@@ -1,0 +1,6 @@
+# backend/Dockerfile.stub
+FROM python:3.12-slim
+WORKDIR /app
+EXPOSE 8080
+# 200を返す簡易サーバ（/ も /health もOK）
+CMD ["python", "-c", "import http.server, socketserver; socketserver.TCPServer.allow_reuse_address=True; http.server.SimpleHTTPRequestHandler.protocol_version='HTTP/1.1'; http.server.ThreadingHTTPServer(('',8080), http.server.SimpleHTTPRequestHandler).serve_forever()"]

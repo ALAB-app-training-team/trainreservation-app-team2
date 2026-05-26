@@ -1,0 +1,89 @@
+name: Build & Deploy Frontend to S3/CloudFront
+
+on:
+  workflow_dispatch:
+    inputs:
+      app_name:
+        description: "App name (must match infra APP_NAME)"
+        required: false
+        default: "sample-app"
+      node_version:
+        description: "Node.js version"
+        required: false
+        default: "20"
+
+concurrency:
+  group: fe-deploy-${{ github.ref }}
+  cancel-in-progress: true
+
+permissions:
+  id-token: write
+  contents: read
+
+env:
+  AWS_REGION: ${{ vars.AWS_REGION }}
+  AWS_ACCOUNT_ID: ${{ vars.AWS_ACCOUNT_ID }}
+  AWS_OIDC_ROLE_ARN: ${{ vars.AWS_OIDC_ROLE_ARN }}
+
+jobs:
+  build-and-deploy:
+    runs-on: ubuntu-latest
+    env:
+      APP_NAME: ${{ inputs.app_name || vars.APP_NAME || 'sample-app' }}
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Validate required Variables
+        run: |
+          : "${AWS_REGION:?Missing vars.AWS_REGION}"
+          : "${AWS_ACCOUNT_ID:?Missing vars.AWS_ACCOUNT_ID}"
+          : "${AWS_OIDC_ROLE_ARN:?Missing vars.AWS_OIDC_ROLE_ARN}"
+
+      - name: Configure AWS (OIDC)
+        uses: aws-actions/configure-aws-credentials@v4
+        with:
+          role-to-assume: ${{ env.AWS_OIDC_ROLE_ARN }}
+          aws-region: ${{ env.AWS_REGION }}
+
+      - name: Setup Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: ${{ inputs.node_version }}
+          cache: "npm"
+          cache-dependency-path: "frontend/package-lock.json"
+
+      - name: Build (Vite)
+        working-directory: frontend
+        run: |
+          npm ci
+          npm run build
+
+      - name: Lookup S3 bucket & CloudFront URL from CDK outputs
+        id: cdkout
+        run: |
+          BUCKET=$(aws cloudformation describe-stacks --stack-name $APP_NAME-fe \
+            --query "Stacks[0].Outputs[?OutputKey=='WebBucketName'].OutputValue" --output text)
+          CF_URL=$(aws cloudformation describe-stacks --stack-name $APP_NAME-fe \
+            --query "Stacks[0].Outputs[?OutputKey=='CloudFrontUrl'].OutputValue" --output text)
+          echo "bucket=$BUCKET"   >> $GITHUB_OUTPUT
+          echo "cf_url=$CF_URL"   >> $GITHUB_OUTPUT
+
+      - name: Sync to S3
+        run: |
+          aws s3 sync frontend/dist s3://${{ steps.cdkout.outputs.bucket }} --delete
+
+      - name: Invalidate CloudFront
+        run: |
+          CF_DOMAIN=$(echo "${{ steps.cdkout.outputs.cf_url }}" | sed -e 's~^https\?://~~')
+          DIST_ID=$(aws cloudfront list-distributions \
+            --query "DistributionList.Items[?DomainName=='$CF_DOMAIN'].Id" \
+            --output text)
+          if [ -n "$DIST_ID" ] && [ "$DIST_ID" != "None" ]; then
+            aws cloudfront create-invalidation --distribution-id "$DIST_ID" --paths "/*"
+          else
+            echo "CloudFront Distribution not found from URL. Skipping invalidation."
+          fi
+
+      - name: Done
+        run: |
+          echo "Deployed to: ${{ steps.cdkout.outputs.cf_url }}"

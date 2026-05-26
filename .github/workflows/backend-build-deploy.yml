@@ -1,0 +1,95 @@
+name: Build & Push backend image, then deploy to App Runner
+on:
+  # 自動実行を有効にする場合はコメントアウトを外す
+  # （infraのApp Runnerサービス作成後に有効化すること）
+  # push:
+  #   branches: [main]
+  #   paths:
+  #     - "backend/**"
+  #     - ".github/workflows/backend-build-deploy.yml"
+  workflow_dispatch:
+    inputs:
+      dockerfile:
+        description: "backend Dockerfile (gradle/stub)"
+        default: "stub" # Springbootプロジェクトが作られたら「gradle」を指定する
+        required: true
+      app_name:
+        description: "App name (must match infra APP_NAME)"
+        default: "sample-app"
+        required: true
+
+concurrency:
+  group: build-deploy-${{ github.ref }}
+  cancel-in-progress: true
+
+permissions:
+  id-token: write
+  contents: read
+
+jobs:
+  build-push-deploy:
+    permissions: { id-token: write, contents: read }
+    runs-on: ubuntu-latest
+    env:
+      AWS_REGION: ${{ vars.AWS_REGION }}
+      AWS_ACCOUNT_ID: ${{ vars.AWS_ACCOUNT_ID }}
+      AWS_OIDC_ROLE_ARN: ${{ vars.AWS_OIDC_ROLE_ARN }}
+      APP_NAME: ${{ inputs.app_name || vars.APP_NAME || 'sample-app' }}
+      REPO_NAME: ${{ inputs.app_name || vars.APP_NAME || 'sample-app' }} # = ECRリポ名（infraと一致）
+      DOCKERFILE: ${{ inputs.dockerfile || 'stub' }} # Springbootプロジェクトが作られたら「gradle」を指定する
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Validate required Variables
+        run: |
+          : "${AWS_REGION:?Missing vars.AWS_REGION}"
+          : "${AWS_ACCOUNT_ID:?Missing vars.AWS_ACCOUNT_ID}"
+          : "${AWS_OIDC_ROLE_ARN:?Missing vars.AWS_OIDC_ROLE_ARN}"
+
+      - name: Configure AWS (OIDC)
+        uses: aws-actions/configure-aws-credentials@v4
+        with:
+          role-to-assume: ${{ env.AWS_OIDC_ROLE_ARN }}
+          aws-region: ${{ env.AWS_REGION }}
+
+      - name: Ensure ECR repo exists
+        run: |
+          aws ecr describe-repositories --repository-names "$REPO_NAME" >/dev/null 2>&1 || {
+            echo "ECR repository '$REPO_NAME' not found. Deploy infra (ECR stack) first.";
+            exit 1;
+          }
+
+      - name: Login to ECR
+        run: |
+          aws ecr get-login-password --region $AWS_REGION | \
+            docker login --username AWS --password-stdin $AWS_ACCOUNT_ID.dkr.ecr.$AWS_REGION.amazonaws.com
+
+      - name: Build backend image
+        working-directory: backend
+        run: |
+          DF="Dockerfile.${DOCKERFILE}"
+          echo "Using $DF"
+          docker build -f $DF -t $REPO_NAME:latest .
+
+      - name: Tag & push
+        run: |
+          docker tag $REPO_NAME:latest $AWS_ACCOUNT_ID.dkr.ecr.$AWS_REGION.amazonaws.com/$REPO_NAME:latest
+          docker push $AWS_ACCOUNT_ID.dkr.ecr.$AWS_REGION.amazonaws.com/$REPO_NAME:latest
+
+      # App Runnerにデプロイ開始要求
+      - name: Get App Runner Service ARN
+        id: get
+        run: |
+          ARN=$(aws cloudformation describe-stacks --stack-name $APP_NAME-be \
+            --query "Stacks[0].Outputs[?OutputKey=='AppRunnerServiceArn'].OutputValue" --output text 2>/dev/null || echo "")
+          if [ "$ARN" = "None" ]; then ARN=""; fi
+          echo "arn=$ARN" >> $GITHUB_OUTPUT
+
+      - name: Trigger App Runner deployment
+        if: ${{ steps.get.outputs.arn != '' }}
+        run: aws apprunner start-deployment --service-arn "${{ steps.get.outputs.arn }}"
+
+      - name: Note when BE service is not created yet
+        if: ${{ steps.get.outputs.arn == '' }}
+        run: |
+          echo "App Runner service not found yet (did you deploy infra with CREATE_BE_SERVICE=true at least once?). Skipping start-deployment."
