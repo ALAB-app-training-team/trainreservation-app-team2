@@ -35,7 +35,7 @@ jobs:
       AWS_ACCOUNT_ID: ${{ vars.AWS_ACCOUNT_ID }}
       AWS_OIDC_ROLE_ARN: ${{ vars.AWS_OIDC_ROLE_ARN }}
       APP_NAME: ${{ inputs.app_name || vars.APP_NAME || 'shinkansendego' }}
-      REPO_NAME: ${{ inputs.app_name || vars.APP_NAME || 'shinkansendego' }} # = ECRリポ名（infraと一致）
+      REPO_NAME: ${{ inputs.app_name || vars.APP_NAME || 'shinkansendego-ecr' }} # = ECRリポ名（infraと一致）
       DOCKERFILE: ${{ inputs.dockerfile || 'gradle' }} # Springbootプロジェクトが作られたら「gradle」を指定する
     steps:
       - uses: actions/checkout@v4
