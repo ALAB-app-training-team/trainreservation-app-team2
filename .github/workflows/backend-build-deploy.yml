@@ -69,7 +69,7 @@ jobs:
         run: |
           DF="Dockerfile.${DOCKERFILE}"
           echo "Using $DF"
-          docker build -f $DF -t $REPO_NAME:latest
+          docker build -f $DF -t $REPO_NAME:latest .
 
       - name: Tag & push
         run: |
