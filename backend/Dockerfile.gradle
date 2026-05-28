@@ -33,9 +33,3 @@ COPY --from=build /workspace/build/libs/*.jar /app/app.jar
 COPY entrypoint.sh /entrypoint.sh
 RUN chmod +x /entrypoint.sh
 ENTRYPOINT ["/entrypoint.sh"]
-
-if [ -n "$DB_SECRET_JSON" ]; then
-  export DB_USERNAME=$(echo "$DB_SECRET_JSON" | jq -r '.username')
-  export DB_PASSWORD=$(echo "$DB_SECRET_JSON" | jq -r '.password')
-fi
-exec java -jar /app/app.jar "$@"
