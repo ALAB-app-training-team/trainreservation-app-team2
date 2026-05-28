@@ -5,8 +5,8 @@ WORKDIR /workspace
 # Gradle Wrapper & 設定ファイル類
 COPY gradlew ./
 COPY gradle gradle
-COPY settings.gradle.kts* ./settings.gradle
-COPY build.gradle.kts* ./
+COPY settings.gradle.kts* settings.gradle*
+COPY build.gradle.kts* build.gradle*
 RUN chmod +x gradlew
 
 # 依存を先取り（キャッシュ用）
