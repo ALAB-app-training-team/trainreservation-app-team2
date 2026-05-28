@@ -30,6 +30,6 @@ COPY --from=build /workspace/build/libs/*.jar /app/app.jar
 
 # App Runnerのヘルスチェックはサービス側で行うためHEALTHCHECKは不要
 # ENTRYPOINT ["sh", "-c", "java $JAVA_OPTS -jar /app/app.jar"]
-COPY entrypoint.sh entrypoint.sh
-RUN chmod +x entrypoint.sh
-ENTRYPOINT ["/backend/entrypoint.sh"]
+COPY entrypoint.sh /entrypoint.sh
+RUN chmod +x /entrypoint.sh
+ENTRYPOINT ["/entrypoint.sh"]
