@@ -11,11 +11,11 @@ on:
     inputs:
       dockerfile:
         description: "backend Dockerfile (gradle/stub)"
-        default: "stub" # Springbootプロジェクトが作られたら「gradle」を指定する
+        default: "gradle" # Springbootプロジェクトが作られたら「gradle」を指定する
         required: true
       app_name:
         description: "App name (must match infra APP_NAME)"
-        default: "sample-app"
+        default: "shinkansendego"
         required: true
 
 concurrency:
@@ -34,9 +34,9 @@ jobs:
       AWS_REGION: ${{ vars.AWS_REGION }}
       AWS_ACCOUNT_ID: ${{ vars.AWS_ACCOUNT_ID }}
       AWS_OIDC_ROLE_ARN: ${{ vars.AWS_OIDC_ROLE_ARN }}
-      APP_NAME: ${{ inputs.app_name || vars.APP_NAME || 'sample-app' }}
-      REPO_NAME: ${{ inputs.app_name || vars.APP_NAME || 'sample-app' }} # = ECRリポ名（infraと一致）
-      DOCKERFILE: ${{ inputs.dockerfile || 'stub' }} # Springbootプロジェクトが作られたら「gradle」を指定する
+      APP_NAME: ${{ inputs.app_name || vars.APP_NAME || 'shinkansendego' }}
+      REPO_NAME: ${{ inputs.app_name || vars.APP_NAME || 'shinkansendego' }} # = ECRリポ名（infraと一致）
+      DOCKERFILE: ${{ inputs.dockerfile || 'gradle' }} # Springbootプロジェクトが作られたら「gradle」を指定する
     steps:
       - uses: actions/checkout@v4
 
