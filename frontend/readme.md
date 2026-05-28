@@ -1,73 +1,33 @@
-# React + TypeScript + Vite
+# Frontend（React）
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+## 目的
 
-Currently, two official plugins are available:
+- このディレクトリ配下に React アプリを作成します
+- GitHub Actions で S3/CloudFront へデプロイされる前提です
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Oxc](https://oxc.rs)
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/)
+## 前提（infra）
 
-## React Compiler
+- `app-infra` 側で `${APP_NAME}-fe` スタックがデプロイ済みであること（S3バケット名/CloudFront URLをOutputsから参照します）
 
-The React Compiler is not enabled on this template because of its impact on dev & build performances. To add it, see [this documentation](https://react.dev/learn/react-compiler/installation).
+## 初期作成（例: Vite + React + TypeScript）
 
-## Expanding the ESLint configuration
-
-If you are developing a production application, we recommend updating the configuration to enable type-aware lint rules:
-
-```js
-export default defineConfig([
-  globalIgnores(['dist']),
-  {
-    files: ['**/*.{ts,tsx}'],
-    extends: [
-      // Other configs...
-
-      // Remove tseslint.configs.recommended and replace with this
-      tseslint.configs.recommendedTypeChecked,
-      // Alternatively, use this for stricter rules
-      tseslint.configs.strictTypeChecked,
-      // Optionally, add this for stylistic rules
-      tseslint.configs.stylisticTypeChecked,
-
-      // Other configs...
-    ],
-    languageOptions: {
-      parserOptions: {
-        project: ['./tsconfig.node.json', './tsconfig.app.json'],
-        tsconfigRootDir: import.meta.dirname,
-      },
-      // other options...
-    },
-  },
-])
+```bash
+npm create vite@latest . -- --template react-ts
+npm install
+npm run dev
+npm run build
 ```
 
-You can also install [eslint-plugin-react-x](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-x) and [eslint-plugin-react-dom](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-dom) for React-specific lint rules:
+## デプロイ要件（GitHub Actions から参照されるもの）
 
-```js
-// eslint.config.js
-import reactX from 'eslint-plugin-react-x'
-import reactDom from 'eslint-plugin-react-dom'
+- `package-lock.json` が存在すること（Actions の npm キャッシュ用）
+- `npm run build` の成果物が `dist/` に出力されること（Viteのデフォルト）
 
-export default defineConfig([
-  globalIgnores(['dist']),
-  {
-    files: ['**/*.{ts,tsx}'],
-    extends: [
-      // Other configs...
-      // Enable lint rules for React
-      reactX.configs['recommended-typescript'],
-      // Enable lint rules for React DOM
-      reactDom.configs.recommended,
-    ],
-    languageOptions: {
-      parserOptions: {
-        project: ['./tsconfig.node.json', './tsconfig.app.json'],
-        tsconfigRootDir: import.meta.dirname,
-      },
-      // other options...
-    },
-  },
-])
-```
+## よくある注意
+
+- ルート直下ではなく、この `frontend/` 配下で完結させてください（Actions が `working-directory: frontend` を前提にしています）
+
+## デプロイ（GitHub Actions）
+
+- GitHub Actions の `Build & Deploy Frontend to S3/CloudFront` を手動実行します
+- 反映先は `${APP_NAME}-fe` の CloudFormation Outputs から自動で解決されます

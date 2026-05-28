@@ -10,7 +10,7 @@ on:
       node_version:
         description: "Node.js version"
         required: false
-        default: "20"
+        default: "24"
 
 concurrency:
   group: fe-deploy-${{ github.ref }}
