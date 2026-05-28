@@ -1,6 +1,6 @@
 # ---- build stage (Gradle) ----
 FROM gradle:8.10.1-jdk21-alpine AS build
-WORKDIR /workspace
+WORKDIR /backend
 
 # Gradle Wrapper & 設定ファイル類
 COPY gradlew ./
