@@ -12,7 +12,7 @@ public class CorsConfig implements WebMvcConfigurer{
          // CORS設定を適用するリソース
          registry.addMapping("/**") 
              // アクセスを許可するオリジン
-            .allowedOrigins("http://localhost:5173") 
+            .allowedOrigins("http://localhost:5173","https://d220o4bv1ls3lr.cloudfront.net/") 
             // アクセスを許可するHTTPメソッド
             .allowedMethods("GET", "POST", "PUT", "DELETE") 
             // アクセスを許可するHTTPヘッダ
