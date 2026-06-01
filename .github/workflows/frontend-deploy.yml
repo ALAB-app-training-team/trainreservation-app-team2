@@ -1,12 +1,17 @@
 name: Build & Deploy Frontend to S3/CloudFront
 
 on:
+push:
+    branches: [main]
+    paths:
+      - "frontend/**"
+      - ".github/workflows/frontend-deploy.yml"
   workflow_dispatch:
     inputs:
       app_name:
         description: "App name (must match infra APP_NAME)"
         required: false
-        default: "sample-app"
+        default: "shinkansendego"
       node_version:
         description: "Node.js version"
         required: false
@@ -29,7 +34,7 @@ jobs:
   build-and-deploy:
     runs-on: ubuntu-latest
     env:
-      APP_NAME: ${{ inputs.app_name || vars.APP_NAME || 'sample-app' }}
+      APP_NAME: ${{ inputs.app_name || vars.APP_NAME || 'shinkansendego' }}
     steps:
       - uses: actions/checkout@v4
 
