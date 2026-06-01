@@ -1,4 +1,4 @@
-package com.shinkansendego.demo.entities;
+package com.shinkansendego.demo.feature.account.entities;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;

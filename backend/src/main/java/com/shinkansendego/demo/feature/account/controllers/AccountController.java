@@ -1,7 +1,7 @@
-package com.shinkansendego.demo.controllers;
+package com.shinkansendego.demo.feature.account.controllers;
 
-import com.shinkansendego.demo.entities.Account;
-import com.shinkansendego.demo.servicies.AccountService;
+import com.shinkansendego.demo.feature.account.entities.Account;
+import com.shinkansendego.demo.feature.account.servicies.AccountService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;

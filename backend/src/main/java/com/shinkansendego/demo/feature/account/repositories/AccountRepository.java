@@ -1,7 +1,7 @@
-package com.shinkansendego.demo.repositories;
+package com.shinkansendego.demo.feature.account.repositories;
 import org.apache.ibatis.annotations.Mapper;
 
-import com.shinkansendego.demo.entities.Account;
+import com.shinkansendego.demo.feature.account.entities.Account;
 
 import java.util.List;
 

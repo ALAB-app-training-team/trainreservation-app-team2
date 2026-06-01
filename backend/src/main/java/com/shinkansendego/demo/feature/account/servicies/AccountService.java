@@ -1,7 +1,7 @@
-package com.shinkansendego.demo.servicies;
+package com.shinkansendego.demo.feature.account.servicies;
 
-import com.shinkansendego.demo.entities.Account;
-import com.shinkansendego.demo.repositories.AccountRepository;
+import com.shinkansendego.demo.feature.account.entities.Account;
+import com.shinkansendego.demo.feature.account.repositories.AccountRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
