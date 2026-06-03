@@ -1,4 +1,5 @@
 import { Suspense, useState } from "react";
+import "tailwindcss";
 import { ScheduleList } from "../../components/ScheduleList/ScheduleList";
 import { ScheduleListSkeleton } from "../../components/ScheduleList/ScheduleListSkeleton";
 import type { SearchRequestDto } from "../../types/SearchRequestDto";
@@ -25,13 +26,15 @@ export function SearchResult() {
       <div>
         {departureStation}→{arrivalStation}
       </div>
-      <div>
-        <label>出発日</label>
-        <input type="date"></input>
-      </div>
-      <div>
-        <label>出発時刻</label>
-        <input type="time"></input>
+      <div className="flex">
+        <div>
+          <label>出発日</label>
+          <input type="date"></input>
+        </div>
+        <div>
+          <label>出発時刻</label>
+          <input type="time"></input>
+        </div>
       </div>
       {/* <Suspense fallback={<ScheduleListSkeleton />}> */}
       <ScheduleList searchRequestDto={searchRequestDto} />

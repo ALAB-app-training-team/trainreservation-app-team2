@@ -1,6 +1,7 @@
 import { useId, useState } from "react";
 import { useSuspenseQuery } from "@tanstack/react-query";
 import axios from "axios";
+import "tailwindcss";
 import { API } from "../../api/route";
 import type { SearchResponseDto } from "../../types/SearchResponseDto";
 import type { SearchRequestDto } from "../../types/SearchRequestDto";
@@ -9,8 +10,6 @@ import { ScheduleItem } from "../ScheduleItem/ScheduleItem";
 type ScheduleListProps = { searchRequestDto: SearchRequestDto };
 
 export function ScheduleList({ searchRequestDto }: ScheduleListProps) {
-  const id = useId();
-
   // const { data } = useSuspenseQuery({
   //   queryKey: ["schedule"],
   //   queryFn: async () => {
@@ -42,6 +41,7 @@ export function ScheduleList({ searchRequestDto }: ScheduleListProps) {
   return (
     <>
       {suchedules.map((suchedule) => {
+        const id = useId();
         return <ScheduleItem key={id} suchedule={suchedule} />;
       })}
     </>
