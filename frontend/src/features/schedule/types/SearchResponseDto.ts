@@ -1,4 +1,4 @@
-export type SearchResultDto = {
+export type SearchResponseDto = {
     train_type_name: string
     departure_station_name: string
     departure_time: string

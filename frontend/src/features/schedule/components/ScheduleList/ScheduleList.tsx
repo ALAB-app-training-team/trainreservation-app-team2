@@ -1,35 +1,33 @@
+import { useId, useState } from "react";
 import { useSuspenseQuery } from "@tanstack/react-query";
 import axios from "axios";
 import { API } from "../../api/route";
-import type { SearchResultDto } from "../../types/SearchResultDto";
+import type { SearchResponseDto } from "../../types/SearchResponseDto";
+import type { SearchRequestDto } from "../../types/SearchRequestDto";
+import { ScheduleItem } from "../ScheduleItem/ScheduleItem";
 
-type ScheduleListProps = {
-  time: string;
-  date: string;
-  departureStation: string;
-  arrivalStation: string;
-};
-export function ScheduleList({
-  time,
-  date,
-  departureStation,
-  arrivalStation,
-}: ScheduleListProps) {
+type ScheduleListProps = { searchRequestDto: SearchRequestDto };
+
+export function ScheduleList({ searchRequestDto }: ScheduleListProps) {
+  const id = useId();
+
   const { data } = useSuspenseQuery({
-    queryKey: ["tasks"],
+    queryKey: ["schedule"],
     queryFn: async () => {
       // await new Promise(resolve => setTimeout(resolve, 5000))
-      const response = await axios.get<SearchResultDto>(API);
+      const response = await axios.get<SearchResponseDto[]>(API, {
+        params: searchRequestDto,
+      });
       return response.data;
     },
   });
+  const [suchedules, setSchedules] = useState<SearchResponseDto[]>(data);
 
   return (
     <>
-      <div>{time}</div>
-      <div>{date}</div>
-      <div>{departureStation}</div>
-      <div>{arrivalStation}</div>
+      {suchedules.map((suchedule) => {
+        <ScheduleItem key={id} suchedule={suchedule} />;
+      })}
     </>
   );
 }
