@@ -24,21 +24,23 @@ export function SearchResult() {
   return (
     <>
       <div>
-        {departureStation}→{arrivalStation}
-      </div>
-      <div className="flex">
-        <div>
-          <label>出発日</label>
-          <input type="date"></input>
+        <h1 className="text-left">
+          {departureStation}→{arrivalStation}
+        </h1>
+        <div className="flex justify-center bg-primary-light">
+          <div>
+            <label>出発日</label>
+            <input type="date"></input>
+          </div>
+          <div>
+            <label>出発時刻</label>
+            <input type="time"></input>
+          </div>
         </div>
-        <div>
-          <label>出発時刻</label>
-          <input type="time"></input>
-        </div>
+        {/* <Suspense fallback={<ScheduleListSkeleton />}> */}
+        <ScheduleList searchRequestDto={searchRequestDto} />
+        {/* </Suspense> */}
       </div>
-      {/* <Suspense fallback={<ScheduleListSkeleton />}> */}
-      <ScheduleList searchRequestDto={searchRequestDto} />
-      {/* </Suspense> */}
     </>
   );
 }

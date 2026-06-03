@@ -5,7 +5,7 @@ type ScheduleItemProps = { suchedule: SearchResponseDto };
 export function ScheduleItem({ suchedule }: ScheduleItemProps) {
   return (
     <>
-      <div>
+      <div className="flex justify-center">
         <div>{suchedule.train_type_name}</div>
         <div>{suchedule.departure_station_name}</div>
         <div>{suchedule.departure_time}</div>

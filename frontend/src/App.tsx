@@ -5,12 +5,14 @@ import { SearchResult } from "./features/schedule/pages/SearchResult/SearchResul
 function App() {
   return (
     <>
-      <BrowserRouter>
-        <Routes>
-          <Route path="/" element={<SearchResult />} />
-          <Route path="/searchResult" element={<SearchResult />} />
-        </Routes>
-      </BrowserRouter>
+      <div className="min-h-screen">
+        <BrowserRouter>
+          <Routes>
+            <Route path="/" element={<SearchResult />} />
+            <Route path="/searchResult" element={<SearchResult />} />
+          </Routes>
+        </BrowserRouter>
+      </div>
     </>
   );
 }
