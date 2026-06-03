@@ -30,6 +30,13 @@ export function ScheduleList({ searchRequestDto }: ScheduleListProps) {
       arrival_station_name: "上野",
       arrival_time: "06:39",
     },
+    {
+      train_type_name: "やまびこ41号",
+      departure_station_name: "東京",
+      departure_time: "06:40",
+      arrival_station_name: "上野",
+      arrival_time: "06:47",
+    },
   ]);
 
   return (
