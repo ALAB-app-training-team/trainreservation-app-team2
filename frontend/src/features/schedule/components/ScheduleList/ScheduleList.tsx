@@ -11,22 +11,31 @@ type ScheduleListProps = { searchRequestDto: SearchRequestDto };
 export function ScheduleList({ searchRequestDto }: ScheduleListProps) {
   const id = useId();
 
-  const { data } = useSuspenseQuery({
-    queryKey: ["schedule"],
-    queryFn: async () => {
-      // await new Promise(resolve => setTimeout(resolve, 5000))
-      const response = await axios.get<SearchResponseDto[]>(API, {
-        params: searchRequestDto,
-      });
-      return response.data;
+  // const { data } = useSuspenseQuery({
+  //   queryKey: ["schedule"],
+  //   queryFn: async () => {
+  //     // await new Promise(resolve => setTimeout(resolve, 5000))
+  //     const response = await axios.get<SearchResponseDto[]>(API, {
+  //       params: searchRequestDto,
+  //     });
+  //     return response.data;
+  //   },
+  // });
+  // const [suchedules, setSchedules] = useState<SearchResponseDto[]>(data);
+  const [suchedules, setSchedules] = useState<SearchResponseDto[]>([
+    {
+      train_type_name: "はやぶさ1号",
+      departure_station_name: "東京",
+      departure_time: "06:32",
+      arrival_station_name: "上野",
+      arrival_time: "06:39",
     },
-  });
-  const [suchedules, setSchedules] = useState<SearchResponseDto[]>(data);
+  ]);
 
   return (
     <>
       {suchedules.map((suchedule) => {
-        <ScheduleItem key={id} suchedule={suchedule} />;
+        return <ScheduleItem key={id} suchedule={suchedule} />;
       })}
     </>
   );

@@ -19,9 +19,9 @@ export function SearchResult() {
   return (
     <>
       <div>こんちゃっちゃー</div>
-      <Suspense fallback={<ScheduleListSkeleton />}>
-        <ScheduleList searchRequestDto={searchRequestDto} />
-      </Suspense>
+      {/* <Suspense fallback={<ScheduleListSkeleton />}> */}
+      <ScheduleList searchRequestDto={searchRequestDto} />
+      {/* </Suspense> */}
     </>
   );
 }
