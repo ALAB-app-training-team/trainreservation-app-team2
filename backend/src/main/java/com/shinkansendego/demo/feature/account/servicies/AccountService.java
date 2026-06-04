@@ -1,6 +1,6 @@
 package com.shinkansendego.demo.feature.account.servicies;
 
-import com.shinkansendego.demo.feature.account.entities.Account;
+import com.shinkansendego.demo.feature.account.entities.AccountEntity;
 import com.shinkansendego.demo.feature.account.repositories.AccountRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -16,7 +16,7 @@ public class AccountService {
         this.accountRepository = accountRepository;
     }
 
-    public List<Account> findAllAccounts() {
+    public List<AccountEntity> findAllAccounts() {
         return accountRepository.findAllAccounts();
     }
 }
