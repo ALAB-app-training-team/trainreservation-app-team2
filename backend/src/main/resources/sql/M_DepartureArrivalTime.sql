@@ -1,4 +1,4 @@
--- 発車到着時刻テーブル
+-- 出発到着時刻テーブル
 USE postgres;
 
 CREATE TABLE M_DepartureArrivalTime(
