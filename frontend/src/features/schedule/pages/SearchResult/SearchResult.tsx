@@ -29,22 +29,22 @@ export function SearchResult() {
             {departureStation}→{arrivalStation}
           </h1>
           <div className="flex justify-between bg-primary-light rounded-2xl p-8 gap-4">
-            <div className="flex flex-col w-1/2 items-start">
+            <div className="flex flex-col gap-2 w-1/2 items-start">
               <label htmlFor="date">出発日</label>
               <input
                 id="date"
                 type="date"
-                className="w-full bg-white"
+                className="w-full bg-white p-2 rounded-xl outline-none border-2 border-transparent focus:border-primary-transparent"
                 value={date}
                 onChange={(e) => setDate(e.target.value)}
               ></input>
             </div>
-            <div className="flex flex-col w-1/2 items-start">
+            <div className="flex flex-col gap-2 w-1/2 items-start">
               <label htmlFor="time">出発時刻</label>
               <input
                 id="time"
                 type="time"
-                className="w-full bg-white"
+                className="w-full bg-white p-2 rounded-xl outline-none border-2 border-transparent focus:border-primary-transparent"
                 value={time}
                 onChange={(e) => setTime(e.target.value)}
               ></input>
