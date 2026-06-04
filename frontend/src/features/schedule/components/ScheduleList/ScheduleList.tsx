@@ -21,7 +21,7 @@ export function ScheduleList({ searchRequestDto }: ScheduleListProps) {
   //   },
   // });
   // const [suchedules, setSchedules] = useState<SearchResponseDto[]>(data);
-  const [suchedules, setSchedules] = useState<SearchResponseDto[]>([
+  const [schedules, setSchedules] = useState<SearchResponseDto[]>([
     {
       train_type_name: "はやぶさ1号",
       departure_station_name: "東京",
@@ -40,10 +40,15 @@ export function ScheduleList({ searchRequestDto }: ScheduleListProps) {
 
   return (
     <>
-      {suchedules.map((suchedule) => {
-        const id = useId();
-        return <ScheduleItem key={id} suchedule={suchedule} />;
-      })}
+      <div className=" flex flex-col gap-4">
+        <div className="self-end">
+          {schedules.length}件の列車が見つかりました
+        </div>
+        {schedules.map((suchedule) => {
+          const id = useId();
+          return <ScheduleItem key={id} suchedule={suchedule} />;
+        })}
+      </div>
     </>
   );
 }
