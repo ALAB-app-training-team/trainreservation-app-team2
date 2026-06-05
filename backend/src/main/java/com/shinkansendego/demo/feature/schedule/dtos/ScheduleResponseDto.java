@@ -11,8 +11,8 @@ import java.time.LocalTime;
 @Setter
 public class ScheduleResponseDto {
     private String train_type_name;
-    private String arrival_station_name;
-    private LocalTime arrival_time;
     private String departure_station_name;
     private LocalTime departure_time;
+    private String arrival_station_name;
+    private LocalTime arrival_time;
 }
