@@ -13,6 +13,7 @@ export function Header() {
       <div className="flex-1 flex justify-end px-4">
         <button
           className="bg-primary-light rounded-xl px-4 py-3 cursor-pointer text-sm font-bold"
+          type="button"
           onClick={() => {
             navigate("/searchResult");
           }}
