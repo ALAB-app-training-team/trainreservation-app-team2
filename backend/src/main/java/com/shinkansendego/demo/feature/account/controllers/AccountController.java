@@ -1,6 +1,6 @@
 package com.shinkansendego.demo.feature.account.controllers;
 
-import com.shinkansendego.demo.feature.account.entities.Account;
+import com.shinkansendego.demo.feature.account.entities.AccountEntity;
 import com.shinkansendego.demo.feature.account.servicies.AccountService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -20,7 +20,7 @@ public class AccountController {
     }
 
     @GetMapping
-    public List<Account> getAccounts() {
+    public List<AccountEntity> getAccounts() {
         return accountService.findAllAccounts();
     }
 
