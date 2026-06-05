@@ -1,6 +1,6 @@
 import { BrowserRouter, Route, Routes } from "react-router-dom";
 import "./App.css";
-import { SearchResult } from "./features/schedule/pages/SearchResult/SearchResult";
+import { SearchResult } from "./features/schedule/pages/SearchResult";
 import { Header } from "./shared/components/Header";
 
 function App() {

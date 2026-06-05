@@ -4,7 +4,7 @@ const ReactPaginate = (_ReactPaginate as any).default || _ReactPaginate;
 import "tailwindcss";
 import useSchedules from "../../hooks/useSchedules";
 import type { SearchRequestDto } from "../../types/SearchRequestDto";
-import { ScheduleItem } from "../ScheduleItem/ScheduleItem";
+import { ScheduleItem } from "../ScheduleItem";
 
 type ScheduleListProps = { searchRequestDto: SearchRequestDto };
 
