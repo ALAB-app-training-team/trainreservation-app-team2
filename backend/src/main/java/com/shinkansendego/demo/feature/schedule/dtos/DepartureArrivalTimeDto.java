@@ -9,8 +9,8 @@ import java.time.LocalTime;
 @AllArgsConstructor
 @Getter
 @Setter
-public class ScheduleResponseDto {
-    private String train_type_name;
+public class DepartureArrivalTimeDto {
+    private String schedule_cd;
     private LocalTime departure_time;
     private LocalTime arrival_time;
 }
