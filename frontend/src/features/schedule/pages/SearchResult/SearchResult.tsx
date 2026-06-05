@@ -2,6 +2,7 @@ import { Suspense, useState } from "react";
 import "tailwindcss";
 import { ScheduleList } from "../../components/ScheduleList/ScheduleList";
 import { ScheduleListSkeleton } from "../../components/ScheduleList/ScheduleListSkeleton";
+import { DepartureDateAndTimePicker } from "../../components/DepartureDateAndTimePicker/DepartureDateAndTimePicker";
 import type { SearchRequestDto } from "../../types/SearchRequestDto";
 
 export function SearchResult() {
@@ -29,26 +30,20 @@ export function SearchResult() {
             {departureStation}→{arrivalStation}
           </h1>
           <div className="flex flex-col md:flex-row justify-between bg-primary-light rounded-2xl p-8 gap-4">
-            <div className="flex flex-col gap-2 w-full items-start">
-              <label htmlFor="date">出発日</label>
-              <input
-                id="date"
-                type="date"
-                className="w-full bg-white p-2 rounded-xl outline-none border-2 border-transparent focus:border-primary-transparent"
-                value={date}
-                onChange={(e) => setDate(e.target.value)}
-              ></input>
-            </div>
-            <div className="flex flex-col gap-2 w-full items-start">
-              <label htmlFor="time">出発時刻</label>
-              <input
-                id="time"
-                type="time"
-                className="w-full bg-white p-2 rounded-xl outline-none border-2 border-transparent focus:border-primary-transparent"
-                value={time}
-                onChange={(e) => setTime(e.target.value)}
-              ></input>
-            </div>
+            <DepartureDateAndTimePicker
+              id="date"
+              label="出発日"
+              type="date"
+              value={date}
+              setValue={setDate}
+            />
+            <DepartureDateAndTimePicker
+              id="time"
+              label="出発時刻"
+              type="time"
+              value={time}
+              setValue={setTime}
+            />
           </div>
           {/* <Suspense fallback={<ScheduleListSkeleton />}> */}
           <ScheduleList searchRequestDto={searchRequestDto} />
