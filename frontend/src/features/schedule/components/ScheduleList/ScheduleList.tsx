@@ -26,165 +26,21 @@ export function ScheduleList({ searchRequestDto }: ScheduleListProps) {
   const [schedules, setSchedules] = useState<SearchResponseDto[]>([
     {
       train_type_name: "はやぶさ1号",
-      departure_station_name: "東京",
       departure_time: "06:32",
-      arrival_station_name: "上野",
       arrival_time: "06:39",
     },
     {
       train_type_name: "やまびこ41号",
-      departure_station_name: "東京",
       departure_time: "06:40",
-      arrival_station_name: "上野",
-      arrival_time: "06:47",
-    },
-    {
-      train_type_name: "やまびこ41号",
-      departure_station_name: "東京",
-      departure_time: "06:40",
-      arrival_station_name: "上野",
-      arrival_time: "06:47",
-    },
-    {
-      train_type_name: "やまびこ41号",
-      departure_station_name: "東京",
-      departure_time: "06:40",
-      arrival_station_name: "上野",
-      arrival_time: "06:47",
-    },
-    {
-      train_type_name: "やまびこ41号",
-      departure_station_name: "東京",
-      departure_time: "06:40",
-      arrival_station_name: "上野",
-      arrival_time: "06:47",
-    },
-    {
-      train_type_name: "やまびこ41号",
-      departure_station_name: "東京",
-      departure_time: "06:40",
-      arrival_station_name: "上野",
-      arrival_time: "06:47",
-    },
-    {
-      train_type_name: "やまびこ41号",
-      departure_station_name: "東京",
-      departure_time: "06:40",
-      arrival_station_name: "上野",
-      arrival_time: "06:47",
-    },
-    {
-      train_type_name: "やまびこ41号",
-      departure_station_name: "東京",
-      departure_time: "06:40",
-      arrival_station_name: "上野",
-      arrival_time: "06:47",
-    },
-    {
-      train_type_name: "やまびこ41号",
-      departure_station_name: "東京",
-      departure_time: "06:40",
-      arrival_station_name: "上野",
-      arrival_time: "06:47",
-    },
-    {
-      train_type_name: "やまびこ41号",
-      departure_station_name: "東京",
-      departure_time: "06:40",
-      arrival_station_name: "上野",
-      arrival_time: "06:47",
-    },
-    {
-      train_type_name: "やまびこ41号",
-      departure_station_name: "東京",
-      departure_time: "06:40",
-      arrival_station_name: "上野",
-      arrival_time: "06:47",
-    },
-    {
-      train_type_name: "やまびこ41号",
-      departure_station_name: "東京",
-      departure_time: "06:40",
-      arrival_station_name: "上野",
-      arrival_time: "06:47",
-    },
-    {
-      train_type_name: "やまびこ41号",
-      departure_station_name: "東京",
-      departure_time: "06:40",
-      arrival_station_name: "上野",
-      arrival_time: "06:47",
-    },
-    {
-      train_type_name: "やまびこ41号",
-      departure_station_name: "東京",
-      departure_time: "06:40",
-      arrival_station_name: "上野",
-      arrival_time: "06:47",
-    },
-    {
-      train_type_name: "やまびこ41号",
-      departure_station_name: "東京",
-      departure_time: "06:40",
-      arrival_station_name: "上野",
-      arrival_time: "06:47",
-    },
-    {
-      train_type_name: "やまびこ41号",
-      departure_station_name: "東京",
-      departure_time: "06:40",
-      arrival_station_name: "上野",
-      arrival_time: "06:47",
-    },
-    {
-      train_type_name: "やまびこ41号",
-      departure_station_name: "東京",
-      departure_time: "06:40",
-      arrival_station_name: "上野",
-      arrival_time: "06:47",
-    },
-    {
-      train_type_name: "やまびこ41号",
-      departure_station_name: "東京",
-      departure_time: "06:40",
-      arrival_station_name: "上野",
-      arrival_time: "06:47",
-    },
-    {
-      train_type_name: "やまびこ41号",
-      departure_station_name: "東京",
-      departure_time: "06:40",
-      arrival_station_name: "上野",
-      arrival_time: "06:47",
-    },
-    {
-      train_type_name: "やまびこ41号",
-      departure_station_name: "東京",
-      departure_time: "06:40",
-      arrival_station_name: "上野",
-      arrival_time: "06:47",
-    },
-    {
-      train_type_name: "やまびこ41号",
-      departure_station_name: "東京",
-      departure_time: "06:40",
-      arrival_station_name: "上野",
-      arrival_time: "06:47",
-    },
-    {
-      train_type_name: "やまびこ41号",
-      departure_station_name: "東京",
-      departure_time: "06:40",
-      arrival_station_name: "上野",
       arrival_time: "06:47",
     },
   ]);
 
-  const [offset, setOffset] = useState(0); // 何番目のアイテムから表示するか
-  const perPage: number = 10; // 1ページあたりに表示したいアイテムの数
+  const [offset, setOffset] = useState(0);
+  const perPage: number = 10;
   const handlePageChange = (data: { selected: number }) => {
-    let pageNumber = data["selected"]; //選択されたページ番号
-    setOffset(pageNumber * perPage); // offsetを変更し、表示開始するアイテムの番号を変更
+    let pageNumber = data["selected"];
+    setOffset(pageNumber * perPage);
   };
 
   return (
@@ -194,13 +50,20 @@ export function ScheduleList({ searchRequestDto }: ScheduleListProps) {
           {schedules.length}件の列車が見つかりました
         </div>
         {schedules.slice(offset, offset + perPage).map((schedule, index) => {
-          return <ScheduleItem key={index} schedule={schedule} />;
+          return (
+            <ScheduleItem
+              key={index}
+              schedule={schedule}
+              departure_station_name={searchRequestDto.departure_station_name}
+              arrival_station_name={searchRequestDto.arrival_station_name}
+            />
+          );
         })}
         <ReactPaginate
           pageCount={Math.ceil(schedules.length / perPage)}
           marginPagesDisplayed={1}
           pageRangeDisplayed={2}
-          onPageChange={handlePageChange} // クリック時のfunction
+          onPageChange={handlePageChange}
           previousLabel={"前へ"}
           nextLabel={"次へ"}
           containerClassName="flex justify-center space-x-2"

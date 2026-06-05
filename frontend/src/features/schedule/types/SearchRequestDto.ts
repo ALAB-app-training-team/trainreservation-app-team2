@@ -1,6 +1,6 @@
 export type SearchRequestDto = {
     time: string;
     date: string;
-    departureStation: string;
-    arrivalStation: string;
+    departure_station_name: string;
+    arrival_station_name: string;
 }

@@ -17,8 +17,8 @@ export function SearchResult() {
   const searchRequestDto: SearchRequestDto = {
     time,
     date,
-    departureStation,
-    arrivalStation,
+    departure_station_name: departureStation,
+    arrival_station_name: arrivalStation,
   };
 
   return (

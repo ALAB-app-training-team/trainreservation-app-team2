@@ -1,9 +1,17 @@
 import { PiTrainBold } from "react-icons/pi";
 import type { SearchResponseDto } from "../../types/SearchResponseDto";
 
-type ScheduleItemProps = { schedule: SearchResponseDto };
+type ScheduleItemProps = {
+  schedule: SearchResponseDto;
+  departure_station_name: string;
+  arrival_station_name: string;
+};
 
-export function ScheduleItem({ schedule: schedule }: ScheduleItemProps) {
+export function ScheduleItem({
+  schedule,
+  departure_station_name,
+  arrival_station_name,
+}: ScheduleItemProps) {
   return (
     <>
       <div className="flex justify-between w-full p-8 border-2 rounded-2xl border-primary-transparent">
@@ -26,17 +34,13 @@ export function ScheduleItem({ schedule: schedule }: ScheduleItemProps) {
             );
           })()}
           <div className="text-left">
-            <div className="text-2xl font-black">
-              {schedule.departure_time}
-            </div>
-            <div>{schedule.departure_station_name}</div>
+            <div className="text-2xl font-black">{schedule.departure_time}</div>
+            <div>{departure_station_name}</div>
           </div>
         </div>
         <div className="text-left">
-          <div className="text-2xl font-black">
-            {schedule.arrival_time}
-          </div>
-          <div>{schedule.arrival_station_name}</div>
+          <div className="text-2xl font-black">{schedule.arrival_time}</div>
+          <div>{arrival_station_name}</div>
         </div>
       </div>
     </>
