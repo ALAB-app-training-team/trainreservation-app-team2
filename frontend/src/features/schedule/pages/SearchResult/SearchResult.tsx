@@ -1,26 +1,21 @@
-import { Suspense, useState } from "react";
+import { Suspense } from "react";
 import "tailwindcss";
+import { DepartureDateAndTimePicker } from "../../components/DepartureDateAndTimePicker/DepartureDateAndTimePicker";
 import { ScheduleList } from "../../components/ScheduleList/ScheduleList";
 import { ScheduleListSkeleton } from "../../components/ScheduleList/ScheduleListSkeleton";
-import { DepartureDateAndTimePicker } from "../../components/DepartureDateAndTimePicker/DepartureDateAndTimePicker";
-import type { SearchRequestDto } from "../../types/SearchRequestDto";
+import useSearchRequestDto from "../../hooks/useSearchRequestDto";
 
 export function SearchResult() {
-  // TODO: 検索画面ができたら、useLocationで取り出すようにする
-  const [time, setTime] = useState<string>("12:00");
-  const [date, setDate] = useState<string>("2026-02-05");
-  const [departureStation, setDepartureStation] = useState<string>("東京");
-  const [arrivalStation, setArrivalStation] = useState<string>("上野");
-  // const [time, setTime] = useState<string>("");
-  // const [date, setDate] = useState<string>("");
-  // const [departureStation, setDepartureStation] = useState<string>("");
-  // const [arrivalStation, setArrivalStation] = useState<string>("");
-  const searchRequestDto: SearchRequestDto = {
+  // TODO: 検索画面ができたら検索画面で生成する
+  const {
     time,
     date,
-    departure_station_name: departureStation,
-    arrival_station_name: arrivalStation,
-  };
+    departureStation,
+    arrivalStation,
+    setTime,
+    setDate,
+    searchRequestDto,
+  } = useSearchRequestDto();
 
   return (
     <>
