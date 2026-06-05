@@ -25,7 +25,7 @@ export function SearchResult() {
     <>
       <div className="flex justify-center">
         <div className="w-full max-w-7xl flex flex-col gap-4">
-          <h1 className="text-left">
+          <h1 className="text-left !text-3xl !mb-0">
             {departureStation}→{arrivalStation}
           </h1>
           <div className="flex flex-col md:flex-row justify-between bg-primary-light rounded-2xl p-8 gap-4">
