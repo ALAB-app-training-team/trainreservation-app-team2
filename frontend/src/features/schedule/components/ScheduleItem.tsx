@@ -14,7 +14,7 @@ export function ScheduleItem({
 }: ScheduleItemProps) {
   return (
     <>
-      <div className="flex flex-col md:flex-row justify-start items-start md:items-center w-full p-8 border-2 rounded-2xl border-primary-transparent gap-4">
+      <div className="flex flex-col md:flex-row justify-start items-start md:items-center w-full p-8 border-2 rounded-2xl border-primary-light gap-4">
         <div className="flex gap-4">
           <div className="flex items-center">
             <div className="flex justify-center items-center w-8 h-8 p-0.5 text-2xl rounded-md bg-primary text-white">
@@ -39,7 +39,7 @@ export function ScheduleItem({
             <div className="text-2xl font-black">{schedule.departure_time}</div>
             <div>{departure_station_name}</div>
           </div>
-          <div className="flex-1 h-0.5 bg-primary-transparent" />
+          <div className="flex-1 h-0.5 bg-primary-light" />
           <div className="text-left">
             <div className="text-2xl font-black">{schedule.arrival_time}</div>
             <div>{arrival_station_name}</div>

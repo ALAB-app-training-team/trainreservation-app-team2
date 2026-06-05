@@ -24,7 +24,7 @@ export function SearchResult() {
           <h1 className="text-left !text-3xl !m-0">
             {departureStation}→{arrivalStation}
           </h1>
-          <div className="flex flex-col md:flex-row justify-between bg-primary-light rounded-2xl p-8 gap-4">
+          <div className="flex flex-col md:flex-row justify-between bg-primary-lighter rounded-2xl p-8 gap-4">
             <DepartureDateAndTimePicker
               id="date"
               label="出発日"

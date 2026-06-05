@@ -42,10 +42,10 @@ export function ScheduleList({ searchRequestDto }: ScheduleListProps) {
           previousLabel={"前へ"}
           nextLabel={"次へ"}
           containerClassName="flex justify-center space-x-2"
-          pageLinkClassName="border-2 border-primary-transparent rounded-lg px-4 py-2 cursor-pointer"
+          pageLinkClassName="border-2 border-primary-light rounded-lg px-4 py-2 cursor-pointer"
           activeLinkClassName="bg-primary text-white cursor-not-allowed"
-          previousLinkClassName="border-2 border-primary-transparent rounded-lg px-4 py-2 cursor-pointer"
-          nextLinkClassName="border-2 border-primary-transparent rounded-lg px-4 py-2 cursor-pointer"
+          previousLinkClassName="border-2 border-primary-light rounded-lg px-4 py-2 cursor-pointer"
+          nextLinkClassName="border-2 border-primary-light rounded-lg px-4 py-2 cursor-pointer"
           disabledLinkClassName="bg-gray-300 cursor-not-allowed"
         />
       </div>
