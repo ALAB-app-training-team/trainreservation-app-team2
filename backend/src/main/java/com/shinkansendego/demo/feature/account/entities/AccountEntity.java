@@ -10,9 +10,9 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @Builder
 public class AccountEntity {
-        private String id;
-        private String name;
-        private String mail;
-        private String password;
-        private String pay_token;
+    private String id;
+    private String name;
+    private String mail;
+    private String password;
+    private String pay_token;
 }

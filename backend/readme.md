@@ -15,7 +15,7 @@
 ## 初期作成の方針
 
 - `backend/Dockerfile.gradle` は `backend/` 直下に Gradle プロジェクトがある想定です
-  - 例: `gradlew`, `gradle/`, `build.gradle` または `build.gradle.kts`, `settings.gradle*`, `src/`
+    - 例: `gradlew`, `gradle/`, `build.gradle` または `build.gradle.kts`, `settings.gradle*`, `src/`
 - Spring Initializr で生成したプロジェクトを `backend/` 直下に配置してください（サブディレクトリに入れるとDockerfileのCOPYが合いません）
 
 ## ポート
@@ -25,9 +25,9 @@
 ## Dockerfile について
 
 - `Dockerfile.stub`:
-  - 実習の最初に、BE未実装でもデプロイの流れだけ確認したいとき用
+    - 実習の最初に、BE未実装でもデプロイの流れだけ確認したいとき用
 - `Dockerfile.gradle`:
-  - Spring Boot の Gradle ビルド（`bootJar`）を実行して jar を起動します
+    - Spring Boot の Gradle ビルド（`bootJar`）を実行して jar を起動します
 
 ## よくある注意
 
@@ -45,11 +45,11 @@
 
 App Runner には以下の環境変数が自動設定されます:
 
-| 環境変数 | 内容 | 例 |
-|---------|------|-----|
-| `DB_ENDPOINT` | RDS のホスト名 | `my-app-postgres.xxxx.ap-northeast-1.rds.amazonaws.com` |
-| `DB_NAME` | データベース名 | `postgres` |
-| `DB_SECRET_JSON` | Secrets Manager の JSON | (下記参照) |
+| 環境変数             | 内容                     | 例                                                       |
+|------------------|------------------------|---------------------------------------------------------|
+| `DB_ENDPOINT`    | RDS のホスト名              | `my-app-postgres.xxxx.ap-northeast-1.rds.amazonaws.com` |
+| `DB_NAME`        | データベース名                | `postgres`                                              |
+| `DB_SECRET_JSON` | Secrets Manager の JSON | (下記参照)                                                  |
 
 ### `DB_SECRET_JSON` の構造
 
