@@ -1,5 +1,6 @@
 package com.shinkansendego.demo.feature.schedule.repositories;
 
+import com.shinkansendego.demo.feature.schedule.dtos.DepartureArrivalTimeDto;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.mybatis.spring.boot.test.autoconfigure.MybatisTest;
@@ -22,14 +23,15 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 @Testcontainers
 @Sql(scripts = "classpath:com/shinkansendego/demo/feature/schedule/sql/SectionKmTestData.sql")
 public class SectionKmRepositoryTest {
+    @Autowired
+    private SectionKmRepository repo;
+
     // テスト用DB作成
     @Container
     static PostgreSQLContainer<?> postgres = new PostgreSQLContainer<>("postgres:16")
             .withDatabaseName("test")
             .withUsername("user")
             .withPassword("pass");
-    @Autowired
-    private SectionKmRepository repo;
 
     @DynamicPropertySource
     static void configure(DynamicPropertyRegistry registry) {
@@ -40,17 +42,31 @@ public class SectionKmRepositoryTest {
 
     @Test
     @DisplayName("始点駅コードから区間コードを取得できる")
-    void findSectionCdByStartStation() {
+    void findSectionCdByStartStationCd() {
         List<String> expected = Arrays.asList("TEST1", "TEST2");
-        List<String> actual = repo.findSectionCdByStartStation("EKI01");
+        List<String> actual = repo.findSectionCdByStartStationCd("EKI01");
         assertEquals(expected, actual);
     }
 
     @Test
+    @DisplayName("テーブルに存在しない始点駅コードを検索した場合、空のリストが返却されるか")
+    void returnEmptyListWhenNotExistStartStationCd(){
+        List<String> actual = repo.findSectionCdByStartStationCd("99999");
+        assertEquals(0,actual.size());
+    }
+
+    @Test
     @DisplayName("終点駅コードから区間コードを取得できる")
-    void findSectionCdByGoalStation() {
+    void findSectionCdByGoalStationCd() {
         List<String> expected = Arrays.asList("TEST2", "TEST3");
-        List<String> actual = repo.findSectionCdByGoalStation("EKI03");
+        List<String> actual = repo.findSectionCdByGoalStationCd("EKI03");
         assertEquals(expected, actual);
+    }
+
+    @Test
+    @DisplayName("テーブルに存在しない終点駅コードを検索した場合、空のリストが返却されるか")
+    void returnEmptyListWhenNotExistGoalStationCd(){
+        List<String> actual = repo.findSectionCdByGoalStationCd("99999");
+        assertEquals(0,actual.size());
     }
 }

@@ -7,7 +7,7 @@ import java.util.List;
 
 @Mapper
 public interface SectionKmRepository {
-    List<String> findSectionCdByStartStation(@Param("start_station_cd") String start_station_cd);
+    List<String> findSectionCdByStartStationCd(@Param("start_station_cd") String start_station_cd);
 
-    List<String> findSectionCdByGoalStation(@Param("goal_station_cd") String goal_station_cd);
+    List<String> findSectionCdByGoalStationCd(@Param("goal_station_cd") String goal_station_cd);
 }

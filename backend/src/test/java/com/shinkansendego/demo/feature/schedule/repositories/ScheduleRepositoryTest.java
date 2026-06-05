@@ -1,5 +1,6 @@
 package com.shinkansendego.demo.feature.schedule.repositories;
 
+import com.shinkansendego.demo.feature.schedule.dtos.DepartureArrivalTimeDto;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.mybatis.spring.boot.test.autoconfigure.MybatisTest;
@@ -12,21 +13,25 @@ import org.testcontainers.containers.PostgreSQLContainer;
 import org.testcontainers.junit.jupiter.Container;
 import org.testcontainers.junit.jupiter.Testcontainers;
 
+import java.util.List;
+
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNull;
 
 @MybatisTest
 @AutoConfigureTestDatabase(replace = AutoConfigureTestDatabase.Replace.NONE)
 @Testcontainers
 @Sql(scripts = {"classpath:com/shinkansendego/demo/feature/schedule/sql/TrainTypeTestData.sql", "classpath:com/shinkansendego/demo/feature/schedule/sql/ScheduleTestData.sql"})
 public class ScheduleRepositoryTest {
+    @Autowired
+    private ScheduleRepository repo;
+
     // テスト用DB作成
     @Container
     static PostgreSQLContainer<?> postgres = new PostgreSQLContainer<>("postgres:16")
             .withDatabaseName("test")
             .withUsername("user")
             .withPassword("pass");
-    @Autowired
-    private ScheduleRepository repo;
 
     @DynamicPropertySource
     static void configure(DynamicPropertyRegistry registry) {
@@ -41,5 +46,12 @@ public class ScheduleRepositoryTest {
         String expected = "やまびこ11号";
         String actual = repo.findTrainTypeNameByScheduleCd("TEST06");
         assertEquals(expected, actual);
+    }
+
+    @Test
+    @DisplayName("テーブルに存在しないダイヤコードを検索した場合、Nullが返却されるか")
+    void returnNullWhenNotExistScheduleCd(){
+        String actual = repo.findTrainTypeNameByScheduleCd("99999");
+        assertNull(actual);
     }
 }

@@ -24,14 +24,15 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 @Testcontainers
 @Sql(scripts = "classpath:com/shinkansendego/demo/feature/schedule/sql/DepartureArrivalTimeTestData.sql")
 public class DepartureArrivalTimeRepositoryTest {
+    @Autowired
+    private DepartureArrivalTimeRepository repo;
+
     // テスト用DB作成
     @Container
     static PostgreSQLContainer<?> postgres = new PostgreSQLContainer<>("postgres:16")
             .withDatabaseName("test")
             .withUsername("user")
             .withPassword("pass");
-    @Autowired
-    private DepartureArrivalTimeRepository repo;
 
     @DynamicPropertySource
     static void configure(DynamicPropertyRegistry registry) {
@@ -52,5 +53,12 @@ public class DepartureArrivalTimeRepositoryTest {
                         "TEST17", LocalTime.of(9, 8, 0), LocalTime.of(9, 13, 0)));
         List<DepartureArrivalTimeDto> actual = repo.findScheduleBySectionKmCd("TEST2");
         assertEquals(expected, actual);
+    }
+
+    @Test
+    @DisplayName("テーブルに存在しない区間コードを検索した場合、空のリストが返却されるか")
+    void returnEmptyListWhenNotExistSectionCd(){
+        List<DepartureArrivalTimeDto> actual = repo.findScheduleBySectionKmCd("99999");
+        assertEquals(0,actual.size());
     }
 }

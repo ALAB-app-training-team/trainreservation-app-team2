@@ -13,20 +13,22 @@ import org.testcontainers.junit.jupiter.Container;
 import org.testcontainers.junit.jupiter.Testcontainers;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNull;
 
 @MybatisTest
 @AutoConfigureTestDatabase(replace = AutoConfigureTestDatabase.Replace.NONE)
 @Testcontainers
 @Sql(scripts = "classpath:com/shinkansendego/demo/feature/schedule/sql/StationTestData.sql")
 public class StationRepositoryTest {
+    @Autowired
+    private StationRepository repo;
+
     // テスト用DB作成
     @Container
     static PostgreSQLContainer<?> postgres = new PostgreSQLContainer<>("postgres:16")
             .withDatabaseName("test")
             .withUsername("user")
             .withPassword("pass");
-    @Autowired
-    private StationRepository repo;
 
     @DynamicPropertySource
     static void configure(DynamicPropertyRegistry registry) {
@@ -40,5 +42,12 @@ public class StationRepositoryTest {
     void FindStationCdByStationName() {
         String actual = repo.findStationCdByName("TestStation02");
         assertEquals("Test2", actual);
+    }
+
+    @Test
+    @DisplayName("テーブルに存在しない駅コードを検索した場合、Nullが返却されるか")
+    void returnNullWhenNotExistStationCd(){
+        String actual = repo.findStationCdByName("99999");
+        assertNull(actual);
     }
 }
