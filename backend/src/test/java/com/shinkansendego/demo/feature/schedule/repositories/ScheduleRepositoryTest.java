@@ -1,6 +1,5 @@
 package com.shinkansendego.demo.feature.schedule.repositories;
 
-import com.shinkansendego.demo.feature.schedule.dtos.DepartureArrivalTimeDto;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.mybatis.spring.boot.test.autoconfigure.MybatisTest;
@@ -13,16 +12,12 @@ import org.testcontainers.containers.PostgreSQLContainer;
 import org.testcontainers.junit.jupiter.Container;
 import org.testcontainers.junit.jupiter.Testcontainers;
 
-import java.time.LocalTime;
-import java.util.Arrays;
-import java.util.List;
-
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
 @MybatisTest
 @AutoConfigureTestDatabase(replace = AutoConfigureTestDatabase.Replace.NONE)
 @Testcontainers
-@Sql(scripts = {"classpath:com/shinkansendego/demo/feature/schedule/sql/TrainTypeTestData.sql","classpath:com/shinkansendego/demo/feature/schedule/sql/ScheduleTestData.sql"})
+@Sql(scripts = {"classpath:com/shinkansendego/demo/feature/schedule/sql/TrainTypeTestData.sql", "classpath:com/shinkansendego/demo/feature/schedule/sql/ScheduleTestData.sql"})
 public class ScheduleRepositoryTest {
     // テスト用DB作成
     @Container
@@ -43,7 +38,7 @@ public class ScheduleRepositoryTest {
     @Test
     @DisplayName("ダイヤコードから車種名を取得できる")
     void findScheduleAndTrainTypeByScheduleCd() {
-        String expected ="やまびこ11号";
+        String expected = "やまびこ11号";
         String actual = repo.findTrainTypeNameByScheduleCd("TEST06");
         assertEquals(expected, actual);
     }

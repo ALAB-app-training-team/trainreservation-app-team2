@@ -45,11 +45,11 @@ public class DepartureArrivalTimeRepositoryTest {
     void findScheduleBySectionKmCd() {
         List<DepartureArrivalTimeDto> expected = Arrays.asList(
                 new DepartureArrivalTimeDto(
-                "TEST04", LocalTime.of(6,40, 0), LocalTime.of(6,45, 0)),
+                        "TEST04", LocalTime.of(6, 40, 0), LocalTime.of(6, 45, 0)),
                 new DepartureArrivalTimeDto(
-                        "TEST10", LocalTime.of(7,44, 0), LocalTime.of(7,49, 0)),
+                        "TEST10", LocalTime.of(7, 44, 0), LocalTime.of(7, 49, 0)),
                 new DepartureArrivalTimeDto(
-                        "TEST17", LocalTime.of(9,8, 0), LocalTime.of(9,13, 0)));
+                        "TEST17", LocalTime.of(9, 8, 0), LocalTime.of(9, 13, 0)));
         List<DepartureArrivalTimeDto> actual = repo.findScheduleBySectionKmCd("TEST2");
         assertEquals(expected, actual);
     }
