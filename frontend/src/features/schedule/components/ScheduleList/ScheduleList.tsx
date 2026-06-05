@@ -34,6 +34,56 @@ export function ScheduleList({ searchRequestDto }: ScheduleListProps) {
       departure_time: "06:40",
       arrival_time: "06:47",
     },
+    {
+      train_type_name: "やまびこ41号",
+      departure_time: "06:40",
+      arrival_time: "06:47",
+    },
+    {
+      train_type_name: "やまびこ41号",
+      departure_time: "06:40",
+      arrival_time: "06:47",
+    },
+    {
+      train_type_name: "やまびこ41号",
+      departure_time: "06:40",
+      arrival_time: "06:47",
+    },
+    {
+      train_type_name: "やまびこ41号",
+      departure_time: "06:40",
+      arrival_time: "06:47",
+    },
+    {
+      train_type_name: "やまびこ41号",
+      departure_time: "06:40",
+      arrival_time: "06:47",
+    },
+    {
+      train_type_name: "やまびこ41号",
+      departure_time: "06:40",
+      arrival_time: "06:47",
+    },
+    {
+      train_type_name: "やまびこ41号",
+      departure_time: "06:40",
+      arrival_time: "06:47",
+    },
+    {
+      train_type_name: "やまびこ41号",
+      departure_time: "06:40",
+      arrival_time: "06:47",
+    },
+    {
+      train_type_name: "やまびこ41号",
+      departure_time: "06:40",
+      arrival_time: "06:47",
+    },
+    {
+      train_type_name: "やまびこ41号",
+      departure_time: "06:40",
+      arrival_time: "06:47",
+    },
   ]);
 
   const [offset, setOffset] = useState(0);
