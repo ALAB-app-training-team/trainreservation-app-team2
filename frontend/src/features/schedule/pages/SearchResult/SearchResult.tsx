@@ -28,8 +28,8 @@ export function SearchResult() {
           <h1 className="text-left">
             {departureStation}→{arrivalStation}
           </h1>
-          <div className="flex justify-between bg-primary-light rounded-2xl p-8 gap-4">
-            <div className="flex flex-col gap-2 w-1/2 items-start">
+          <div className="flex flex-col md:flex-row justify-between bg-primary-light rounded-2xl p-8 gap-4">
+            <div className="flex flex-col gap-2 w-full items-start">
               <label htmlFor="date">出発日</label>
               <input
                 id="date"
@@ -39,7 +39,7 @@ export function SearchResult() {
                 onChange={(e) => setDate(e.target.value)}
               ></input>
             </div>
-            <div className="flex flex-col gap-2 w-1/2 items-start">
+            <div className="flex flex-col gap-2 w-full items-start">
               <label htmlFor="time">出発時刻</label>
               <input
                 id="time"
