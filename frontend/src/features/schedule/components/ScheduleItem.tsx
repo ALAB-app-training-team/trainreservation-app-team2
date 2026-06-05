@@ -1,5 +1,5 @@
 import { PiTrainBold } from "react-icons/pi";
-import type { SearchResponseDto } from "../../types/SearchResponseDto";
+import type { SearchResponseDto } from "../types/SearchResponseDto";
 
 type ScheduleItemProps = {
   schedule: SearchResponseDto;
