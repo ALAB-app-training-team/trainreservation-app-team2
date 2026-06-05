@@ -7,10 +7,10 @@ function App() {
   return (
     <>
       <div className="min-h-screen">
-        <div className="sticky top-0 z-10 bg-white">
-          <Header />
-        </div>
         <BrowserRouter>
+          <div className="sticky top-0 z-10 bg-white">
+            <Header />
+          </div>
           <Routes>
             <Route path="/" element={<SearchResult />} />
             <Route path="/searchResult" element={<SearchResult />} />
