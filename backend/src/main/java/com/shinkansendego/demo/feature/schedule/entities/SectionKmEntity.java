@@ -1,14 +1,12 @@
 package com.shinkansendego.demo.feature.schedule.entities;
 
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import lombok.*;
 
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
-@Builder
+@Getter
+@Setter
 public class SectionKmEntity {
     private String section_cd;
     private String start_station_cd;

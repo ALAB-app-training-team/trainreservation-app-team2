@@ -1,13 +1,13 @@
 package com.shinkansendego.demo.feature.schedule.dtos;
 
-import lombok.Data;
-import lombok.Getter;
-import lombok.Setter;
+import lombok.*;
 
 import java.time.LocalDate;
 import java.time.LocalTime;
 
 @Data
+@NoArgsConstructor
+@AllArgsConstructor
 @Getter
 @Setter
 public class ScheduleRequestDto {
