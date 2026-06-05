@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis/org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.shinkansendego.demo.features.schedule.repositories.DepartureArrivalTimeRepository">
+    <select id="findScheduleBySectionKmCd"
+            resultType="com.shinkansendego.demo.features.schedule.dtos.DepartureArrivalTimeDto">
+        SELECT schedule_cd,departure_time,arrival_time
+        FROM M_DepartureArrivalTime WHERE section_cd=#{section_cd};
+    </select>
+</mapper>
