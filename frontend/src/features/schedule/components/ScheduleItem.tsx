@@ -33,6 +33,12 @@ export function ScheduleItem({
     return `${hours}h${String(minutes).padStart(2, "0")}m`;
   };
 
+  const formatTime = (timeString: string) => {
+    if (!timeString) return "";
+    const [hours, minutes] = timeString.split(":");
+    return `${hours}:${minutes}`;
+  };
+
   return (
     <>
       <div className="flex flex-col md:flex-row justify-start items-start md:items-center w-full p-8 border-2 rounded-2xl border-primary-light gap-4">
@@ -57,7 +63,9 @@ export function ScheduleItem({
         </div>
         <div className="flex w-full justify-between items-center gap-4 flex-1">
           <div className="text-left">
-            <div className="text-2xl font-black">{schedule.departure_time}</div>
+            <div className="text-2xl font-black">
+              {formatTime(schedule.departure_time)}
+            </div>
             <div>{departure_station_name}</div>
           </div>
           <div className="flex-1 flex items-center gap-2 text-primary">
@@ -74,7 +82,9 @@ export function ScheduleItem({
             </div>
           </div>
           <div className="text-left">
-            <div className="text-2xl font-black">{schedule.arrival_time}</div>
+            <div className="text-2xl font-black">
+              {formatTime(schedule.arrival_time)}
+            </div>
             <div>{arrival_station_name}</div>
           </div>
         </div>

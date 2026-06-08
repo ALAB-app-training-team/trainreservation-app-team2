@@ -7,10 +7,10 @@ import type { SearchResponseDto } from "../types/SearchResponseDto";
 
 export function useSchedules(searchRequestDto: SearchRequestDto) {
     const { data } = useSuspenseQuery({
-        queryKey: ["schedule"],
+        queryKey: ["schedule", searchRequestDto],
         queryFn: async () => {
             console.log(API)
-            await new Promise(resolve => setTimeout(resolve, 5000))
+            // await new Promise(resolve => setTimeout(resolve, 5000))
             const response = await axios.get<SearchResponseDto[]>(API, {
                 params: searchRequestDto,
             });
