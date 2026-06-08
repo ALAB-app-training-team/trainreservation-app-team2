@@ -1,13 +1,9 @@
-# ----build stage(Gradle)----
-FROM gradle
-: 8.10 .1 - jdk21 - alpine AS build
-WORKDIR / workspace
+# ---- build stage (Gradle) ----
+FROM gradle:8.10.1-jdk21-alpine AS build
+WORKDIR /workspace
 
-#
-Gradle Wrapper
-& 設定ファイル類
-COPY gradlew
-. /
+# Gradle Wrapper & 設定ファイル類
+COPY gradlew ./
 COPY gradle gradle
 COPY settings.gradle settings.gradle
 COPY build.gradle build.gradle
