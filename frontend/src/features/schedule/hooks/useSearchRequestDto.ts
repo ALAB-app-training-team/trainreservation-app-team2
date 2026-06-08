@@ -1,7 +1,7 @@
 import { useState } from "react";
 import type { SearchRequestDto } from "../types/SearchRequestDto";
 
-export default function useSearchRequestDto() {
+export function useSearchRequestDto() {
     // TODO: 検索画面ができたら、useLocationで取り出すようにする
     const [time, setTime] = useState<string>("12:00");
     const [date, setDate] = useState<string>("2026-02-05");

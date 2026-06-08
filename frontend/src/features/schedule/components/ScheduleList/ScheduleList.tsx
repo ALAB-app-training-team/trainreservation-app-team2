@@ -3,14 +3,14 @@ import { AiOutlineExclamationCircle } from "react-icons/ai";
 import _ReactPaginate from "react-paginate";
 const ReactPaginate = (_ReactPaginate as any).default || _ReactPaginate;
 import "tailwindcss";
-import useSchedules from "../../hooks/useSchedules";
+import { useSchedules } from "../../hooks/useSchedules";
 import type { SearchRequestDto } from "../../types/SearchRequestDto";
 import { ScheduleItem } from "../ScheduleItem";
 
 type ScheduleListProps = { searchRequestDto: SearchRequestDto };
 
 export function ScheduleList({ searchRequestDto }: ScheduleListProps) {
-  const { schedules } = useSchedules();
+  const { schedules } = useSchedules(searchRequestDto);
 
   const [offset, setOffset] = useState(0);
   const perPage: number = 10;

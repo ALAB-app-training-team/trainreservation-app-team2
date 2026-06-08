@@ -3,7 +3,7 @@ import "tailwindcss";
 import { DepartureDateAndTimePicker } from "../components/DepartureDateAndTimePicker";
 import { ScheduleList } from "../components/ScheduleList/ScheduleList";
 import { ScheduleListSkeleton } from "../components/ScheduleList/ScheduleListSkeleton";
-import useSearchRequestDto from "../hooks/useSearchRequestDto";
+import { useSearchRequestDto } from "../hooks/useSearchRequestDto";
 
 export function SearchResult() {
   // TODO: 検索画面ができたら検索画面で生成する
@@ -40,9 +40,9 @@ export function SearchResult() {
               setValue={setTime}
             />
           </div>
-          {/* <Suspense fallback={<ScheduleListSkeleton />}> */}
-          <ScheduleList searchRequestDto={searchRequestDto} />
-          {/* </Suspense> */}
+          <Suspense fallback={<ScheduleListSkeleton />}>
+            <ScheduleList searchRequestDto={searchRequestDto} />
+          </Suspense>
         </div>
       </div>
     </>
