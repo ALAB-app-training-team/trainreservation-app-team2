@@ -14,7 +14,7 @@ import org.springframework.web.bind.annotation.RestController;
 import java.util.List;
 
 @RestController
-@RequestMapping(path = "api/shikansen-schedule")
+@RequestMapping(path = "api/shinkansen-schedule")
 public class ScheduleController {
     private final ScheduleService scheduleService;
 
@@ -24,7 +24,7 @@ public class ScheduleController {
     }
 
     @GetMapping
-    public ResponseEntity<List<ScheduleResponseDto>> getSchedule(@Valid @RequestBody ScheduleRequestDto request) {
+    public ResponseEntity<List<ScheduleResponseDto>> getSchedule(@Valid ScheduleRequestDto request) {
         List<ScheduleResponseDto> response = scheduleService.getSearchedScheduleByStation(request);
         return ResponseEntity.ok(response);
     }

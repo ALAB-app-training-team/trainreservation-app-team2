@@ -1,6 +1,5 @@
 package com.shinkansendego.demo.features.schedule.dtos;
 
-import com.fasterxml.jackson.annotation.JsonFormat;
 import jakarta.validation.constraints.NotNull;
 import lombok.*;
 
@@ -14,7 +13,6 @@ import java.time.LocalTime;
 @Setter
 public class ScheduleRequestDto {
     @NotNull
-    @JsonFormat(pattern = "yyyy-MM-dd")
     private LocalDate date;
     @NotNull
     private LocalTime time;
