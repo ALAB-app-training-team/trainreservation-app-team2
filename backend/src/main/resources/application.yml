@@ -3,8 +3,8 @@ spring:
     name: demo
   datasource:
     url: jdbc:postgresql://${DB_ENDPOINT}:5432/${DB_NAME}
-    username: ${DB_USERNAME:appuser}
-    password: ${DB_PASSWORD:}
+    username: appuser
+    password: A6U.4rITJ^bYFNHp7E9,bHyjk,qC6b
 springdoc:
   api-docs:
     enabled: false
