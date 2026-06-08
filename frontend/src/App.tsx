@@ -1,5 +1,4 @@
 import { createBrowserRouter, RouterProvider, Outlet } from "react-router-dom";
-import "./App.css";
 import { SearchResult } from "./features/schedule/pages/SearchResult";
 import { Error } from "./shared/pages/Error";
 import { Header } from "./shared/components/Header";
