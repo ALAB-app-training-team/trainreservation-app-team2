@@ -13,8 +13,7 @@ RUN chmod +x gradlew
 RUN ./ gradlew-- no -daemon dependencies || true
 
 # ソース投入して本ビルド
-COPY src
-src
+COPY src src
 RUN./gradlew --no-daemon clean bootJar -x test
 
 # ---- run stage (JRE) ----
