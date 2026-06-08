@@ -1,7 +1,7 @@
 name: Build & Deploy Frontend to S3/CloudFront
 
 on:
-push:
+  push:
     branches: [main]
     paths:
       - "frontend/**"
@@ -62,7 +62,7 @@ jobs:
         run: |
           npm ci
           npm run build
-        env: 
+        env:
           VITE_API_BASE_URL: ${{ secrets.VITE_API_BASE_URL }}
 
       - name: Lookup S3 bucket & CloudFront URL from CDK outputs
