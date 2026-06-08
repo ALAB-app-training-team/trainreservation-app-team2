@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis/org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.shinkansendego.demo.features.schedule.repositories.ScheduleRepository">
+    <select id="findTrainTypeNameByScheduleCd" resultType="String" parameterType="String">
+        SELECT t.name
+        FROM M_Schedule AS s
+        LEFT OUTER JOIN M_TrainType AS t
+        ON s.train_type_cd=t.train_type_cd
+        WHERE s.schedule_cd=#{schedule_cd};
+    </select>
+</mapper>
