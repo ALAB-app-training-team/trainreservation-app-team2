@@ -12,6 +12,26 @@ export function ScheduleItem({
   departure_station_name,
   arrival_station_name,
 }: ScheduleItemProps) {
+  const calculateDuration = (
+    departureTime: string,
+    arrivalTime: string,
+  ): string => {
+    const [depHours, depMinutes] = (departureTime || "0:0")
+      .split(":")
+      .map(Number);
+    const [arrHours, arrMinutes] = (arrivalTime || "0:0")
+      .split(":")
+      .map(Number);
+
+    const totalMinutes =
+      arrHours * 60 + arrMinutes - (depHours * 60 + depMinutes);
+
+    const hours = Math.floor(totalMinutes / 60);
+    const minutes = totalMinutes % 60;
+
+    return `${hours}h${String(minutes).padStart(2, "0")}m`;
+  };
+
   return (
     <>
       <div className="flex flex-col md:flex-row justify-start items-start md:items-center w-full p-8 border-2 rounded-2xl border-primary-light gap-4">
@@ -39,7 +59,9 @@ export function ScheduleItem({
             <div className="text-2xl font-black">{schedule.departure_time}</div>
             <div>{departure_station_name}</div>
           </div>
-          <div className="flex-1 h-0.5 bg-primary-light" />
+          <div className="flex-1 h-0.5 bg-primary-light">
+            {calculateDuration(schedule.departure_time, schedule.arrival_time)}
+          </div>
           <div className="text-left">
             <div className="text-2xl font-black">{schedule.arrival_time}</div>
             <div>{arrival_station_name}</div>
