@@ -39,14 +39,14 @@ public class ScheduleService {
         String departureStationCd = stationRepository.findStationCdByName(request.getDeparture_station_name());
         String arrivalStationCd = stationRepository.findStationCdByName(request.getArrival_station_name());
 
-        if(departureStationCd==null|arrivalStationCd==null){
+        if (departureStationCd == null || arrivalStationCd == null) {
             throw new IllegalArgumentException("StationCD is Not found");
         }
 
         List<String> departureSectionCdList = sectionKmRepository.findSectionCdByStartStationCd(departureStationCd);
         List<String> arrivalSectionCdList = sectionKmRepository.findSectionCdByGoalStationCd(arrivalStationCd);
 
-        if(departureSectionCdList.isEmpty()|arrivalSectionCdList.isEmpty()){
+        if (departureSectionCdList.isEmpty() || arrivalSectionCdList.isEmpty()) {
             throw new IllegalArgumentException("SectionCD is Not found");
         }
 
@@ -68,7 +68,7 @@ public class ScheduleService {
                 if (Objects.equals(departure.getSchedule_cd(), arrival.getSchedule_cd())) {
 
                     String trainTypeName = scheduleRepository.findTrainTypeNameByScheduleCd(departure.getSchedule_cd());
-                    if(trainTypeName==null){
+                    if (trainTypeName == null) {
                         throw new IllegalArgumentException("TrainTypeName is Not found");
                     }
 

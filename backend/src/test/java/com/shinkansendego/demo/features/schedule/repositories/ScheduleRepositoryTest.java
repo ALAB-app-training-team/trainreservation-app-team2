@@ -20,15 +20,14 @@ import static org.junit.jupiter.api.Assertions.assertNull;
 @Testcontainers
 @Sql(scripts = {"classpath:com/shinkansendego/demo/features/schedule/sql/TrainTypeTestData.sql", "classpath:com/shinkansendego/demo/features/schedule/sql/ScheduleTestData.sql"})
 public class ScheduleRepositoryTest {
-    @Autowired
-    private ScheduleRepository repo;
-
     // テスト用DB作成
     @Container
     static PostgreSQLContainer<?> postgres = new PostgreSQLContainer<>("postgres:16")
             .withDatabaseName("test")
             .withUsername("user")
             .withPassword("pass");
+    @Autowired
+    private ScheduleRepository repo;
 
     @DynamicPropertySource
     static void configure(DynamicPropertyRegistry registry) {
@@ -47,7 +46,7 @@ public class ScheduleRepositoryTest {
 
     @Test
     @DisplayName("テーブルに存在しないダイヤコードを検索した場合、Nullが返却されるか")
-    void returnNullWhenNotExistScheduleCd(){
+    void returnNullWhenNotExistScheduleCd() {
         String actual = repo.findTrainTypeNameByScheduleCd("99999");
         assertNull(actual);
     }
