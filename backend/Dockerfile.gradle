@@ -1,12 +1,12 @@
 # ---- build stage (Gradle) ----
 FROM gradle:8.10.1-jdk21-alpine AS build
-WORKDIR /workspace
+WORKDIR /backend
 
 # Gradle Wrapper & 設定ファイル類
 COPY gradlew ./
 COPY gradle gradle
-COPY settings.gradle settings.gradle
-COPY build.gradle build.gradle
+COPY settings.gradle.kts* settings.gradle*
+COPY build.gradle.kts* build.gradle*
 RUN chmod +x gradlew
 
 # 依存を先取り（キャッシュ用）
@@ -29,7 +29,7 @@ EXPOSE 8080
 COPY --from=build /workspace/build/libs/*.jar /app/app.jar
 
 # App Runnerのヘルスチェックはサービス側で行うためHEALTHCHECKは不要
-# ENTRYPOINT ["sh", "-c", "java $JAVA_OPTS -jar /app/app.jar"]
-COPY entrypoint.sh /entrypoint.sh
-RUN chmod +x /entrypoint.sh
-ENTRYPOINT ["/entrypoint.sh"]
+ENTRYPOINT ["sh", "-c", "java $JAVA_OPTS -jar /app/app.jar"]
+# COPY entrypoint.sh /entrypoint.sh
+# RUN chmod +x /entrypoint.sh
+# ENTRYPOINT ["/entrypoint.sh"]
