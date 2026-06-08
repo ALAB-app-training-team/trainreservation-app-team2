@@ -1,4 +1,3 @@
-import { FiArrowRight } from "react-icons/fi";
 import { PiTrainBold } from "react-icons/pi";
 import type { SearchResponseDto } from "../types/SearchResponseDto";
 
@@ -60,18 +59,8 @@ export function ScheduleItem({
             <div className="text-2xl font-black">{schedule.departure_time}</div>
             <div>{departure_station_name}</div>
           </div>
-          <div className="flex-1 flex items-center gap-2 text-primary">
-            <div className="relative w-full border-t-4 border-dotted border-primary-light">
-              <span className="absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 bg-white px-2">
-                {calculateDuration(
-                  schedule.departure_time,
-                  schedule.arrival_time,
-                )}
-              </span>
-            </div>
-            <div className="text-2xl">
-              <FiArrowRight />
-            </div>
+          <div className="flex-1 h-0.5 bg-primary-light">
+            {calculateDuration(schedule.departure_time, schedule.arrival_time)}
           </div>
           <div className="text-left">
             <div className="text-2xl font-black">{schedule.arrival_time}</div>
