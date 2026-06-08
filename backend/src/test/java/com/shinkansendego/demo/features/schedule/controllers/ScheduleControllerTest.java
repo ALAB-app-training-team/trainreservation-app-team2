@@ -29,8 +29,10 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 @WebMvcTest(ScheduleController.class)
 public class ScheduleControllerTest {
     private final ScheduleRequestDto request = new ScheduleRequestDto();
+
     // TODO:リクエストのLocalDateとの相性が悪くエラーが出たため以下処理としたが、@Autowiredが推奨されるためいつか変更したい
     private final ObjectMapper objectMapper = new ObjectMapper();
+    private final String baseUrl = "/api/shinkansen-schedule";
     @Autowired
     private MockMvc mockMvc;
     @MockitoBean
@@ -60,13 +62,14 @@ public class ScheduleControllerTest {
     void getSchedule() throws Exception {
 
         List<ScheduleResponseDto> expectList = getExpectScheduleResponseDtosList();
+        String url = baseUrl + "?date=2026-06-01&time=12:00:00&departure_station_name=東京&arrival_station_name=上野";
 
         Mockito.when(service.getSearchedScheduleByStation(request)).thenReturn(expectList);
 
         String json = objectMapper.writeValueAsString(request);
 
         mockMvc.perform(
-                        get("/api/shikansen-schedule")
+                        get(url)
                                 .contentType(MediaType.APPLICATION_JSON)
                                 .content(json))
                 .andExpect(status().isOk())
@@ -80,10 +83,11 @@ public class ScheduleControllerTest {
     void ReturnBadRequestWhenValidationError() throws Exception {
 
         request.setArrival_station_name(null);
+        String url = baseUrl + "?date=2026-06-01&time=12:00:00&departure_station_name=東京";
 
         String json = objectMapper.writeValueAsString(request);
 
-        mockMvc.perform(get("/api/shikansen-schedule")
+        mockMvc.perform(get(url)
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(json))
                 .andExpect(status().isBadRequest());
