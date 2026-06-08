@@ -21,6 +21,8 @@ public class DataSourceConfig {
 
     @Bean
     public DataSource dataSource() throws Exception {
+        System.out.println("dataSourceConfi開始");
+        System.out.println(dbSecretJson);
         var hikari = new HikariDataSource();
         hikari.setJdbcUrl("jdbc:postgresql://" + dbEndpoint + ":5432/" + dbName);
 
@@ -30,6 +32,8 @@ public class DataSourceConfig {
             hikari.setUsername(secret.get("username").asText());
             hikari.setPassword(secret.get("password").asText());
         }
+        System.out.println(hikari.getUsername());
+        System.out.println(hikari.getPassword());
         return hikari;
     }
 }
