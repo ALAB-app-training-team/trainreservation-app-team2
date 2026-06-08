@@ -21,7 +21,6 @@ public class ScheduleService {
     private final DepartureArrivalTimeRepository departureArrivalTimeRepository;
     private final ScheduleRepository scheduleRepository;
 
-
     @Autowired
     public ScheduleService(
             StationRepository stationRepository, SectionKmRepository sectionKmRepository,
@@ -56,7 +55,7 @@ public class ScheduleService {
         for (String cd : departureSectionCdList) {
             List<DepartureArrivalTimeDto> list = departureArrivalTimeRepository.findScheduleBySectionKmCd(cd);
             List<DepartureArrivalTimeDto> filteredList = list.stream().filter(
-                    d -> d.getDeparture_time().isAfter(request.getTime()) || d.getDeparture_time().equals(request.getTime())).toList();
+                    d -> !d.getDeparture_time().isBefore(request.getTime())).toList();
             departureScheduleList.addAll(filteredList);
         }
         for (String cd : arrivalSectionCdList) {
