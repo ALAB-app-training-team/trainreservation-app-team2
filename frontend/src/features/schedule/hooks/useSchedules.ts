@@ -6,18 +6,17 @@ import type { SearchRequestDto } from "../types/SearchRequestDto";
 import type { SearchResponseDto } from "../types/SearchResponseDto";
 
 export function useSchedules(searchRequestDto: SearchRequestDto) {
-    const { data } = useSuspenseQuery({
-        queryKey: ["schedule", searchRequestDto],
-        queryFn: async () => {
-            console.log(API)
-            // await new Promise(resolve => setTimeout(resolve, 5000))
-            const response = await axios.get<SearchResponseDto[]>(API, {
-                params: searchRequestDto,
-            });
-            return response.data;
-        },
-    });
-    const [schedules, setSchedules] = useState<SearchResponseDto[]>(data);
+  const { data } = useSuspenseQuery({
+    queryKey: ["schedule", searchRequestDto],
+    queryFn: async () => {
+      // await new Promise(resolve => setTimeout(resolve, 5000))
+      const response = await axios.get<SearchResponseDto[]>(API, {
+        params: searchRequestDto,
+      });
+      return response.data;
+    },
+  });
+  const [schedules] = useState<SearchResponseDto[]>(data);
 
-    return { schedules }
+  return { schedules };
 }
