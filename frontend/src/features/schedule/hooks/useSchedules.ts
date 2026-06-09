@@ -1,4 +1,3 @@
-import { useState } from "react";
 import { useSuspenseQuery } from "@tanstack/react-query";
 import axios from "axios";
 import { API } from "../api/route";
