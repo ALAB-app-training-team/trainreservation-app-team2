@@ -1,29 +1,32 @@
 import { useState } from "react";
 import type { SearchRequestDto } from "../types/SearchRequestDto";
 
-export function useSearchRequestDto() {
-  // TODO: 検索画面ができたら、useLocationで取り出すようにする
-  const [date, setDate] = useState<string>("2026-06-01");
-  const [time, setTime] = useState<string>("12:00:00");
-  const [departureStation] = useState<string>("東京");
-  const [arrivalStation] = useState<string>("上野");
-  // const [time, setTime] = useState<string>("");
-  // const [date, setDate] = useState<string>("");
-  // const [departureStation, setDepartureStation] = useState<string>("");
-  // const [arrivalStation, setArrivalStation] = useState<string>("");
+type useSearchRequestDtoProps = { condition?: SearchRequestDto };
+
+export function useSearchRequestDto({
+  condition,
+}: useSearchRequestDtoProps = {}) {
+  const [time, setTime] = useState<string>(condition?.time ?? "");
+  const [date, setDate] = useState<string>(condition?.date ?? "");
+  const [departureStation, setDepartureStation] = useState<string>(
+    condition?.departure_station_name ?? "",
+  );
+  const [arrivalStation, setArrivalStation] = useState<string>(
+    condition?.arrival_station_name ?? "",
+  );
+
   const searchRequestDto: SearchRequestDto = {
     date,
     time,
     departure_station_name: departureStation,
     arrival_station_name: arrivalStation,
   };
+
   return {
-    time,
-    date,
-    departureStation,
-    arrivalStation,
     setTime,
     setDate,
+    setDepartureStation,
+    setArrivalStation,
     searchRequestDto,
   };
 }
