@@ -24,7 +24,7 @@ export function DepartureDateAndTimePicker({
         className="w-full bg-white p-2 rounded-xl outline-none border-2 border-transparent focus:border-primary-light"
         value={value}
         onChange={(e) => setValue(e.target.value)}
-      ></input>
+      />
     </div>
   );
 }
