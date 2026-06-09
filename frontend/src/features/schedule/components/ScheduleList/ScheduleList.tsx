@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { AiOutlineExclamationCircle } from "react-icons/ai";
 import _ReactPaginate from "react-paginate";
 const ReactPaginate = (_ReactPaginate as any).default || _ReactPaginate;
@@ -18,6 +18,10 @@ export function ScheduleList({ searchRequestDto }: ScheduleListProps) {
     let pageNumber = data["selected"];
     setOffset(pageNumber * perPage);
   };
+
+  useEffect(() => {
+    setOffset(0);
+  }, [schedules]);
 
   return (
     <>
@@ -43,6 +47,7 @@ export function ScheduleList({ searchRequestDto }: ScheduleListProps) {
               })}
             <ReactPaginate
               pageCount={Math.ceil(schedules.length / perPage)}
+              forcePage={Math.floor(offset / perPage)}
               marginPagesDisplayed={1}
               pageRangeDisplayed={2}
               onPageChange={handlePageChange}
