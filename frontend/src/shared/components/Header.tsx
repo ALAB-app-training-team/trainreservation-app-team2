@@ -14,8 +14,9 @@ export function Header() {
         新幹線でGO！
       </NavLink>
       <div className="flex-1 flex justify-end px-4">
-        {buttons.map((button) => (
+        {buttons.map((button, index) => (
           <NavLink
+            key={index}
             to={button.to}
             className={({ isActive }) =>
               `rounded-xl px-4 py-3 text-sm font-bold ${isActive ? "bg-primary text-white" : "cursor-pointer"}`
