@@ -7,11 +7,13 @@ import { Header } from "./shared/components/Header";
 function Layout() {
   return (
     <>
-      <div className="sticky top-0 z-10 bg-white">
-        <Header />
-      </div>
-      <div className="min-h-screen w-full min-w-[375px] overflow-x-auto">
-        <Outlet />
+      <div className="flex flex-col min-h-screen">
+        <div className="sticky top-0 z-10 bg-white">
+          <Header />
+        </div>
+        <div className="flex-1 w-full min-w-[375px] overflow-x-auto">
+          <Outlet />
+        </div>
       </div>
     </>
   );
