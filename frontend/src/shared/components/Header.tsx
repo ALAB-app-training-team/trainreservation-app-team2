@@ -12,7 +12,7 @@ export function Header() {
   ];
 
   return (
-    <div className="relative h-16 flex items-center justify-start gap-6 px-8 border-primary-light border-b-2">
+    <div className="relative min-h-16 flex items-center justify-start gap-6 px-8 py-2 border-primary-light border-b-2">
       <NavLink
         to="/searchSchedule"
         className="flex items-center gap-2 text-lg text-primary font-bold px-4"
