@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { useSuspenseQuery } from "@tanstack/react-query";
 import axios from "axios";
@@ -10,26 +10,26 @@ import type { Station } from "../../types/Station";
 export function SearchScheduleBody() {
   const navigate = useNavigate();
 
-  const {
-    setTime,
-    setDate,
-    setDepartureStation,
-    setArrivalStation,
-    searchRequestDto,
-  } = useSearchRequestDto();
-
   /*   const { data } = useSuspenseQuery({
     queryKey: ["station"],
     queryFn: async () => {
       const response = await axios.get<Station[]>(ENDPOINTS.STATIONS());
       return response.data;
     },
-  });
-  const [stations, setStations] = useState<Station[]>(data); */
+    });
+    const [stations, setStations] = useState<Station[]>(data); */
   const [stations, setStations] = useState<Station[]>([
     { station_cd: "tokyo", name: "東京" },
     { station_cd: "ueno", name: "上野" },
   ]);
+
+  const {
+    setTime,
+    setDate,
+    setDepartureStation,
+    setArrivalStation,
+    searchRequestDto,
+  } = useSearchRequestDto({ stations });
 
   const handleSearch = () => {
     navigate("/searchResult", { state: searchRequestDto });
