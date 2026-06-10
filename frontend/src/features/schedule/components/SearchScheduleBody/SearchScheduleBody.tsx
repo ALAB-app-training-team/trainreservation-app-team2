@@ -50,6 +50,7 @@ export function SearchScheduleBody() {
                 value={searchRequestDto.departure_station_name}
                 setValue={setDepartureStation}
               />
+              →
               <StationSelect
                 id="arrivalStation"
                 label="降車駅"
@@ -74,7 +75,12 @@ export function SearchScheduleBody() {
                 setValue={setTime}
               />
             </div>
-            <button onClick={handleSearch}>列車を検索</button>
+            <button
+              onClick={handleSearch}
+              className="rounded-lg p-2 bg-primary text-white"
+            >
+              列車を検索
+            </button>
           </div>
         </div>
       </div>

@@ -24,6 +24,7 @@ export function StationSelect({
           id={id}
           value={value}
           onChange={(e) => setValue(e.target.value)}
+          className="w-full bg-primary-light p-2 rounded-xl outline-none border-2 border-transparent focus:border-primary"
         >
           {list.map((item, index) => {
             return (
