@@ -10,23 +10,26 @@ COPY build.gradle build.gradle
 RUN chmod +x gradlew
 
 # 依存を先取り（キャッシュ用）
-RUN ./ gradlew-- no -daemon dependencies || true
+RUN ./gradlew --no-daemon dependencies || true
 
 # ソース投入して本ビルド
 COPY src src
-RUN./gradlew --no-daemon clean bootJar -x test
+RUN ./gradlew --no-daemon clean bootJar -x test
 
 # ---- run stage (JRE) ----
 FROM amazoncorretto:21-alpine
-WORKDIR / app
+WORKDIR /app
+
+# jqコマンドのインストール
+RUN apk add --no-cache jq
 
 # お好みで起動時のJVM最適化
-ENV JAVA_OPTS = "-XX:MaxRAMPercentage=75.0 -XX:+UseSerialGC"
+ENV JAVA_OPTS="-XX:MaxRAMPercentage=75.0 -XX:+UseSerialGC"
 # Springのデフォルトポート
 EXPOSE 8080
 
-# 生成されたjarを配置 （ 単一jar想定 ）
-COPY-- from = build / workspace / build / libs/*.jar /app/app.jar
+# 生成されたjarを配置（単一jar想定）
+COPY --from=build /workspace/build/libs/*.jar /app/app.jar
 
 # App Runnerのヘルスチェックはサービス側で行うためHEALTHCHECKは不要
 # ENTRYPOINT ["sh", "-c", "java $JAVA_OPTS -jar /app/app.jar"]
