@@ -15,7 +15,11 @@ export function Header() {
     <div className="relative min-h-16 flex items-center justify-start gap-6 px-8 py-2 border-primary-light border-b-2">
       <NavLink
         to="/searchSchedule"
-        className="flex items-center gap-2 text-lg text-primary font-bold px-4"
+        className={({ isActive }) =>
+          `flex items-center gap-2 text-lg text-primary font-bold px-4 ${
+            isActive ? "cursor-default" : "cursor-pointer"
+          }`
+        }
       >
         <BsTrainFreightFrontFill />
         新幹線でGO！
@@ -28,7 +32,7 @@ export function Header() {
             className={({ isActive }) =>
               `rounded-xl px-4 py-3 text-sm font-bold ${
                 isActive
-                  ? "bg-primary text-white"
+                  ? "bg-primary text-white cursor-default"
                   : button.relatedPath.includes(location.pathname)
                     ? "cursor-pointer bg-primary-light"
                     : "cursor-pointer"
