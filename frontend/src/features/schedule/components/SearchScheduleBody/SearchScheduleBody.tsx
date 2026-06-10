@@ -1,9 +1,6 @@
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import { FiArrowRight } from "react-icons/fi";
 import { useNavigate } from "react-router-dom";
-import { useSuspenseQuery } from "@tanstack/react-query";
-import axios from "axios";
-import { ENDPOINTS } from "../../../../api/routes";
 import { DepartureDateAndTimePicker } from "../DepartureDateAndTimePicker";
 import { StationSelect } from "../StationSelect";
 import { useSearchRequestDto } from "../../hooks/useSearchRequestDto";
@@ -20,7 +17,7 @@ export function SearchScheduleBody() {
     },
     });
     const [stations, setStations] = useState<Station[]>(data); */
-  const [stations, setStations] = useState<Station[]>([
+  const [stations] = useState<Station[]>([
     { station_cd: "tokyo", name: "東京" },
     { station_cd: "ueno", name: "上野" },
   ]);

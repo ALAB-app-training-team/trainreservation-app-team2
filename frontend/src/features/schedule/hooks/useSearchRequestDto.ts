@@ -1,4 +1,4 @@
-import { useEffect, useMemo, useState } from "react";
+import { useMemo, useState } from "react";
 import type { SearchRequestDto } from "../types/SearchRequestDto";
 import type { Station } from "../types/Station";
 
