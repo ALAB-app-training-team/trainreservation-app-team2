@@ -1,4 +1,4 @@
-import { Suspense } from "react";
+import { Suspense, useEffect } from "react";
 import { useLocation } from "react-router-dom";
 import "tailwindcss";
 import { DepartureDateAndTimePicker } from "../components/DepartureDateAndTimePicker";

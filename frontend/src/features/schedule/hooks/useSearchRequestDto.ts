@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useMemo, useState } from "react";
 import type { SearchRequestDto } from "../types/SearchRequestDto";
 
 type useSearchRequestDtoProps = { condition?: SearchRequestDto };
@@ -15,12 +15,15 @@ export function useSearchRequestDto({
     condition?.arrival_station_name ?? "",
   );
 
-  const searchRequestDto: SearchRequestDto = {
-    date,
-    time,
-    departure_station_name: departureStation,
-    arrival_station_name: arrivalStation,
-  };
+  const searchRequestDto: SearchRequestDto = useMemo(
+    () => ({
+      date,
+      time,
+      departure_station_name: departureStation,
+      arrival_station_name: arrivalStation,
+    }),
+    [date, time, departureStation, arrivalStation],
+  );
 
   return {
     setTime,
