@@ -3,6 +3,10 @@ spring:
     url: jdbc:postgresql://localhost:5432/postgres
     username: appuser
     password: localpassword
+  flyway:
+    enabled: true
+    baseline-on-migrate: true
+    baseline-version: 0
 springdoc:
   api-docs:
     enabled: true
