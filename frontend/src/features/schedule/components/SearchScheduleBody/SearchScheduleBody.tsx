@@ -4,6 +4,7 @@ import { useSuspenseQuery } from "@tanstack/react-query";
 import axios from "axios";
 import { ENDPOINTS } from "../../../../api/routes";
 import { DepartureDateAndTimePicker } from "../DepartureDateAndTimePicker";
+import { StationSelect } from "../StationSelect";
 import { useSearchRequestDto } from "../../hooks/useSearchRequestDto";
 import type { Station } from "../../types/Station";
 
@@ -42,36 +43,20 @@ export function SearchScheduleBody() {
           <div className="flex flex-col justify-between border-2 border-primary-light rounded-2xl p-8 gap-4">
             <h1 className="text-left !text-3xl !m-0">新幹線をさがす</h1>
             <div className="flex flex-col md:flex-row justify-between gap-4">
-              <div className="flex flex-col gap-2 w-full items-start">
-                <label htmlFor="date">乗車駅</label>
-                <select
-                  value={searchRequestDto.departure_station_name}
-                  onChange={(e) => setDepartureStation(e.target.value)}
-                >
-                  {stations.map((station, index) => {
-                    return (
-                      <option key={index} value={station.name}>
-                        {station.name}
-                      </option>
-                    );
-                  })}
-                </select>
-              </div>
-              <div className="flex flex-col gap-2 w-full items-start">
-                <label htmlFor="date">降車駅</label>
-                <select
-                  value={searchRequestDto.arrival_station_name}
-                  onChange={(e) => setArrivalStation(e.target.value)}
-                >
-                  {stations.map((station, index) => {
-                    return (
-                      <option key={index} value={station.name}>
-                        {station.name}
-                      </option>
-                    );
-                  })}
-                </select>
-              </div>
+              <StationSelect
+                id="departureStation"
+                label="乗車駅"
+                list={stations}
+                value={searchRequestDto.departure_station_name}
+                setValue={setDepartureStation}
+              />
+              <StationSelect
+                id="arrivalStation"
+                label="降車駅"
+                list={stations}
+                value={searchRequestDto.arrival_station_name}
+                setValue={setArrivalStation}
+              />
             </div>
             <div className="flex flex-col md:flex-row justify-between gap-4">
               <DepartureDateAndTimePicker
