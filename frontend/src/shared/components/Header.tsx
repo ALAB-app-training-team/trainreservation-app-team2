@@ -20,7 +20,7 @@ export function Header() {
         <BsTrainFreightFrontFill />
         新幹線でGO！
       </NavLink>
-      <div className="flex-1 flex justify-end px-4">
+      <div className="flex-1 flex justify-end px-4 gap-4">
         {buttons.map((button, index) => (
           <NavLink
             key={index}
