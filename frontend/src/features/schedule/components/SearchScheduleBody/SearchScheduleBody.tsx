@@ -40,7 +40,7 @@ export function SearchScheduleBody() {
   return (
     <>
       <div className="flex justify-center">
-        <div className="w-full m-8">
+        <div className="w-full max-w-5xl flex flex-col gap-4 m-8">
           <div className="flex flex-col justify-between border-2 border-primary-light rounded-2xl p-8 gap-4">
             <h1 className="text-left !text-3xl !m-0">新幹線をさがす</h1>
             <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">
@@ -51,7 +51,7 @@ export function SearchScheduleBody() {
                 value={searchRequestDto.departure_station_name}
                 setValue={setDepartureStation}
               />
-              <div className="text-xl mt-4">
+              <div className="hidden md:block text-xl mt-4">
                 <FiArrowRight />
               </div>
               <StationSelect
