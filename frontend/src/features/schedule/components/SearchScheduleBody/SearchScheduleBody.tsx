@@ -1,4 +1,5 @@
 import { useEffect, useState } from "react";
+import { FiArrowRight } from "react-icons/fi";
 import { useNavigate } from "react-router-dom";
 import { useSuspenseQuery } from "@tanstack/react-query";
 import axios from "axios";
@@ -42,7 +43,7 @@ export function SearchScheduleBody() {
         <div className="w-full m-8">
           <div className="flex flex-col justify-between border-2 border-primary-light rounded-2xl p-8 gap-4">
             <h1 className="text-left !text-3xl !m-0">新幹線をさがす</h1>
-            <div className="flex flex-col md:flex-row justify-between gap-4">
+            <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">
               <StationSelect
                 id="departureStation"
                 label="乗車駅"
@@ -50,7 +51,9 @@ export function SearchScheduleBody() {
                 value={searchRequestDto.departure_station_name}
                 setValue={setDepartureStation}
               />
-              →
+              <div className="text-xl mt-4">
+                <FiArrowRight />
+              </div>
               <StationSelect
                 id="arrivalStation"
                 label="降車駅"
