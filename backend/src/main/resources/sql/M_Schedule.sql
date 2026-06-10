@@ -2,12 +2,6 @@
 USE
 postgres;
 
-CREATE TABLE M_Schedule
-(
-    schedule_cd   VARCHAR(6) NOT NULL PRIMARY KEY,
-    train_type_cd VARCHAR(5) NOT NULL REFERENCES M_TrainType (train_type_cd) ON DELETE RESTRICT
-);
-
 INSERT INTO M_Schedule (schedule_cd, train_type_cd)
 VALUES ('THK001', 'YM051'),
        ('THK002', 'YM201'),
