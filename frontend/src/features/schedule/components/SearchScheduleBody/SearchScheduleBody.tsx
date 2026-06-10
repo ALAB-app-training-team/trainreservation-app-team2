@@ -31,6 +31,7 @@ export function SearchScheduleBody() {
     setDepartureStation,
     setArrivalStation,
     searchRequestDto,
+    isInvalid,
   } = useSearchRequestDto({ stations });
 
   const handleSearch = () => {
@@ -79,8 +80,9 @@ export function SearchScheduleBody() {
               />
             </div>
             <button
+              disabled={isInvalid}
               onClick={handleSearch}
-              className="rounded-lg p-2 bg-primary text-white"
+              className="rounded-lg p-2 bg-primary text-white cursor-pointer disabled:bg-gray-300 disabled:cursor-not-allowed"
             >
               列車を検索
             </button>

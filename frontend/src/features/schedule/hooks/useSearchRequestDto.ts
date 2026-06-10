@@ -33,11 +33,14 @@ export function useSearchRequestDto({
     };
   }, [date, time, departureStation, arrivalStation]);
 
+  const isInvalid: boolean = departureStation === arrivalStation;
+
   return {
     setTime,
     setDate,
     setDepartureStation,
     setArrivalStation,
     searchRequestDto,
+    isInvalid,
   };
 }
