@@ -32,7 +32,6 @@ export function SearchScheduleBody() {
   ]);
 
   const handleSearch = () => {
-    console.log(searchRequestDto);
     navigate("/searchResult", { state: searchRequestDto });
   };
 

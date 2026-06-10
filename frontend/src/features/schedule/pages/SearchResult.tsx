@@ -9,7 +9,10 @@ import { useSearchRequestDto } from "../hooks/useSearchRequestDto";
 export function SearchResult() {
   const location = useLocation();
   const condition = location.state;
-  const { setTime, setDate, searchRequestDto } = useSearchRequestDto(condition);
+  const { setTime, setDate, searchRequestDto } = useSearchRequestDto({
+    condition,
+  });
+
   return (
     <>
       <div className="flex justify-center">
