@@ -24,17 +24,17 @@ public class SearchServiceTest {
     @InjectMocks
     private SearchService service;
 
-    @BeforeEach
-    void setUp() {
-        MockitoAnnotations.openMocks(this);
-    }
-
     private static @NonNull List<StationResponseDto> getStationResponseDtosList() {
         StationResponseDto expect01 = new StationResponseDto("Test1", "TestStation01");
         StationResponseDto expect02 = new StationResponseDto("Test2", "TestStation02");
         StationResponseDto expect03 = new StationResponseDto("Test3", "TestStation03");
         StationResponseDto expect04 = new StationResponseDto("Test4", "TestStation04");
         return Arrays.asList(expect01, expect02, expect03, expect04);
+    }
+
+    @BeforeEach
+    void setUp() {
+        MockitoAnnotations.openMocks(this);
     }
 
     @Test

@@ -17,7 +17,7 @@ public class SearchService {
         this.stationRepository = stationRepository;
     }
 
-    public List<StationResponseDto> getAllStationList(){
+    public List<StationResponseDto> getAllStationList() {
         return stationRepository.findAllStationCdAndName();
     }
 }

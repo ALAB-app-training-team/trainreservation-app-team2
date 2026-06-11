@@ -46,7 +46,7 @@ public class SearchControllerTest {
         Mockito.when(service.getAllStationList()).thenReturn(expectList);
 
         mockMvc.perform(
-                get(url).contentType(MediaType.APPLICATION_JSON))
+                        get(url).contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.length()").value(4))
                 .andExpect(jsonPath("$[0].station_cd").value("Test1"))
