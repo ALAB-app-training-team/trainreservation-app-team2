@@ -8,7 +8,7 @@ import java.util.List;
 
 @Mapper
 public interface StationRepository {
-    List<StationResponseDto> findAllStationList();
+    List<StationResponseDto> findAllStation();
 
     String findStationCdByName(@Param("name") String name);
 }

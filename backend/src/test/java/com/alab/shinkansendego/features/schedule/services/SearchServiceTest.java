@@ -40,7 +40,7 @@ public class SearchServiceTest {
     @Test
     @DisplayName("駅コードと駅名が全件取得できる")
     void getAllStationList_returnGetStationListSuccess() {
-        when(stationRepo.findAllStationList()).thenReturn(getStationResponseDtosList());
+        when(stationRepo.findAllStation()).thenReturn(getStationResponseDtosList());
 
         List<StationResponseDto> expectList = getStationResponseDtosList();
 

@@ -43,8 +43,8 @@ public class StationRepositoryTest {
 
     @Test
     @DisplayName("駅コードと駅名を全件取得できる")
-    void findAllStationList_returnGetStationListSuccess() {
-        List<StationResponseDto> actual = repo.findAllStationList();
+    void findAllStation_returnGetStationListSuccess() {
+        List<StationResponseDto> actual = repo.findAllStation();
         assertEquals(10, actual.size());
         assertEquals("Test0", actual.get(0).getStation_cd());
         assertEquals("Test1", actual.get(1).getStation_cd());
