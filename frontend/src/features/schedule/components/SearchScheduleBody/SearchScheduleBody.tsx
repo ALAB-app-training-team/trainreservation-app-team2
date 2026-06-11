@@ -1,30 +1,13 @@
-import { useEffect, useState } from "react";
 import { FiArrowRight } from "react-icons/fi";
 import { useNavigate } from "react-router-dom";
-import { useSuspenseQuery } from "@tanstack/react-query";
-import axios from "axios";
-import { ENDPOINTS } from "../../../../api/routes";
+import { useSearchRequestDto } from "../../hooks/useSearchRequestDto";
+import { useStations } from "../../hooks/useStations";
 import { DepartureDateAndTimePicker } from "../DepartureDateAndTimePicker";
 import { StationSelect } from "../StationSelect";
-import { useSearchRequestDto } from "../../hooks/useSearchRequestDto";
-import type { Station } from "../../types/Station";
 
 export function SearchScheduleBody() {
   const navigate = useNavigate();
-
-  /*   const { data } = useSuspenseQuery({
-    queryKey: ["station"],
-    queryFn: async () => {
-      const response = await axios.get<Station[]>(ENDPOINTS.STATIONS());
-      return response.data;
-    },
-    });
-    const [stations, setStations] = useState<Station[]>(data); */
-  const [stations, setStations] = useState<Station[]>([
-    { station_cd: "tokyo", name: "東京" },
-    { station_cd: "ueno", name: "上野" },
-  ]);
-
+  const { stations } = useStations();
   const {
     setTime,
     setDate,
@@ -32,6 +15,7 @@ export function SearchScheduleBody() {
     setArrivalStation,
     searchRequestDto,
     isInvalid,
+    getFieldError,
   } = useSearchRequestDto({ stations });
 
   const handleSearch = () => {
@@ -61,6 +45,7 @@ export function SearchScheduleBody() {
                 list={stations}
                 value={searchRequestDto.arrival_station_name}
                 setValue={setArrivalStation}
+                getFieldError={getFieldError}
               />
             </div>
             <div className="flex flex-col md:flex-row justify-between gap-4">
@@ -70,6 +55,7 @@ export function SearchScheduleBody() {
                 type="date"
                 value={searchRequestDto.date}
                 setValue={setDate}
+                getFieldError={getFieldError}
               />
               <DepartureDateAndTimePicker
                 id="time"
@@ -77,6 +63,7 @@ export function SearchScheduleBody() {
                 type="time"
                 value={searchRequestDto.time}
                 setValue={setTime}
+                getFieldError={getFieldError}
               />
             </div>
             <button

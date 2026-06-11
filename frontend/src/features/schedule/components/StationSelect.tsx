@@ -7,6 +7,7 @@ type StationSelectProps = {
   list: Station[];
   value: string;
   setValue: React.Dispatch<SetStateAction<string>>;
+  getFieldError?: (field: string) => string;
 };
 
 export function StationSelect({
@@ -15,6 +16,7 @@ export function StationSelect({
   list,
   value,
   setValue,
+  getFieldError: getFieldError,
 }: StationSelectProps) {
   return (
     <>
@@ -34,6 +36,9 @@ export function StationSelect({
             );
           })}
         </select>
+        {getFieldError?.(id) && (
+          <p className="text-left text-sm text-red-600 ">{getFieldError(id)}</p>
+        )}
       </div>
     </>
   );
