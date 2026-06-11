@@ -15,6 +15,7 @@ export function SearchScheduleBody() {
     setArrivalStation,
     searchRequestDto,
     isInvalid,
+    getFieldError,
   } = useSearchRequestDto({ stations });
 
   const handleSearch = () => {
@@ -44,6 +45,7 @@ export function SearchScheduleBody() {
                 list={stations}
                 value={searchRequestDto.arrival_station_name}
                 setValue={setArrivalStation}
+                getFieldError={getFieldError}
               />
             </div>
             <div className="flex flex-col md:flex-row justify-between gap-4">
@@ -53,6 +55,7 @@ export function SearchScheduleBody() {
                 type="date"
                 value={searchRequestDto.date}
                 setValue={setDate}
+                getFieldError={getFieldError}
               />
               <DepartureDateAndTimePicker
                 id="time"
@@ -60,6 +63,7 @@ export function SearchScheduleBody() {
                 type="time"
                 value={searchRequestDto.time}
                 setValue={setTime}
+                getFieldError={getFieldError}
               />
             </div>
             <button
