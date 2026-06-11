@@ -18,6 +18,6 @@ public class SearchService {
     }
 
     public List<StationResponseDto> getAllStationList() {
-        return stationRepository.findAllStationCdAndName();
+        return stationRepository.findAllStationList();
     }
 }

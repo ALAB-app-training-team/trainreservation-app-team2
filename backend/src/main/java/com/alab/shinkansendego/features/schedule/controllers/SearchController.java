@@ -21,7 +21,7 @@ public class SearchController {
     }
 
     @GetMapping(path = "api/shinkansen-station")
-    public ResponseEntity<List<StationResponseDto>> getStationList() {
+    public ResponseEntity<List<StationResponseDto>> getAllStationList() {
         List<StationResponseDto> response = searchService.getAllStationList();
         return ResponseEntity.ok(response);
     }

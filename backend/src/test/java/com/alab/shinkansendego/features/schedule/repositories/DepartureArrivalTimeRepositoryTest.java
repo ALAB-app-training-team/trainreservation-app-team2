@@ -44,7 +44,7 @@ public class DepartureArrivalTimeRepositoryTest {
 
     @Test
     @DisplayName("区間コードからダイヤコードと出発到着時刻を取得できる")
-    void findScheduleBySectionKmCd() {
+    void findScheduleBySectionKmCd_withSectionCd_returnGetScheduleAndDepartureArrivalTimeSuccess() {
         List<DepartureArrivalTimeDto> expected = Arrays.asList(
                 new DepartureArrivalTimeDto(
                         "TEST04", LocalTime.of(6, 40, 0), LocalTime.of(6, 45, 0)),
@@ -58,7 +58,7 @@ public class DepartureArrivalTimeRepositoryTest {
 
     @Test
     @DisplayName("テーブルに存在しない区間コードを検索した場合、空のリストが返却されるか")
-    void returnEmptyListWhenNotExistSectionCd() {
+    void findScheduleBySectionKmCd_withNotExistSectionCd_returnEmptyList() {
         List<DepartureArrivalTimeDto> actual = repo.findScheduleBySectionKmCd("99999");
         assertEquals(0, actual.size());
     }

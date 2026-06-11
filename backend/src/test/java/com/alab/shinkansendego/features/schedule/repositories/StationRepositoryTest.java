@@ -43,8 +43,8 @@ public class StationRepositoryTest {
 
     @Test
     @DisplayName("駅コードと駅名を全件取得できる")
-    void FindAllStationCdAndName() {
-        List<StationResponseDto> actual = repo.findAllStationCdAndName();
+    void findAllStationList_returnGetStationListSuccess() {
+        List<StationResponseDto> actual = repo.findAllStationList();
         assertEquals(10, actual.size());
         assertEquals("Test0", actual.get(0).getStation_cd());
         assertEquals("Test1", actual.get(1).getStation_cd());
@@ -71,14 +71,14 @@ public class StationRepositoryTest {
 
     @Test
     @DisplayName("駅名から駅コードを取得できる")
-    void FindStationCdByStationName() {
+    void findStationCdByName_withStationName_returnGetStationCdSuccess() {
         String actual = repo.findStationCdByName("TestStation02");
         assertEquals("Test2", actual);
     }
 
     @Test
     @DisplayName("テーブルに存在しない駅コードを検索した場合、Nullが返却されるか")
-    void returnNullWhenNotExistStationCd() {
+    void findStationCdByName_withNotExistStationCd_returnNull() {
         String actual = repo.findStationCdByName("99999");
         assertNull(actual);
     }

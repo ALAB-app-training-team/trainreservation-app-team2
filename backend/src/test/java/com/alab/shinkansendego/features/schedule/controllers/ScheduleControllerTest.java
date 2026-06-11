@@ -58,7 +58,7 @@ public class ScheduleControllerTest {
 
     @Test
     @DisplayName("リクエストDTOからダイヤリストが取得できる")
-    void getSchedule() throws Exception {
+    void getSchedule_withValidScheduleRequestDto_returnGetScheduleListSuccess() throws Exception {
 
         List<ScheduleResponseDto> expectList = getExpectScheduleResponseDtosList();
         String url = baseUrl + "?date=2026-06-01&time=12:00:00&departure_station_name=東京&arrival_station_name=上野";
@@ -77,7 +77,7 @@ public class ScheduleControllerTest {
 
     @Test
     @DisplayName("リクエストのカラムがNullの場合、バリデーションエラー発生")
-    void ReturnBadRequestWhenValidationError() throws Exception {
+    void getSchedule_withNotValidScheduleRequestDto_returnValidationError() throws Exception {
 
         request.setArrival_station_name(null);
         String url = baseUrl + "?date=2026-06-01&time=12:00:00&departure_station_name=東京";

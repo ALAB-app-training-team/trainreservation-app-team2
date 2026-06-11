@@ -38,7 +38,7 @@ public class SearchControllerTest {
 
     @Test
     @DisplayName("駅コードと駅名が全件取得できる")
-    void getAllStation() throws Exception {
+    void getAllStationList_returnGetStationListSuccess() throws Exception {
 
         List<StationResponseDto> expectList = getStationResponseDtosList();
         String url = baseUrl + "station";

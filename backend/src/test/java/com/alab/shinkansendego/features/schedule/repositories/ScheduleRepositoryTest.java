@@ -40,7 +40,7 @@ public class ScheduleRepositoryTest {
 
     @Test
     @DisplayName("ダイヤコードから車種名を取得できる")
-    void findScheduleAndTrainTypeByScheduleCd() {
+    void findTrainTypeNameByScheduleCd_withScheduleCd_returnGetTrainTypeSuccess() {
         String expected = "やまびこ11号";
         String actual = repo.findTrainTypeNameByScheduleCd("TEST06");
         assertEquals(expected, actual);
@@ -48,7 +48,7 @@ public class ScheduleRepositoryTest {
 
     @Test
     @DisplayName("テーブルに存在しないダイヤコードを検索した場合、Nullが返却されるか")
-    void returnNullWhenNotExistScheduleCd() {
+    void findTrainTypeNameByScheduleCd_withNotExistScheduleCd_returnNull() {
         String actual = repo.findTrainTypeNameByScheduleCd("99999");
         assertNull(actual);
     }

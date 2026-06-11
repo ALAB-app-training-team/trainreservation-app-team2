@@ -42,7 +42,7 @@ public class SectionKmRepositoryTest {
 
     @Test
     @DisplayName("始点駅コードから区間コードを取得できる")
-    void findSectionCdByStartStationCd() {
+    void findSectionCdByStartStationCd_withStartStationCd_returnGetSectionCdSuccess() {
         List<String> expected = Arrays.asList("TEST1", "TEST2");
         List<String> actual = repo.findSectionCdByStartStationCd("EKI01");
         assertEquals(expected, actual);
@@ -50,14 +50,14 @@ public class SectionKmRepositoryTest {
 
     @Test
     @DisplayName("テーブルに存在しない始点駅コードを検索した場合、空のリストが返却されるか")
-    void returnEmptyListWhenNotExistStartStationCd() {
+    void findSectionCdByStartStationCd_withNotExistStartStationCd_returnEmptyList() {
         List<String> actual = repo.findSectionCdByStartStationCd("99999");
         assertEquals(0, actual.size());
     }
 
     @Test
     @DisplayName("終点駅コードから区間コードを取得できる")
-    void findSectionCdByGoalStationCd() {
+    void findSectionCdByStartStationCd_withGoalStationCd_returnGetSectionCdSuccess() {
         List<String> expected = Arrays.asList("TEST2", "TEST3");
         List<String> actual = repo.findSectionCdByGoalStationCd("EKI03");
         assertEquals(expected, actual);
@@ -65,7 +65,7 @@ public class SectionKmRepositoryTest {
 
     @Test
     @DisplayName("テーブルに存在しない終点駅コードを検索した場合、空のリストが返却されるか")
-    void returnEmptyListWhenNotExistGoalStationCd() {
+    void findSectionCdByStartStationCd_withNotExistGoalStationCd_returnEmptyList() {
         List<String> actual = repo.findSectionCdByGoalStationCd("99999");
         assertEquals(0, actual.size());
     }
