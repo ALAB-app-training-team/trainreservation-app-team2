@@ -41,7 +41,10 @@ export function SearchResult() {
             />
           </div>
           <Suspense fallback={<ScheduleListSkeleton />}>
-            <ScheduleList searchRequestDto={searchRequestDto} />
+            <ScheduleList
+              key={JSON.stringify(searchRequestDto)}
+              searchRequestDto={searchRequestDto}
+            />
           </Suspense>
         </div>
       </div>

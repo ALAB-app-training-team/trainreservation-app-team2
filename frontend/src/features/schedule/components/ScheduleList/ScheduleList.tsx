@@ -1,7 +1,11 @@
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import { AiOutlineExclamationCircle } from "react-icons/ai";
 import _ReactPaginate from "react-paginate";
-const ReactPaginate = (_ReactPaginate as any).default || _ReactPaginate;
+import type { ReactPaginateProps } from "react-paginate";
+type PaginateType = React.ComponentType<ReactPaginateProps>;
+const ReactPaginate =
+  (_ReactPaginate as unknown as { default: PaginateType }).default ||
+  (_ReactPaginate as unknown as PaginateType);
 import "tailwindcss";
 import { useSchedules } from "../../hooks/useSchedules";
 import type { SearchRequestDto } from "../../types/SearchRequestDto";
@@ -15,13 +19,9 @@ export function ScheduleList({ searchRequestDto }: ScheduleListProps) {
   const [offset, setOffset] = useState(0);
   const perPage: number = 10;
   const handlePageChange = (data: { selected: number }) => {
-    let pageNumber = data["selected"];
+    const pageNumber = data["selected"];
     setOffset(pageNumber * perPage);
   };
-
-  useEffect(() => {
-    setOffset(0);
-  }, [schedules]);
 
   return (
     <>
