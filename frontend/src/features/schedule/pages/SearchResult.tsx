@@ -30,8 +30,8 @@ export function SearchResult() {
               }}
               className="flex items-center gap-2 px-4 border-2 rounded-xl border-primary-light cursor-pointer"
             >
-              <GoHome />
               <div>ホーム</div>
+              <GoHome />
             </button>
           </div>
           <div className="flex flex-col md:flex-row justify-between bg-primary-light rounded-2xl p-8 gap-4">
