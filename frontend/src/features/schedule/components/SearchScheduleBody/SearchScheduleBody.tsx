@@ -1,27 +1,13 @@
-import { useState } from "react";
 import { FiArrowRight } from "react-icons/fi";
 import { useNavigate } from "react-router-dom";
+import { useSearchRequestDto } from "../../hooks/useSearchRequestDto";
+import { useStations } from "../../hooks/useStations";
 import { DepartureDateAndTimePicker } from "../DepartureDateAndTimePicker";
 import { StationSelect } from "../StationSelect";
-import { useSearchRequestDto } from "../../hooks/useSearchRequestDto";
-import type { Station } from "../../types/Station";
 
 export function SearchScheduleBody() {
   const navigate = useNavigate();
-
-  /*   const { data } = useSuspenseQuery({
-    queryKey: ["station"],
-    queryFn: async () => {
-      const response = await axios.get<Station[]>(ENDPOINTS.STATIONS());
-      return response.data;
-    },
-    });
-    const [stations, setStations] = useState<Station[]>(data); */
-  const [stations] = useState<Station[]>([
-    { station_cd: "tokyo", name: "東京" },
-    { station_cd: "ueno", name: "上野" },
-  ]);
-
+  const { stations } = useStations();
   const {
     setTime,
     setDate,
