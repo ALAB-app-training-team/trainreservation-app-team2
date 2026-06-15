@@ -1,7 +1,4 @@
 -- ダイヤテーブル
-USE
-postgres;
-
 INSERT INTO M_Schedule (schedule_cd, train_type_cd)
 VALUES ('THK001', 'YM051'),
        ('THK002', 'YM201'),
@@ -93,9 +90,9 @@ VALUES ('THK001', 'YM051'),
        ('JET002', 'TN409'),
        ('JET101', 'TK334'),
        ('JET102', 'TN414'),
-       ('HKR001', 'HK573'),
+       ('HKR001', 'HT573'),
        ('HKR002', 'KK515'),
        ('HKR003', 'AS625'),
-       ('HKR101', 'HK572'),
+       ('HKR101', 'HT572'),
        ('HKR102', 'KK514'),
        ('HKR103', 'AS630');

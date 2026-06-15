@@ -1,7 +1,4 @@
 -- 区間キロ程テーブル
-USE
-postgres;
-
 INSERT INTO M_SectionKm (section_cd, start_station_cd, goal_station_cd, distance_km)
 VALUES ('THK01', 'THK01', 'THK02', 3.6),   -- 東北新幹線各駅下り 東京ー上野
        ('THK02', 'THK02', 'CMN01', 26.7),  --上野ー大宮

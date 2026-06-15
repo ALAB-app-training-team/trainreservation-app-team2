@@ -1,7 +1,4 @@
 -- 車種テーブル
-USE
-postgres;
-
 INSERT INTO M_TrainType (train_type_cd, name)
 VALUES ('YM051', 'やまびこ51号'),
        ('YM201', 'やまびこ201号'),
