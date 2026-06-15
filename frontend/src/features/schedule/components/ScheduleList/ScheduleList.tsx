@@ -19,6 +19,7 @@ export function ScheduleList({ searchRequestDto }: ScheduleListProps) {
   const [offset, setOffset] = useState(0);
   const perPage: number = 10;
   const handlePageChange = (data: { selected: number }) => {
+    window.scrollTo(0, 0);
     const pageNumber = data["selected"];
     setOffset(pageNumber * perPage);
   };
