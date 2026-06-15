@@ -6,6 +6,7 @@ type DepartureDateAndTimePickerProps = {
   type: string;
   value: string;
   setValue: React.Dispatch<SetStateAction<string>>;
+  getFieldError?: (field: string) => string;
 };
 
 export function DepartureDateAndTimePicker({
@@ -14,17 +15,21 @@ export function DepartureDateAndTimePicker({
   type,
   value,
   setValue,
+  getFieldError,
 }: DepartureDateAndTimePickerProps) {
   return (
     <div className="flex flex-col gap-2 w-full items-start">
-      <label htmlFor="date">{label}</label>
+      <label htmlFor={id}>{label}</label>
       <input
         id={id}
         type={type}
-        className="w-full bg-white p-2 rounded-xl outline-none border-2 border-transparent focus:border-primary-light"
         value={value}
         onChange={(e) => setValue(e.target.value)}
-      ></input>
+        className="w-full bg-white p-2 rounded-xl outline-none border-2 border-primary-light focus:border-primary"
+      />
+      {getFieldError?.(id) && (
+        <p className="text-left text-sm text-red-600 ">{getFieldError(id)}</p>
+      )}
     </div>
   );
 }
