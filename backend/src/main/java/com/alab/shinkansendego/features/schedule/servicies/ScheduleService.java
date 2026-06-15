@@ -64,7 +64,7 @@ public class ScheduleService {
         }
         for (DepartureArrivalTimeDto departure : departureScheduleList) {
             for (DepartureArrivalTimeDto arrival : arrivalScheduleList) {
-                if (Objects.equals(departure.getSchedule_cd(), arrival.getSchedule_cd())) {
+                if (Objects.equals(departure.getSchedule_cd(), arrival.getSchedule_cd())&&departure.getDeparture_time().isBefore(arrival.getArrival_time())) {
 
                     String trainTypeName = scheduleRepository.findTrainTypeNameByScheduleCd(departure.getSchedule_cd());
                     if (trainTypeName == null) {
