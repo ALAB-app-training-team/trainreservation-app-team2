@@ -15,3 +15,4 @@ FROM M_DEPARTUREARRIVALTIME AS da
          LEFT OUTER JOIN M_SECTIONKM AS sec ON da.section_cd = sec.section_cd
          LEFT OUTER JOIN M_STATION AS s1 ON sec.start_station_cd = s1.station_cd
          LEFT OUTER JOIN M_STATION AS s2 ON sec.goal_station_cd = s2.station_cd;
+         
