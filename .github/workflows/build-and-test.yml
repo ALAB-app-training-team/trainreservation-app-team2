@@ -1,0 +1,45 @@
+# ワークフローの名前
+name: Build and Test
+
+# ワークフローのトリガー設定
+on:
+  # プッシュ時のトリガー設定
+  push:
+    branches:
+      - main
+      - feature/* # featureで始まるすべてのブランチ
+  # プルリクエスト時のトリガー設定
+  pull_request:
+    types: [opened, reopened, synchronize, ready_for_review]
+
+# 実行されるジョブの定義
+jobs:
+  # Node.jsビルドとテストを行うジョブ
+  node-build-and-test:
+    # ジョブを実行する環境（Ubuntu最新版）
+    runs-on: ubuntu-latest
+    # ジョブの各ステップ
+    steps:
+      # リポジトリのコードをチェックアウト
+      - uses: actions/checkout@v3
+
+      # Node.jsのセットアップ
+      - name: Set up Node.js
+        uses: actions/setup-node@v3
+        with:
+          node-version: "22" # 使用するNode.jsのバージョン
+
+      # npmの依存関係をインストール
+      - name: Install Node.js dependencies
+        run: npm install
+        working-directory: ./frontend
+
+      # ビルドプロセスの実行
+      - name: Build
+        run: npm run build
+        working-directory: ./frontend
+
+      # Lintテストを実行
+      - name: Run Lint Check
+        run: npm run lint
+        working-directory: ./frontend
