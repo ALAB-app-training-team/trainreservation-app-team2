@@ -44,7 +44,7 @@ export function ScheduleItem({
   };
 
   const handleSearch = () => {
-    console.log(schedule.schedule_cd, departure_station_cd, arrival_station_cd);
+    console.log(schedule, departure_station_cd, arrival_station_cd);
   };
 
   return (
