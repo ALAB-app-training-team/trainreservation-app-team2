@@ -52,8 +52,8 @@ public class ScheduleControllerTest {
         objectMapper.disable(SerializationFeature.WRITE_DATES_AS_TIMESTAMPS);
         request.setDate(LocalDate.of(2026, 6, 1));
         request.setTime(LocalTime.of(11, 0, 0));
-        request.setDeparture_station_cd("東京");
-        request.setArrival_station_cd("上野");
+        request.setDeparture_station_cd("THK01");
+        request.setArrival_station_cd("THK02");
     }
 
     @Test
@@ -61,7 +61,7 @@ public class ScheduleControllerTest {
     void getSchedule_withValidScheduleRequestDto_returnGetScheduleListSuccess() throws Exception {
 
         List<ScheduleResponseDto> expectList = getExpectScheduleResponseDtosList();
-        String url = baseUrl + "?date=2026-06-01&time=12:00:00&departure_station_cd=東京&arrival_station_cd=上野";
+        String url = baseUrl + "?date=2026-06-01&time=12:00:00&departure_station_cd=THK01&arrival_station_cd=THK02";
 
         Mockito.when(service.getSearchedScheduleByStation(request)).thenReturn(expectList);
 
@@ -80,7 +80,7 @@ public class ScheduleControllerTest {
     void getSchedule_withNotValidScheduleRequestDto_returnValidationError() throws Exception {
 
         request.setArrival_station_cd(null);
-        String url = baseUrl + "?date=2026-06-01&time=12:00:00&departure_station_name=東京";
+        String url = baseUrl + "?date=2026-06-01&time=12:00:00&departure_station_cd=THK01";
 
         String json = objectMapper.writeValueAsString(request);
 
