@@ -4,13 +4,17 @@ import type { SearchResponseDto } from "../types/SearchResponseDto";
 
 type ScheduleItemProps = {
   schedule: SearchResponseDto;
+  departure_station_cd: string;
   departure_station_name: string;
+  arrival_station_cd: string;
   arrival_station_name: string;
 };
 
 export function ScheduleItem({
   schedule,
+  departure_station_cd,
   departure_station_name,
+  arrival_station_cd,
   arrival_station_name,
 }: ScheduleItemProps) {
   const calculateDuration = (
@@ -37,6 +41,10 @@ export function ScheduleItem({
     if (!timeString) return "";
     const [hours, minutes] = timeString.split(":");
     return `${hours}:${minutes}`;
+  };
+
+  const handleSearch = () => {
+    console.log(schedule.schedule_cd, departure_station_cd, arrival_station_cd);
   };
 
   return (
@@ -87,6 +95,9 @@ export function ScheduleItem({
             </div>
             <div>{arrival_station_name}</div>
           </div>
+          <button type="button" onClick={handleSearch}>
+            詳細を見る
+          </button>
         </div>
       </div>
     </>

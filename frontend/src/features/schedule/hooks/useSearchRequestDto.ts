@@ -18,18 +18,18 @@ export function useSearchRequestDto({
     condition?.time ?? new Date().toTimeString().slice(0, 5),
   );
   const [departureStation, setDepartureStation] = useState<string>(
-    condition?.departure_station_name ?? stations[0]?.name ?? "",
+    condition?.departure_station_cd ?? stations[0]?.station_cd ?? "",
   );
   const [arrivalStation, setArrivalStation] = useState<string>(
-    condition?.arrival_station_name ?? stations[1]?.name ?? "",
+    condition?.arrival_station_cd ?? stations[1]?.station_cd ?? "",
   );
 
   const searchRequestDto: SearchRequestDto = useMemo<SearchRequestDto>(() => {
     return {
       date,
       time,
-      departure_station_name: departureStation,
-      arrival_station_name: arrivalStation,
+      departure_station_cd: departureStation,
+      arrival_station_cd: arrivalStation,
     };
   }, [date, time, departureStation, arrivalStation]);
 
