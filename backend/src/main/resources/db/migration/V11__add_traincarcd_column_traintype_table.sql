@@ -16,15 +16,36 @@ VALUES ('E2SER', 'E2系'),
        ('E8SER', 'E8系');
 
 --既存レコードの更新
-UPDATE M_TrainType SET train_series_cd='E5SER' WHERE train_type_cd LIKE 'HB%';
-UPDATE M_TrainType SET train_series_cd='E5SER' WHERE train_type_cd LIKE 'YM%';
-UPDATE M_TrainType SET train_series_cd='E5SER' WHERE train_type_cd LIKE 'NS%';
-UPDATE M_TrainType SET train_series_cd='E6SER' WHERE train_type_cd LIKE 'KM%';
-UPDATE M_TrainType SET train_series_cd='E7SER' WHERE train_type_cd LIKE 'KK%';
-UPDATE M_TrainType SET train_series_cd='E7SER' WHERE train_type_cd LIKE 'HT%';
-UPDATE M_TrainType SET train_series_cd='E7SER' WHERE train_type_cd LIKE 'AS%';
-UPDATE M_TrainType SET train_series_cd='E7SER' WHERE train_type_cd LIKE 'TK%';
-UPDATE M_TrainType SET train_series_cd='E7SER' WHERE train_type_cd LIKE 'TN%';
-UPDATE M_TrainType SET train_series_cd='E8SER' WHERE train_type_cd LIKE 'TB%';
+UPDATE M_TrainType
+SET train_series_cd='E5SER'
+WHERE train_type_cd LIKE 'HB%';
+UPDATE M_TrainType
+SET train_series_cd='E5SER'
+WHERE train_type_cd LIKE 'YM%';
+UPDATE M_TrainType
+SET train_series_cd='E5SER'
+WHERE train_type_cd LIKE 'NS%';
+UPDATE M_TrainType
+SET train_series_cd='E6SER'
+WHERE train_type_cd LIKE 'KM%';
+UPDATE M_TrainType
+SET train_series_cd='E7SER'
+WHERE train_type_cd LIKE 'KK%';
+UPDATE M_TrainType
+SET train_series_cd='E7SER'
+WHERE train_type_cd LIKE 'HT%';
+UPDATE M_TrainType
+SET train_series_cd='E7SER'
+WHERE train_type_cd LIKE 'AS%';
+UPDATE M_TrainType
+SET train_series_cd='E7SER'
+WHERE train_type_cd LIKE 'TK%';
+UPDATE M_TrainType
+SET train_series_cd='E7SER'
+WHERE train_type_cd LIKE 'TN%';
+UPDATE M_TrainType
+SET train_series_cd='E8SER'
+WHERE train_type_cd LIKE 'TB%';
 
-ALTER TABLE M_TrainType ALTER COLUMN train_series_cd SET NOT NULL;
+ALTER TABLE M_TrainType
+    ALTER COLUMN train_series_cd SET NOT NULL;
