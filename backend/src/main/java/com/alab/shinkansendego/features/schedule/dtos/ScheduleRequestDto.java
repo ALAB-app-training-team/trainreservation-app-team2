@@ -17,7 +17,7 @@ public class ScheduleRequestDto {
     @NotNull
     private LocalTime time;
     @NotNull
-    private String departure_station_name;
+    private String departure_station_cd;
     @NotNull
-    private String arrival_station_name;
+    private String arrival_station_cd;
 }

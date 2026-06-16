@@ -68,18 +68,4 @@ public class StationRepositoryTest {
         assertEquals("TestStation08", actual.get(8).getName());
         assertEquals("TestStation09", actual.get(9).getName());
     }
-
-    @Test
-    @DisplayName("駅名から駅コードを取得できる")
-    void findStationCdByName_withStationName_returnGetStationCdSuccess() {
-        String actual = repo.findStationCdByName("TestStation02");
-        assertEquals("Test2", actual);
-    }
-
-    @Test
-    @DisplayName("テーブルに存在しない駅コードを検索した場合、Nullが返却されるか")
-    void findStationCdByName_withNotExistStationCd_returnNull() {
-        String actual = repo.findStationCdByName("99999");
-        assertNull(actual);
-    }
 }

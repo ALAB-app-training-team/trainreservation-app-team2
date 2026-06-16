@@ -36,15 +36,8 @@ public class ScheduleService {
 
         List<ScheduleResponseDto> responseList = new ArrayList<>();
 
-        String departureStationCd = stationRepository.findStationCdByName(request.getDeparture_station_name());
-        String arrivalStationCd = stationRepository.findStationCdByName(request.getArrival_station_name());
-
-        if (departureStationCd == null || arrivalStationCd == null) {
-            throw new IllegalArgumentException("StationCD is Not found");
-        }
-
-        List<String> departureSectionCdList = sectionKmRepository.findSectionCdByStartStationCd(departureStationCd);
-        List<String> arrivalSectionCdList = sectionKmRepository.findSectionCdByGoalStationCd(arrivalStationCd);
+        List<String> departureSectionCdList = sectionKmRepository.findSectionCdByStartStationCd(request.getDeparture_station_cd());
+        List<String> arrivalSectionCdList = sectionKmRepository.findSectionCdByGoalStationCd(request.getArrival_station_cd());
 
         if (departureSectionCdList.isEmpty() || arrivalSectionCdList.isEmpty()) {
             throw new IllegalArgumentException("SectionCD is Not found");

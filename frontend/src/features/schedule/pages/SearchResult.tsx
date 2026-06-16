@@ -1,4 +1,4 @@
-import { Suspense } from "react";
+import { Suspense, useState } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
 import { GoHome } from "react-icons/go";
 import "tailwindcss";
@@ -10,9 +10,11 @@ import { useSearchRequestDto } from "../hooks/useSearchRequestDto";
 export function SearchResult() {
   const location = useLocation();
   const navigate = useNavigate();
-  const condition = location.state;
+  const { dto, departure_station_name, arrival_station_name } = location.state;
+  const [departureStationName] = useState(departure_station_name);
+  const [arrivalStationName] = useState(arrival_station_name);
   const { setTime, setDate, searchRequestDto } = useSearchRequestDto({
-    condition,
+    condition: dto,
   });
 
   return (
@@ -21,8 +23,7 @@ export function SearchResult() {
         <div className="w-full max-w-5xl flex flex-col gap-4 mx-8 my-4">
           <div className="flex justify-between">
             <h1 className="text-left !text-3xl !m-0">
-              {searchRequestDto.departure_station_name}→
-              {searchRequestDto.arrival_station_name}
+              {departureStationName}→{arrivalStationName}
             </h1>
             <button
               onClick={() => {
@@ -54,6 +55,8 @@ export function SearchResult() {
             <ScheduleList
               key={JSON.stringify(searchRequestDto)}
               searchRequestDto={searchRequestDto}
+              departureStationName={departureStationName}
+              arrivalStationName={arrivalStationName}
             />
           </Suspense>
         </div>
