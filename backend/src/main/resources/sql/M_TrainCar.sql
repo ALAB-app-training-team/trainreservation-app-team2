@@ -1,3 +1,4 @@
+--号車情報テーブル
 INSERT INTO M_TrainCar (train_car_cd, train_series_cd,train_car_number,seat_type_cd)
 VALUES ('E2SER01', 'E2SER',1,'SEAT01'),
        ('E2SER02', 'E2SER',2,'SEAT01'),

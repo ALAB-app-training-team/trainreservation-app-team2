@@ -1,3 +1,4 @@
+--車両テーブル
 INSERT INTO M_TrainSeries (train_series_cd, name)
 VALUES ('E2SER', 'E2系'),
        ('E5SER', 'E5系'),
