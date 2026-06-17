@@ -3,5 +3,5 @@ export type SeatsResponseDto = {
   train_car_number: number;
   seat_cd: string;
   seat_number: number;
-  seat_row: string;
+  seat_column: string;
 };

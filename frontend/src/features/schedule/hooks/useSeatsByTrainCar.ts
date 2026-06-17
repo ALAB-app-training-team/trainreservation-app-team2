@@ -1,8 +1,3 @@
-import { useSuspenseQuery } from "@tanstack/react-query";
-import axios from "axios";
-import { ENDPOINTS } from "../../../api/routes";
-import type { SeatsResponseDto } from "../types/SeatsResponseDto";
-
 export function useSeatsByTrainCar(trainCarCd: string) {
   // TODO: BEできたらコメントアウト解除する
   //   const { data: seats } = useSuspenseQuery({
@@ -17,6 +12,7 @@ export function useSeatsByTrainCar(trainCarCd: string) {
   //       return response.data;
   //     },
   //   });
+  console.log(trainCarCd);
 
   const seats = [
     {
@@ -24,35 +20,35 @@ export function useSeatsByTrainCar(trainCarCd: string) {
       train_car_number: 1,
       seat_cd: "SEAT01001",
       seat_number: 1,
-      seat_row: "A",
+      seat_column: "A",
     },
     {
       train_car_cd: "E5SER01",
       train_car_number: 1,
-      seat_cd: "SEAT01001",
+      seat_cd: "SEAT01002",
       seat_number: 2,
-      seat_row: "A",
+      seat_column: "A",
     },
     {
       train_car_cd: "E5SER01",
       train_car_number: 1,
-      seat_cd: "SEAT01001",
+      seat_cd: "SEAT01003",
       seat_number: 1,
-      seat_row: "B",
+      seat_column: "B",
     },
     {
       train_car_cd: "E5SER01",
       train_car_number: 1,
-      seat_cd: "SEAT01001",
+      seat_cd: "SEAT01004",
+      seat_number: 3,
+      seat_column: "B",
+    },
+    {
+      train_car_cd: "E5SER01",
+      train_car_number: 1,
+      seat_cd: "SEAT01005",
       seat_number: 2,
-      seat_row: "B",
-    },
-    {
-      train_car_cd: "E5SER01",
-      train_car_number: 1,
-      seat_cd: "SEAT01001",
-      seat_number: 1,
-      seat_row: "",
+      seat_column: "C",
     },
   ];
 
