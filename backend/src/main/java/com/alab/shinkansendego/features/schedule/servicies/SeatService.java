@@ -18,7 +18,7 @@ public class SeatService {
     }
 
     public List<SeatResponseDto> getSeatListByTrainCar(String request) {
-        List<SeatResponseDto> seatList=trainCarRepository.findSeatByTrainCarCd(request);
+        List<SeatResponseDto> seatList = trainCarRepository.findSeatByTrainCarCd(request);
 
         if (seatList.isEmpty()) {
             throw new IllegalArgumentException("TrainCarCd is Not found");

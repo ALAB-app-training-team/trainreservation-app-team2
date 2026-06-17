@@ -1,7 +1,6 @@
 package com.alab.shinkansendego.features.schedule.repositories;
 
 import com.alab.shinkansendego.features.schedule.dtos.SeatResponseDto;
-import com.alab.shinkansendego.features.schedule.dtos.StationResponseDto;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.mybatis.spring.boot.test.autoconfigure.MybatisTest;
@@ -23,7 +22,7 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 @MybatisTest
 @AutoConfigureTestDatabase(replace = AutoConfigureTestDatabase.Replace.NONE)
 @Testcontainers
-@Sql(scripts = {"classpath:com/alab/shinkansendego/features/schedule/sql/SeatTypeTestData.sql","classpath:com/alab/shinkansendego/features/schedule/sql/TrainCarTestData.sql","classpath:com/alab/shinkansendego/features/schedule/sql/SeatTestData.sql"})
+@Sql(scripts = {"classpath:com/alab/shinkansendego/features/schedule/sql/SeatTypeTestData.sql", "classpath:com/alab/shinkansendego/features/schedule/sql/TrainCarTestData.sql", "classpath:com/alab/shinkansendego/features/schedule/sql/SeatTestData.sql"})
 public class TrainCarRepositoryTest {
     // テスト用DB作成
     @Container
