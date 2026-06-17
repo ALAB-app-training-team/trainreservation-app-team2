@@ -1,3 +1,4 @@
+import { Fragment } from "react";
 import { useSeatsByTrainCar } from "../../hooks/useSeatsByTrainCar";
 
 export function SeatsByTrainCar() {
@@ -24,7 +25,7 @@ export function SeatsByTrainCar() {
           }}
         >
           {rows.map((row) => (
-            <>
+            <Fragment key={row}>
               <div className="flex justify-center items-center">{row}</div>
               {columns.map((column) => {
                 const seat = seats.find(
@@ -42,7 +43,7 @@ export function SeatsByTrainCar() {
                   <div key={column + row}></div>
                 );
               })}
-            </>
+            </Fragment>
           ))}
         </div>
       </div>
