@@ -1,8 +1,8 @@
 CREATE TABLE M_SeatType
 (
-    seat_type_cd VARCHAR(6)   NOT NULL PRIMARY KEY,
-    name         VARCHAR(255) NOT NULL,
-    train_car_type_cd  VARCHAR(5)   NOT NULL REFERENCES M_TrainCarType (train_car_type_cd) ON DELETE RESTRICT
+    seat_type_cd      VARCHAR(6)   NOT NULL PRIMARY KEY,
+    name              VARCHAR(255) NOT NULL,
+    train_car_type_cd VARCHAR(5)   NOT NULL REFERENCES M_TrainCarType (train_car_type_cd) ON DELETE RESTRICT
 );
 
 INSERT INTO M_SeatType (seat_type_cd, name, train_car_type_cd)

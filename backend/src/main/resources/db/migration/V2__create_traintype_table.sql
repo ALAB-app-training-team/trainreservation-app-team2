@@ -1,8 +1,8 @@
 CREATE TABLE M_TrainType
 (
-    train_type_cd VARCHAR(5)   NOT NULL PRIMARY KEY,
-    name          VARCHAR(255) NOT NULL,
-    train_series_cd VARCHAR(5) NOT NULL REFERENCES M_TrainSeries (train_series_cd) ON DELETE RESTRICT
+    train_type_cd   VARCHAR(5)   NOT NULL PRIMARY KEY,
+    name            VARCHAR(255) NOT NULL,
+    train_series_cd VARCHAR(5)   NOT NULL REFERENCES M_TrainSeries (train_series_cd) ON DELETE RESTRICT
 );
 
 INSERT INTO M_TrainType (train_type_cd, name, train_series_cd)

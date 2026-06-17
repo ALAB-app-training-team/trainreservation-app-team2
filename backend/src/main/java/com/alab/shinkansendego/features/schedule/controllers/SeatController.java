@@ -6,6 +6,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import java.util.List;
@@ -21,8 +22,8 @@ public class SeatController {
     }
 
     @GetMapping(path = "api/shinkansen-seat")
-    public ResponseEntity<List<SeatResponseDto>> getSeatList(String request) {
-        List<SeatResponseDto> response = seatService.getSeatListByTrainCar(request);
+    public ResponseEntity<List<SeatResponseDto>> getSeatList(@RequestParam String trainCarCd) {
+        List<SeatResponseDto> response = seatService.getSeatListByTrainCar(trainCarCd);
         return ResponseEntity.ok(response);
     }
 }
