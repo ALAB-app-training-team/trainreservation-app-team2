@@ -6,5 +6,5 @@ const SEATS = `${BASE_URL}/shinkansen-seat`;
 export const ENDPOINTS = {
   SCHEDULES_SEARCH: () => SCHEDULES,
   STATIONS: () => STATIONS,
-  SEATS_SELECT: () => `${SEATS}/select`,
+  SEATS_SELECT: () => SEATS,
 };
