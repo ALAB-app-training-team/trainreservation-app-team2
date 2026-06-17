@@ -37,7 +37,7 @@ export function SeatsByTrainCar() {
                     key={seat.seat_cd}
                     className="px-4 py-3 border-2 rounded-lg border-primary-light"
                   >
-                    {seat.seat_column + seat.seat_number}
+                    {seat.seat_number + seat.seat_column}
                   </div>
                 ) : (
                   <div key={column + row}></div>
