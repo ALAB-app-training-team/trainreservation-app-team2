@@ -9,14 +9,14 @@ import java.util.List;
 
 @Service
 public class TrainCarFormationService {
-    private final TrainCarFormationRepository trainCarFormationRepository;
+    private final ScheduleRepository scheduleRepository;
 
     @Autowired
-    public TrainCarFormationService(TrainCarFormationRepository trainCarFormationRepository) {
-        this.trainCarFormationRepository = trainCarFormationRepository;
+    public TrainCarFormationService(ScheduleRepository scheduleRepository) {
+        this.scheduleRepository = scheduleRepository;
     }
 
     public List<TrainCarFormationResponseDto> getTrainCarList(String scheduledCd) {
-        return trainCarFormationRepository.findTrainCarFormationByScheduleCd(scheduledCd);
+        return scheduleRepository.findTrainCarFormationByScheduleCd(scheduledCd);
     }
 }

@@ -10,6 +10,4 @@ import java.util.List;
 @Mapper
 public interface TrainCarFormationRepository {
     List<SeatResponseDto> findSeatByTrainCarCd(@Param("train_car_cd") String train_car_cd);
-
-    List<TrainCarFormationResponseDto> findTrainCarFormationByScheduleCd(@Param("schedule_cd") String scheduleCd);
 }

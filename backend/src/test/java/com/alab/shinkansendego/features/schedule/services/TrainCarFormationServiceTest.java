@@ -1,6 +1,7 @@
 package com.alab.shinkansendego.features.schedule.services;
 
 import com.alab.shinkansendego.features.schedule.dtos.TrainCarFormationResponseDto;
+import com.alab.shinkansendego.features.schedule.repositories.ScheduleRepository;
 import com.alab.shinkansendego.features.schedule.repositories.TrainCarFormationRepository;
 import com.alab.shinkansendego.features.schedule.servicies.TrainCarFormationService;
 import org.jspecify.annotations.NonNull;
@@ -20,7 +21,7 @@ import static org.mockito.Mockito.when;
 public class TrainCarFormationServiceTest {
 
     @Mock
-    private TrainCarFormationRepository trainCarRepo;
+    private ScheduleRepository scheduleRepo;
     @InjectMocks
     private TrainCarFormationService service;
 
@@ -42,7 +43,7 @@ public class TrainCarFormationServiceTest {
         String scheduleCd = "TEST01";
         List<TrainCarFormationResponseDto> expectList = getTrainCarResponseDtosList();
 
-        when(trainCarRepo.findTrainCarFormationByScheduleCd(scheduleCd)).thenReturn(expectList);
+        when(scheduleRepo.findTrainCarFormationByScheduleCd(scheduleCd)).thenReturn(expectList);
 
         List<TrainCarFormationResponseDto> actualList = service.getTrainCarList(scheduleCd);
 

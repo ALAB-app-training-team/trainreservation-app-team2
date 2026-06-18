@@ -32,7 +32,7 @@ public class TrainCarFormationRepositoryTest {
             .withUsername("user")
             .withPassword("pass");
     @Autowired
-    private TrainCarFormationRepository repo;
+    private ScheduleRepository repo;
 
     @DynamicPropertySource
     static void configure(DynamicPropertyRegistry registry) {
