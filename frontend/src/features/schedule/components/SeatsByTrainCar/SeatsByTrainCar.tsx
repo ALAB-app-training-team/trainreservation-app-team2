@@ -1,6 +1,6 @@
 import { Fragment } from "react";
 import { useSeatsByTrainCar } from "../../hooks/useSeatsByTrainCar";
-import { Seat } from "../seat";
+import { Seat } from "../Seat";
 
 type SeatsByTrainCarProps = {
   selectedSeats: string[];
