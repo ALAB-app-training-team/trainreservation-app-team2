@@ -66,7 +66,7 @@ export function SeatsByTrainCar({
         </div>
         <div className="flex gap-4">
           <div className="flex gap-1 items-center">
-            <Seat type="isReserved" isReserveMode={false} />
+            <Seat type="reservable" isReserveMode={false} />
             <div className="text-sm">空席</div>
           </div>
           <div className="flex gap-1 items-center">
@@ -74,7 +74,7 @@ export function SeatsByTrainCar({
             <div className="text-sm">選択中</div>
           </div>
           <div className="flex gap-1 items-center">
-            <Seat type="reservable" isReserveMode={false} />
+            <Seat type="isReserved" isReserveMode={false} />
             <div className="text-sm">予約済み</div>
           </div>
         </div>
