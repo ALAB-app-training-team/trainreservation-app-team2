@@ -13,12 +13,15 @@ export function TrainCars({
 }: TrainCarsProps) {
   return (
     <>
-      <Suspense fallback={<SeatsByTrainCarSkeleton />}>
-        <SeatsByTrainCar
-          selectedSeats={selectedSeats}
-          handleSelectedSeats={handleSelectedSeats}
-        />
-      </Suspense>
+      {/* TODO: このコンポーネントで号車や指定席・グリーン席等を選択できるようにする */}
+      <div className="p-8 border-2 rounded-2xl border-primary-light">
+        <Suspense fallback={<SeatsByTrainCarSkeleton />}>
+          <SeatsByTrainCar
+            selectedSeats={selectedSeats}
+            handleSelectedSeats={handleSelectedSeats}
+          />
+        </Suspense>
+      </div>
     </>
   );
 }

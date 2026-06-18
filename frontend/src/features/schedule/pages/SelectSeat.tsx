@@ -8,12 +8,16 @@ export function SelectSeat() {
 
   return (
     <>
-      <Suspense fallback={<TrainCarsSkeleton />}>
-        <TrainCars
-          selectedSeats={selectedSeats}
-          handleSelectedSeats={handleSelectedSeats}
-        />
-      </Suspense>
+      <div className="p-4">
+        {/* TODO: 戻るボタンを作る */}
+        <Suspense fallback={<TrainCarsSkeleton />}>
+          <TrainCars
+            selectedSeats={selectedSeats}
+            handleSelectedSeats={handleSelectedSeats}
+          />
+        </Suspense>
+        {/* TODO: 選択した座席を一覧にするコンポーネントを作る */}
+      </div>
     </>
   );
 }
