@@ -1,19 +1,21 @@
 import { Fragment } from "react";
 import { useSeatsByTrainCar } from "../../hooks/useSeatsByTrainCar";
+import type { SeatsRequestDto } from "../../types/SeatsRequestDto";
 import type { SeatResponseDto } from "../../types/SeatResponseDto";
 import { Seat } from "../Seat";
 
 type SeatsByTrainCarProps = {
+  seatsRequestDto: SeatsRequestDto;
   selectedSeats: SeatResponseDto[];
   handleSelectedSeats: (seat: SeatResponseDto) => void;
 };
 
 export function SeatsByTrainCar({
+  seatsRequestDto,
   selectedSeats,
   handleSelectedSeats,
 }: SeatsByTrainCarProps) {
-  // TODO: 引数を動的にする
-  const { seats } = useSeatsByTrainCar("E5SER01");
+  const { seats } = useSeatsByTrainCar(seatsRequestDto);
 
   const columns: string[] = Array.from(
     new Set(seats.map((seat) => seat.seat_column)),
