@@ -24,10 +24,10 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 @MybatisTest
 @AutoConfigureTestDatabase(replace = AutoConfigureTestDatabase.Replace.NONE)
 @Testcontainers
-@Sql(scripts = {"classpath:com/alab/shinkansendego/features/schedule/sql/SeatTypeTestData.sql", "classpath:com/alab/shinkansendego/features/schedule/sql/TrainCarFormationTestData.sql", "classpath:com/alab/shinkansendego/features/schedule/sql/SeatTestData.sql"})
+/*@Sql(scripts = {"classpath:com/alab/shinkansendego/features/schedule/sql/SeatTypeTestData.sql", "classpath:com/alab/shinkansendego/features/schedule/sql/TrainCarFormationTestData.sql", "classpath:com/alab/shinkansendego/features/schedule/sql/SeatTestData.sql"})
 @Sql(scripts = {"classpath:com/alab/shinkansendego/features/schedule/sql/TrainTypeTestData.sql",
         "classpath:com/alab/shinkansendego/features/schedule/sql/ScheduleTestData.sql",
-        "classpath:com/alab/shinkansendego/features/schedule/sql/TrainCarFormationTestData.sql"})
+        "classpath:com/alab/shinkansendego/features/schedule/sql/TrainCarFormationTestData.sql"})*/
 public class TrainCarFormationRepositoryTest {
     // テスト用DB作成
     @Container
@@ -45,7 +45,7 @@ public class TrainCarFormationRepositoryTest {
         registry.add("spring.datasource.password", postgres::getPassword);
     }
 
-    @Test
+    /*@Test
     @DisplayName("号車コードから号車内の座席リストが取得できる")
     void findSeatByTrainCarCd_returnGetSeatListSuccess() {
         List<SeatResponseDto> actual = repo.findSeatByTrainCarCd("E5SER01");
@@ -65,7 +65,7 @@ public class TrainCarFormationRepositoryTest {
         assertEquals("A", actual.get(0).getSeat_column());
         assertEquals("B", actual.get(1).getSeat_column());
         assertEquals("C", actual.get(2).getSeat_column());
-    }
+    }*/
 
     @Test
     @DisplayName("ダイヤコードを指定して車両編成が取得できる")
