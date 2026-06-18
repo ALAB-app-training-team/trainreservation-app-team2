@@ -1,4 +1,4 @@
-export type SeatsResponseDto = {
+export type SeatResponseDto = {
   train_car_cd: string;
   train_car_number: number;
   seat_cd: string;
