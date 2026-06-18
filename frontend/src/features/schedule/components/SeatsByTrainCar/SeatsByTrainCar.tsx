@@ -1,13 +1,18 @@
 import { Fragment } from "react";
 import { useSeatsByTrainCar } from "../../hooks/useSeatsByTrainCar";
-import { useSelectedSeats } from "../../hooks/useSelectedSeats";
 import { Seat } from "../seat";
 
-export function SeatsByTrainCar() {
+type SeatsByTrainCarProps = {
+  selectedSeats: string[];
+  handleSelectedSeats: (id: string) => void;
+};
+
+export function SeatsByTrainCar({
+  selectedSeats,
+  handleSelectedSeats,
+}: SeatsByTrainCarProps) {
   // TODO: 引数を動的にする
   const { seats } = useSeatsByTrainCar("E5SER01");
-  // TODO: 1つ上の階層で呼び出すようにする
-  const { selectedSeats, handleSelectedSeats } = useSelectedSeats();
 
   const columns: string[] = Array.from(
     new Set(seats.map((seat) => seat.seat_column)),
