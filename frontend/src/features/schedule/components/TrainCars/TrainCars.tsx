@@ -1,10 +1,11 @@
 import { Suspense } from "react";
+import type { SeatResponseDto } from "../../types/SeatResponseDto";
 import { SeatsByTrainCar } from "../SeatsByTrainCar/SeatsByTrainCar";
 import { SeatsByTrainCarSkeleton } from "../SeatsByTrainCar/SeatsByTrainCarSkeleton";
 
 type TrainCarsProps = {
-  selectedSeats: string[];
-  handleSelectedSeats: (id: string) => void;
+  selectedSeats: SeatResponseDto[];
+  handleSelectedSeats: (seat: SeatResponseDto) => void;
 };
 
 export function TrainCars({
@@ -14,7 +15,7 @@ export function TrainCars({
   return (
     <>
       {/* TODO: このコンポーネントで号車や指定席・グリーン席等を選択できるようにする */}
-      <div className="p-8 border-2 rounded-2xl border-primary-light">
+      <div className="w-full p-8 border-2 rounded-2xl border-primary-light">
         <Suspense fallback={<SeatsByTrainCarSkeleton />}>
           <SeatsByTrainCar
             selectedSeats={selectedSeats}
