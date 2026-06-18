@@ -13,6 +13,8 @@ export function SelectedSeats({ selectedSeats }: SelectedSeatsProps) {
         {selectedSeats.length !== 0 ? (
           selectedSeats
             .sort((a, b) => a.train_car_number - b.train_car_number)
+            .sort((a, b) => a.seat_column.localeCompare(b.seat_column))
+            .sort((a, b) => a.seat_number - b.seat_number)
             .map((selectedSeat) => {
               return (
                 <Fragment key={selectedSeat.seat_cd}>
