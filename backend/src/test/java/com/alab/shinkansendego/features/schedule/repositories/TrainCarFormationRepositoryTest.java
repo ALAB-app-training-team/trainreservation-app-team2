@@ -24,7 +24,6 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 @MybatisTest
 @AutoConfigureTestDatabase(replace = AutoConfigureTestDatabase.Replace.NONE)
 @Testcontainers
-@Sql(scripts = {"classpath:com/alab/shinkansendego/features/schedule/sql/TrainCarFormationTestData.sql"})
 public class TrainCarFormationRepositoryTest {
     // テスト用DB作成
     @Container
@@ -43,6 +42,7 @@ public class TrainCarFormationRepositoryTest {
     }
 
     @Test
+    @Sql(scripts = {"classpath:com/alab/shinkansendego/features/schedule/sql/TrainCarFormationTestData.sql"})
     @DisplayName("ダイヤコードを指定して車両編成が取得できる")
     void findTrainCarByScheduleCd_withScheduleCd_returnGetTrainCarListSuccess() {
         String scheduleCd = "TEST01";
@@ -63,6 +63,7 @@ public class TrainCarFormationRepositoryTest {
     }
 
     @Test
+    @Sql(scripts = {"classpath:com/alab/shinkansendego/features/schedule/sql/TrainCarFormationTestData.sql"})
     @DisplayName("テーブルに存在しないダイヤコードを検索した場合、空のリストが返却されるか")
     void findTrainCarByScheduleCd_withNotExistScheduleCd_returnEmptyList() {
         List<TrainCarFormationResponseDto> actualList = repo.findTrainCarFormationByScheduleCd("99999");
