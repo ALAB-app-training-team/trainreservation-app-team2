@@ -1,7 +1,7 @@
 package com.alab.shinkansendego.features.schedule.services;
 
 import com.alab.shinkansendego.features.schedule.dtos.SeatResponseDto;
-import com.alab.shinkansendego.features.schedule.repositories.TrainCarRepository;
+import com.alab.shinkansendego.features.schedule.repositories.TrainCarFormationRepository;
 import com.alab.shinkansendego.features.schedule.servicies.SeatService;
 import org.jspecify.annotations.NonNull;
 import org.junit.jupiter.api.BeforeEach;
@@ -24,7 +24,7 @@ public class SeatServiceTest {
     private final List<SeatResponseDto> emptySeatList = new ArrayList<>();
 
     @Mock
-    private TrainCarRepository trainCarRepo;
+    private TrainCarFormationRepository trainCarRepo;
     @InjectMocks
     private SeatService service;
 

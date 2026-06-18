@@ -1,6 +1,7 @@
 package com.alab.shinkansendego.features.schedule.repositories;
 
 import com.alab.shinkansendego.features.schedule.dtos.SeatResponseDto;
+import com.alab.shinkansendego.features.schedule.dtos.TrainCarFormationResponseDto;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.mybatis.spring.boot.test.autoconfigure.MybatisTest;
@@ -17,13 +18,17 @@ import org.testcontainers.junit.jupiter.Testcontainers;
 import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 @ActiveProfiles("test")
 @MybatisTest
 @AutoConfigureTestDatabase(replace = AutoConfigureTestDatabase.Replace.NONE)
 @Testcontainers
-@Sql(scripts = {"classpath:com/alab/shinkansendego/features/schedule/sql/SeatTypeTestData.sql", "classpath:com/alab/shinkansendego/features/schedule/sql/TrainCarTestData.sql", "classpath:com/alab/shinkansendego/features/schedule/sql/SeatTestData.sql"})
-public class TrainCarRepositoryTest {
+@Sql(scripts = {"classpath:com/alab/shinkansendego/features/schedule/sql/SeatTypeTestData.sql", "classpath:com/alab/shinkansendego/features/schedule/sql/TrainCarFormationTestData.sql", "classpath:com/alab/shinkansendego/features/schedule/sql/SeatTestData.sql"})
+@Sql(scripts = {"classpath:com/alab/shinkansendego/features/schedule/sql/TrainTypeTestData.sql",
+        "classpath:com/alab/shinkansendego/features/schedule/sql/ScheduleTestData.sql",
+        "classpath:com/alab/shinkansendego/features/schedule/sql/TrainCarFormationTestData.sql"})
+public class TrainCarFormationRepositoryTest {
     // テスト用DB作成
     @Container
     static PostgreSQLContainer<?> postgres = new PostgreSQLContainer<>("postgres:16")
@@ -31,7 +36,7 @@ public class TrainCarRepositoryTest {
             .withUsername("user")
             .withPassword("pass");
     @Autowired
-    private TrainCarRepository repo;
+    private TrainCarFormationRepository repo;
 
     @DynamicPropertySource
     static void configure(DynamicPropertyRegistry registry) {
@@ -60,5 +65,32 @@ public class TrainCarRepositoryTest {
         assertEquals("A", actual.get(0).getSeat_column());
         assertEquals("B", actual.get(1).getSeat_column());
         assertEquals("C", actual.get(2).getSeat_column());
+    }
+
+    @Test
+    @DisplayName("ダイヤコードを指定して車両編成が取得できる")
+    void findTrainCarByScheduleCd_withScheduleCd_returnGetTrainCarListSuccess() {
+        String scheduleCd = "TEST01";
+        List<TrainCarFormationResponseDto> actualList = repo.findTrainCarFormationByScheduleCd(scheduleCd);
+        assertEquals(2, actualList.size());
+
+        TrainCarFormationResponseDto actual01 = actualList.getFirst();
+        assertEquals("E5SER01", actual01.getTrain_car_cd());
+        assertEquals(1, actual01.getTrain_car_number());
+        assertEquals("SEAT01", actual01.getSeat_type_cd());
+        assertEquals("指定席", actual01.getName());
+
+        TrainCarFormationResponseDto actual02 = actualList.getLast();
+        assertEquals("E5SER02", actual02.getTrain_car_cd());
+        assertEquals(2, actual02.getTrain_car_number());
+        assertEquals("SEAT01", actual02.getSeat_type_cd());
+        assertEquals("指定席", actual02.getName());
+    }
+
+    @Test
+    @DisplayName("テーブルに存在しないダイヤコードを検索した場合、空のリストが返却されるか")
+    void findTrainCarByScheduleCd_withNotExistScheduleCd_returnEmptyList() {
+        List<TrainCarFormationResponseDto> actualList = repo.findTrainCarFormationByScheduleCd("99999");
+        assertTrue(actualList.isEmpty());
     }
 }
