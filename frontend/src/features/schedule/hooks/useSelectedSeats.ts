@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useState } from "react";
 
 export function useSelectedSeats() {
   const [selectedSeats, setSelectedSeats] = useState<string[]>([]);
