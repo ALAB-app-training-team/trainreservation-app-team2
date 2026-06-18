@@ -1,9 +1,13 @@
 import { Fragment } from "react";
 import { useSeatsByTrainCar } from "../../hooks/useSeatsByTrainCar";
+import { useSelectedSeats } from "../../hooks/useSelectedSeats";
+import { Seat } from "../seat";
 
 export function SeatsByTrainCar() {
   // TODO: 引数を動的にする
   const { seats } = useSeatsByTrainCar("E5SER01");
+  // TODO: 1つ上の階層で呼び出すようにする
+  const { selectedSeats, handleSelectedSeats } = useSelectedSeats();
 
   const columns: string[] = Array.from(
     new Set(seats.map((seat) => seat.seat_column)),
@@ -33,18 +37,41 @@ export function SeatsByTrainCar() {
                     seat.seat_column === column && seat.seat_number === row,
                 );
                 return seat ? (
-                  <div
+                  <Seat
                     key={seat.seat_cd}
-                    className="px-4 py-3 border-2 rounded-lg border-primary-light"
-                  >
-                    {seat.seat_number + seat.seat_column}
-                  </div>
+                    id={seat.seat_cd}
+                    onClick={handleSelectedSeats}
+                    disabled={seat.is_reserved}
+                    type={
+                      seat.is_reserved
+                        ? "isReserved"
+                        : selectedSeats.includes(seat.seat_cd)
+                          ? "isSelected"
+                          : "reservable"
+                    }
+                    isReserveMode={true}
+                    name={seat.seat_number + seat.seat_column}
+                  />
                 ) : (
                   <div key={column + row}></div>
                 );
               })}
             </Fragment>
           ))}
+        </div>
+        <div className="flex gap-4">
+          <div className="flex gap-1 items-center">
+            <Seat type="isReserved" isReserveMode={false} />
+            <div className="text-sm">空席</div>
+          </div>
+          <div className="flex gap-1 items-center">
+            <Seat type="isSelected" isReserveMode={false} />
+            <div className="text-sm">選択中</div>
+          </div>
+          <div className="flex gap-1 items-center">
+            <Seat type="reservable" isReserveMode={false} />
+            <div className="text-sm">予約済み</div>
+          </div>
         </div>
       </div>
     </>
