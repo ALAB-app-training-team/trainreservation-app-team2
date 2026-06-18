@@ -1,14 +1,23 @@
 import { Suspense } from "react";
-import { SeatsByTrainCar } from "../components/SeatsByTrainCar/SeatsByTrainCar";
-import { SeatsByTrainCarSkeleton } from "../components/SeatsByTrainCar/SeatsByTrainCarSkeleton";
+import { useSelectedSeats } from "../hooks/useSelectedSeats";
+import { TrainCarsSkeleton } from "../components/TrainCars/TrainCarsSkeleton";
+import { TrainCars } from "../components/TrainCars/TrainCars";
 
-// 動作確認用page
 export function SelectSeat() {
+  const { selectedSeats, handleSelectedSeats } = useSelectedSeats();
+
   return (
     <>
-      <Suspense fallback={<SeatsByTrainCarSkeleton />}>
-        <SeatsByTrainCar />
-      </Suspense>
+      <div className="p-4">
+        {/* TODO: 戻るボタンを作る */}
+        <Suspense fallback={<TrainCarsSkeleton />}>
+          <TrainCars
+            selectedSeats={selectedSeats}
+            handleSelectedSeats={handleSelectedSeats}
+          />
+        </Suspense>
+        {/* TODO: 選択した座席を一覧にするコンポーネントを作る */}
+      </div>
     </>
   );
 }
