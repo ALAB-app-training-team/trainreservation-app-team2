@@ -6,7 +6,6 @@ import com.alab.shinkansendego.features.schedule.dtos.ScheduleResponseDto;
 import com.alab.shinkansendego.features.schedule.repositories.DepartureArrivalTimeRepository;
 import com.alab.shinkansendego.features.schedule.repositories.ScheduleRepository;
 import com.alab.shinkansendego.features.schedule.repositories.SectionKmRepository;
-import com.alab.shinkansendego.features.schedule.repositories.StationRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
