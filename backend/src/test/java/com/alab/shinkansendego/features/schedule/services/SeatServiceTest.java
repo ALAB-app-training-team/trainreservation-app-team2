@@ -2,6 +2,8 @@ package com.alab.shinkansendego.features.schedule.services;
 
 import com.alab.shinkansendego.features.schedule.dtos.SeatRequestDto;
 import com.alab.shinkansendego.features.schedule.dtos.SeatResponseDto;
+import com.alab.shinkansendego.features.schedule.repositories.DepartureArrivalTimeRepository;
+import com.alab.shinkansendego.features.schedule.repositories.ReservedSeatSectionRepository;
 import com.alab.shinkansendego.features.schedule.repositories.TrainCarRepository;
 import com.alab.shinkansendego.features.schedule.servicies.SeatService;
 import org.jspecify.annotations.NonNull;
@@ -25,10 +27,15 @@ import static org.mockito.Mockito.when;
 public class SeatServiceTest {
 
     private final List<SeatResponseDto> emptySeatList = new ArrayList<>();
+    private final List<String> emptySectionCdList = new ArrayList<>();
     private final SeatRequestDto request = new SeatRequestDto();
 
     @Mock
     private TrainCarRepository trainCarRepo;
+    @Mock
+    private DepartureArrivalTimeRepository departureArrivalTimeRepo;
+    @Mock
+    private ReservedSeatSectionRepository reservedSeatSectionRepo;
     @InjectMocks
     private SeatService service;
 
@@ -37,6 +44,14 @@ public class SeatServiceTest {
         SeatResponseDto expect02 = new SeatResponseDto("Test001", 1, "TestSeat2", 2, "E", true);
         SeatResponseDto expect03 = new SeatResponseDto("Test001", 1, "TestSeat3", 3, "S", false);
         SeatResponseDto expect04 = new SeatResponseDto("Test001", 1, "TestSeat4", 4, "T", true);
+        return Arrays.asList(expect01, expect02, expect03, expect04);
+    }
+
+    private static @NonNull List<SeatResponseDto> getIsreservedIsNullList() {
+        SeatResponseDto expect01 = new SeatResponseDto("Test001", 1, "TestSeat1", 1, "T", null);
+        SeatResponseDto expect02 = new SeatResponseDto("Test001", 1, "TestSeat2", 2, "E", null);
+        SeatResponseDto expect03 = new SeatResponseDto("Test001", 1, "TestSeat3", 3, "S", null);
+        SeatResponseDto expect04 = new SeatResponseDto("Test001", 1, "TestSeat4", 4, "T", null);
         return Arrays.asList(expect01, expect02, expect03, expect04);
     }
 
@@ -55,7 +70,25 @@ public class SeatServiceTest {
     @Test
     @DisplayName("号車コードから号車内の座席リストが取得できる")
     void getSeatListByTrainCar_returnGetSeatListSuccess() {
-        when(trainCarRepo.findSeatByTrainCarCd("Test001")).thenReturn(getSeatResponseDtosList());
+        when(trainCarRepo.findSeatByTrainCarCd("Test001"))
+                .thenReturn(getIsreservedIsNullList());
+        when(departureArrivalTimeRepo.findSectionCdByScheduleCd(
+                "Test001",
+                LocalTime.of(12, 0, 0),
+                LocalTime.of(13, 0, 0)))
+                .thenReturn(List.of("Test1", "Test2"));
+        when(reservedSeatSectionRepo.findReservedSeatCdOfTrainCarBySectionCd(
+                LocalDate.of(2026, 6, 1),
+                "Test01",
+                "Test001",
+                "Test1"))
+                .thenReturn(List.of("TestSeat2", "TestSeat4"));
+        when(reservedSeatSectionRepo.findReservedSeatCdOfTrainCarBySectionCd(
+                LocalDate.of(2026, 6, 1),
+                "Test01",
+                "Test001",
+                "Test2"))
+                .thenReturn(List.of("TestSeat4"));
 
         List<SeatResponseDto> expectList = getSeatResponseDtosList();
 
@@ -67,7 +100,7 @@ public class SeatServiceTest {
 
     @Test
     @DisplayName("座席情報を持たない号車コードがリクエストされた場合にエラーを発生させる")
-    void getSearchedScheduleByStation_withNotExistStartSectionRequest_returnIllegalArgumentException() {
+    void getSeatListByTrainCar_withNotExistTrainCarCdRequest_returnIllegalArgumentException() {
         when(trainCarRepo.findSeatByTrainCarCd("9999999")).thenReturn(emptySeatList);
         request.setTrain_car_cd("9999999");
         Exception ex = assertThrows(
@@ -75,5 +108,23 @@ public class SeatServiceTest {
                 () -> service.getSeatListByTrainCar(request)
         );
         assertEquals("TrainCarCd is Not found", ex.getMessage());
+    }
+
+    @Test
+    @DisplayName("出発到着時刻情報を持たないダイヤコードがリクエストされた場合にエラーを発生させる")
+    void getSeatListByTrainCar_withNotExistScheduleCdRequest_returnIllegalArgumentException() {
+        when(trainCarRepo.findSeatByTrainCarCd("Test001"))
+                .thenReturn(getIsreservedIsNullList());
+        when(departureArrivalTimeRepo.findSectionCdByScheduleCd(
+                "9999999",
+                LocalTime.of(12, 0, 0),
+                LocalTime.of(13, 0, 0)))
+                .thenReturn(emptySectionCdList);
+        request.setSchedule_cd("9999999");
+        Exception ex = assertThrows(
+                IllegalArgumentException.class,
+                () -> service.getSeatListByTrainCar(request)
+        );
+        assertEquals("SectionCdOfSeat is Not found", ex.getMessage());
     }
 }

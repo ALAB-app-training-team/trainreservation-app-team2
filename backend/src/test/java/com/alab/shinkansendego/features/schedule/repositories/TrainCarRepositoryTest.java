@@ -17,6 +17,7 @@ import org.testcontainers.junit.jupiter.Testcontainers;
 import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNull;
 
 @ActiveProfiles("test")
 @MybatisTest
@@ -60,5 +61,9 @@ public class TrainCarRepositoryTest {
         assertEquals("A", actual.get(0).getSeat_column());
         assertEquals("B", actual.get(1).getSeat_column());
         assertEquals("C", actual.get(2).getSeat_column());
+        assertNull(actual.get(0).getIs_reserved());
+        assertNull(actual.get(1).getIs_reserved());
+        assertNull(actual.get(2).getIs_reserved());
+        assertNull(actual.get(3).getIs_reserved());
     }
 }

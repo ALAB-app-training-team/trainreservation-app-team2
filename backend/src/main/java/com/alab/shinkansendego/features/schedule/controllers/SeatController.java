@@ -23,8 +23,8 @@ public class SeatController {
     }
 
     @GetMapping(path = "api/shinkansen-seat")
-    public ResponseEntity<List<SeatResponseDto>> getSeatList(@Valid SeatRequestDto request) {
-        List<SeatResponseDto> response = seatService.getSeatListByTrainCar(request);
+    public ResponseEntity<List<SeatResponseDto>> getSeatList(@Valid SeatRequestDto seatRequestDto) {
+        List<SeatResponseDto> response = seatService.getSeatListByTrainCar(seatRequestDto);
         return ResponseEntity.ok(response);
     }
 }

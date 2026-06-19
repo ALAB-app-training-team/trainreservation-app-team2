@@ -12,5 +12,5 @@ public interface ReservedSeatSectionRepository {
             (@Param("ride_date") LocalDate ride_date,
              @Param("schedule_cd") String schedule_cd,
              @Param("train_car_cd") String train_car_cd,
-             @Param("reserved_section_cd") String reserved_section_cd);
+             @Param("reserved_section_cd") String section_cd);
 }

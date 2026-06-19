@@ -3,6 +3,9 @@ package com.alab.shinkansendego.features.schedule.controllers;
 import com.alab.shinkansendego.features.schedule.dtos.SeatRequestDto;
 import com.alab.shinkansendego.features.schedule.dtos.SeatResponseDto;
 import com.alab.shinkansendego.features.schedule.servicies.SeatService;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.databind.SerializationFeature;
+import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
 import org.jspecify.annotations.NonNull;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
@@ -27,6 +30,9 @@ public class SeatControllerTest {
 
     private final String baseUrl = "/api/shinkansen-";
     private final SeatRequestDto request = new SeatRequestDto();
+
+    @Autowired
+    private ObjectMapper objectMapper;
     @Autowired
     private MockMvc mockMvc;
     @MockitoBean
@@ -34,14 +40,16 @@ public class SeatControllerTest {
 
     private static @NonNull List<SeatResponseDto> getSeatResponseDtosList() {
         SeatResponseDto expect01 = new SeatResponseDto("Test001", 1, "TestSeat1", 1, "T", false);
-        SeatResponseDto expect02 = new SeatResponseDto("Test001", 1, "TestSeat2", 2, "E", false);
-        SeatResponseDto expect03 = new SeatResponseDto("Test001", 1, "TestSeat3", 3, "S", true);
-        SeatResponseDto expect04 = new SeatResponseDto("Test001", 1, "TestSeat4", 4, "T", false);
+        SeatResponseDto expect02 = new SeatResponseDto("Test001", 1, "TestSeat2", 2, "E", true);
+        SeatResponseDto expect03 = new SeatResponseDto("Test001", 1, "TestSeat3", 3, "S", false);
+        SeatResponseDto expect04 = new SeatResponseDto("Test001", 1, "TestSeat4", 4, "T", true);
         return Arrays.asList(expect01, expect02, expect03, expect04);
     }
 
     @BeforeEach
     void setUp() {
+        objectMapper.registerModule(new JavaTimeModule());
+        objectMapper.disable(SerializationFeature.WRITE_DATES_AS_TIMESTAMPS);
         request.setSchedule_cd("Test01");
         request.setDate(LocalDate.of(2026, 6, 1));
         request.setDeparture_station_cd("Test1");
@@ -83,17 +91,38 @@ public class SeatControllerTest {
                 .andExpect(jsonPath("$[0].seat_column").value("T"))
                 .andExpect(jsonPath("$[1].seat_column").value("E"))
                 .andExpect(jsonPath("$[2].seat_column").value("S"))
-                .andExpect(jsonPath("$[3].seat_column").value("T"));
+                .andExpect(jsonPath("$[3].seat_column").value("T"))
+                .andExpect(jsonPath("$[0].is_reserved").value(false))
+                .andExpect(jsonPath("$[1].is_reserved").value(true))
+                .andExpect(jsonPath("$[2].is_reserved").value(false))
+                .andExpect(jsonPath("$[3].is_reserved").value(true));
+    }
+
+    @Test
+    @DisplayName("リクエストのカラムがNullの場合、バリデーションエラー発生")
+    void getSeatList_withNotValidSeatRequestDto_returnValidationError() throws Exception {
+
+        request.setTrain_car_cd(null);
+        String url = baseUrl
+                + "?schedule_cd=THK055&date=2026-06-23&departure_station_cd=THK01&departure_time=17:20:00&arrival_station_cd=THK20&arrival_time=20:40:00";
+
+        String json = objectMapper.writeValueAsString(request);
+
+        mockMvc.perform(get(url)
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(json))
+                .andExpect(status().isBadRequest())
+                .andExpect(content().string("TrainCarCd is Null"));
     }
 
     @Test
     @DisplayName("リクエストがNullの場合、パラメーターエラー発生")
-    void getSeatList_withTrainCarCdIsNull_returnRequestParamError() throws Exception {
+    void getSeatList_withSeatRequestDtoIsNull_returnRequestParamError() throws Exception {
 
         String url = baseUrl + "seat?";
 
         mockMvc.perform(get(url))
                 .andExpect(status().isBadRequest())
-                .andExpect(content().string("trainCarCd is Null"));
+                .andExpect(content().string("seatRequestDto is Null"));
     }
 }
