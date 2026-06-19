@@ -7,7 +7,7 @@ import { useSelectedSeats } from "../hooks/useSelectedSeats";
 
 export function SelectSeat() {
   const location = useLocation();
-  const { trainCarRequestDto } = location.state;
+  const { scheduleInfoDto } = location.state;
   const { selectedSeats, handleSelectedSeats } = useSelectedSeats();
 
   return (
@@ -17,7 +17,7 @@ export function SelectSeat() {
         <div className="w-full md:w-7/10">
           <Suspense fallback={<TrainCarsSkeleton />}>
             <TrainCars
-              trainCarRequestDto={trainCarRequestDto}
+              scheduleInfoDto={scheduleInfoDto}
               selectedSeats={selectedSeats}
               handleSelectedSeats={handleSelectedSeats}
             />

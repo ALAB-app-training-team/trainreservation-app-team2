@@ -2,7 +2,7 @@ import { useNavigate } from "react-router-dom";
 import { FiArrowRight } from "react-icons/fi";
 import { PiTrainBold } from "react-icons/pi";
 import type { SearchResponseDto } from "../types/SearchResponseDto";
-import type { TrainCarRequestDto } from "../types/TrainCarRequestDto";
+import type { ScheduleInfoDto } from "../types/ScheduleInfoDto";
 
 type ScheduleItemProps = {
   schedule: SearchResponseDto;
@@ -50,14 +50,14 @@ export function ScheduleItem({
   };
 
   const handleSearch = () => {
-    const trainCarRequestDto: TrainCarRequestDto = {
+    const scheduleInfoDto: ScheduleInfoDto = {
       schedule_cd: schedule.schedule_cd,
       date: date,
       departure_station_cd: departure_station_cd,
       arrival_station_cd: arrival_station_cd,
     };
     navigate("/selectSeat", {
-      state: { trainCarRequestDto },
+      state: { scheduleInfoDto },
     });
   };
 

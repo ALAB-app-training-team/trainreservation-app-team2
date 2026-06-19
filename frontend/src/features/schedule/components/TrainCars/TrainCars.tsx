@@ -1,27 +1,27 @@
 import { Suspense } from "react";
 import type { SeatsRequestDto } from "../../types/SeatsRequestDto";
 import type { SeatResponseDto } from "../../types/SeatResponseDto";
-import type { TrainCarRequestDto } from "../../types/TrainCarRequestDto";
+import type { ScheduleInfoDto } from "../../types/ScheduleInfoDto";
 import { SeatsByTrainCar } from "../SeatsByTrainCar/SeatsByTrainCar";
 import { SeatsByTrainCarSkeleton } from "../SeatsByTrainCar/SeatsByTrainCarSkeleton";
 
 type TrainCarsProps = {
-  trainCarRequestDto: TrainCarRequestDto;
+  scheduleInfoDto: ScheduleInfoDto;
   selectedSeats: SeatResponseDto[];
   handleSelectedSeats: (seat: SeatResponseDto) => void;
 };
 
 export function TrainCars({
-  trainCarRequestDto,
+  scheduleInfoDto,
   selectedSeats,
   handleSelectedSeats,
 }: TrainCarsProps) {
   // TODO: train_car_cdを動的にする
   const seatsRequestDto: SeatsRequestDto = {
-    schedule_cd: trainCarRequestDto.schedule_cd,
-    date: trainCarRequestDto.date,
-    departure_station_cd: trainCarRequestDto.departure_station_cd,
-    arrival_station_cd: trainCarRequestDto.arrival_station_cd,
+    schedule_cd: scheduleInfoDto.schedule_cd,
+    date: scheduleInfoDto.date,
+    departure_station_cd: scheduleInfoDto.departure_station_cd,
+    arrival_station_cd: scheduleInfoDto.arrival_station_cd,
     train_car_cd: "E5SER01",
   };
 
