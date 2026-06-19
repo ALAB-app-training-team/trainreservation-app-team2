@@ -22,7 +22,7 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 @MybatisTest
 @AutoConfigureTestDatabase(replace = AutoConfigureTestDatabase.Replace.NONE)
 @Testcontainers
-@Sql(scripts = {"classpath:com/alab/shinkansendego/features/schedule/sql/SeatTypeTestData.sql", "classpath:com/alab/shinkansendego/features/schedule/sql/TrainCarTestData.sql", "classpath:com/alab/shinkansendego/features/schedule/sql/SeatTestData.sql"})
+@Sql(scripts = "classpath:com/alab/shinkansendego/features/schedule/sql/ReservedSeatSectionTestData.sql")
 public class ReservedSeatSectionRepositoryTest {
     // テスト用DB作成
     @Container

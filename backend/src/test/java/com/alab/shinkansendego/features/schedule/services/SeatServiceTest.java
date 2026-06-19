@@ -73,7 +73,7 @@ public class SeatServiceTest {
         when(trainCarRepo.findSeatByTrainCarCd("Test001"))
                 .thenReturn(getIsreservedIsNullList());
         when(departureArrivalTimeRepo.findSectionCdByScheduleCd(
-                "Test001",
+                "Test01",
                 LocalTime.of(12, 0, 0),
                 LocalTime.of(13, 0, 0)))
                 .thenReturn(List.of("Test1", "Test2"));

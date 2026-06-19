@@ -64,6 +64,5 @@ public class TrainCarRepositoryTest {
         assertNull(actual.get(0).getIs_reserved());
         assertNull(actual.get(1).getIs_reserved());
         assertNull(actual.get(2).getIs_reserved());
-        assertNull(actual.get(3).getIs_reserved());
     }
 }

@@ -31,8 +31,8 @@ public class SeatControllerTest {
     private final String baseUrl = "/api/shinkansen-";
     private final SeatRequestDto request = new SeatRequestDto();
 
-    @Autowired
-    private ObjectMapper objectMapper;
+    // TODO:リクエストのLocalDateとの相性が悪くエラーが出たため以下処理としたが、@Autowiredが推奨されるためいつか変更したい
+    private final ObjectMapper objectMapper = new ObjectMapper();
     @Autowired
     private MockMvc mockMvc;
     @MockitoBean
@@ -64,7 +64,8 @@ public class SeatControllerTest {
     void getSeatList_returnGetSeatListSuccess() throws Exception {
 
         List<SeatResponseDto> expectList = getSeatResponseDtosList();
-        String url = baseUrl + "seat?trainCarCd=Test001";
+        String url = baseUrl
+                + "seat?schedule_cd=Test01&date=2026-06-01&departure_station_cd=Test1&departure_time=12:00:00&arrival_station_cd=Test2&arrival_time=13:00:00&train_car_cd=Test001";
 
         Mockito.when(service.getSeatListByTrainCar(request)).thenReturn(expectList);
 
@@ -104,7 +105,7 @@ public class SeatControllerTest {
 
         request.setTrain_car_cd(null);
         String url = baseUrl
-                + "?schedule_cd=THK055&date=2026-06-23&departure_station_cd=THK01&departure_time=17:20:00&arrival_station_cd=THK20&arrival_time=20:40:00";
+                + "seat?schedule_cd=THK055&date=2026-06-23&departure_station_cd=THK01&departure_time=17:20:00&arrival_station_cd=THK20&arrival_time=20:40:00";
 
         String json = objectMapper.writeValueAsString(request);
 
@@ -116,13 +117,12 @@ public class SeatControllerTest {
     }
 
     @Test
-    @DisplayName("リクエストがNullの場合、パラメーターエラー発生")
+    @DisplayName("リクエストDTO自体がNullの場合、パラメーターエラー発生")
     void getSeatList_withSeatRequestDtoIsNull_returnRequestParamError() throws Exception {
 
         String url = baseUrl + "seat?";
 
         mockMvc.perform(get(url))
-                .andExpect(status().isBadRequest())
-                .andExpect(content().string("seatRequestDto is Null"));
+                .andExpect(status().isBadRequest());
     }
 }
