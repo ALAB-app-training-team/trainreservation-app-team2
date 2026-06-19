@@ -11,7 +11,7 @@ export function useSeatsByTrainCar(seatsRequestDto: SeatsRequestDto) {
       const response = await axios.get<SeatResponseDto[]>(
         ENDPOINTS.SEATS_SELECT(),
         {
-          params: { seatsRequestDto },
+          params: seatsRequestDto,
         },
       );
       return response.data;
