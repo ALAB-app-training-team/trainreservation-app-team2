@@ -1,5 +1,6 @@
 package com.alab.shinkansendego.features.schedule.servicies;
 
+import com.alab.shinkansendego.features.schedule.dtos.SeatRequestDto;
 import com.alab.shinkansendego.features.schedule.dtos.SeatResponseDto;
 import com.alab.shinkansendego.features.schedule.repositories.TrainCarRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -17,12 +18,14 @@ public class SeatService {
         this.trainCarRepository = trainCarRepository;
     }
 
-    public List<SeatResponseDto> getSeatListByTrainCar(String request) {
-        List<SeatResponseDto> seatList = trainCarRepository.findSeatByTrainCarCd(request);
-
+    public List<SeatResponseDto> getSeatListByTrainCar(SeatRequestDto request) {
+        List<SeatResponseDto> seatList = trainCarRepository.findSeatByTrainCarCd(request.getTrain_car_cd());
         if (seatList.isEmpty()) {
             throw new IllegalArgumentException("TrainCarCd is Not found");
         }
+
+        
+
 
         return seatList;
     }
