@@ -1,9 +1,12 @@
+import { useNavigate } from "react-router-dom";
 import { FiArrowRight } from "react-icons/fi";
 import { PiTrainBold } from "react-icons/pi";
 import type { SearchResponseDto } from "../types/SearchResponseDto";
+import type { ScheduleInfoDto } from "../types/ScheduleInfoDto";
 
 type ScheduleItemProps = {
   schedule: SearchResponseDto;
+  date: string;
   departure_station_cd: string;
   departure_station_name: string;
   arrival_station_cd: string;
@@ -12,11 +15,14 @@ type ScheduleItemProps = {
 
 export function ScheduleItem({
   schedule,
+  date,
   departure_station_cd,
   departure_station_name,
   arrival_station_cd,
   arrival_station_name,
 }: ScheduleItemProps) {
+  const navigate = useNavigate();
+
   const calculateDuration = (
     departureTime: string,
     arrivalTime: string,
@@ -44,7 +50,15 @@ export function ScheduleItem({
   };
 
   const handleSearch = () => {
-    console.log(schedule, departure_station_cd, arrival_station_cd);
+    const scheduleInfoDto: ScheduleInfoDto = {
+      schedule_cd: schedule.schedule_cd,
+      date: date,
+      departure_station_cd: departure_station_cd,
+      arrival_station_cd: arrival_station_cd,
+    };
+    navigate("/selectSeat", {
+      state: { scheduleInfoDto },
+    });
   };
 
   return (
@@ -95,7 +109,11 @@ export function ScheduleItem({
             </div>
             <div>{arrival_station_name}</div>
           </div>
-          <button type="button" onClick={handleSearch}>
+          <button
+            type="button"
+            onClick={handleSearch}
+            className="p-2 rounded-lg bg-primary text-white"
+          >
             詳細を見る
           </button>
         </div>

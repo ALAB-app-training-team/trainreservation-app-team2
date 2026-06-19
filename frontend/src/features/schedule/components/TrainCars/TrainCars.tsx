@@ -1,22 +1,37 @@
 import { Suspense } from "react";
+import type { SeatsRequestDto } from "../../types/SeatsRequestDto";
+import type { SeatResponseDto } from "../../types/SeatResponseDto";
+import type { ScheduleInfoDto } from "../../types/ScheduleInfoDto";
 import { SeatsByTrainCar } from "../SeatsByTrainCar/SeatsByTrainCar";
 import { SeatsByTrainCarSkeleton } from "../SeatsByTrainCar/SeatsByTrainCarSkeleton";
 
 type TrainCarsProps = {
-  selectedSeats: string[];
-  handleSelectedSeats: (id: string) => void;
+  scheduleInfoDto: ScheduleInfoDto;
+  selectedSeats: SeatResponseDto[];
+  handleSelectedSeats: (seat: SeatResponseDto) => void;
 };
 
 export function TrainCars({
+  scheduleInfoDto,
   selectedSeats,
   handleSelectedSeats,
 }: TrainCarsProps) {
+  // TODO: train_car_cdを動的にする
+  const seatsRequestDto: SeatsRequestDto = {
+    schedule_cd: scheduleInfoDto.schedule_cd,
+    date: scheduleInfoDto.date,
+    departure_station_cd: scheduleInfoDto.departure_station_cd,
+    arrival_station_cd: scheduleInfoDto.arrival_station_cd,
+    train_car_cd: "E5SER01",
+  };
+
   return (
     <>
       {/* TODO: このコンポーネントで号車や指定席・グリーン席等を選択できるようにする */}
-      <div className="p-8 border-2 rounded-2xl border-primary-light">
+      <div className="w-full p-8 border-2 rounded-2xl border-primary-light">
         <Suspense fallback={<SeatsByTrainCarSkeleton />}>
           <SeatsByTrainCar
+            seatsRequestDto={seatsRequestDto}
             selectedSeats={selectedSeats}
             handleSelectedSeats={handleSelectedSeats}
           />
