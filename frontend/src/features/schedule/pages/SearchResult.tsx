@@ -13,9 +13,10 @@ export function SearchResult() {
   const { dto, departure_station_name, arrival_station_name } = location.state;
   const [departureStationName] = useState(departure_station_name);
   const [arrivalStationName] = useState(arrival_station_name);
-  const { setTime, setDate, searchRequestDto } = useSearchRequestDto({
-    condition: dto,
-  });
+  const { setTime, setDate, searchRequestDto, isInvalid, getFieldError } =
+    useSearchRequestDto({
+      condition: dto,
+    });
 
   return (
     <>
@@ -42,6 +43,7 @@ export function SearchResult() {
               type="date"
               value={searchRequestDto.date}
               setValue={setDate}
+              getFieldError={getFieldError}
             />
             <DepartureDateAndTimePicker
               id="time"
@@ -49,12 +51,14 @@ export function SearchResult() {
               type="time"
               value={searchRequestDto.time}
               setValue={setTime}
+              getFieldError={getFieldError}
             />
           </div>
           <Suspense fallback={<ScheduleListSkeleton />}>
             <ScheduleList
               key={JSON.stringify(searchRequestDto)}
               searchRequestDto={searchRequestDto}
+              isInvalid={isInvalid}
               departureStationName={departureStationName}
               arrivalStationName={arrivalStationName}
             />

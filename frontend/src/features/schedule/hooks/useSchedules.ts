@@ -4,10 +4,16 @@ import { ENDPOINTS } from "../../../api/routes";
 import type { SearchRequestDto } from "../types/SearchRequestDto";
 import type { SearchResponseDto } from "../types/SearchResponseDto";
 
-export function useSchedules(searchRequestDto: SearchRequestDto) {
+export function useSchedules(
+  searchRequestDto: SearchRequestDto,
+  isInvalid: boolean,
+) {
   const { data: schedules } = useSuspenseQuery({
     queryKey: ["schedule", searchRequestDto],
     queryFn: async () => {
+      if (isInvalid) {
+        return [];
+      }
       // await new Promise(resolve => setTimeout(resolve, 5000))
       const response = await axios.get<SearchResponseDto[]>(
         ENDPOINTS.SCHEDULES_SEARCH(),
