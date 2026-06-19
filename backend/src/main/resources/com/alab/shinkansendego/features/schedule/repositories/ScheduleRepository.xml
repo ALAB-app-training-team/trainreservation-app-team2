@@ -18,8 +18,6 @@
         FROM M_Schedule s
         INNER JOIN M_TrainType tt
         ON s.train_type_cd = tt.train_type_cd
-        INNER JOIN M_TrainSeries ts
-        ON tt.train_series_cd = ts.train_series_cd
         INNER JOIN M_TrainCar tc
         ON tt.train_series_cd = tc.train_series_cd
         INNER JOIN M_SeatType st
@@ -27,6 +25,6 @@
         INNER JOIN M_TrainCarType tct
         ON st.train_car_type_cd = tct.train_car_type_cd
         WHERE s.schedule_cd = #{schedule_cd}
-        ORDER BY tc.train_car_number ASC
+        ORDER BY tc.train_car_number ASC;
     </select>
 </mapper>

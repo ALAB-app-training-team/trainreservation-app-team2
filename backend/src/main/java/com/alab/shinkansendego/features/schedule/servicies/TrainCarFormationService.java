@@ -1,7 +1,7 @@
 package com.alab.shinkansendego.features.schedule.servicies;
 
 import com.alab.shinkansendego.features.schedule.dtos.TrainCarFormationResponseDto;
-import com.alab.shinkansendego.features.schedule.repositories.*;
+import com.alab.shinkansendego.features.schedule.repositories.ScheduleRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -17,6 +17,11 @@ public class TrainCarFormationService {
     }
 
     public List<TrainCarFormationResponseDto> getTrainCarList(String scheduledCd) {
-        return scheduleRepository.findTrainCarFormationByScheduleCd(scheduledCd);
+        List<TrainCarFormationResponseDto> trainCarList = scheduleRepository.findTrainCarFormationByScheduleCd(scheduledCd);
+
+        if (trainCarList.isEmpty()) {
+            throw new IllegalArgumentException("ScheduleCd is Not found");
+        }
+        return trainCarList;
     }
 }

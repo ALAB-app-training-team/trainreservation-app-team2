@@ -1,6 +1,5 @@
 package com.alab.shinkansendego.features.schedule.repositories;
 
-import com.alab.shinkansendego.features.schedule.dtos.SeatResponseDto;
 import com.alab.shinkansendego.features.schedule.dtos.TrainCarFormationResponseDto;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -24,7 +23,7 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 @MybatisTest
 @AutoConfigureTestDatabase(replace = AutoConfigureTestDatabase.Replace.NONE)
 @Testcontainers
-public class TrainCarFormationRepositoryTest {
+public class TrainCarRepositoryTest {
     // テスト用DB作成
     @Container
     static PostgreSQLContainer<?> postgres = new PostgreSQLContainer<>("postgres:16")
