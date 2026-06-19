@@ -4,6 +4,7 @@ import jakarta.validation.constraints.NotNull;
 import lombok.*;
 
 import java.time.LocalDate;
+import java.time.LocalTime;
 
 @Data
 @NoArgsConstructor
@@ -17,8 +18,12 @@ public class SeatRequestDto {
     private LocalDate date;
     @NotNull(message = "DepartureStationCd is Null")
     private String departure_station_cd;
+    @NotNull(message = "DepartureTime is Null")
+    private LocalTime departure_time;
     @NotNull(message = "ArrivalStationCd is Null")
-    private String arrival_station_cdr;
+    private String arrival_station_cd;
+    @NotNull(message = "ArrivalTime is Null")
+    private LocalTime arrival_time;
     @NotNull(message = "TrainCarCd is Null")
     private String train_car_cd;
 }

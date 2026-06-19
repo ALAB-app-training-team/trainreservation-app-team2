@@ -54,7 +54,9 @@ export function ScheduleItem({
       schedule_cd: schedule.schedule_cd,
       date: date,
       departure_station_cd: departure_station_cd,
+      departure_time: schedule.departure_time,
       arrival_station_cd: arrival_station_cd,
+      arrival_time: schedule.arrival_time,
     };
     navigate("/selectSeat", {
       state: { scheduleInfoDto },

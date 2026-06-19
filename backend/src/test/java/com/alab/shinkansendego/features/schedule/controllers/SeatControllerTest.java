@@ -1,8 +1,10 @@
 package com.alab.shinkansendego.features.schedule.controllers;
 
+import com.alab.shinkansendego.features.schedule.dtos.SeatRequestDto;
 import com.alab.shinkansendego.features.schedule.dtos.SeatResponseDto;
 import com.alab.shinkansendego.features.schedule.servicies.SeatService;
 import org.jspecify.annotations.NonNull;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;
@@ -12,6 +14,8 @@ import org.springframework.http.MediaType;
 import org.springframework.test.context.bean.override.mockito.MockitoBean;
 import org.springframework.test.web.servlet.MockMvc;
 
+import java.time.LocalDate;
+import java.time.LocalTime;
 import java.util.Arrays;
 import java.util.List;
 
@@ -22,17 +26,29 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 public class SeatControllerTest {
 
     private final String baseUrl = "/api/shinkansen-";
+    private final SeatRequestDto request = new SeatRequestDto();
     @Autowired
     private MockMvc mockMvc;
     @MockitoBean
     private SeatService service;
 
     private static @NonNull List<SeatResponseDto> getSeatResponseDtosList() {
-        SeatResponseDto expect01 = new SeatResponseDto("Test001", 1, "TestSeat1", 1, "T");
-        SeatResponseDto expect02 = new SeatResponseDto("Test001", 1, "TestSeat2", 2, "E");
-        SeatResponseDto expect03 = new SeatResponseDto("Test001", 1, "TestSeat3", 3, "S");
-        SeatResponseDto expect04 = new SeatResponseDto("Test001", 1, "TestSeat4", 4, "T");
+        SeatResponseDto expect01 = new SeatResponseDto("Test001", 1, "TestSeat1", 1, "T", false);
+        SeatResponseDto expect02 = new SeatResponseDto("Test001", 1, "TestSeat2", 2, "E", false);
+        SeatResponseDto expect03 = new SeatResponseDto("Test001", 1, "TestSeat3", 3, "S", true);
+        SeatResponseDto expect04 = new SeatResponseDto("Test001", 1, "TestSeat4", 4, "T", false);
         return Arrays.asList(expect01, expect02, expect03, expect04);
+    }
+
+    @BeforeEach
+    void setUp() {
+        request.setSchedule_cd("Test01");
+        request.setDate(LocalDate.of(2026, 6, 1));
+        request.setDeparture_station_cd("Test1");
+        request.setDeparture_time(LocalTime.of(12, 0, 0));
+        request.setArrival_station_cd("Test2");
+        request.setArrival_time(LocalTime.of(13, 0, 0));
+        request.setTrain_car_cd("Test001");
     }
 
     @Test
@@ -42,7 +58,7 @@ public class SeatControllerTest {
         List<SeatResponseDto> expectList = getSeatResponseDtosList();
         String url = baseUrl + "seat?trainCarCd=Test001";
 
-        Mockito.when(service.getSeatListByTrainCar("Test001")).thenReturn(expectList);
+        Mockito.when(service.getSeatListByTrainCar(request)).thenReturn(expectList);
 
         mockMvc.perform(
                         get(url).contentType(MediaType.APPLICATION_JSON))
