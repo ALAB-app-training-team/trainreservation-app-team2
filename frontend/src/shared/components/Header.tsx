@@ -14,10 +14,12 @@ export function Header() {
   return (
     <div className="relative min-h-16 flex items-center justify-start gap-6 px-8 py-2 border-primary-light border-b-2">
       <NavLink
-        to="/searchSchedule"
+        to="/"
         className={({ isActive }) =>
           `flex items-center gap-2 text-lg text-primary font-bold px-4 ${
-            isActive ? "cursor-default" : "cursor-pointer"
+            isActive || location.pathname === "/searchSchedule"
+              ? "cursor-default"
+              : "cursor-pointer"
           }`
         }
       >

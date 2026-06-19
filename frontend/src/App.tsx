@@ -1,4 +1,9 @@
-import { createBrowserRouter, RouterProvider, Outlet } from "react-router-dom";
+import {
+  createBrowserRouter,
+  redirect,
+  RouterProvider,
+  Outlet,
+} from "react-router-dom";
 import { SearchResult } from "./features/schedule/pages/SearchResult";
 import { SearchSchedule } from "./features/schedule/pages/SearchSchedule";
 import { Error } from "./shared/pages/Error";
@@ -24,7 +29,11 @@ const router = createBrowserRouter([
     path: "/",
     element: <Layout />,
     children: [
-      { path: "/", element: <SearchSchedule />, errorElement: <Error /> },
+      {
+        path: "/",
+        loader: () => redirect("/searchSchedule"),
+        errorElement: <Error />,
+      },
       {
         path: "/searchResult",
         element: <SearchResult />,
