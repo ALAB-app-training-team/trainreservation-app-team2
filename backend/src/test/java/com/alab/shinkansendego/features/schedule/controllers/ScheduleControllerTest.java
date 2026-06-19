@@ -38,10 +38,10 @@ public class ScheduleControllerTest {
     private ScheduleService service;
 
     private static @NonNull List<ScheduleResponseDto> getExpectScheduleResponseDtosList() {
-        ScheduleResponseDto expect01 = new ScheduleResponseDto("やまびこ2号", LocalTime.of(11, 0, 0), LocalTime.of(16, 10, 0));
-        ScheduleResponseDto expect02 = new ScheduleResponseDto("やまびこ3号", LocalTime.of(12, 0, 0), LocalTime.of(12, 30, 0));
-        ScheduleResponseDto expect03 = new ScheduleResponseDto("やまびこ4号", LocalTime.of(13, 0, 0), LocalTime.of(13, 40, 0));
-        ScheduleResponseDto expect04 = new ScheduleResponseDto("やまびこ6号", LocalTime.of(15, 0, 0), LocalTime.of(16, 0, 0));
+        ScheduleResponseDto expect01 = new ScheduleResponseDto("THK001", "やまびこ2号", LocalTime.of(11, 0, 0), LocalTime.of(16, 10, 0));
+        ScheduleResponseDto expect02 = new ScheduleResponseDto("THK002", "やまびこ3号", LocalTime.of(12, 0, 0), LocalTime.of(12, 30, 0));
+        ScheduleResponseDto expect03 = new ScheduleResponseDto("THK003", "やまびこ4号", LocalTime.of(13, 0, 0), LocalTime.of(13, 40, 0));
+        ScheduleResponseDto expect04 = new ScheduleResponseDto("THK004", "やまびこ6号", LocalTime.of(15, 0, 0), LocalTime.of(16, 0, 0));
         return Arrays.asList(expect01, expect02, expect03, expect04);
     }
 
@@ -72,6 +72,10 @@ public class ScheduleControllerTest {
                                 .content(json))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.length()").value(4))
+                .andExpect(jsonPath("$[0].schedule_cd").value("THK001"))
+                .andExpect(jsonPath("$[1].schedule_cd").value("THK002"))
+                .andExpect(jsonPath("$[2].schedule_cd").value("THK003"))
+                .andExpect(jsonPath("$[3].schedule_cd").value("THK004"))
                 .andExpect(jsonPath("$[0].train_type_name").value("やまびこ2号"))
                 .andExpect(jsonPath("$[1].train_type_name").value("やまびこ3号"))
                 .andExpect(jsonPath("$[2].train_type_name").value("やまびこ4号"))
