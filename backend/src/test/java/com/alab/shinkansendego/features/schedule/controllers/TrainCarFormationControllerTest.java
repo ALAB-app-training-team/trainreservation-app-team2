@@ -54,11 +54,11 @@ public class TrainCarFormationControllerTest {
                 .andExpect(jsonPath("$[0].train_car_cd").value("E5SER01"))
                 .andExpect(jsonPath("$[0].train_car_number").value(1))
                 .andExpect(jsonPath("$[0].seat_type_cd").value("SEAT01"))
-                .andExpect(jsonPath("$[0].name").value("指定席"))
+                .andExpect(jsonPath("$[0].train_car_type_name").value("指定席"))
 
                 .andExpect(jsonPath("$[1].train_car_cd").value("E5SER02"))
                 .andExpect(jsonPath("$[1].train_car_number").value(2))
                 .andExpect(jsonPath("$[1].seat_type_cd").value("SEAT01"))
-                .andExpect(jsonPath("$[1].name").value("指定席"));
+                .andExpect(jsonPath("$[1].train_car_type_name").value("指定席"));
     }
 }

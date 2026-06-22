@@ -2,7 +2,6 @@ package com.alab.shinkansendego.features.schedule.services;
 
 import com.alab.shinkansendego.features.schedule.dtos.TrainCarFormationResponseDto;
 import com.alab.shinkansendego.features.schedule.repositories.ScheduleRepository;
-import com.alab.shinkansendego.features.schedule.repositories.TrainCarFormationRepository;
 import com.alab.shinkansendego.features.schedule.servicies.TrainCarFormationService;
 import org.jspecify.annotations.NonNull;
 import org.junit.jupiter.api.BeforeEach;

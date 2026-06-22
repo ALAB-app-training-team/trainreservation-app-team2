@@ -14,7 +14,7 @@
         tc.train_car_cd,
         tc.train_car_number,
         tc.seat_type_cd,
-        tct.name
+        tct.name AS train_car_type_name
         FROM M_Schedule s
         INNER JOIN M_TrainType tt
         ON s.train_type_cd = tt.train_type_cd
