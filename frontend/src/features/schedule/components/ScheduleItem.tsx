@@ -1,6 +1,8 @@
 import { useNavigate } from "react-router-dom";
 import { FiArrowRight } from "react-icons/fi";
 import { PiTrainBold } from "react-icons/pi";
+import { tv } from "tailwind-variants";
+import { TrainTypeColor } from "../../../shared/types/TrainTypeColor.ts";
 import type { SearchResponseDto } from "../types/SearchResponseDto";
 import type { ScheduleInfoDto } from "../types/ScheduleInfoDto";
 
@@ -57,12 +59,41 @@ export function ScheduleItem({
     });
   };
 
+  const trainIconStyle = tv({
+    base: "flex justify-center items-center w-8 h-8 p-0.5 text-2xl rounded-md text-white",
+    variants: {
+      color: {
+        primary: "bg-primary",
+        YM: "bg-YM",
+        HB: "bg-HB",
+        NS: "bg-NS",
+        HT: "bg-HT",
+        KM: "bg-KM",
+        TB: "bg-TB",
+        TK: "bg-TK",
+        TN: "bg-TN",
+        KK: "bg-KK",
+        AS: "bg-AS",
+      },
+    },
+    defaultVariants: {
+      color: "primary",
+    },
+  });
+
+  const foundColor = TrainTypeColor.find(
+    (item) =>
+      item.train_type_name === schedule.train_type_name.split(/(\d+)/)[0],
+  );
+
+  const colorCd = foundColor ? foundColor.color_cd : "primary";
+
   return (
     <>
       <div className="flex flex-col md:flex-row justify-start items-start md:items-center w-full p-8 border-2 rounded-2xl border-primary-light gap-4">
         <div className="flex gap-4">
           <div className="flex items-center">
-            <div className="flex justify-center items-center w-8 h-8 p-0.5 text-2xl rounded-md bg-primary text-white">
+            <div className={trainIconStyle({ color: colorCd })}>
               <PiTrainBold />
             </div>
           </div>
