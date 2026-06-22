@@ -20,8 +20,8 @@ export function TrainCars({
   const seatsRequestDto: SeatsRequestDto = {
     schedule_cd: scheduleInfoDto.schedule_cd,
     date: scheduleInfoDto.date,
-    departure_station_cd: scheduleInfoDto.departure_station_cd,
-    arrival_station_cd: scheduleInfoDto.arrival_station_cd,
+    departure_time: scheduleInfoDto.departure_time,
+    arrival_time: scheduleInfoDto.arrival_time,
     train_car_cd: "E5SER01",
   };
 

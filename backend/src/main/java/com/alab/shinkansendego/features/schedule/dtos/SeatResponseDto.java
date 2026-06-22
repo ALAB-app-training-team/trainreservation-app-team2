@@ -13,4 +13,5 @@ public class SeatResponseDto {
     private String seat_cd;
     private Integer seat_number;
     private String seat_column;
+    private Boolean is_reserved;
 }
