@@ -5,18 +5,13 @@ import type { SeatResponseDto } from "../../types/SeatResponseDto";
 import type { ScheduleInfoDto } from "../../types/ScheduleInfoDto";
 import { SeatsByTrainCar } from "../SeatsByTrainCar/SeatsByTrainCar";
 import { SeatsByTrainCarSkeleton } from "../SeatsByTrainCar/SeatsByTrainCarSkeleton";
+import { SEAT_TYPE_LABELS } from "../../constants/seatType";
 
 type TrainCarsProps = {
   scheduleInfoDto: ScheduleInfoDto;
   selectedSeats: SeatResponseDto[];
   handleSelectedSeats: (seat: SeatResponseDto) => void;
 };
-
-const SEAT_TYPE_LABELS = {
-  SEAT01: "指定席",
-  SEAT02: "グリーン車",
-  SEAT03: "グランクラス",
-} as const;
 
 export function TrainCars({
   scheduleInfoDto,
@@ -62,7 +57,7 @@ export function TrainCars({
             key={code}
             type="button"
             onClick={() => setActiveSeatTypeCd(code)}
-            className={`flex-1 px-5 py-3text-center text-sm rounded-full font-medium transition-all duration-200 ${
+            className={`flex-1 px-5 py-3 text-center text-sm rounded-full font-medium transition-all duration-200 ${
               activeSeatTypeCd === code
                 ? "bg-white text-gray-900 shadow-md font-semibold"
                 : "text-gray-500 hover:text-gray-900"
@@ -83,20 +78,12 @@ export function TrainCars({
             onClick={() => setActiveTrainCarCd(car.train_car_cd)}
             className={`flex flex-col items-center justify-center min-w-[80px] h-20 p-3 border-2 rounded-2xl transition-all duration-200 ${
               activeTrainCarCd === car.train_car_cd
-                ? "border-green-600 bg-green-50 text-green-700 font-bold shadow-sm"
+                ? "border-primary bg-primary-light text-primary font-bold shadow-sm"
                 : "border-gray-200 bg-white hover:bg-gray-50 text-gray-700"
             }`}
           >
-            <span className="text-sm">{car.train_car_number}号車</span>
-            <span
-              className={`text-[10px] mt-1 font-normal ${
-                activeTrainCarCd === car.train_car_cd
-                  ? "text-green-600"
-                  : "text-gray-400"
-              }`}
-            >
-              {car.availableSeats}席
-            </span>
+            <span className="text-base font-bold">{car.train_car_number}</span>
+            <span className="text-[10px] text-gray-400 font-normal">号車</span>
           </button>
         ))}
 
@@ -107,13 +94,15 @@ export function TrainCars({
         )}
       </div>
 
-      <Suspense fallback={<SeatsByTrainCarSkeleton />}>
-        <SeatsByTrainCar
-          seatsRequestDto={seatsRequestDto}
-          selectedSeats={selectedSeats}
-          handleSelectedSeats={handleSelectedSeats}
-        />
-      </Suspense>
+      {filteredCars.length > 0 && (
+        <Suspense fallback={<SeatsByTrainCarSkeleton />}>
+          <SeatsByTrainCar
+            seatsRequestDto={seatsRequestDto}
+            selectedSeats={selectedSeats}
+            handleSelectedSeats={handleSelectedSeats}
+          />
+        </Suspense>
+      )}
     </div>
   );
 }
