@@ -85,7 +85,6 @@ export function TrainCars({
             }`}
           >
             <span className="text-base font-bold">{car.train_car_number}</span>
-            <span className="text-[10px] text-gray-400 font-normal">75席</span>
           </button>
         ))}
 
