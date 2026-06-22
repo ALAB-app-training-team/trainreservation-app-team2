@@ -1,18 +1,21 @@
 import { Fragment } from "react";
 import { useSeatsByTrainCar } from "../../hooks/useSeatsByTrainCar";
+import type { SeatsRequestDto } from "../../types/SeatsRequestDto";
+import type { SeatResponseDto } from "../../types/SeatResponseDto";
 import { Seat } from "../Seat";
 
 type SeatsByTrainCarProps = {
-  selectedSeats: string[];
-  handleSelectedSeats: (id: string) => void;
+  seatsRequestDto: SeatsRequestDto;
+  selectedSeats: SeatResponseDto[];
+  handleSelectedSeats: (seat: SeatResponseDto) => void;
 };
 
 export function SeatsByTrainCar({
+  seatsRequestDto,
   selectedSeats,
   handleSelectedSeats,
 }: SeatsByTrainCarProps) {
-  // TODO: 引数を動的にする
-  const { seats } = useSeatsByTrainCar("E5SER01");
+  const { seats } = useSeatsByTrainCar(seatsRequestDto);
 
   const columns: string[] = Array.from(
     new Set(seats.map((seat) => seat.seat_column)),
@@ -44,18 +47,19 @@ export function SeatsByTrainCar({
                 return seat ? (
                   <Seat
                     key={seat.seat_cd}
-                    id={seat.seat_cd}
+                    seat={seat}
                     onClick={handleSelectedSeats}
                     disabled={seat.is_reserved}
                     type={
                       seat.is_reserved
                         ? "isReserved"
-                        : selectedSeats.includes(seat.seat_cd)
+                        : selectedSeats.some(
+                              (selectedSeat) =>
+                                selectedSeat.seat_cd === seat.seat_cd,
+                            )
                           ? "isSelected"
                           : "reservable"
                     }
-                    isReserveMode={true}
-                    name={seat.seat_number + seat.seat_column}
                   />
                 ) : (
                   <div key={column + row}></div>
@@ -66,15 +70,15 @@ export function SeatsByTrainCar({
         </div>
         <div className="flex gap-4">
           <div className="flex gap-1 items-center">
-            <Seat type="reservable" isReserveMode={false} />
+            <Seat type="reservable" />
             <div className="text-sm">空席</div>
           </div>
           <div className="flex gap-1 items-center">
-            <Seat type="isSelected" isReserveMode={false} />
+            <Seat type="isSelected" />
             <div className="text-sm">選択中</div>
           </div>
           <div className="flex gap-1 items-center">
-            <Seat type="isReserved" isReserveMode={false} />
+            <Seat type="isReserved" />
             <div className="text-sm">予約済み</div>
           </div>
         </div>

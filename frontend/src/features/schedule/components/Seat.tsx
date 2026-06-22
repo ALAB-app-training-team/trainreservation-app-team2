@@ -1,20 +1,13 @@
+import type { SeatResponseDto } from "../types/SeatResponseDto";
+
 type seatProps = {
-  id?: string;
-  onClick?: (id: string) => void;
+  seat?: SeatResponseDto;
+  onClick?: (seat: SeatResponseDto) => void;
   disabled?: boolean;
   type: "isReserved" | "isSelected" | "reservable";
-  isReserveMode: boolean;
-  name?: string;
 };
 
-export function Seat({
-  id,
-  onClick,
-  disabled,
-  type,
-  isReserveMode,
-  name,
-}: seatProps) {
+export function Seat({ seat, onClick, disabled, type }: seatProps) {
   const styles = {
     reserveModeStyle: "w-12 h-12 rounded-lg",
     nonReserveModeStyle: "w-8 h-8 rounded-md",
@@ -25,17 +18,15 @@ export function Seat({
 
   return (
     <>
-      {isReserveMode ? (
+      {seat && onClick ? (
         <button
           onClick={() => {
-            if (onClick && id) {
-              onClick(id);
-            }
+            onClick(seat);
           }}
           className={`${styles["reserveModeStyle"]} ${styles[type]}`}
           disabled={disabled}
         >
-          {name}
+          {seat.seat_number + seat.seat_column}
         </button>
       ) : (
         <div className={`${styles["nonReserveModeStyle"]} ${styles[type]}`} />
