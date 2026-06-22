@@ -47,9 +47,8 @@ export function ScheduleList({
                   <ScheduleItem
                     key={index}
                     schedule={schedule}
-                    departure_station_cd={searchRequestDto.departure_station_cd}
+                    date={searchRequestDto.date}
                     departure_station_name={departureStationName}
-                    arrival_station_cd={searchRequestDto.arrival_station_cd}
                     arrival_station_name={arrivalStationName}
                   />
                 );
