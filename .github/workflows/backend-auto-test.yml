@@ -38,3 +38,13 @@ jobs:
       - name: Run tests
         working-directory: ./backend
         run: ./gradlew clean test
+
+      # テスト結果レポート出力
+      - name: Upload Test Report
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: test-report
+          path: |
+            build/reports/tests/test
+            build/test-results/test
