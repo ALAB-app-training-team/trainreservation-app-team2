@@ -16,8 +16,7 @@ import java.util.Arrays;
 import java.util.List;
 
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
 @WebMvcTest(TrainCarFormationController.class)
 public class TrainCarFormationControllerTest {
@@ -60,5 +59,16 @@ public class TrainCarFormationControllerTest {
                 .andExpect(jsonPath("$[1].train_car_number").value(2))
                 .andExpect(jsonPath("$[1].seat_type_cd").value("SEAT01"))
                 .andExpect(jsonPath("$[1].train_car_type_name").value("指定席"));
+    }
+
+    @Test
+    @DisplayName("リクエストがNullの場合、パラメーターエラー発生")
+    void getTrainCarList_withScheduleCdIsNull_returnRequestParamError() throws Exception {
+
+        String url = baseUrl + "traincar?";
+
+        mockMvc.perform(get(url))
+                .andExpect(status().isBadRequest())
+                .andExpect(content().string("schedule_cd is Null"));
     }
 }

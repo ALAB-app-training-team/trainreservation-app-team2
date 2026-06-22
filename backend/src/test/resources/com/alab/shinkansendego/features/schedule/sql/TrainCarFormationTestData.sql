@@ -1,9 +1,3 @@
-CREATE TABLE M_TrainSeries
-(
-    train_series_cd VARCHAR(5)   NOT NULL PRIMARY KEY,
-    name            VARCHAR(255) NOT NULL
-);
-
 CREATE TABLE M_TrainCarType
 (
     train_car_type_cd VARCHAR(5)   NOT NULL PRIMARY KEY,
@@ -12,8 +6,8 @@ CREATE TABLE M_TrainCarType
 
 CREATE TABLE M_TrainType
 (
-    train_type_cd    VARCHAR(5)   NOT NULL PRIMARY KEY ,
-    name             VARCHAR(255) NOT NULL,
+    train_type_cd   VARCHAR(5)   NOT NULL PRIMARY KEY,
+    name            VARCHAR(255) NOT NULL,
     train_series_cd VARCHAR(5)   NOT NULL
 );
 
@@ -37,9 +31,6 @@ CREATE TABLE M_Schedule
     schedule_cd   VARCHAR(6) NOT NULL PRIMARY KEY,
     train_type_cd VARCHAR(5) NOT NULL
 );
-
-INSERT INTO M_TrainSeries(train_series_cd, name)
-VALUES ('E5SER', 'E5系');
 
 INSERT INTO M_TrainCarType(train_car_type_cd, name)
 VALUES ('CAR01', '指定席');
