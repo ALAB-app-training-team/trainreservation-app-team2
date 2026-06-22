@@ -9,6 +9,7 @@ import org.springframework.boot.jdbc.test.autoconfigure.AutoConfigureTestDatabas
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.DynamicPropertyRegistry;
 import org.springframework.test.context.DynamicPropertySource;
+import org.springframework.test.context.jdbc.Sql;
 import org.testcontainers.containers.PostgreSQLContainer;
 import org.testcontainers.junit.jupiter.Container;
 import org.testcontainers.junit.jupiter.Testcontainers;
@@ -21,6 +22,7 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 @MybatisTest
 @AutoConfigureTestDatabase(replace = AutoConfigureTestDatabase.Replace.NONE)
 @Testcontainers
+@Sql(scripts = {"classpath:com/alab/shinkansendego/features/schedule/sql/SeatTypeTestData.sql", "classpath:com/alab/shinkansendego/features/schedule/sql/TrainCarTestData.sql", "classpath:com/alab/shinkansendego/features/schedule/sql/SeatTestData.sql"})
 public class TrainCarRepositoryTest {
     // テスト用DB作成
     @Container
