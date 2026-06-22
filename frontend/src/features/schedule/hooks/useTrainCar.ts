@@ -1,14 +1,14 @@
 import { useQuery } from "@tanstack/react-query";
 //import axios from "axios";
-import type { TrainCarDto } from "../types/TrainCarDto";
+import type { TrainCarFormationResponseDto } from "../types/TrainCarFormationResponseDto";
 
-/*const fetchTrainCar = async (schedule_cd: string): Promise<TrainCarDto[]> => {
+/*const fetchTrainCar = async (schedule_cd: string): Promise<TrainCarFormationResponseDto[]> => {
   if(!schedule_cd) return [];
-  const response = await axios.get<TrainCarDto[]>(`api/shinkansen-traincar/${schedule_cd}`);
+  const response = await axios.get<TrainCarFormationResponseDto[]>(`api/shinkansen-traincar/${schedule_cd}`);
   return response.data;
 };*/
 
-const MOCK_TRAIN_CARS: TrainCarDto[] = [
+const MOCK_TRAIN_CARS: TrainCarFormationResponseDto[] = [
   {train_car_number: 1, train_car_cd: "E5SER01", seat_type_cd: "SEAT01", availableSeats:12},
   {train_car_number: 2, train_car_cd: "E5SER02", seat_type_cd: "SEAT01", availableSeats:45},
   {train_car_number: 3, train_car_cd: "E5SER03", seat_type_cd: "SEAT01", availableSeats:0},
@@ -17,7 +17,7 @@ const MOCK_TRAIN_CARS: TrainCarDto[] = [
 ];
 
 export function useTrainCar(schedule_cd: string){
-  const { data: trainCarsData, isLoading, error } = useQuery<TrainCarDto[]>({
+  const { data: trainCarsData, isLoading, error } = useQuery<TrainCarFormationResponseDto[]>({
     queryKey: ["TrainCars", schedule_cd],
     //queryFn: () => fetchTrainCar(schedule_cd),
     queryFn: async () => {
