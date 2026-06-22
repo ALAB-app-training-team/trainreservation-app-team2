@@ -45,7 +45,7 @@ jobs:
         working-directory: ./frontend
 
   # Backendの単体テストコード実行
-  test:
+  backend-test:
     runs-on: ubuntu-latest
     permissions:
       contents: read
