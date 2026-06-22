@@ -12,12 +12,12 @@ import java.time.LocalTime;
 @Getter
 @Setter
 public class ScheduleRequestDto {
-    @NotNull
+    @NotNull(message = "Date is Null")
     private LocalDate date;
-    @NotNull
+    @NotNull(message = "Time is Null")
     private LocalTime time;
-    @NotNull
-    private String departure_station_name;
-    @NotNull
-    private String arrival_station_name;
+    @NotNull(message = "DepartureStationCd is Null")
+    private String departure_station_cd;
+    @NotNull(message = "ArrivalStationCd is Null")
+    private String arrival_station_cd;
 }

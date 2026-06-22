@@ -11,9 +11,17 @@ import { useSchedules } from "../../hooks/useSchedules";
 import type { SearchRequestDto } from "../../types/SearchRequestDto";
 import { ScheduleItem } from "../ScheduleItem";
 
-type ScheduleListProps = { searchRequestDto: SearchRequestDto };
+type ScheduleListProps = {
+  searchRequestDto: SearchRequestDto;
+  departureStationName: string;
+  arrivalStationName: string;
+};
 
-export function ScheduleList({ searchRequestDto }: ScheduleListProps) {
+export function ScheduleList({
+  searchRequestDto,
+  departureStationName,
+  arrivalStationName,
+}: ScheduleListProps) {
   const { schedules } = useSchedules(searchRequestDto);
 
   const [offset, setOffset] = useState(0);
@@ -39,10 +47,9 @@ export function ScheduleList({ searchRequestDto }: ScheduleListProps) {
                   <ScheduleItem
                     key={index}
                     schedule={schedule}
-                    departure_station_name={
-                      searchRequestDto.departure_station_name
-                    }
-                    arrival_station_name={searchRequestDto.arrival_station_name}
+                    date={searchRequestDto.date}
+                    departure_station_name={departureStationName}
+                    arrival_station_name={arrivalStationName}
                   />
                 );
               })}

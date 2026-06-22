@@ -47,10 +47,10 @@ public class ScheduleServiceTest {
     private ScheduleService service;
 
     private static @NonNull List<ScheduleResponseDto> getExpectScheduleResponseDtosList() {
-        ScheduleResponseDto expect01 = new ScheduleResponseDto("やまびこ2号", LocalTime.of(11, 0, 0), LocalTime.of(16, 10, 0));
-        ScheduleResponseDto expect02 = new ScheduleResponseDto("やまびこ3号", LocalTime.of(12, 0, 0), LocalTime.of(12, 30, 0));
-        ScheduleResponseDto expect03 = new ScheduleResponseDto("やまびこ4号", LocalTime.of(13, 0, 0), LocalTime.of(13, 40, 0));
-        ScheduleResponseDto expect04 = new ScheduleResponseDto("やまびこ6号", LocalTime.of(15, 0, 0), LocalTime.of(16, 0, 0));
+        ScheduleResponseDto expect01 = new ScheduleResponseDto("TIME02", "やまびこ2号", LocalTime.of(11, 0, 0), LocalTime.of(16, 10, 0));
+        ScheduleResponseDto expect02 = new ScheduleResponseDto("TIME03", "やまびこ3号", LocalTime.of(12, 0, 0), LocalTime.of(12, 30, 0));
+        ScheduleResponseDto expect03 = new ScheduleResponseDto("TIME04", "やまびこ4号", LocalTime.of(13, 0, 0), LocalTime.of(13, 40, 0));
+        ScheduleResponseDto expect04 = new ScheduleResponseDto("TIME06", "やまびこ6号", LocalTime.of(15, 0, 0), LocalTime.of(16, 0, 0));
         return Arrays.asList(expect01, expect02, expect03, expect04);
     }
 
@@ -77,15 +77,13 @@ public class ScheduleServiceTest {
 
         request.setDate(LocalDate.of(2026, 6, 1));
         request.setTime(LocalTime.of(9, 0, 0));
-        request.setDeparture_station_name("東京");
-        request.setArrival_station_name("上野");
+        request.setDeparture_station_cd("STATION01");
+        request.setArrival_station_cd("STATION02");
     }
 
     @Test
     @DisplayName("出発・到着駅名と出発時刻のリクエストDTOからダイヤリストが取得できる")
     void getSearchedScheduleByStation_withValidScheduleRequestDto_returnGetScheduleListSuccess() {
-        when(stationRepo.findStationCdByName("東京")).thenReturn("STATION01");
-        when(stationRepo.findStationCdByName("上野")).thenReturn("STATION02");
         when(sectionRepo.findSectionCdByStartStationCd("STATION01")).thenReturn(depatureSectionList);
         when(sectionRepo.findSectionCdByGoalStationCd("STATION02")).thenReturn(arrivalSectionList);
         when(timeRepo.findScheduleBySectionKmCd("SEC01")).thenReturn(sec01ScheduleList);
@@ -106,35 +104,8 @@ public class ScheduleServiceTest {
     }
 
     @Test
-    @DisplayName("データに存在しない駅名が出発駅としてリクエストされた場合にエラーを発生させる")
-    void getSearchedScheduleByStation_withNotExistStartStationNameRequest_returnIllegalArgumentException() {
-        when(stationRepo.findStationCdByName("NotExistStationName")).thenReturn(null);
-        request.setDeparture_station_name("NotExistStationName");
-        Exception ex = assertThrows(
-                IllegalArgumentException.class,
-                () -> service.getSearchedScheduleByStation(request)
-        );
-        assertEquals("StationCD is Not found", ex.getMessage());
-    }
-
-    @Test
-    @DisplayName("データに存在しない駅名が到着駅としてリクエストされた場合にエラーを発生させる")
-    void getSearchedScheduleByStation_withNotExistGoalStationNameRequest_returnIllegalArgumentException() {
-        when(stationRepo.findStationCdByName("東京")).thenReturn("STATION01");
-        when(stationRepo.findStationCdByName("NotExistStationName")).thenReturn(null);
-        request.setArrival_station_name("NotExistStationName");
-        Exception ex = assertThrows(
-                IllegalArgumentException.class,
-                () -> service.getSearchedScheduleByStation(request)
-        );
-        assertEquals("StationCD is Not found", ex.getMessage());
-    }
-
-    @Test
     @DisplayName("区間キロデータに存在しない出発駅がリクエストされた場合にエラーを発生させる")
     void getSearchedScheduleByStation_withNotExistStartSectionRequest_returnIllegalArgumentException() {
-        when(stationRepo.findStationCdByName("東京")).thenReturn("STATION01");
-        when(stationRepo.findStationCdByName("上野")).thenReturn("STATION02");
         when(sectionRepo.findSectionCdByStartStationCd("STATION01")).thenReturn(emptySectionCdList);
         Exception ex = assertThrows(
                 IllegalArgumentException.class,
@@ -146,8 +117,6 @@ public class ScheduleServiceTest {
     @Test
     @DisplayName("区間キロデータに存在しない到着駅がリクエストされた場合にエラーを発生させる")
     void getSearchedScheduleByStation_withNotExistGoalSectionRequest_returnIllegalArgumentException() {
-        when(stationRepo.findStationCdByName("東京")).thenReturn("STATION01");
-        when(stationRepo.findStationCdByName("上野")).thenReturn("STATION02");
         when(sectionRepo.findSectionCdByStartStationCd("STATION01")).thenReturn(depatureSectionList);
         when(sectionRepo.findSectionCdByGoalStationCd("STATION02")).thenReturn(emptySectionCdList);
         Exception ex = assertThrows(
@@ -160,8 +129,6 @@ public class ScheduleServiceTest {
     @Test
     @DisplayName("車種データに存在しないダイヤコードがリクエストされた場合にエラーを発生させる")
     void getSearchedScheduleByStation_withNotExistTrainTypeRequest_returnIllegalArgumentException() {
-        when(stationRepo.findStationCdByName("東京")).thenReturn("STATION01");
-        when(stationRepo.findStationCdByName("上野")).thenReturn("STATION02");
         when(sectionRepo.findSectionCdByStartStationCd("STATION01")).thenReturn(depatureSectionList);
         when(sectionRepo.findSectionCdByGoalStationCd("STATION02")).thenReturn(arrivalSectionList);
         when(timeRepo.findScheduleBySectionKmCd("SEC01")).thenReturn(sec01ScheduleList);

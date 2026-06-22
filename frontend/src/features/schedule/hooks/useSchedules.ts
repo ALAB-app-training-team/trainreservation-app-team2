@@ -8,7 +8,6 @@ export function useSchedules(searchRequestDto: SearchRequestDto) {
   const { data: schedules } = useSuspenseQuery({
     queryKey: ["schedule", searchRequestDto],
     queryFn: async () => {
-      // await new Promise(resolve => setTimeout(resolve, 5000))
       const response = await axios.get<SearchResponseDto[]>(
         ENDPOINTS.SCHEDULES_SEARCH(),
         {

@@ -19,7 +19,17 @@ export function SearchScheduleBody() {
   } = useSearchRequestDto({ stations });
 
   const handleSearch = () => {
-    navigate("/searchResult", { state: searchRequestDto });
+    navigate("/searchResult", {
+      state: {
+        dto: searchRequestDto,
+        departure_station_name: stations.find(
+          (s) => s.station_cd === searchRequestDto.departure_station_cd,
+        )?.name,
+        arrival_station_name: stations.find(
+          (s) => s.station_cd === searchRequestDto.arrival_station_cd,
+        )?.name,
+      },
+    });
   };
 
   return (
@@ -33,7 +43,7 @@ export function SearchScheduleBody() {
                 id="departureStation"
                 label="乗車駅"
                 list={stations}
-                value={searchRequestDto.departure_station_name}
+                value={searchRequestDto.departure_station_cd}
                 setValue={setDepartureStation}
               />
               <div className="hidden md:block text-xl mt-4">
@@ -43,7 +53,7 @@ export function SearchScheduleBody() {
                 id="arrivalStation"
                 label="降車駅"
                 list={stations}
-                value={searchRequestDto.arrival_station_name}
+                value={searchRequestDto.arrival_station_cd}
                 setValue={setArrivalStation}
                 getFieldError={getFieldError}
               />

@@ -6,26 +6,22 @@ import com.alab.shinkansendego.features.schedule.dtos.ScheduleResponseDto;
 import com.alab.shinkansendego.features.schedule.repositories.DepartureArrivalTimeRepository;
 import com.alab.shinkansendego.features.schedule.repositories.ScheduleRepository;
 import com.alab.shinkansendego.features.schedule.repositories.SectionKmRepository;
-import com.alab.shinkansendego.features.schedule.repositories.StationRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
+import java.util.Comparator;
 import java.util.List;
 import java.util.Objects;
 
 @Service
 public class ScheduleService {
-    private final StationRepository stationRepository;
     private final SectionKmRepository sectionKmRepository;
     private final DepartureArrivalTimeRepository departureArrivalTimeRepository;
     private final ScheduleRepository scheduleRepository;
 
     @Autowired
-    public ScheduleService(
-            StationRepository stationRepository, SectionKmRepository sectionKmRepository,
-            DepartureArrivalTimeRepository departureArrivalTimeRepository, ScheduleRepository scheduleRepository) {
-        this.stationRepository = stationRepository;
+    public ScheduleService(SectionKmRepository sectionKmRepository, DepartureArrivalTimeRepository departureArrivalTimeRepository, ScheduleRepository scheduleRepository) {
         this.sectionKmRepository = sectionKmRepository;
         this.departureArrivalTimeRepository = departureArrivalTimeRepository;
         this.scheduleRepository = scheduleRepository;
@@ -35,15 +31,8 @@ public class ScheduleService {
 
         List<ScheduleResponseDto> responseList = new ArrayList<>();
 
-        String departureStationCd = stationRepository.findStationCdByName(request.getDeparture_station_name());
-        String arrivalStationCd = stationRepository.findStationCdByName(request.getArrival_station_name());
-
-        if (departureStationCd == null || arrivalStationCd == null) {
-            throw new IllegalArgumentException("StationCD is Not found");
-        }
-
-        List<String> departureSectionCdList = sectionKmRepository.findSectionCdByStartStationCd(departureStationCd);
-        List<String> arrivalSectionCdList = sectionKmRepository.findSectionCdByGoalStationCd(arrivalStationCd);
+        List<String> departureSectionCdList = sectionKmRepository.findSectionCdByStartStationCd(request.getDeparture_station_cd());
+        List<String> arrivalSectionCdList = sectionKmRepository.findSectionCdByGoalStationCd(request.getArrival_station_cd());
 
         if (departureSectionCdList.isEmpty() || arrivalSectionCdList.isEmpty()) {
             throw new IllegalArgumentException("SectionCD is Not found");
@@ -72,6 +61,7 @@ public class ScheduleService {
                     }
 
                     ScheduleResponseDto data = new ScheduleResponseDto();
+                    data.setSchedule_cd(departure.getSchedule_cd());
                     data.setTrain_type_name(trainTypeName);
                     data.setDeparture_time(departure.getDeparture_time());
                     data.setArrival_time(arrival.getArrival_time());
@@ -79,6 +69,8 @@ public class ScheduleService {
                 }
             }
         }
+
+        responseList.sort(Comparator.comparing(ScheduleResponseDto::getDeparture_time));
 
         return responseList;
 
