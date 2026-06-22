@@ -1,5 +1,6 @@
 package com.alab.shinkansendego.features.schedule.repositories;
 
+import com.alab.shinkansendego.features.schedule.dtos.TrainCarFormationResponseDto;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.mybatis.spring.boot.test.autoconfigure.MybatisTest;
@@ -13,8 +14,9 @@ import org.testcontainers.containers.PostgreSQLContainer;
 import org.testcontainers.junit.jupiter.Container;
 import org.testcontainers.junit.jupiter.Testcontainers;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertNull;
+import java.util.List;
+
+import static org.junit.jupiter.api.Assertions.*;
 
 @ActiveProfiles("test")
 @MybatisTest
@@ -51,5 +53,34 @@ public class ScheduleRepositoryTest {
     void findTrainTypeNameByScheduleCd_withNotExistScheduleCd_returnNull() {
         String actual = repo.findTrainTypeNameByScheduleCd("99999");
         assertNull(actual);
+    }
+
+    @Test
+    @Sql(scripts = {"classpath:com/alab/shinkansendego/features/schedule/sql/TrainCarFormationTestData.sql"})
+    @DisplayName("ダイヤコードを指定して車両編成が取得できる")
+    void findTrainCarByScheduleCd_withScheduleCd_returnGetTrainCarListSuccess() {
+        String scheduleCd = "TEST01";
+        List<TrainCarFormationResponseDto> actualList = repo.findTrainCarFormationByScheduleCd(scheduleCd);
+        assertEquals(2, actualList.size());
+
+        TrainCarFormationResponseDto actual01 = actualList.getFirst();
+        assertEquals("E5SER01", actual01.getTrain_car_cd());
+        assertEquals(1, actual01.getTrain_car_number());
+        assertEquals("SEAT01", actual01.getSeat_type_cd());
+        assertEquals("指定席", actual01.getTrain_car_type_name());
+
+        TrainCarFormationResponseDto actual02 = actualList.getLast();
+        assertEquals("E5SER02", actual02.getTrain_car_cd());
+        assertEquals(2, actual02.getTrain_car_number());
+        assertEquals("SEAT01", actual02.getSeat_type_cd());
+        assertEquals("指定席", actual02.getTrain_car_type_name());
+    }
+
+    @Test
+    @Sql(scripts = {"classpath:com/alab/shinkansendego/features/schedule/sql/TrainCarFormationTestData.sql"})
+    @DisplayName("テーブルに存在しないダイヤコードを検索した場合、空のリストが返却されるか")
+    void findTrainCarByScheduleCd_withNotExistScheduleCd_returnEmptyList() {
+        List<TrainCarFormationResponseDto> actualList = repo.findTrainCarFormationByScheduleCd("99999");
+        assertTrue(actualList.isEmpty());
     }
 }

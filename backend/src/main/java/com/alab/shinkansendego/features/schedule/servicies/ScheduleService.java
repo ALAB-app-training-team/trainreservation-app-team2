@@ -6,7 +6,6 @@ import com.alab.shinkansendego.features.schedule.dtos.ScheduleResponseDto;
 import com.alab.shinkansendego.features.schedule.repositories.DepartureArrivalTimeRepository;
 import com.alab.shinkansendego.features.schedule.repositories.ScheduleRepository;
 import com.alab.shinkansendego.features.schedule.repositories.SectionKmRepository;
-import com.alab.shinkansendego.features.schedule.repositories.StationRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -17,16 +16,12 @@ import java.util.Objects;
 
 @Service
 public class ScheduleService {
-    private final StationRepository stationRepository;
     private final SectionKmRepository sectionKmRepository;
     private final DepartureArrivalTimeRepository departureArrivalTimeRepository;
     private final ScheduleRepository scheduleRepository;
 
     @Autowired
-    public ScheduleService(
-            StationRepository stationRepository, SectionKmRepository sectionKmRepository,
-            DepartureArrivalTimeRepository departureArrivalTimeRepository, ScheduleRepository scheduleRepository) {
-        this.stationRepository = stationRepository;
+    public ScheduleService(SectionKmRepository sectionKmRepository, DepartureArrivalTimeRepository departureArrivalTimeRepository, ScheduleRepository scheduleRepository) {
         this.sectionKmRepository = sectionKmRepository;
         this.departureArrivalTimeRepository = departureArrivalTimeRepository;
         this.scheduleRepository = scheduleRepository;
@@ -66,6 +61,7 @@ public class ScheduleService {
                     }
 
                     ScheduleResponseDto data = new ScheduleResponseDto();
+                    data.setSchedule_cd(departure.getSchedule_cd());
                     data.setTrain_type_name(trainTypeName);
                     data.setDeparture_time(departure.getDeparture_time());
                     data.setArrival_time(arrival.getArrival_time());

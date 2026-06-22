@@ -11,10 +11,6 @@ export function useSchedules(
   const { data: schedules } = useSuspenseQuery({
     queryKey: ["schedule", searchRequestDto],
     queryFn: async () => {
-      if (isInvalid) {
-        return [];
-      }
-      // await new Promise(resolve => setTimeout(resolve, 5000))
       const response = await axios.get<SearchResponseDto[]>(
         ENDPOINTS.SCHEDULES_SEARCH(),
         {
