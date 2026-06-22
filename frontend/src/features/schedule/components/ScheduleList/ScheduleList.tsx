@@ -13,16 +13,18 @@ import { ScheduleItem } from "../ScheduleItem";
 
 type ScheduleListProps = {
   searchRequestDto: SearchRequestDto;
+  isInvalid: boolean;
   departureStationName: string;
   arrivalStationName: string;
 };
 
 export function ScheduleList({
   searchRequestDto,
+  isInvalid,
   departureStationName,
   arrivalStationName,
 }: ScheduleListProps) {
-  const { schedules } = useSchedules(searchRequestDto);
+  const { schedules } = useSchedules(searchRequestDto, isInvalid);
 
   const [offset, setOffset] = useState(0);
   const perPage: number = 10;

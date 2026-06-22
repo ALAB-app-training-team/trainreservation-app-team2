@@ -3,6 +3,28 @@
 @theme {
   --color-primary: #008803;
   --color-primary-light: #f0f5f0;
+  /* やまびこ */
+  --color-YM: #27ae60;
+  /* はやぶさ */
+  --color-HB: #008803;
+  /* なすの */
+  --color-NS: #e67e22;
+  /* はやて */
+  --color-HT: #ffe561;
+  /* こまち */
+  --color-KM: #df2626;
+  /* つばさ */
+  --color-TB: #df9b26;
+  /* とき */
+  --color-TK: #db26df;
+  /* たにがわ */
+  --color-TN: #7f2092;
+  /* かがやき */
+  --color-KK: #3e4aea;
+  /* はくたか */
+  --color-HT: #4da9ff;
+  /* あさま */
+  --color-AS: #4dffe1;
 }
 
 * {
