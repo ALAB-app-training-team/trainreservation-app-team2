@@ -55,7 +55,9 @@ export function SeatsByTrainCar({
                         ? "isReserved"
                         : selectedSeats.some(
                               (selectedSeat) =>
-                                selectedSeat.seat_cd === seat.seat_cd,
+                                selectedSeat.seat_cd === seat.seat_cd &&
+                                selectedSeat.train_car_cd ===
+                                  seatsRequestDto.train_car_cd,
                             )
                           ? "isSelected"
                           : "reservable"
