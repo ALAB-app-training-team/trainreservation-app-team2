@@ -28,7 +28,7 @@ public class SeatService {
         this.reservedSeatSectionRepository = reservedSeatSectionRepository;
     }
 
-    public List<SeatResponseDto> getSeatListByTrainCar(SeatRequestDto request) {
+    public List<SeatResponseDto> getSeatListWithReserved(SeatRequestDto request) {
         List<SeatResponseDto> seatList = trainCarRepository.findSeatByTrainCarCd(request.getTrain_car_cd());
         if (seatList.isEmpty()) {
             throw new IllegalArgumentException("TrainCarCd is Not found");

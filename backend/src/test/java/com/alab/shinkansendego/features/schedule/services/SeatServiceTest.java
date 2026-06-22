@@ -69,7 +69,7 @@ public class SeatServiceTest {
 
     @Test
     @DisplayName("号車コードから号車内の座席リストが取得できる")
-    void getSeatListByTrainCar_returnGetSeatListSuccess() {
+    void getSeatListWithReserved_returnGetSeatListSuccess() {
         when(trainCarRepo.findSeatByTrainCarCd("Test001"))
                 .thenReturn(getIsreservedIsNullList());
         when(departureArrivalTimeRepo.findSectionCdByScheduleCd(
@@ -92,7 +92,7 @@ public class SeatServiceTest {
 
         List<SeatResponseDto> expectList = getSeatResponseDtosList();
 
-        List<SeatResponseDto> actualList = service.getSeatListByTrainCar(request);
+        List<SeatResponseDto> actualList = service.getSeatListWithReserved(request);
 
         assertEquals(4, actualList.size());
         assertEquals(expectList, actualList);
@@ -100,19 +100,19 @@ public class SeatServiceTest {
 
     @Test
     @DisplayName("座席情報を持たない号車コードがリクエストされた場合にエラーを発生させる")
-    void getSeatListByTrainCar_withNotExistTrainCarCdRequest_returnIllegalArgumentException() {
+    void getSeatListWithReserved_withNotExistTrainCarCdRequest_returnIllegalArgumentException() {
         when(trainCarRepo.findSeatByTrainCarCd("9999999")).thenReturn(emptySeatList);
         request.setTrain_car_cd("9999999");
         Exception ex = assertThrows(
                 IllegalArgumentException.class,
-                () -> service.getSeatListByTrainCar(request)
+                () -> service.getSeatListWithReserved(request)
         );
         assertEquals("TrainCarCd is Not found", ex.getMessage());
     }
 
     @Test
     @DisplayName("出発到着時刻情報を持たないダイヤコードがリクエストされた場合にエラーを発生させる")
-    void getSeatListByTrainCar_withNotExistScheduleCdRequest_returnIllegalArgumentException() {
+    void getSeatListWithReserved_withNotExistScheduleCdRequest_returnIllegalArgumentException() {
         when(trainCarRepo.findSeatByTrainCarCd("Test001"))
                 .thenReturn(getIsreservedIsNullList());
         when(departureArrivalTimeRepo.findSectionCdByScheduleCd(
@@ -123,7 +123,7 @@ public class SeatServiceTest {
         request.setSchedule_cd("9999999");
         Exception ex = assertThrows(
                 IllegalArgumentException.class,
-                () -> service.getSeatListByTrainCar(request)
+                () -> service.getSeatListWithReserved(request)
         );
         assertEquals("SectionCdOfSeat is Not found", ex.getMessage());
     }
