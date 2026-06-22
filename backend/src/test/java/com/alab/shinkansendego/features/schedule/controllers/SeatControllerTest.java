@@ -52,9 +52,7 @@ public class SeatControllerTest {
         objectMapper.disable(SerializationFeature.WRITE_DATES_AS_TIMESTAMPS);
         request.setSchedule_cd("Test01");
         request.setDate(LocalDate.of(2026, 6, 1));
-        request.setDeparture_station_cd("Test1");
         request.setDeparture_time(LocalTime.of(12, 0, 0));
-        request.setArrival_station_cd("Test2");
         request.setArrival_time(LocalTime.of(13, 0, 0));
         request.setTrain_car_cd("Test001");
     }
@@ -65,7 +63,7 @@ public class SeatControllerTest {
 
         List<SeatResponseDto> expectList = getSeatResponseDtosList();
         String url = baseUrl
-                + "seat?schedule_cd=Test01&date=2026-06-01&departure_station_cd=Test1&departure_time=12:00:00&arrival_station_cd=Test2&arrival_time=13:00:00&train_car_cd=Test001";
+                + "seat?schedule_cd=Test01&date=2026-06-01&departure_time=12:00:00&arrival_time=13:00:00&train_car_cd=Test001";
 
         Mockito.when(service.getSeatListWithReserved(request)).thenReturn(expectList);
 
@@ -105,7 +103,7 @@ public class SeatControllerTest {
 
         request.setTrain_car_cd(null);
         String url = baseUrl
-                + "seat?schedule_cd=THK055&date=2026-06-23&departure_station_cd=THK01&departure_time=17:20:00&arrival_station_cd=THK20&arrival_time=20:40:00";
+                + "seat?schedule_cd=THK055&date=2026-06-23&departure_time=17:20:00&arrival_time=20:40:00";
 
         String json = objectMapper.writeValueAsString(request);
 

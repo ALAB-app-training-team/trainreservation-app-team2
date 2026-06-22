@@ -60,9 +60,7 @@ public class SeatServiceTest {
         MockitoAnnotations.openMocks(this);
         request.setSchedule_cd("Test01");
         request.setDate(LocalDate.of(2026, 6, 1));
-        request.setDeparture_station_cd("Test1");
         request.setDeparture_time(LocalTime.of(12, 0, 0));
-        request.setArrival_station_cd("Test2");
         request.setArrival_time(LocalTime.of(13, 0, 0));
         request.setTrain_car_cd("Test001");
     }

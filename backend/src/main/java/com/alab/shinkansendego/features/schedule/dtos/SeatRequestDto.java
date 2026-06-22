@@ -16,12 +16,8 @@ public class SeatRequestDto {
     private String schedule_cd;
     @NotNull(message = "Date is Null")
     private LocalDate date;
-    @NotNull(message = "DepartureStationCd is Null")
-    private String departure_station_cd;
     @NotNull(message = "DepartureTime is Null")
     private LocalTime departure_time;
-    @NotNull(message = "ArrivalStationCd is Null")
-    private String arrival_station_cd;
     @NotNull(message = "ArrivalTime is Null")
     private LocalTime arrival_time;
     @NotNull(message = "TrainCarCd is Null")
