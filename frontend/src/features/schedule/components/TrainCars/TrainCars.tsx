@@ -28,23 +28,21 @@ export function TrainCars({
   const [activeSeatTypeCd, setActiveSeatTypeCd] = useState<
     "SEAT01" | "SEAT02" | "SEAT03"
   >("SEAT01");
-  const [activeTrainCarCd, setActiveTrainCarCd] = useState<string>("");
 
   const filteredCars = useMemo(() => {
     if (!trainCarsData) return [];
     return trainCarsData.filter((car) => car.seat_type_cd === activeSeatTypeCd);
   }, [trainCarsData, activeSeatTypeCd]);
 
-  useMemo(() => {
-    if (filteredCars.length > 0) {
-      const isStillAvailable = filteredCars.some(
-        (car) => car.train_car_cd === activeTrainCarCd,
+  const [activeTrainCarCd, setActiveTrainCarCd] = useState<string>(() => {
+    if (trainCarsData && trainCarsData.length > 0) {
+      const initialCar = trainCarsData.find(
+        (car) => car.seat_type_cd === "SEAT01",
       );
-      if (!isStillAvailable) {
-        setActiveTrainCarCd(filteredCars[0].train_car_cd);
-      }
+      return initialCar ? initialCar.train_car_cd : "E5SER01";
     }
-  }, [filteredCars, activeTrainCarCd]);
+    return "E5SER01";
+  });
 
   const seatsRequestDto: SeatsRequestDto = {
     schedule_cd: scheduleInfoDto.schedule_cd,
