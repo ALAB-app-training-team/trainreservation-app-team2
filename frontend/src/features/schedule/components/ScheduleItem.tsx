@@ -90,8 +90,8 @@ export function ScheduleItem({
 
   return (
     <>
-      <div className="flex flex-col md:flex-row justify-start items-start md:items-center w-full p-8 border-2 rounded-2xl border-primary-light gap-4">
-        <div className="flex gap-4">
+      <div className="flex flex-row flex-wrap justify-start items-center md:items-center w-full p-8 border-2 rounded-2xl border-primary-light gap-4">
+        <div className="order-1 flex-1 md:flex-none flex gap-4">
           <div className="flex items-center">
             <div className={trainIconStyle({ color: colorCd })}>
               <PiTrainBold />
@@ -100,7 +100,7 @@ export function ScheduleItem({
           {(() => {
             const trainTypeName = schedule.train_type_name.split(/(\d+)/);
             return (
-              <div className="text-left">
+              <div className="text-left w-16">
                 <div className="text-lg font-extrabold">{trainTypeName[0]}</div>
                 <div className="text-base">
                   {trainTypeName[1]}
@@ -110,7 +110,7 @@ export function ScheduleItem({
             );
           })()}
         </div>
-        <div className="flex w-full justify-between items-center gap-4 flex-1">
+        <div className="order-3 md:order-2 flex w-full md:flex-1 justify-between items-center gap-4">
           <div className="text-left">
             <div className="text-2xl font-black">
               {formatTime(schedule.departure_time)}
@@ -136,14 +136,14 @@ export function ScheduleItem({
             </div>
             <div>{arrival_station_name}</div>
           </div>
-          <button
-            type="button"
-            onClick={handleSearch}
-            className="p-2 rounded-lg bg-primary text-white"
-          >
-            詳細を見る
-          </button>
         </div>
+        <button
+          type="button"
+          onClick={handleSearch}
+          className="order-2 md:order-3 p-2 rounded-lg bg-primary text-white"
+        >
+          詳細を見る
+        </button>
       </div>
     </>
   );
