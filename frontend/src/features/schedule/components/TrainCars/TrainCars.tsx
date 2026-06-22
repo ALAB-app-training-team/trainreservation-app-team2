@@ -18,8 +18,9 @@ export function TrainCars({
   selectedSeats,
   handleSelectedSeats,
 }: TrainCarsProps) {
-  //const { trainCarsData } = useTrainCar(scheduleInfoDto.schedule_cd);
-  const { trainCarsData } = useTrainCar("THK001");
+  const { trainCarsData } = useTrainCar(scheduleInfoDto.schedule_cd);
+  //const { trainCarsData } = useTrainCar("THK001");
+
   const [activeSeatTypeCd, setActiveSeatTypeCd] = useState<
     "SEAT01" | "SEAT02" | "SEAT03"
   >("SEAT01");
@@ -63,7 +64,10 @@ export function TrainCars({
                 : "text-gray-500 hover:text-gray-900"
             }`}
           >
-            {SEAT_TYPE_LABELS[code]}
+            {trainCarsData?.find(
+              (car) => car.seat_type_cd.toUpperCase() === code.toUpperCase(),
+            )?.train_car_type_name ||
+              SEAT_TYPE_LABELS[code as keyof typeof SEAT_TYPE_LABELS]}
           </button>
         ))}
       </div>
