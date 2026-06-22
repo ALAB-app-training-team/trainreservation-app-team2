@@ -7,18 +7,14 @@ import type { ScheduleInfoDto } from "../types/ScheduleInfoDto";
 type ScheduleItemProps = {
   schedule: SearchResponseDto;
   date: string;
-  departure_station_cd: string;
   departure_station_name: string;
-  arrival_station_cd: string;
   arrival_station_name: string;
 };
 
 export function ScheduleItem({
   schedule,
   date,
-  departure_station_cd,
   departure_station_name,
-  arrival_station_cd,
   arrival_station_name,
 }: ScheduleItemProps) {
   const navigate = useNavigate();
@@ -53,8 +49,8 @@ export function ScheduleItem({
     const scheduleInfoDto: ScheduleInfoDto = {
       schedule_cd: schedule.schedule_cd,
       date: date,
-      departure_station_cd: departure_station_cd,
-      arrival_station_cd: arrival_station_cd,
+      departure_time: schedule.departure_time,
+      arrival_time: schedule.arrival_time,
     };
     navigate("/selectSeat", {
       state: { scheduleInfoDto },

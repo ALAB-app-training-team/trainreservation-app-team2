@@ -42,14 +42,14 @@ export function TrainCars({
   const seatsRequestDto: SeatsRequestDto = {
     schedule_cd: scheduleInfoDto.schedule_cd,
     date: scheduleInfoDto.date,
-    departure_station_cd: scheduleInfoDto.departure_station_cd,
-    arrival_station_cd: scheduleInfoDto.arrival_station_cd,
+    departure_time: scheduleInfoDto.departure_time,
+    arrival_time: scheduleInfoDto.arrival_time,
     train_car_cd: activeTrainCarCd,
   };
 
   return (
     <div className="p-8 border-2 border-primary-light rounded-3xl bg-white shadow-sm">
-      <div className="flex bg-gray-100 p-1 rounded-full mb-8 space-x-1 max-w-md">
+      <div className="flex w-full bg-gray-100 p-1 rounded-full mb-8 space-x-1">
         {(
           Object.keys(SEAT_TYPE_LABELS) as Array<keyof typeof SEAT_TYPE_LABELS>
         ).map((code) => (
@@ -68,7 +68,9 @@ export function TrainCars({
         ))}
       </div>
 
-      <h2 className="text-base font-bold text-gray-950 mb-4">号車を選択</h2>
+      <h4 className="w-full text-left text-base font-bold text-gray-900 mb-4">
+        号車を選択
+      </h4>
 
       <div className="flex space-x-3 overflow-x-auto pb-4 mb-8 scrollbar-thin">
         {filteredCars.map((car) => (
@@ -83,7 +85,7 @@ export function TrainCars({
             }`}
           >
             <span className="text-base font-bold">{car.train_car_number}</span>
-            <span className="text-[10px] text-gray-400 font-normal">号車</span>
+            <span className="text-[10px] text-gray-400 font-normal">75席</span>
           </button>
         ))}
 
