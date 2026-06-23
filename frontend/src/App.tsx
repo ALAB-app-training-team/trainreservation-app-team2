@@ -6,7 +6,7 @@ import {
 } from "react-router-dom";
 import { SearchResult } from "./features/schedule/pages/SearchResult";
 import { SearchSchedule } from "./features/schedule/pages/SearchSchedule";
-import { SelectSeats } from "./features/schedule/pages/SelectSeat";
+import { SelectSeats } from "./features/schedule/pages/SelectSeats";
 import { Error } from "./shared/pages/Error";
 import { Header } from "./shared/components/Header";
 
