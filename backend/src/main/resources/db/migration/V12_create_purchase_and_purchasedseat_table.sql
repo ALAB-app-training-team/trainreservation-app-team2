@@ -1,7 +1,6 @@
 DELETE
 FROM T_ReservedSeatSection;
 
-
 CREATE TABLE T_Purchase
 (
     id                   UUID DEFAULT gen_random_uuid() PRIMARY KEY,
