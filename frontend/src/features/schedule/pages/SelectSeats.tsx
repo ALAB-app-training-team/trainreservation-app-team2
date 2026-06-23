@@ -5,7 +5,7 @@ import { TrainCars } from "../components/TrainCars/TrainCars";
 import { TrainCarsSkeleton } from "../components/TrainCars/TrainCarsSkeleton";
 import { useSelectedSeats } from "../hooks/useSelectedSeats";
 
-export function SelectSeat() {
+export function SelectSeats() {
   const location = useLocation();
   const { scheduleInfoDto } = location.state;
   const { selectedSeats, handleSelectedSeats } = useSelectedSeats();
