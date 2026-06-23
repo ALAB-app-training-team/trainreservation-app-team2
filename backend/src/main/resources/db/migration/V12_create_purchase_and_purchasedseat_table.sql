@@ -17,4 +17,5 @@ CREATE TABLE T_PurchasedSeat
     train_car_cd VARCHAR(7)                     NOT NULL REFERENCES M_TrainCar (train_car_cd) ON DELETE RESTRICT,
     seat_cd      VARCHAR(9)                     NOT NULL REFERENCES M_Seat (seat_cd) ON DELETE RESTRICT,
     code_token   UUID DEFAULT gen_random_uuid() NOT NULL UNIQUE
+        UNIQUE (purchase_id, train_car_cd, seat_cd)
 );
