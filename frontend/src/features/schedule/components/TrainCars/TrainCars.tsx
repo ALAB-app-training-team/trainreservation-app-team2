@@ -49,6 +49,7 @@ export function TrainCars({
 
   return (
     <div className=" flex flex-col gap-8 p-8 border-2 border-primary-light rounded-2xl">
+      <h1 className="text-left !text-2xl !m-0">{`座席選択 - ${Math.max(...trainCarsData.map((trainCarsData) => trainCarsData.train_car_number))}号`}</h1>
       <div className="flex w-full bg-primary-light p-1 rounded-full">
         {(
           Object.keys(SEAT_TYPE_LABELS) as Array<keyof typeof SEAT_TYPE_LABELS>
