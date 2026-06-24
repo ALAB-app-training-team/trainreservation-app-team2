@@ -3,7 +3,7 @@ import axios from "axios";
 import { ENDPOINTS } from "../../../api/routes";
 import type { ReservationResponseDto } from "../types/ReservationResponseDto";
 
-export function useReservedTickets(purchaseId: String) {
+export function useReservedTickets(purchaseId: string) {
   const { data: reservedTickets } = useSuspenseQuery({
     queryKey: ["reservedTickets", purchaseId],
     queryFn: async () => {
