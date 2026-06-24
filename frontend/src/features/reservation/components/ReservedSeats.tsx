@@ -18,7 +18,7 @@ export function ReservedSeats({
     <>
       <div className="flex flex-col gap-2 w-full items-start">
         <label htmlFor={id}>{title}</label>
-        <div className="flex flex-col gap-2">
+        <div className="flex flex-wrap gap-2">
           {seats.length !== 0 ? (
             seats
               .sort(
@@ -37,13 +37,14 @@ export function ReservedSeats({
                     }
                     className="flex items-center gap-2"
                   >
-                    <div className="px-2 border-2 rounded-lg border-primary-light">
-                      <BsTrainFreightFrontFill />
+                    <div className="flex items-center px-2 border-2 rounded-lg border-primary-light gap-1">
                       <div>{`${reservedSeats.train_car_number}号車`}</div>
                       <div>{reservedSeats.train_car_type_name}</div>
                       <div>
-                        {reservedSeats.seat_number + reservedSeats.seat_column}
+                        {`${reservedSeats.seat_number}番` +
+                          `${reservedSeats.seat_column}席`}
                       </div>
+                      <BsTrainFreightFrontFill />
                     </div>
                   </div>
                 );

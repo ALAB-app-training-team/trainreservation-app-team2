@@ -3,6 +3,7 @@ import { FiArrowRight } from "react-icons/fi";
 import { PiTrainBold } from "react-icons/pi";
 import { tv } from "tailwind-variants";
 import { TrainTypeColor } from "../../../shared/types/TrainTypeColor.ts";
+import { FormatTime } from "../../../shared/hooks/useFormatTime.ts";
 import type { SearchResponseDto } from "../types/SearchResponseDto";
 import type { ScheduleInfoDto } from "../types/ScheduleInfoDto";
 
@@ -39,12 +40,6 @@ export function ScheduleItem({
     const minutes = totalMinutes % 60;
 
     return `${hours}h${String(minutes).padStart(2, "0")}m`;
-  };
-
-  const formatTime = (timeString: string) => {
-    if (!timeString) return "";
-    const [hours, minutes] = timeString.split(":");
-    return `${hours}:${minutes}`;
   };
 
   const handleSearch = () => {
@@ -113,7 +108,7 @@ export function ScheduleItem({
         <div className="order-3 md:order-2 flex w-full md:flex-1 justify-between items-center gap-4">
           <div className="text-left">
             <div className="text-2xl font-black">
-              {formatTime(schedule.departure_time)}
+              {FormatTime(schedule.departure_time)}
             </div>
             <div>{departure_station_name}</div>
           </div>
@@ -132,7 +127,7 @@ export function ScheduleItem({
           </div>
           <div className="text-left">
             <div className="text-2xl font-black">
-              {formatTime(schedule.arrival_time)}
+              {FormatTime(schedule.arrival_time)}
             </div>
             <div>{arrival_station_name}</div>
           </div>

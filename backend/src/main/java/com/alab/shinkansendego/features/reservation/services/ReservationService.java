@@ -31,10 +31,18 @@ public class ReservationService {
 
         ReservationResponseDto response = new ReservationResponseDto();
 
-        List<ReservedScheduleDto> scheduleList = purchaseRepository.findScheduleByPurchaseId(request);
         ReservationDto purchase = purchaseRepository.findPurchaseByPurchaseId(request);
+        if(purchase==null){
+            throw new IllegalArgumentException("PurchaseCd is Not Found");
+        }
+
+        List<ReservedScheduleDto> scheduleList = purchaseRepository.findScheduleByPurchaseId(request);
+        //TODO:Listの1件抽出に変更したい
         List<ReservedScheduleDto> departureSchedule = scheduleList.stream().filter(schedule -> Objects.equals(schedule.getDeparture_station_cd(), purchase.getDeparture_station_cd())).toList();
         List<ReservedScheduleDto> arrivalSchedule = scheduleList.stream().filter(schedule -> Objects.equals(schedule.getArrival_station_cd(), purchase.getArrival_station_cd())).toList();
+        if(departureSchedule.size()!=1||arrivalSchedule.size()!=1){
+            throw new IllegalArgumentException("DepartureAndArrivalStation is Not Found");
+        }
 
         List<ReservedSeatDto> reservedSeatList = purchasedSeatRepository.findReservedSeatByPurchaseId(request);
 
