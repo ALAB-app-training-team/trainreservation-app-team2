@@ -19,6 +19,7 @@ export function TrainCars({
   handleSelectedSeats,
 }: TrainCarsProps) {
   const { trainCarsData } = useTrainCar(scheduleInfoDto.schedule_cd);
+  //const { trainCarsData } = useTrainCar("THK001");
 
   const [activeSeatTypeCd, setActiveSeatTypeCd] = useState<
     "SEAT01" | "SEAT02" | "SEAT03"
@@ -48,9 +49,8 @@ export function TrainCars({
   };
 
   return (
-    <div className=" flex flex-col gap-8 p-8 border-2 border-primary-light rounded-2xl">
-      <h1 className="text-left !text-2xl !m-0">{`座席選択 - ${Math.max(...trainCarsData.map((trainCarsData) => trainCarsData.train_car_number))}号`}</h1>
-      <div className="flex w-full bg-primary-light p-1 rounded-full">
+    <div className="p-8 border-2 border-primary-light rounded-3xl bg-white shadow-sm">
+      <div className="flex w-full bg-gray-100 p-1 rounded-full mb-8 space-x-1">
         {(
           Object.keys(SEAT_TYPE_LABELS) as Array<keyof typeof SEAT_TYPE_LABELS>
         ).map((code) => (
@@ -58,10 +58,10 @@ export function TrainCars({
             key={code}
             type="button"
             onClick={() => setActiveSeatTypeCd(code)}
-            className={`flex-1 px-4 py-2 text-center text-sm rounded-full transition-all duration-200 ${
+            className={`flex-1 px-5 py-3 text-center text-sm rounded-full font-medium transition-all duration-200 ${
               activeSeatTypeCd === code
-                ? "cursor-default bg-white text-gray-900 shadow-md font-semibold"
-                : "cursor-pointer hover:text-gray-900"
+                ? "bg-white text-gray-900 shadow-md font-semibold"
+                : "text-gray-500 hover:text-gray-900"
             }`}
           >
             {trainCarsData?.find(
@@ -72,37 +72,41 @@ export function TrainCars({
         ))}
       </div>
 
-      {filteredCars.length > 0 ? (
-        <>
-          <div>
-            <div className="text-left mb-2">号車を選択</div>
-            <div className="flex flex-wrap gap-2">
-              {filteredCars.map((car) => (
-                <button
-                  key={car.train_car_number}
-                  type="button"
-                  onClick={() => setActiveTrainCarCd(car.train_car_cd)}
-                  className={`flex flex-col items-center justify-center w-16 h-16 border-2 rounded-2xl transition-all duration-200 ${
-                    activeTrainCarCd === car.train_car_cd
-                      ? "border-primary bg-primary-light text-primary font-bold"
-                      : "border-primary-light hover:bg-primary-lighty"
-                  }`}
-                >
-                  <span className="font-bold">{car.train_car_number}</span>
-                </button>
-              ))}
-            </div>
-          </div>
-          <Suspense fallback={<SeatsByTrainCarSkeleton />}>
-            <SeatsByTrainCar
-              seatsRequestDto={seatsRequestDto}
-              selectedSeats={selectedSeats}
-              handleSelectedSeats={handleSelectedSeats}
-            />
-          </Suspense>
-        </>
-      ) : (
-        <div>該当する列車がありません</div>
+      <h4 className="w-full text-left text-base font-bold text-gray-900 mb-4">
+        号車を選択
+      </h4>
+
+      <div className="flex space-x-3 overflow-x-auto pb-4 mb-8 scrollbar-thin">
+        {filteredCars.map((car) => (
+          <button
+            key={car.train_car_number}
+            type="button"
+            onClick={() => setActiveTrainCarCd(car.train_car_cd)}
+            className={`flex flex-col items-center justify-center min-w-[80px] h-20 p-3 border-2 rounded-2xl transition-all duration-200 ${
+              activeTrainCarCd === car.train_car_cd
+                ? "border-primary bg-primary-light text-primary font-bold shadow-sm"
+                : "border-gray-200 bg-white hover:bg-gray-50 text-gray-700"
+            }`}
+          >
+            <span className="text-base font-bold">{car.train_car_number}</span>
+          </button>
+        ))}
+
+        {filteredCars.length === 0 && (
+          <p className="text-sm text-gray-400 py-4 pl-2">
+            該当する列車がありません
+          </p>
+        )}
+      </div>
+
+      {filteredCars.length > 0 && (
+        <Suspense fallback={<SeatsByTrainCarSkeleton />}>
+          <SeatsByTrainCar
+            seatsRequestDto={seatsRequestDto}
+            selectedSeats={selectedSeats}
+            handleSelectedSeats={handleSelectedSeats}
+          />
+        </Suspense>
       )}
     </div>
   );
