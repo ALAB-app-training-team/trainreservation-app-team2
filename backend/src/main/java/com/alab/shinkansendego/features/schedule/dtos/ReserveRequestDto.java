@@ -23,11 +23,13 @@ public class ReserveRequestDto {
     @NotNull(message = "Seats is Null")
     private List<SelectedSeatDto> seats;
 
-    public class SelectedSeatDto {
+    @Data
+    @NoArgsConstructor
+    @AllArgsConstructor
+    public static class SelectedSeatDto {
         @NotNull(message = "trainCarCd is Null")
         private String train_car_cd;
         @NotNull(message = "seatCd is Null")
         private String seat_cd;
     }
 }
-
