@@ -42,7 +42,7 @@ export function TrainCars({
     return "E5SER01";
   }, [userSelectedTrainCarCd, filteredCars]);
 
-  const handleSeatTypeChange = (code: "SEAT01" | "SEAT02" | "SEAT03") => {
+  const handleSeatTypeChange = (code: keyof typeof SEAT_TYPE_LABELS) => {
     setActiveSeatTypeCd(code);
     setUserSelectedTrainCarCd("");
   };
@@ -65,7 +65,7 @@ export function TrainCars({
             key={code}
             type="button"
             onClick={() =>
-              handleSeatTypeChange(code as "SEAT01" | "SEAT02" | "SEAT03")
+              handleSeatTypeChange(code as keyof typeof SEAT_TYPE_LABELS)
             }
             className={`flex-1 px-5 py-3 text-center text-sm rounded-full font-medium transition-all duration-200 ${
               activeSeatTypeCd === code
