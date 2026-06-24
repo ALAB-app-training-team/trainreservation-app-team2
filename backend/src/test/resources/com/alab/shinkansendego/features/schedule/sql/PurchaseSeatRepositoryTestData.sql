@@ -39,17 +39,8 @@ CREATE TABLE M_TrainCarType
     name              VARCHAR(255) NOT NULL UNIQUE
 );
 INSERT INTO M_TrainCarType (train_car_type_cd, name)
-VALUES ('CAR01', '指定席'),
+VALUES ('CAR01', '指定席');
 
-CREATE TABLE M_TrainCar
-(
-    train_car_cd     VARCHAR(7) NOT NULL PRIMARY KEY,
-    train_series_cd  VARCHAR(5) NOT NULL REFERENCES M_TrainSeries (train_series_cd) ON DELETE RESTRICT,
-    train_car_number INT        NOT NULL,
-    seat_type_cd     VARCHAR(6) NOT NULL REFERENCES M_SeatType (seat_type_cd) ON DELETE RESTRICT,
-    UNIQUE (train_series_cd, train_car_number)
-);
-INSERT INTO M_TrainCar (train_car_cd, train_series_cd, train_car_number, seat_type_cd)
 VALUES ('E5SER01', 'E5SER', 1, 'SEAT01');
 
 CREATE TABLE M_SeatType
@@ -60,6 +51,16 @@ CREATE TABLE M_SeatType
 );
 INSERT INTO M_SeatType (seat_type_cd, name, train_car_type_cd)
 VALUES ('SEAT01', '指定席構成', 'CAR01');
+
+CREATE TABLE M_TrainCar
+(
+    train_car_cd     VARCHAR(7) NOT NULL PRIMARY KEY,
+    train_series_cd  VARCHAR(5) NOT NULL REFERENCES M_TrainSeries (train_series_cd) ON DELETE RESTRICT,
+    train_car_number INT        NOT NULL,
+    seat_type_cd     VARCHAR(6) NOT NULL REFERENCES M_SeatType (seat_type_cd) ON DELETE RESTRICT,
+    UNIQUE (train_series_cd, train_car_number)
+);
+INSERT INTO M_TrainCar (train_car_cd, train_series_cd, train_car_number, seat_type_cd)
 
 CREATE TABLE M_Seat
 (
