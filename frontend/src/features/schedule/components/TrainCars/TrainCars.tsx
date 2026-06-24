@@ -1,4 +1,4 @@
-import { Suspense, useMemo, useState } from "react";
+import { Suspense, useMemo, useState, useEffect } from "react";
 import { useTrainCar } from "../../hooks/useTrainCar";
 import type { SeatsRequestDto } from "../../types/SeatsRequestDto";
 import type { SeatResponseDto } from "../../types/SeatResponseDto";
@@ -29,11 +29,25 @@ export function TrainCars({
     return trainCarsData.filter((car) => car.seat_type_cd === activeSeatTypeCd);
   }, [trainCarsData, activeSeatTypeCd]);
 
+  const [userSelectedTrainCarCd, setUserSelectedTrainCarCd] =
+    useState<string>("");
+
   const activeTrainCarCd = useMemo(() => {
+    if (userSelectedTrainCarCd) {
+      return userSelectedTrainCarCd;
+    }
     if (filteredCars && filteredCars.length > 0) {
       return filteredCars[0].train_car_cd;
     }
+    return "E5SER01";
+  }, [userSelectedTrainCarCd, filteredCars]);
 
+  const handleSeatTypeChange = (code: "SEAT01" | "SEAT02" | "SEAT03") => {
+    setActiveSeatTypeCd(code);
+    setUserSelectedTrainCarCd("");
+  };
+
+  /*nst [activeTrainCarCd, setActiveTrainCarCd] = useState<string>(() => {
     if (trainCarsData && trainCarsData.length > 0) {
       const initialCar = trainCarsData.find(
         (car) => car.seat_type_cd === "SEAT01",
@@ -41,7 +55,13 @@ export function TrainCars({
       return initialCar ? initialCar.train_car_cd : "E5SER01";
     }
     return "E5SER01";
-  }, [filteredCars, trainCarsData]);
+  });
+
+  useEffect(() => {
+    if (filteredCars && filteredCars.length > 0) {
+      setActiveTrainCarCd(filteredCars[0].train_car_cd);
+    }
+  }, [activeSeatTypeCd, filteredCars]);*/
 
   const seatsRequestDto: SeatsRequestDto = {
     schedule_cd: scheduleInfoDto.schedule_cd,
@@ -60,7 +80,9 @@ export function TrainCars({
           <button
             key={code}
             type="button"
-            onClick={() => setActiveSeatTypeCd(code)}
+            onClick={() =>
+              handleSeatTypeChange(code as "SEAT01" | "SEAT02" | "SEAT03")
+            }
             className={`flex-1 px-5 py-3 text-center text-sm rounded-full font-medium transition-all duration-200 ${
               activeSeatTypeCd === code
                 ? "bg-white text-gray-900 shadow-md font-semibold"
@@ -84,7 +106,7 @@ export function TrainCars({
           <button
             key={car.train_car_number}
             type="button"
-            onClick={() => setActiveTrainCarCd(car.train_car_cd)}
+            onClick={() => setUserSelectedTrainCarCd(car.train_car_cd)}
             className={`flex flex-col items-center justify-center min-w-[80px] h-20 p-3 border-2 rounded-2xl transition-all duration-200 ${
               activeTrainCarCd === car.train_car_cd
                 ? "border-primary bg-primary-light text-primary font-bold shadow-sm"
