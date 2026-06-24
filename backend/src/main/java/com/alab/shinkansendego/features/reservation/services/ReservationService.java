@@ -9,37 +9,34 @@ import com.alab.shinkansendego.features.reservation.repositories.PurchasedSeatRe
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import java.util.Collections;
 import java.util.List;
 import java.util.Objects;
 import java.util.UUID;
-import java.util.stream.Collectors;
-import java.util.stream.Stream;
 
 @Service
 public class ReservationService {
-    private  final PurchaseRepository purchaseRepository;
-    private  final PurchasedSeatRepository purchasedSeatRepository;
+    private final PurchaseRepository purchaseRepository;
+    private final PurchasedSeatRepository purchasedSeatRepository;
 
     @Autowired
     public ReservationService(
             PurchaseRepository purchaseRepository,
             PurchasedSeatRepository purchasedSeatRepository
-    ){
-        this.purchaseRepository=purchaseRepository;
-        this.purchasedSeatRepository=purchasedSeatRepository;
+    ) {
+        this.purchaseRepository = purchaseRepository;
+        this.purchasedSeatRepository = purchasedSeatRepository;
     }
 
-    public ReservationResponseDto getReservation(UUID request){
+    public ReservationResponseDto getReservation(UUID request) {
 
-        ReservationResponseDto response=new ReservationResponseDto();
+        ReservationResponseDto response = new ReservationResponseDto();
 
-        List<ReservedScheduleDto> scheduleList=purchaseRepository.findScheduleByPurchaseId(request);
-        ReservationDto purchase=purchaseRepository.findPurchaseByPurchaseId(request);
-        List<ReservedScheduleDto> departureSchedule=scheduleList.stream().filter(schedule-> Objects.equals(schedule.getDeparture_station_cd(), purchase.getDeparture_station_cd())).toList();
-        List<ReservedScheduleDto> arrivalSchedule=scheduleList.stream().filter(schedule-> Objects.equals(schedule.getArrival_station_cd(), purchase.getArrival_station_cd())).toList();
+        List<ReservedScheduleDto> scheduleList = purchaseRepository.findScheduleByPurchaseId(request);
+        ReservationDto purchase = purchaseRepository.findPurchaseByPurchaseId(request);
+        List<ReservedScheduleDto> departureSchedule = scheduleList.stream().filter(schedule -> Objects.equals(schedule.getDeparture_station_cd(), purchase.getDeparture_station_cd())).toList();
+        List<ReservedScheduleDto> arrivalSchedule = scheduleList.stream().filter(schedule -> Objects.equals(schedule.getArrival_station_cd(), purchase.getArrival_station_cd())).toList();
 
-        List<ReservedSeatDto> reservedSeatList=purchasedSeatRepository.findReservedSeatByPurchaseId(request);
+        List<ReservedSeatDto> reservedSeatList = purchasedSeatRepository.findReservedSeatByPurchaseId(request);
 
         response.setTrain_type_name(purchase.getTrain_type_name());
         response.setDeparture_time(departureSchedule.getFirst().getDeparture_time());

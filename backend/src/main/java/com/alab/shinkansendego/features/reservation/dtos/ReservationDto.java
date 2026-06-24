@@ -3,7 +3,6 @@ package com.alab.shinkansendego.features.reservation.dtos;
 import lombok.*;
 
 import java.time.LocalDate;
-import java.util.List;
 
 @Data
 @NoArgsConstructor
