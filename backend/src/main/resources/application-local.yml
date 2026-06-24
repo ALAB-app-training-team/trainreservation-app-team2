@@ -4,7 +4,7 @@ spring:
     username: appuser
     password: localpassword
   flyway:
-    enabled: true
+    enabled: false
     baseline-on-migrate: true
     baseline-version: 0
 springdoc:
