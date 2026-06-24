@@ -1,8 +1,15 @@
 package com.alab.shinkansendego.features.schedule.entities;
 
+import lombok.*;
+
 import java.time.LocalDate;
 import java.util.UUID;
 
+@Data
+@NoArgsConstructor
+@AllArgsConstructor
+@Getter
+@Setter
 public class PurchaseEntity {
     private UUID id;
     private LocalDate ride_date;
