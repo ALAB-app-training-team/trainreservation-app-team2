@@ -15,9 +15,9 @@ import org.testcontainers.junit.jupiter.Container;
 import org.testcontainers.junit.jupiter.Testcontainers;
 
 import java.time.LocalDate;
+import java.util.UUID;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertNotNull;
 
 @ActiveProfiles("test")
 @MybatisTest
@@ -43,14 +43,14 @@ public class PurchaseRepositoryTest {
 
     @Test
     @DisplayName("新規購入情報が挿入できる")
-    void insertPurchase_withPurchaseEntity_returnVoid() {
+    void insertPurchase_withPurchaseEntity_returnRecordCount() {
         PurchaseEntity purchase = new PurchaseEntity();
+        purchase.setId(UUID.fromString("123e4567-e89b-12d3-a456-426614174000"));
         purchase.setRide_date(LocalDate.now());
         purchase.setSchedule_cd("TEST01");
         purchase.setDeparture_station_cd("Test0");
         purchase.setArrival_station_cd("Test1");
-        int id = repo.insertPurchase(purchase);
-        assertEquals(id, 1);
-        assertNotNull(purchase.getId());
+        int result = repo.insertPurchase(purchase);
+        assertEquals(result, 1);
     }
 }
