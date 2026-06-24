@@ -19,6 +19,7 @@ import java.util.List;
 import java.util.UUID;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 
 @ActiveProfiles("test")
 @MybatisTest
@@ -44,7 +45,7 @@ public class PurchaseSeatRepositoryTest {
 
     @Test
     @DisplayName("新規購入座席情報が挿入できる")
-    void insertPurchaseSeat_withPurchaseSeatEntity_returnRecordCount() {
+    void insertPurchaseSeat_withPurchaseSeatList_returnRecordCount() {
         List<PurchaseSeatEntity> purchaseSeats = new ArrayList<>();
         for (int i = 1; i < 3; i++) {
             PurchaseSeatEntity purchaseSeat = new PurchaseSeatEntity();
@@ -53,8 +54,18 @@ public class PurchaseSeatRepositoryTest {
             purchaseSeat.setTrain_car_cd("E5SER01");
             purchaseSeat.setSeat_cd("SEAT0100" + i);
             purchaseSeat.setCode_token(UUID.randomUUID());
+            purchaseSeats.add(purchaseSeat);
         }
         int result = repo.insertPurchaseSeats(purchaseSeats);
         assertEquals(result, 2);
+    }
+
+    @Test
+    @DisplayName("空の購入座席情報を渡した場合、BadSqlGrammarExceptionが発生する")
+    void insertPurchaseSeat_withEmptyPurchaseSeatList_throwsException() {
+        List<PurchaseSeatEntity> emptySeats = new ArrayList<>();
+        assertThrows(org.springframework.jdbc.BadSqlGrammarException.class, () -> {
+            int result = repo.insertPurchaseSeats(emptySeats);
+        });
     }
 }

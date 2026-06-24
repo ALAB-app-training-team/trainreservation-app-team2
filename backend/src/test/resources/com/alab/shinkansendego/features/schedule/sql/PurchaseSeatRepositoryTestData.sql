@@ -41,8 +41,6 @@ CREATE TABLE M_TrainCarType
 INSERT INTO M_TrainCarType (train_car_type_cd, name)
 VALUES ('CAR01', '指定席');
 
-VALUES ('E5SER01', 'E5SER', 1, 'SEAT01');
-
 CREATE TABLE M_SeatType
 (
     seat_type_cd      VARCHAR(6)   NOT NULL PRIMARY KEY,
@@ -61,6 +59,7 @@ CREATE TABLE M_TrainCar
     UNIQUE (train_series_cd, train_car_number)
 );
 INSERT INTO M_TrainCar (train_car_cd, train_series_cd, train_car_number, seat_type_cd)
+VALUES ('E5SER01', 'E5SER', 1, 'SEAT01');
 
 CREATE TABLE M_Seat
 (
