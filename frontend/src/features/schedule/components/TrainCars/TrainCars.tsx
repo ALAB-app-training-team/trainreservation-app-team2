@@ -1,4 +1,4 @@
-import { Suspense, useMemo, useState, useEffect } from "react";
+import { Suspense, useMemo, useState } from "react";
 import { useTrainCar } from "../../hooks/useTrainCar";
 import type { SeatsRequestDto } from "../../types/SeatsRequestDto";
 import type { SeatResponseDto } from "../../types/SeatResponseDto";
@@ -46,22 +46,6 @@ export function TrainCars({
     setActiveSeatTypeCd(code);
     setUserSelectedTrainCarCd("");
   };
-
-  /*nst [activeTrainCarCd, setActiveTrainCarCd] = useState<string>(() => {
-    if (trainCarsData && trainCarsData.length > 0) {
-      const initialCar = trainCarsData.find(
-        (car) => car.seat_type_cd === "SEAT01",
-      );
-      return initialCar ? initialCar.train_car_cd : "E5SER01";
-    }
-    return "E5SER01";
-  });
-
-  useEffect(() => {
-    if (filteredCars && filteredCars.length > 0) {
-      setActiveTrainCarCd(filteredCars[0].train_car_cd);
-    }
-  }, [activeSeatTypeCd, filteredCars]);*/
 
   const seatsRequestDto: SeatsRequestDto = {
     schedule_cd: scheduleInfoDto.schedule_cd,
