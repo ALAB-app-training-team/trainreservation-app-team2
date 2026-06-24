@@ -9,14 +9,18 @@ import type { ScheduleInfoDto } from "../types/ScheduleInfoDto";
 type ScheduleItemProps = {
   schedule: SearchResponseDto;
   date: string;
+  departure_station_cd: string;
   departure_station_name: string;
+  arrival_station_cd: string;
   arrival_station_name: string;
 };
 
 export function ScheduleItem({
   schedule,
   date,
+  departure_station_cd,
   departure_station_name,
+  arrival_station_cd,
   arrival_station_name,
 }: ScheduleItemProps) {
   const navigate = useNavigate();
@@ -55,7 +59,7 @@ export function ScheduleItem({
       arrival_time: schedule.arrival_time,
     };
     navigate("/selectSeat", {
-      state: { scheduleInfoDto },
+      state: { scheduleInfoDto, departure_station_cd, arrival_station_cd },
     });
   };
 
