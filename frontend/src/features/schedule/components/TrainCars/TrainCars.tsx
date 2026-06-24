@@ -21,8 +21,8 @@ export function TrainCars({
   const { trainCarsData } = useTrainCar(scheduleInfoDto.schedule_cd);
 
   const [activeSeatTypeCd, setActiveSeatTypeCd] = useState<
-    "SEAT01" | "SEAT02" | "SEAT03"
-  >("SEAT01");
+    keyof typeof SEAT_TYPE_LABELS
+  >(Object.keys(SEAT_TYPE_LABELS)[0] as keyof typeof SEAT_TYPE_LABELS);
 
   const filteredCars = useMemo(() => {
     if (!trainCarsData) return [];
