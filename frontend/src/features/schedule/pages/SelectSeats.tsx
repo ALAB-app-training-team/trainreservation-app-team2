@@ -26,7 +26,10 @@ export function SelectSeats() {
         seat_cd: seat.seat_cd,
       })),
     };
-    const response = await axios.post(ENDPOINTS.PURCHASE(), reserveRequestDto);
+    const response = await axios.post(
+      ENDPOINTS.RESERVATION(),
+      reserveRequestDto,
+    );
     console.log(response);
   };
 
