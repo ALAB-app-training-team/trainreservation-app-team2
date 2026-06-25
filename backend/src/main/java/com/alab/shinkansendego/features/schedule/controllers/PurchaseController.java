@@ -14,7 +14,7 @@ import org.springframework.web.bind.annotation.RestController;
 import java.util.UUID;
 
 @RestController
-@RequestMapping(path = "api/shinkansen-reservation")
+@RequestMapping(path = "api/shinkansen-purchase")
 public class PurchaseController {
     private final PurchaseService purchaseService;
 
