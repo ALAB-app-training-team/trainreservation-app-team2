@@ -1,7 +1,7 @@
 CREATE TABLE M_Schedule
 (
     schedule_cd   VARCHAR(6) NOT NULL PRIMARY KEY,
-    train_type_cd VARCHAR(5) NOT NULL REFERENCES M_TrainType (train_type_cd)
+    train_type_cd VARCHAR(5) NOT NULL
 );
 INSERT INTO M_Schedule (schedule_cd, train_type_cd)
 VALUES ('TEST01', 'YM001'),
