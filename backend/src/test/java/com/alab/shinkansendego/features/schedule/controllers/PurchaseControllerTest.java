@@ -26,7 +26,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 @WebMvcTest(PurchaseController.class)
 public class PurchaseControllerTest {
     private final ObjectMapper objectMapper = new ObjectMapper();
-    private final String baseUrl = "/api/shinkansen-reservation";
+    private final String baseUrl = "/api/shinkansen-purchase";
     @Autowired
     private MockMvc mockMvc;
     @MockitoBean
