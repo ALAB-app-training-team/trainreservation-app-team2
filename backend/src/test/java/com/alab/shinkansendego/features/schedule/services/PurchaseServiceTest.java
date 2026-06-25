@@ -80,7 +80,7 @@ public class PurchaseServiceTest {
                 new ReserveRequestDto.SelectedSeatDto("E5SER01", "SEAT01001"),
                 new ReserveRequestDto.SelectedSeatDto("E5SER01", "SEAT01002")
         ));
-        when(purchaseRepo.insertPurchase(any())).thenReturn(0);
+        when(purchaseRepo.insertPurchase(any())).thenReturn(1);
         when(purchaseSeatRepo.insertPurchaseSeats(any())).thenReturn(0);
 
         assertThrows(RuntimeException.class, () -> {
