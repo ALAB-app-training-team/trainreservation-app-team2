@@ -10,7 +10,7 @@ export function useReservedTickets(purchaseId: string) {
       const response = await axios.get<ReservationResponseDto>(
         ENDPOINTS.RESERVATION(),
         {
-          params: { purchase_id: purchaseId },
+          params: { purchaseId: purchaseId },
         },
       );
       return response.data;

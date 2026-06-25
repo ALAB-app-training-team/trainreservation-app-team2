@@ -22,7 +22,7 @@ public class ReservationController {
     }
 
     @GetMapping
-    public ResponseEntity<ReservationResponseDto> getReservation(@RequestParam("purchase_id") UUID request) {
+    public ResponseEntity<ReservationResponseDto> getReservation(@RequestParam("purchaseId") UUID request) {
         ReservationResponseDto response = reservationService.getReservation(request);
         return ResponseEntity.ok(response);
     }
