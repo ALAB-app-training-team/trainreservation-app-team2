@@ -10,6 +10,7 @@ import org.junit.jupiter.api.Test;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
+import org.springframework.dao.DuplicateKeyException;
 
 import java.time.LocalDate;
 import java.util.List;
@@ -64,6 +65,22 @@ public class PurchaseServiceTest {
         ReserveRequestDto request = new ReserveRequestDto(
                 "Test01", LocalDate.now(), "Test0", "Test1", null);
         assertThrows(IllegalArgumentException.class, () -> {
+            service.purchaseSeats(request);
+        });
+    }
+
+    @Test
+    @DisplayName("同一購入情報IDで重複した座席を予約しようとした場合、DataAccessExceptionが発生する")
+    void insertPurchaseSeat_withSameSelectedSeatDto_throwsDataAccessException() {
+        ReserveRequestDto request = new ReserveRequestDto(
+                "Test01", LocalDate.now(), "Test0", "Test1", List.of(
+                new ReserveRequestDto.SelectedSeatDto("E5SER01", "SEAT01001"),
+                new ReserveRequestDto.SelectedSeatDto("E5SER01", "SEAT01001")
+        ));
+        when(purchaseRepo.insertPurchase(any())).thenReturn(1);
+        when(purchaseSeatRepo.insertPurchaseSeats(any())).thenThrow(new DuplicateKeyException("UNIQUE制約エラー"));
+
+        assertThrows(org.springframework.dao.DataAccessException.class, () -> {
             service.purchaseSeats(request);
         });
     }

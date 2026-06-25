@@ -61,11 +61,29 @@ public class PurchaseSeatRepositoryTest {
     }
 
     @Test
+    @DisplayName("同一購入情報IDで重複した座席を予約しようとした場合、DataAccessExceptionが発生する")
+    void insertPurchaseSeat_withSamePurchaseSeatList_throwsDataAccessException() {
+        List<PurchaseSeatEntity> sameSeats = new ArrayList<>();
+        for (int i = 1; i < 3; i++) {
+            PurchaseSeatEntity purchaseSeat = new PurchaseSeatEntity();
+            purchaseSeat.setId(UUID.randomUUID());
+            purchaseSeat.setPurchase_id(UUID.fromString("123e4567-e89b-12d3-a456-426614174000"));
+            purchaseSeat.setTrain_car_cd("E5SER01");
+            purchaseSeat.setSeat_cd("SEAT01001");
+            purchaseSeat.setCode_token(UUID.randomUUID());
+            sameSeats.add(purchaseSeat);
+        }
+        assertThrows(org.springframework.dao.DataAccessException.class, () -> {
+            repo.insertPurchaseSeats(sameSeats);
+        });
+    }
+
+    @Test
     @DisplayName("空の購入座席情報を渡した場合、BadSqlGrammarExceptionが発生する")
     void insertPurchaseSeat_withEmptyPurchaseSeatList_throwsException() {
         List<PurchaseSeatEntity> emptySeats = new ArrayList<>();
         assertThrows(org.springframework.jdbc.BadSqlGrammarException.class, () -> {
-            int result = repo.insertPurchaseSeats(emptySeats);
+            repo.insertPurchaseSeats(emptySeats);
         });
     }
 }
