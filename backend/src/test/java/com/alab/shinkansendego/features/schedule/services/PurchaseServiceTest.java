@@ -59,6 +59,16 @@ public class PurchaseServiceTest {
     }
 
     @Test
+    @DisplayName("座席リストがnullの場合、IllegalArgumentExceptionが発生する")
+    void purchaseSeats_withNullSelectedSeatDto_throwsIllegalArgumentException() {
+        ReserveRequestDto request = new ReserveRequestDto(
+                "Test01", LocalDate.now(), "Test0", "Test1", null);
+        assertThrows(IllegalArgumentException.class, () -> {
+            service.purchaseSeats(request);
+        });
+    }
+
+    @Test
     @DisplayName("insertPurchaseが失敗した場合、RuntimeExceptionが発生する")
     void purchaseSeats_withInsertPurchaseFails_throwsRuntimeException() {
         ReserveRequestDto request = new ReserveRequestDto(
