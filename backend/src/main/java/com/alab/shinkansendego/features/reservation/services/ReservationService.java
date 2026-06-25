@@ -33,7 +33,7 @@ public class ReservationService {
 
         ReservationDto purchase = purchaseRepository.findPurchaseByPurchaseId(request);
         if (purchase == null) {
-            throw new IllegalArgumentException("PurchaseCd is Not Found");
+            throw new IllegalArgumentException("PurchaseId is Not found");
         }
 
         List<ReservedScheduleDto> scheduleList = purchaseRepository.findScheduleByPurchaseId(request);
@@ -47,10 +47,10 @@ public class ReservationService {
         List<ReservedSeatDto> reservedSeatList = purchasedSeatRepository.findReservedSeatByPurchaseId(request);
 
         response.setTrain_type_name(purchase.getTrain_type_name());
-        response.setDeparture_time(departureSchedule.getFirst().getDeparture_time());
         response.setDeparture_station_name(departureSchedule.getFirst().getDeparture_station_name());
-        response.setArrival_time(arrivalSchedule.getFirst().getArrival_time());
+        response.setDeparture_time(departureSchedule.getFirst().getDeparture_time());
         response.setArrival_station_name(arrivalSchedule.getFirst().getArrival_station_name());
+        response.setArrival_time(arrivalSchedule.getFirst().getArrival_time());
         response.setRide_date(purchase.getRide_date());
         response.setReserved_seats(reservedSeatList);
 

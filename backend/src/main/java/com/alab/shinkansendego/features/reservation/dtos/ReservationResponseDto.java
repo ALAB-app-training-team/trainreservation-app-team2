@@ -13,10 +13,10 @@ import java.util.List;
 @Setter
 public class ReservationResponseDto {
     private String train_type_name;
-    private LocalTime departure_time;
     private String departure_station_name;
-    private LocalTime arrival_time;
+    private LocalTime departure_time;
     private String arrival_station_name;
+    private LocalTime arrival_time;
     private LocalDate ride_date;
     private List<ReservedSeatDto> reserved_seats;
 }

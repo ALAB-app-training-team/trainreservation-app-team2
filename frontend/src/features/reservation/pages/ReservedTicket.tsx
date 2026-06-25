@@ -14,14 +14,14 @@ export function ReservedTicket() {
 
   return (
     <>
-      <div className="flex flex-col md:flex-row flex-col-reverse justify-between items-start gap-4 w-full p-4">
+      <div className="flex flex-col items-center gap-4 w-full p-4">
         {/* TODO: 戻るボタンを作る */}
-        <div className="flex justify-between w-full md:w-7/10">
+        <div className="w-full md:w-7/10">
           <button
             onClick={() => {
               navigate("/searchSchedule");
             }}
-            className="flex items-center gap-2 px-4 border-2 rounded-xl border-primary-light cursor-pointer"
+            className="flex ml-auto items-center gap-2 px-4 border-2 rounded-xl border-primary-light cursor-pointer"
           >
             <div>ホーム</div>
             <GoHome />

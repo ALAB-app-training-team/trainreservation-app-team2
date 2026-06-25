@@ -38,10 +38,10 @@ public class ReservationControllerTest {
         List<ReservedSeatDto> reservedSeatList = Arrays.asList(seat1, seat2, seat3);
         return new ReservationResponseDto(
                 "やまびこ1号",
-                LocalTime.of(12, 0, 0),
                 "東京",
-                LocalTime.of(13, 0, 0),
+                LocalTime.of(12, 0, 0),
                 "仙台",
+                LocalTime.of(13, 0, 0),
                 LocalDate.of(2026, 6, 1),
                 reservedSeatList);
     }
@@ -61,10 +61,10 @@ public class ReservationControllerTest {
                                 .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.train_type_name").value("やまびこ1号"))
-                .andExpect(jsonPath("$.departure_time").value("12:00:00"))
                 .andExpect(jsonPath("$.departure_station_name").value("東京"))
-                .andExpect(jsonPath("$.arrival_time").value("13:00:00"))
+                .andExpect(jsonPath("$.departure_time").value("12:00:00"))
                 .andExpect(jsonPath("$.arrival_station_name").value("仙台"))
+                .andExpect(jsonPath("$.arrival_time").value("13:00:00"))
                 .andExpect(jsonPath("$.ride_date").value("2026-06-01"))
                 .andExpect(jsonPath("$.reserved_seats.length()").value(3))
                 .andExpect(jsonPath("$.reserved_seats[0].train_car_type_name").value("指定席"))
