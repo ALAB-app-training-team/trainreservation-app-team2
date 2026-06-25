@@ -39,7 +39,7 @@ public class PurchaseControllerTest {
     }
 
     @Test
-    @DisplayName("リクエストDTOからダイヤリストが取得できる")
+    @DisplayName("購入情報・購入座席情報を挿入できる")
     void purchaseSeats_withValidReserveRequestDto_return201AndPurchaseId() throws Exception {
         ReserveRequestDto request = new ReserveRequestDto(
                 "Test01", LocalDate.now(), "Test0", "Test1", List.of(
