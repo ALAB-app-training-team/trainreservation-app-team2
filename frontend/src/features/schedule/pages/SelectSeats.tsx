@@ -15,10 +15,12 @@ export function SelectSeats() {
   const { selectedSeats, handleSelectedSeats } = useSelectedSeats();
 
   const handleReserve = async () => {
+    console.log(scheduleInfoDto);
+
     // TODO: try-catchをつける
     const reserveRequestDto: ReserveRequestDto = {
       schedule_cd: scheduleInfoDto.schedule_cd,
-      ride_date: scheduleInfoDto.ride_date,
+      ride_date: scheduleInfoDto.date,
       departure_station_cd: departure_station_cd,
       arrival_station_cd: arrival_station_cd,
       seats: selectedSeats.map((seat) => ({

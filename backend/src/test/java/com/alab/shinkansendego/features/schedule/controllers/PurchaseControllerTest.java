@@ -77,7 +77,9 @@ public class PurchaseControllerTest {
     @DisplayName("リクエストDTO自体がNullの場合、バインドエラー発生")
     void purchaseSeats_withReserveRequestDtoIsNull_returnBindError() throws Exception {
         //バインド順が毎回異なるためエラーメッセージの比較は行わない
-        mockMvc.perform(post(baseUrl))
+        mockMvc.perform(post(baseUrl)
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(objectMapper.writeValueAsString(new ReserveRequestDto())))
                 .andExpect(status().isBadRequest());
     }
 }
