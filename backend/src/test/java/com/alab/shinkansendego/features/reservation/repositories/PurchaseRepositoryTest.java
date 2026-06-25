@@ -2,8 +2,6 @@ package com.alab.shinkansendego.features.reservation.repositories;
 
 import com.alab.shinkansendego.features.reservation.dtos.ReservationDto;
 import com.alab.shinkansendego.features.reservation.dtos.ReservedScheduleDto;
-import com.alab.shinkansendego.features.schedule.dtos.DepartureArrivalTimeDto;
-import com.alab.shinkansendego.features.schedule.repositories.DepartureArrivalTimeRepository;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.mybatis.spring.boot.test.autoconfigure.MybatisTest;
@@ -38,6 +36,7 @@ public class PurchaseRepositoryTest {
             .withDatabaseName("test")
             .withUsername("user")
             .withPassword("pass");
+    private final UUID purchaseId = UUID.fromString("4156b939-2e3e-46c1-92d3-7aa64b6ca575");
     @Autowired
     private PurchaseRepository repo;
 
@@ -48,18 +47,16 @@ public class PurchaseRepositoryTest {
         registry.add("spring.datasource.password", postgres::getPassword);
     }
 
-    private final UUID purchaseId = UUID.fromString("4156b939-2e3e-46c1-92d3-7aa64b6ca575");
-
     @Test
     @DisplayName("購入情報IDから購入した座席の運行情報を取得できる")
     void findScheduleByPurchaseId_withPurchaseId_returnGetScheduleSuccess() {
         List<ReservedScheduleDto> expected = Arrays.asList(
                 new ReservedScheduleDto(
-                        LocalTime.of(6, 0, 0),"EKI01","TestStation01", LocalTime.of(6, 55, 0),"EKI02","TestStation02"),
+                        LocalTime.of(6, 0, 0), "EKI01", "TestStation01", LocalTime.of(6, 55, 0), "EKI02", "TestStation02"),
                 new ReservedScheduleDto(
-                        LocalTime.of(7, 0, 0),"EKI02","TestStation02", LocalTime.of(7, 55, 0),"EKI03","TestStation03"),
+                        LocalTime.of(7, 0, 0), "EKI02", "TestStation02", LocalTime.of(7, 55, 0), "EKI03", "TestStation03"),
                 new ReservedScheduleDto(
-                        LocalTime.of(8, 0, 0),"EKI03","TestStation03", LocalTime.of(8, 55, 0),"EKI04","TestStation04"));
+                        LocalTime.of(8, 0, 0), "EKI03", "TestStation03", LocalTime.of(8, 55, 0), "EKI04", "TestStation04"));
         List<ReservedScheduleDto> actual = repo.findScheduleByPurchaseId(purchaseId);
         assertEquals(expected, actual);
     }

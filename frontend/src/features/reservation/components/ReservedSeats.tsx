@@ -37,7 +37,7 @@ export function ReservedSeats({
                     }
                     className="flex items-center gap-2"
                   >
-                    <div className="flex items-center px-2 border-2 rounded-lg border-primary-light gap-1">
+                    <div className="flex items-center px-2 border-2 rounded-lg border-primary-light gap-1 bg-green-200">
                       <div>{`${reservedSeats.train_car_number}号車`}</div>
                       <div>{reservedSeats.train_car_type_name}</div>
                       <div>
