@@ -2,9 +2,9 @@ package com.alab.shinkansendego.features.schedule.servicies;
 
 import com.alab.shinkansendego.features.schedule.dtos.ReserveRequestDto;
 import com.alab.shinkansendego.features.schedule.entities.PurchaseEntity;
-import com.alab.shinkansendego.features.schedule.entities.PurchaseSeatEntity;
+import com.alab.shinkansendego.features.schedule.entities.PurchasedSeatEntity;
 import com.alab.shinkansendego.features.schedule.repositories.PurchaseRepository;
-import com.alab.shinkansendego.features.schedule.repositories.PurchaseSeatRepository;
+import com.alab.shinkansendego.features.schedule.repositories.PurchasedSeatRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -16,12 +16,12 @@ import java.util.UUID;
 @Service
 public class PurchaseService {
     private final PurchaseRepository purchaseRepository;
-    private final PurchaseSeatRepository purchaseSeatRepository;
+    private final PurchasedSeatRepository purchasedSeatRepository;
 
     @Autowired
-    public PurchaseService(PurchaseRepository purchaseRepository, PurchaseSeatRepository purchaseSeatRepository) {
+    public PurchaseService(PurchaseRepository purchaseRepository, PurchasedSeatRepository purchasedSeatRepository) {
         this.purchaseRepository = purchaseRepository;
-        this.purchaseSeatRepository = purchaseSeatRepository;
+        this.purchasedSeatRepository = purchasedSeatRepository;
     }
 
     @Transactional
@@ -43,16 +43,16 @@ public class PurchaseService {
             throw new RuntimeException("Insert Purchase is failed");
         }
 
-        List<PurchaseSeatEntity> purchaseSeats = new ArrayList<>();
+        List<PurchasedSeatEntity> purchasedSeats = new ArrayList<>();
         for (ReserveRequestDto.SelectedSeatDto seatDto : reserveRequestDto.getSeats()) {
-            PurchaseSeatEntity purchaseSeat = new PurchaseSeatEntity(
+            PurchasedSeatEntity purchasedSeat = new PurchasedSeatEntity(
                     UUID.randomUUID(), purchaseId, seatDto.getTrain_car_cd(), seatDto.getSeat_cd(), UUID.randomUUID()
             );
-            purchaseSeats.add(purchaseSeat);
+            purchasedSeats.add(purchasedSeat);
         }
-        int purchaseSeatResult = purchaseSeatRepository.insertPurchaseSeats(purchaseSeats);
-        if (purchaseSeatResult != reserveRequestDto.getSeats().size()) {
-            throw new RuntimeException("Insert PurchaseSeats is failed");
+        int purchasedSeatResult = purchasedSeatRepository.insertPurchasedSeats(purchasedSeats);
+        if (purchasedSeatResult != reserveRequestDto.getSeats().size()) {
+            throw new RuntimeException("Insert PurchasedSeats is failed");
         }
 
         return purchaseId;

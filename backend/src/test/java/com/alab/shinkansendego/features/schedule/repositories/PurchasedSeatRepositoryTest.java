@@ -1,6 +1,6 @@
 package com.alab.shinkansendego.features.schedule.repositories;
 
-import com.alab.shinkansendego.features.schedule.entities.PurchaseSeatEntity;
+import com.alab.shinkansendego.features.schedule.entities.PurchasedSeatEntity;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.mybatis.spring.boot.test.autoconfigure.MybatisTest;
@@ -25,8 +25,8 @@ import static org.junit.jupiter.api.Assertions.assertThrows;
 @MybatisTest
 @AutoConfigureTestDatabase(replace = AutoConfigureTestDatabase.Replace.NONE)
 @Testcontainers
-@Sql(scripts = {"classpath:com/alab/shinkansendego/features/schedule/sql/PurchaseSeatRepositoryTestData.sql"})
-public class PurchaseSeatRepositoryTest {
+@Sql(scripts = {"classpath:com/alab/shinkansendego/features/schedule/sql/PurchasedSeatRepositoryTestData.sql"})
+public class PurchasedSeatRepositoryTest {
     // テスト用DB作成
     @Container
     static PostgreSQLContainer<?> postgres = new PostgreSQLContainer<>("postgres:16")
@@ -34,7 +34,7 @@ public class PurchaseSeatRepositoryTest {
             .withUsername("user")
             .withPassword("pass");
     @Autowired
-    private PurchaseSeatRepository repo;
+    private PurchasedSeatRepository repo;
 
     @DynamicPropertySource
     static void configure(DynamicPropertyRegistry registry) {
@@ -45,45 +45,45 @@ public class PurchaseSeatRepositoryTest {
 
     @Test
     @DisplayName("新規購入座席情報が挿入できる")
-    void insertPurchaseSeat_withPurchaseSeatList_returnRecordCount() {
-        List<PurchaseSeatEntity> purchaseSeats = new ArrayList<>();
+    void insertPurchasedSeat_withPurchasedSeatList_returnRecordCount() {
+        List<PurchasedSeatEntity> purchasedSeats = new ArrayList<>();
         for (int i = 1; i < 3; i++) {
-            PurchaseSeatEntity purchaseSeat = new PurchaseSeatEntity();
-            purchaseSeat.setId(UUID.randomUUID());
-            purchaseSeat.setPurchase_id(UUID.fromString("123e4567-e89b-12d3-a456-426614174000"));
-            purchaseSeat.setTrain_car_cd("E5SER01");
-            purchaseSeat.setSeat_cd("SEAT0100" + i);
-            purchaseSeat.setCode_token(UUID.randomUUID());
-            purchaseSeats.add(purchaseSeat);
+            PurchasedSeatEntity purchasedSeat = new PurchasedSeatEntity();
+            purchasedSeat.setId(UUID.randomUUID());
+            purchasedSeat.setPurchase_id(UUID.fromString("123e4567-e89b-12d3-a456-426614174000"));
+            purchasedSeat.setTrain_car_cd("E5SER01");
+            purchasedSeat.setSeat_cd("SEAT0100" + i);
+            purchasedSeat.setCode_token(UUID.randomUUID());
+            purchasedSeats.add(purchasedSeat);
         }
-        int result = repo.insertPurchaseSeats(purchaseSeats);
+        int result = repo.insertPurchasedSeats(purchasedSeats);
         assertEquals(result, 2);
     }
 
     @Test
     @DisplayName("同一購入情報IDで重複した座席を予約しようとした場合、DataAccessExceptionが発生する")
-    void insertPurchaseSeat_withSamePurchaseSeatList_throwsDataAccessException() {
-        List<PurchaseSeatEntity> sameSeats = new ArrayList<>();
+    void insertPurchasedSeat_withSamePurchasedSeatList_throwsDataAccessException() {
+        List<PurchasedSeatEntity> sameSeats = new ArrayList<>();
         for (int i = 1; i < 3; i++) {
-            PurchaseSeatEntity purchaseSeat = new PurchaseSeatEntity();
-            purchaseSeat.setId(UUID.randomUUID());
-            purchaseSeat.setPurchase_id(UUID.fromString("123e4567-e89b-12d3-a456-426614174000"));
-            purchaseSeat.setTrain_car_cd("E5SER01");
-            purchaseSeat.setSeat_cd("SEAT01001");
-            purchaseSeat.setCode_token(UUID.randomUUID());
-            sameSeats.add(purchaseSeat);
+            PurchasedSeatEntity purchasedSeat = new PurchasedSeatEntity();
+            purchasedSeat.setId(UUID.randomUUID());
+            purchasedSeat.setPurchase_id(UUID.fromString("123e4567-e89b-12d3-a456-426614174000"));
+            purchasedSeat.setTrain_car_cd("E5SER01");
+            purchasedSeat.setSeat_cd("SEAT01001");
+            purchasedSeat.setCode_token(UUID.randomUUID());
+            sameSeats.add(purchasedSeat);
         }
         assertThrows(org.springframework.dao.DataAccessException.class, () -> {
-            repo.insertPurchaseSeats(sameSeats);
+            repo.insertPurchasedSeats(sameSeats);
         });
     }
 
     @Test
     @DisplayName("空の購入座席情報を渡した場合、BadSqlGrammarExceptionが発生する")
-    void insertPurchaseSeat_withEmptyPurchaseSeatList_throwsException() {
-        List<PurchaseSeatEntity> emptySeats = new ArrayList<>();
+    void insertPurchasedSeat_withEmptyPurchasedSeatList_throwsException() {
+        List<PurchasedSeatEntity> emptySeats = new ArrayList<>();
         assertThrows(org.springframework.jdbc.BadSqlGrammarException.class, () -> {
-            repo.insertPurchaseSeats(emptySeats);
+            repo.insertPurchasedSeats(emptySeats);
         });
     }
 }

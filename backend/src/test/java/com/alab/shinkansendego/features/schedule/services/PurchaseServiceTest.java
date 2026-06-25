@@ -2,7 +2,7 @@ package com.alab.shinkansendego.features.schedule.services;
 
 import com.alab.shinkansendego.features.schedule.dtos.ReserveRequestDto;
 import com.alab.shinkansendego.features.schedule.repositories.PurchaseRepository;
-import com.alab.shinkansendego.features.schedule.repositories.PurchaseSeatRepository;
+import com.alab.shinkansendego.features.schedule.repositories.PurchasedSeatRepository;
 import com.alab.shinkansendego.features.schedule.servicies.PurchaseService;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
@@ -25,7 +25,7 @@ public class PurchaseServiceTest {
     @Mock
     private PurchaseRepository purchaseRepo;
     @Mock
-    private PurchaseSeatRepository purchaseSeatRepo;
+    private PurchasedSeatRepository purchasedSeatRepo;
     @InjectMocks
     private PurchaseService service;
 
@@ -43,7 +43,7 @@ public class PurchaseServiceTest {
                 new ReserveRequestDto.SelectedSeatDto("E5SER01", "SEAT01002")
         ));
         when(purchaseRepo.insertPurchase(any())).thenReturn(1);
-        when(purchaseSeatRepo.insertPurchaseSeats(any())).thenReturn(request.getSeats().size());
+        when(purchasedSeatRepo.insertPurchasedSeats(any())).thenReturn(request.getSeats().size());
 
         UUID result = service.purchaseSeats(request);
         assertNotNull(result);
@@ -78,7 +78,7 @@ public class PurchaseServiceTest {
                 new ReserveRequestDto.SelectedSeatDto("E5SER01", "SEAT01001")
         ));
         when(purchaseRepo.insertPurchase(any())).thenReturn(1);
-        when(purchaseSeatRepo.insertPurchaseSeats(any())).thenThrow(new DuplicateKeyException("UNIQUE制約エラー"));
+        when(purchasedSeatRepo.insertPurchasedSeats(any())).thenThrow(new DuplicateKeyException("UNIQUE制約エラー"));
 
         assertThrows(org.springframework.dao.DataAccessException.class, () -> {
             service.purchaseSeats(request);
@@ -100,15 +100,15 @@ public class PurchaseServiceTest {
     }
 
     @Test
-    @DisplayName("insertPurchaseSeatsが失敗した場合、RuntimeExceptionが発生する")
-    void purchaseSeats_withInsertPurchaseSeatsFails_throwsRuntimeException() {
+    @DisplayName("insertPurchasedSeatsが失敗した場合、RuntimeExceptionが発生する")
+    void purchaseSeats_withInsertPurchasedSeatsFails_throwsRuntimeException() {
         ReserveRequestDto request = new ReserveRequestDto(
                 "Test01", LocalDate.now(), "Test0", "Test1", List.of(
                 new ReserveRequestDto.SelectedSeatDto("E5SER01", "SEAT01001"),
                 new ReserveRequestDto.SelectedSeatDto("E5SER01", "SEAT01002")
         ));
         when(purchaseRepo.insertPurchase(any())).thenReturn(1);
-        when(purchaseSeatRepo.insertPurchaseSeats(any())).thenReturn(0);
+        when(purchasedSeatRepo.insertPurchasedSeats(any())).thenReturn(0);
 
         assertThrows(RuntimeException.class, () -> {
             service.purchaseSeats(request);

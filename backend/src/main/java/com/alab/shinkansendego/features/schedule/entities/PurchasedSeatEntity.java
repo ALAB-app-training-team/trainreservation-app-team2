@@ -9,7 +9,7 @@ import java.util.UUID;
 @AllArgsConstructor
 @Getter
 @Setter
-public class PurchaseSeatEntity {
+public class PurchasedSeatEntity {
     private UUID id;
     private UUID purchase_id;
     private String train_car_cd;
