@@ -1,36 +1,14 @@
 import { Suspense } from "react";
 import { useLocation } from "react-router-dom";
-import axios from "axios";
-import { ENDPOINTS } from "../../../api/routes";
 import { SelectedSeats } from "../components/SelectedSeats";
 import { TrainCars } from "../components/TrainCars/TrainCars";
 import { TrainCarsSkeleton } from "../components/TrainCars/TrainCarsSkeleton";
 import { useSelectedSeats } from "../hooks/useSelectedSeats";
-import type { ReserveRequestDto } from "../types/ReserveRequestDto";
 
-export function SelectSeats() {
+export function SelectSeat() {
   const location = useLocation();
-  const { scheduleInfoDto, departure_station_cd, arrival_station_cd } =
-    location.state;
+  const { scheduleInfoDto } = location.state;
   const { selectedSeats, handleSelectedSeats } = useSelectedSeats();
-
-  const handleReserve = async () => {
-    console.log(scheduleInfoDto);
-
-    // TODO: try-catchをつける
-    const reserveRequestDto: ReserveRequestDto = {
-      schedule_cd: scheduleInfoDto.schedule_cd,
-      ride_date: scheduleInfoDto.date,
-      departure_station_cd: departure_station_cd,
-      arrival_station_cd: arrival_station_cd,
-      seats: selectedSeats.map((seat) => ({
-        train_car_cd: seat.train_car_cd,
-        seat_cd: seat.seat_cd,
-      })),
-    };
-    const response = await axios.post(ENDPOINTS.PURCHASE(), reserveRequestDto);
-    console.log(response);
-  };
 
   return (
     <>
@@ -46,10 +24,7 @@ export function SelectSeats() {
           </Suspense>
         </div>
         <div className="flex-1 w-full">
-          <SelectedSeats
-            selectedSeats={selectedSeats}
-            onClick={handleReserve}
-          />
+          <SelectedSeats selectedSeats={selectedSeats} />
         </div>
       </div>
     </>
