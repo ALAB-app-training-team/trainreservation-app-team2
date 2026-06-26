@@ -3,10 +3,8 @@ package com.alab.shinkansendego.features.schedule.servicies;
 import com.alab.shinkansendego.features.schedule.dtos.ReserveRequestDto;
 import com.alab.shinkansendego.features.schedule.entities.PurchaseEntity;
 import com.alab.shinkansendego.features.schedule.entities.PurchasedSeatEntity;
-import com.alab.shinkansendego.features.schedule.repositories.DepartureArrivalTimeRepository;
 import com.alab.shinkansendego.features.schedule.repositories.PurchaseRepository;
 import com.alab.shinkansendego.features.schedule.repositories.PurchasedSeatRepository;
-import com.alab.shinkansendego.features.schedule.repositories.SectionKmRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -19,15 +17,11 @@ import java.util.UUID;
 public class PurchaseService {
     private final PurchaseRepository purchaseRepository;
     private final PurchasedSeatRepository purchasedSeatRepository;
-    private final SectionKmRepository sectionKmRepository;
-    private final DepartureArrivalTimeRepository departureArrivalTimeRepository;
 
     @Autowired
-    public PurchaseService(PurchaseRepository purchaseRepository, PurchasedSeatRepository purchasedSeatRepository, SectionKmRepository sectionKmRepository, DepartureArrivalTimeRepository departureArrivalTimeRepository) {
+    public PurchaseService(PurchaseRepository purchaseRepository, PurchasedSeatRepository purchasedSeatRepository) {
         this.purchaseRepository = purchaseRepository;
         this.purchasedSeatRepository = purchasedSeatRepository;
-        this.sectionKmRepository = sectionKmRepository;
-        this.departureArrivalTimeRepository = departureArrivalTimeRepository;
     }
 
     @Transactional
@@ -35,11 +29,6 @@ public class PurchaseService {
         if (reserveRequestDto.getSeats() == null || reserveRequestDto.getSeats().isEmpty()) {
             throw new IllegalArgumentException("Seats is Not found");
         }
-
-        List<String> SectionKmCdsByDepartureStation = sectionKmRepository.findSectionCdByStartStationCd(reserveRequestDto.getDeparture_station_cd());
-        List<String> SectionKmCdsByArrivalStation = sectionKmRepository.findSectionCdByGoalStationCd(reserveRequestDto.getArrival_station_cd());
-
-
 
         UUID purchaseId = UUID.randomUUID();
         PurchaseEntity purchase = new PurchaseEntity(
