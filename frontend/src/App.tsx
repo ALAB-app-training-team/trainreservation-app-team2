@@ -7,9 +7,10 @@ import {
 import { SearchResult } from "./features/schedule/pages/SearchResult";
 import { SearchSchedule } from "./features/schedule/pages/SearchSchedule";
 import { SelectSeat } from "./features/schedule/pages/SelectSeat";
-import { ReservedTicket } from "./features/reservation/pages/ReservedTicket";
 import { Error } from "./shared/pages/Error";
 import { Header } from "./shared/components/Header";
+
+import { ReservedTicket } from "./features/reservation/pages/ReservedTicket";
 
 function Layout() {
   return (
