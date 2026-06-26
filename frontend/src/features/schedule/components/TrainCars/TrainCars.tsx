@@ -29,22 +29,26 @@ export function TrainCars({
     return trainCarsData.filter((car) => car.seat_type_cd === activeSeatTypeCd);
   }, [trainCarsData, activeSeatTypeCd]);
 
-  const [userSelectedTrainCarCd, setUserSelectedTrainCarCd] =
-    useState<string>("");
+  const [selectedTrainCarCd, setSelectedTrainCarCd] = useState<string>("");
 
   const activeTrainCarCd = useMemo(() => {
-    if (userSelectedTrainCarCd) {
-      return userSelectedTrainCarCd;
+    const isCarInCurrentTab = filteredCars.some(
+      (car) => car.train_car_cd === selectedTrainCarCd,
+    );
+
+    if (selectedTrainCarCd && isCarInCurrentTab) {
+      return selectedTrainCarCd;
     }
     if (filteredCars && filteredCars.length > 0) {
       return filteredCars[0].train_car_cd;
     }
-    return "E5SER01";
-  }, [userSelectedTrainCarCd, filteredCars]);
+    return trainCarsData && trainCarsData.length > 0
+      ? trainCarsData[0].train_car_cd
+      : "";
+  }, [selectedTrainCarCd, filteredCars, trainCarsData]);
 
   const handleSeatTypeChange = (code: keyof typeof SEAT_TYPE_LABELS) => {
     setActiveSeatTypeCd(code);
-    setUserSelectedTrainCarCd("");
   };
 
   const seatsRequestDto: SeatsRequestDto = {
@@ -90,7 +94,7 @@ export function TrainCars({
           <button
             key={car.train_car_number}
             type="button"
-            onClick={() => setUserSelectedTrainCarCd(car.train_car_cd)}
+            onClick={() => setSelectedTrainCarCd(car.train_car_cd)}
             className={`flex flex-col items-center justify-center min-w-[80px] h-20 p-3 border-2 rounded-2xl transition-all duration-200 ${
               activeTrainCarCd === car.train_car_cd
                 ? "border-primary bg-primary-light text-primary font-bold shadow-sm"
