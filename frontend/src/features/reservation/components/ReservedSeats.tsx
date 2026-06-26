@@ -38,13 +38,13 @@ export function ReservedSeats({
                     className="flex items-center gap-2"
                   >
                     <div className="flex items-center px-2 border-2 rounded-lg border-primary-light gap-1 bg-green-100 text-primary">
+                      <BsTrainFreightFrontFill />
                       <div>{`${reservedSeats.train_car_number}号車`}</div>
                       <div>{reservedSeats.train_car_type_name}</div>
                       <div>
                         {`${reservedSeats.seat_number}番` +
                           `${reservedSeats.seat_column}席`}
                       </div>
-                      <BsTrainFreightFrontFill />
                     </div>
                   </div>
                 );
