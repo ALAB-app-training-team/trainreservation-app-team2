@@ -1,6 +1,5 @@
-package com.alab.shinkansendego.features.db.repositories;
+package com.alab.shinkansendego.db.repositories;
 
-import com.alab.shinkansendego.db.repositories.PurchaseRepository;
 import com.alab.shinkansendego.features.reservation.dtos.ReservationDto;
 import com.alab.shinkansendego.features.reservation.dtos.ReservedScheduleDto;
 import com.alab.shinkansendego.features.schedule.entities.PurchaseEntity;

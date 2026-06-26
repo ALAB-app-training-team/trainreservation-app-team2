@@ -1,6 +1,5 @@
-package com.alab.shinkansendego.features.db.repositories;
+package com.alab.shinkansendego.db.repositories;
 
-import com.alab.shinkansendego.db.repositories.PurchasedSeatRepository;
 import com.alab.shinkansendego.features.reservation.dtos.ReservedSeatDto;
 import com.alab.shinkansendego.features.schedule.entities.PurchasedSeatEntity;
 import org.junit.jupiter.api.DisplayName;
