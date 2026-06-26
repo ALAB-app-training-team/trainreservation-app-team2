@@ -14,14 +14,18 @@ import { ScheduleItem } from "../ScheduleItem";
 type ScheduleListProps = {
   searchRequestDto: SearchRequestDto;
   isInvalid: boolean;
+  departureStationCd: string;
   departureStationName: string;
+  arrivalStationCd: string;
   arrivalStationName: string;
 };
 
 export function ScheduleList({
   searchRequestDto,
   isInvalid,
+  departureStationCd,
   departureStationName,
+  arrivalStationCd,
   arrivalStationName,
 }: ScheduleListProps) {
   const { schedules } = useSchedules(searchRequestDto, isInvalid);
@@ -50,7 +54,9 @@ export function ScheduleList({
                     key={index}
                     schedule={schedule}
                     date={searchRequestDto.date}
+                    departure_station_cd={departureStationCd}
                     departure_station_name={departureStationName}
+                    arrival_station_cd={arrivalStationCd}
                     arrival_station_name={arrivalStationName}
                   />
                 );
