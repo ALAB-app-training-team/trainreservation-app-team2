@@ -7,7 +7,7 @@ import "swiper/css/pagination";
 import "swiper/css/navigation";
 
 type ReservedTicketQrCodeProps = {
-  train_type_name: String;
+  train_type_name: string;
   reserved_seats: ReservedSeatDto[];
 };
 
