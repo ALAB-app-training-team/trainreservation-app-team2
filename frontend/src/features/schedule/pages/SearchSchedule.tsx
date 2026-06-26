@@ -2,11 +2,11 @@ import { Suspense } from "react";
 import { SearchScheduleBody } from "../components/SearchScheduleBody/SearchScheduleBody";
 import { SearchScheduleBodySkeleton } from "../components/SearchScheduleBody/SearchScheduleBodySkeleton";
 import { QrCode } from "../../reservation/components/QrCode";
-import { Swiper, SwiperSlide } from "Swiper/react";
-import { Pagination, Navigation } from "Swiper/modules";
-import "Swiper/css";
-import "Swiper/css/pagination";
-import "Swiper/css/navigation";
+import { Swiper, SwiperSlide } from "swiper/react";
+import { Pagination, Navigation } from "swiper/modules";
+import "swiper/css";
+import "swiper/css/pagination";
+import "swiper/css/navigation";
 
 export function SearchSchedule() {
   return (
