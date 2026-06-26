@@ -24,8 +24,8 @@ public class PurchaseController {
     }
 
     @PostMapping
-    public ResponseEntity<UUID> purchaseSeats(@Valid @RequestBody ReserveRequestDto request) {
-        UUID response = purchaseService.purchaseSeats(request);
+    public ResponseEntity<UUID> insertPurchaseSeats(@Valid @RequestBody ReserveRequestDto request) {
+        UUID response = purchaseService.insertPurchaseSeats(request);
         return ResponseEntity.status(HttpStatus.CREATED).body(response);
     }
 }

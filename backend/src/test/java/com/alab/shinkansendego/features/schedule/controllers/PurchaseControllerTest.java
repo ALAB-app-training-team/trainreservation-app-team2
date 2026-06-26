@@ -40,14 +40,14 @@ public class PurchaseControllerTest {
 
     @Test
     @DisplayName("購入情報・購入座席情報を挿入できる")
-    void purchaseSeats_withValidReserveRequestDto_return201AndPurchaseId() throws Exception {
+    void insertPurchaseSeats_withValidReserveRequestDto_return201AndInsertPurchaseId() throws Exception {
         ReserveRequestDto request = new ReserveRequestDto(
                 "Test01", LocalDate.now(), "Test0", "Test1", List.of(
                 new ReserveRequestDto.SelectedSeatDto("E5SER01", "SEAT01001"),
                 new ReserveRequestDto.SelectedSeatDto("E5SER01", "SEAT01002")
         ));
         UUID mockedPurchaseId = UUID.randomUUID();
-        Mockito.when(service.purchaseSeats(request)).thenReturn(mockedPurchaseId);
+        Mockito.when(service.insertPurchaseSeats(request)).thenReturn(mockedPurchaseId);
 
         mockMvc.perform(post(baseUrl)
                         .contentType(MediaType.APPLICATION_JSON)
@@ -59,7 +59,7 @@ public class PurchaseControllerTest {
 
     @Test
     @DisplayName("リクエストのカラムがNullの場合、バリデーションエラー発生")
-    void purchaseSeats_withNotValidReserveRequestDto_returnValidationError() throws Exception {
+    void insertPurchaseSeats_withNotValidReserveRequestDto_returnValidationError() throws Exception {
         ReserveRequestDto request = new ReserveRequestDto(
                 null, LocalDate.now(), "Test0", "Test1", List.of(
                 new ReserveRequestDto.SelectedSeatDto("E5SER01", "SEAT01001"),
@@ -75,7 +75,7 @@ public class PurchaseControllerTest {
 
     @Test
     @DisplayName("リクエストDTO自体がNullの場合、バインドエラー発生")
-    void purchaseSeats_withReserveRequestDtoIsNull_returnBindError() throws Exception {
+    void insertPurchaseSeats_withReserveRequestDtoIsNull_returnBindError() throws Exception {
         //バインド順が毎回異なるためエラーメッセージの比較は行わない
         mockMvc.perform(post(baseUrl)
                         .contentType(MediaType.APPLICATION_JSON)

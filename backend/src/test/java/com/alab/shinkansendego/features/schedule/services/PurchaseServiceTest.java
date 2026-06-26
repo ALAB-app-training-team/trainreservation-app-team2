@@ -36,7 +36,7 @@ public class PurchaseServiceTest {
 
     @Test
     @DisplayName("購入情報・購入座席情報を挿入できる")
-    void purchaseSeats_withValidReserveRequestDto_returnPurchaseId() {
+    void insertPurchaseSeats_withValidReserveRequestDto_returnInsertPurchaseId() {
         ReserveRequestDto request = new ReserveRequestDto(
                 "Test01", LocalDate.now(), "Test0", "Test1", List.of(
                 new ReserveRequestDto.SelectedSeatDto("E5SER01", "SEAT01001"),
@@ -45,27 +45,27 @@ public class PurchaseServiceTest {
         when(purchaseRepo.insertPurchase(any())).thenReturn(1);
         when(purchasedSeatRepo.insertPurchasedSeats(any())).thenReturn(request.getSeats().size());
 
-        UUID result = service.purchaseSeats(request);
+        UUID result = service.insertPurchaseSeats(request);
         assertNotNull(result);
     }
 
     @Test
     @DisplayName("座席リストが空の場合、IllegalArgumentExceptionが発生する")
-    void purchaseSeats_withEmptySelectedSeatDto_throwsIllegalArgumentException() {
+    void insertPurchaseSeats_withEmptySelectedSeatDto_throwsIllegalArgumentException() {
         ReserveRequestDto request = new ReserveRequestDto(
                 "Test01", LocalDate.now(), "Test0", "Test1", List.of());
         assertThrows(IllegalArgumentException.class, () -> {
-            service.purchaseSeats(request);
+            service.insertPurchaseSeats(request);
         });
     }
 
     @Test
     @DisplayName("座席リストがnullの場合、IllegalArgumentExceptionが発生する")
-    void purchaseSeats_withNullSelectedSeatDto_throwsIllegalArgumentException() {
+    void insertPurchaseSeats_withNullSelectedSeatDto_throwsIllegalArgumentException() {
         ReserveRequestDto request = new ReserveRequestDto(
                 "Test01", LocalDate.now(), "Test0", "Test1", null);
         assertThrows(IllegalArgumentException.class, () -> {
-            service.purchaseSeats(request);
+            service.insertPurchaseSeats(request);
         });
     }
 
@@ -81,13 +81,13 @@ public class PurchaseServiceTest {
         when(purchasedSeatRepo.insertPurchasedSeats(any())).thenThrow(new DuplicateKeyException("UNIQUE制約エラー"));
 
         assertThrows(org.springframework.dao.DataAccessException.class, () -> {
-            service.purchaseSeats(request);
+            service.insertPurchaseSeats(request);
         });
     }
 
     @Test
     @DisplayName("insertPurchaseが失敗した場合、RuntimeExceptionが発生する")
-    void purchaseSeats_withInsertPurchaseFails_throwsRuntimeException() {
+    void insertPurchaseSeats_withInsertInsertPurchaseFails_throwsRuntimeException() {
         ReserveRequestDto request = new ReserveRequestDto(
                 "Test01", LocalDate.now(), "Test0", "Test1", List.of(
                 new ReserveRequestDto.SelectedSeatDto("E5SER01", "SEAT01001"),
@@ -95,13 +95,13 @@ public class PurchaseServiceTest {
         ));
         when(purchaseRepo.insertPurchase(any())).thenReturn(0);
         assertThrows(RuntimeException.class, () -> {
-            service.purchaseSeats(request);
+            service.insertPurchaseSeats(request);
         });
     }
 
     @Test
     @DisplayName("insertPurchasedSeatsが失敗した場合、RuntimeExceptionが発生する")
-    void purchaseSeats_withInsertPurchasedSeatsFails_throwsRuntimeException() {
+    void insertPurchaseSeats_withInsertPurchasedSeatsFails_throwsRuntimeException() {
         ReserveRequestDto request = new ReserveRequestDto(
                 "Test01", LocalDate.now(), "Test0", "Test1", List.of(
                 new ReserveRequestDto.SelectedSeatDto("E5SER01", "SEAT01001"),
@@ -111,7 +111,7 @@ public class PurchaseServiceTest {
         when(purchasedSeatRepo.insertPurchasedSeats(any())).thenReturn(0);
 
         assertThrows(RuntimeException.class, () -> {
-            service.purchaseSeats(request);
+            service.insertPurchaseSeats(request);
         });
     }
 }
