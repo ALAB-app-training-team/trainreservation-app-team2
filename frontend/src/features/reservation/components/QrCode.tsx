@@ -18,17 +18,17 @@ export const QrCode = ({
   code_token_text,
 }: QrCodeProps) => {
   return (
-    <div className="max-w-sm mx-auto bg-white border border-gray-200 rounded-2xl p-6 shadow-sm text center">
+    <div className="max-w-sm mx-auto bg-white border border-primary-light rounded-2xl p-6 shadow-sm text center">
       <h2 className="text-2xl font-bold text-gray-800 mb-1">
         {train_car_type_name}
       </h2>
-      <p className="text-sm text-gray-500 mb-6">{`${train_car_number} 号`}</p>
+      <p className="text-sm text-gray-500 mb-6">{`${train_car_number}号車`}</p>
       <p className="text-sm text-gray-500 mb-6">
         {seat_number}
         {seat_column}
       </p>
 
-      <div className="flex justify-center mb-4">
+      <div className="flex justify-center mb-1">
         <QRCodeSVG
           value={code_token}
           size={180}
@@ -40,14 +40,14 @@ export const QrCode = ({
             src: "../../../../../public/BsTrainFreightFrontFill.svg",
             x: undefined,
             y: undefined,
-            height: 20,
-            width: 20,
+            height: 40,
+            width: 40,
             excavate: true,
           }}
         />
       </div>
 
-      <p className="text-sm text-gray-400">QRコード: {code_token_text}</p>
+      <p className="text-sm text-gray-400 mb-4">QRコード: {code_token_text}</p>
     </div>
   );
 };
