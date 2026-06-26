@@ -1,12 +1,13 @@
 import { Suspense } from "react";
+import { useLocation } from "react-router-dom";
 import { ReservedTicketInfo } from "../components/ReservedTicketInfo/ReservedTicketInfo";
 import { ReservedTicketInfoSkeleton } from "../components/ReservedTicketInfo/ReservedTicketInfoSkeleton";
 import { useReservedTickets } from "../hooks/useReservedTickets";
 
 export function ReservedTicket() {
-  const { reservedTickets } = useReservedTickets(
-    "21d9af6d-64cc-4011-b897-271075135016",
-  ); /*TODO:パラメータを動的にする*/
+  const location = useLocation();
+  const { purchaseId } = location.state;
+  const { reservedTickets } = useReservedTickets(purchaseId);
 
   return (
     <>
