@@ -1,12 +1,10 @@
-import { Suspense, useMemo, useState } from "react";
+import { Suspense } from "react";
 import { useTrainCar } from "../../hooks/useTrainCar";
-import type { SeatsRequestDto } from "../../types/SeatsRequestDto";
 import type { SeatResponseDto } from "../../types/SeatResponseDto";
 import type { ScheduleInfoDto } from "../../types/ScheduleInfoDto";
 import { SeatsByTrainCar } from "../SeatsByTrainCar/SeatsByTrainCar";
 import { SeatsByTrainCarSkeleton } from "../SeatsByTrainCar/SeatsByTrainCarSkeleton";
 import { SEAT_TYPE_LABELS, type SeatTypeCd } from "../../constants/seatType";
-import { DEFAULT_SEAT_TYPE } from "../../constants/seatType";
 
 type TrainCarsProps = {
   scheduleInfoDto: ScheduleInfoDto;
@@ -19,45 +17,15 @@ export function TrainCars({
   selectedSeats,
   handleSelectedSeats,
 }: TrainCarsProps) {
-  const { trainCarsData } = useTrainCar(scheduleInfoDto.schedule_cd);
-
-  const [activeSeatTypeCd, setActiveSeatTypeCd] =
-    useState<SeatTypeCd>(DEFAULT_SEAT_TYPE);
-
-  const filteredCars = useMemo(() => {
-    if (!trainCarsData) return [];
-    return trainCarsData.filter((car) => car.seat_type_cd === activeSeatTypeCd);
-  }, [trainCarsData, activeSeatTypeCd]);
-
-  const [selectedTrainCarCd, setSelectedTrainCarCd] = useState<string>("");
-
-  const activeTrainCarCd = useMemo(() => {
-    const isCarInCurrentTab = filteredCars.some(
-      (car) => car.train_car_cd === selectedTrainCarCd,
-    );
-
-    if (selectedTrainCarCd && isCarInCurrentTab) {
-      return selectedTrainCarCd;
-    }
-    if (filteredCars && filteredCars.length > 0) {
-      return filteredCars[0].train_car_cd;
-    }
-    return trainCarsData && trainCarsData.length > 0
-      ? trainCarsData[0].train_car_cd
-      : "";
-  }, [selectedTrainCarCd, filteredCars, trainCarsData]);
-
-  const handleSeatTypeChange = (code: SeatTypeCd) => {
-    setActiveSeatTypeCd(code);
-  };
-
-  const seatsRequestDto: SeatsRequestDto = {
-    schedule_cd: scheduleInfoDto.schedule_cd,
-    date: scheduleInfoDto.date,
-    departure_time: scheduleInfoDto.departure_time,
-    arrival_time: scheduleInfoDto.arrival_time,
-    train_car_cd: activeTrainCarCd,
-  };
+  const {
+    trainCarsData,
+    activeSeatTypeCd,
+    filteredCars,
+    activeTrainCarCd,
+    handleSeatTypeChange,
+    setSelectedTrainCarCd,
+    seatsRequestDto,
+  } = useTrainCar(scheduleInfoDto);
 
   return (
     <div className="p-8 border-2 border-primary-light rounded-3xl bg-white shadow-sm">
