@@ -5,7 +5,8 @@ import type { SeatResponseDto } from "../../types/SeatResponseDto";
 import type { ScheduleInfoDto } from "../../types/ScheduleInfoDto";
 import { SeatsByTrainCar } from "../SeatsByTrainCar/SeatsByTrainCar";
 import { SeatsByTrainCarSkeleton } from "../SeatsByTrainCar/SeatsByTrainCarSkeleton";
-import { SEAT_TYPE_LABELS } from "../../constants/seatType";
+import { SEAT_TYPE_LABELS, type SeatTypeCd } from "../../constants/seatType";
+import { DEFAULT_SEAT_TYPE } from "../../constants/seatType";
 
 type TrainCarsProps = {
   scheduleInfoDto: ScheduleInfoDto;
@@ -20,9 +21,8 @@ export function TrainCars({
 }: TrainCarsProps) {
   const { trainCarsData } = useTrainCar(scheduleInfoDto.schedule_cd);
 
-  const [activeSeatTypeCd, setActiveSeatTypeCd] = useState<
-    keyof typeof SEAT_TYPE_LABELS
-  >(Object.keys(SEAT_TYPE_LABELS)[0] as keyof typeof SEAT_TYPE_LABELS);
+  const [activeSeatTypeCd, setActiveSeatTypeCd] =
+    useState<SeatTypeCd>(DEFAULT_SEAT_TYPE);
 
   const filteredCars = useMemo(() => {
     if (!trainCarsData) return [];
@@ -47,7 +47,7 @@ export function TrainCars({
       : "";
   }, [selectedTrainCarCd, filteredCars, trainCarsData]);
 
-  const handleSeatTypeChange = (code: keyof typeof SEAT_TYPE_LABELS) => {
+  const handleSeatTypeChange = (code: SeatTypeCd) => {
     setActiveSeatTypeCd(code);
   };
 
@@ -62,15 +62,11 @@ export function TrainCars({
   return (
     <div className="p-8 border-2 border-primary-light rounded-3xl bg-white shadow-sm">
       <div className="flex w-full bg-gray-100 p-1 rounded-full mb-8 space-x-1">
-        {(
-          Object.keys(SEAT_TYPE_LABELS) as Array<keyof typeof SEAT_TYPE_LABELS>
-        ).map((code) => (
+        {(Object.keys(SEAT_TYPE_LABELS) as SeatTypeCd[]).map((code) => (
           <button
             key={code}
             type="button"
-            onClick={() =>
-              handleSeatTypeChange(code as keyof typeof SEAT_TYPE_LABELS)
-            }
+            onClick={() => handleSeatTypeChange(code)}
             className={`flex-1 px-5 py-3 text-center text-sm rounded-full font-medium transition-all duration-200 ${
               activeSeatTypeCd === code
                 ? "bg-white text-gray-900 shadow-md font-semibold"
@@ -79,8 +75,7 @@ export function TrainCars({
           >
             {trainCarsData?.find(
               (car) => car.seat_type_cd.toUpperCase() === code.toUpperCase(),
-            )?.train_car_type_name ||
-              SEAT_TYPE_LABELS[code as keyof typeof SEAT_TYPE_LABELS]}
+            )?.train_car_type_name || SEAT_TYPE_LABELS[code]}
           </button>
         ))}
       </div>
