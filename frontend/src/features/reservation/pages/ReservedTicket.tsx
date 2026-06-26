@@ -5,7 +5,7 @@ import { useReservedTickets } from "../hooks/useReservedTickets";
 
 export function ReservedTicket() {
   const { reservedTickets } = useReservedTickets(
-    "37ce698d-1780-4f43-964c-f75d816b87e3",
+    "21d9af6d-64cc-4011-b897-271075135016",
   ); /*TODO:パラメータを動的にする*/
 
   return (
