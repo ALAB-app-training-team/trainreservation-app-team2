@@ -32,7 +32,7 @@ export function SelectSeats() {
     const response = await axios.post(ENDPOINTS.PURCHASE(), reserveRequestDto);
     console.log(response);
     navigate("/reservedTicket", {
-      state: { purchaseId: response },
+      state: { purchaseId: response.data },
     });
   };
 

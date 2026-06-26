@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE mapper PUBLIC "-//mybatis/org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
-<mapper namespace="com.alab.shinkansendego.features.reservation.repositories.PurchasedSeatRepository">
+<mapper namespace="com.alab.shinkansendego.db.repositories.PurchasedSeatRepository">
     <select id="findReservedSeatByPurchaseId"
             resultType="com.alab.shinkansendego.features.reservation.dtos.ReservedSeatDto"
             parameterType="java.util.UUID">
@@ -12,4 +12,18 @@
         INNER JOIN M_TrainCarType AS tct ON st.train_car_type_cd=tct.train_car_type_cd
         ORDER BY tc.train_car_number,s.seat_number,s.seat_column;
     </select>
+    <insert id="insertPurchasedSeats"
+            parameterType="java.util.List">
+        INSERT INTO T_PurchasedSeat (id, purchase_id, train_car_cd, seat_cd, code_token)
+        VALUES
+        <foreach collection="list" item="purchasedSeat" separator=",">
+            (
+            #{purchasedSeat.id, typeHandler=org.apache.ibatis.type.ObjectTypeHandler},
+            #{purchasedSeat.purchase_id, typeHandler=org.apache.ibatis.type.ObjectTypeHandler},
+            #{purchasedSeat.train_car_cd},
+            #{purchasedSeat.seat_cd},
+            #{purchasedSeat.code_token, typeHandler=org.apache.ibatis.type.ObjectTypeHandler}
+            )
+        </foreach>
+    </insert>
 </mapper>

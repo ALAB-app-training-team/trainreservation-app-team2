@@ -1,8 +1,8 @@
 package com.alab.shinkansendego.features.schedule.services;
 
+import com.alab.shinkansendego.db.repositories.PurchaseRepository;
+import com.alab.shinkansendego.db.repositories.PurchasedSeatRepository;
 import com.alab.shinkansendego.features.schedule.dtos.ReserveRequestDto;
-import com.alab.shinkansendego.features.schedule.repositories.PurchaseRepository;
-import com.alab.shinkansendego.features.schedule.repositories.PurchasedSeatRepository;
 import com.alab.shinkansendego.features.schedule.servicies.PurchaseService;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;

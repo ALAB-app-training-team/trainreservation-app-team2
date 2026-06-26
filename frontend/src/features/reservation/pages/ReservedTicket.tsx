@@ -14,6 +14,7 @@ export function ReservedTicket() {
       <div className="flex flex-col items-center gap-4 w-full p-4">
         {/* TODO: 戻るボタンを作る */}
         <div className="w-full md:w-7/10 min-w-[360px]">
+          <h1 className="text-left !text-3xl !m-0">予約完了</h1>
           <Suspense fallback={<ReservedTicketInfoSkeleton />}>
             <ReservedTicketInfo ticketInfo={reservedTickets} />
           </Suspense>

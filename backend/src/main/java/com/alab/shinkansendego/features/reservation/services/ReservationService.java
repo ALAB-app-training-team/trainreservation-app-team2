@@ -1,11 +1,11 @@
 package com.alab.shinkansendego.features.reservation.services;
 
+import com.alab.shinkansendego.db.repositories.PurchaseRepository;
+import com.alab.shinkansendego.db.repositories.PurchasedSeatRepository;
 import com.alab.shinkansendego.features.reservation.dtos.ReservationDto;
 import com.alab.shinkansendego.features.reservation.dtos.ReservationResponseDto;
 import com.alab.shinkansendego.features.reservation.dtos.ReservedScheduleDto;
 import com.alab.shinkansendego.features.reservation.dtos.ReservedSeatDto;
-import com.alab.shinkansendego.features.reservation.repositories.PurchaseRepository;
-import com.alab.shinkansendego.features.reservation.repositories.PurchasedSeatRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 

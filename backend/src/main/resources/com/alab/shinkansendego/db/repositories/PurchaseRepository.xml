@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE mapper PUBLIC "-//mybatis/org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
-<mapper namespace="com.alab.shinkansendego.features.reservation.repositories.PurchaseRepository">
+<mapper namespace="com.alab.shinkansendego.db.repositories.PurchaseRepository">
     <select id="findScheduleByPurchaseId"
             resultType="com.alab.shinkansendego.features.reservation.dtos.ReservedScheduleDto"
             parameterType="java.util.UUID">
@@ -20,4 +20,13 @@
         INNER JOIN M_Schedule AS s ON p.schedule_cd=s.schedule_cd AND p.id=#{purchase_id}
         INNER JOIN M_TrainType AS tt ON s.train_type_cd=tt.train_type_cd;
     </select>
+    <insert id="insertPurchase" parameterType="com.alab.shinkansendego.features.schedule.entities.PurchaseEntity">
+        INSERT INTO T_Purchase (id, ride_date, schedule_cd, departure_station_cd, arrival_station_cd)
+        VALUES(#{
+        id, typeHandler=org.apache.ibatis.type.ObjectTypeHandler},
+        #{ride_date}, #{schedule_cd},
+        #{departure_station_cd},
+        #{arrival_station_cd}
+        )
+    </insert>
 </mapper>
