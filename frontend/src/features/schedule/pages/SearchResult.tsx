@@ -59,7 +59,9 @@ export function SearchResult() {
               key={JSON.stringify(searchRequestDto)}
               searchRequestDto={searchRequestDto}
               isInvalid={isInvalid}
+              departureStationCd={searchRequestDto.departure_station_cd}
               departureStationName={departureStationName}
+              arrivalStationCd={searchRequestDto.arrival_station_cd}
               arrivalStationName={arrivalStationName}
             />
           </Suspense>
