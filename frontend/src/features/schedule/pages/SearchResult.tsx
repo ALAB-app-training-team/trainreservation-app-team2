@@ -30,7 +30,7 @@ export function SearchResult() {
               onClick={() => {
                 navigate("/searchSchedule");
               }}
-              className="flex items-center gap-2 px-4 border-2 rounded-xl border-primary-light cursor-pointer"
+              className="flex items-center gap-2 px-4 border-2 rounded-xl border-primary-light"
             >
               <div>ホーム</div>
               <GoHome />

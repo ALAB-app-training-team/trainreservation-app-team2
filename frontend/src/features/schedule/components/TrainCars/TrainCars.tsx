@@ -71,11 +71,9 @@ export function TrainCars({
           </button>
         ))}
       </div>
-
-      <h4 className="w-full text-left text-base font-bold text-gray-900 mb-4">
+      <div className="w-full text-left text-base text-gray-900 mb-4">
         号車を選択
-      </h4>
-
+      </div>
       <div className="flex space-x-3 overflow-x-auto pb-4 mb-8 scrollbar-thin">
         {filteredCars.map((car) => (
           <button
