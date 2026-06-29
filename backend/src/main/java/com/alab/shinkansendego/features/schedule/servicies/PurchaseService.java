@@ -7,7 +7,9 @@ import com.alab.shinkansendego.features.schedule.entities.DepartureArrivalTimeEn
 import com.alab.shinkansendego.features.schedule.entities.PurchaseEntity;
 import com.alab.shinkansendego.features.schedule.entities.PurchasedSeatEntity;
 import com.alab.shinkansendego.features.schedule.entities.ReservedSeatSectionEntity;
-import com.alab.shinkansendego.features.schedule.repositories.*;
+import com.alab.shinkansendego.features.schedule.repositories.DepartureArrivalTimeRepository;
+import com.alab.shinkansendego.features.schedule.repositories.ReservedSeatSectionRepository;
+import com.alab.shinkansendego.features.schedule.repositories.SectionKmRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -42,11 +44,18 @@ public class PurchaseService {
             throw new IllegalArgumentException("Seats is Not found");
         }
 
+        if (reserveRequestDto.getSeats().size() > 6) {
+            throw new IllegalArgumentException("Seat limit exceeded");
+        }
+
         List<String> SectionKmCdsByDepartureStation = sectionKmRepository.findSectionCdByStartStationCd(reserveRequestDto.getDeparture_station_cd());
         List<String> SectionKmCdsByArrivalStation = sectionKmRepository.findSectionCdByGoalStationCd(reserveRequestDto.getArrival_station_cd());
 
         DepartureArrivalTimeEntity departureArrivalTimeOfStart = departureArrivalTimeRepository.findScheduleBySectionKmCdAndScheduleCd(SectionKmCdsByDepartureStation, reserveRequestDto.getSchedule_cd());
         DepartureArrivalTimeEntity departureArrivalTimeOfGoal = departureArrivalTimeRepository.findScheduleBySectionKmCdAndScheduleCd(SectionKmCdsByArrivalStation, reserveRequestDto.getSchedule_cd());
+        if (departureArrivalTimeOfStart == null || departureArrivalTimeOfGoal == null) {
+            throw new IllegalArgumentException("Section is Not found");
+        }
 
         List<String> sectionCdList =
                 departureArrivalTimeRepository.findSectionCdByScheduleCd(reserveRequestDto.getSchedule_cd(), departureArrivalTimeOfStart.getDeparture_time(), departureArrivalTimeOfGoal.getArrival_time());
@@ -91,7 +100,7 @@ public class PurchaseService {
             }
         }
         int reservedSeatSectionResult = reservedSeatSectionRepository.insertReservedSeatSections(reservedSeatSections);
-        if (reservedSeatSectionResult != sectionCdList.size()) {
+        if (reservedSeatSectionResult != sectionCdList.size() * reserveRequestDto.getSeats().size()) {
             throw new RuntimeException("Insert ReservedSeatSections is failed");
         }
 
