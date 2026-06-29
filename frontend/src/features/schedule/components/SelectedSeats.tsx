@@ -3,10 +3,15 @@ import type { SeatResponseDto } from "../types/SeatResponseDto";
 
 type SelectedSeatsProps = {
   selectedSeats: SeatResponseDto[];
+  limitSeats: number;
   onClick: () => void;
 };
 
-export function SelectedSeats({ selectedSeats, onClick }: SelectedSeatsProps) {
+export function SelectedSeats({
+  selectedSeats,
+  limitSeats,
+  onClick,
+}: SelectedSeatsProps) {
   return (
     <>
       <div className="flex flex-col gap-4 w-full p-8 border-2 rounded-2xl border-primary-light text-left">
@@ -35,6 +40,11 @@ export function SelectedSeats({ selectedSeats, onClick }: SelectedSeatsProps) {
               })
           ) : (
             <div>座席が選択されていません</div>
+          )}
+          {selectedSeats.length >= limitSeats && (
+            <p className="text-left text-sm text-red-600 ">
+              一度に予約できる座席は{limitSeats}席までです
+            </p>
           )}
         </div>
         <button
