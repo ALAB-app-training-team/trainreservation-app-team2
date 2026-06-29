@@ -56,6 +56,7 @@ export function ScheduleItem({
     navigate("/selectSeat", {
       state: { scheduleInfoDto, departure_station_cd, arrival_station_cd },
     });
+    window.scrollTo(0, 0);
   };
 
   const trainIconStyle = tv({

@@ -79,7 +79,7 @@ export function SearchScheduleBody() {
             <button
               disabled={isInvalid}
               onClick={handleSearch}
-              className="rounded-lg p-2 bg-primary text-white cursor-pointer disabled:bg-gray-300 disabled:cursor-not-allowed"
+              className="rounded-lg p-2 bg-primary text-white"
             >
               列車を検索
             </button>

@@ -17,8 +17,8 @@ export function ReservedTicketInfo({ ticketInfo }: ReservedTicketInfoProps) {
   return (
     <>
       <div className="flex justify-center">
-        <div className="w-full max-w-5xl flex flex-col gap-4 m-8">
-          <div className="flex flex-col justify-between border-2 border-primary-light rounded-2xl p-8 gap-4">
+        <div className="w-full max-w-5xl flex flex-col gap-4">
+          <div className="flex flex-col justify-between border-2 border-primary-light rounded-2xl p-4 gap-4">
             <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">
               <DepartureAndArrivalInfo
                 id="departureInfo"

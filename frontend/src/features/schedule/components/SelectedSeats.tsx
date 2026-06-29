@@ -51,6 +51,7 @@ export function SelectedSeats({
           type="button"
           onClick={onClick}
           className="w-full rounded-lg bg-primary text-white p-2"
+          disabled={selectedSeats.length === 0}
         >
           <div className="flex justify-center items-center gap-4">
             <IoCardOutline />
