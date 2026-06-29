@@ -77,7 +77,7 @@ public class DepartureArrivalTimeRepositoryTest {
     }
 
     @Test
-    @DisplayName("ダイヤコードと区間コードが一致する出発到着時刻が存在しない場合、Exceptionが発生する")
+    @DisplayName("ダイヤコードと区間コードが一致する出発到着時刻が存在しない場合、Nullが返却される")
     void findScheduleBySectionKmCdAndScheduleCd_withNotMatchSectionCdAndScheduleCd_returnNull() {
         List<String> sectionCds = List.of("TEST1", "TEST2");
         String scheduleCd = "TEST01";
