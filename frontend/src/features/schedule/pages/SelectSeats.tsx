@@ -13,7 +13,7 @@ export function SelectSeats() {
   const location = useLocation();
   const { scheduleInfoDto, departure_station_cd, arrival_station_cd } =
     location.state;
-  const { selectedSeats, handleSelectedSeats } = useSelectedSeats();
+  const { selectedSeats, limitSeats, handleSelectedSeats } = useSelectedSeats();
 
   const handleReserve = async () => {
     console.log(scheduleInfoDto);
@@ -52,6 +52,7 @@ export function SelectSeats() {
         <div className="flex-1 w-full">
           <SelectedSeats
             selectedSeats={selectedSeats}
+            limitSeats={limitSeats}
             onClick={handleReserve}
           />
         </div>
