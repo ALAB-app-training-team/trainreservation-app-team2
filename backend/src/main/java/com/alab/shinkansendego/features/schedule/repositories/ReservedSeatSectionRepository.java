@@ -1,5 +1,6 @@
 package com.alab.shinkansendego.features.schedule.repositories;
 
+import com.alab.shinkansendego.features.schedule.entities.ReservedSeatSectionEntity;
 import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Param;
 
@@ -13,4 +14,6 @@ public interface ReservedSeatSectionRepository {
              @Param("schedule_cd") String schedule_cd,
              @Param("train_car_cd") String train_car_cd,
              @Param("reserved_section_cd") String section_cd);
+
+    int insertReservedSeatSections(List<ReservedSeatSectionEntity> reservedSeatSections);
 }
