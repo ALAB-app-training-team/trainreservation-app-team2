@@ -1,5 +1,7 @@
 package com.alab.shinkansendego.features.schedule.servicies;
 
+import com.alab.shinkansendego.db.repositories.PurchaseRepository;
+import com.alab.shinkansendego.db.repositories.PurchasedSeatRepository;
 import com.alab.shinkansendego.features.schedule.dtos.ReserveRequestDto;
 import com.alab.shinkansendego.features.schedule.entities.DepartureArrivalTimeEntity;
 import com.alab.shinkansendego.features.schedule.entities.PurchaseEntity;

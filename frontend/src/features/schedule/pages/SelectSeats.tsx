@@ -1,5 +1,5 @@
 import { Suspense } from "react";
-import { useLocation } from "react-router-dom";
+import { useLocation, useNavigate } from "react-router-dom";
 import axios from "axios";
 import { ENDPOINTS } from "../../../api/routes";
 import { SelectedSeats } from "../components/SelectedSeats";
@@ -9,6 +9,7 @@ import { useSelectedSeats } from "../hooks/useSelectedSeats";
 import type { ReserveRequestDto } from "../types/ReserveRequestDto";
 
 export function SelectSeats() {
+  const navigate = useNavigate();
   const location = useLocation();
   const { scheduleInfoDto, departure_station_cd, arrival_station_cd } =
     location.state;
@@ -30,6 +31,9 @@ export function SelectSeats() {
     };
     const response = await axios.post(ENDPOINTS.PURCHASE(), reserveRequestDto);
     console.log(response);
+    navigate("/reservedTicket", {
+      state: { purchaseId: response.data },
+    });
   };
 
   return (
