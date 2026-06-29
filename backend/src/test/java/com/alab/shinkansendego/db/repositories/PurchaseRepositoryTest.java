@@ -73,7 +73,7 @@ public class PurchaseRepositoryTest {
     @Test
     @Sql(scripts = "classpath:com/alab/shinkansendego/db/sql/PurchaseTestData_Reservation.sql")
     @DisplayName("購入情報IDから購入情報を取得できる")
-    void findPurchaseByPurchaseId_withPurchaseId_returnGetScheduleSuccess() {
+    void findPurchaseByPurchaseId_withPurchaseId_returnGetPurchaseSuccess() {
         ReservationDto expected = new ReservationDto("やまびこ1号", "EKI01", "EKI03", LocalDate.of(2026, 6, 1));
         ReservationDto actual = repo.findPurchaseByPurchaseId(purchaseId);
         assertEquals(expected, actual);
