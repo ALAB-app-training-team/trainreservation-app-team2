@@ -8,7 +8,7 @@ import { useSelectedSeats } from "../hooks/useSelectedSeats";
 export function SelectSeat() {
   const location = useLocation();
   const { scheduleInfoDto } = location.state;
-  const { selectedSeats, handleSelectedSeats } = useSelectedSeats();
+  const { selectedSeats, limitSeats, handleSelectedSeats } = useSelectedSeats();
 
   return (
     <>
@@ -24,7 +24,10 @@ export function SelectSeat() {
           </Suspense>
         </div>
         <div className="flex-1 w-full">
-          <SelectedSeats selectedSeats={selectedSeats} />
+          <SelectedSeats
+            selectedSeats={selectedSeats}
+            limitSeats={limitSeats}
+          />
         </div>
       </div>
     </>
