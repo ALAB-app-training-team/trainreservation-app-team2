@@ -16,6 +16,7 @@ export const ReservedTicketQrCode = ({
   reserved_seats,
 }: ReservedTicketQrCodeProps) => {
   const trainSvg = "src/shared/svgs/BsTrainFreightFrontFill.svg";
+  const seats = [...reserved_seats];
   return (
     <div className="flex justify-center">
       <Swiper
@@ -28,8 +29,8 @@ export const ReservedTicketQrCode = ({
         modules={[Pagination, Navigation]}
         className="w-full max-w-5xl flex flex-col gap-4 m-2"
       >
-        {reserved_seats.length !== 0 ? (
-          reserved_seats
+        {seats.length !== 0 ? (
+          seats
             .sort(
               (a, b) =>
                 a.train_car_number - b.train_car_number ||
