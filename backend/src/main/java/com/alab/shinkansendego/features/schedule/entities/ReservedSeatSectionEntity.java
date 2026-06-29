@@ -12,6 +12,7 @@ import java.util.UUID;
 @Setter
 public class ReservedSeatSectionEntity {
     private UUID id;
+    private UUID purchase_id;
     private LocalDate ride_date;
     private String schedule_cd;
     private String train_car_cd;
