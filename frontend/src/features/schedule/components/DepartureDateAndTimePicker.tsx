@@ -25,7 +25,7 @@ export function DepartureDateAndTimePicker({
         type={type}
         value={value}
         onChange={(e) => setValue(e.target.value)}
-        className="w-full bg-white p-2 rounded-xl outline-none border-2 border-primary-light focus:border-primary"
+        className="w-full bg-white p-2 rounded-xl outline-none border-2 border-primary-light cursor-pointer focus:border-primary"
       />
       {getFieldError?.(id) && (
         <p className="text-left text-sm text-red-600 ">{getFieldError(id)}</p>

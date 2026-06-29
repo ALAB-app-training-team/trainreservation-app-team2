@@ -1,5 +1,6 @@
 package com.alab.shinkansendego.features.schedule.repositories;
 
+import com.alab.shinkansendego.features.schedule.entities.ReservedSeatSectionEntity;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.mybatis.spring.boot.test.autoconfigure.MybatisTest;
@@ -14,22 +15,22 @@ import org.testcontainers.junit.jupiter.Container;
 import org.testcontainers.junit.jupiter.Testcontainers;
 
 import java.time.LocalDate;
+import java.util.ArrayList;
 import java.util.List;
+import java.util.UUID;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 
 @ActiveProfiles("test")
 @MybatisTest
 @AutoConfigureTestDatabase(replace = AutoConfigureTestDatabase.Replace.NONE)
 @Testcontainers
-@Sql(scripts = "classpath:com/alab/shinkansendego/features/schedule/sql/ReservedSeatSectionTestData.sql")
+@Sql(scripts = "classpath:com/alab/shinkansendego/features/schedule/sql/ReservedSeatSectionRepositoryTestData.sql")
 public class ReservedSeatSectionRepositoryTest {
     // テスト用DB作成
     @Container
-    static PostgreSQLContainer<?> postgres = new PostgreSQLContainer<>("postgres:16")
-            .withDatabaseName("test")
-            .withUsername("user")
-            .withPassword("pass");
+    static PostgreSQLContainer<?> postgres = new PostgreSQLContainer<>("postgres:16").withDatabaseName("test").withUsername("user").withPassword("pass");
     @Autowired
     private ReservedSeatSectionRepository repo;
 
@@ -43,12 +44,7 @@ public class ReservedSeatSectionRepositoryTest {
     @Test
     @DisplayName("乗車日付と区間CDから号車内の予約済座席リストが取得できる")
     void findReservedSeatCdOfTrainCarBySectionCd_returnGetReservedSeatListSuccess() {
-        List<String> actual = repo
-                .findReservedSeatCdOfTrainCarBySectionCd(
-                        LocalDate.of(2026, 6, 1),
-                        "Test01",
-                        "E5SER01",
-                        "Test1");
+        List<String> actual = repo.findReservedSeatCdOfTrainCarBySectionCd(LocalDate.of(2026, 6, 1), "Test01", "E5SER01", "Test1");
         assertEquals(2, actual.size());
         assertEquals("SEAT00101", actual.get(0));
         assertEquals("SEAT00104", actual.get(1));
@@ -57,48 +53,76 @@ public class ReservedSeatSectionRepositoryTest {
     @Test
     @DisplayName("テーブルに存在しない日付を検索した場合、空のリストが返却されるか")
     void findReservedSeatCdOfTrainCarBySectionCd_withNotExistRideDate_returnEmptyList() {
-        List<String> actual = repo
-                .findReservedSeatCdOfTrainCarBySectionCd(
-                        LocalDate.of(2000, 6, 1),
-                        "Test01",
-                        "E5SER01",
-                        "Test1");
+        List<String> actual = repo.findReservedSeatCdOfTrainCarBySectionCd(LocalDate.of(2000, 6, 1), "Test01", "E5SER01", "Test1");
         assertEquals(0, actual.size());
     }
 
     @Test
     @DisplayName("テーブルに存在しないダイヤCDを検索した場合、空のリストが返却されるか")
     void findReservedSeatCdOfTrainCarBySectionCd_withNotExistScheduleCd_returnEmptyList() {
-        List<String> actual = repo
-                .findReservedSeatCdOfTrainCarBySectionCd(
-                        LocalDate.of(2026, 6, 1),
-                        "Test99",
-                        "E5SER01",
-                        "Test1");
+        List<String> actual = repo.findReservedSeatCdOfTrainCarBySectionCd(LocalDate.of(2026, 6, 1), "Test99", "E5SER01", "Test1");
         assertEquals(0, actual.size());
     }
 
     @Test
     @DisplayName("テーブルに存在しない号車CDを検索した場合、空のリストが返却されるか")
     void findReservedSeatCdOfTrainCarBySectionCd_withNotExistTrainCarCd_returnEmptyList() {
-        List<String> actual = repo
-                .findReservedSeatCdOfTrainCarBySectionCd(
-                        LocalDate.of(2026, 6, 1),
-                        "Test01",
-                        "E0SER01",
-                        "Test1");
+        List<String> actual = repo.findReservedSeatCdOfTrainCarBySectionCd(LocalDate.of(2026, 6, 1), "Test01", "E0SER01", "Test1");
         assertEquals(0, actual.size());
     }
 
     @Test
     @DisplayName("テーブルに存在しない区間CDを検索した場合、空のリストが返却されるか")
     void findReservedSeatCdOfTrainCarBySectionCd_withNotExistSectionCd_returnEmptyList() {
-        List<String> actual = repo
-                .findReservedSeatCdOfTrainCarBySectionCd(
-                        LocalDate.of(2026, 6, 1),
-                        "Test01",
-                        "E5SER01",
-                        "Test0");
+        List<String> actual = repo.findReservedSeatCdOfTrainCarBySectionCd(LocalDate.of(2026, 6, 1), "Test01", "E5SER01", "Test0");
         assertEquals(0, actual.size());
+    }
+
+    @Test
+    @DisplayName("新規予約済座席区間情報が挿入できる")
+    void insertReservedSeatSections_withPurchasedSeatList_returnRecordCount() {
+        List<ReservedSeatSectionEntity> reservedSeatSections = new ArrayList<>();
+        for (int i = 1; i < 3; i++) {
+            ReservedSeatSectionEntity reservedSeatSection = new ReservedSeatSectionEntity();
+            reservedSeatSection.setId(UUID.randomUUID());
+            reservedSeatSection.setPurchase_id(UUID.fromString("123e4567-e89b-12d3-a456-426614174000"));
+            reservedSeatSection.setRide_date(LocalDate.now());
+            reservedSeatSection.setSchedule_cd("Test01");
+            reservedSeatSection.setTrain_car_cd("E5SER01");
+            reservedSeatSection.setSeat_cd("SEAT0100" + (i + 5));
+            reservedSeatSection.setReserved_section_cd("Test" + (i + 1));
+            reservedSeatSections.add(reservedSeatSection);
+        }
+        int result = repo.insertReservedSeatSections(reservedSeatSections);
+        assertEquals(2, result);
+    }
+
+    @Test
+    @DisplayName("同一購入情報IDで重複した座席を予約しようとした場合、DataAccessExceptionが発生する")
+    void insertReservedSeatSections_withSameReservedSeatSectionList_throwsDataAccessException() {
+        List<ReservedSeatSectionEntity> reservedSeatSections = new ArrayList<>();
+        for (int i = 1; i < 3; i++) {
+            ReservedSeatSectionEntity reservedSeatSection = new ReservedSeatSectionEntity();
+            reservedSeatSection.setId(UUID.randomUUID());
+            reservedSeatSection.setPurchase_id(UUID.fromString("123e4567-e89b-12d3-a456-426614174000"));
+            reservedSeatSection.setRide_date(LocalDate.parse("2026-06-01"));
+            reservedSeatSection.setSchedule_cd("Test01");
+            reservedSeatSection.setTrain_car_cd("E5SER01");
+            reservedSeatSection.setSeat_cd("SEAT0010" + i);
+            reservedSeatSection.setReserved_section_cd("Test1");
+            reservedSeatSections.add(reservedSeatSection);
+        }
+        assertThrows(org.springframework.dao.DataAccessException.class, () -> {
+            repo.insertReservedSeatSections(reservedSeatSections);
+        });
+    }
+
+    @Test
+    @DisplayName("空の予約済座席区間情報を渡した場合、BadSqlGrammarExceptionが発生する")
+    void insertReservedSeatSections_withEmptyReservedSeatSectionList_throwsException() {
+        List<ReservedSeatSectionEntity> emptyReservedSeatSections = new ArrayList<>();
+        assertThrows(org.springframework.jdbc.BadSqlGrammarException.class, () -> {
+            repo.insertReservedSeatSections(emptyReservedSeatSections);
+        });
     }
 }

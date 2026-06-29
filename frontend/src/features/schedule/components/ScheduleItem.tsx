@@ -3,20 +3,25 @@ import { FiArrowRight } from "react-icons/fi";
 import { PiTrainBold } from "react-icons/pi";
 import { tv } from "tailwind-variants";
 import { TrainTypeColor } from "../../../shared/types/TrainTypeColor.ts";
+import { FormatTime } from "../../../shared/hooks/useFormatTime.ts";
 import type { SearchResponseDto } from "../types/SearchResponseDto";
 import type { ScheduleInfoDto } from "../types/ScheduleInfoDto";
 
 type ScheduleItemProps = {
   schedule: SearchResponseDto;
   date: string;
+  departure_station_cd: string;
   departure_station_name: string;
+  arrival_station_cd: string;
   arrival_station_name: string;
 };
 
 export function ScheduleItem({
   schedule,
   date,
+  departure_station_cd,
   departure_station_name,
+  arrival_station_cd,
   arrival_station_name,
 }: ScheduleItemProps) {
   const navigate = useNavigate();
@@ -41,12 +46,6 @@ export function ScheduleItem({
     return `${hours}h${String(minutes).padStart(2, "0")}m`;
   };
 
-  const formatTime = (timeString: string) => {
-    if (!timeString) return "";
-    const [hours, minutes] = timeString.split(":");
-    return `${hours}:${minutes}`;
-  };
-
   const handleSearch = () => {
     const scheduleInfoDto: ScheduleInfoDto = {
       schedule_cd: schedule.schedule_cd,
@@ -55,8 +54,9 @@ export function ScheduleItem({
       arrival_time: schedule.arrival_time,
     };
     navigate("/selectSeat", {
-      state: { scheduleInfoDto },
+      state: { scheduleInfoDto, departure_station_cd, arrival_station_cd },
     });
+    window.scrollTo(0, 0);
   };
 
   const trainIconStyle = tv({
@@ -113,7 +113,7 @@ export function ScheduleItem({
         <div className="order-3 md:order-2 flex w-full md:flex-1 justify-between items-center gap-4">
           <div className="text-left">
             <div className="text-2xl font-black">
-              {formatTime(schedule.departure_time)}
+              {FormatTime(schedule.departure_time)}
             </div>
             <div>{departure_station_name}</div>
           </div>
@@ -132,7 +132,7 @@ export function ScheduleItem({
           </div>
           <div className="text-left">
             <div className="text-2xl font-black">
-              {formatTime(schedule.arrival_time)}
+              {FormatTime(schedule.arrival_time)}
             </div>
             <div>{arrival_station_name}</div>
           </div>

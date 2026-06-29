@@ -8,4 +8,21 @@
         reserved_section_cd=#{reserved_section_cd}
         ORDER BY seat_cd;
     </select>
+    <insert id="insertReservedSeatSections"
+            parameterType="java.util.List">
+        INSERT INTO T_ReservedSeatSection (id, purchase_id, ride_date, schedule_cd,
+        train_car_cd,seat_cd,reserved_section_cd)
+        VALUES
+        <foreach collection="list" item="item" separator=",">
+            (
+            #{item.id, typeHandler=org.apache.ibatis.type.ObjectTypeHandler},
+            #{item.purchase_id, typeHandler=org.apache.ibatis.type.ObjectTypeHandler},
+            #{item.ride_date},
+            #{item.schedule_cd},
+            #{item.train_car_cd},
+            #{item.seat_cd},
+            #{item.reserved_section_cd}
+            )
+        </foreach>
+    </insert>
 </mapper>

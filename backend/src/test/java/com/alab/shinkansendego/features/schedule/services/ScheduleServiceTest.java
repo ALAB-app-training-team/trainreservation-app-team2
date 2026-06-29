@@ -6,7 +6,6 @@ import com.alab.shinkansendego.features.schedule.dtos.ScheduleResponseDto;
 import com.alab.shinkansendego.features.schedule.repositories.DepartureArrivalTimeRepository;
 import com.alab.shinkansendego.features.schedule.repositories.ScheduleRepository;
 import com.alab.shinkansendego.features.schedule.repositories.SectionKmRepository;
-import com.alab.shinkansendego.features.schedule.repositories.StationRepository;
 import com.alab.shinkansendego.features.schedule.servicies.ScheduleService;
 import org.jspecify.annotations.NonNull;
 import org.junit.jupiter.api.BeforeEach;
@@ -35,8 +34,7 @@ public class ScheduleServiceTest {
     private final List<DepartureArrivalTimeDto> sec03ScheduleList = new ArrayList<>();
     private final ScheduleRequestDto request = new ScheduleRequestDto(LocalDate.of(2026, 6, 1), LocalTime.of(9, 0, 0), "東京", "上野");
     private final List<String> emptySectionCdList = new ArrayList<>();
-    @Mock
-    private StationRepository stationRepo;
+
     @Mock
     private SectionKmRepository sectionRepo;
     @Mock
