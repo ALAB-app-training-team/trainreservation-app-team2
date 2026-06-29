@@ -1,6 +1,7 @@
 package com.alab.shinkansendego.features.schedule.repositories;
 
 import com.alab.shinkansendego.features.schedule.dtos.DepartureArrivalTimeDto;
+import com.alab.shinkansendego.features.schedule.entities.DepartureArrivalTimeEntity;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.mybatis.spring.boot.test.autoconfigure.MybatisTest;
@@ -19,12 +20,13 @@ import java.util.Arrays;
 import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNull;
 
 @ActiveProfiles("test")
 @MybatisTest
 @AutoConfigureTestDatabase(replace = AutoConfigureTestDatabase.Replace.NONE)
 @Testcontainers
-@Sql(scripts = "classpath:com/alab/shinkansendego/features/schedule/sql/DepartureArrivalTimeTestData.sql")
+@Sql(scripts = "classpath:com/alab/shinkansendego/features/schedule/sql/DepartureArrivalTimeRepositoryTestData.sql")
 public class DepartureArrivalTimeRepositoryTest {
     // テスト用DB作成
     @Container
@@ -61,5 +63,25 @@ public class DepartureArrivalTimeRepositoryTest {
     void findScheduleBySectionKmCd_withNotExistSectionCd_returnEmptyList() {
         List<DepartureArrivalTimeDto> actual = repo.findScheduleBySectionKmCd("99999");
         assertEquals(0, actual.size());
+    }
+
+    @Test
+    @DisplayName("ダイヤコードと区間コードから出発到着時刻を取得できる")
+    void findScheduleBySectionKmCdAndScheduleCd_withSectionCdAndScheduleCd_returnGetDepartureArrivalTime() {
+        List<String> sectionCds = List.of("TEST1", "TEST2", "TEST3");
+        String scheduleCd = "TEST01";
+        DepartureArrivalTimeEntity expected = new DepartureArrivalTimeEntity("TEST0101", "TEST01", LocalTime.of(6, 4),
+                LocalTime.of(6, 9), "TEST3");
+        DepartureArrivalTimeEntity actual = repo.findScheduleBySectionKmCdAndScheduleCd(sectionCds, scheduleCd);
+        assertEquals(expected, actual);
+    }
+
+    @Test
+    @DisplayName("ダイヤコードと区間コードが一致する出発到着時刻が存在しない場合、Nullが返却される")
+    void findScheduleBySectionKmCdAndScheduleCd_withNotMatchSectionCdAndScheduleCd_returnNull() {
+        List<String> sectionCds = List.of("TEST1", "TEST2");
+        String scheduleCd = "TEST01";
+        DepartureArrivalTimeEntity actual = repo.findScheduleBySectionKmCdAndScheduleCd(sectionCds, scheduleCd);
+        assertNull(actual);
     }
 }
