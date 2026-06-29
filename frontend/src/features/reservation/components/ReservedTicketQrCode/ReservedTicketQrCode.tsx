@@ -2,6 +2,7 @@ import { QRCodeSVG } from "qrcode.react";
 import { Swiper, SwiperSlide } from "swiper/react";
 import { Pagination, Navigation } from "swiper/modules";
 import type { ReservedSeatDto } from "../../types/ReservedSeatDto";
+import trainSvg from "../../../../shared/svgs/BsTrainFreightFrontFill.svg";
 import "swiper/css";
 import "swiper/css/pagination";
 import "swiper/css/navigation";
@@ -15,7 +16,6 @@ export const ReservedTicketQrCode = ({
   train_type_name,
   reserved_seats,
 }: ReservedTicketQrCodeProps) => {
-  const trainSvg = "src/shared/svgs/BsTrainFreightFrontFill.svg";
   const seats = [...reserved_seats].sort(
     (a, b) =>
       a.train_car_number - b.train_car_number ||
