@@ -8,7 +8,7 @@
     </select>
     <select id="findScheduleBySectionKmCdAndScheduleCd"
             resultType="com.alab.shinkansendego.features.schedule.entities.DepartureArrivalTimeEntity">
-        SELECT schedule_cd,departure_time,arrival_time
+        SELECT time_cd, schedule_cd, departure_time, arrival_time, section_cd
         FROM M_DepartureArrivalTime WHERE schedule_cd=#{schedule_cd}
         AND section_cd IN
         <foreach item="item" collection="section_cd_list" open="(" separator="," close=")">
