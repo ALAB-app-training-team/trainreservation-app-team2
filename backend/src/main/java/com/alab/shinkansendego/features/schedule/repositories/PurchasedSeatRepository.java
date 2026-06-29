@@ -8,5 +8,4 @@ import java.util.List;
 @Mapper
 public interface PurchasedSeatRepository {
     int insertPurchasedSeats(List<PurchasedSeatEntity> purchasedSeats);
-
 }

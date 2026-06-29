@@ -6,6 +6,15 @@
         SELECT schedule_cd,departure_time,arrival_time
         FROM M_DepartureArrivalTime WHERE section_cd=#{section_cd};
     </select>
+    <select id="findScheduleBySectionKmCdAndScheduleCd"
+            resultType="com.alab.shinkansendego.features.schedule.entities.DepartureArrivalTimeEntity">
+        SELECT schedule_cd,departure_time,arrival_time
+        FROM M_DepartureArrivalTime WHERE schedule_cd=#{schedule_cd}
+        AND section_cd IN
+        <foreach item="item" collection="section_cd_list" open="(" separator="," close=")">
+            #{item}
+        </foreach>
+    </select>
     <select id="findSectionCdByScheduleCd"
             resultType="String">
         SELECT section_cd
