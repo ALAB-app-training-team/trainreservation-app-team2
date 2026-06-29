@@ -20,8 +20,7 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.UUID;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.junit.jupiter.api.Assertions.*;
 
 @ActiveProfiles("test")
 @MybatisTest
@@ -62,7 +61,7 @@ public class PurchasedSeatRepositoryTest {
     @DisplayName("テーブルに存在しない購入情報IDを検索した場合、空の座席リストが返却されるか")
     void findReservedSeatByPurchaseId_withNotExistPurchaseId_returnEmptyList() {
         List<ReservedSeatDto> actual = repo.findReservedSeatByPurchaseId(UUID.fromString("9996b939-2e3e-46c1-92d3-7aa64b6ca575"));
-        assertEquals(0, actual.size());
+        assertTrue(actual.isEmpty());
     }
 
     @Test
