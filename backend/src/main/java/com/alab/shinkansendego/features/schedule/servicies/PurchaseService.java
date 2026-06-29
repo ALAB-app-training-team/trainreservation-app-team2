@@ -1,10 +1,10 @@
 package com.alab.shinkansendego.features.schedule.servicies;
 
+import com.alab.shinkansendego.db.repositories.PurchaseRepository;
+import com.alab.shinkansendego.db.repositories.PurchasedSeatRepository;
 import com.alab.shinkansendego.features.schedule.dtos.ReserveRequestDto;
 import com.alab.shinkansendego.features.schedule.entities.PurchaseEntity;
 import com.alab.shinkansendego.features.schedule.entities.PurchasedSeatEntity;
-import com.alab.shinkansendego.features.schedule.repositories.PurchaseRepository;
-import com.alab.shinkansendego.features.schedule.repositories.PurchasedSeatRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
