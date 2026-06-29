@@ -3,6 +3,7 @@ import type { SeatResponseDto } from "../types/SeatResponseDto";
 
 export function useSelectedSeats() {
   const [selectedSeats, setSelectedSeats] = useState<SeatResponseDto[]>([]);
+  const limitSeats = 6;
 
   const handleSelectedSeats = (seat: SeatResponseDto) => {
     if (selectedSeats.includes(seat)) {
@@ -11,10 +12,10 @@ export function useSelectedSeats() {
           (selectedSeatCds) => selectedSeatCds.seat_cd !== seat.seat_cd,
         ),
       );
-    } else {
+    } else if (selectedSeats.length < limitSeats) {
       setSelectedSeats((prevSeats) => [...prevSeats, seat]);
     }
   };
 
-  return { selectedSeats, handleSelectedSeats };
+  return { selectedSeats, limitSeats, handleSelectedSeats };
 }

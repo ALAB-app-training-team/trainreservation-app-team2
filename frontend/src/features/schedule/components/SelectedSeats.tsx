@@ -2,9 +2,13 @@ import type { SeatResponseDto } from "../types/SeatResponseDto";
 
 type SelectedSeatsProps = {
   selectedSeats: SeatResponseDto[];
+  limitSeats: number;
 };
 
-export function SelectedSeats({ selectedSeats }: SelectedSeatsProps) {
+export function SelectedSeats({
+  selectedSeats,
+  limitSeats,
+}: SelectedSeatsProps) {
   return (
     <>
       <div className="w-full p-8 border-2 rounded-2xl border-primary-light text-left">
@@ -33,6 +37,11 @@ export function SelectedSeats({ selectedSeats }: SelectedSeatsProps) {
               })
           ) : (
             <div>座席が選択されていません</div>
+          )}
+          {selectedSeats.length >= limitSeats && (
+            <p className="text-left text-sm text-red-600 ">
+              一度に予約できる座席は{limitSeats}席までです
+            </p>
           )}
         </div>
       </div>
