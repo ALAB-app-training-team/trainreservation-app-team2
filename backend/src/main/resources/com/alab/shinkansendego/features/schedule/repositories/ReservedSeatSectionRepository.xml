@@ -13,15 +13,15 @@
         INSERT INTO T_ReservedSeatSection (id, purchase_id, ride_date, schedule_cd,
         train_car_cd,seat_cd,reserved_section_cd)
         VALUES
-        <foreach collection="list" item="reservedSeatSections" separator=",">
+        <foreach collection="list" item="item" separator=",">
             (
-            #{reservedSeatSections.id, typeHandler=org.apache.ibatis.type.ObjectTypeHandler},
-            #{reservedSeatSections.purchase_id, typeHandler=org.apache.ibatis.type.ObjectTypeHandler},
-            #{reservedSeatSections.ride_date},
-            #{reservedSeatSections.schedule_cd},
-            #{reservedSeatSections.train_car_cd},
-            #{reservedSeatSections.seat_cd},
-            #{reservedSeatSections.reserved_section_cd},
+            #{item.id, typeHandler=org.apache.ibatis.type.ObjectTypeHandler},
+            #{item.purchase_id, typeHandler=org.apache.ibatis.type.ObjectTypeHandler},
+            #{item.ride_date},
+            #{item.schedule_cd},
+            #{item.train_car_cd},
+            #{item.seat_cd},
+            #{item.reserved_section_cd}
             )
         </foreach>
     </insert>
