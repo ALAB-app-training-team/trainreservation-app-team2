@@ -13,13 +13,13 @@ import java.util.Comparator;
 import java.util.List;
 
 @Service
-public class SeatService {
+public class TrainCarService {
     private final TrainCarRepository trainCarRepository;
     private final DepartureArrivalTimeRepository departureArrivalTimeRepository;
     private final ReservedSeatSectionRepository reservedSeatSectionRepository;
 
     @Autowired
-    public SeatService(
+    public TrainCarService(
             TrainCarRepository trainCarRepository,
             DepartureArrivalTimeRepository departureArrivalTimeRepository,
             ReservedSeatSectionRepository reservedSeatSectionRepository) {

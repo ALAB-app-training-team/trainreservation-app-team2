@@ -2,7 +2,7 @@ package com.alab.shinkansendego.features.schedule.services;
 
 import com.alab.shinkansendego.features.schedule.dtos.StationResponseDto;
 import com.alab.shinkansendego.features.schedule.repositories.StationRepository;
-import com.alab.shinkansendego.features.schedule.servicies.SearchService;
+import com.alab.shinkansendego.features.schedule.servicies.StationService;
 import org.jspecify.annotations.NonNull;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
@@ -17,12 +17,12 @@ import java.util.List;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.mockito.Mockito.when;
 
-public class SearchServiceTest {
+public class StationServiceTest {
 
     @Mock
     private StationRepository stationRepo;
     @InjectMocks
-    private SearchService service;
+    private StationService service;
 
     private static @NonNull List<StationResponseDto> getStationResponseDtosList() {
         StationResponseDto expect01 = new StationResponseDto("Test1", "TestStation01");

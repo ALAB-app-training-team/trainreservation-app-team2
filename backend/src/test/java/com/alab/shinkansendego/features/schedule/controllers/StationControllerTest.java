@@ -1,7 +1,7 @@
 package com.alab.shinkansendego.features.schedule.controllers;
 
 import com.alab.shinkansendego.features.schedule.dtos.StationResponseDto;
-import com.alab.shinkansendego.features.schedule.servicies.SearchService;
+import com.alab.shinkansendego.features.schedule.servicies.StationService;
 import org.jspecify.annotations.NonNull;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -19,14 +19,14 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
-@WebMvcTest(SearchController.class)
-public class SearchControllerTest {
+@WebMvcTest(StationController.class)
+public class StationControllerTest {
 
     private final String baseUrl = "/api/shinkansen-";
     @Autowired
     private MockMvc mockMvc;
     @MockitoBean
-    private SearchService service;
+    private StationService service;
 
     private static @NonNull List<StationResponseDto> getStationResponseDtosList() {
         StationResponseDto expect01 = new StationResponseDto("Test1", "TestStation01");
