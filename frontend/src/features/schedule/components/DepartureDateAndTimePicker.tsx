@@ -5,7 +5,7 @@ type DepartureDateAndTimePickerProps = {
   label: string;
   type: string;
   value: string;
-  setValue: React.Dispatch<SetStateAction<string>>;
+  setValue: React.Dispatch<SetStateAction<string>> | ((time: string) => void);
   getFieldError?: (field: string) => string;
 };
 
