@@ -66,7 +66,7 @@ public class TrainCarServiceTest {
     void getSeatListWithReserved_returnGetSeatListSuccess() {
         when(trainCarRepo.findSeatByTrainCarCd("Test001"))
                 .thenReturn(getIsreservedIsNullList());
-        when(departureArrivalTimeRepo.findSectionCdByScheduleCd(
+        when(departureArrivalTimeRepo.findByScheduleCdAndDepartureTimeAndArrivalTime(
                 "Test01",
                 LocalTime.of(12, 0, 0),
                 LocalTime.of(13, 0, 0)))
@@ -109,7 +109,7 @@ public class TrainCarServiceTest {
     void getSeatListWithReserved_withNotExistScheduleCdRequest_returnIllegalArgumentException() {
         when(trainCarRepo.findSeatByTrainCarCd("Test001"))
                 .thenReturn(getIsreservedIsNullList());
-        when(departureArrivalTimeRepo.findSectionCdByScheduleCd(
+        when(departureArrivalTimeRepo.findByScheduleCdAndDepartureTimeAndArrivalTime(
                 "9999999",
                 LocalTime.of(12, 0, 0),
                 LocalTime.of(13, 0, 0)))

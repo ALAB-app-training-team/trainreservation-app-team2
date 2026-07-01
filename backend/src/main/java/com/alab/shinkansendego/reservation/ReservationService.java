@@ -27,12 +27,12 @@ public class ReservationService {
 
         ReservationResponseDto response = new ReservationResponseDto();
 
-        ReservationDto purchase = purchaseRepository.findPurchaseByPurchaseId(request);
+        ReservationDto purchase = purchaseRepository.findReservationDtoByPurchaseId(request);
         if (purchase == null) {
             throw new IllegalArgumentException("PurchaseId is Not found");
         }
 
-        List<ReservedScheduleDto> scheduleList = purchaseRepository.findScheduleByPurchaseId(request);
+        List<ReservedScheduleDto> scheduleList = purchaseRepository.findReservationScheduleDtoByPurchaseId(request);
         //TODO:Listの1件抽出に変更したい
         List<ReservedScheduleDto> departureSchedule = scheduleList.stream().filter(schedule -> Objects.equals(schedule.getDeparture_station_cd(), purchase.getDeparture_station_cd())).toList();
         List<ReservedScheduleDto> arrivalSchedule = scheduleList.stream().filter(schedule -> Objects.equals(schedule.getArrival_station_cd(), purchase.getArrival_station_cd())).toList();

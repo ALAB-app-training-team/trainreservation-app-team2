@@ -1,19 +1,45 @@
 package com.alab.shinkansendego.purchase;
 
-import lombok.*;
+import com.alab.shinkansendego.departurearrivaltime.DepartureArrivalTimeEntity;
+import com.alab.shinkansendego.schedule.ScheduleEntity;
+import jakarta.persistence.*;
+import jakarta.validation.constraints.NotNull;
+import lombok.AccessLevel;
+import lombok.AllArgsConstructor;
+import lombok.Data;
+import lombok.NoArgsConstructor;
 
 import java.time.LocalDate;
+import java.util.List;
 import java.util.UUID;
 
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
-@Getter
-@Setter
+@Entity
+@Table(name = "T_Purchase")
 public class PurchaseEntity {
+    @Id
+    @Column(name = "id")
     private UUID id;
-    private LocalDate ride_date;
-    private String schedule_cd;
-    private String departure_station_cd;
-    private String arrival_station_cd;
+
+    @Column(name = "ride_date")
+    private LocalDate rideDate;
+
+    @Column(name = "schedule_cd")
+    private String scheduleCd;
+
+    @Column(name = "departure_station_cd")
+    private String departureStationCd;
+
+    @Column(name = "arrival_station_cd")
+    private String arrivalStationCd;
+
+    @ManyToMany(fetch = FetchType.LAZY)
+    @JoinColumn(name = "schedule_cd", referencedColumnName = "schedule_cd", insertable = false, updatable = false)
+    private List<DepartureArrivalTimeEntity> departureArrivalTime;
+
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "schedule_cd", referencedColumnName = "schedule_cd", insertable = false, updatable = false)
+    private ScheduleEntity schedule;
 }

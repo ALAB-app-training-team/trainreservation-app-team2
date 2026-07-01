@@ -87,9 +87,9 @@ public class ScheduleServiceTest {
     void getSearchedScheduleByStation_withValidScheduleRequestDto_returnGetScheduleListSuccess() {
         when(sectionRepo.findSectionCdByStartStationCd("STATION01")).thenReturn(depatureSectionList);
         when(sectionRepo.findSectionCdByGoalStationCd("STATION02")).thenReturn(arrivalSectionList);
-        when(timeRepo.findScheduleBySectionKmCd("SEC01")).thenReturn(sec01ScheduleList);
-        when(timeRepo.findScheduleBySectionKmCd("SEC02")).thenReturn(sec02ScheduleList);
-        when(timeRepo.findScheduleBySectionKmCd("SEC03")).thenReturn(sec03ScheduleList);
+        when(timeRepo.findBySectionCd("SEC01")).thenReturn(sec01ScheduleList);
+        when(timeRepo.findBySectionCd("SEC02")).thenReturn(sec02ScheduleList);
+        when(timeRepo.findBySectionCd("SEC03")).thenReturn(sec03ScheduleList);
         when(scheduleRepo.findTrainTypeNameByScheduleCd("TIME01")).thenReturn("やまびこ1号");
         when(scheduleRepo.findTrainTypeNameByScheduleCd("TIME02")).thenReturn("やまびこ2号");
         when(scheduleRepo.findTrainTypeNameByScheduleCd("TIME03")).thenReturn("やまびこ3号");
@@ -132,9 +132,9 @@ public class ScheduleServiceTest {
     void getSearchedScheduleByStation_withNotExistTrainTypeRequest_returnIllegalArgumentException() {
         when(sectionRepo.findSectionCdByStartStationCd("STATION01")).thenReturn(depatureSectionList);
         when(sectionRepo.findSectionCdByGoalStationCd("STATION02")).thenReturn(arrivalSectionList);
-        when(timeRepo.findScheduleBySectionKmCd("SEC01")).thenReturn(sec01ScheduleList);
-        when(timeRepo.findScheduleBySectionKmCd("SEC02")).thenReturn(sec02ScheduleList);
-        when(timeRepo.findScheduleBySectionKmCd("SEC03")).thenReturn(sec03ScheduleList);
+        when(timeRepo.findBySectionCd("SEC01")).thenReturn(sec01ScheduleList);
+        when(timeRepo.findBySectionCd("SEC02")).thenReturn(sec02ScheduleList);
+        when(timeRepo.findBySectionCd("SEC03")).thenReturn(sec03ScheduleList);
         when(scheduleRepo.findTrainTypeNameByScheduleCd("TIME02")).thenReturn(null);
         Exception ex = assertThrows(
                 IllegalArgumentException.class,

@@ -75,8 +75,8 @@ public class ReservationServiceTest {
     @Test
     @DisplayName("購入情報IDから予約チケット情報が取得できる")
     void getReservation_withPurchaseId_returnGetReservationSuccess() {
-        when(purchaseRepo.findPurchaseByPurchaseId(purchaseId)).thenReturn(purchase);
-        when(purchaseRepo.findScheduleByPurchaseId(purchaseId)).thenReturn(scheduleList);
+        when(purchaseRepo.findReservationDtoByPurchaseId(purchaseId)).thenReturn(purchase);
+        when(purchaseRepo.findReservationScheduleDtoByPurchaseId(purchaseId)).thenReturn(scheduleList);
         when(purchasedSeatRepo.findReservedSeatByPurchaseId(purchaseId)).thenReturn(seatList);
 
         ReservationResponseDto expect = getExpectReservationResponseDto();
@@ -89,7 +89,7 @@ public class ReservationServiceTest {
     @Test
     @DisplayName("購入情報データに存在しない購入情報IDがリクエストされた場合にエラーを発生させる")
     void getReservation_withNotExistPurchaseRequest_returnIllegalArgumentException() {
-        when(purchaseRepo.findPurchaseByPurchaseId(purchaseId)).thenReturn(null);
+        when(purchaseRepo.findReservationDtoByPurchaseId(purchaseId)).thenReturn(null);
         Exception ex = assertThrows(
                 IllegalArgumentException.class,
                 () -> service.getReservation(purchaseId)
@@ -101,8 +101,8 @@ public class ReservationServiceTest {
     @DisplayName("出発到着時刻データに存在しない出発駅CDを持つ購入情報IDがリクエストされた場合にエラーを発生させる")
     void getReservation_withNotExistScheduleOfDepartureStationRequest_returnIllegalArgumentException() {
         purchase.setDeparture_station_cd("None");
-        when(purchaseRepo.findPurchaseByPurchaseId(purchaseId)).thenReturn(purchase);
-        when(purchaseRepo.findScheduleByPurchaseId(purchaseId)).thenReturn(scheduleList);
+        when(purchaseRepo.findReservationDtoByPurchaseId(purchaseId)).thenReturn(purchase);
+        when(purchaseRepo.findReservationScheduleDtoByPurchaseId(purchaseId)).thenReturn(scheduleList);
         Exception ex = assertThrows(
                 IllegalArgumentException.class,
                 () -> service.getReservation(purchaseId)
@@ -114,8 +114,8 @@ public class ReservationServiceTest {
     @DisplayName("出発到着時刻データに存在しない到着駅CDを持つ購入情報IDがリクエストされた場合にエラーを発生させる")
     void getReservation_withNotExistScheduleOfArrivalStationRequest_returnIllegalArgumentException() {
         purchase.setArrival_station_cd("None");
-        when(purchaseRepo.findPurchaseByPurchaseId(purchaseId)).thenReturn(purchase);
-        when(purchaseRepo.findScheduleByPurchaseId(purchaseId)).thenReturn(scheduleList);
+        when(purchaseRepo.findReservationDtoByPurchaseId(purchaseId)).thenReturn(purchase);
+        when(purchaseRepo.findReservationScheduleDtoByPurchaseId(purchaseId)).thenReturn(scheduleList);
         Exception ex = assertThrows(
                 IllegalArgumentException.class,
                 () -> service.getReservation(purchaseId)

@@ -1,18 +1,25 @@
 package com.alab.shinkansendego.departurearrivaltime;
 
-import org.apache.ibatis.annotations.Mapper;
-import org.apache.ibatis.annotations.Param;
+import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Query;
+import org.springframework.data.repository.query.Param;
+import org.springframework.stereotype.Repository;
 
 import java.time.LocalTime;
 import java.util.List;
 
-@Mapper
-public interface DepartureArrivalTimeRepository {
-    List<DepartureArrivalTimeDto> findScheduleBySectionKmCd(@Param("section_cd") String section_cd);
+@Repository
+public interface DepartureArrivalTimeRepository extends JpaRepository<DepartureArrivalTimeEntity, String> {
 
-    DepartureArrivalTimeEntity findScheduleBySectionKmCdAndScheduleCd(@Param("section_cd_list") List<String> section_cd_list, @Param("schedule_cd") String schedule_cd);
+    List<DepartureArrivalTimeEntity> findBySectionCd(String sectionCd);
 
-    List<String> findSectionCdByScheduleCd(@Param("schedule_cd") String schedule_cd,
-                                           @Param("departure_time") LocalTime departure_time,
-                                           @Param("arrival_time") LocalTime arrival_time);
+    DepartureArrivalTimeEntity findByScheduleCdAndSectionCdIn(String scheduleCd, List<String> sectionCdList);
+
+    @Query("""
+        SELECT d.sectionCd
+                FROM DepartureArrivalTimeEntity d
+                        WHERE d.scheduleCd= :scheduleCd AND d.departureTime >= :departureTime AND :arrivalTime >= d.arrivalTime""")
+    List<String> findByScheduleCdAndDepartureTimeAndArrivalTime(@Param("scheduleCd")String scheduleCd,
+                                                                @Param("departureTime")LocalTime departureTime,
+                                                                @Param("arrivalTime")LocalTime arrivalTime);
 }

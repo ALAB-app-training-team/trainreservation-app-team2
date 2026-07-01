@@ -32,7 +32,7 @@ public class TrainCarService {
         }
 
         List<String> seatOfSectionCdList =
-                departureArrivalTimeRepository.findSectionCdByScheduleCd(request.getSchedule_cd(), request.getDeparture_time(), request.getArrival_time());
+                departureArrivalTimeRepository.findByScheduleCdAndDepartureTimeAndArrivalTime(request.getSchedule_cd(), request.getDeparture_time(), request.getArrival_time());
         if (seatOfSectionCdList.isEmpty()) {
             throw new IllegalArgumentException("SectionCdOfSeat is Not found");
         }

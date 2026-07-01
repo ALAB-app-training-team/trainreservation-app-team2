@@ -52,14 +52,14 @@ public class DepartureArrivalTimeRepositoryTest {
                         "TEST10", LocalTime.of(7, 44, 0), LocalTime.of(7, 49, 0)),
                 new DepartureArrivalTimeDto(
                         "TEST17", LocalTime.of(9, 8, 0), LocalTime.of(9, 13, 0)));
-        List<DepartureArrivalTimeDto> actual = repo.findScheduleBySectionKmCd("TEST2");
+        List<DepartureArrivalTimeEntity> actual = repo.findBySectionCd("TEST2");
         assertEquals(expected, actual);
     }
 
     @Test
     @DisplayName("テーブルに存在しない区間コードを検索した場合、空のリストが返却されるか")
     void findScheduleBySectionKmCd_withNotExistSectionCd_returnEmptyList() {
-        List<DepartureArrivalTimeDto> actual = repo.findScheduleBySectionKmCd("99999");
+        List<DepartureArrivalTimeEntity> actual = repo.findBySectionCd("99999");
         assertEquals(0, actual.size());
     }
 
@@ -70,7 +70,7 @@ public class DepartureArrivalTimeRepositoryTest {
         String scheduleCd = "TEST01";
         DepartureArrivalTimeEntity expected = new DepartureArrivalTimeEntity("TEST0101", "TEST01", LocalTime.of(6, 4),
                 LocalTime.of(6, 9), "TEST3");
-        DepartureArrivalTimeEntity actual = repo.findScheduleBySectionKmCdAndScheduleCd(sectionCds, scheduleCd);
+        DepartureArrivalTimeEntity actual = repo.findByScheduleCdAndSectionCdIn( scheduleCd,sectionCds);
         assertEquals(expected, actual);
     }
 
@@ -79,7 +79,7 @@ public class DepartureArrivalTimeRepositoryTest {
     void findScheduleBySectionKmCdAndScheduleCd_withNotMatchSectionCdAndScheduleCd_returnNull() {
         List<String> sectionCds = List.of("TEST1", "TEST2");
         String scheduleCd = "TEST01";
-        DepartureArrivalTimeEntity actual = repo.findScheduleBySectionKmCdAndScheduleCd(sectionCds, scheduleCd);
+        DepartureArrivalTimeEntity actual = repo.findByScheduleCdAndSectionCdIn(scheduleCd,sectionCds);
         assertNull(actual);
     }
 }

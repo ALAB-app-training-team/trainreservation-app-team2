@@ -48,27 +48,27 @@ public class PurchaseService {
         List<String> SectionKmCdsByDepartureStation = sectionKmRepository.findSectionCdByStartStationCd(reserveRequestDto.getDeparture_station_cd());
         List<String> SectionKmCdsByArrivalStation = sectionKmRepository.findSectionCdByGoalStationCd(reserveRequestDto.getArrival_station_cd());
 
-        DepartureArrivalTimeEntity departureArrivalTimeOfStart = departureArrivalTimeRepository.findScheduleBySectionKmCdAndScheduleCd(SectionKmCdsByDepartureStation, reserveRequestDto.getSchedule_cd());
-        DepartureArrivalTimeEntity departureArrivalTimeOfGoal = departureArrivalTimeRepository.findScheduleBySectionKmCdAndScheduleCd(SectionKmCdsByArrivalStation, reserveRequestDto.getSchedule_cd());
+        DepartureArrivalTimeEntity departureArrivalTimeOfStart = departureArrivalTimeRepository.findByScheduleCdAndSectionCdIn(reserveRequestDto.getSchedule_cd(), SectionKmCdsByDepartureStation);
+        DepartureArrivalTimeEntity departureArrivalTimeOfGoal = departureArrivalTimeRepository.findByScheduleCdAndSectionCdIn(reserveRequestDto.getSchedule_cd(), SectionKmCdsByArrivalStation);
         if (departureArrivalTimeOfStart == null || departureArrivalTimeOfGoal == null) {
             throw new IllegalArgumentException("Section is Not found");
         }
 
         List<String> sectionCdList =
-                departureArrivalTimeRepository.findSectionCdByScheduleCd(reserveRequestDto.getSchedule_cd(), departureArrivalTimeOfStart.getDeparture_time(), departureArrivalTimeOfGoal.getArrival_time());
+                departureArrivalTimeRepository.findByScheduleCdAndDepartureTimeAndArrivalTime(reserveRequestDto.getSchedule_cd(), departureArrivalTimeOfStart.getDepartureTime(), departureArrivalTimeOfGoal.getArrivalTime());
         if (sectionCdList.isEmpty()) {
             throw new IllegalArgumentException("SectionCd is Not found");
         }
 
         UUID purchaseId = UUID.randomUUID();
-        PurchaseEntity purchase = new PurchaseEntity(
-                purchaseId,
-                reserveRequestDto.getRide_date(),
-                reserveRequestDto.getSchedule_cd(),
-                reserveRequestDto.getDeparture_station_cd(),
-                reserveRequestDto.getArrival_station_cd()
-        );
-        int purchaseResult = purchaseRepository.insertPurchase(purchase);
+        PurchaseEntity purchase = new PurchaseEntity();
+        purchase.setId(purchaseId);
+        purchase.setRideDate(reserveRequestDto.getRide_date());
+        purchase.setScheduleCd(reserveRequestDto.getSchedule_cd());
+        purchase.setDepartureStationCd(reserveRequestDto.getDeparture_station_cd());
+        purchase.setArrivalStationCd(reserveRequestDto.getArrival_station_cd());
+
+        int purchaseResult = purchaseRepository.save(purchase);
         if (purchaseResult != 1) {
             throw new RuntimeException("Insert Purchase is failed");
         }

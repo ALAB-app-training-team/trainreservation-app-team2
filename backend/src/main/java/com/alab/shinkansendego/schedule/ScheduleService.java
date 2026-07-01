@@ -1,6 +1,7 @@
 package com.alab.shinkansendego.schedule;
 
 import com.alab.shinkansendego.departurearrivaltime.DepartureArrivalTimeDto;
+import com.alab.shinkansendego.departurearrivaltime.DepartureArrivalTimeEntity;
 import com.alab.shinkansendego.departurearrivaltime.DepartureArrivalTimeRepository;
 import com.alab.shinkansendego.sectionkm.SectionKmRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -35,33 +36,33 @@ public class ScheduleService {
             throw new IllegalArgumentException("SectionCD is Not found");
         }
 
-        List<DepartureArrivalTimeDto> departureScheduleList = new ArrayList<>();
-        List<DepartureArrivalTimeDto> arrivalScheduleList = new ArrayList<>();
+        List<DepartureArrivalTimeEntity> departureScheduleList = new ArrayList<>();
+        List<DepartureArrivalTimeEntity> arrivalScheduleList = new ArrayList<>();
 
         for (String cd : departureSectionCdList) {
-            List<DepartureArrivalTimeDto> list = departureArrivalTimeRepository.findScheduleBySectionKmCd(cd);
-            List<DepartureArrivalTimeDto> filteredList = list.stream().filter(
-                    d -> !d.getDeparture_time().isBefore(request.getTime())).toList();
+            List<DepartureArrivalTimeEntity> list = departureArrivalTimeRepository.findBySectionCd(cd);
+            List<DepartureArrivalTimeEntity> filteredList = list.stream().filter(
+                    d -> !d.getDepartureTime().isBefore(request.getTime())).toList();
             departureScheduleList.addAll(filteredList);
         }
         for (String cd : arrivalSectionCdList) {
-            List<DepartureArrivalTimeDto> list = departureArrivalTimeRepository.findScheduleBySectionKmCd(cd);
+            List<DepartureArrivalTimeEntity> list = departureArrivalTimeRepository.findBySectionCd(cd);
             arrivalScheduleList.addAll(list);
         }
-        for (DepartureArrivalTimeDto departure : departureScheduleList) {
-            for (DepartureArrivalTimeDto arrival : arrivalScheduleList) {
-                if (Objects.equals(departure.getSchedule_cd(), arrival.getSchedule_cd()) && departure.getDeparture_time().isBefore(arrival.getArrival_time())) {
+        for (DepartureArrivalTimeEntity departure : departureScheduleList) {
+            for (DepartureArrivalTimeEntity arrival : arrivalScheduleList) {
+                if (Objects.equals(departure.getScheduleCd(), arrival.getScheduleCd()) && departure.getDepartureTime().isBefore(arrival.getArrivalTime())) {
 
-                    String trainTypeName = scheduleRepository.findTrainTypeNameByScheduleCd(departure.getSchedule_cd());
+                    String trainTypeName = scheduleRepository.findTrainTypeNameByScheduleCd(departure.getScheduleCd());
                     if (trainTypeName == null) {
                         throw new IllegalArgumentException("TrainTypeName is Not found");
                     }
 
                     ScheduleResponseDto data = new ScheduleResponseDto();
-                    data.setSchedule_cd(departure.getSchedule_cd());
+                    data.setSchedule_cd(departure.getScheduleCd());
                     data.setTrain_type_name(trainTypeName);
-                    data.setDeparture_time(departure.getDeparture_time());
-                    data.setArrival_time(arrival.getArrival_time());
+                    data.setDeparture_time(departure.getDepartureTime());
+                    data.setArrival_time(arrival.getArrivalTime());
                     responseList.add(data);
                 }
             }
