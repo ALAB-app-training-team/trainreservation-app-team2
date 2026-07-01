@@ -4,8 +4,7 @@ import {
   RouterProvider,
   Outlet,
 } from "react-router-dom";
-import { SearchResult } from "./features/schedule/pages/SearchResult";
-import { SearchSchedule } from "./features/schedule/pages/SearchSchedule";
+import { ScheduleSearch } from "./features/schedule/pages/ScheduleSearch";
 import { SelectSeats } from "./features/schedule/pages/SelectSeats";
 import { Error } from "./shared/pages/Error";
 import { Header } from "./shared/components/Header";
@@ -34,17 +33,12 @@ const router = createBrowserRouter([
     children: [
       {
         path: "/",
-        loader: () => redirect("/searchSchedule"),
+        loader: () => redirect("/searchResult"),
         errorElement: <Error />,
       },
       {
         path: "/searchResult",
-        element: <SearchResult />,
-        errorElement: <Error />,
-      },
-      {
-        path: "/searchSchedule",
-        element: <SearchSchedule />,
+        element: <ScheduleSearch />,
         errorElement: <Error />,
       },
       {

@@ -6,8 +6,7 @@ export function Header() {
   const buttons = [
     {
       label: "新幹線を探す",
-      to: "/searchSchedule",
-      relatedPath: ["/searchResult"],
+      to: "/searchResult",
     },
   ];
 
@@ -17,7 +16,7 @@ export function Header() {
         to="/"
         className={({ isActive }) =>
           `flex items-center gap-2 text-lg text-primary font-bold px-4 ${
-            isActive || location.pathname === "/searchSchedule"
+            isActive || location.pathname === "/searchResult"
               ? "cursor-default"
               : "cursor-pointer"
           }`
@@ -35,9 +34,7 @@ export function Header() {
               `rounded-xl px-4 py-3 text-sm font-bold ${
                 isActive
                   ? "bg-primary text-white cursor-default"
-                  : button.relatedPath.includes(location.pathname)
-                    ? "cursor-pointer bg-primary-light"
-                    : "cursor-pointer"
+                  : "cursor-pointer"
               }`
             }
           >
