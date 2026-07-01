@@ -6,7 +6,7 @@ export function Header() {
   const buttons = [
     {
       label: "新幹線を探す",
-      to: "/searchResult",
+      to: "/scheduleSearch",
     },
   ];
 
@@ -16,7 +16,7 @@ export function Header() {
         to="/"
         className={({ isActive }) =>
           `flex items-center gap-2 text-lg text-primary font-bold px-4 ${
-            isActive || location.pathname === "/searchResult"
+            isActive || location.pathname === "/scheduleSearch"
               ? "cursor-default"
               : "cursor-pointer"
           }`

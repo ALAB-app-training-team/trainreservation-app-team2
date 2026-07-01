@@ -33,11 +33,11 @@ const router = createBrowserRouter([
     children: [
       {
         path: "/",
-        loader: () => redirect("/searchResult"),
+        loader: () => redirect("/scheduleSearch"),
         errorElement: <Error />,
       },
       {
-        path: "/searchResult",
+        path: "/scheduleSearch",
         element: <ScheduleSearch />,
         errorElement: <Error />,
       },
