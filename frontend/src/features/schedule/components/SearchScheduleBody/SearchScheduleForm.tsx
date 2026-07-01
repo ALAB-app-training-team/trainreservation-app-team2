@@ -1,7 +1,4 @@
 import { FiArrowRight } from "react-icons/fi";
-import { useNavigate } from "react-router-dom";
-import { useSearchRequestDto } from "../../hooks/useSearchRequestDto";
-import { useStations } from "../../hooks/useStations";
 import { DepartureDateAndTimePicker } from "../DepartureDateAndTimePicker";
 import { StationSelect } from "../StationSelect";
 import type { Station } from "../../types/Station";

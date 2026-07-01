@@ -1,4 +1,4 @@
-import { useEffect, useMemo, useState } from "react";
+import { useMemo, useState } from "react";
 import type { SearchRequestDto } from "../types/SearchRequestDto";
 import type { Station } from "../types/Station";
 
@@ -59,7 +59,7 @@ export function useSearchRequestDto({
     }
 
     return messages;
-  }, [date, time, departureStation, arrivalStation]);
+  }, [date, departureStation, arrivalStation]);
 
   const getFieldError = (field: string) => {
     return inValidMessages.find((item) => item.field === field)?.message ?? "";
