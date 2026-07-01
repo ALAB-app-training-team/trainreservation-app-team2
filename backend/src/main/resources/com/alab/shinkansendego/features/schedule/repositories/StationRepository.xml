@@ -1,8 +1,0 @@
-<?xml version="1.0" encoding="UTF-8"?>
-<!DOCTYPE mapper PUBLIC "-//mybatis/org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
-<mapper namespace="com.alab.shinkansendego.features.schedule.repositories.StationRepository">
-    <select id="findAllStation" resultType="com.alab.shinkansendego.features.schedule.dtos.StationResponseDto">
-        SELECT station_cd,name
-        FROM M_Station;
-    </select>
-</mapper>
