@@ -1,4 +1,4 @@
-export function SearchScheduleBodySkeleton() {
+export function ScheduleSearchBodySkeleton() {
   return (
     <>
       <div className="flex justify-center">
