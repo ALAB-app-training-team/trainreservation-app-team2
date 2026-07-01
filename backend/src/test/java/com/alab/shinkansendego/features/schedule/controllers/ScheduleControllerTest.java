@@ -2,6 +2,7 @@ package com.alab.shinkansendego.features.schedule.controllers;
 
 import com.alab.shinkansendego.features.schedule.dtos.ScheduleRequestDto;
 import com.alab.shinkansendego.features.schedule.dtos.ScheduleResponseDto;
+import com.alab.shinkansendego.features.schedule.dtos.TrainCarFormationResponseDto;
 import com.alab.shinkansendego.features.schedule.servicies.ScheduleService;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.SerializationFeature;
@@ -31,7 +32,7 @@ public class ScheduleControllerTest {
 
     // TODO:リクエストのLocalDateとの相性が悪くエラーが出たため以下処理としたが、@Autowiredが推奨されるためいつか変更したい
     private final ObjectMapper objectMapper = new ObjectMapper();
-    private final String baseUrl = "/api/shinkansen-schedule";
+    private final String baseUrl = "/api/shinkansen-";
     @Autowired
     private MockMvc mockMvc;
     @MockitoBean
@@ -43,6 +44,13 @@ public class ScheduleControllerTest {
         ScheduleResponseDto expect03 = new ScheduleResponseDto("THK003", "やまびこ4号", LocalTime.of(13, 0, 0), LocalTime.of(13, 40, 0));
         ScheduleResponseDto expect04 = new ScheduleResponseDto("THK004", "やまびこ6号", LocalTime.of(15, 0, 0), LocalTime.of(16, 0, 0));
         return Arrays.asList(expect01, expect02, expect03, expect04);
+    }
+
+    private static @NonNull List<TrainCarFormationResponseDto> getTrainCarResponseDtosList() {
+        TrainCarFormationResponseDto expect01 = new TrainCarFormationResponseDto("E5SER01", 1, "SEAT01", "指定席");
+        TrainCarFormationResponseDto expect02 = new TrainCarFormationResponseDto("E5SER02", 2, "SEAT01", "指定席");
+
+        return Arrays.asList(expect01, expect02);
     }
 
     @BeforeEach
@@ -60,7 +68,7 @@ public class ScheduleControllerTest {
     void getSchedule_withValidScheduleRequestDto_returnGetScheduleListSuccess() throws Exception {
 
         List<ScheduleResponseDto> expectList = getExpectScheduleResponseDtosList();
-        String url = baseUrl + "?date=2026-06-01&time=12:00:00&departure_station_cd=THK01&arrival_station_cd=THK02";
+        String url = baseUrl + "schedule?date=2026-06-01&time=12:00:00&departure_station_cd=THK01&arrival_station_cd=THK02";
 
         Mockito.when(service.getSearchedScheduleByStation(request)).thenReturn(expectList);
 
@@ -95,7 +103,7 @@ public class ScheduleControllerTest {
     void getSchedule_withNotValidScheduleRequestDto_returnValidationError() throws Exception {
 
         request.setArrival_station_cd(null);
-        String url = baseUrl + "?date=2026-06-01&time=12:00:00&departure_station_cd=THK01";
+        String url = baseUrl + "schedule?date=2026-06-01&time=12:00:00&departure_station_cd=THK01";
 
         String json = objectMapper.writeValueAsString(request);
 
@@ -110,10 +118,48 @@ public class ScheduleControllerTest {
     @DisplayName("リクエストDTO自体がNullの場合、バインドエラー発生")
     void getSchedule_withScheduleRequestDtoIsNull_returnBindError() throws Exception {
 
-        String url = baseUrl + "?";
+        String url = baseUrl + "schedule?";
 
         //バインド順が毎回異なるためエラーメッセージの比較は行わない
         mockMvc.perform(get(url))
                 .andExpect(status().isBadRequest());
+    }
+
+    @Test
+    @DisplayName("ダイヤコードを指定して車両編成が取得できる")
+    void getTrainCarList_returnTrainCarListSuccess() throws Exception {
+
+        String scheduleCd = "TEST01";
+        List<TrainCarFormationResponseDto> expectList = getTrainCarResponseDtosList();
+        String url = baseUrl + "traincar";
+
+        Mockito.when(service.getTrainCarList(scheduleCd)).thenReturn(expectList);
+
+        mockMvc.perform(
+                        get(url).param("schedule_cd", scheduleCd)
+                                .contentType(MediaType.APPLICATION_JSON))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.length()").value(2))
+
+                .andExpect(jsonPath("$[0].train_car_cd").value("E5SER01"))
+                .andExpect(jsonPath("$[0].train_car_number").value(1))
+                .andExpect(jsonPath("$[0].seat_type_cd").value("SEAT01"))
+                .andExpect(jsonPath("$[0].train_car_type_name").value("指定席"))
+
+                .andExpect(jsonPath("$[1].train_car_cd").value("E5SER02"))
+                .andExpect(jsonPath("$[1].train_car_number").value(2))
+                .andExpect(jsonPath("$[1].seat_type_cd").value("SEAT01"))
+                .andExpect(jsonPath("$[1].train_car_type_name").value("指定席"));
+    }
+
+    @Test
+    @DisplayName("リクエストがNullの場合、パラメーターエラー発生")
+    void getTrainCarList_withScheduleCdIsNull_returnRequestParamError() throws Exception {
+
+        String url = baseUrl + "traincar?";
+
+        mockMvc.perform(get(url))
+                .andExpect(status().isBadRequest())
+                .andExpect(content().string("schedule_cd is Null"));
     }
 }

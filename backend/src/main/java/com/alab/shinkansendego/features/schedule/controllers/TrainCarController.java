@@ -2,7 +2,7 @@ package com.alab.shinkansendego.features.schedule.controllers;
 
 import com.alab.shinkansendego.features.schedule.dtos.SeatRequestDto;
 import com.alab.shinkansendego.features.schedule.dtos.SeatResponseDto;
-import com.alab.shinkansendego.features.schedule.servicies.SeatService;
+import com.alab.shinkansendego.features.schedule.servicies.TrainCarService;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
@@ -14,17 +14,17 @@ import java.util.List;
 
 @RestController
 @RequestMapping
-public class SeatController {
-    private final SeatService seatService;
+public class TrainCarController {
+    private final TrainCarService traincarService;
 
     @Autowired
-    public SeatController(SeatService seatService) {
-        this.seatService = seatService;
+    public TrainCarController(TrainCarService traincarService) {
+        this.traincarService = traincarService;
     }
 
     @GetMapping(path = "api/shinkansen-seat")
     public ResponseEntity<List<SeatResponseDto>> getSeatList(@Valid SeatRequestDto seatRequestDto) {
-        List<SeatResponseDto> response = seatService.getSeatListWithReserved(seatRequestDto);
+        List<SeatResponseDto> response = traincarService.getSeatListWithReserved(seatRequestDto);
         return ResponseEntity.ok(response);
     }
 }

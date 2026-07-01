@@ -3,6 +3,7 @@ package com.alab.shinkansendego.features.schedule.services;
 import com.alab.shinkansendego.features.schedule.dtos.DepartureArrivalTimeDto;
 import com.alab.shinkansendego.features.schedule.dtos.ScheduleRequestDto;
 import com.alab.shinkansendego.features.schedule.dtos.ScheduleResponseDto;
+import com.alab.shinkansendego.features.schedule.dtos.TrainCarFormationResponseDto;
 import com.alab.shinkansendego.features.schedule.repositories.DepartureArrivalTimeRepository;
 import com.alab.shinkansendego.features.schedule.repositories.ScheduleRepository;
 import com.alab.shinkansendego.features.schedule.repositories.SectionKmRepository;
@@ -50,6 +51,13 @@ public class ScheduleServiceTest {
         ScheduleResponseDto expect03 = new ScheduleResponseDto("TIME04", "やまびこ4号", LocalTime.of(13, 0, 0), LocalTime.of(13, 40, 0));
         ScheduleResponseDto expect04 = new ScheduleResponseDto("TIME06", "やまびこ6号", LocalTime.of(15, 0, 0), LocalTime.of(16, 0, 0));
         return Arrays.asList(expect01, expect02, expect03, expect04);
+    }
+
+    private static @NonNull List<TrainCarFormationResponseDto> getTrainCarResponseDtosList() {
+        TrainCarFormationResponseDto expect01 = new TrainCarFormationResponseDto("E5SER01", 1, "SEAT01", "指定席");
+        TrainCarFormationResponseDto expect02 = new TrainCarFormationResponseDto("E5SER02", 2, "SEAT01", "指定席");
+
+        return Arrays.asList(expect01, expect02);
     }
 
     @BeforeEach
@@ -138,6 +146,20 @@ public class ScheduleServiceTest {
                 () -> service.getSearchedScheduleByStation(request)
         );
         assertEquals("TrainTypeName is Not found", ex.getMessage());
+    }
+
+    @Test
+    @DisplayName("ダイヤコードを指定して車両編成が取得できる")
+    void getTrainCarList_returnTrainCarListSuccess() {
+        String scheduleCd = "TEST01";
+        List<TrainCarFormationResponseDto> expectList = getTrainCarResponseDtosList();
+
+        when(scheduleRepo.findTrainCarFormationByScheduleCd(scheduleCd)).thenReturn(expectList);
+
+        List<TrainCarFormationResponseDto> actualList = service.getTrainCarList(scheduleCd);
+
+        assertEquals(2, actualList.size());
+        assertEquals(expectList, actualList);
     }
 
 }

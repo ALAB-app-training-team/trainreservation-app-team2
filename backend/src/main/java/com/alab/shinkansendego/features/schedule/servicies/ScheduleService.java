@@ -3,6 +3,7 @@ package com.alab.shinkansendego.features.schedule.servicies;
 import com.alab.shinkansendego.features.schedule.dtos.DepartureArrivalTimeDto;
 import com.alab.shinkansendego.features.schedule.dtos.ScheduleRequestDto;
 import com.alab.shinkansendego.features.schedule.dtos.ScheduleResponseDto;
+import com.alab.shinkansendego.features.schedule.dtos.TrainCarFormationResponseDto;
 import com.alab.shinkansendego.features.schedule.repositories.DepartureArrivalTimeRepository;
 import com.alab.shinkansendego.features.schedule.repositories.ScheduleRepository;
 import com.alab.shinkansendego.features.schedule.repositories.SectionKmRepository;
@@ -74,6 +75,15 @@ public class ScheduleService {
 
         return responseList;
 
+    }
+
+    public List<TrainCarFormationResponseDto> getTrainCarList(String scheduledCd) {
+        List<TrainCarFormationResponseDto> trainCarList = scheduleRepository.findTrainCarFormationByScheduleCd(scheduledCd);
+
+        if (trainCarList.isEmpty()) {
+            throw new IllegalArgumentException("ScheduleCd is Not found");
+        }
+        return trainCarList;
     }
 
 }

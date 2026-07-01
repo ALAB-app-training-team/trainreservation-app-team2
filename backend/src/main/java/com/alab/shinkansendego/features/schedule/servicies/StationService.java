@@ -8,11 +8,11 @@ import org.springframework.stereotype.Service;
 import java.util.List;
 
 @Service
-public class SearchService {
+public class StationService {
     private final StationRepository stationRepository;
 
     @Autowired
-    public SearchService(
+    public StationService(
             StationRepository stationRepository) {
         this.stationRepository = stationRepository;
     }

@@ -5,7 +5,7 @@ import com.alab.shinkansendego.features.schedule.dtos.SeatResponseDto;
 import com.alab.shinkansendego.features.schedule.repositories.DepartureArrivalTimeRepository;
 import com.alab.shinkansendego.features.schedule.repositories.ReservedSeatSectionRepository;
 import com.alab.shinkansendego.features.schedule.repositories.TrainCarRepository;
-import com.alab.shinkansendego.features.schedule.servicies.SeatService;
+import com.alab.shinkansendego.features.schedule.servicies.TrainCarService;
 import org.jspecify.annotations.NonNull;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
@@ -24,7 +24,7 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.Mockito.when;
 
-public class SeatServiceTest {
+public class TrainCarServiceTest {
 
     private final List<SeatResponseDto> emptySeatList = new ArrayList<>();
     private final List<String> emptySectionCdList = new ArrayList<>();
@@ -37,7 +37,7 @@ public class SeatServiceTest {
     @Mock
     private ReservedSeatSectionRepository reservedSeatSectionRepo;
     @InjectMocks
-    private SeatService service;
+    private TrainCarService service;
 
     private static @NonNull List<SeatResponseDto> getSeatResponseDtosList() {
         SeatResponseDto expect01 = new SeatResponseDto("Test001", 1, "TestSeat1", 1, "T", false);

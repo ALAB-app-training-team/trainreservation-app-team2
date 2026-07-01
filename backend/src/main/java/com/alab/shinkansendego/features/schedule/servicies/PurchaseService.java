@@ -39,7 +39,7 @@ public class PurchaseService {
     }
 
     @Transactional
-    public UUID insertPurchaseSeats(ReserveRequestDto reserveRequestDto) {
+    public UUID insertPurchase(ReserveRequestDto reserveRequestDto) {
         if (reserveRequestDto.getSeats() == null || reserveRequestDto.getSeats().isEmpty()) {
             throw new IllegalArgumentException("Seats is Not found");
         }

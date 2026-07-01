@@ -2,7 +2,7 @@ package com.alab.shinkansendego.features.schedule.controllers;
 
 import com.alab.shinkansendego.features.schedule.dtos.SeatRequestDto;
 import com.alab.shinkansendego.features.schedule.dtos.SeatResponseDto;
-import com.alab.shinkansendego.features.schedule.servicies.SeatService;
+import com.alab.shinkansendego.features.schedule.servicies.TrainCarService;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.SerializationFeature;
 import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
@@ -25,8 +25,8 @@ import java.util.List;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
-@WebMvcTest(SeatController.class)
-public class SeatControllerTest {
+@WebMvcTest(TrainCarController.class)
+public class TrainCarControllerTest {
 
     private final String baseUrl = "/api/shinkansen-";
     private final SeatRequestDto request = new SeatRequestDto();
@@ -36,7 +36,7 @@ public class SeatControllerTest {
     @Autowired
     private MockMvc mockMvc;
     @MockitoBean
-    private SeatService service;
+    private TrainCarService service;
 
     private static @NonNull List<SeatResponseDto> getSeatResponseDtosList() {
         SeatResponseDto expect01 = new SeatResponseDto("Test001", 1, "TestSeat1", 1, "T", false);
