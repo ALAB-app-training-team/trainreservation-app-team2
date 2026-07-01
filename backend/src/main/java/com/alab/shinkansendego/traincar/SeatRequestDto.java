@@ -9,8 +9,6 @@ import java.time.LocalTime;
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
-@Getter
-@Setter
 public class SeatRequestDto {
     @NotNull(message = "ScheduleCd is Null")
     private String schedule_cd;

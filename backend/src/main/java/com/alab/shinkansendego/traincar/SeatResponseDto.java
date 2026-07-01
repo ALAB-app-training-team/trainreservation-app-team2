@@ -5,8 +5,6 @@ import lombok.*;
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
-@Getter
-@Setter
 public class SeatResponseDto {
     private String train_car_cd;
     private Integer train_car_number;
