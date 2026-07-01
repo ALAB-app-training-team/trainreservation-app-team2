@@ -21,7 +21,7 @@ import static org.junit.jupiter.api.Assertions.*;
 @MybatisTest
 @AutoConfigureTestDatabase(replace = AutoConfigureTestDatabase.Replace.NONE)
 @Testcontainers
-@Sql(scripts = {"classpath:com/alab/shinkansendego/sql/TrainTypeTestData.sql", "classpath:com/alab/shinkansendego/features/schedule/sql/ScheduleTestData.sql"})
+@Sql(scripts = {"classpath:com/alab/shinkansendego/sql/TrainTypeTestData.sql", "classpath:com/alab/shinkansendego/sql/ScheduleTestData.sql"})
 public class ScheduleRepositoryTest {
     // テスト用DB作成
     @Container
