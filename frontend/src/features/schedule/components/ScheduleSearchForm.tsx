@@ -5,7 +5,7 @@ import type { Station } from "../types/Station";
 import type { SetStateAction } from "react";
 import type { SearchRequestDto } from "../types/SearchRequestDto";
 
-type SearchScheduleFormProps = {
+type ScheduleSearchFormProps = {
   stations: Station[];
   setTime: (time: string) => void;
   setDate: React.Dispatch<SetStateAction<string>>;
@@ -23,7 +23,7 @@ export function ScheduleSearchForm({
   setArrivalStation,
   searchRequestDto,
   getFieldError,
-}: SearchScheduleFormProps) {
+}: ScheduleSearchFormProps) {
   return (
     <>
       <div className="flex justify-center">
