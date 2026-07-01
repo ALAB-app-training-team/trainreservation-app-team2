@@ -1,0 +1,8 @@
+# .prettierignore
+node_modules/
+dist/
+.idea/
+public/
+*.min.js
+*.min.css
+package-lock.json
