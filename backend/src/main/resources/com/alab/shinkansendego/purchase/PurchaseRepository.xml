@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis/org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.alab.shinkansendego.purchase.PurchaseRepository">
+    <select id="findScheduleByPurchaseId"
+            resultType="com.alab.shinkansendego.reservation.ReservedScheduleDto"
+            parameterType="java.util.UUID">
+        SELECT dat.departure_time,sd.station_cd AS departure_station_cd,sd.name AS
+        departure_station_name,dat.arrival_time,sa.station_cd AS arrival_station_cd,sa.name AS arrival_station_name
+        FROM T_Purchase AS p
+        INNER JOIN M_DepartureArrivalTime AS dat ON p.schedule_cd=dat.schedule_cd AND p.id=#{purchase_id}
+        INNER JOIN M_SectionKm AS sk ON dat.section_cd=sk.section_cd
+        INNER JOIN M_Station AS sd ON sk.start_station_cd=sd.station_cd
+        INNER JOIN M_Station AS sa ON sk.goal_station_cd=sa.station_cd
+        ORDER BY dat.departure_time;
+    </select>
+    <select id="findPurchaseByPurchaseId" resultType="com.alab.shinkansendego.reservation.ReservationDto"
+            parameterType="java.util.UUID">
+        SELECT tt.name AS train_type_name,p.departure_station_cd,p.arrival_station_cd,p.ride_date
+        FROM T_Purchase AS p
+        INNER JOIN M_Schedule AS s ON p.schedule_cd=s.schedule_cd AND p.id=#{purchase_id}
+        INNER JOIN M_TrainType AS tt ON s.train_type_cd=tt.train_type_cd;
+    </select>
+    <insert id="insertPurchase" parameterType="com.alab.shinkansendego.purchase.PurchaseEntity">
+        INSERT INTO T_Purchase (id, ride_date, schedule_cd, departure_station_cd, arrival_station_cd)
+        VALUES(#{
+        id, typeHandler=org.apache.ibatis.type.ObjectTypeHandler},
+        #{ride_date}, #{schedule_cd},
+        #{departure_station_cd},
+        #{arrival_station_cd}
+        )
+    </insert>
+</mapper>
