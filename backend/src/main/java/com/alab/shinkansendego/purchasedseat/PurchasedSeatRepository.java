@@ -1,7 +1,6 @@
 package com.alab.shinkansendego.purchasedseat;
 
 import com.alab.shinkansendego.reservation.ReservedSeatDto;
-import org.apache.ibatis.annotations.Param;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.stereotype.Repository;
@@ -14,17 +13,19 @@ public interface PurchasedSeatRepository extends JpaRepository<PurchasedSeatEnti
 
     @Query("""
             SELECT new com.alab.shinkansendego.reservation.ReservedSeatDto(
-                    tt.name,
-                    p.departureStationCd,
-                    p.arrivalStationCd,
-                    p.rideDate
+                    tct.name,
+                    tc.trainCarNumber,
+                    s.seatNumber,
+                    s.seatColumn,
+                    ps.codeToken
                     )
-                    FROM PurchaseEntity p
-                    JOIN p.schedule s
-                    JOIN s.trainType tt
-                    WHERE p.id=:purchaseId
+                    FROM PurchaseSeatEntity ps
+                    JOIN ps.trainCar tc
+                    JOIN tc.seat s
+                    JOIN s.seatType st
+                    JOIN st.trainCarType tct
+                    WHERE ps.purchaseId=:purchaseId
+                    ORDER By tc.trainCarNumber,s.seatNumber,s.seatColumn
             """)
-    List<ReservedSeatDto> findReservedSeatByPurchaseId(@Param("purchase_id") UUID purchase_id);
-
-    int insertPurchasedSeats(List<PurchasedSeatEntity> purchasedSeats);
+    List<ReservedSeatDto> findReservedSeatDtoByPurchaseId(UUID purchaseId);
 }

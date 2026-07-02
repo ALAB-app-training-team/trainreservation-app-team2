@@ -77,7 +77,7 @@ public class ReservationServiceTest {
     void getReservation_withPurchaseId_returnGetReservationSuccess() {
         when(purchaseRepo.findReservationDtoByPurchaseId(purchaseId)).thenReturn(purchase);
         when(purchaseRepo.findReservationScheduleDtoByPurchaseId(purchaseId)).thenReturn(scheduleList);
-        when(purchasedSeatRepo.findReservedSeatByPurchaseId(purchaseId)).thenReturn(seatList);
+        when(purchasedSeatRepo.findReservedSeatDtoByPurchaseId(purchaseId)).thenReturn(seatList);
 
         ReservationResponseDto expect = getExpectReservationResponseDto();
 

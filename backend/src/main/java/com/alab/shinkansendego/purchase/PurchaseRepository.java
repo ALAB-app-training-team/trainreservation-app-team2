@@ -1,7 +1,9 @@
 package com.alab.shinkansendego.purchase;
 
+import com.alab.shinkansendego.purchasedseat.PurchasedSeatEntity;
 import com.alab.shinkansendego.reservation.ReservationDto;
 import com.alab.shinkansendego.reservation.ReservedScheduleDto;
+import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.stereotype.Repository;
 
@@ -9,7 +11,7 @@ import java.util.List;
 import java.util.UUID;
 
 @Repository
-public interface PurchaseRepository {
+public interface PurchaseRepository extends JpaRepository<PurchaseEntity, UUID> {
     @Query("""
             SELECT new com.alab.shinkansendego.reservation.ReservedScheduleSDto(
                     d.departureTime,

@@ -68,19 +68,22 @@ public class PurchaseService {
         purchase.setDepartureStationCd(reserveRequestDto.getDeparture_station_cd());
         purchase.setArrivalStationCd(reserveRequestDto.getArrival_station_cd());
 
-        int purchaseResult = purchaseRepository.save(purchase);
-        if (purchaseResult != 1) {
+        PurchaseEntity purchaseResult = purchaseRepository.save(purchase);
+        if (purchaseResult.getId() != null) {
             throw new RuntimeException("Insert Purchase is failed");
         }
 
         List<PurchasedSeatEntity> purchasedSeats = new ArrayList<>();
         for (ReserveRequestDto.SelectedSeatDto seatDto : reserveRequestDto.getSeats()) {
-            PurchasedSeatEntity purchasedSeat = new PurchasedSeatEntity(
-                    UUID.randomUUID(), purchaseId, seatDto.getTrain_car_cd(), seatDto.getSeat_cd(), UUID.randomUUID()
-            );
+            PurchasedSeatEntity purchasedSeat = new PurchasedSeatEntity();
+            purchasedSeat.setId(UUID.randomUUID());
+            purchasedSeat.setPurchaseId(purchaseResult.getId());
+            purchasedSeat.setTrainCarCd(seatDto.getTrain_car_cd());
+            purchasedSeat.setSeatCd(seatDto.getSeat_cd());
+            purchasedSeat.setCodeToken(UUID.randomUUID());
             purchasedSeats.add(purchasedSeat);
         }
-        int purchasedSeatResult = purchasedSeatRepository.insertPurchasedSeats(purchasedSeats);
+        int purchasedSeatResult = purchasedSeatRepository.saveAll(purchasedSeats).size();
         if (purchasedSeatResult != reserveRequestDto.getSeats().size()) {
             throw new RuntimeException("Insert PurchasedSeats is failed");
         }
@@ -96,7 +99,7 @@ public class PurchaseService {
                 reservedSeatSections.add(reservedSeatSection);
             }
         }
-        int reservedSeatSectionResult = reservedSeatSectionRepository.insertReservedSeatSections(reservedSeatSections);
+        int reservedSeatSectionResult = reservedSeatSectionRepository.saveAll(reservedSeatSections).size();
         if (reservedSeatSectionResult != sectionCdList.size() * reserveRequestDto.getSeats().size()) {
             throw new RuntimeException("Insert ReservedSeatSections is failed");
         }
