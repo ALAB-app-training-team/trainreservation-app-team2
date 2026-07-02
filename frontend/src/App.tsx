@@ -10,6 +10,7 @@ import { Error } from "./shared/pages/Error";
 import { Header } from "./shared/components/Header";
 
 import { ReservedTicket } from "./features/reservation/pages/ReservedTicket";
+import { ReservationList } from "./features/reservation/pages/ReservationList";
 
 function Layout() {
   return (
@@ -49,6 +50,11 @@ const router = createBrowserRouter([
       {
         path: "/reservedTicket",
         element: <ReservedTicket />,
+        errorElement: <Error />,
+      },
+      {
+        path: "/reservationList",
+        element: <ReservationList />,
         errorElement: <Error />,
       },
       { path: "/error", element: <Error /> },
