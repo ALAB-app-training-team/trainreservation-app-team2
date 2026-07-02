@@ -1,63 +1,63 @@
 import {
-  createBrowserRouter,
-  redirect,
-  RouterProvider,
-  Outlet,
-} from "react-router-dom";
-import { ScheduleSearch } from "./features/schedule/pages/ScheduleSearch";
-import { SelectSeats } from "./features/schedule/pages/SelectSeats";
-import { Error } from "./shared/pages/Error";
-import { Header } from "./shared/components/Header";
+    createBrowserRouter,
+    Outlet,
+    redirect,
+    RouterProvider,
+} from 'react-router-dom';
 
-import { ReservedTicket } from "./features/reservation/pages/ReservedTicket";
+import { ReservedTicket } from '@/features/reservation/pages/ReservedTicket';
+import { ScheduleSearch } from '@/features/schedule/pages/ScheduleSearch';
+import { SelectSeats } from '@/features/schedule/pages/SelectSeats';
+import { Header } from '@/shared/components/Header';
+import { Error } from '@/shared/pages/Error';
 
 function Layout() {
-  return (
-    <>
-      <div className="flex flex-col min-h-screen">
-        <div className="sticky top-0 z-10 bg-white">
-          <Header />
-        </div>
-        <div className="flex-1 w-full min-w-[375px] overflow-x-auto">
-          <Outlet />
-        </div>
-      </div>
-    </>
-  );
+    return (
+        <>
+            <div className="flex min-h-screen flex-col">
+                <div className="sticky top-0 z-10 bg-white">
+                    <Header />
+                </div>
+                <div className="w-full min-w-[375px] flex-1 overflow-x-auto">
+                    <Outlet />
+                </div>
+            </div>
+        </>
+    );
 }
 
 const router = createBrowserRouter([
-  {
-    path: "/",
-    element: <Layout />,
-    children: [
-      {
-        path: "/",
-        loader: () => redirect("/scheduleSearch"),
-        errorElement: <Error />,
-      },
-      {
-        path: "/scheduleSearch",
-        element: <ScheduleSearch />,
-        errorElement: <Error />,
-      },
-      {
-        path: "/selectSeat",
-        element: <SelectSeats />,
-        errorElement: <Error />,
-      },
-      {
-        path: "/reservedTicket",
-        element: <ReservedTicket />,
-        errorElement: <Error />,
-      },
-      { path: "/error", element: <Error /> },
-    ],
-  },
+    {
+        path: '/',
+        element: <Layout />,
+        children: [
+            {
+                path: '/',
+                loader: () => redirect('/scheduleSearch'),
+                errorElement: <Error />,
+            },
+            {
+                path: '/scheduleSearch',
+                element: <ScheduleSearch />,
+                errorElement: <Error />,
+            },
+            {
+                path: '/selectSeat',
+                element: <SelectSeats />,
+                errorElement: <Error />,
+            },
+            {
+                path: '/reservedTicket',
+                element: <ReservedTicket />,
+                errorElement: <Error />,
+            },
+            { path: '/error', element: <Error /> },
+        ],
+    },
 ]);
 
 function App() {
-  return <RouterProvider router={router} />;
+    return <RouterProvider router={router} />;
 }
 
 export default App;

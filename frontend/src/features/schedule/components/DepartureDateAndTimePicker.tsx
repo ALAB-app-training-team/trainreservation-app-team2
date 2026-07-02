@@ -1,35 +1,37 @@
-import type { SetStateAction } from "react";
+import type { SetStateAction } from 'react';
 
 type DepartureDateAndTimePickerProps = {
-  id: string;
-  label: string;
-  type: string;
-  value: string;
-  setValue: React.Dispatch<SetStateAction<string>> | ((time: string) => void);
-  getFieldError?: (field: string) => string;
+    id: string;
+    label: string;
+    type: string;
+    value: string;
+    setValue: React.Dispatch<SetStateAction<string>> | ((time: string) => void);
+    getFieldError?: (field: string) => string;
 };
 
 export function DepartureDateAndTimePicker({
-  id,
-  label,
-  type,
-  value,
-  setValue,
-  getFieldError,
+    id,
+    label,
+    type,
+    value,
+    setValue,
+    getFieldError,
 }: DepartureDateAndTimePickerProps) {
-  return (
-    <div className="flex flex-col gap-2 w-full items-start">
-      <label htmlFor={id}>{label}</label>
-      <input
-        id={id}
-        type={type}
-        value={value}
-        onChange={(e) => setValue(e.target.value)}
-        className="w-full bg-white p-2 rounded-xl outline-none cursor-pointer focus:border-2 focus:border-primary"
-      />
-      {getFieldError?.(id) && (
-        <p className="text-left text-sm text-red-600 ">{getFieldError(id)}</p>
-      )}
-    </div>
-  );
+    return (
+        <div className="flex w-full flex-col items-start gap-2">
+            <label htmlFor={id}>{label}</label>
+            <input
+                id={id}
+                type={type}
+                value={value}
+                onChange={(e) => setValue(e.target.value)}
+                className="focus:border-primary w-full cursor-pointer rounded-xl bg-white p-2 outline-none focus:border-2"
+            />
+            {getFieldError?.(id) && (
+                <p className="text-left text-sm text-red-600">
+                    {getFieldError(id)}
+                </p>
+            )}
+        </div>
+    );
 }

@@ -44,6 +44,10 @@ export default defineConfig([
                 {
                     // 変数をキャメルケース
                     selector: 'variable',
+                    filter: {
+                        regex: '^(ReactPaginate)$',
+                        match: false,
+                    },
                     format: ['camelCase', 'UPPER_CASE'],
                 },
                 {
