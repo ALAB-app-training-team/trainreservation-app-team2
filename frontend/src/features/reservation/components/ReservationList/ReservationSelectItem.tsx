@@ -47,7 +47,7 @@ export function ReservationSelectItem({ details }: ReservationSelectItemProps) {
           <h3>{details.departure_time.slice(0, 5)}</h3>
         </div>
       </div>
-      <div className="flex">
+      <div className="flex border-b-2 py-4 border-primary/20">
         <div className="flex flex-col gap-2 self-start items-start">
           <h5>座席</h5>
           <div className="border-primary/20 flex flex-none rounded-2xl border px-2 py-1 font-semibold">
