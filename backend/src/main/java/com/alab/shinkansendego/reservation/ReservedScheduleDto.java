@@ -7,8 +7,6 @@ import java.time.*;
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
-@Getter
-@Setter
 public class ReservedScheduleDto {
     private LocalTime departureTime;
     private String departureStationCd;
