@@ -18,48 +18,62 @@ export function ReservationListBody() {
     ReservationListResponseDto[]
   >(ENDPOINTS.RESERVATION(), fetcher);*/
 
-  const reservations: ReservationListResponseDto[] = [
-    {
-      train_type_name: "やまびこ51号",
-      departure_time: "06:00:00",
-      departure_station_name: "東京",
-      arrival_station_name: "仙台",
-      ride_date: "2026-07-10",
-      train_car_number: 1,
-      seat_number: 1,
-      seat_column: "A",
-    },
-    {
-      train_type_name: "やまびこ51号",
-      departure_time: "06:00:00",
-      departure_station_name: "東京",
-      arrival_station_name: "仙台",
-      ride_date: "2026-07-10",
-      train_car_number: 1,
-      seat_number: 1,
-      seat_column: "B",
-    },
-    {
-      train_type_name: "やまびこ51号",
-      departure_time: "06:00:00",
-      departure_station_name: "東京",
-      arrival_station_name: "仙台",
-      ride_date: "2026-06-29",
-      train_car_number: 1,
-      seat_number: 1,
-      seat_column: "A",
-    },
+  const reservations: ReservationListResponseDto[][] = [
+    [
+      {
+        train_type_name: "やまびこ51号",
+        departure_time: "06:00:00",
+        departure_station_name: "東京",
+        arrival_station_name: "仙台",
+        ride_date: "2026-07-10",
+        train_car_number: 1,
+        seat_number: 1,
+        seat_column: "A",
+      },
+      {
+        train_type_name: "やまびこ51号",
+        departure_time: "06:00:00",
+        departure_station_name: "東京",
+        arrival_station_name: "仙台",
+        ride_date: "2026-07-10",
+        train_car_number: 1,
+        seat_number: 1,
+        seat_column: "B",
+      },
+    ],
+    [
+      {
+        train_type_name: "やまびこ51号",
+        departure_time: "06:00:00",
+        departure_station_name: "東京",
+        arrival_station_name: "仙台",
+        ride_date: "2026-06-30",
+        train_car_number: 1,
+        seat_number: 1,
+        seat_column: "A",
+      },
+      {
+        train_type_name: "やまびこ51号",
+        departure_time: "06:00:00",
+        departure_station_name: "東京",
+        arrival_station_name: "仙台",
+        ride_date: "2026-06-30",
+        train_car_number: 1,
+        seat_number: 1,
+        seat_column: "B",
+      },
+    ],
   ];
 
   const now = new Date();
   now.setHours(0, 0, 0, 0);
 
-  const activeReservations = reservations?.filter((reservation) => {
+  const activeReservations = reservations?.filter((reservation: any) => {
     const departureDate = new Date(reservation.ride_date);
     return departureDate >= now;
   });
 
-  const pastReservations = reservations?.filter((reservation) => {
+  const pastReservations = reservations?.filter((reservation: any) => {
     const departureDate = new Date(reservation.ride_date);
     return departureDate < now;
   });
@@ -110,7 +124,7 @@ export function ReservationListBody() {
                 arrival_station_name: string;
                 ride_date: string;
               },
-              index,
+              index: any,
             ) => <ReservationSelectItem key={index} details={reservation} />,
           )
         ) : (
