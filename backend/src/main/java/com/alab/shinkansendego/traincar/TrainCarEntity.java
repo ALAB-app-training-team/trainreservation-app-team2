@@ -1,9 +1,7 @@
 package com.alab.shinkansendego.traincar;
 
-import jakarta.persistence.Column;
-import jakarta.persistence.Entity;
-import jakarta.persistence.Id;
-import jakarta.persistence.Table;
+import com.alab.shinkansendego.seattype.*;
+import jakarta.persistence.*;
 import jakarta.validation.constraints.NotNull;
 import lombok.Data;
 
@@ -26,4 +24,8 @@ public class TrainCarEntity {
     @NotNull
     @Column(name = "seat_type_cd")
     private String seatTypeCd;
+
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "seat_type_cd", referencedColumnName = "seat_type_cd")
+    private SeatTypeEntity seatType;
 }
