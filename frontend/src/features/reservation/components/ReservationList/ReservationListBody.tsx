@@ -64,12 +64,12 @@ export function ReservationListBody() {
   const now = new Date();
   now.setHours(0, 0, 0, 0);
 
-  const activeReservations = reservations?.filter((reservation: any) => {
+  const activeReservations = reservations?.filter((reservation) => {
     const departureDate = new Date(reservation.ride_date);
     return departureDate >= now;
   });
 
-  const pastReservations = reservations?.filter((reservation: any) => {
+  const pastReservations = reservations?.filter((reservation) => {
     const departureDate = new Date(reservation.ride_date);
     return departureDate < now;
   });
@@ -120,7 +120,7 @@ export function ReservationListBody() {
                 arrival_station_name: string;
                 ride_date: string;
               },
-              index: any,
+              index,
             ) => <ReservationSelectItem key={index} details={reservation} />,
           )
         ) : (
