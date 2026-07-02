@@ -49,7 +49,7 @@ public class PurchaseServiceTest {
         DepartureArrivalTimeEntity departureArrivalTime = new DepartureArrivalTimeEntity("Test1", request.getSchedule_cd(), LocalTime.of(6, 4), LocalTime.of(6, 9), "Test1");
         when(sectionKmRepo.findSectionCdByStartStationCd(request.getDeparture_station_cd())).thenReturn(List.of(departureArrivalTime.getSectionCd()));
         when(sectionKmRepo.findSectionCdByGoalStationCd(request.getArrival_station_cd())).thenReturn(List.of(departureArrivalTime.getSectionCd()));
-        when(departureArrivalTimeRepo.findByScheduleCdAndSectionCdIn(request.getSchedule_cd(),List.of(departureArrivalTime.getSectionCd()))).thenReturn(departureArrivalTime);
+        when(departureArrivalTimeRepo.findByScheduleCdAndSectionCdIn(request.getSchedule_cd(), List.of(departureArrivalTime.getSectionCd()))).thenReturn(departureArrivalTime);
         when(departureArrivalTimeRepo.findByScheduleCdAndDepartureTimeAndArrivalTime(request.getSchedule_cd(), departureArrivalTime.getDepartureTime(), departureArrivalTime.getArrivalTime())).thenReturn(List.of(departureArrivalTime.getSectionCd()));
         when(purchaseRepo.save(any())).thenReturn(1);
         when(purchasedSeatRepo.insertPurchasedSeats(any())).thenReturn(request.getSeats().size());
@@ -93,7 +93,7 @@ public class PurchaseServiceTest {
         DepartureArrivalTimeEntity departureArrivalTime = new DepartureArrivalTimeEntity("Test1", request.getSchedule_cd(), LocalTime.of(6, 4), LocalTime.of(6, 9), "Test1");
         when(sectionKmRepo.findSectionCdByStartStationCd(request.getDeparture_station_cd())).thenReturn(List.of());
         when(sectionKmRepo.findSectionCdByGoalStationCd(request.getArrival_station_cd())).thenReturn(List.of());
-        when(departureArrivalTimeRepo.findByScheduleCdAndSectionCdIn(request.getSchedule_cd(),List.of(departureArrivalTime.getSectionCd()))).thenReturn(null);
+        when(departureArrivalTimeRepo.findByScheduleCdAndSectionCdIn(request.getSchedule_cd(), List.of(departureArrivalTime.getSectionCd()))).thenReturn(null);
         when(departureArrivalTimeRepo.findByScheduleCdAndDepartureTimeAndArrivalTime(request.getSchedule_cd(), departureArrivalTime.getDepartureTime(), departureArrivalTime.getArrivalTime())).thenReturn(List.of());
 
         assertThrows(IllegalArgumentException.class, () -> {
@@ -108,7 +108,7 @@ public class PurchaseServiceTest {
         DepartureArrivalTimeEntity departureArrivalTime = new DepartureArrivalTimeEntity("Test1", request.getSchedule_cd(), LocalTime.of(6, 4), LocalTime.of(6, 9), "Test1");
         when(sectionKmRepo.findSectionCdByStartStationCd(request.getDeparture_station_cd())).thenReturn(List.of(departureArrivalTime.getSectionCd()));
         when(sectionKmRepo.findSectionCdByGoalStationCd(request.getArrival_station_cd())).thenReturn(List.of(departureArrivalTime.getSectionCd()));
-        when(departureArrivalTimeRepo.findByScheduleCdAndSectionCdIn(request.getSchedule_cd(),List.of(departureArrivalTime.getSectionCd()))).thenReturn(departureArrivalTime);
+        when(departureArrivalTimeRepo.findByScheduleCdAndSectionCdIn(request.getSchedule_cd(), List.of(departureArrivalTime.getSectionCd()))).thenReturn(departureArrivalTime);
         when(departureArrivalTimeRepo.findByScheduleCdAndDepartureTimeAndArrivalTime(request.getSchedule_cd(), departureArrivalTime.getDepartureTime(), departureArrivalTime.getArrivalTime())).thenReturn(List.of(departureArrivalTime.getSectionCd()));
         when(purchaseRepo.save(any())).thenReturn(1);
         when(purchasedSeatRepo.insertPurchasedSeats(any())).thenThrow(new DuplicateKeyException("UNIQUE制約エラー"));
@@ -124,7 +124,7 @@ public class PurchaseServiceTest {
         DepartureArrivalTimeEntity departureArrivalTime = new DepartureArrivalTimeEntity("Test1", request.getSchedule_cd(), LocalTime.of(6, 4), LocalTime.of(6, 9), "Test1");
         when(sectionKmRepo.findSectionCdByStartStationCd(request.getDeparture_station_cd())).thenReturn(List.of(departureArrivalTime.getSectionCd()));
         when(sectionKmRepo.findSectionCdByGoalStationCd(request.getArrival_station_cd())).thenReturn(List.of(departureArrivalTime.getSectionCd()));
-        when(departureArrivalTimeRepo.findByScheduleCdAndSectionCdIn( request.getSchedule_cd(),List.of(departureArrivalTime.getSectionCd()))).thenReturn(departureArrivalTime);
+        when(departureArrivalTimeRepo.findByScheduleCdAndSectionCdIn(request.getSchedule_cd(), List.of(departureArrivalTime.getSectionCd()))).thenReturn(departureArrivalTime);
         when(departureArrivalTimeRepo.findByScheduleCdAndDepartureTimeAndArrivalTime(request.getSchedule_cd(), departureArrivalTime.getDepartureTime(), departureArrivalTime.getArrivalTime())).thenReturn(List.of(departureArrivalTime.getSectionCd()));
         when(purchaseRepo.save(any())).thenReturn(0);
         assertThrows(RuntimeException.class, () -> {
@@ -139,7 +139,7 @@ public class PurchaseServiceTest {
         DepartureArrivalTimeEntity departureArrivalTime = new DepartureArrivalTimeEntity("Test1", request.getSchedule_cd(), LocalTime.of(6, 4), LocalTime.of(6, 9), "Test1");
         when(sectionKmRepo.findSectionCdByStartStationCd(request.getDeparture_station_cd())).thenReturn(List.of(departureArrivalTime.getSectionCd()));
         when(sectionKmRepo.findSectionCdByGoalStationCd(request.getArrival_station_cd())).thenReturn(List.of(departureArrivalTime.getSectionCd()));
-        when(departureArrivalTimeRepo.findByScheduleCdAndSectionCdIn(request.getSchedule_cd(),List.of(departureArrivalTime.getSectionCd()))).thenReturn(departureArrivalTime);
+        when(departureArrivalTimeRepo.findByScheduleCdAndSectionCdIn(request.getSchedule_cd(), List.of(departureArrivalTime.getSectionCd()))).thenReturn(departureArrivalTime);
         when(departureArrivalTimeRepo.findByScheduleCdAndDepartureTimeAndArrivalTime(request.getSchedule_cd(), departureArrivalTime.getDepartureTime(), departureArrivalTime.getArrivalTime())).thenReturn(List.of(departureArrivalTime.getSectionCd()));
         when(purchaseRepo.save(any())).thenReturn(1);
         when(purchasedSeatRepo.insertPurchasedSeats(any())).thenReturn(0);
@@ -156,7 +156,7 @@ public class PurchaseServiceTest {
         DepartureArrivalTimeEntity departureArrivalTime = new DepartureArrivalTimeEntity("Test1", request.getSchedule_cd(), LocalTime.of(6, 4), LocalTime.of(6, 9), "Test1");
         when(sectionKmRepo.findSectionCdByStartStationCd(request.getDeparture_station_cd())).thenReturn(List.of(departureArrivalTime.getSectionCd()));
         when(sectionKmRepo.findSectionCdByGoalStationCd(request.getArrival_station_cd())).thenReturn(List.of(departureArrivalTime.getSectionCd()));
-        when(departureArrivalTimeRepo.findByScheduleCdAndSectionCdIn(request.getSchedule_cd(),List.of(departureArrivalTime.getSectionCd()))).thenReturn(departureArrivalTime);
+        when(departureArrivalTimeRepo.findByScheduleCdAndSectionCdIn(request.getSchedule_cd(), List.of(departureArrivalTime.getSectionCd()))).thenReturn(departureArrivalTime);
         when(departureArrivalTimeRepo.findByScheduleCdAndDepartureTimeAndArrivalTime(request.getSchedule_cd(), departureArrivalTime.getDepartureTime(), departureArrivalTime.getArrivalTime())).thenReturn(List.of(departureArrivalTime.getSectionCd()));
         when(purchaseRepo.save(any())).thenReturn(1);
         when(purchasedSeatRepo.insertPurchasedSeats(any())).thenReturn(request.getSeats().size());
@@ -174,7 +174,7 @@ public class PurchaseServiceTest {
         DepartureArrivalTimeEntity departureArrivalTime = new DepartureArrivalTimeEntity("Test1", request.getSchedule_cd(), LocalTime.of(6, 4), LocalTime.of(6, 9), "Test1");
         when(sectionKmRepo.findSectionCdByStartStationCd(request.getDeparture_station_cd())).thenReturn(List.of(departureArrivalTime.getSectionCd()));
         when(sectionKmRepo.findSectionCdByGoalStationCd(request.getArrival_station_cd())).thenReturn(List.of(departureArrivalTime.getSectionCd()));
-        when(departureArrivalTimeRepo.findByScheduleCdAndSectionCdIn(request.getSchedule_cd(),List.of(departureArrivalTime.getSectionCd()))).thenReturn(departureArrivalTime);
+        when(departureArrivalTimeRepo.findByScheduleCdAndSectionCdIn(request.getSchedule_cd(), List.of(departureArrivalTime.getSectionCd()))).thenReturn(departureArrivalTime);
         when(departureArrivalTimeRepo.findByScheduleCdAndDepartureTimeAndArrivalTime(request.getSchedule_cd(), departureArrivalTime.getDepartureTime(), departureArrivalTime.getArrivalTime())).thenReturn(List.of(departureArrivalTime.getSectionCd()));
         when(purchaseRepo.save(any())).thenReturn(1);
         when(purchasedSeatRepo.insertPurchasedSeats(any())).thenReturn(request.getSeats().size());

@@ -3,8 +3,6 @@ package com.alab.shinkansendego.purchase;
 import com.alab.shinkansendego.departurearrivaltime.DepartureArrivalTimeEntity;
 import com.alab.shinkansendego.schedule.ScheduleEntity;
 import jakarta.persistence.*;
-import jakarta.validation.constraints.NotNull;
-import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
