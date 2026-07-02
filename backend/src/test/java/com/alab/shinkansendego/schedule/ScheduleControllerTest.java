@@ -55,8 +55,8 @@ public class ScheduleControllerTest {
         objectMapper.disable(SerializationFeature.WRITE_DATES_AS_TIMESTAMPS);
         request.setDate(LocalDate.of(2026, 6, 1));
         request.setTime(LocalTime.of(12, 0, 0));
-        request.setDeparture_station_cd("THK01");
-        request.setArrival_station_cd("THK02");
+        request.setDepartureStationCd("THK01");
+        request.setArrivalStationCd("THK02");
     }
 
     @Test
@@ -98,7 +98,7 @@ public class ScheduleControllerTest {
     @DisplayName("リクエストのカラムがNullの場合、バリデーションエラー発生")
     void getSchedule_withNotValidScheduleRequestDto_returnValidationError() throws Exception {
 
-        request.setArrival_station_cd(null);
+        request.setArrivalStationCd(null);
         String url = baseUrl + "schedule?date=2026-06-01&time=12:00:00&departure_station_cd=THK01";
 
         String json = objectMapper.writeValueAsString(request);

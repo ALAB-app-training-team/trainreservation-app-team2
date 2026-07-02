@@ -78,8 +78,8 @@ public class ScheduleServiceTest {
 
         request.setDate(LocalDate.of(2026, 6, 1));
         request.setTime(LocalTime.of(9, 0, 0));
-        request.setDeparture_station_cd("STATION01");
-        request.setArrival_station_cd("STATION02");
+        request.setDepartureStationCd("STATION01");
+        request.setArrivalStationCd("STATION02");
     }
 
     @Test

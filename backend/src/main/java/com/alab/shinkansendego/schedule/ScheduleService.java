@@ -28,8 +28,8 @@ public class ScheduleService {
 
         List<ScheduleResponseDto> responseList = new ArrayList<>();
 
-        List<String> departureSectionCdList = sectionKmRepository.findSectionCdByStartStationCd(request.getDeparture_station_cd());
-        List<String> arrivalSectionCdList = sectionKmRepository.findSectionCdByGoalStationCd(request.getArrival_station_cd());
+        List<String> departureSectionCdList = sectionKmRepository.findSectionCdByStartStationCd(request.getDepartureStationCd());
+        List<String> arrivalSectionCdList = sectionKmRepository.findSectionCdByGoalStationCd(request.getArrivalStationCd());
 
         if (departureSectionCdList.isEmpty() || arrivalSectionCdList.isEmpty()) {
             throw new IllegalArgumentException("SectionCD is Not found");
@@ -58,16 +58,16 @@ public class ScheduleService {
                     }
 
                     ScheduleResponseDto data = new ScheduleResponseDto();
-                    data.setSchedule_cd(departure.getScheduleCd());
-                    data.setTrain_type_name(trainTypeName);
-                    data.setDeparture_time(departure.getDepartureTime());
-                    data.setArrival_time(arrival.getArrivalTime());
+                    data.setScheduleCd(departure.getScheduleCd());
+                    data.setTrainTypeName(trainTypeName);
+                    data.setDepartureTime(departure.getDepartureTime());
+                    data.setArrivalTime(arrival.getArrivalTime());
                     responseList.add(data);
                 }
             }
         }
 
-        responseList.sort(Comparator.comparing(ScheduleResponseDto::getDeparture_time));
+        responseList.sort(Comparator.comparing(ScheduleResponseDto::getDepartureTime));
 
         return responseList;
 
