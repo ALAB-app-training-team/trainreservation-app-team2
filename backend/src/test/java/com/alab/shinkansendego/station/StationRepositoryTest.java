@@ -41,19 +41,19 @@ public class StationRepositoryTest {
 
     @Test
     @DisplayName("駅コードと駅名を全件取得できる")
-    void findAllStation_returnGetStationListSuccess() {
-        List<StationResponseDto> actual = repo.findAllStation();
+    void findAll_returnGetListSuccess() {
+        List<StationEntity> actual = repo.findAll();
         assertEquals(10, actual.size());
-        assertEquals("Test0", actual.get(0).getStation_cd());
-        assertEquals("Test1", actual.get(1).getStation_cd());
-        assertEquals("Test2", actual.get(2).getStation_cd());
-        assertEquals("Test3", actual.get(3).getStation_cd());
-        assertEquals("Test4", actual.get(4).getStation_cd());
-        assertEquals("Test5", actual.get(5).getStation_cd());
-        assertEquals("Test6", actual.get(6).getStation_cd());
-        assertEquals("Test7", actual.get(7).getStation_cd());
-        assertEquals("Test8", actual.get(8).getStation_cd());
-        assertEquals("Test9", actual.get(9).getStation_cd());
+        assertEquals("Test0", actual.get(0).getStationCd());
+        assertEquals("Test1", actual.get(1).getStationCd());
+        assertEquals("Test2", actual.get(2).getStationCd());
+        assertEquals("Test3", actual.get(3).getStationCd());
+        assertEquals("Test4", actual.get(4).getStationCd());
+        assertEquals("Test5", actual.get(5).getStationCd());
+        assertEquals("Test6", actual.get(6).getStationCd());
+        assertEquals("Test7", actual.get(7).getStationCd());
+        assertEquals("Test8", actual.get(8).getStationCd());
+        assertEquals("Test9", actual.get(9).getStationCd());
 
         assertEquals("TestStation00", actual.get(0).getName());
         assertEquals("TestStation01", actual.get(1).getName());
