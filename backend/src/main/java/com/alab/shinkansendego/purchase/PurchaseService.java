@@ -99,7 +99,7 @@ public class PurchaseService {
                 reservedSeatSections.add(reservedSeatSection);
             }
         }
-        int reservedSeatSectionResult = reservedSeatSectionRepository.insertReservedSeatSections(reservedSeatSections);
+        int reservedSeatSectionResult = reservedSeatSectionRepository.saveAll(reservedSeatSections).size();
         if (reservedSeatSectionResult != sectionCdList.size() * reserveRequestDto.getSeats().size()) {
             throw new RuntimeException("Insert ReservedSeatSections is failed");
         }
