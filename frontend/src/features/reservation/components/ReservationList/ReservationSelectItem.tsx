@@ -51,8 +51,8 @@ export function ReservationSelectItem({ details }: ReservationSelectItemProps) {
         <div className="flex flex-col gap-2 self-start items-start">
           <h5>座席</h5>
           <div className="border-primary/20 flex flex-none rounded-2xl border px-2 py-1 font-semibold">
-            {details.train_car_number}号車 {details.seat_number}{" "}
-            {details.seat_column}
+            {details.train_car_number}号車 {details.seat_number}番
+            {details.seat_column}席
           </div>
         </div>
       </div>
