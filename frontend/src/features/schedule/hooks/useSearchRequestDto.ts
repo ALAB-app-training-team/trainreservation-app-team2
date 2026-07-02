@@ -3,25 +3,23 @@ import type { SearchRequestDto } from "../types/SearchRequestDto";
 import type { Station } from "../types/Station";
 
 type useSearchRequestDtoProps = {
-  condition?: SearchRequestDto;
-  stations?: Station[];
+  stations: Station[];
 };
 
 export function useSearchRequestDto({
-  condition,
   stations = [],
-}: useSearchRequestDtoProps = {}) {
+}: useSearchRequestDtoProps) {
   const [date, setDate] = useState<string>(
-    condition?.date ?? new Date().toISOString().split("T")[0],
+    new Date().toISOString().split("T")[0],
   );
   const [time, setTime] = useState<string>(
-    condition?.time ?? new Date().toTimeString().slice(0, 5),
+    new Date().toTimeString().slice(0, 5),
   );
   const [departureStation, setDepartureStation] = useState<string>(
-    condition?.departure_station_cd ?? stations[0]?.station_cd ?? "",
+    stations[0].station_cd,
   );
   const [arrivalStation, setArrivalStation] = useState<string>(
-    condition?.arrival_station_cd ?? stations[1]?.station_cd ?? "",
+    stations[1].station_cd,
   );
 
   const searchRequestDto: SearchRequestDto = useMemo<SearchRequestDto>(() => {
@@ -33,21 +31,25 @@ export function useSearchRequestDto({
     };
   }, [date, time, departureStation, arrivalStation]);
 
+  const handleTime = (time: string) => {
+    if (time === "") {
+      setTime("00:00");
+    } else {
+      setTime(time);
+    }
+  };
+
   type InValidMessage = {
-    field: "date" | "time" | "arrivalStation";
+    field: "date" | "arrivalStation";
     message: string;
   };
 
-  const isInvalid: boolean =
-    date === "" || time === "" || departureStation === arrivalStation;
+  const isInvalid: boolean = date === "" || departureStation === arrivalStation;
 
   const inValidMessages: InValidMessage[] = useMemo(() => {
     const messages: InValidMessage[] = [];
     if (date === "") {
       messages.push({ field: "date", message: "日付を入力してください" });
-    }
-    if (time === "") {
-      messages.push({ field: "time", message: "時間を入力してください" });
     }
     if (departureStation === arrivalStation) {
       messages.push({
@@ -57,14 +59,14 @@ export function useSearchRequestDto({
     }
 
     return messages;
-  }, [date, time, departureStation, arrivalStation]);
+  }, [date, departureStation, arrivalStation]);
 
   const getFieldError = (field: string) => {
     return inValidMessages.find((item) => item.field === field)?.message ?? "";
   };
 
   return {
-    setTime,
+    setTime: handleTime,
     setDate,
     setDepartureStation,
     setArrivalStation,
