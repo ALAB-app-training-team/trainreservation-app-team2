@@ -1,25 +1,16 @@
 package com.alab.shinkansendego.reservation;
 
-import com.alab.shinkansendego.purchase.PurchaseRepository;
-import com.alab.shinkansendego.purchasedseat.PurchasedSeatRepository;
-import org.jspecify.annotations.NonNull;
-import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.DisplayName;
-import org.junit.jupiter.api.Test;
-import org.mockito.InjectMocks;
-import org.mockito.Mock;
-import org.mockito.MockitoAnnotations;
+import com.alab.shinkansendego.purchase.*;
+import com.alab.shinkansendego.purchasedseat.*;
+import org.jspecify.annotations.*;
+import org.junit.jupiter.api.*;
+import org.mockito.*;
 
-import java.time.LocalDate;
-import java.time.LocalTime;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
-import java.util.UUID;
+import java.time.*;
+import java.util.*;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertThrows;
-import static org.mockito.Mockito.when;
+import static org.junit.jupiter.api.Assertions.*;
+import static org.mockito.Mockito.*;
 
 public class ReservationServiceTest {
 
@@ -100,7 +91,7 @@ public class ReservationServiceTest {
     @Test
     @DisplayName("出発到着時刻データに存在しない出発駅CDを持つ購入情報IDがリクエストされた場合にエラーを発生させる")
     void getReservation_withNotExistScheduleOfDepartureStationRequest_returnIllegalArgumentException() {
-        purchase.setDeparture_station_cd("None");
+        purchase.setDepartureStationCd("None");
         when(purchaseRepo.findReservationDtoByPurchaseId(purchaseId)).thenReturn(purchase);
         when(purchaseRepo.findReservationScheduleDtoByPurchaseId(purchaseId)).thenReturn(scheduleList);
         Exception ex = assertThrows(
@@ -113,7 +104,7 @@ public class ReservationServiceTest {
     @Test
     @DisplayName("出発到着時刻データに存在しない到着駅CDを持つ購入情報IDがリクエストされた場合にエラーを発生させる")
     void getReservation_withNotExistScheduleOfArrivalStationRequest_returnIllegalArgumentException() {
-        purchase.setArrival_station_cd("None");
+        purchase.setArrivalStationCd("None");
         when(purchaseRepo.findReservationDtoByPurchaseId(purchaseId)).thenReturn(purchase);
         when(purchaseRepo.findReservationScheduleDtoByPurchaseId(purchaseId)).thenReturn(scheduleList);
         Exception ex = assertThrows(

@@ -20,4 +20,7 @@ public class TrainTypeEntity {
 
     @Column(name = "name")
     private String name;
+
+    @Column(name = "train_series_cd")
+    private String trainSeriesCd;
 }

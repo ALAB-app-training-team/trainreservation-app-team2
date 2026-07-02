@@ -1,13 +1,11 @@
 package com.alab.shinkansendego.reservation;
 
-import com.alab.shinkansendego.purchase.PurchaseRepository;
-import com.alab.shinkansendego.purchasedseat.PurchasedSeatRepository;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Service;
+import com.alab.shinkansendego.purchase.*;
+import com.alab.shinkansendego.purchasedseat.*;
+import org.springframework.beans.factory.annotation.*;
+import org.springframework.stereotype.*;
 
-import java.util.List;
-import java.util.Objects;
-import java.util.UUID;
+import java.util.*;
 
 @Service
 public class ReservationService {
@@ -34,20 +32,20 @@ public class ReservationService {
 
         List<ReservedScheduleDto> scheduleList = purchaseRepository.findReservationScheduleDtoByPurchaseId(request);
         //TODO:Listの1件抽出に変更したい
-        List<ReservedScheduleDto> departureSchedule = scheduleList.stream().filter(schedule -> Objects.equals(schedule.getDeparture_station_cd(), purchase.getDeparture_station_cd())).toList();
-        List<ReservedScheduleDto> arrivalSchedule = scheduleList.stream().filter(schedule -> Objects.equals(schedule.getArrival_station_cd(), purchase.getArrival_station_cd())).toList();
+        List<ReservedScheduleDto> departureSchedule = scheduleList.stream().filter(schedule -> Objects.equals(schedule.getDepartureStationCd(), purchase.getDepartureStationCd())).toList();
+        List<ReservedScheduleDto> arrivalSchedule = scheduleList.stream().filter(schedule -> Objects.equals(schedule.getArrivalStationCd(), purchase.getArrivalStationCd())).toList();
         if (departureSchedule.size() != 1 || arrivalSchedule.size() != 1) {
             throw new IllegalArgumentException("DepartureAndArrivalStation is Not Found");
         }
 
         List<ReservedSeatDto> reservedSeatList = purchasedSeatRepository.findReservedSeatDtoByPurchaseId(request);
 
-        response.setTrain_type_name(purchase.getTrain_type_name());
-        response.setDeparture_station_name(departureSchedule.getFirst().getDeparture_station_name());
-        response.setDeparture_time(departureSchedule.getFirst().getDeparture_time());
-        response.setArrival_station_name(arrivalSchedule.getFirst().getArrival_station_name());
-        response.setArrival_time(arrivalSchedule.getFirst().getArrival_time());
-        response.setRide_date(purchase.getRide_date());
+        response.setTrain_type_name(purchase.getTrainTypeName());
+        response.setDeparture_station_name(departureSchedule.getFirst().getDepartureStationName());
+        response.setDeparture_time(departureSchedule.getFirst().getDepartureTime());
+        response.setArrival_station_name(arrivalSchedule.getFirst().getArrivalStationName());
+        response.setArrival_time(arrivalSchedule.getFirst().getArrivalTime());
+        response.setRide_date(purchase.getRideDate());
         response.setReserved_seats(reservedSeatList);
 
         return response;

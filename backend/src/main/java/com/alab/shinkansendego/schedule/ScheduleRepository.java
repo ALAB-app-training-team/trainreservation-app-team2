@@ -1,14 +1,13 @@
 package com.alab.shinkansendego.schedule;
 
-import com.alab.shinkansendego.sectionkm.SectionKmEntity;
 import org.springframework.data.jpa.repository.*;
 import org.springframework.data.repository.query.*;
 import org.springframework.stereotype.*;
 
-import java.util.List;
+import java.util.*;
 
 @Repository
-public interface ScheduleRepository extends JpaRepository<ScheduleEntity, String>{
+public interface ScheduleRepository extends JpaRepository<ScheduleEntity, String> {
     @Query("SELECT t.name FROM ScheduleEntity s " +
             "LEFT OUTER JOIN TrainTypeEntity t " +
             "ON s.trainTypeCd = t.trainTypeCd " +
@@ -21,11 +20,11 @@ public interface ScheduleRepository extends JpaRepository<ScheduleEntity, String
             "ON s.trainTypeCd = tt.trainTypeCd " +
             "INNER JOIN TrainCarEntity tc " +
             "ON tt.trainSeriesCd = tc.trainSeriesCd " +
-            "INNER JOIN SeatTypeEnityt st " +
+            "INNER JOIN SeatTypeEntity st " +
             "ON tc.seatTypeCd = st.seatTypeCd " +
             "INNER JOIN TrainCarTypeEntity tct " +
             "ON st.trainCarTypeCd = tct.trainCarTypeCd " +
-            "WHERE s.schedule_Cd = :scheduleCd " +
+            "WHERE s.scheduleCd = :scheduleCd " +
             "ORDER BY tc.trainCarNumber ASC")
     List<TrainCarFormationResponseDto> findTrainCarFormationByScheduleCd(@Param("scheduleCd") String scheduleCd);
 }

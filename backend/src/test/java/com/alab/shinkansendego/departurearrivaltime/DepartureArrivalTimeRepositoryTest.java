@@ -1,24 +1,20 @@
 package com.alab.shinkansendego.departurearrivaltime;
 
-import org.junit.jupiter.api.DisplayName;
-import org.junit.jupiter.api.Test;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.data.jpa.test.autoconfigure.DataJpaTest;
-import org.springframework.boot.jdbc.test.autoconfigure.AutoConfigureTestDatabase;
-import org.springframework.test.context.ActiveProfiles;
-import org.springframework.test.context.DynamicPropertyRegistry;
-import org.springframework.test.context.DynamicPropertySource;
-import org.springframework.test.context.jdbc.Sql;
-import org.testcontainers.containers.PostgreSQLContainer;
+import org.junit.jupiter.api.*;
+import org.springframework.beans.factory.annotation.*;
+import org.springframework.boot.data.jpa.test.autoconfigure.*;
+import org.springframework.boot.jdbc.test.autoconfigure.*;
+import org.springframework.boot.testcontainers.service.connection.*;
+import org.springframework.test.context.*;
+import org.springframework.test.context.jdbc.*;
+import org.testcontainers.containers.*;
+import org.testcontainers.junit.jupiter.*;
 import org.testcontainers.junit.jupiter.Container;
-import org.testcontainers.junit.jupiter.Testcontainers;
 
-import java.time.LocalTime;
-import java.util.Arrays;
-import java.util.List;
+import java.time.*;
+import java.util.*;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertNull;
+import static org.junit.jupiter.api.Assertions.*;
 
 @ActiveProfiles("test")
 @DataJpaTest
@@ -28,6 +24,7 @@ import static org.junit.jupiter.api.Assertions.assertNull;
 public class DepartureArrivalTimeRepositoryTest {
     // テスト用DB作成
     @Container
+    @ServiceConnection
     static PostgreSQLContainer<?> postgres = new PostgreSQLContainer<>("postgres:16")
             .withDatabaseName("test")
             .withUsername("user")
@@ -35,12 +32,12 @@ public class DepartureArrivalTimeRepositoryTest {
     @Autowired
     private DepartureArrivalTimeRepository repo;
 
-    @DynamicPropertySource
-    static void configure(DynamicPropertyRegistry registry) {
-        registry.add("spring.datasource.url", postgres::getJdbcUrl);
-        registry.add("spring.datasource.username", postgres::getUsername);
-        registry.add("spring.datasource.password", postgres::getPassword);
-    }
+//    @DynamicPropertySource
+//    static void configure(DynamicPropertyRegistry registry) {
+//        registry.add("spring.datasource.url", postgres::getJdbcUrl);
+//        registry.add("spring.datasource.username", postgres::getUsername);
+//        registry.add("spring.datasource.password", postgres::getPassword);
+//    }
 
     @Test
     @DisplayName("区間コードからダイヤコードと出発到着時刻を取得できる")
