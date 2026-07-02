@@ -21,8 +21,7 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.UUID;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertNull;
+import static org.junit.jupiter.api.Assertions.*;
 
 @ActiveProfiles("test")
 @DataJpaTest
@@ -96,7 +95,7 @@ public class PurchaseRepositoryTest {
         purchase.setScheduleCd("TEST01");
         purchase.setDepartureStationCd("Test0");
         purchase.setArrivalStationCd("Test1");
-        int result = repo.save(purchase);
-        assertEquals(result, 1);
+        UUID result = repo.save(purchase).getId();
+        assertNotNull(result);
     }
 }
