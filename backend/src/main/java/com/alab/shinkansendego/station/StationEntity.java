@@ -7,7 +7,7 @@ import lombok.*;
 @AllArgsConstructor
 @Getter
 @Setter
-public class StationEntity {
+public class StationResponseDto {
     private String station_cd;
     private String name;
 }
