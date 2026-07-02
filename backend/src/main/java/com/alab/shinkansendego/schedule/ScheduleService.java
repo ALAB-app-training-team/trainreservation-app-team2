@@ -1,6 +1,5 @@
 package com.alab.shinkansendego.schedule;
 
-import com.alab.shinkansendego.departurearrivaltime.DepartureArrivalTimeDto;
 import com.alab.shinkansendego.departurearrivaltime.DepartureArrivalTimeEntity;
 import com.alab.shinkansendego.departurearrivaltime.DepartureArrivalTimeRepository;
 import com.alab.shinkansendego.sectionkm.SectionKmRepository;

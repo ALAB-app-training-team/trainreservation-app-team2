@@ -71,10 +71,10 @@ public class PurchasedSeatRepositoryTest {
         for (int i = 1; i < 3; i++) {
             PurchasedSeatEntity purchasedSeat = new PurchasedSeatEntity();
             purchasedSeat.setId(UUID.randomUUID());
-            purchasedSeat.setPurchase_id(UUID.fromString("123e4567-e89b-12d3-a456-426614174000"));
-            purchasedSeat.setTrain_car_cd("E5SER01");
-            purchasedSeat.setSeat_cd("SEAT0100" + i);
-            purchasedSeat.setCode_token(UUID.randomUUID());
+            purchasedSeat.setPurchaseId(UUID.fromString("123e4567-e89b-12d3-a456-426614174000"));
+            purchasedSeat.setTrainCarCd("E5SER01");
+            purchasedSeat.setSeatCd("SEAT0100" + i);
+            purchasedSeat.setCodeToken(UUID.randomUUID());
             purchasedSeats.add(purchasedSeat);
         }
         int result = repo.insertPurchasedSeats(purchasedSeats);
@@ -89,10 +89,10 @@ public class PurchasedSeatRepositoryTest {
         for (int i = 1; i < 3; i++) {
             PurchasedSeatEntity purchasedSeat = new PurchasedSeatEntity();
             purchasedSeat.setId(UUID.randomUUID());
-            purchasedSeat.setPurchase_id(UUID.fromString("123e4567-e89b-12d3-a456-426614174000"));
-            purchasedSeat.setTrain_car_cd("E5SER01");
-            purchasedSeat.setSeat_cd("SEAT01001");
-            purchasedSeat.setCode_token(UUID.randomUUID());
+            purchasedSeat.setPurchaseId(UUID.fromString("123e4567-e89b-12d3-a456-426614174000"));
+            purchasedSeat.setTrainCarCd("E5SER01");
+            purchasedSeat.setSeatCd("SEAT01001");
+            purchasedSeat.setCodeToken(UUID.randomUUID());
             sameSeats.add(purchasedSeat);
         }
         assertThrows(org.springframework.dao.DataAccessException.class, () -> {

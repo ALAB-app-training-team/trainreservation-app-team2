@@ -70,7 +70,7 @@ public class DepartureArrivalTimeRepositoryTest {
         String scheduleCd = "TEST01";
         DepartureArrivalTimeEntity expected = new DepartureArrivalTimeEntity("TEST0101", "TEST01", LocalTime.of(6, 4),
                 LocalTime.of(6, 9), "TEST3");
-        DepartureArrivalTimeEntity actual = repo.findByScheduleCdAndSectionCdIn( scheduleCd,sectionCds);
+        DepartureArrivalTimeEntity actual = repo.findByScheduleCdAndSectionCdIn(scheduleCd, sectionCds);
         assertEquals(expected, actual);
     }
 
@@ -79,7 +79,7 @@ public class DepartureArrivalTimeRepositoryTest {
     void findScheduleBySectionKmCdAndScheduleCd_withNotMatchSectionCdAndScheduleCd_returnNull() {
         List<String> sectionCds = List.of("TEST1", "TEST2");
         String scheduleCd = "TEST01";
-        DepartureArrivalTimeEntity actual = repo.findByScheduleCdAndSectionCdIn(scheduleCd,sectionCds);
+        DepartureArrivalTimeEntity actual = repo.findByScheduleCdAndSectionCdIn(scheduleCd, sectionCds);
         assertNull(actual);
     }
 }
