@@ -1,13 +1,16 @@
 package com.alab.shinkansendego.sectionkm;
 
-import org.apache.ibatis.annotations.Mapper;
-import org.apache.ibatis.annotations.Param;
+import org.springframework.data.jpa.repository.*;
+import org.springframework.data.repository.query.*;
+import org.springframework.stereotype.*;
 
 import java.util.List;
 
-@Mapper
-public interface SectionKmRepository {
-    List<String> findSectionCdByStartStationCd(@Param("start_station_cd") String start_station_cd);
+@Repository
+public interface SectionKmRepository extends JpaRepository<SectionKmEntity, String> {
+    @Query("SELECT sk.sectionCd FROM SectionKmEntity sk WHERE sk.startStationCd = :startStationCd")
+    List<String> findSectionCdByStartStationCd(@Param("startStationCd") String startStationCd);
 
-    List<String> findSectionCdByGoalStationCd(@Param("goal_station_cd") String goal_station_cd);
+    @Query("SELECT sk.sectionCd FROM SectionKmEntiy sk WHERE sk.goalStationCd = :goalStationCd")
+    List<String> findSectionCdByGoalStationCd(@Param("goalStationCd") String goalStationCd);
 }

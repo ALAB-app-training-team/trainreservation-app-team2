@@ -19,8 +19,8 @@ public class StationController {
     }
 
     @GetMapping(path = "api/shinkansen-station")
-    public ResponseEntity<List<StationResponseDto>> getAllStationList() {
-        List<StationResponseDto> response = stationService.getAllStationList();
+    public ResponseEntity<List<StationEntity>> getAllStationList() {
+        List<StationEntity> response = stationService.getAllStationList();
         return ResponseEntity.ok(response);
     }
 }

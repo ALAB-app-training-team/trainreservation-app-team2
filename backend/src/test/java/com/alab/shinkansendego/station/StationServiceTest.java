@@ -21,11 +21,11 @@ public class StationServiceTest {
     @InjectMocks
     private StationService service;
 
-    private static @NonNull List<StationResponseDto> getStationResponseDtosList() {
-        StationResponseDto expect01 = new StationResponseDto("Test1", "TestStation01");
-        StationResponseDto expect02 = new StationResponseDto("Test2", "TestStation02");
-        StationResponseDto expect03 = new StationResponseDto("Test3", "TestStation03");
-        StationResponseDto expect04 = new StationResponseDto("Test4", "TestStation04");
+    private static @NonNull List<StationEntity> getStationEntityList() {
+        StationEntity expect01 = new StationEntity("Test1", "TestStation01");
+        StationEntity expect02 = new StationEntity("Test2", "TestStation02");
+        StationEntity expect03 = new StationEntity("Test3", "TestStation03");
+        StationEntity expect04 = new StationEntity("Test4", "TestStation04");
         return Arrays.asList(expect01, expect02, expect03, expect04);
     }
 
@@ -37,11 +37,11 @@ public class StationServiceTest {
     @Test
     @DisplayName("駅コードと駅名が全件取得できる")
     void getAllStationList_returnGetStationListSuccess() {
-        when(stationRepo.findAllStation()).thenReturn(getStationResponseDtosList());
+        when(stationRepo.findAll()).thenReturn(getStationEntityList());
 
-        List<StationResponseDto> expectList = getStationResponseDtosList();
+        List<StationEntity> expectList = getStationEntityList();
 
-        List<StationResponseDto> actualList = service.getAllStationList();
+        List<StationEntity> actualList = service.getAllStationList();
 
         assertEquals(4, actualList.size());
         assertEquals(expectList, actualList);
