@@ -40,7 +40,7 @@ public class ReservationService {
             throw new IllegalArgumentException("DepartureAndArrivalStation is Not Found");
         }
 
-        List<ReservedSeatDto> reservedSeatList = purchasedSeatRepository.findReservedSeatByPurchaseId(request);
+        List<ReservedSeatDto> reservedSeatList = purchasedSeatRepository.findReservedSeatDtoByPurchaseId(request);
 
         response.setTrain_type_name(purchase.getTrain_type_name());
         response.setDeparture_station_name(departureSchedule.getFirst().getDeparture_station_name());
