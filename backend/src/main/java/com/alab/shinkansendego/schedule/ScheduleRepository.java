@@ -14,7 +14,7 @@ public interface ScheduleRepository extends JpaRepository<ScheduleEntity, String
             "WHERE s.scheduleCd = :scheduleCd")
     String findTrainTypeNameByScheduleCd(String scheduleCd);
 
-    @Query("SELECT tc.trainCarCd, tc.trainCarNumber, tc.seatTypeCd, tct.name AS trainCarTypeName " +
+    @Query("SELECT new com.alab.shinkansendego.schedule.TrainCarFormationResponseDto(tc.trainCarCd, tc.trainCarNumber, tc.seatTypeCd, tct.name) " +
             "FROM ScheduleEntity s " +
             "INNER JOIN TrainTypeEntity tt " +
             "ON s.trainTypeCd = tt.trainTypeCd " +

@@ -24,7 +24,6 @@ import static org.junit.jupiter.api.Assertions.*;
 public class DepartureArrivalTimeRepositoryTest {
     // テスト用DB作成
     @Container
-    @ServiceConnection
     static PostgreSQLContainer<?> postgres = new PostgreSQLContainer<>("postgres:16")
             .withDatabaseName("test")
             .withUsername("user")
@@ -32,23 +31,36 @@ public class DepartureArrivalTimeRepositoryTest {
     @Autowired
     private DepartureArrivalTimeRepository repo;
 
-//    @DynamicPropertySource
-//    static void configure(DynamicPropertyRegistry registry) {
-//        registry.add("spring.datasource.url", postgres::getJdbcUrl);
-//        registry.add("spring.datasource.username", postgres::getUsername);
-//        registry.add("spring.datasource.password", postgres::getPassword);
-//    }
+    @DynamicPropertySource
+    static void configure(DynamicPropertyRegistry registry) {
+        registry.add("spring.datasource.url", postgres::getJdbcUrl);
+        registry.add("spring.datasource.username", postgres::getUsername);
+        registry.add("spring.datasource.password", postgres::getPassword);
+    }
 
     @Test
     @DisplayName("区間コードからダイヤコードと出発到着時刻を取得できる")
     void findScheduleBySectionKmCd_withSectionCd_returnGetScheduleAndDepartureArrivalTimeSuccess() {
-        List<DepartureArrivalTimeDto> expected = Arrays.asList(
-                new DepartureArrivalTimeDto(
-                        "TEST04", LocalTime.of(6, 40, 0), LocalTime.of(6, 45, 0)),
-                new DepartureArrivalTimeDto(
-                        "TEST10", LocalTime.of(7, 44, 0), LocalTime.of(7, 49, 0)),
-                new DepartureArrivalTimeDto(
-                        "TEST17", LocalTime.of(9, 8, 0), LocalTime.of(9, 13, 0)));
+        DepartureArrivalTimeEntity test4 = new DepartureArrivalTimeEntity();
+        test4.setTimeCd("TEST0401");
+        test4.setScheduleCd("TEST04");
+        test4.setDepartureTime(LocalTime.of(6, 40, 0));
+        test4.setArrivalTime(LocalTime.of(6, 45, 0));
+        test4.setSectionCd("TEST02");
+        DepartureArrivalTimeEntity test10 = new DepartureArrivalTimeEntity();
+        test10.setTimeCd("TEST1001");
+        test10.setSectionCd("TEST10");
+        test10.setDepartureTime(LocalTime.of(7, 44, 0));
+        test10.setArrivalTime(LocalTime.of(7, 49, 0));
+        test10.setSectionCd("TEST02");
+        DepartureArrivalTimeEntity test17 = new DepartureArrivalTimeEntity();
+        test17.setTimeCd("TEST1701");
+        test17.setSectionCd("TEST17");
+        test17.setDepartureTime(LocalTime.of(9, 8, 0));
+        test17.setArrivalTime(LocalTime.of(9, 13, 0));
+        test17.setSectionCd("TEST02");
+
+        List<DepartureArrivalTimeEntity> expected = Arrays.asList(test4, test10, test17);
         List<DepartureArrivalTimeEntity> actual = repo.findBySectionCd("TEST2");
         assertEquals(expected, actual);
     }
