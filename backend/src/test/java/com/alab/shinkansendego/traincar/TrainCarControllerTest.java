@@ -60,7 +60,7 @@ public class TrainCarControllerTest {
 
         List<SeatResponseDto> expectList = getSeatResponseDtosList();
         String url = baseUrl
-                + "seat?schedule_cd=Test01&date=2026-06-01&departure_time=12:00:00&arrival_time=13:00:00&train_car_cd=Test001";
+                + "seat?scheduleCd=Test01&date=2026-06-01&departureTime=12:00:00&arrivalTime=13:00:00&trainCarCd=Test001";
 
         Mockito.when(service.getSeatListWithReserved(request)).thenReturn(expectList);
 
@@ -68,30 +68,30 @@ public class TrainCarControllerTest {
                         get(url).contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.length()").value(4))
-                .andExpect(jsonPath("$[0].train_car_cd").value("Test001"))
-                .andExpect(jsonPath("$[1].train_car_cd").value("Test001"))
-                .andExpect(jsonPath("$[2].train_car_cd").value("Test001"))
-                .andExpect(jsonPath("$[3].train_car_cd").value("Test001"))
-                .andExpect(jsonPath("$[0].train_car_number").value(1))
-                .andExpect(jsonPath("$[1].train_car_number").value(1))
-                .andExpect(jsonPath("$[2].train_car_number").value(1))
-                .andExpect(jsonPath("$[3].train_car_number").value(1))
-                .andExpect(jsonPath("$[0].seat_cd").value("TestSeat1"))
-                .andExpect(jsonPath("$[1].seat_cd").value("TestSeat2"))
-                .andExpect(jsonPath("$[2].seat_cd").value("TestSeat3"))
-                .andExpect(jsonPath("$[3].seat_cd").value("TestSeat4"))
-                .andExpect(jsonPath("$[0].seat_number").value(1))
-                .andExpect(jsonPath("$[1].seat_number").value(2))
-                .andExpect(jsonPath("$[2].seat_number").value(3))
-                .andExpect(jsonPath("$[3].seat_number").value(4))
-                .andExpect(jsonPath("$[0].seat_column").value("T"))
-                .andExpect(jsonPath("$[1].seat_column").value("E"))
-                .andExpect(jsonPath("$[2].seat_column").value("S"))
-                .andExpect(jsonPath("$[3].seat_column").value("T"))
-                .andExpect(jsonPath("$[0].is_reserved").value(false))
-                .andExpect(jsonPath("$[1].is_reserved").value(true))
-                .andExpect(jsonPath("$[2].is_reserved").value(false))
-                .andExpect(jsonPath("$[3].is_reserved").value(true));
+                .andExpect(jsonPath("$[0].trainCarCd").value("Test001"))
+                .andExpect(jsonPath("$[1].trainCarCd").value("Test001"))
+                .andExpect(jsonPath("$[2].trainCarCd").value("Test001"))
+                .andExpect(jsonPath("$[3].trainCarCd").value("Test001"))
+                .andExpect(jsonPath("$[0].trainCarNumber").value(1))
+                .andExpect(jsonPath("$[1].trainCarNumber").value(1))
+                .andExpect(jsonPath("$[2].trainCarNumber").value(1))
+                .andExpect(jsonPath("$[3].trainCarNumber").value(1))
+                .andExpect(jsonPath("$[0].seatCd").value("TestSeat1"))
+                .andExpect(jsonPath("$[1].seatCd").value("TestSeat2"))
+                .andExpect(jsonPath("$[2].seatCd").value("TestSeat3"))
+                .andExpect(jsonPath("$[3].seatCd").value("TestSeat4"))
+                .andExpect(jsonPath("$[0].seatNumber").value(1))
+                .andExpect(jsonPath("$[1].seatNumber").value(2))
+                .andExpect(jsonPath("$[2].seatNumber").value(3))
+                .andExpect(jsonPath("$[3].seatNumber").value(4))
+                .andExpect(jsonPath("$[0].seatColumn").value("T"))
+                .andExpect(jsonPath("$[1].seatColumn").value("E"))
+                .andExpect(jsonPath("$[2].seatColumn").value("S"))
+                .andExpect(jsonPath("$[3].seatColumn").value("T"))
+                .andExpect(jsonPath("$[0].isReserved").value(false))
+                .andExpect(jsonPath("$[1].isReserved").value(true))
+                .andExpect(jsonPath("$[2].isReserved").value(false))
+                .andExpect(jsonPath("$[3].isReserved").value(true));
     }
 
     @Test
@@ -100,7 +100,7 @@ public class TrainCarControllerTest {
 
         request.setTrainCarCd(null);
         String url = baseUrl
-                + "seat?schedule_cd=THK055&date=2026-06-23&departure_time=17:20:00&arrival_time=20:40:00";
+                + "seat?scheduleCd=THK055&date=2026-06-23&departureTime=17:20:00&arrivalTime=20:40:00";
 
         String json = objectMapper.writeValueAsString(request);
 
