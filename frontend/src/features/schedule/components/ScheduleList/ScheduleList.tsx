@@ -84,10 +84,14 @@ export function ScheduleList({
                 <AiOutlineExclamationCircle />
               </div>
               <div className="text-xl font-bold">
-                指定日時の列車はありません
+                {isInvalid
+                  ? "検索条件が不正です"
+                  : "指定日時の列車はありません"}
               </div>
               <div className="text-base">
-                お選びいただいた日時以降の列車が見つかりませんでした。条件を変更するか翌日の列車を検索してください。
+                {isInvalid
+                  ? "検索条件を修正してください。"
+                  : "お選びいただいた日時以降の列車が見つかりませんでした。条件を変更するか翌日の列車を検索してください。"}
               </div>
             </div>
           </div>
