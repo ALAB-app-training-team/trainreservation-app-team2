@@ -74,7 +74,12 @@ public class PurchaseRepositoryTest {
     void findPurchaseByPurchaseId_withReservationDtoId_returnGetPurchaseSuccess() {
         ReservationDto expected = new ReservationDto("やまびこ1号", "EKI01", "EKI03", LocalDate.of(2026, 6, 1));
         ReservationDto actual = repo.findReservationDtoByPurchaseId(purchaseId);
-        assertEquals(expected, actual);
+        assertAll(
+                ()->assertEquals(expected.getTrainTypeName(), actual.getTrainTypeName()),
+                ()->assertEquals(expected.getDepartureStationCd(), actual.getDepartureStationCd()),
+                ()->assertEquals(expected.getArrivalStationCd(), actual.getArrivalStationCd()),
+                ()->assertEquals(expected.getRideDate(), actual.getRideDate())
+        );
     }
 
     @Test

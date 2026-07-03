@@ -186,6 +186,7 @@ public class PurchaseServiceTest {
     void savePurchase_withSaveAllReservedSeatSectionsFails_throwsRuntimeException() {
         ReserveRequestDto request = new ReserveRequestDto("Test01", LocalDate.now(), "Test0", "Test1", List.of(new ReserveRequestDto.SelectedSeatDto("E5SER01", "SEAT01001"), new ReserveRequestDto.SelectedSeatDto("E5SER01", "SEAT01001")));
         DepartureArrivalTimeEntity departureArrivalTime = new DepartureArrivalTimeEntity();
+
         departureArrivalTime.setTimeCd("Test1");
         departureArrivalTime.setScheduleCd(request.getScheduleCd());
         departureArrivalTime.setDepartureTime(LocalTime.of(6, 4));
@@ -195,10 +196,9 @@ public class PurchaseServiceTest {
         when(sectionKmRepo.findSectionCdByGoalStationCd(request.getArrivalStationCd())).thenReturn(List.of(departureArrivalTime.getSectionCd()));
         when(departureArrivalTimeRepo.findByScheduleCdAndSectionCdIn(request.getScheduleCd(), List.of(departureArrivalTime.getSectionCd()))).thenReturn(departureArrivalTime);
         when(departureArrivalTimeRepo.findByScheduleCdAndDepartureTimeAndArrivalTime(request.getScheduleCd(), departureArrivalTime.getDepartureTime(), departureArrivalTime.getArrivalTime())).thenReturn(List.of(departureArrivalTime.getSectionCd()));
-        when(purchaseRepo.save(any()).getId()).thenReturn(UUID.randomUUID());
+//        when(purchaseRepo.save(any()).getId()).thenReturn(UUID.randomUUID());
         when(purchasedSeatRepo.saveAll(any()).size()).thenReturn(request.getSeats().size());
-        when(reservedSeatSectionRepo.saveAll(any()).size()).thenReturn(0);
-
+        when(reservedSeatSectionRepo.saveAll(any())).thenReturn(List.of());
         assertThrows(RuntimeException.class, () -> service.insertPurchase(request));
     }
 }
