@@ -17,12 +17,12 @@ public interface PurchaseRepository extends JpaRepository<PurchaseEntity, UUID> 
             "JOIN StationEntity gs ON s.goalStationCd = gs.stationCd " +
             "WHERE p.id = :purchaseId " +
             "ORDER BY d.departureTime")
-    List<ReservedScheduleDto> findReservationScheduleDtoByPurchaseId(@Param("purchaseId") UUID purchaseId);
+    List<ReservedScheduleDto> findReservationScheduleDtoByPurchaseId(UUID purchaseId);
 
     @Query("SELECT ReservationDto(tt.name,p.departureStationCd,p.arrivalStationCd,p.rideDate) " +
             "FROM PurchaseEntity p " +
             "JOIN ScheduleEntity s ON p.scheduleCd = s.scheduleCd " +
             "JOIN TrainTypeEntity tt ON s.trainTypeCd = tt.trainTypeCd " +
             "WHERE p.id = :purchaseId")
-    ReservationDto findReservationDtoByPurchaseId(@Param("purchaseId") UUID purchaseId);
+    ReservationDto findReservationDtoByPurchaseId(UUID purchaseId);
 }

@@ -40,13 +40,13 @@ public class ReservationService {
 
         List<ReservedSeatDto> reservedSeatList = purchasedSeatRepository.findReservedSeatDtoByPurchaseId(request);
 
-        response.setTrain_type_name(purchase.getTrainTypeName());
-        response.setDeparture_station_name(departureSchedule.getFirst().getDepartureStationName());
-        response.setDeparture_time(departureSchedule.getFirst().getDepartureTime());
-        response.setArrival_station_name(arrivalSchedule.getFirst().getArrivalStationName());
-        response.setArrival_time(arrivalSchedule.getFirst().getArrivalTime());
-        response.setRide_date(purchase.getRideDate());
-        response.setReserved_seats(reservedSeatList);
+        response.setTrainTypeName(purchase.getTrainTypeName());
+        response.setDepartureStationName(departureSchedule.getFirst().getDepartureStationName());
+        response.setDepartureTime(departureSchedule.getFirst().getDepartureTime());
+        response.setArrivalStationName(arrivalSchedule.getFirst().getArrivalStationName());
+        response.setArrivalTime(arrivalSchedule.getFirst().getArrivalTime());
+        response.setRideDate(purchase.getRideDate());
+        response.setReservedSeats(reservedSeatList);
 
         return response;
 

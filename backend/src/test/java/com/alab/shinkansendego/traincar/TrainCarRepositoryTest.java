@@ -45,23 +45,23 @@ public class TrainCarRepositoryTest {
     void findSeatByTrainCarCd_returnGetSeatListSuccess() {
         List<SeatResponseDto> actual = repo.findSeatByTrainCarCd("E5SER01");
         assertEquals(3, actual.size());
-        assertEquals("E5SER01", actual.get(0).getTrain_car_cd());
-        assertEquals("E5SER01", actual.get(1).getTrain_car_cd());
-        assertEquals("E5SER01", actual.get(2).getTrain_car_cd());
-        assertEquals(1, actual.get(0).getTrain_car_number());
-        assertEquals(1, actual.get(1).getTrain_car_number());
-        assertEquals(1, actual.get(2).getTrain_car_number());
-        assertEquals("SEAT01001", actual.get(0).getSeat_cd());
-        assertEquals("SEAT01002", actual.get(1).getSeat_cd());
-        assertEquals("SEAT01003", actual.get(2).getSeat_cd());
-        assertEquals(1, actual.get(0).getSeat_number());
-        assertEquals(1, actual.get(1).getSeat_number());
-        assertEquals(1, actual.get(2).getSeat_number());
-        assertEquals("A", actual.get(0).getSeat_column());
-        assertEquals("B", actual.get(1).getSeat_column());
-        assertEquals("C", actual.get(2).getSeat_column());
-        assertNull(actual.get(0).getIs_reserved());
-        assertNull(actual.get(1).getIs_reserved());
-        assertNull(actual.get(2).getIs_reserved());
+        assertEquals("E5SER01", actual.get(0).getTrainCarCd());
+        assertEquals("E5SER01", actual.get(1).getTrainCarCd());
+        assertEquals("E5SER01", actual.get(2).getTrainCarCd());
+        assertEquals(1, actual.get(0).getTrainCarNumber());
+        assertEquals(1, actual.get(1).getTrainCarNumber());
+        assertEquals(1, actual.get(2).getTrainCarNumber());
+        assertEquals("SEAT01001", actual.get(0).getSeatCd());
+        assertEquals("SEAT01002", actual.get(1).getSeatCd());
+        assertEquals("SEAT01003", actual.get(2).getSeatCd());
+        assertEquals(1, actual.get(0).getSeatNumber());
+        assertEquals(1, actual.get(1).getSeatNumber());
+        assertEquals(1, actual.get(2).getSeatNumber());
+        assertEquals("A", actual.get(0).getSeatColumn());
+        assertEquals("B", actual.get(1).getSeatColumn());
+        assertEquals("C", actual.get(2).getSeatColumn());
+        assertNull(actual.get(0).getIsReserved());
+        assertNull(actual.get(1).getIsReserved());
+        assertNull(actual.get(2).getIsReserved());
     }
 }

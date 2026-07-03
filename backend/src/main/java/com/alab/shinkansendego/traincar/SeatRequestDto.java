@@ -13,13 +13,13 @@ import java.time.LocalTime;
 @AllArgsConstructor
 public class SeatRequestDto {
     @NotNull(message = "ScheduleCd is Null")
-    private String schedule_cd;
+    private String scheduleCd;
     @NotNull(message = "Date is Null")
     private LocalDate date;
     @NotNull(message = "DepartureTime is Null")
-    private LocalTime departure_time;
+    private LocalTime departureTime;
     @NotNull(message = "ArrivalTime is Null")
-    private LocalTime arrival_time;
+    private LocalTime arrivalTime;
     @NotNull(message = "TrainCarCd is Null")
-    private String train_car_cd;
+    private String trainCarCd;
 }

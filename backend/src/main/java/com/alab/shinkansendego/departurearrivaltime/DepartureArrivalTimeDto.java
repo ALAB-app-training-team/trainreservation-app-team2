@@ -10,7 +10,7 @@ import java.time.LocalTime;
 @Getter
 @Setter
 public class DepartureArrivalTimeDto {
-    private String schedule_cd;
-    private LocalTime departure_time;
-    private LocalTime arrival_time;
+    private String scheduleCd;
+    private LocalTime departureTime;
+    private LocalTime arrivalTime;
 }

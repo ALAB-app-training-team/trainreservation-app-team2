@@ -9,8 +9,8 @@ import java.util.*;
 @Repository
 public interface SectionKmRepository extends JpaRepository<SectionKmEntity, String> {
     @Query("SELECT sk.sectionCd FROM SectionKmEntity sk WHERE sk.startStationCd = :startStationCd")
-    List<String> findSectionCdByStartStationCd(@Param("startStationCd") String startStationCd);
+    List<String> findSectionCdByStartStationCd(String startStationCd);
 
     @Query("SELECT sk.sectionCd FROM SectionKmEntity sk WHERE sk.goalStationCd = :goalStationCd")
-    List<String> findSectionCdByGoalStationCd(@Param("goalStationCd") String goalStationCd);
+    List<String> findSectionCdByGoalStationCd(String goalStationCd);
 }

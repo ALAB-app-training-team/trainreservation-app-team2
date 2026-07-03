@@ -12,7 +12,7 @@ public interface ScheduleRepository extends JpaRepository<ScheduleEntity, String
             "LEFT OUTER JOIN TrainTypeEntity t " +
             "ON s.trainTypeCd = t.trainTypeCd " +
             "WHERE s.scheduleCd = :scheduleCd")
-    String findTrainTypeNameByScheduleCd(@Param("scheduleCd") String scheduleCd);
+    String findTrainTypeNameByScheduleCd(String scheduleCd);
 
     @Query("SELECT tc.trainCarCd, tc.trainCarNumber, tc.seatTypeCd, tct.name AS trainCarTypeName " +
             "FROM ScheduleEntity s " +
@@ -26,5 +26,5 @@ public interface ScheduleRepository extends JpaRepository<ScheduleEntity, String
             "ON st.trainCarTypeCd = tct.trainCarTypeCd " +
             "WHERE s.scheduleCd = :scheduleCd " +
             "ORDER BY tc.trainCarNumber ASC")
-    List<TrainCarFormationResponseDto> findTrainCarFormationByScheduleCd(@Param("scheduleCd") String scheduleCd);
+    List<TrainCarFormationResponseDto> findTrainCarFormationByScheduleCd(String scheduleCd);
 }

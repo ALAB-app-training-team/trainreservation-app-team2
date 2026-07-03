@@ -45,17 +45,17 @@ public class PurchaseService {
             throw new IllegalArgumentException("Seat limit exceeded");
         }
 
-        List<String> SectionKmCdsByDepartureStation = sectionKmRepository.findSectionCdByStartStationCd(reserveRequestDto.getDeparture_station_cd());
-        List<String> SectionKmCdsByArrivalStation = sectionKmRepository.findSectionCdByGoalStationCd(reserveRequestDto.getArrival_station_cd());
+        List<String> SectionKmCdsByDepartureStation = sectionKmRepository.findSectionCdByStartStationCd(reserveRequestDto.getDepartureStationCd());
+        List<String> SectionKmCdsByArrivalStation = sectionKmRepository.findSectionCdByGoalStationCd(reserveRequestDto.getArrivalStationCd());
 
-        DepartureArrivalTimeEntity departureArrivalTimeOfStart = departureArrivalTimeRepository.findByScheduleCdAndSectionCdIn(reserveRequestDto.getSchedule_cd(), SectionKmCdsByDepartureStation);
-        DepartureArrivalTimeEntity departureArrivalTimeOfGoal = departureArrivalTimeRepository.findByScheduleCdAndSectionCdIn(reserveRequestDto.getSchedule_cd(), SectionKmCdsByArrivalStation);
+        DepartureArrivalTimeEntity departureArrivalTimeOfStart = departureArrivalTimeRepository.findByScheduleCdAndSectionCdIn(reserveRequestDto.getScheduleCd(), SectionKmCdsByDepartureStation);
+        DepartureArrivalTimeEntity departureArrivalTimeOfGoal = departureArrivalTimeRepository.findByScheduleCdAndSectionCdIn(reserveRequestDto.getScheduleCd(), SectionKmCdsByArrivalStation);
         if (departureArrivalTimeOfStart == null || departureArrivalTimeOfGoal == null) {
             throw new IllegalArgumentException("Section is Not found");
         }
 
         List<String> sectionCdList =
-                departureArrivalTimeRepository.findByScheduleCdAndDepartureTimeAndArrivalTime(reserveRequestDto.getSchedule_cd(), departureArrivalTimeOfStart.getDepartureTime(), departureArrivalTimeOfGoal.getArrivalTime());
+                departureArrivalTimeRepository.findByScheduleCdAndDepartureTimeAndArrivalTime(reserveRequestDto.getScheduleCd(), departureArrivalTimeOfStart.getDepartureTime(), departureArrivalTimeOfGoal.getArrivalTime());
         if (sectionCdList.isEmpty()) {
             throw new IllegalArgumentException("SectionCd is Not found");
         }
@@ -63,10 +63,10 @@ public class PurchaseService {
         UUID purchaseId = UUID.randomUUID();
         PurchaseEntity purchase = new PurchaseEntity();
         purchase.setId(purchaseId);
-        purchase.setRideDate(reserveRequestDto.getRide_date());
-        purchase.setScheduleCd(reserveRequestDto.getSchedule_cd());
-        purchase.setDepartureStationCd(reserveRequestDto.getDeparture_station_cd());
-        purchase.setArrivalStationCd(reserveRequestDto.getArrival_station_cd());
+        purchase.setRideDate(reserveRequestDto.getRideDate());
+        purchase.setScheduleCd(reserveRequestDto.getScheduleCd());
+        purchase.setDepartureStationCd(reserveRequestDto.getDepartureStationCd());
+        purchase.setArrivalStationCd(reserveRequestDto.getArrivalStationCd());
 
         PurchaseEntity purchaseResult = purchaseRepository.save(purchase);
         if (purchaseResult.getId() != null) {
@@ -78,8 +78,8 @@ public class PurchaseService {
             PurchasedSeatEntity purchasedSeat = new PurchasedSeatEntity();
             purchasedSeat.setId(UUID.randomUUID());
             purchasedSeat.setPurchaseId(purchaseResult.getId());
-            purchasedSeat.setTrainCarCd(seatDto.getTrain_car_cd());
-            purchasedSeat.setSeatCd(seatDto.getSeat_cd());
+            purchasedSeat.setTrainCarCd(seatDto.getTrainCarCd());
+            purchasedSeat.setSeatCd(seatDto.getSeatCd());
             purchasedSeat.setCodeToken(UUID.randomUUID());
             purchasedSeats.add(purchasedSeat);
         }
@@ -92,9 +92,9 @@ public class PurchaseService {
         for (ReserveRequestDto.SelectedSeatDto seatDto : reserveRequestDto.getSeats()) {
             for (String sectionCd : sectionCdList) {
                 ReservedSeatSectionEntity reservedSeatSection = new ReservedSeatSectionEntity(
-                        UUID.randomUUID(), purchaseId, reserveRequestDto.getRide_date(), reserveRequestDto.getSchedule_cd(),
-                        seatDto.getTrain_car_cd(),
-                        seatDto.getSeat_cd(), sectionCd
+                        UUID.randomUUID(), purchaseId, reserveRequestDto.getRideDate(), reserveRequestDto.getScheduleCd(),
+                        seatDto.getTrainCarCd(),
+                        seatDto.getSeatCd(), sectionCd
                 );
                 reservedSeatSections.add(reservedSeatSection);
             }

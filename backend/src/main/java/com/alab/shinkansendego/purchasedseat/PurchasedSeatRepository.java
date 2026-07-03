@@ -18,5 +18,5 @@ public interface PurchasedSeatRepository extends JpaRepository<PurchasedSeatEnti
             "INNER JOIN SeatTypeEntity st ON s.seatTypeCd = st.seatTypeCd " +
             "INNER JOIN TrainCarTypeEntity tct ON st.trainCarTypeCd = tct.trainCarTypeCd " +
             "ORDER BY tc.trainCarNumber,s.seatNumber,s.seatColumn")
-    List<ReservedSeatDto> findReservedSeatDtoByPurchaseId(@Param("purchaseId")UUID purchaseId);
+    List<ReservedSeatDto> findReservedSeatDtoByPurchaseId(UUID purchaseId);
 }

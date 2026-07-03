@@ -1,12 +1,10 @@
 package com.alab.shinkansendego.departurearrivaltime;
 
-import org.springframework.data.jpa.repository.JpaRepository;
-import org.springframework.data.jpa.repository.Query;
-import org.springframework.data.repository.query.Param;
-import org.springframework.stereotype.Repository;
+import org.springframework.data.jpa.repository.*;
+import org.springframework.stereotype.*;
 
-import java.time.LocalTime;
-import java.util.List;
+import java.time.*;
+import java.util.*;
 
 @Repository
 public interface DepartureArrivalTimeRepository extends JpaRepository<DepartureArrivalTimeEntity, String> {
@@ -15,10 +13,8 @@ public interface DepartureArrivalTimeRepository extends JpaRepository<DepartureA
 
     DepartureArrivalTimeEntity findByScheduleCdAndSectionCdIn(String scheduleCd, List<String> sectionCdList);
 
-    @Query("SELECT d.sectionCd "+
-            "FROM DepartureArrivalTimeEntity d "+
+    @Query("SELECT d.sectionCd " +
+            "FROM DepartureArrivalTimeEntity d " +
             "WHERE d.scheduleCd= :scheduleCd AND d.departureTime >= :departureTime AND :arrivalTime >= d.arrivalTime")
-    List<String> findByScheduleCdAndDepartureTimeAndArrivalTime(@Param("scheduleCd") String scheduleCd,
-                                                                @Param("departureTime") LocalTime departureTime,
-                                                                @Param("arrivalTime") LocalTime arrivalTime);
+    List<String> findByScheduleCdAndDepartureTimeAndArrivalTime(String scheduleCd, LocalTime departureTime, LocalTime arrivalTime);
 }
