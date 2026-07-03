@@ -15,8 +15,7 @@ import org.testcontainers.junit.jupiter.Testcontainers;
 
 import java.util.List;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertNull;
+import static org.junit.jupiter.api.Assertions.*;
 
 @ActiveProfiles("test")
 @DataJpaTest
@@ -60,8 +59,8 @@ public class TrainCarRepositoryTest {
         assertEquals("A", actual.get(0).getSeatColumn());
         assertEquals("B", actual.get(1).getSeatColumn());
         assertEquals("C", actual.get(2).getSeatColumn());
-        assertNull(actual.get(0).getIsReserved());
-        assertNull(actual.get(1).getIsReserved());
-        assertNull(actual.get(2).getIsReserved());
+        assertFalse(actual.get(0).getIsReserved());
+        assertFalse(actual.get(1).getIsReserved());
+        assertFalse(actual.get(2).getIsReserved());
     }
 }
