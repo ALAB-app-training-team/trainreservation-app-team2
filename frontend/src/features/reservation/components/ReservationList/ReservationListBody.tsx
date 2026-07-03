@@ -1,8 +1,8 @@
-import { useState } from "react";
-import { CiCalendar } from "react-icons/ci";
-import { RiGroupLine } from "react-icons/ri";
-// import { useReservationList } from "../../hooks/useReservationList";
-import { ReservationSelectItem } from "./ReservationSelectItem";
+import { useState } from 'react';
+import { CiCalendar } from 'react-icons/ci';
+import { RiGroupLine } from 'react-icons/ri';
+// import { useReservationList } from '@/features/reservation/hooks/useReservationList';
+import { ReservationSelectItem } from '@/features/reservation/components/ReservationList/ReservationSelectItem';
 
 import type { ReservationResponseDto } from "../../types/ReservationResponseDto";
 

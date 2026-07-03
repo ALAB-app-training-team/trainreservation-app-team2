@@ -2,7 +2,7 @@
 import type { ReservedSeatDto } from "../types/ReservedSeatDto";
 
 export type ReservationListResponseDto = {
-  trainTypeName: string; //やまびこ1号
+  trainTypeName: string;
   departureTime: string;
   departureStationName: string;
   arrivalStationName: string;
