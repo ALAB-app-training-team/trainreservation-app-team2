@@ -4,6 +4,7 @@ import { useNavigate } from 'react-router-dom';
 import { tv } from 'tailwind-variants';
 
 import type { ScheduleInfoDto } from '@/features/schedule/types/ScheduleInfoDto';
+import type { SearchRequestDto } from '@/features/schedule/types/SearchRequestDto';
 import type { SearchResponseDto } from '@/features/schedule/types/SearchResponseDto';
 import { TRAIN_TYPE_COLOR } from '@/shared/constants/TrainTypeColor';
 import { FormatTime } from '@/shared/hooks/useFormatTime.ts';
@@ -15,6 +16,7 @@ type ScheduleItemProps = {
     departureStationName: string;
     arrivalStationCd: string;
     arrivalStationName: string;
+    searchRequestDto: SearchRequestDto;
 };
 
 export function ScheduleItem({
@@ -24,6 +26,7 @@ export function ScheduleItem({
     departureStationName,
     arrivalStationCd,
     arrivalStationName,
+    searchRequestDto,
 }: ScheduleItemProps) {
     const navigate = useNavigate();
 
@@ -59,6 +62,7 @@ export function ScheduleItem({
                 scheduleInfoDto,
                 departureStationCd,
                 arrivalStationCd,
+                searchRequestDto,
             },
         });
         window.scrollTo(0, 0);
