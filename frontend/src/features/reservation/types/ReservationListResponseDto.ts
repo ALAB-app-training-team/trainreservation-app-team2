@@ -1,5 +1,5 @@
 // import type { ReservedSeatDto } from "@/features/reservation/types/ReservedSeatDto";
-import type { ReservedSeatDto } from '../types/ReservedSeatDto';
+import type { ReservedSeatDto } from '@/features/reservation/types/ReservedSeatDto';
 
 export type ReservationListResponseDto = {
     trainTypeName: string;

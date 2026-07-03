@@ -4,12 +4,12 @@ import {
     RouterProvider,
 } from 'react-router-dom';
 
+import { ReservationList } from '@/features/reservation/pages/ReservationList';
 import { ReservedTicket } from '@/features/reservation/pages/ReservedTicket';
 import { ScheduleSearch } from '@/features/schedule/pages/ScheduleSearch';
 import { SelectSeats } from '@/features/schedule/pages/SelectSeats';
 import { Layout } from '@/Layout';
 import { Error } from '@/shared/pages/Error';
-import { ReservationList } from '@/features/reservation/pages/ReservationList';
 
 const router = createBrowserRouter([
     {
