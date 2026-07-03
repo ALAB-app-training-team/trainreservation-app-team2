@@ -26,6 +26,6 @@ public class TrainCarEntity {
     private String seatTypeCd;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "seat_type_cd", referencedColumnName = "seat_type_cd")
+    @JoinColumn(name = "seat_type_cd", referencedColumnName = "seat_type_cd",insertable = false, updatable = false)
     private SeatTypeEntity seatType;
 }

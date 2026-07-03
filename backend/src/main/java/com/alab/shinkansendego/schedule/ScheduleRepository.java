@@ -1,5 +1,6 @@
 package com.alab.shinkansendego.schedule;
 
+import com.alab.shinkansendego.sectionkm.SectionKmEntity;
 import org.springframework.data.jpa.repository.*;
 import org.springframework.data.repository.query.*;
 import org.springframework.stereotype.*;
@@ -7,7 +8,7 @@ import org.springframework.stereotype.*;
 import java.util.List;
 
 @Repository
-public interface ScheduleRepository {
+public interface ScheduleRepository extends JpaRepository<ScheduleEntity, String>{
     @Query("SELECT t.name FROM ScheduleEntity s " +
             "LEFT OUTER JOIN TrainTypeEntity t " +
             "ON s.trainTypeCd = t.trainTypeCd " +

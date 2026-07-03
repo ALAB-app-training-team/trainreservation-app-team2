@@ -4,8 +4,8 @@ import com.alab.shinkansendego.reservation.ReservationDto;
 import com.alab.shinkansendego.reservation.ReservedScheduleDto;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
-import org.mybatis.spring.boot.test.autoconfigure.MybatisTest;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.data.jpa.test.autoconfigure.DataJpaTest;
 import org.springframework.boot.jdbc.test.autoconfigure.AutoConfigureTestDatabase;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.DynamicPropertyRegistry;
@@ -21,11 +21,10 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.UUID;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertNull;
+import static org.junit.jupiter.api.Assertions.*;
 
 @ActiveProfiles("test")
-@MybatisTest
+@DataJpaTest
 @AutoConfigureTestDatabase(replace = AutoConfigureTestDatabase.Replace.NONE)
 @Testcontainers
 public class PurchaseRepositoryTest {
@@ -96,7 +95,7 @@ public class PurchaseRepositoryTest {
         purchase.setScheduleCd("TEST01");
         purchase.setDepartureStationCd("Test0");
         purchase.setArrivalStationCd("Test1");
-        int result = repo.save(purchase);
-        assertEquals(result, 1);
+        UUID result = repo.save(purchase).getId();
+        assertNotNull(result);
     }
 }

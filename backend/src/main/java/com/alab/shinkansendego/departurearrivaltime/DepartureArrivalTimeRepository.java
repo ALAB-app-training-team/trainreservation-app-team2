@@ -15,10 +15,9 @@ public interface DepartureArrivalTimeRepository extends JpaRepository<DepartureA
 
     DepartureArrivalTimeEntity findByScheduleCdAndSectionCdIn(String scheduleCd, List<String> sectionCdList);
 
-    @Query("""
-            SELECT d.sectionCd
-                    FROM DepartureArrivalTimeEntity d
-                            WHERE d.scheduleCd= :scheduleCd AND d.departureTime >= :departureTime AND :arrivalTime >= d.arrivalTime""")
+    @Query("SELECT d.sectionCd "+
+            "FROM DepartureArrivalTimeEntity d "+
+            "WHERE d.scheduleCd= :scheduleCd AND d.departureTime >= :departureTime AND :arrivalTime >= d.arrivalTime")
     List<String> findByScheduleCdAndDepartureTimeAndArrivalTime(@Param("scheduleCd") String scheduleCd,
                                                                 @Param("departureTime") LocalTime departureTime,
                                                                 @Param("arrivalTime") LocalTime arrivalTime);
