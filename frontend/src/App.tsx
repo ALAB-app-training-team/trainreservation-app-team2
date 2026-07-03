@@ -9,7 +9,7 @@ import { ScheduleSearch } from '@/features/schedule/pages/ScheduleSearch';
 import { SelectSeats } from '@/features/schedule/pages/SelectSeats';
 import { Layout } from '@/Layout';
 import { Error } from '@/shared/pages/Error';
-import { ReservationList } from "./features/reservation/pages/ReservationList";
+import { ReservationList } from '@/features/reservation/pages/ReservationList';
 
 const router = createBrowserRouter([
     {
@@ -37,7 +37,7 @@ const router = createBrowserRouter([
                 errorElement: <Error />,
             },
             {
-                path: "/reservationList",
+                path: '/reservationList',
                 element: <ReservationList />,
                 errorElement: <Error />,
             },

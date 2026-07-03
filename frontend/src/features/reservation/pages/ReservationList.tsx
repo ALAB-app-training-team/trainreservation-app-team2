@@ -1,14 +1,14 @@
-import { Suspense } from "react";
+import { Suspense } from 'react';
 
-import { ReservationListBody } from "../components/ReservationList/ReservationListBody";
-import { ReservationListBodySkeleton } from "../components/ReservationList/ReservationListBodySkeletons";
+import { ReservationListBody } from '@/features/reservation/components/ReservationList/ReservationListBody';
+import { ReservationListBodySkeleton } from '@/features/reservation/components/ReservationList/ReservationListBodySkeletons';
 
 export function ReservationList() {
-  return (
-    <>
-      <Suspense fallback={<ReservationListBodySkeleton />}>
-        <ReservationListBody />
-      </Suspense>
-    </>
-  );
+    return (
+        <>
+            <Suspense fallback={<ReservationListBodySkeleton />}>
+                <ReservationListBody />
+            </Suspense>
+        </>
+    );
 }

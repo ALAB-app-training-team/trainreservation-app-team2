@@ -5,12 +5,12 @@ export function Header() {
     const location = useLocation();
     const buttons = [
         {
-            label: "新幹線を探す",
-            to: "/scheduleSearch",
+            label: '新幹線を探す',
+            to: '/scheduleSearch',
         },
         {
-            label: "予約確認",
-            to: "/reservationList",
+            label: '予約確認',
+            to: '/reservationList',
         },
     ];
 
