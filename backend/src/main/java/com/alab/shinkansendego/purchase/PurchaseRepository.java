@@ -9,7 +9,7 @@ import java.util.*;
 
 @Repository
 public interface PurchaseRepository extends JpaRepository<PurchaseEntity, UUID> {
-    @Query("SELECT ReservedScheduleDto(d.departureTime,ss.stationCd,ss.name,d.arrivalTime,gs.stationCd,gs.name) " +
+    @Query("SELECT new com.alab.shinkansendego.reservation.ReservedScheduleDto(d.departureTime,ss.stationCd,ss.name,d.arrivalTime,gs.stationCd,gs.name) " +
             "FROM PurchaseEntity p " +
             "JOIN DepartureArrivalTimeEntity d ON p.scheduleCd = d.scheduleCd " +
             "JOIN SectionKmEntity s ON d.sectionCd = s.sectionCd " +
@@ -19,7 +19,7 @@ public interface PurchaseRepository extends JpaRepository<PurchaseEntity, UUID> 
             "ORDER BY d.departureTime")
     List<ReservedScheduleDto> findReservationScheduleDtoByPurchaseId(UUID purchaseId);
 
-    @Query("SELECT ReservationDto(tt.name,p.departureStationCd,p.arrivalStationCd,p.rideDate) " +
+    @Query("SELECT new com.alab.shinkansendego.reservation.ReservationDto(tt.name,p.departureStationCd,p.arrivalStationCd,p.rideDate) " +
             "FROM PurchaseEntity p " +
             "JOIN ScheduleEntity s ON p.scheduleCd = s.scheduleCd " +
             "JOIN TrainTypeEntity tt ON s.trainTypeCd = tt.trainTypeCd " +
