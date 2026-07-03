@@ -45,15 +45,34 @@ export function useSearchRequestDto({
         message: string;
     };
 
+    const maxDate = new Date(
+        new Date().getFullYear(),
+        new Date().getMonth() + 1,
+        new Date().getDate(),
+    );
+    const minDate = new Date();
+    minDate.setHours(0, 0, 0, 0);
+
+    const isDateEmpty: boolean = date === '';
+    const isDateWithinOneMonth: boolean =
+        new Date(date) < minDate || new Date(date) > maxDate;
+    const isStationSame: boolean = departureStation === arrivalStation;
+
     const isInvalid: boolean =
-        date === '' || departureStation === arrivalStation;
+        isDateEmpty || isDateWithinOneMonth || isStationSame;
 
     const inValidMessages: InValidMessage[] = useMemo(() => {
         const messages: InValidMessage[] = [];
-        if (date === '') {
+        if (isDateEmpty) {
             messages.push({ field: 'date', message: '日付を入力してください' });
         }
-        if (departureStation === arrivalStation) {
+        if (isDateWithinOneMonth) {
+            messages.push({
+                field: 'date',
+                message: '出発日は本日から1か月以内の日付を指定してください',
+            });
+        }
+        if (isStationSame) {
             messages.push({
                 field: 'arrivalStation',
                 message: '乗車駅と異なる駅を選択してください。',
@@ -77,5 +96,7 @@ export function useSearchRequestDto({
         searchRequestDto,
         isInvalid,
         getFieldError,
+        maxDate,
+        minDate,
     };
 }
