@@ -1,7 +1,9 @@
 package com.alab.shinkansendego.traincar;
 
 import jakarta.validation.constraints.NotNull;
-import lombok.*;
+import lombok.AllArgsConstructor;
+import lombok.Data;
+import lombok.NoArgsConstructor;
 
 import java.time.LocalDate;
 import java.time.LocalTime;
@@ -9,17 +11,15 @@ import java.time.LocalTime;
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
-@Getter
-@Setter
 public class SeatRequestDto {
     @NotNull(message = "ScheduleCd is Null")
-    private String schedule_cd;
+    private String scheduleCd;
     @NotNull(message = "Date is Null")
     private LocalDate date;
     @NotNull(message = "DepartureTime is Null")
-    private LocalTime departure_time;
+    private LocalTime departureTime;
     @NotNull(message = "ArrivalTime is Null")
-    private LocalTime arrival_time;
+    private LocalTime arrivalTime;
     @NotNull(message = "TrainCarCd is Null")
-    private String train_car_cd;
+    private String trainCarCd;
 }

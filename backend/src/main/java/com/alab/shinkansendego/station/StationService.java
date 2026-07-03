@@ -15,7 +15,7 @@ public class StationService {
         this.stationRepository = stationRepository;
     }
 
-    public List<StationResponseDto> getAllStationList() {
-        return stationRepository.findAllStation();
+    public List<StationEntity> getAllStationList() {
+        return stationRepository.findAll();
     }
 }

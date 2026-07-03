@@ -1,10 +1,11 @@
 package com.alab.shinkansendego.station;
 
-import org.apache.ibatis.annotations.Mapper;
+import org.springframework.data.jpa.repository.*;
+import org.springframework.stereotype.*;
 
 import java.util.List;
 
-@Mapper
-public interface StationRepository {
-    List<StationResponseDto> findAllStation();
+@Repository
+public interface StationRepository extends JpaRepository<StationEntity, String> {
+    List<StationEntity> findAll();
 }

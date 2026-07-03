@@ -2,8 +2,8 @@ package com.alab.shinkansendego.schedule;
 
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
-import org.mybatis.spring.boot.test.autoconfigure.MybatisTest;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.data.jpa.test.autoconfigure.DataJpaTest;
 import org.springframework.boot.jdbc.test.autoconfigure.AutoConfigureTestDatabase;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.DynamicPropertyRegistry;
@@ -18,7 +18,7 @@ import java.util.List;
 import static org.junit.jupiter.api.Assertions.*;
 
 @ActiveProfiles("test")
-@MybatisTest
+@DataJpaTest
 @AutoConfigureTestDatabase(replace = AutoConfigureTestDatabase.Replace.NONE)
 @Testcontainers
 @Sql(scripts = {"classpath:com/alab/shinkansendego/sql/TrainTypeTestData.sql", "classpath:com/alab/shinkansendego/sql/ScheduleTestData.sql"})
@@ -63,16 +63,16 @@ public class ScheduleRepositoryTest {
         assertEquals(2, actualList.size());
 
         TrainCarFormationResponseDto actual01 = actualList.getFirst();
-        assertEquals("E5SER01", actual01.getTrain_car_cd());
-        assertEquals(1, actual01.getTrain_car_number());
-        assertEquals("SEAT01", actual01.getSeat_type_cd());
-        assertEquals("指定席", actual01.getTrain_car_type_name());
+        assertEquals("E5SER01", actual01.getTrainCarCd());
+        assertEquals(1, actual01.getTrainCarNumber());
+        assertEquals("SEAT01", actual01.getSeatTypeCd());
+        assertEquals("指定席", actual01.getTrainCarTypeName());
 
         TrainCarFormationResponseDto actual02 = actualList.getLast();
-        assertEquals("E5SER02", actual02.getTrain_car_cd());
-        assertEquals(2, actual02.getTrain_car_number());
-        assertEquals("SEAT01", actual02.getSeat_type_cd());
-        assertEquals("指定席", actual02.getTrain_car_type_name());
+        assertEquals("E5SER02", actual02.getTrainCarCd());
+        assertEquals(2, actual02.getTrainCarNumber());
+        assertEquals("SEAT01", actual02.getSeatTypeCd());
+        assertEquals("指定席", actual02.getTrainCarTypeName());
     }
 
     @Test

@@ -54,11 +54,11 @@ public class TrainCarServiceTest {
     @BeforeEach
     void setUp() {
         MockitoAnnotations.openMocks(this);
-        request.setSchedule_cd("Test01");
+        request.setScheduleCd("Test01");
         request.setDate(LocalDate.of(2026, 6, 1));
-        request.setDeparture_time(LocalTime.of(12, 0, 0));
-        request.setArrival_time(LocalTime.of(13, 0, 0));
-        request.setTrain_car_cd("Test001");
+        request.setDepartureTime(LocalTime.of(12, 0, 0));
+        request.setArrivalTime(LocalTime.of(13, 0, 0));
+        request.setTrainCarCd("Test001");
     }
 
     @Test
@@ -66,18 +66,18 @@ public class TrainCarServiceTest {
     void getSeatListWithReserved_returnGetSeatListSuccess() {
         when(trainCarRepo.findSeatByTrainCarCd("Test001"))
                 .thenReturn(getIsreservedIsNullList());
-        when(departureArrivalTimeRepo.findSectionCdByScheduleCd(
+        when(departureArrivalTimeRepo.findByScheduleCdAndDepartureTimeAndArrivalTime(
                 "Test01",
                 LocalTime.of(12, 0, 0),
                 LocalTime.of(13, 0, 0)))
                 .thenReturn(List.of("Test1", "Test2"));
-        when(reservedSeatSectionRepo.findReservedSeatCdOfTrainCarBySectionCd(
+        when(reservedSeatSectionRepo.findReservedSeatCdByRideDateAndScheduleCdAndTrainCarCdAndReservedSeatSectionCd(
                 LocalDate.of(2026, 6, 1),
                 "Test01",
                 "Test001",
                 "Test1"))
                 .thenReturn(List.of("TestSeat2", "TestSeat4"));
-        when(reservedSeatSectionRepo.findReservedSeatCdOfTrainCarBySectionCd(
+        when(reservedSeatSectionRepo.findReservedSeatCdByRideDateAndScheduleCdAndTrainCarCdAndReservedSeatSectionCd(
                 LocalDate.of(2026, 6, 1),
                 "Test01",
                 "Test001",
@@ -96,7 +96,7 @@ public class TrainCarServiceTest {
     @DisplayName("座席情報を持たない号車コードがリクエストされた場合にエラーを発生させる")
     void getSeatListWithReserved_withNotExistTrainCarCdRequest_returnIllegalArgumentException() {
         when(trainCarRepo.findSeatByTrainCarCd("9999999")).thenReturn(emptySeatList);
-        request.setTrain_car_cd("9999999");
+        request.setTrainCarCd("9999999");
         Exception ex = assertThrows(
                 IllegalArgumentException.class,
                 () -> service.getSeatListWithReserved(request)
@@ -109,12 +109,12 @@ public class TrainCarServiceTest {
     void getSeatListWithReserved_withNotExistScheduleCdRequest_returnIllegalArgumentException() {
         when(trainCarRepo.findSeatByTrainCarCd("Test001"))
                 .thenReturn(getIsreservedIsNullList());
-        when(departureArrivalTimeRepo.findSectionCdByScheduleCd(
+        when(departureArrivalTimeRepo.findByScheduleCdAndDepartureTimeAndArrivalTime(
                 "9999999",
                 LocalTime.of(12, 0, 0),
                 LocalTime.of(13, 0, 0)))
                 .thenReturn(emptySectionCdList);
-        request.setSchedule_cd("9999999");
+        request.setScheduleCd("9999999");
         Exception ex = assertThrows(
                 IllegalArgumentException.class,
                 () -> service.getSeatListWithReserved(request)

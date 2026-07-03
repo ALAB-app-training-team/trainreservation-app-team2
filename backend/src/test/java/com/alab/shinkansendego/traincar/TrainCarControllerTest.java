@@ -47,11 +47,11 @@ public class TrainCarControllerTest {
     void setUp() {
         objectMapper.registerModule(new JavaTimeModule());
         objectMapper.disable(SerializationFeature.WRITE_DATES_AS_TIMESTAMPS);
-        request.setSchedule_cd("Test01");
+        request.setScheduleCd("Test01");
         request.setDate(LocalDate.of(2026, 6, 1));
-        request.setDeparture_time(LocalTime.of(12, 0, 0));
-        request.setArrival_time(LocalTime.of(13, 0, 0));
-        request.setTrain_car_cd("Test001");
+        request.setDepartureTime(LocalTime.of(12, 0, 0));
+        request.setArrivalTime(LocalTime.of(13, 0, 0));
+        request.setTrainCarCd("Test001");
     }
 
     @Test
@@ -98,7 +98,7 @@ public class TrainCarControllerTest {
     @DisplayName("リクエストのカラムがNullの場合、バリデーションエラー発生")
     void getSeatList_withNotValidSeatRequestDto_returnValidationError() throws Exception {
 
-        request.setTrain_car_cd(null);
+        request.setTrainCarCd(null);
         String url = baseUrl
                 + "seat?schedule_cd=THK055&date=2026-06-23&departure_time=17:20:00&arrival_time=20:40:00";
 
