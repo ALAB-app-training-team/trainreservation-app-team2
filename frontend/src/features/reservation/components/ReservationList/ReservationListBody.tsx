@@ -1,22 +1,14 @@
 import { useState } from "react";
-/*import useSWR from "swr";*/
 import { CiCalendar } from "react-icons/ci";
 import { RiGroupLine } from "react-icons/ri";
-
-/*import { ENDPOINTS } from "../../../../api/routes";
-import fetcher from "../../../../api/fetcher";
-import { Error } from "../../../../shared/pages/Error";*/
-
+// import { useReservationList } from "../../hooks/useReservationList";
 import { ReservationSelectItem } from "./ReservationSelectItem";
 
 import type { ReservationResponseDto } from "../../types/ReservationResponseDto";
 
 export function ReservationListBody() {
   const [selectedTab, setSelectedTab] = useState<"active" | "past">("active");
-
-  /*const { data: reservations, error: reservationError } = useSWR<
-    ReservationListResponseDto[]
-  >(ENDPOINTS.RESERVATION(), fetcher);*/
+  // const { reservations } = useReservationList();
 
   const reservations: ReservationResponseDto[] = [
     {
@@ -98,10 +90,6 @@ export function ReservationListBody() {
 
   const filteredReservations =
     selectedTab === "active" ? activeReservations : pastReservations;
-
-  /*if (reservationError) {
-    return <Error />;
-  }*/
 
   return (
     <>
