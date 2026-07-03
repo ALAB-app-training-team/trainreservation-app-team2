@@ -6,6 +6,7 @@ import org.springframework.beans.factory.annotation.*;
 import org.springframework.stereotype.*;
 
 import java.util.*;
+import java.util.stream.Collectors;
 
 @Service
 public class ReservationService {
@@ -19,6 +20,19 @@ public class ReservationService {
     ) {
         this.purchaseRepository = purchaseRepository;
         this.purchasedSeatRepository = purchasedSeatRepository;
+    }
+
+    public List<ReservationResponseDto> getReservationList(){
+        List<ReservationResponseDto> reservationList =new ArrayList<>();
+        List<PurchaseEntity> purchaseList=purchaseRepository.findAll();
+
+        for(PurchaseEntity purchase:purchaseList){
+            ReservationResponseDto reservation=getReservation(purchase.getId());
+            reservation.setPurchaseId(purchase.getId());
+            reservationList.add(reservation);
+        }
+
+        return reservationList;
     }
 
     public ReservationResponseDto getReservation(UUID request) {

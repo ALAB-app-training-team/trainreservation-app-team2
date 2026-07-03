@@ -5,7 +5,7 @@ import { ENDPOINTS } from '@/api/routes';
 import type { ReservationResponseDto } from '@/features/reservation/types/ReservationResponseDto';
 
 export function useReservationList() {
-    const { data: reservedTickets } = useSuspenseQuery({
+    const { data: reservations } = useSuspenseQuery({
         queryKey: ['reservationList'],
         queryFn: async () => {
             const response = await axios.get<ReservationResponseDto[]>(
@@ -15,5 +15,5 @@ export function useReservationList() {
         },
     });
 
-    return { reservedTickets };
+    return { reservations };
 }

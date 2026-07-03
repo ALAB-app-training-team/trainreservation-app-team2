@@ -30,7 +30,7 @@ export function ReservedTicketInfo({ ticketInfo }: ReservedTicketInfoProps) {
                             <DepartureAndArrivalInfo
                                 id="arrivalInfo"
                                 title="到着"
-                                time={ticketInfo.arrivalTime!}
+                                time={ticketInfo.arrivalTime}
                                 station={ticketInfo.arrivalStationName}
                             />
                         </div>

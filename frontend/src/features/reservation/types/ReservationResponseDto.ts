@@ -5,7 +5,7 @@ export type ReservationResponseDto = {
     trainTypeName: string;
     departureTime: string;
     departureStationName: string;
-    arrivalTime?: string;
+    arrivalTime: string;
     arrivalStationName: string;
     rideDate: string;
     reservedSeats: ReservedSeatDto[];
