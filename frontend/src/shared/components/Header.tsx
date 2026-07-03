@@ -2,17 +2,17 @@ import { BsTrainFreightFrontFill } from 'react-icons/bs';
 import { NavLink, useLocation } from 'react-router-dom';
 
 export function Header() {
-  const location = useLocation();
-  const buttons = [
-    {
-      label: "新幹線を探す",
-      to: "/scheduleSearch",
-    },
-    {
-      label: "予約確認",
-      to: "/reservationList",
-    },
-  ];
+    const location = useLocation();
+    const buttons = [
+        {
+            label: "新幹線を探す",
+            to: "/scheduleSearch",
+        },
+        {
+            label: "予約確認",
+            to: "/reservationList",
+        },
+    ];
 
     return (
         <div className="border-primary-light relative flex min-h-16 items-center justify-start gap-6 border-b-2 px-8 py-2">

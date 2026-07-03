@@ -1,7 +1,7 @@
-import { useSuspenseQuery } from "@tanstack/react-query";
-import axios from "axios";
-import { ENDPOINTS } from "../../../api/routes";
-import type { ReservationResponseDto } from "../types/ReservationResponseDto";
+import { useSuspenseQuery } from '@tanstack/react-query';
+import axios from 'axios';
+import { ENDPOINTS } from '@/api/routes';
+import type { ReservationResponseDto } from '@/features/reservation/types/ReservationResponseDto';
 
 export function useReservationList() {
   const { data: reservedTickets } = useSuspenseQuery({
