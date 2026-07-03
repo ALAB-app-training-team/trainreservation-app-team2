@@ -9,7 +9,7 @@ import { Error } from "../../../../shared/pages/Error";*/
 
 import { ReservationSelectItem } from "./ReservationSelectItem";
 
-import type { ReservationListResponseDto } from "../../types/ReservationListResponseDto";
+import type { ReservationResponseDto } from "../../types/ReservationResponseDto";
 
 export function ReservationListBody() {
   const [selectedTab, setSelectedTab] = useState<"active" | "past">("active");
@@ -18,46 +18,68 @@ export function ReservationListBody() {
     ReservationListResponseDto[]
   >(ENDPOINTS.RESERVATION(), fetcher);*/
 
-  const reservations: ReservationListResponseDto[] = [
+  const reservations: ReservationResponseDto[] = [
     {
-      train_type_name: "やまびこ51号",
-      departure_time: "06:00:00",
-      departure_station_name: "東京",
-      arrival_station_name: "仙台",
-      ride_date: "2026-07-10",
-      train_car_number: 1,
-      seat_number: 1,
-      seat_column: "A",
+      purchaseId: "521390fb-8077-4383-831d-9b321739ad11",
+      trainTypeName: "やまびこ51号",
+      departureTime: "06:00:00",
+      departureStationName: "東京",
+      arrivalStationName: "仙台",
+      rideDate: "2026-07-10",
+      reservedSeats: [
+        {
+          trainCarTypeName: "指定席",
+          trainCarNumber: 1,
+          seatNumber: 1,
+          seatColumn: "A",
+          codeToken: "4d661a82-044b-45a7-8799-978b5a5e2a5f",
+        },
+        {
+          trainCarTypeName: "指定席",
+          trainCarNumber: 1,
+          seatNumber: 2,
+          seatColumn: "B",
+          codeToken: "ee38f696-a063-4bcd-a88a-00a9ff925fc2",
+        },
+        {
+          trainCarTypeName: "指定席",
+          trainCarNumber: 1,
+          seatNumber: 3,
+          seatColumn: "C",
+          codeToken: "bd07ab55-3fde-43a6-9073-0d334f4e1a3e",
+        },
+      ],
     },
     {
-      train_type_name: "やまびこ51号",
-      departure_time: "06:00:00",
-      departure_station_name: "東京",
-      arrival_station_name: "仙台",
-      ride_date: "2026-07-10",
-      train_car_number: 1,
-      seat_number: 1,
-      seat_column: "B",
-    },
-    {
-      train_type_name: "やまびこ51号",
-      departure_time: "06:00:00",
-      departure_station_name: "東京",
-      arrival_station_name: "仙台",
-      ride_date: "2026-06-30",
-      train_car_number: 1,
-      seat_number: 1,
-      seat_column: "A",
-    },
-    {
-      train_type_name: "やまびこ51号",
-      departure_time: "06:00:00",
-      departure_station_name: "東京",
-      arrival_station_name: "仙台",
-      ride_date: "2026-06-30",
-      train_car_number: 1,
-      seat_number: 1,
-      seat_column: "B",
+      purchaseId: "521390fb-8077-4383-831d-9b321739ad11",
+      trainTypeName: "やまびこ51号",
+      departureTime: "06:00:00",
+      departureStationName: "東京",
+      arrivalStationName: "仙台",
+      rideDate: "2026-07-02",
+      reservedSeats: [
+        {
+          trainCarTypeName: "指定席",
+          trainCarNumber: 1,
+          seatNumber: 1,
+          seatColumn: "A",
+          codeToken: "4d661a82-044b-45a7-8799-978b5a5e2a5f",
+        },
+        {
+          trainCarTypeName: "指定席",
+          trainCarNumber: 1,
+          seatNumber: 2,
+          seatColumn: "B",
+          codeToken: "ee38f696-a063-4bcd-a88a-00a9ff925fc2",
+        },
+        {
+          trainCarTypeName: "指定席",
+          trainCarNumber: 1,
+          seatNumber: 3,
+          seatColumn: "C",
+          codeToken: "bd07ab55-3fde-43a6-9073-0d334f4e1a3e",
+        },
+      ],
     },
   ];
 
@@ -65,12 +87,12 @@ export function ReservationListBody() {
   now.setHours(0, 0, 0, 0);
 
   const activeReservations = reservations?.filter((reservation) => {
-    const departureDate = new Date(reservation.ride_date);
+    const departureDate = new Date(reservation.rideDate);
     return departureDate >= now;
   });
 
   const pastReservations = reservations?.filter((reservation) => {
-    const departureDate = new Date(reservation.ride_date);
+    const departureDate = new Date(reservation.rideDate);
     return departureDate < now;
   });
 
@@ -90,7 +112,7 @@ export function ReservationListBody() {
             <button
               onClick={() => setSelectedTab("active")}
               className={`flex w-full cursor-pointer items-center justify-center gap-2 rounded-3xl px-6 py-2 transition ${
-                selectedTab === "active" ? "bg-white font-semibold shadow" : ""
+                selectedTab === "active" ? "bg-white font-bold shadow" : ""
               } `}
             >
               <CiCalendar />
@@ -99,7 +121,7 @@ export function ReservationListBody() {
             <button
               onClick={() => setSelectedTab("past")}
               className={`flex w-full cursor-pointer items-center justify-center gap-2 rounded-3xl px-6 py-2 transition ${
-                selectedTab === "past" ? "bg-white font-semibold shadow" : ""
+                selectedTab === "past" ? "bg-white font-bold shadow" : ""
               } `}
             >
               <RiGroupLine />
@@ -108,21 +130,14 @@ export function ReservationListBody() {
           </div>
         </div>
         {filteredReservations && filteredReservations.length > 0 ? (
-          filteredReservations.map(
-            (
-              reservation: {
-                train_car_number: number;
-                seat_number: number;
-                seat_column: string;
-                train_type_name: string;
-                departure_time: string;
-                departure_station_name: string;
-                arrival_station_name: string;
-                ride_date: string;
-              },
-              index,
-            ) => <ReservationSelectItem key={index} details={reservation} />,
-          )
+          filteredReservations.map((reservation) => {
+            return (
+              <ReservationSelectItem
+                key={reservation.purchaseId}
+                details={reservation}
+              />
+            );
+          })
         ) : (
           <></>
         )}

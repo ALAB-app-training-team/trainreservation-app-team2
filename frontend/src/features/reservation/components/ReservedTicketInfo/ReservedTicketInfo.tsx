@@ -23,25 +23,25 @@ export function ReservedTicketInfo({ ticketInfo }: ReservedTicketInfoProps) {
               <DepartureAndArrivalInfo
                 id="departureInfo"
                 title="出発"
-                time={ticketInfo.departure_time}
-                station={ticketInfo.departure_station_name}
+                time={ticketInfo.departureTime}
+                station={ticketInfo.departureStationName}
               />
               <DepartureAndArrivalInfo
                 id="arrivalInfo"
                 title="到着"
-                time={ticketInfo.arrival_time}
-                station={ticketInfo.arrival_station_name}
+                time={ticketInfo.arrivalTime!}
+                station={ticketInfo.arrivalStationName}
               />
             </div>
             <div className="flex items-center gap-2">
               <FaClock />
-              <div>{formatter.format(new Date(ticketInfo.ride_date))}</div>
+              <div>{formatter.format(new Date(ticketInfo.rideDate))}</div>
             </div>
             <div className="flex flex-col md:flex-row justify-between gap-4">
               <ReservedSeats
                 id="seats"
                 title="座席"
-                seats={ticketInfo.reserved_seats}
+                seats={ticketInfo.reservedSeats}
               />
             </div>
           </div>

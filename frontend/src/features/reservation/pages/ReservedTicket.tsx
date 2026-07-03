@@ -19,8 +19,8 @@ export function ReservedTicket() {
           <h1 className="text-left !text-3xl !m-0">予約完了</h1>
           <Suspense fallback={<ReservedTicketQrCodeSkeleton />}>
             <ReservedTicketQrCode
-              train_type_name={reservedTickets.train_type_name}
-              reserved_seats={reservedTickets.reserved_seats}
+              train_type_name={reservedTickets.trainTypeName}
+              reserved_seats={reservedTickets.reservedSeats}
             />
           </Suspense>
           <Suspense fallback={<ReservedTicketInfoSkeleton />}>
