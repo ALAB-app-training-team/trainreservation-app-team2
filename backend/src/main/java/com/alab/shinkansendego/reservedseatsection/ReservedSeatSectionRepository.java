@@ -12,8 +12,8 @@ import java.util.UUID;
 @Repository
 public interface ReservedSeatSectionRepository extends JpaRepository<ReservedSeatSectionEntity, UUID> {
 
-    @Query("SELECT d.sectionCd "+
-           "FROM ReservedSeatSection rss "+
+    @Query("SELECT rss.reservedSectionCd "+
+           "FROM ReservedSeatSectionEntity rss "+
            "WHERE rss.rideDate= :rideDate AND rss.scheduleCd = :scheduleCd AND rss.trainCarCd = :trainCarCd AND rss.reservedSectionCd = :reservedSectionCd "+
            "ORDER BY rss.seatCd")
     List<String> findReservedSeatCdByRideDateAndScheduleCdAndTrainCarCdAndReservedSeatSectionCd
