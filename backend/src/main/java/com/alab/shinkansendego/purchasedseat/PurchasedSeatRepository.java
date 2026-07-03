@@ -11,7 +11,7 @@ import java.util.UUID;
 
 @Repository
 public interface PurchasedSeatRepository extends JpaRepository<PurchasedSeatEntity, UUID> {
-    @Query("SELECT ReservedSeatDto(tct.name,tc.trainCarNumber,s.seatNumber,s.seatColumn,ps.codeToken) " +
+    @Query("SELECT new com.alab.shinkansendego.reservation.ReservedSeatDto(tct.name, tc.trainCarNumber, s.seatNumber, s.seatColumn, ps.codeToken) " +
             "FROM PurchasedSeatEntity ps " +
             "INNER JOIN TrainCarEntity tc ON ps.trainCarCd = tc.trainCarCd AND ps.purchaseId = :purchaseId " +
             "INNER JOIN SeatEntity s ON ps.seatCd = s.seatCd " +

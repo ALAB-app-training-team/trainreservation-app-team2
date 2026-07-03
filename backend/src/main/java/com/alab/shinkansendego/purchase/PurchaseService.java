@@ -69,7 +69,7 @@ public class PurchaseService {
         purchase.setArrivalStationCd(reserveRequestDto.getArrivalStationCd());
 
         PurchaseEntity purchaseResult = purchaseRepository.save(purchase);
-        if (purchaseResult.getId() != null) {
+        if (purchaseResult.getId() == null) {
             throw new RuntimeException("Insert Purchase is failed");
         }
 
