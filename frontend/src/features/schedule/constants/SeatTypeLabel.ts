@@ -5,5 +5,3 @@ export const SEAT_TYPE_LABELS = {
 } as const;
 
 export const DEFAULT_SEAT_TYPE = 'SEAT01';
-
-export type SeatTypeCd = keyof typeof SEAT_TYPE_LABELS;

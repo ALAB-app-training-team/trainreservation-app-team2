@@ -3,10 +3,10 @@ import axios from 'axios';
 import { useMemo, useState } from 'react';
 
 import { ENDPOINTS } from '@/api/routes';
-import type { SeatTypeCd } from '@/features/schedule/constants/seatType';
-import { DEFAULT_SEAT_TYPE } from '@/features/schedule/constants/seatType';
+import { DEFAULT_SEAT_TYPE } from '@/features/schedule/constants/SeatTypeLabel';
 import type { ScheduleInfoDto } from '@/features/schedule/types/ScheduleInfoDto';
 import type { SeatsRequestDto } from '@/features/schedule/types/SeatsRequestDto';
+import type { SeatTypeCd } from '@/features/schedule/types/SeatTypeCd';
 import type { TrainCarFormationResponseDto } from '@/features/schedule/types/TrainCarFormationResponseDto';
 
 export function useTrainCar(scheduleInfoDto: ScheduleInfoDto) {

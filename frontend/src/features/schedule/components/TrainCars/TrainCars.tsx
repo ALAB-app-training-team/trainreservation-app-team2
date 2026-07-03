@@ -2,13 +2,11 @@ import { Suspense } from 'react';
 
 import { SeatsByTrainCar } from '@/features/schedule/components/SeatsByTrainCar/SeatsByTrainCar';
 import { SeatsByTrainCarSkeleton } from '@/features/schedule/components/SeatsByTrainCar/SeatsByTrainCarSkeleton';
-import {
-    SEAT_TYPE_LABELS,
-    type SeatTypeCd,
-} from '@/features/schedule/constants/seatType';
+import { SEAT_TYPE_LABELS } from '@/features/schedule/constants/SeatTypeLabel';
 import { useTrainCar } from '@/features/schedule/hooks/useTrainCar';
 import type { ScheduleInfoDto } from '@/features/schedule/types/ScheduleInfoDto';
 import type { SeatResponseDto } from '@/features/schedule/types/SeatResponseDto';
+import type { SeatTypeCd } from '@/features/schedule/types/SeatTypeCd';
 
 type TrainCarsProps = {
     scheduleInfoDto: ScheduleInfoDto;

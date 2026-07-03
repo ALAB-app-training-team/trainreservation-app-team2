@@ -6,7 +6,7 @@ import { tv } from 'tailwind-variants';
 import type { ScheduleInfoDto } from '@/features/schedule/types/ScheduleInfoDto';
 import type { SearchResponseDto } from '@/features/schedule/types/SearchResponseDto';
 import { FormatTime } from '@/shared/hooks/useFormatTime.ts';
-import { trainTypeColor } from '@/shared/types/TrainTypeColor.ts';
+import { TRAIN_TYPE_COLOR } from '@/shared/constants/TrainTypeColor';
 
 type ScheduleItemProps = {
     schedule: SearchResponseDto;
@@ -86,12 +86,12 @@ export function ScheduleItem({
         },
     });
 
-    const foundColor = trainTypeColor.find(
+    const foundColor = TRAIN_TYPE_COLOR.find(
         (item) =>
             item.trainTypeName === schedule.trainTypeName.split(/(\d+)/)[0],
     );
 
-    const colorCd = foundColor ? foundColor.color_cd : 'primary';
+    const colorCd = foundColor ? foundColor.colorCd : 'primary';
 
     return (
         <>
