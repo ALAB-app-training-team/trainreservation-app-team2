@@ -1,71 +1,74 @@
-import { useSuspenseQuery } from "@tanstack/react-query";
-import axios from "axios";
-import type { TrainCarFormationResponseDto } from "../types/TrainCarFormationResponseDto";
-import { ENDPOINTS } from "../../../api/routes";
-import { useMemo, useState } from "react";
-import type { SeatsRequestDto } from "../types/SeatsRequestDto";
-import type { ScheduleInfoDto } from "../types/ScheduleInfoDto";
-import type { SeatTypeCd } from "../constants/seatType";
-import { DEFAULT_SEAT_TYPE } from "../constants/seatType";
+import { useSuspenseQuery } from '@tanstack/react-query';
+import axios from 'axios';
+import { useMemo, useState } from 'react';
 
-export function useTrainCar(scheduleInfoDto: ScheduleInfoDto){
-  const { data: trainCarsData } = useSuspenseQuery({
-    queryKey: ["ScheduleCd", scheduleInfoDto.schedule_cd],
-    queryFn: async () => {
-      const response = await axios.get<TrainCarFormationResponseDto[]>(
-        ENDPOINTS.TRAINCAR(),
-        {
-          params: {schedule_cd: scheduleInfoDto.schedule_cd}
+import { ENDPOINTS } from '@/api/routes';
+import { DEFAULT_SEAT_TYPE } from '@/features/schedule/constants/SeatTypeLabel';
+import type { ScheduleInfoDto } from '@/features/schedule/types/ScheduleInfoDto';
+import type { SeatsRequestDto } from '@/features/schedule/types/SeatsRequestDto';
+import type { SeatTypeCd } from '@/features/schedule/types/SeatTypeCd';
+import type { TrainCarFormationResponseDto } from '@/features/schedule/types/TrainCarFormationResponseDto';
+
+export function useTrainCar(scheduleInfoDto: ScheduleInfoDto) {
+    const { data: trainCars } = useSuspenseQuery({
+        queryKey: ['ScheduleCd', scheduleInfoDto.scheduleCd],
+        queryFn: async () => {
+            const response = await axios.get<TrainCarFormationResponseDto[]>(
+                ENDPOINTS.TRAINCAR(),
+                {
+                    params: { scheduleCd: scheduleInfoDto.scheduleCd },
+                },
+            );
+            return response.data;
         },
-      );
-      return response.data;
-    }
-  });
+    });
 
-  const [activeSeatTypeCd, setActiveSeatTypeCd] = useState<SeatTypeCd>(DEFAULT_SEAT_TYPE);
+    const [activeSeatTypeCd, setActiveSeatTypeCd] =
+        useState<SeatTypeCd>(DEFAULT_SEAT_TYPE);
 
-  const filteredCars = useMemo(() => {
-    if (!trainCarsData) return [];
-    return trainCarsData.filter((car) => car.seat_type_cd === activeSeatTypeCd);
-  }, [trainCarsData, activeSeatTypeCd]);
+    const filteredCars = useMemo(() => {
+        if (!trainCars) return [];
+        return trainCars.filter((car) => car.seatTypeCd === activeSeatTypeCd);
+    }, [trainCars, activeSeatTypeCd]);
 
-  const [selectedTrainCarCd, setSelectedTrainCarCd] = useState<string>("");
+    const [selectedTrainCarCd, setSelectedTrainCarCd] = useState<string>('');
 
-  const activeTrainCarCd = useMemo(() => {
-    const isCarInCurrentTab = filteredCars.some(
-      (car) => car.train_car_cd === selectedTrainCarCd,
+    const activeTrainCarCd = useMemo(() => {
+        const isCarInCurrentTab = filteredCars.some(
+            (car) => car.trainCarCd === selectedTrainCarCd,
+        );
+
+        if (selectedTrainCarCd && isCarInCurrentTab) {
+            return selectedTrainCarCd;
+        }
+        if (filteredCars && filteredCars.length > 0) {
+            return filteredCars[0].trainCarCd;
+        }
+        return trainCars && trainCars.length > 0 ? trainCars[0].trainCarCd : '';
+    }, [selectedTrainCarCd, filteredCars, trainCars]);
+
+    const handleSeatTypeChange = (code: SeatTypeCd) => {
+        setActiveSeatTypeCd(code);
+    };
+
+    const seatsRequestDto: SeatsRequestDto = useMemo(
+        () => ({
+            scheduleCd: scheduleInfoDto.scheduleCd,
+            date: scheduleInfoDto.date,
+            departureTime: scheduleInfoDto.departureTime,
+            arrivalTime: scheduleInfoDto.arrivalTime,
+            trainCarCd: activeTrainCarCd,
+        }),
+        [scheduleInfoDto, activeTrainCarCd],
     );
 
-    if (selectedTrainCarCd && isCarInCurrentTab) {
-      return selectedTrainCarCd;
-    }
-    if (filteredCars && filteredCars.length > 0) {
-      return filteredCars[0].train_car_cd;
-    }
-    return trainCarsData && trainCarsData.length > 0
-      ? trainCarsData[0].train_car_cd
-      : "";
-  }, [selectedTrainCarCd, filteredCars, trainCarsData]);
-
-  const handleSeatTypeChange = (code: SeatTypeCd) => {
-    setActiveSeatTypeCd(code);
-  };
-
-  const seatsRequestDto: SeatsRequestDto = useMemo(() => ({
-    schedule_cd: scheduleInfoDto.schedule_cd,
-    date: scheduleInfoDto.date,
-    departure_time: scheduleInfoDto.departure_time,
-    arrival_time: scheduleInfoDto.arrival_time,
-    train_car_cd: activeTrainCarCd,
-  }), [scheduleInfoDto, activeTrainCarCd]);
-
-  return {
-    trainCarsData,
-    activeSeatTypeCd,
-    filteredCars,
-    activeTrainCarCd,
-    handleSeatTypeChange,
-    setSelectedTrainCarCd,
-    seatsRequestDto
-  };
+    return {
+        trainCars,
+        activeSeatTypeCd,
+        filteredCars,
+        activeTrainCarCd,
+        handleSeatTypeChange,
+        setSelectedTrainCarCd,
+        seatsRequestDto,
+    };
 }
