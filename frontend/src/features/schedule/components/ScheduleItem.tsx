@@ -5,8 +5,8 @@ import { tv } from 'tailwind-variants';
 
 import type { ScheduleInfoDto } from '@/features/schedule/types/ScheduleInfoDto';
 import type { SearchResponseDto } from '@/features/schedule/types/SearchResponseDto';
-import { FormatTime } from '@/shared/hooks/useFormatTime.ts';
 import { TRAIN_TYPE_COLOR } from '@/shared/constants/TrainTypeColor';
+import { FormatTime } from '@/shared/hooks/useFormatTime.ts';
 
 type ScheduleItemProps = {
     schedule: SearchResponseDto;
