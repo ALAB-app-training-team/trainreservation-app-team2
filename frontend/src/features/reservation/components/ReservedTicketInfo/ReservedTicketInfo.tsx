@@ -1,52 +1,57 @@
-import { FaClock } from "react-icons/fa";
-import type { ReservationResponseDto } from "../../types/ReservationResponseDto";
-import { DepartureAndArrivalInfo } from "../DepartureAndArrivalInfo";
-import { ReservedSeats } from "../ReservedSeats";
+import { FaClock } from 'react-icons/fa';
+
+import { DepartureAndArrivalInfo } from '@/features/reservation/components/DepartureAndArrivalInfo';
+import { ReservedSeats } from '@/features/reservation/components/ReservedSeats';
+import type { ReservationResponseDto } from '@/features/reservation/types/ReservationResponseDto';
 
 type ReservedTicketInfoProps = {
-  ticketInfo: ReservationResponseDto;
+    ticketInfo: ReservationResponseDto;
 };
 
 export function ReservedTicketInfo({ ticketInfo }: ReservedTicketInfoProps) {
-  const formatter = new Intl.DateTimeFormat("ja-JP", {
-    year: "numeric",
-    month: "long",
-    day: "numeric",
-    weekday: "short",
-  });
-  return (
-    <>
-      <div className="flex justify-center">
-        <div className="w-full max-w-5xl flex flex-col gap-4">
-          <div className="flex flex-col justify-between border-2 border-primary-light rounded-2xl p-4 gap-4">
-            <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">
-              <DepartureAndArrivalInfo
-                id="departureInfo"
-                title="出発"
-                time={ticketInfo.departureTime}
-                station={ticketInfo.departureStationName}
-              />
-              <DepartureAndArrivalInfo
-                id="arrivalInfo"
-                title="到着"
-                time={ticketInfo.arrivalTime!}
-                station={ticketInfo.arrivalStationName}
-              />
+    const formatter = new Intl.DateTimeFormat('ja-JP', {
+        year: 'numeric',
+        month: 'long',
+        day: 'numeric',
+        weekday: 'short',
+    });
+    return (
+        <>
+            <div className="flex justify-center">
+                <div className="flex w-full max-w-5xl flex-col gap-4">
+                    <div className="border-primary-light flex flex-col justify-between gap-4 rounded-2xl border-2 p-4">
+                        <div className="flex flex-col justify-between gap-4 md:flex-row md:items-center">
+                            <DepartureAndArrivalInfo
+                                id="departureInfo"
+                                title="出発"
+                                time={ticketInfo.departureTime}
+                                station={ticketInfo.departureStationName}
+                            />
+                            <DepartureAndArrivalInfo
+                                id="arrivalInfo"
+                                title="到着"
+                                time={ticketInfo.arrivalTime!}
+                                station={ticketInfo.arrivalStationName}
+                            />
+                        </div>
+                        <div className="flex items-center gap-2">
+                            <FaClock />
+                            <div>
+                                {formatter.format(
+                                    new Date(ticketInfo.rideDate),
+                                )}
+                            </div>
+                        </div>
+                        <div className="flex flex-col justify-between gap-4 md:flex-row">
+                            <ReservedSeats
+                                id="seats"
+                                title="座席"
+                                seats={ticketInfo.reservedSeats}
+                            />
+                        </div>
+                    </div>
+                </div>
             </div>
-            <div className="flex items-center gap-2">
-              <FaClock />
-              <div>{formatter.format(new Date(ticketInfo.rideDate))}</div>
-            </div>
-            <div className="flex flex-col md:flex-row justify-between gap-4">
-              <ReservedSeats
-                id="seats"
-                title="座席"
-                seats={ticketInfo.reservedSeats}
-              />
-            </div>
-          </div>
-        </div>
-      </div>
-    </>
-  );
+        </>
+    );
 }
