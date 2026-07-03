@@ -26,7 +26,7 @@ export function Seat({ seat, onClick, disabled, type }: seatProps) {
                     className={`${styles['reserveModeStyle']} ${styles[type]}`}
                     disabled={disabled}
                 >
-                    {seat.seat_number + seat.seat_column}
+                    {seat.seatNumber + seat.seatColumn}
                 </button>
             ) : (
                 <div

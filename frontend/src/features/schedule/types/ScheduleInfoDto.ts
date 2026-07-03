@@ -1,6 +1,6 @@
 export type ScheduleInfoDto = {
-    schedule_cd: string;
+    scheduleCd: string;
     date: string;
-    departure_time: string;
-    arrival_time: string;
+    departureTime: string;
+    arrivalTime: string;
 };

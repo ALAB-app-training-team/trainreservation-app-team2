@@ -17,10 +17,10 @@ export function useSearchRequestDto({
         new Date().toTimeString().slice(0, 5),
     );
     const [departureStation, setDepartureStation] = useState<string>(
-        stations[0].station_cd,
+        stations[0].stationCd,
     );
     const [arrivalStation, setArrivalStation] = useState<string>(
-        stations[1].station_cd,
+        stations[1].stationCd,
     );
 
     const searchRequestDto: SearchRequestDto = useMemo<SearchRequestDto>(() => {

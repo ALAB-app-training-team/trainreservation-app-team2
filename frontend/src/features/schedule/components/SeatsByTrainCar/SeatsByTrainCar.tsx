@@ -19,17 +19,17 @@ export function SeatsByTrainCar({
     const { seats } = useSeatsByTrainCar(seatsRequestDto);
 
     const columns: string[] = Array.from(
-        new Set(seats.map((seat) => seat.seat_column)),
+        new Set(seats.map((seat) => seat.seatColumn)),
     ).sort();
     const rows: number[] = Array.from(
-        new Set(seats.map((seat) => seat.seat_number)),
+        new Set(seats.map((seat) => seat.seatNumber)),
     ).sort((a, b) => a - b);
 
     return (
         <>
             <div className="flex w-full flex-col items-start justify-center gap-4">
                 <h1 className="!m-0 text-left !text-xl">
-                    {seats[0].train_car_number}号車
+                    {seats[0].trainCarNumber}号車
                 </h1>
                 <div
                     className={`grid gap-2`}
@@ -45,24 +45,24 @@ export function SeatsByTrainCar({
                             {columns.map((column) => {
                                 const seat = seats.find(
                                     (seat) =>
-                                        seat.seat_column === column &&
-                                        seat.seat_number === row,
+                                        seat.seatColumn === column &&
+                                        seat.seatNumber === row,
                                 );
                                 return seat ? (
                                     <Seat
-                                        key={seat.seat_cd}
+                                        key={seat.seatCd}
                                         seat={seat}
                                         onClick={handleSelectedSeats}
-                                        disabled={seat.is_reserved}
+                                        disabled={seat.isReserved}
                                         type={
-                                            seat.is_reserved
+                                            seat.isReserved
                                                 ? 'isReserved'
                                                 : selectedSeats.some(
                                                         (selectedSeat) =>
-                                                            selectedSeat.seat_cd ===
-                                                                seat.seat_cd &&
-                                                            selectedSeat.train_car_cd ===
-                                                                seatsRequestDto.train_car_cd,
+                                                            selectedSeat.seatCd ===
+                                                                seat.seatCd &&
+                                                            selectedSeat.trainCarCd ===
+                                                                seatsRequestDto.trainCarCd,
                                                     )
                                                   ? 'isSelected'
                                                   : 'reservable'

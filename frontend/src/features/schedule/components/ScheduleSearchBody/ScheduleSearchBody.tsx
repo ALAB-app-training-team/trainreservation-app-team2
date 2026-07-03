@@ -42,7 +42,7 @@ export function ScheduleSearchBody() {
                             departureStationName={
                                 stations.find(
                                     (station) =>
-                                        station.station_cd ===
+                                        station.stationCd ===
                                         searchRequestDto.departureStationCd,
                                 )?.name || 'エラー'
                             }
@@ -50,7 +50,7 @@ export function ScheduleSearchBody() {
                             arrivalStationName={
                                 stations.find(
                                     (station) =>
-                                        station.station_cd ===
+                                        station.stationCd ===
                                         searchRequestDto.arrivalStationCd,
                                 )?.name || 'エラー'
                             }

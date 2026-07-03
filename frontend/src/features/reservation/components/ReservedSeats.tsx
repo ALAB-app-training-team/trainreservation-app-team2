@@ -24,31 +24,29 @@ export function ReservedSeats({
                         seats
                             .sort(
                                 (a, b) =>
-                                    a.train_car_number - b.train_car_number ||
-                                    a.seat_number - b.seat_number ||
-                                    a.seat_column.localeCompare(b.seat_column),
+                                    a.trainCarNumber - b.trainCarNumber ||
+                                    a.seatNumber - b.seatNumber ||
+                                    a.seatColumn.localeCompare(b.seatColumn),
                             )
                             .map((reservedSeats) => {
                                 return (
                                     <div
                                         key={
-                                            reservedSeats.train_car_number +
-                                            reservedSeats.seat_number +
-                                            reservedSeats.seat_column
+                                            reservedSeats.trainCarNumber +
+                                            reservedSeats.seatNumber +
+                                            reservedSeats.seatColumn
                                         }
                                         className="flex items-center gap-2"
                                     >
                                         <div className="border-primary-light text-primary flex items-center gap-1 rounded-lg border-2 bg-green-100 px-2">
                                             <BsTrainFreightFrontFill />
-                                            <div>{`${reservedSeats.train_car_number}号車`}</div>
+                                            <div>{`${reservedSeats.trainCarNumber}号車`}</div>
                                             <div>
-                                                {
-                                                    reservedSeats.train_car_type_name
-                                                }
+                                                {reservedSeats.trainCarTypeName}
                                             </div>
                                             <div>
-                                                {`${reservedSeats.seat_number}番` +
-                                                    `${reservedSeats.seat_column}席`}
+                                                {`${reservedSeats.seatNumber}番` +
+                                                    `${reservedSeats.seatColumn}席`}
                                             </div>
                                         </div>
                                     </div>

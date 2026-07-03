@@ -20,9 +20,9 @@ export function ReservedTicketQrCode({
 }: ReservedTicketQrCodeProps) {
     const seats = [...reservedSeats].sort(
         (a, b) =>
-            a.train_car_number - b.train_car_number ||
-            a.seat_number - b.seat_number ||
-            a.seat_column.localeCompare(b.seat_column),
+            a.trainCarNumber - b.trainCarNumber ||
+            a.seatNumber - b.seatNumber ||
+            a.seatColumn.localeCompare(b.seatColumn),
     );
     return (
         <div className="flex justify-center">
@@ -42,22 +42,22 @@ export function ReservedTicketQrCode({
                             <div>
                                 <SwiperSlide
                                     key={
-                                        reservedSeat.train_car_number +
-                                        reservedSeat.seat_number +
-                                        reservedSeat.seat_column
+                                        reservedSeat.trainCarNumber +
+                                        reservedSeat.seatNumber +
+                                        reservedSeat.seatColumn
                                     }
                                     className="border-primary-light flex flex-col justify-between gap-2 rounded-2xl border-2 p-4"
                                 >
                                     <h2>{trainTypeName}</h2>
                                     <div className="text-sm">
-                                        {`${reservedSeat.train_car_number}号車` +
-                                            `${reservedSeat.seat_number}番` +
-                                            `${reservedSeat.seat_column}席`}
+                                        {`${reservedSeat.trainCarNumber}号車` +
+                                            `${reservedSeat.seatNumber}番` +
+                                            `${reservedSeat.seatColumn}席`}
                                     </div>
                                     <div className="mb-1 flex justify-center">
                                         <QRCodeSVG
                                             className="h-auto w-1/4"
-                                            value={reservedSeat.code_token}
+                                            value={reservedSeat.codeToken}
                                             size={200}
                                             bgColor={'#ffffff'}
                                             fgColor={'#000000'}
@@ -74,7 +74,7 @@ export function ReservedTicketQrCode({
                                         />
                                     </div>
                                     <div className="mb-4 text-sm">
-                                        QRコード: {reservedSeat.code_token}
+                                        QRコード: {reservedSeat.codeToken}
                                     </div>
                                 </SwiperSlide>
                             </div>

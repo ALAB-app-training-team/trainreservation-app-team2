@@ -22,13 +22,13 @@ export function SelectSeats() {
 
         // TODO: try-catchをつける
         const reserveRequestDto: ReserveRequestDto = {
-            schedule_cd: scheduleInfoDto.schedule_cd,
-            ride_date: scheduleInfoDto.date,
+            scheduleCd: scheduleInfoDto.scheduleCd,
+            rideDate: scheduleInfoDto.date,
             departureStationCd: departureStationCd,
             arrivalStationCd: arrivalStationCd,
             seats: selectedSeats.map((seat) => ({
-                train_car_cd: seat.train_car_cd,
-                seat_cd: seat.seat_cd,
+                trainCarCd: seat.trainCarCd,
+                seatCd: seat.seatCd,
             })),
         };
         const response = await axios.post(

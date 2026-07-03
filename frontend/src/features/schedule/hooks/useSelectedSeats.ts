@@ -10,8 +10,7 @@ export function useSelectedSeats() {
         if (selectedSeats.includes(seat)) {
             setSelectedSeats((prevSeats) =>
                 prevSeats.filter(
-                    (selectedSeatCds) =>
-                        selectedSeatCds.seat_cd !== seat.seat_cd,
+                    (selectedSeatCds) => selectedSeatCds.seatCd !== seat.seatCd,
                 ),
             );
         } else if (selectedSeats.length < limitSeats) {

@@ -24,13 +24,13 @@ export function ReservedTicketInfo({ ticketInfo }: ReservedTicketInfoProps) {
                             <DepartureAndArrivalInfo
                                 id="departureInfo"
                                 title="出発"
-                                time={ticketInfo.departure_time}
+                                time={ticketInfo.departureTime}
                                 station={ticketInfo.departureStationName}
                             />
                             <DepartureAndArrivalInfo
                                 id="arrivalInfo"
                                 title="到着"
-                                time={ticketInfo.arrival_time}
+                                time={ticketInfo.arrivalTime}
                                 station={ticketInfo.arrivalStationName}
                             />
                         </div>
@@ -38,7 +38,7 @@ export function ReservedTicketInfo({ ticketInfo }: ReservedTicketInfoProps) {
                             <FaClock />
                             <div>
                                 {formatter.format(
-                                    new Date(ticketInfo.ride_date),
+                                    new Date(ticketInfo.rideDate),
                                 )}
                             </div>
                         </div>

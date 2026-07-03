@@ -49,10 +49,10 @@ export function ScheduleItem({
 
     const handleSearch = () => {
         const scheduleInfoDto: ScheduleInfoDto = {
-            schedule_cd: schedule.schedule_cd,
+            scheduleCd: schedule.scheduleCd,
             date: date,
-            departure_time: schedule.departure_time,
-            arrival_time: schedule.arrival_time,
+            departureTime: schedule.departureTime,
+            arrivalTime: schedule.arrivalTime,
         };
         navigate('/selectSeat', {
             state: {
@@ -121,7 +121,7 @@ export function ScheduleItem({
                 <div className="order-3 flex w-full items-center justify-between gap-4 md:order-2 md:flex-1">
                     <div className="text-left">
                         <div className="text-2xl font-black">
-                            {FormatTime(schedule.departure_time)}
+                            {FormatTime(schedule.departureTime)}
                         </div>
                         <div>{departureStationName}</div>
                     </div>
@@ -129,8 +129,8 @@ export function ScheduleItem({
                         <div className="border-primary-light relative w-full border-t-4 border-dotted">
                             <span className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 bg-white px-2">
                                 {calculateDuration(
-                                    schedule.departure_time,
-                                    schedule.arrival_time,
+                                    schedule.departureTime,
+                                    schedule.arrivalTime,
                                 )}
                             </span>
                         </div>
@@ -140,7 +140,7 @@ export function ScheduleItem({
                     </div>
                     <div className="text-left">
                         <div className="text-2xl font-black">
-                            {FormatTime(schedule.arrival_time)}
+                            {FormatTime(schedule.arrivalTime)}
                         </div>
                         <div>{arrivalStationName}</div>
                     </div>

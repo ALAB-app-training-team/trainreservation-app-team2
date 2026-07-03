@@ -22,20 +22,20 @@ export function SelectedSeats({
                         selectedSeats
                             .sort(
                                 (a, b) =>
-                                    a.train_car_number - b.train_car_number ||
-                                    a.seat_number - b.seat_number ||
-                                    a.seat_column.localeCompare(b.seat_column),
+                                    a.trainCarNumber - b.trainCarNumber ||
+                                    a.seatNumber - b.seatNumber ||
+                                    a.seatColumn.localeCompare(b.seatColumn),
                             )
                             .map((selectedSeat) => {
                                 return (
                                     <div
-                                        key={selectedSeat.seat_cd}
+                                        key={selectedSeat.seatCd}
                                         className="flex items-center gap-2"
                                     >
-                                        <div className="border-primary-light rounded-lg border-2 px-2">{`${selectedSeat.train_car_number}号車`}</div>
+                                        <div className="border-primary-light rounded-lg border-2 px-2">{`${selectedSeat.trainCarNumber}号車`}</div>
                                         <div>
-                                            {selectedSeat.seat_number +
-                                                selectedSeat.seat_column}
+                                            {selectedSeat.seatNumber +
+                                                selectedSeat.seatColumn}
                                         </div>
                                     </div>
                                 );

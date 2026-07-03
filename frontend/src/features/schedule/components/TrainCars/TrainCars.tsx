@@ -47,9 +47,9 @@ export function TrainCars({
                     >
                         {trainCars?.find(
                             (car) =>
-                                car.seat_type_cd.toUpperCase() ===
+                                car.seatTypeCd.toUpperCase() ===
                                 code.toUpperCase(),
-                        )?.train_car_type_name || SEAT_TYPE_LABELS[code]}
+                        )?.trainCarTypeName || SEAT_TYPE_LABELS[code]}
                     </button>
                 ))}
             </div>
@@ -59,17 +59,17 @@ export function TrainCars({
             <div className="mb-8 flex scrollbar-thin space-x-3 overflow-x-auto pb-4">
                 {filteredCars.map((car) => (
                     <button
-                        key={car.train_car_number}
+                        key={car.trainCarNumber}
                         type="button"
-                        onClick={() => setSelectedTrainCarCd(car.train_car_cd)}
+                        onClick={() => setSelectedTrainCarCd(car.trainCarCd)}
                         className={`flex h-20 min-w-[80px] flex-col items-center justify-center rounded-2xl border-2 p-3 transition-all duration-200 ${
-                            activeTrainCarCd === car.train_car_cd
+                            activeTrainCarCd === car.trainCarCd
                                 ? 'border-primary bg-primary-light text-primary font-bold shadow-sm'
                                 : 'border-gray-200 bg-white text-gray-700 hover:bg-gray-50'
                         }`}
                     >
                         <span className="text-base font-bold">
-                            {car.train_car_number}
+                            {car.trainCarNumber}
                         </span>
                     </button>
                 ))}

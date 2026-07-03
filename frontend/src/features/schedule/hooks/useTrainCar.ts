@@ -11,12 +11,12 @@ import type { TrainCarFormationResponseDto } from '@/features/schedule/types/Tra
 
 export function useTrainCar(scheduleInfoDto: ScheduleInfoDto) {
     const { data: trainCars } = useSuspenseQuery({
-        queryKey: ['ScheduleCd', scheduleInfoDto.schedule_cd],
+        queryKey: ['ScheduleCd', scheduleInfoDto.scheduleCd],
         queryFn: async () => {
             const response = await axios.get<TrainCarFormationResponseDto[]>(
                 ENDPOINTS.TRAINCAR(),
                 {
-                    params: { schedule_cd: scheduleInfoDto.schedule_cd },
+                    params: { scheduleCd: scheduleInfoDto.scheduleCd },
                 },
             );
             return response.data;
@@ -28,25 +28,23 @@ export function useTrainCar(scheduleInfoDto: ScheduleInfoDto) {
 
     const filteredCars = useMemo(() => {
         if (!trainCars) return [];
-        return trainCars.filter((car) => car.seat_type_cd === activeSeatTypeCd);
+        return trainCars.filter((car) => car.seatTypeCd === activeSeatTypeCd);
     }, [trainCars, activeSeatTypeCd]);
 
     const [selectedTrainCarCd, setSelectedTrainCarCd] = useState<string>('');
 
     const activeTrainCarCd = useMemo(() => {
         const isCarInCurrentTab = filteredCars.some(
-            (car) => car.train_car_cd === selectedTrainCarCd,
+            (car) => car.trainCarCd === selectedTrainCarCd,
         );
 
         if (selectedTrainCarCd && isCarInCurrentTab) {
             return selectedTrainCarCd;
         }
         if (filteredCars && filteredCars.length > 0) {
-            return filteredCars[0].train_car_cd;
+            return filteredCars[0].trainCarCd;
         }
-        return trainCars && trainCars.length > 0
-            ? trainCars[0].train_car_cd
-            : '';
+        return trainCars && trainCars.length > 0 ? trainCars[0].trainCarCd : '';
     }, [selectedTrainCarCd, filteredCars, trainCars]);
 
     const handleSeatTypeChange = (code: SeatTypeCd) => {
@@ -55,11 +53,11 @@ export function useTrainCar(scheduleInfoDto: ScheduleInfoDto) {
 
     const seatsRequestDto: SeatsRequestDto = useMemo(
         () => ({
-            schedule_cd: scheduleInfoDto.schedule_cd,
+            scheduleCd: scheduleInfoDto.scheduleCd,
             date: scheduleInfoDto.date,
-            departure_time: scheduleInfoDto.departure_time,
-            arrival_time: scheduleInfoDto.arrival_time,
-            train_car_cd: activeTrainCarCd,
+            departureTime: scheduleInfoDto.departureTime,
+            arrivalTime: scheduleInfoDto.arrivalTime,
+            trainCarCd: activeTrainCarCd,
         }),
         [scheduleInfoDto, activeTrainCarCd],
     );

@@ -31,7 +31,7 @@ export function StationSelect({
                 >
                     {list.map((item, index) => {
                         return (
-                            <option key={index} value={item.station_cd}>
+                            <option key={index} value={item.stationCd}>
                                 {item.name}
                             </option>
                         );
