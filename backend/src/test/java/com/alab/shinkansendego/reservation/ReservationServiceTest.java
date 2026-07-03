@@ -18,9 +18,9 @@ public class ReservationServiceTest {
     private final UUID purchaseId = UUID.fromString("4156b939-2e3e-46c1-92d3-7aa64b6ca575");
     private final List<ReservedScheduleDto> scheduleList = new ArrayList<>();
     private final List<ReservedSeatDto> seatList = new ArrayList<>();
-    private final ReservedSeatDto seat1 = new ReservedSeatDto("指定席", 1, 1, "A", "60a1ab63-a41f-430d-a2d1-10a76368d0f5");
-    private final ReservedSeatDto seat2 = new ReservedSeatDto("グリーン車", 9, 1, "A", "3de8909e-32de-478e-bd9b-739f3fe6d6c3");
-    private final ReservedSeatDto seat3 = new ReservedSeatDto("グランクラス", 10, 1, "A", "e192e5f1-318e-4d10-b76d-2f2bf15e8b70");
+    private final ReservedSeatDto seat1 = new ReservedSeatDto("指定席", 1, 1, "A", UUID.fromString("60a1ab63-a41f-430d-a2d1-10a76368d0f5"));
+    private final ReservedSeatDto seat2 = new ReservedSeatDto("グリーン車", 9, 1, "A", UUID.fromString("3de8909e-32de-478e-bd9b-739f3fe6d6c3"));
+    private final ReservedSeatDto seat3 = new ReservedSeatDto("グランクラス", 10, 1, "A", UUID.fromString("e192e5f1-318e-4d10-b76d-2f2bf15e8b70"));
 
     @Mock
     private PurchaseRepository purchaseRepo;

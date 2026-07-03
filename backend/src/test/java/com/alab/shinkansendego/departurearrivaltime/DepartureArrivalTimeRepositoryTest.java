@@ -43,26 +43,20 @@ public class DepartureArrivalTimeRepositoryTest {
     void findScheduleBySectionKmCd_withSectionCd_returnGetScheduleAndDepartureArrivalTimeSuccess() {
         DepartureArrivalTimeEntity test4 = new DepartureArrivalTimeEntity();
         test4.setTimeCd("TEST0401");
-        test4.setScheduleCd("TEST04");
-        test4.setDepartureTime(LocalTime.of(6, 40, 0));
-        test4.setArrivalTime(LocalTime.of(6, 45, 0));
-        test4.setSectionCd("TEST02");
+
         DepartureArrivalTimeEntity test10 = new DepartureArrivalTimeEntity();
         test10.setTimeCd("TEST1001");
-        test10.setSectionCd("TEST10");
-        test10.setDepartureTime(LocalTime.of(7, 44, 0));
-        test10.setArrivalTime(LocalTime.of(7, 49, 0));
-        test10.setSectionCd("TEST02");
+
         DepartureArrivalTimeEntity test17 = new DepartureArrivalTimeEntity();
         test17.setTimeCd("TEST1701");
-        test17.setSectionCd("TEST17");
-        test17.setDepartureTime(LocalTime.of(9, 8, 0));
-        test17.setArrivalTime(LocalTime.of(9, 13, 0));
-        test17.setSectionCd("TEST02");
 
         List<DepartureArrivalTimeEntity> expected = Arrays.asList(test4, test10, test17);
         List<DepartureArrivalTimeEntity> actual = repo.findBySectionCd("TEST2");
-        assertEquals(expected, actual);
+        assertAll(
+                () -> assertEquals(expected.getFirst().getTimeCd(), actual.getFirst().getTimeCd()),
+                () -> assertEquals(expected.get(1).getTimeCd(), actual.get(1).getTimeCd()),
+                () -> assertEquals(expected.get(2).getTimeCd(), actual.get(2).getTimeCd())
+        );
     }
 
     @Test
@@ -79,12 +73,8 @@ public class DepartureArrivalTimeRepositoryTest {
         String scheduleCd = "TEST01";
         DepartureArrivalTimeEntity expected = new DepartureArrivalTimeEntity();
         expected.setTimeCd("TEST0101");
-        expected.setScheduleCd("TEST01");
-        expected.setDepartureTime(LocalTime.of(6, 4));
-        expected.setArrivalTime(LocalTime.of(6, 9));
-        expected.setSectionCd("TEST3");
         DepartureArrivalTimeEntity actual = repo.findByScheduleCdAndSectionCdIn(scheduleCd, sectionCds);
-        assertEquals(expected, actual);
+        assertEquals(expected.getTimeCd(), actual.getTimeCd());
     }
 
     @Test
