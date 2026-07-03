@@ -1,12 +1,12 @@
 type SelectedSeats = {
-  train_car_cd: string;
-  seat_cd: string;
+    trainCarCd: string;
+    seatCd: string;
 };
 
 export type ReserveRequestDto = {
-  schedule_cd: string;
-  ride_date: string;
-  departure_station_cd: string;
-  arrival_station_cd: string;
-  seats: SelectedSeats[];
+    scheduleCd: string;
+    rideDate: string;
+    departureStationCd: string;
+    arrivalStationCd: string;
+    seats: SelectedSeats[];
 };
