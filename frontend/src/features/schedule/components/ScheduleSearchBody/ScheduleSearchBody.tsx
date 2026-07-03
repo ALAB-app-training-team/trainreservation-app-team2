@@ -37,23 +37,21 @@ export function ScheduleSearchBody() {
                             searchRequestDto={searchRequestDto}
                             isInvalid={isInvalid}
                             departureStationCd={
-                                searchRequestDto.departure_station_cd
+                                searchRequestDto.departureStationCd
                             }
                             departureStationName={
                                 stations.find(
                                     (station) =>
                                         station.station_cd ===
-                                        searchRequestDto.departure_station_cd,
+                                        searchRequestDto.departureStationCd,
                                 )?.name || 'エラー'
                             }
-                            arrivalStationCd={
-                                searchRequestDto.arrival_station_cd
-                            }
+                            arrivalStationCd={searchRequestDto.arrivalStationCd}
                             arrivalStationName={
                                 stations.find(
                                     (station) =>
                                         station.station_cd ===
-                                        searchRequestDto.arrival_station_cd,
+                                        searchRequestDto.arrivalStationCd,
                                 )?.name || 'エラー'
                             }
                         />

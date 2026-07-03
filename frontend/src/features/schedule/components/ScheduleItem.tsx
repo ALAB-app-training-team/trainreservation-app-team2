@@ -6,24 +6,24 @@ import { tv } from 'tailwind-variants';
 import type { ScheduleInfoDto } from '@/features/schedule/types/ScheduleInfoDto';
 import type { SearchResponseDto } from '@/features/schedule/types/SearchResponseDto';
 import { FormatTime } from '@/shared/hooks/useFormatTime.ts';
-import { TrainTypeColor } from '@/shared/types/TrainTypeColor.ts';
+import { trainTypeColor } from '@/shared/types/TrainTypeColor.ts';
 
 type ScheduleItemProps = {
     schedule: SearchResponseDto;
     date: string;
-    departure_station_cd: string;
-    departure_station_name: string;
-    arrival_station_cd: string;
-    arrival_station_name: string;
+    departureStationCd: string;
+    departureStationName: string;
+    arrivalStationCd: string;
+    arrivalStationName: string;
 };
 
 export function ScheduleItem({
     schedule,
     date,
-    departure_station_cd,
-    departure_station_name,
-    arrival_station_cd,
-    arrival_station_name,
+    departureStationCd,
+    departureStationName,
+    arrivalStationCd,
+    arrivalStationName,
 }: ScheduleItemProps) {
     const navigate = useNavigate();
 
@@ -57,8 +57,8 @@ export function ScheduleItem({
         navigate('/selectSeat', {
             state: {
                 scheduleInfoDto,
-                departure_station_cd,
-                arrival_station_cd,
+                departureStationCd,
+                arrivalStationCd,
             },
         });
         window.scrollTo(0, 0);
@@ -86,9 +86,9 @@ export function ScheduleItem({
         },
     });
 
-    const foundColor = TrainTypeColor.find(
+    const foundColor = trainTypeColor.find(
         (item) =>
-            item.train_type_name === schedule.train_type_name.split(/(\d+)/)[0],
+            item.trainTypeName === schedule.trainTypeName.split(/(\d+)/)[0],
     );
 
     const colorCd = foundColor ? foundColor.color_cd : 'primary';
@@ -104,7 +104,7 @@ export function ScheduleItem({
                     </div>
                     {(() => {
                         const trainTypeName =
-                            schedule.train_type_name.split(/(\d+)/);
+                            schedule.trainTypeName.split(/(\d+)/);
                         return (
                             <div className="w-16 text-left">
                                 <div className="text-lg font-extrabold">
@@ -123,7 +123,7 @@ export function ScheduleItem({
                         <div className="text-2xl font-black">
                             {FormatTime(schedule.departure_time)}
                         </div>
-                        <div>{departure_station_name}</div>
+                        <div>{departureStationName}</div>
                     </div>
                     <div className="text-primary flex flex-1 items-center gap-2">
                         <div className="border-primary-light relative w-full border-t-4 border-dotted">
@@ -142,7 +142,7 @@ export function ScheduleItem({
                         <div className="text-2xl font-black">
                             {FormatTime(schedule.arrival_time)}
                         </div>
-                        <div>{arrival_station_name}</div>
+                        <div>{arrivalStationName}</div>
                     </div>
                 </div>
                 <button

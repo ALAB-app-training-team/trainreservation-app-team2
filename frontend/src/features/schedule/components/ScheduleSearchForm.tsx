@@ -35,7 +35,7 @@ export function ScheduleSearchForm({
                                 id="departureStation"
                                 label="乗車駅"
                                 list={stations}
-                                value={searchRequestDto.departure_station_cd}
+                                value={searchRequestDto.departureStationCd}
                                 setValue={setDepartureStation}
                             />
                             <div className="mt-4 hidden text-xl md:block">
@@ -45,7 +45,7 @@ export function ScheduleSearchForm({
                                 id="arrivalStation"
                                 label="降車駅"
                                 list={stations}
-                                value={searchRequestDto.arrival_station_cd}
+                                value={searchRequestDto.arrivalStationCd}
                                 setValue={setArrivalStation}
                                 getFieldError={getFieldError}
                             />

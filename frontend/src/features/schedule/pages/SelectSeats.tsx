@@ -12,7 +12,7 @@ import type { ReserveRequestDto } from '@/features/schedule/types/ReserveRequest
 export function SelectSeats() {
     const navigate = useNavigate();
     const location = useLocation();
-    const { scheduleInfoDto, departure_station_cd, arrival_station_cd } =
+    const { scheduleInfoDto, departureStationCd, arrivalStationCd } =
         location.state;
     const { selectedSeats, limitSeats, handleSelectedSeats } =
         useSelectedSeats();
@@ -24,8 +24,8 @@ export function SelectSeats() {
         const reserveRequestDto: ReserveRequestDto = {
             schedule_cd: scheduleInfoDto.schedule_cd,
             ride_date: scheduleInfoDto.date,
-            departure_station_cd: departure_station_cd,
-            arrival_station_cd: arrival_station_cd,
+            departureStationCd: departureStationCd,
+            arrivalStationCd: arrivalStationCd,
             seats: selectedSeats.map((seat) => ({
                 train_car_cd: seat.train_car_cd,
                 seat_cd: seat.seat_cd,

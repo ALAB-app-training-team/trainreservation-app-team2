@@ -57,16 +57,12 @@ export function ScheduleList({
                                         key={index}
                                         schedule={schedule}
                                         date={searchRequestDto.date}
-                                        departure_station_cd={
-                                            departureStationCd
-                                        }
-                                        departure_station_name={
+                                        departureStationCd={departureStationCd}
+                                        departureStationName={
                                             departureStationName
                                         }
-                                        arrival_station_cd={arrivalStationCd}
-                                        arrival_station_name={
-                                            arrivalStationName
-                                        }
+                                        arrivalStationCd={arrivalStationCd}
+                                        arrivalStationName={arrivalStationName}
                                     />
                                 );
                             })}

@@ -10,15 +10,15 @@ import type { ReservedSeatDto } from '@/features/reservation/types/ReservedSeatD
 import trainSvg from '@/shared/svgs/BsTrainFreightFrontFill.svg';
 
 type ReservedTicketQrCodeProps = {
-    train_type_name: string;
-    reserved_seats: ReservedSeatDto[];
+    trainTypeName: string;
+    reservedSeats: ReservedSeatDto[];
 };
 
 export function ReservedTicketQrCode({
-    train_type_name,
-    reserved_seats,
+    trainTypeName,
+    reservedSeats,
 }: ReservedTicketQrCodeProps) {
-    const seats = [...reserved_seats].sort(
+    const seats = [...reservedSeats].sort(
         (a, b) =>
             a.train_car_number - b.train_car_number ||
             a.seat_number - b.seat_number ||
@@ -48,7 +48,7 @@ export function ReservedTicketQrCode({
                                     }
                                     className="border-primary-light flex flex-col justify-between gap-2 rounded-2xl border-2 p-4"
                                 >
-                                    <h2>{train_type_name}</h2>
+                                    <h2>{trainTypeName}</h2>
                                     <div className="text-sm">
                                         {`${reservedSeat.train_car_number}号車` +
                                             `${reservedSeat.seat_number}番` +

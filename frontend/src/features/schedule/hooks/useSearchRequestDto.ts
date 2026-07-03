@@ -27,8 +27,8 @@ export function useSearchRequestDto({
         return {
             date,
             time,
-            departure_station_cd: departureStation,
-            arrival_station_cd: arrivalStation,
+            departureStationCd: departureStation,
+            arrivalStationCd: arrivalStation,
         };
     }, [date, time, departureStation, arrivalStation]);
 
