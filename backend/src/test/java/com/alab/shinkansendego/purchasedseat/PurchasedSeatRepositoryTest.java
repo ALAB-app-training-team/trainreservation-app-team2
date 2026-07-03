@@ -48,9 +48,9 @@ public class PurchasedSeatRepositoryTest {
     @DisplayName("購入情報IDから購入した座席リストを取得できる")
     void findReservedSeatDtoByPurchaseId_withPurchaseId_returnGetScheduleSuccess() {
         List<ReservedSeatDto> expected = Arrays.asList(
-                new ReservedSeatDto("指定席", 1, 1, "A", "fe529692-fbac-4332-b70f-263ab1c1e216"),
-                new ReservedSeatDto("グリーン車", 2, 2, "B", "510b8d7b-b954-4220-be15-5b1648e36db5"),
-                new ReservedSeatDto("グランクラス", 3, 3, "C", "a1d64fbb-6f6e-4533-8e99-898ce9dea677"));
+                new ReservedSeatDto("指定席", 1, 1, "A", UUID.fromString("fe529692-fbac-4332-b70f-263ab1c1e216")),
+                new ReservedSeatDto("グリーン車", 2, 2, "B", UUID.fromString("510b8d7b-b954-4220-be15-5b1648e36db5")),
+                new ReservedSeatDto("グランクラス", 3, 3, "C", UUID.fromString("a1d64fbb-6f6e-4533-8e99-898ce9dea677")));
         List<ReservedSeatDto> actual = repo.findReservedSeatDtoByPurchaseId(purchaseId);
         assertEquals(expected, actual);
     }
