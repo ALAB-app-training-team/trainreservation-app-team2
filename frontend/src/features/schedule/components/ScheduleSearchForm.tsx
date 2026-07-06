@@ -5,6 +5,7 @@ import { DepartureDateAndTimePicker } from '@/features/schedule/components/Depar
 import { StationSelect } from '@/features/schedule/components/StationSelect';
 import type { SearchRequestDto } from '@/features/schedule/types/SearchRequestDto';
 import type { Station } from '@/features/schedule/types/Station';
+import { useStationFilter } from '../hooks/useStationFilter';
 
 type ScheduleSearchFormProps = {
     stations: Station[];
@@ -29,6 +30,12 @@ export function ScheduleSearchForm({
     maxDate,
     minDate,
 }: ScheduleSearchFormProps) {
+    const {availableDepartureStations, availableArrivalStations} = useStationFilter(
+        stations,
+        searchRequestDto.departureStationCd,
+        searchRequestDto.arrivalStationCd
+    );
+
     return (
         <>
             <div className="flex justify-center">
@@ -38,7 +45,7 @@ export function ScheduleSearchForm({
                             <StationSelect
                                 id="departureStation"
                                 label="乗車駅"
-                                list={stations}
+                                list={availableDepartureStations}
                                 value={searchRequestDto.departureStationCd}
                                 setValue={setDepartureStation}
                             />
@@ -48,7 +55,7 @@ export function ScheduleSearchForm({
                             <StationSelect
                                 id="arrivalStation"
                                 label="降車駅"
-                                list={stations}
+                                list={availableArrivalStations}
                                 value={searchRequestDto.arrivalStationCd}
                                 setValue={setArrivalStation}
                                 getFieldError={getFieldError}
