@@ -1,40 +1,66 @@
 import { useMemo } from "react";
 import type { StationResponseDto } from "@/features/schedule/types/StationResponseDto"
 
+
+//特定の駅CDがもつすべての停車分類を取得
+const getStopCategoriesByStationCd = (stations: StationResponseDto[], stationCd: string): string[] => {
+    if(!stationCd) return [];
+    return stations
+      .filter((s) => s.stationCd === stationCd)
+      .map((s) => s.stopCategory)
+      .filter((cat):cat is string => !!cat);
+};
+
+//駅CDの重複を削除した駅リストを取得
+const getUniqueStations = (stations: StationResponseDto[]): StationResponseDto[] => {
+    const seen = new Set<string>();
+    return stations.filter((station) => {
+        if(seen.has(station.stationCd)){
+            return false;
+        }
+        seen.add(station.stationCd);
+        return true;
+    });
+};
+
 export function useStationFilter(
     stations: StationResponseDto[],
     departureStationCd: string,
     arrivalStationCd: string
 ){
-    const selectedDeparture = useMemo(() => {
-        return stations.find((s) => s.stationCd === departureStationCd);
+    const departureCategories =useMemo(() => {
+        return getStopCategoriesByStationCd(stations, departureStationCd);
     }, [stations, departureStationCd]);
 
-    const selectedArrival = useMemo(() => {
-        return stations.find((s) => s.stationCd === arrivalStationCd);
+    const arrivalCategories =useMemo(() => {
+        return getStopCategoriesByStationCd(stations, arrivalStationCd);
     }, [stations, arrivalStationCd]);
 
     const availableArrivalStations = useMemo(() => {
-        if(!selectedDeparture) return stations;
+        const uniqueStations = getUniqueStations(stations);
 
-        return stations.filter((station) => {
-            if(station.stationCd === selectedDeparture.stationCd) return false;
+        if(!departureStationCd || departureCategories.length === 0) return uniqueStations;
 
-            return station.stopCategory.some((stopCategory) => 
-            selectedDeparture.stopCategory.includes(stopCategory));
-        });
-    }, [stations, selectedDeparture]);
+       return uniqueStations.filter((station) => {
+        if(station.stationCd === departureStationCd) return false;
+
+        const candidateCategories = getStopCategoriesByStationCd(stations, station.stationCd);
+        return candidateCategories.some((cat) => departureCategories.includes(cat));
+       })
+    }, [stations, departureStationCd, departureCategories]);
 
     const availableDepartureStations = useMemo(() => {
-        if(!selectedArrival) return stations;
+        const uniqueStations = getUniqueStations(stations);
 
-        return stations.filter((station) => {
-            if(station.stationCd === selectedArrival.stationCd) return false;
+        if(!arrivalStationCd || arrivalCategories.length === 0) return uniqueStations;
 
-            return station.stopCategory.some((stopCategory) => 
-            selectedArrival.stopCategory.includes(stopCategory))
-        })
-    })
+        return uniqueStations.filter((station) => {
+        if(station.stationCd === arrivalStationCd) return false;
+
+        const candidateCategories = getStopCategoriesByStationCd(stations, station.stationCd);
+        return candidateCategories.some((cat) => arrivalCategories.includes(cat));
+       })
+    }, [stations, arrivalStationCd, arrivalCategories]);
 
     return {
         availableArrivalStations,
