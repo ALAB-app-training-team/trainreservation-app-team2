@@ -5,22 +5,24 @@ import type { Station } from '@/features/schedule/types/Station';
 
 type useSearchRequestDtoProps = {
     stations: Station[];
+    initialDto?: SearchRequestDto;
 };
 
 export function useSearchRequestDto({
     stations = [],
+    initialDto,
 }: useSearchRequestDtoProps) {
     const [date, setDate] = useState<string>(
-        new Date().toISOString().split('T')[0],
+        initialDto?.date || new Date().toISOString().split('T')[0],
     );
     const [time, setTime] = useState<string>(
-        new Date().toTimeString().slice(0, 5),
+        initialDto?.time || new Date().toTimeString().slice(0, 5),
     );
     const [departureStation, setDepartureStation] = useState<string>(
-        stations[0].stationCd,
+        initialDto?.departureStationCd || stations[0].stationCd,
     );
     const [arrivalStation, setArrivalStation] = useState<string>(
-        stations[1].stationCd,
+        initialDto?.arrivalStationCd || stations[1].stationCd,
     );
 
     const searchRequestDto: SearchRequestDto = useMemo<SearchRequestDto>(() => {
