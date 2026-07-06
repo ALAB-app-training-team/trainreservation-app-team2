@@ -7,10 +7,11 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
+import java.util.List;
 import java.util.UUID;
 
 @RestController
-@RequestMapping(path = "api/shinkansen-reservation")
+@RequestMapping
 public class ReservationController {
     private final ReservationService reservationService;
 
@@ -19,7 +20,13 @@ public class ReservationController {
         this.reservationService = reservationService;
     }
 
-    @GetMapping
+    @GetMapping(path = "api/shinkansen-reservationlist")
+    public ResponseEntity<List<ReservationResponseDto>> getReservationList() {
+        List<ReservationResponseDto> response = reservationService.getReservationList();
+        return ResponseEntity.ok(response);
+    }
+
+    @GetMapping(path = "api/shinkansen-reservation")
     public ResponseEntity<ReservationResponseDto> getReservation(@RequestParam("purchaseId") UUID request) {
         ReservationResponseDto response = reservationService.getReservation(request);
         return ResponseEntity.ok(response);

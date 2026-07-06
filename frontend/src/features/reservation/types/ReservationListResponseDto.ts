@@ -1,12 +1,11 @@
+// import type { ReservedSeatDto } from "@/features/reservation/types/ReservedSeatDto";
 import type { ReservedSeatDto } from '@/features/reservation/types/ReservedSeatDto';
 
-export type ReservationResponseDto = {
-    purchaseId?: string;
+export type ReservationListResponseDto = {
     trainTypeName: string;
     departureTime: string;
     departureStationName: string;
-    arrivalTime: string;
     arrivalStationName: string;
     rideDate: string;
-    reservedSeats: ReservedSeatDto[];
+    seats: ReservedSeatDto[];
 };

@@ -6,6 +6,7 @@ const SEATS = `${BASE_URL}/shinkansen-seat`;
 const TRAINCAR = `${BASE_URL}/shinkansen-traincar`;
 const PURCHASE = `${BASE_URL}/shinkansen-purchase`;
 const RESERVATION = `${BASE_URL}/shinkansen-reservation`;
+const RESERVATIONLIST = `${BASE_URL}/shinkansen-reservationlist`;
 export const ENDPOINTS = {
     SCHEDULES_SEARCH: () => SCHEDULES,
     STATIONS: () => STATIONS,
@@ -13,4 +14,5 @@ export const ENDPOINTS = {
     TRAINCAR: () => TRAINCAR,
     PURCHASE: () => PURCHASE,
     RESERVATION: () => RESERVATION,
+    RESERVATIONLIST: () => RESERVATIONLIST,
 };
