@@ -11,6 +11,7 @@ type ReserveUserInfoProps = {
     focus: Focused;
     handleInputChange: (e: React.ChangeEvent<HTMLInputElement>) => void;
     handleInputFocus: (e: React.ChangeEvent<HTMLInputElement>) => void;
+    getFieldError?: (field: string) => string;
 };
 
 export function ReserveUserInfo({
@@ -18,6 +19,7 @@ export function ReserveUserInfo({
     focus,
     handleInputChange,
     handleInputFocus,
+    getFieldError,
 }: ReserveUserInfoProps) {
     return (
         <>
@@ -32,6 +34,7 @@ export function ReserveUserInfo({
                     onFocus={handleInputFocus}
                     autoComplete="name"
                     icon={IoPersonOutline}
+                    getFieldError={getFieldError}
                 />
                 <ReserveUserInfoInput
                     reserveUser={reserveUser}
@@ -43,6 +46,7 @@ export function ReserveUserInfo({
                     onFocus={handleInputFocus}
                     autoComplete="mail"
                     icon={IoMailOutline}
+                    getFieldError={getFieldError}
                 />
                 <Cards
                     number={reserveUser.cardNumber}
@@ -62,6 +66,7 @@ export function ReserveUserInfo({
                     autoComplete="off"
                     pattern="[\d]{16,22}"
                     icon={IoCardOutline}
+                    getFieldError={getFieldError}
                 />
                 <ReserveUserInfoInput
                     reserveUser={reserveUser}
@@ -72,6 +77,7 @@ export function ReserveUserInfo({
                     onChange={handleInputChange}
                     onFocus={handleInputFocus}
                     autoComplete="off"
+                    getFieldError={getFieldError}
                 />
                 <ReserveUserInfoInput
                     reserveUser={reserveUser}
@@ -83,6 +89,7 @@ export function ReserveUserInfo({
                     onFocus={handleInputFocus}
                     autoComplete="off"
                     pattern="\d\d/\d\d"
+                    getFieldError={getFieldError}
                 />
                 <ReserveUserInfoInput
                     reserveUser={reserveUser}
@@ -94,6 +101,7 @@ export function ReserveUserInfo({
                     onFocus={handleInputFocus}
                     autoComplete="off"
                     pattern="\d{3,4}"
+                    getFieldError={getFieldError}
                 />
             </div>
         </>

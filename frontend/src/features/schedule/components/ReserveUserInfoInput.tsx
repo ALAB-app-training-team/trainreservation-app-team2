@@ -14,6 +14,7 @@ type ReserveUserInfoInputProps = {
     autoComplete: string;
     pattern?: string;
     icon?: IconType;
+    getFieldError?: (field: string) => string;
 };
 export function ReserveUserInfoInput({
     reserveUser,
@@ -26,6 +27,7 @@ export function ReserveUserInfoInput({
     autoComplete,
     pattern,
     icon,
+    getFieldError,
 }: ReserveUserInfoInputProps) {
     return (
         <>
@@ -46,6 +48,11 @@ export function ReserveUserInfoInput({
                         required
                     />
                 </div>
+                {getFieldError?.(id) && (
+                    <p className="text-left text-sm text-red-600">
+                        {getFieldError(id)}
+                    </p>
+                )}
             </div>
         </>
     );

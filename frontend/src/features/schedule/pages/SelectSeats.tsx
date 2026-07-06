@@ -24,8 +24,14 @@ export function SelectSeats() {
     } = location.state;
     const { selectedSeats, limitSeats, handleSelectedSeats } =
         useSelectedSeats();
-    const { reserveUser, focus, handleInputChange, handleInputFocus } =
-        useReserveUser();
+    const {
+        reserveUser,
+        focus,
+        handleInputChange,
+        handleInputFocus,
+        isInvalid,
+        getFieldError,
+    } = useReserveUser();
 
     const handleReserve = async () => {
         // TODO: try-catchをつける
@@ -88,11 +94,14 @@ export function SelectSeats() {
                                     focus={focus}
                                     handleInputChange={handleInputChange}
                                     handleInputFocus={handleInputFocus}
+                                    getFieldError={getFieldError}
                                 />
                                 <button
                                     type="submit"
                                     className="bg-primary w-full rounded-lg p-2 text-white"
-                                    disabled={selectedSeats.length === 0}
+                                    disabled={
+                                        selectedSeats.length === 0 || isInvalid
+                                    }
                                 >
                                     <div className="flex items-center justify-center gap-4">
                                         <IoCardOutline />
