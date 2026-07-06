@@ -14,6 +14,8 @@ type ScheduleSearchFormProps = {
     setArrivalStation: React.Dispatch<SetStateAction<string>>;
     searchRequestDto: SearchRequestDto;
     getFieldError: (field: string) => string;
+    maxDate: Date;
+    minDate: Date;
 };
 
 export function ScheduleSearchForm({
@@ -24,6 +26,8 @@ export function ScheduleSearchForm({
     setArrivalStation,
     searchRequestDto,
     getFieldError,
+    maxDate,
+    minDate,
 }: ScheduleSearchFormProps) {
     return (
         <>
@@ -58,6 +62,8 @@ export function ScheduleSearchForm({
                                 value={searchRequestDto.date}
                                 setValue={setDate}
                                 getFieldError={getFieldError}
+                                maxDate={maxDate}
+                                minDate={minDate}
                             />
                             <DepartureDateAndTimePicker
                                 id="time"
