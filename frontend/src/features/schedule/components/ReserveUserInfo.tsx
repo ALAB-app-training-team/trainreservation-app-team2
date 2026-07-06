@@ -60,7 +60,7 @@ export function ReserveUserInfo({
                     onChange={handleInputChange}
                     onFocus={handleInputFocus}
                     autoComplete="off"
-                    pattern="[\d| ]{16,22}"
+                    pattern="[\d]{16,22}"
                     icon={IoCardOutline}
                 />
                 <ReserveUserInfoInput

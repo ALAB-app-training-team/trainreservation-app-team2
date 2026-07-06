@@ -43,6 +43,7 @@ export function ReserveUserInfoInput({
                         autoComplete={autoComplete}
                         pattern={pattern}
                         className="w-full"
+                        required
                     />
                 </div>
             </div>
