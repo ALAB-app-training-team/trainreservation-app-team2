@@ -1,3 +1,4 @@
+import dayjs from 'dayjs';
 import { useMemo, useState } from 'react';
 
 import type { SearchRequestDto } from '@/features/schedule/types/SearchRequestDto';
@@ -10,12 +11,8 @@ type useSearchRequestDtoProps = {
 export function useSearchRequestDto({
     stations = [],
 }: useSearchRequestDtoProps) {
-    const [date, setDate] = useState<string>(
-        new Date().toISOString().split('T')[0],
-    );
-    const [time, setTime] = useState<string>(
-        new Date().toTimeString().slice(0, 5),
-    );
+    const [date, setDate] = useState<string>(dayjs().format('YYYY-MM-DD'));
+    const [time, setTime] = useState<string>(dayjs().format('HH:mm'));
     const [departureStation, setDepartureStation] = useState<string>(
         stations[0].stationCd,
     );
