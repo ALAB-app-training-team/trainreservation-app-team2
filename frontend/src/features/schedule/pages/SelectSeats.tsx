@@ -1,5 +1,6 @@
 import axios from 'axios';
 import { Suspense } from 'react';
+import { LuArrowLeft } from 'react-icons/lu';
 import { useLocation, useNavigate } from 'react-router-dom';
 
 import { ENDPOINTS } from '@/api/routes';
@@ -53,7 +54,10 @@ export function SelectSeats() {
                         });
                     }}
                 >
-                    ←検索画面に戻る
+                    <div className="flex items-center gap-2">
+                        <LuArrowLeft />
+                        検索画面に戻る
+                    </div>
                 </button>
             </div>
             <div className="flex w-full flex-col flex-col-reverse items-start justify-between gap-4 p-4 md:flex-row">
