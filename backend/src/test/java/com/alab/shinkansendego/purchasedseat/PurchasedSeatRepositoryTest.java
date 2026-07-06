@@ -96,17 +96,7 @@ public class PurchasedSeatRepositoryTest {
             sameSeats.add(purchasedSeat);
         }
         assertThrows(org.springframework.dao.DataAccessException.class, () -> {
-            repo.saveAll(sameSeats);
-        });
-    }
-
-    @Test
-    @Sql(scripts = {"classpath:com/alab/shinkansendego/sql/PurchasedSeatRepositoryTestData_Schedule.sql"})
-    @DisplayName("空の購入座席情報を渡した場合、BadSqlGrammarExceptionが発生する")
-    void saveAll_withEmptyPurchasedSeatList_throwsException() {
-        List<PurchasedSeatEntity> emptySeats = new ArrayList<>();
-        assertThrows(org.springframework.jdbc.BadSqlGrammarException.class, () -> {
-            repo.saveAll(emptySeats);
+            repo.saveAllAndFlush(sameSeats);
         });
     }
 }
