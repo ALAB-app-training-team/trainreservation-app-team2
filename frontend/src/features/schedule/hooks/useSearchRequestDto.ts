@@ -54,19 +54,19 @@ export function useSearchRequestDto({
     minDate.setHours(0, 0, 0, 0);
 
     const isDateEmpty: boolean = date === '';
-    const isDateWithinOneMonth: boolean =
+    const isDateOutsideOneMonth: boolean =
         new Date(date) < minDate || new Date(date) > maxDate;
     const isStationSame: boolean = departureStation === arrivalStation;
 
     const isInvalid: boolean =
-        isDateEmpty || isDateWithinOneMonth || isStationSame;
+        isDateEmpty || isDateOutsideOneMonth || isStationSame;
 
     const inValidMessages: InValidMessage[] = useMemo(() => {
         const messages: InValidMessage[] = [];
         if (isDateEmpty) {
             messages.push({ field: 'date', message: '日付を入力してください' });
         }
-        if (isDateWithinOneMonth) {
+        if (isDateOutsideOneMonth) {
             messages.push({
                 field: 'date',
                 message: '出発日は本日から1か月以内の日付を指定してください',
