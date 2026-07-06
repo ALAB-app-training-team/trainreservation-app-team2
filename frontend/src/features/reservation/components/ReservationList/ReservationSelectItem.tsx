@@ -1,3 +1,5 @@
+import dayjs from 'dayjs';
+import customParseFormat from 'dayjs/plugin/customParseFormat';
 import { BsQrCode } from 'react-icons/bs';
 import { FaSearch } from 'react-icons/fa';
 import { IoTrashOutline } from 'react-icons/io5';
@@ -6,8 +8,6 @@ import { useNavigate } from 'react-router-dom';
 
 import { ReservedSeats } from '@/features/reservation/components/ReservedSeats';
 import type { ReservationResponseDto } from '@/features/reservation/types/ReservationResponseDto';
-import { FormatDate } from '@/shared/utils/FormatDate';
-import { FormatTime } from '@/shared/utils/FormatTime';
 
 type ReservationSelectItemProps = {
     details: ReservationResponseDto;
@@ -26,6 +26,8 @@ export function ReservationSelectItem({ details }: ReservationSelectItemProps) {
         });
         window.scrollTo(0, 0);
     };
+
+    dayjs.extend(customParseFormat);
 
     return (
         <div className="border-primary-light flex flex-col gap-2 rounded-2xl border-2 p-8">
@@ -56,9 +58,13 @@ export function ReservationSelectItem({ details }: ReservationSelectItemProps) {
                 <div className="flex w-full flex-col items-start">
                     <label>出発</label>
                     <label className="text-xl font-bold">
-                        {FormatDate(details.rideDate)}{' '}
+                        {dayjs(details.rideDate).format('YYYY年MM月DD日')}{' '}
                     </label>
-                    <label>{FormatTime(details.departureTime)}</label>
+                    <label>
+                        {dayjs(details.departureTime, 'HH:mm:ss').format(
+                            'HH:mm',
+                        )}
+                    </label>
                 </div>
             </div>
             <div className="border-primary/20 flex border-b-2 py-2">
