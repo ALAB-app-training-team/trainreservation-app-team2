@@ -1,6 +1,8 @@
 package com.alab.shinkansendego.schedule;
 
-import lombok.*;
+import lombok.AllArgsConstructor;
+import lombok.Data;
+import lombok.NoArgsConstructor;
 
 import java.time.LocalTime;
 

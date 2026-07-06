@@ -1,10 +1,10 @@
 package com.alab.shinkansendego.schedule;
 
-import org.springframework.data.jpa.repository.*;
-import org.springframework.data.repository.query.*;
-import org.springframework.stereotype.*;
+import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Query;
+import org.springframework.stereotype.Repository;
 
-import java.util.*;
+import java.util.List;
 
 @Repository
 public interface ScheduleRepository extends JpaRepository<ScheduleEntity, String> {

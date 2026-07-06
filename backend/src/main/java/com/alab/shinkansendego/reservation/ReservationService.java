@@ -1,11 +1,16 @@
 package com.alab.shinkansendego.reservation;
 
-import com.alab.shinkansendego.purchase.*;
-import com.alab.shinkansendego.purchasedseat.*;
-import org.springframework.beans.factory.annotation.*;
-import org.springframework.stereotype.*;
+import com.alab.shinkansendego.purchase.PurchaseEntity;
+import com.alab.shinkansendego.purchase.PurchaseRepository;
+import com.alab.shinkansendego.purchasedseat.PurchasedSeatRepository;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Sort;
+import org.springframework.stereotype.Service;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Objects;
+import java.util.UUID;
 
 @Service
 public class ReservationService {
@@ -19,6 +24,19 @@ public class ReservationService {
     ) {
         this.purchaseRepository = purchaseRepository;
         this.purchasedSeatRepository = purchasedSeatRepository;
+    }
+
+    public List<ReservationResponseDto> getReservationList() {
+        List<ReservationResponseDto> reservationList = new ArrayList<>();
+        List<PurchaseEntity> purchaseList = purchaseRepository.findAll(Sort.by("rideDate").ascending());
+
+        for (PurchaseEntity purchase : purchaseList) {
+            ReservationResponseDto reservation = getReservation(purchase.getId());
+            reservation.setPurchaseId(purchase.getId());
+            reservationList.add(reservation);
+        }
+
+        return reservationList;
     }
 
     public ReservationResponseDto getReservation(UUID request) {

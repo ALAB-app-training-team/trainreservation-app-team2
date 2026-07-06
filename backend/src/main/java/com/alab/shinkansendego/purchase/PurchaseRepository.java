@@ -1,11 +1,13 @@
 package com.alab.shinkansendego.purchase;
 
-import com.alab.shinkansendego.reservation.*;
-import org.springframework.data.jpa.repository.*;
-import org.springframework.data.repository.query.*;
-import org.springframework.stereotype.*;
+import com.alab.shinkansendego.reservation.ReservationDto;
+import com.alab.shinkansendego.reservation.ReservedScheduleDto;
+import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Query;
+import org.springframework.stereotype.Repository;
 
-import java.util.*;
+import java.util.List;
+import java.util.UUID;
 
 @Repository
 public interface PurchaseRepository extends JpaRepository<PurchaseEntity, UUID> {

@@ -1,8 +1,10 @@
 package com.alab.shinkansendego.reservation;
 
-import lombok.*;
+import lombok.AllArgsConstructor;
+import lombok.Data;
+import lombok.NoArgsConstructor;
 
-import java.util.*;
+import java.util.UUID;
 
 @Data
 @NoArgsConstructor

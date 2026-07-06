@@ -4,6 +4,7 @@ import {
     RouterProvider,
 } from 'react-router-dom';
 
+import { ReservationList } from '@/features/reservation/pages/ReservationList';
 import { ReservedTicket } from '@/features/reservation/pages/ReservedTicket';
 import { ScheduleSearch } from '@/features/schedule/pages/ScheduleSearch';
 import { SelectSeats } from '@/features/schedule/pages/SelectSeats';
@@ -33,6 +34,11 @@ const router = createBrowserRouter([
             {
                 path: '/reservedTicket',
                 element: <ReservedTicket />,
+                errorElement: <Error />,
+            },
+            {
+                path: '/reservationList',
+                element: <ReservationList />,
                 errorElement: <Error />,
             },
             { path: '/error', element: <Error /> },

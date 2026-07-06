@@ -1,16 +1,25 @@
 package com.alab.shinkansendego.schedule;
 
-import com.alab.shinkansendego.departurearrivaltime.*;
-import com.alab.shinkansendego.sectionkm.*;
-import org.jspecify.annotations.*;
-import org.junit.jupiter.api.*;
-import org.mockito.*;
+import com.alab.shinkansendego.departurearrivaltime.DepartureArrivalTimeEntity;
+import com.alab.shinkansendego.departurearrivaltime.DepartureArrivalTimeRepository;
+import com.alab.shinkansendego.sectionkm.SectionKmRepository;
+import org.jspecify.annotations.NonNull;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.DisplayName;
+import org.junit.jupiter.api.Test;
+import org.mockito.InjectMocks;
+import org.mockito.Mock;
+import org.mockito.MockitoAnnotations;
 
-import java.time.*;
-import java.util.*;
+import java.time.LocalDate;
+import java.time.LocalTime;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
 
-import static org.junit.jupiter.api.Assertions.*;
-import static org.mockito.Mockito.*;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.mockito.Mockito.when;
 
 public class ScheduleServiceTest {
 
