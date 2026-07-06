@@ -65,7 +65,7 @@ export function SelectSeats() {
                     </div>
                 </button>
             </div>
-            <div className="flex w-full flex-col flex-col-reverse items-start justify-between gap-4 p-4 md:flex-row">
+            <div className="flex w-full flex-col items-start justify-between gap-4 p-4 md:flex-row">
                 <div className="w-full md:w-7/10">
                     <Suspense fallback={<TrainCarsSkeleton />}>
                         <TrainCars
