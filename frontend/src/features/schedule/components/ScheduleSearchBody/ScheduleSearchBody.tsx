@@ -6,11 +6,13 @@ import { ScheduleListSkeleton } from '@/features/schedule/components/ScheduleLis
 import { ScheduleSearchForm } from '@/features/schedule/components/ScheduleSearchForm';
 import { useSearchRequestDto } from '@/features/schedule/hooks/useSearchRequestDto';
 import { useStations } from '@/features/schedule/hooks/useStations';
+import { useStationResponseDtos } from '@/features/schedule/hooks/useStationResponseDtos'
 
 export function ScheduleSearchBody() {
     const location = useLocation();
     const initialDto = location.state?.searchRequestDto;
     const { stations } = useStations();
+    const {stationResponseDtos} = useStationResponseDtos();
     const {
         setTime,
         setDate,
@@ -29,6 +31,7 @@ export function ScheduleSearchBody() {
                 <div className="mx-8 my-4 flex w-full max-w-5xl flex-col gap-4">
                     <ScheduleSearchForm
                         stations={stations}
+                        stationResponseDtos={stationResponseDtos}
                         setTime={setTime}
                         setDate={setDate}
                         setDepartureStation={setDepartureStation}
