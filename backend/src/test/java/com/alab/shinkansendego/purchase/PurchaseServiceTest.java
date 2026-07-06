@@ -1,27 +1,20 @@
 package com.alab.shinkansendego.purchase;
 
-import com.alab.shinkansendego.departurearrivaltime.DepartureArrivalTimeEntity;
-import com.alab.shinkansendego.departurearrivaltime.DepartureArrivalTimeRepository;
-import com.alab.shinkansendego.purchasedseat.PurchasedSeatRepository;
-import com.alab.shinkansendego.reservedseatsection.ReservedSeatSectionRepository;
-import com.alab.shinkansendego.sectionkm.SectionKmRepository;
-import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.DisplayName;
-import org.junit.jupiter.api.Test;
-import org.mockito.InjectMocks;
-import org.mockito.Mock;
-import org.mockito.MockitoAnnotations;
-import org.springframework.dao.DuplicateKeyException;
+import com.alab.shinkansendego.departurearrivaltime.*;
+import com.alab.shinkansendego.purchasedseat.*;
+import com.alab.shinkansendego.reservedseatsection.*;
+import com.alab.shinkansendego.sectionkm.*;
+import org.junit.jupiter.api.*;
+import org.mockito.*;
+import org.springframework.dao.*;
 
-import java.time.LocalDate;
-import java.time.LocalTime;
-import java.util.List;
-import java.util.UUID;
+import java.time.*;
+import java.util.*;
+import java.util.stream.*;
 
-import static org.junit.jupiter.api.Assertions.assertNotNull;
-import static org.junit.jupiter.api.Assertions.assertThrows;
-import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.Mockito.when;
+import static org.junit.jupiter.api.Assertions.*;
+import static org.mockito.ArgumentMatchers.*;
+import static org.mockito.Mockito.*;
 
 public class PurchaseServiceTest {
     @Mock
@@ -56,9 +49,14 @@ public class PurchaseServiceTest {
         when(sectionKmRepo.findSectionCdByGoalStationCd(request.getArrivalStationCd())).thenReturn(List.of(departureArrivalTime.getSectionCd()));
         when(departureArrivalTimeRepo.findByScheduleCdAndSectionCdIn(request.getScheduleCd(), List.of(departureArrivalTime.getSectionCd()))).thenReturn(departureArrivalTime);
         when(departureArrivalTimeRepo.findByScheduleCdAndDepartureTimeAndArrivalTime(request.getScheduleCd(), departureArrivalTime.getDepartureTime(), departureArrivalTime.getArrivalTime())).thenReturn(List.of(departureArrivalTime.getSectionCd()));
-        when(purchaseRepo.save(any()).getId()).thenReturn(UUID.randomUUID());
-        when(purchasedSeatRepo.saveAll(any()).size()).thenReturn(request.getSeats().size());
-        when(reservedSeatSectionRepo.saveAll(any()).size()).thenReturn(request.getSeats().size());
+        when(purchaseRepo.save(any())).thenReturn(new PurchaseEntity() {{
+            setId(UUID.randomUUID());
+        }});
+        when(purchasedSeatRepo.saveAll(any())).thenReturn(Stream.generate(PurchasedSeatEntity::new).limit(request.getSeats().size()).collect(Collectors.toList()));
+        when(reservedSeatSectionRepo.saveAll(any())).
+                thenReturn(Stream.generate(ReservedSeatSectionEntity::new).
+                        limit((List.of(departureArrivalTime.getSectionCd())).size() * request.getSeats().size())
+                        .collect(Collectors.toList()));
 
         UUID result = service.insertPurchase(request);
         assertNotNull(result);
@@ -117,7 +115,9 @@ public class PurchaseServiceTest {
         when(sectionKmRepo.findSectionCdByGoalStationCd(request.getArrivalStationCd())).thenReturn(List.of(departureArrivalTime.getSectionCd()));
         when(departureArrivalTimeRepo.findByScheduleCdAndSectionCdIn(request.getScheduleCd(), List.of(departureArrivalTime.getSectionCd()))).thenReturn(departureArrivalTime);
         when(departureArrivalTimeRepo.findByScheduleCdAndDepartureTimeAndArrivalTime(request.getScheduleCd(), departureArrivalTime.getDepartureTime(), departureArrivalTime.getArrivalTime())).thenReturn(List.of(departureArrivalTime.getSectionCd()));
-        when(purchaseRepo.save(any()).getId()).thenReturn(UUID.randomUUID());
+        when(purchaseRepo.save(any())).thenReturn(new PurchaseEntity() {{
+            setId(UUID.randomUUID());
+        }});
         when(purchasedSeatRepo.saveAll(any()).size()).thenThrow(new DuplicateKeyException("UNIQUE制約エラー"));
         assertThrows(org.springframework.dao.DataAccessException.class, () -> service.insertPurchase(request));
     }
@@ -136,7 +136,7 @@ public class PurchaseServiceTest {
         when(sectionKmRepo.findSectionCdByGoalStationCd(request.getArrivalStationCd())).thenReturn(List.of(departureArrivalTime.getSectionCd()));
         when(departureArrivalTimeRepo.findByScheduleCdAndSectionCdIn(request.getScheduleCd(), List.of(departureArrivalTime.getSectionCd()))).thenReturn(departureArrivalTime);
         when(departureArrivalTimeRepo.findByScheduleCdAndDepartureTimeAndArrivalTime(request.getScheduleCd(), departureArrivalTime.getDepartureTime(), departureArrivalTime.getArrivalTime())).thenReturn(List.of(departureArrivalTime.getSectionCd()));
-        when(purchaseRepo.save(any()).getId()).thenReturn(null);
+        when(purchaseRepo.save(any())).thenReturn(null);
         assertThrows(RuntimeException.class, () -> service.insertPurchase(request));
     }
 
@@ -154,8 +154,8 @@ public class PurchaseServiceTest {
         when(sectionKmRepo.findSectionCdByGoalStationCd(request.getArrivalStationCd())).thenReturn(List.of(departureArrivalTime.getSectionCd()));
         when(departureArrivalTimeRepo.findByScheduleCdAndSectionCdIn(request.getScheduleCd(), List.of(departureArrivalTime.getSectionCd()))).thenReturn(departureArrivalTime);
         when(departureArrivalTimeRepo.findByScheduleCdAndDepartureTimeAndArrivalTime(request.getScheduleCd(), departureArrivalTime.getDepartureTime(), departureArrivalTime.getArrivalTime())).thenReturn(List.of(departureArrivalTime.getSectionCd()));
-        when(purchaseRepo.save(any()).getId()).thenReturn(UUID.randomUUID());
-        when(purchasedSeatRepo.saveAll(any()).size()).thenReturn(0);
+        when(purchaseRepo.save(any())).thenReturn(new PurchaseEntity() {{setId(UUID.randomUUID());}});
+        when(purchasedSeatRepo.saveAll(any())).thenReturn(null);
 
         assertThrows(RuntimeException.class, () -> service.insertPurchase(request));
     }
@@ -174,9 +174,11 @@ public class PurchaseServiceTest {
         when(sectionKmRepo.findSectionCdByGoalStationCd(request.getArrivalStationCd())).thenReturn(List.of(departureArrivalTime.getSectionCd()));
         when(departureArrivalTimeRepo.findByScheduleCdAndSectionCdIn(request.getScheduleCd(), List.of(departureArrivalTime.getSectionCd()))).thenReturn(departureArrivalTime);
         when(departureArrivalTimeRepo.findByScheduleCdAndDepartureTimeAndArrivalTime(request.getScheduleCd(), departureArrivalTime.getDepartureTime(), departureArrivalTime.getArrivalTime())).thenReturn(List.of(departureArrivalTime.getSectionCd()));
-        when(purchaseRepo.save(any()).getId()).thenReturn(UUID.randomUUID());
-        when(purchasedSeatRepo.saveAll(any()).size()).thenReturn(request.getSeats().size());
-        when(reservedSeatSectionRepo.saveAll(any()).size()).thenThrow(new DuplicateKeyException("UNIQUE制約エラー"));
+        when(purchaseRepo.save(any())).thenReturn(new PurchaseEntity() {{
+            setId(UUID.randomUUID());
+        }});
+        when(purchasedSeatRepo.saveAll(any())).thenReturn(List.of(new PurchasedSeatEntity(), new PurchasedSeatEntity()));
+        when(reservedSeatSectionRepo.saveAll(any())).thenThrow(new DuplicateKeyException("UNIQUE制約エラー"));
 
         assertThrows(org.springframework.dao.DataAccessException.class, () -> service.insertPurchase(request));
     }
@@ -192,12 +194,15 @@ public class PurchaseServiceTest {
         departureArrivalTime.setDepartureTime(LocalTime.of(6, 4));
         departureArrivalTime.setArrivalTime(LocalTime.of(6, 9));
         departureArrivalTime.setSectionCd("Test1");
+
         when(sectionKmRepo.findSectionCdByStartStationCd(request.getDepartureStationCd())).thenReturn(List.of(departureArrivalTime.getSectionCd()));
         when(sectionKmRepo.findSectionCdByGoalStationCd(request.getArrivalStationCd())).thenReturn(List.of(departureArrivalTime.getSectionCd()));
         when(departureArrivalTimeRepo.findByScheduleCdAndSectionCdIn(request.getScheduleCd(), List.of(departureArrivalTime.getSectionCd()))).thenReturn(departureArrivalTime);
         when(departureArrivalTimeRepo.findByScheduleCdAndDepartureTimeAndArrivalTime(request.getScheduleCd(), departureArrivalTime.getDepartureTime(), departureArrivalTime.getArrivalTime())).thenReturn(List.of(departureArrivalTime.getSectionCd()));
-//        when(purchaseRepo.save(any()).getId()).thenReturn(UUID.randomUUID());
-        when(purchasedSeatRepo.saveAll(any()).size()).thenReturn(request.getSeats().size());
+        when(purchaseRepo.save(any())).thenReturn(new PurchasedSeatEntity() {{
+            setId(UUID.randomUUID());
+        }});
+        when(purchasedSeatRepo.saveAll(any())).thenReturn(List.of(new PurchasedSeatEntity(), new PurchasedSeatEntity()));
         when(reservedSeatSectionRepo.saveAll(any())).thenReturn(List.of());
         assertThrows(RuntimeException.class, () -> service.insertPurchase(request));
     }
