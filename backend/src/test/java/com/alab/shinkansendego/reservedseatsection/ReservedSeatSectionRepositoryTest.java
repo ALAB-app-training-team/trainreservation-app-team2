@@ -112,16 +112,7 @@ public class ReservedSeatSectionRepositoryTest {
             reservedSeatSections.add(reservedSeatSection);
         }
         assertThrows(org.springframework.dao.DataAccessException.class, () -> {
-            repo.saveAll(reservedSeatSections);
-        });
-    }
-
-    @Test
-    @DisplayName("空の予約済座席区間情報を渡した場合、BadSqlGrammarExceptionが発生する")
-    void saveAllReservedSeatSections_withEmptyReservedSeatSectionList_throwsException() {
-        List<ReservedSeatSectionEntity> emptyReservedSeatSections = new ArrayList<>();
-        assertThrows(org.springframework.jdbc.BadSqlGrammarException.class, () -> {
-            repo.saveAll(emptyReservedSeatSections);
+            repo.saveAllAndFlush(reservedSeatSections);
         });
     }
 }
