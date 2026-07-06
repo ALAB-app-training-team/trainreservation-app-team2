@@ -63,6 +63,7 @@ export function ScheduleList({
                                         }
                                         arrivalStationCd={arrivalStationCd}
                                         arrivalStationName={arrivalStationName}
+                                        searchRequestDto={searchRequestDto}
                                     />
                                 );
                             })}
