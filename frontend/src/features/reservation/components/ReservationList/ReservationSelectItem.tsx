@@ -22,7 +22,7 @@ export function ReservationSelectItem({ details }: ReservationSelectItemProps) {
 
     const handleReservationDetail = () => {
         navigate('/reservedTicket', {
-            state: { purchaseId: details.purchaseId },
+            state: { purchaseId: details.purchaseId, isBack: true },
         });
         window.scrollTo(0, 0);
     };

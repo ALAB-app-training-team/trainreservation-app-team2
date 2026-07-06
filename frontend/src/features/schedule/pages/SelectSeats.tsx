@@ -37,7 +37,7 @@ export function SelectSeats() {
         );
         console.log(response);
         navigate('/reservedTicket', {
-            state: { purchaseId: response.data },
+            state: { purchaseId: response.data, isBack: false },
         });
     };
 
