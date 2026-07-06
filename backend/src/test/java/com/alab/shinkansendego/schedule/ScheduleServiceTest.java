@@ -1,26 +1,16 @@
 package com.alab.shinkansendego.schedule;
 
-import com.alab.shinkansendego.departurearrivaltime.DepartureArrivalTimeEntity;
-import com.alab.shinkansendego.departurearrivaltime.DepartureArrivalTimeDto;
-import com.alab.shinkansendego.departurearrivaltime.DepartureArrivalTimeRepository;
-import com.alab.shinkansendego.sectionkm.SectionKmRepository;
-import org.jspecify.annotations.NonNull;
-import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.DisplayName;
-import org.junit.jupiter.api.Test;
-import org.mockito.InjectMocks;
-import org.mockito.Mock;
-import org.mockito.MockitoAnnotations;
+import com.alab.shinkansendego.departurearrivaltime.*;
+import com.alab.shinkansendego.sectionkm.*;
+import org.jspecify.annotations.*;
+import org.junit.jupiter.api.*;
+import org.mockito.*;
 
-import java.time.LocalDate;
-import java.time.LocalTime;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
+import java.time.*;
+import java.util.*;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertThrows;
-import static org.mockito.Mockito.when;
+import static org.junit.jupiter.api.Assertions.*;
+import static org.mockito.Mockito.*;
 
 public class ScheduleServiceTest {
 
@@ -109,7 +99,7 @@ public class ScheduleServiceTest {
         data07.setArrivalTime(LocalTime.of(16, 10, 0));
         data07.setSectionCd("SEC03");
         sec01ScheduleList.addAll(Arrays.asList(data01, data02));
-        sec02ScheduleList.addAll(Arrays.asList(data03,data04, data06));
+        sec02ScheduleList.addAll(Arrays.asList(data03, data04, data06));
         sec03ScheduleList.addAll(Arrays.asList(data05, data07));
 
         request.setDate(LocalDate.of(2026, 6, 1));
