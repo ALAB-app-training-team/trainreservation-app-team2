@@ -82,22 +82,24 @@ export function SelectSeats() {
                             limitSeats={limitSeats}
                         />
                         <form onSubmit={handleReserve}>
-                            <ReserveUserInfo
-                                reserveUser={reserveUser}
-                                focus={focus}
-                                handleInputChange={handleInputChange}
-                                handleInputFocus={handleInputFocus}
-                            />
-                            <button
-                                type="submit"
-                                className="bg-primary w-full rounded-lg p-2 text-white"
-                                disabled={selectedSeats.length === 0}
-                            >
-                                <div className="flex items-center justify-center gap-4">
-                                    <IoCardOutline />
-                                    予約を確定
-                                </div>
-                            </button>
+                            <div className="flex flex-col gap-8">
+                                <ReserveUserInfo
+                                    reserveUser={reserveUser}
+                                    focus={focus}
+                                    handleInputChange={handleInputChange}
+                                    handleInputFocus={handleInputFocus}
+                                />
+                                <button
+                                    type="submit"
+                                    className="bg-primary w-full rounded-lg p-2 text-white"
+                                    disabled={selectedSeats.length === 0}
+                                >
+                                    <div className="flex items-center justify-center gap-4">
+                                        <IoCardOutline />
+                                        予約を確定
+                                    </div>
+                                </button>
+                            </div>
                         </form>
                     </div>
                 </div>
