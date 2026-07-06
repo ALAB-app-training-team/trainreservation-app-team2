@@ -1,10 +1,10 @@
 package com.alab.shinkansendego.sectionkm;
 
-import org.springframework.data.jpa.repository.*;
-import org.springframework.data.repository.query.*;
-import org.springframework.stereotype.*;
+import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Query;
+import org.springframework.stereotype.Repository;
 
-import java.util.*;
+import java.util.List;
 
 @Repository
 public interface SectionKmRepository extends JpaRepository<SectionKmEntity, String> {

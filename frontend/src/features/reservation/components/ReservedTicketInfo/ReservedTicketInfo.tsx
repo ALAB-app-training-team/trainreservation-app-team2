@@ -44,7 +44,7 @@ export function ReservedTicketInfo({ ticketInfo }: ReservedTicketInfoProps) {
                         </div>
                         <div className="flex flex-col justify-between gap-4 md:flex-row">
                             <ReservedSeats
-                                id="seats"
+                                id="reservationDetail"
                                 title="座席"
                                 seats={ticketInfo.reservedSeats}
                             />

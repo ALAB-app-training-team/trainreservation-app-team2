@@ -50,7 +50,7 @@ export function SelectSeats() {
             reserveRequestDto,
         );
         navigate('/reservedTicket', {
-            state: { purchaseId: response.data },
+            state: { purchaseId: response.data, isBack: false },
         });
     };
 
