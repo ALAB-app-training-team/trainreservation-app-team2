@@ -2,7 +2,7 @@ package com.alab.shinkansendego.reservation;
 
 import lombok.*;
 
-import java.time.LocalDate;
+import java.time.*;
 
 @Data
 @NoArgsConstructor
