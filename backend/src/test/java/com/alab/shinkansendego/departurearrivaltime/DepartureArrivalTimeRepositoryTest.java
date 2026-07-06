@@ -4,14 +4,12 @@ import org.junit.jupiter.api.*;
 import org.springframework.beans.factory.annotation.*;
 import org.springframework.boot.data.jpa.test.autoconfigure.*;
 import org.springframework.boot.jdbc.test.autoconfigure.*;
-import org.springframework.boot.testcontainers.service.connection.*;
 import org.springframework.test.context.*;
 import org.springframework.test.context.jdbc.*;
 import org.testcontainers.containers.*;
 import org.testcontainers.junit.jupiter.*;
 import org.testcontainers.junit.jupiter.Container;
 
-import java.time.*;
 import java.util.*;
 
 import static org.junit.jupiter.api.Assertions.*;
