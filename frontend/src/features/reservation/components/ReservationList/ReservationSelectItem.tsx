@@ -35,7 +35,7 @@ export function ReservationSelectItem({ details }: ReservationSelectItemProps) {
                 <div className="flex">
                     <div className="flex grow-2 items-center gap-2 text-xl font-bold">
                         <LuTicket />
-                        <h3>{details.trainTypeName}</h3>
+                        <label>{details.trainTypeName}</label>
                     </div>
                     {departureDate >= now ? (
                         <div className="bg-primary right-0 flex items-center justify-center rounded-xl px-3 text-sm text-white">
