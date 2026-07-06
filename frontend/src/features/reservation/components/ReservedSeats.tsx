@@ -1,13 +1,28 @@
 import { BsTrainFreightFrontFill } from 'react-icons/bs';
+import { tv, type VariantProps } from 'tailwind-variants';
 
 import type { ReservedSeatDto } from '@/features/reservation/types/ReservedSeatDto';
+
+const reservedSeatsStyle = tv({
+    base: 'flex items-center gap-1 rounded-lg px-2',
+    variants: {
+        id: {
+            reservationList: 'border-primary border',
+            reservationDetail:
+                'border-primary-light text-primary bg-green-100 border-2',
+        },
+    },
+    defaultVariants: {
+        id: 'reservationList',
+    },
+});
 
 type ReservedSeatsProps = {
     id: string;
     title: string;
     seats: ReservedSeatDto[];
     getFieldError?: (field: string) => string;
-};
+} & VariantProps<typeof reservedSeatsStyle>;
 
 export function ReservedSeats({
     id,
@@ -38,12 +53,22 @@ export function ReservedSeats({
                                         }
                                         className="flex items-center gap-2"
                                     >
-                                        <div className="border-primary-light text-primary flex items-center gap-1 rounded-lg border-2 bg-green-100 px-2">
-                                            <BsTrainFreightFrontFill />
+                                        <div
+                                            className={reservedSeatsStyle({
+                                                id,
+                                            })}
+                                        >
+                                            {id === 'reservationDetail' ? (
+                                                <BsTrainFreightFrontFill />
+                                            ) : null}
                                             <div>{`${reservedSeats.trainCarNumber}号車`}</div>
-                                            <div>
-                                                {reservedSeats.trainCarTypeName}
-                                            </div>
+                                            {id === 'reservationDetail' ? (
+                                                <div>
+                                                    {
+                                                        reservedSeats.trainCarTypeName
+                                                    }
+                                                </div>
+                                            ) : null}
                                             <div>
                                                 {`${reservedSeats.seatNumber}番` +
                                                     `${reservedSeats.seatColumn}席`}

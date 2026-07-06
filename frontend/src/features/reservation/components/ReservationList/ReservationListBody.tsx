@@ -12,15 +12,29 @@ export function ReservationListBody() {
     const now = new Date();
     now.setHours(0, 0, 0, 0);
 
-    const activeReservations = reservations?.filter((reservation) => {
-        const departureDate = new Date(reservation.rideDate);
-        return departureDate >= now;
-    });
+    const activeReservations = reservations
+        ?.filter((reservation) => {
+            const departureDate = new Date(reservation.rideDate);
+            return departureDate >= now;
+        })
+        .sort(
+            (a, b) =>
+                new Date(a.rideDate).getDate() -
+                    new Date(b.rideDate).getDate() ||
+                a.departureTime.localeCompare(b.departureTime),
+        );
 
-    const pastReservations = reservations?.filter((reservation) => {
-        const departureDate = new Date(reservation.rideDate);
-        return departureDate < now;
-    });
+    const pastReservations = reservations
+        ?.filter((reservation) => {
+            const departureDate = new Date(reservation.rideDate);
+            return departureDate < now;
+        })
+        .sort(
+            (a, b) =>
+                new Date(a.rideDate).getDate() -
+                    new Date(b.rideDate).getDate() ||
+                a.departureTime.localeCompare(b.departureTime),
+        );
 
     const filteredReservations =
         selectedTab === 'active' ? activeReservations : pastReservations;

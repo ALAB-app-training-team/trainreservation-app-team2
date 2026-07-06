@@ -4,6 +4,7 @@ import { IoTrashOutline } from 'react-icons/io5';
 import { LuTicket } from 'react-icons/lu';
 import { useNavigate } from 'react-router-dom';
 
+import { ReservedSeats } from '@/features/reservation/components/ReservedSeats';
 import type { ReservationResponseDto } from '@/features/reservation/types/ReservationResponseDto';
 import { FormatDate } from '@/shared/hooks/useFormatDate';
 import { FormatTime } from '@/shared/hooks/useFormatTime';
@@ -45,91 +46,53 @@ export function ReservationSelectItem({ details }: ReservationSelectItemProps) {
                     )}
                 </div>
                 <div className="flex py-2">
-                    <h5>
+                    <label>
                         {details.departureStationName} →{' '}
                         {details.arrivalStationName}
-                    </h5>
+                    </label>
                 </div>
             </div>
             <div className="flex justify-between">
                 <div className="flex w-full flex-col items-start">
-                    <h5>出発</h5>
-                    <h3 className="text-xl font-bold">
+                    <label>出発</label>
+                    <label className="text-xl font-bold">
                         {FormatDate(details.rideDate)}{' '}
-                    </h3>
-                    <h3>{FormatTime(details.departureTime)}</h3>
-                </div>
-                <div className="flex w-full flex-col items-start">
-                    <h5>ホーム</h5>
-                    {/*TODO：ホーム番線を動的にする*/}
-                    <h3 className="text-xl font-bold">2番線</h3>
+                    </label>
+                    <label>{FormatTime(details.departureTime)}</label>
                 </div>
             </div>
             <div className="border-primary/20 flex border-b-2 py-2">
                 <div className="flex flex-col items-start gap-2 self-start">
-                    <h5>座席</h5>
-                    <div className="flex flex-wrap gap-2">
-                        {details.reservedSeats.length !== 0 ? (
-                            details.reservedSeats
-                                .sort(
-                                    (a, b) =>
-                                        a.trainCarNumber - b.trainCarNumber ||
-                                        a.seatNumber - b.seatNumber ||
-                                        a.seatColumn.localeCompare(
-                                            b.seatColumn,
-                                        ),
-                                )
-                                .map((seats) => {
-                                    return (
-                                        <div
-                                            key={
-                                                seats.trainCarNumber +
-                                                seats.seatNumber +
-                                                seats.seatColumn
-                                            }
-                                            className="flex items-center gap-2"
-                                        >
-                                            <div className="border-primary flex items-center rounded-lg border px-2">
-                                                {`${seats.trainCarNumber}号車` +
-                                                    `${seats.seatNumber}番` +
-                                                    `${seats.seatColumn}席`}
-                                            </div>
-                                        </div>
-                                    );
-                                })
-                        ) : (
-                            <div>座席が存在しません</div>
-                        )}
-                    </div>
+                    <ReservedSeats
+                        id="reservationList"
+                        title="座席"
+                        seats={details.reservedSeats}
+                    />
                 </div>
             </div>
             <div>
-                <div className="flex justify-between">
-                    {/*TODO：金額を動的にする*/}
-                    <h3 className="text-xl font-bold">合計：￥10,000</h3>
-                    <div className="flex justify-end">
-                        {/*TODO：キャンセルと同じ区間で検索にOnClickを追加する*/}
-                        {departureDate >= now ? (
-                            <>
-                                <button className="text-primary flex items-center justify-center gap-2 rounded-xl px-3 text-sm">
-                                    <IoTrashOutline />
-                                    <h3>キャンセル</h3>
-                                </button>
-                                <button
-                                    onClick={handleReservationDetail}
-                                    className="bg-primary flex items-center justify-center gap-4 rounded-md px-4 py-2 text-sm text-white"
-                                >
-                                    <BsQrCode />
-                                    <h3>チケットを表示</h3>
-                                </button>
-                            </>
-                        ) : (
-                            <button className="bg-primary flex items-center justify-center gap-4 rounded-md px-4 py-2 text-sm text-white">
-                                <FaSearch />
-                                <h3>同じ区間で検索</h3>
+                <div className="flex justify-end">
+                    {/*TODO：キャンセルと同じ区間で検索にOnClickを追加する*/}
+                    {departureDate >= now ? (
+                        <>
+                            <button className="text-primary flex items-center justify-center gap-2 rounded-xl px-3 text-sm">
+                                <IoTrashOutline />
+                                <label>キャンセル</label>
                             </button>
-                        )}
-                    </div>
+                            <button
+                                onClick={handleReservationDetail}
+                                className="bg-primary flex items-center justify-center gap-4 rounded-md px-4 py-2 text-sm text-white"
+                            >
+                                <BsQrCode />
+                                <label>チケットを表示</label>
+                            </button>
+                        </>
+                    ) : (
+                        <button className="bg-primary flex items-center justify-center gap-4 rounded-md px-4 py-2 text-sm text-white">
+                            <FaSearch />
+                            <label>同じ区間で検索</label>
+                        </button>
+                    )}
                 </div>
             </div>
         </div>
