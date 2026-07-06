@@ -58,17 +58,17 @@ export function ReservedSeats({
                                                 id,
                                             })}
                                         >
-                                            {id === 'reservationDetail' ? (
+                                            {id === 'reservationDetail' && (
                                                 <BsTrainFreightFrontFill />
-                                            ) : null}
+                                            )}
                                             <div>{`${reservedSeats.trainCarNumber}号車`}</div>
-                                            {id === 'reservationDetail' ? (
+                                            {id === 'reservationDetail' && (
                                                 <div>
                                                     {
                                                         reservedSeats.trainCarTypeName
                                                     }
                                                 </div>
-                                            ) : null}
+                                            )}
                                             <div>
                                                 {`${reservedSeats.seatNumber}番` +
                                                     `${reservedSeats.seatColumn}席`}

@@ -1,4 +1,4 @@
-import { FormatTime } from '@/shared/hooks/useFormatTime.ts';
+import { FormatTime } from '@/shared/utils/FormatTime';
 
 type DepartureAndArrivalInfoProps = {
     id: string;

@@ -7,7 +7,7 @@ import type { ScheduleInfoDto } from '@/features/schedule/types/ScheduleInfoDto'
 import type { SearchRequestDto } from '@/features/schedule/types/SearchRequestDto';
 import type { SearchResponseDto } from '@/features/schedule/types/SearchResponseDto';
 import { TRAIN_TYPE_COLOR } from '@/shared/constants/TrainTypeColor';
-import { FormatTime } from '@/shared/hooks/useFormatTime.ts';
+import { FormatTime } from '@/shared/utils/FormatTime';
 
 type ScheduleItemProps = {
     schedule: SearchResponseDto;

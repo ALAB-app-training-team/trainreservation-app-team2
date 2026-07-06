@@ -6,8 +6,8 @@ import { useNavigate } from 'react-router-dom';
 
 import { ReservedSeats } from '@/features/reservation/components/ReservedSeats';
 import type { ReservationResponseDto } from '@/features/reservation/types/ReservationResponseDto';
-import { FormatDate } from '@/shared/hooks/useFormatDate';
-import { FormatTime } from '@/shared/hooks/useFormatTime';
+import { FormatDate } from '@/shared/utils/FormatDate';
+import { FormatTime } from '@/shared/utils/FormatTime';
 
 type ReservationSelectItemProps = {
     details: ReservationResponseDto;
