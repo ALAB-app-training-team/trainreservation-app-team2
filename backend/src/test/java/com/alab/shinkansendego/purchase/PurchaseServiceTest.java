@@ -1,20 +1,31 @@
 package com.alab.shinkansendego.purchase;
 
-import com.alab.shinkansendego.departurearrivaltime.*;
-import com.alab.shinkansendego.purchasedseat.*;
-import com.alab.shinkansendego.reservedseatsection.*;
-import com.alab.shinkansendego.sectionkm.*;
-import org.junit.jupiter.api.*;
-import org.mockito.*;
-import org.springframework.dao.*;
+import com.alab.shinkansendego.departurearrivaltime.DepartureArrivalTimeEntity;
+import com.alab.shinkansendego.departurearrivaltime.DepartureArrivalTimeRepository;
+import com.alab.shinkansendego.purchasedseat.PurchasedSeatEntity;
+import com.alab.shinkansendego.purchasedseat.PurchasedSeatRepository;
+import com.alab.shinkansendego.reservedseatsection.ReservedSeatSectionEntity;
+import com.alab.shinkansendego.reservedseatsection.ReservedSeatSectionRepository;
+import com.alab.shinkansendego.sectionkm.SectionKmRepository;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.DisplayName;
+import org.junit.jupiter.api.Test;
+import org.mockito.InjectMocks;
+import org.mockito.Mock;
+import org.mockito.MockitoAnnotations;
+import org.springframework.dao.DuplicateKeyException;
 
-import java.time.*;
-import java.util.*;
-import java.util.stream.*;
+import java.time.LocalDate;
+import java.time.LocalTime;
+import java.util.List;
+import java.util.UUID;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
-import static org.junit.jupiter.api.Assertions.*;
-import static org.mockito.ArgumentMatchers.*;
-import static org.mockito.Mockito.*;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.Mockito.when;
 
 public class PurchaseServiceTest {
     @Mock
@@ -154,7 +165,9 @@ public class PurchaseServiceTest {
         when(sectionKmRepo.findSectionCdByGoalStationCd(request.getArrivalStationCd())).thenReturn(List.of(departureArrivalTime.getSectionCd()));
         when(departureArrivalTimeRepo.findByScheduleCdAndSectionCdIn(request.getScheduleCd(), List.of(departureArrivalTime.getSectionCd()))).thenReturn(departureArrivalTime);
         when(departureArrivalTimeRepo.findByScheduleCdAndDepartureTimeAndArrivalTime(request.getScheduleCd(), departureArrivalTime.getDepartureTime(), departureArrivalTime.getArrivalTime())).thenReturn(List.of(departureArrivalTime.getSectionCd()));
-        when(purchaseRepo.save(any())).thenReturn(new PurchaseEntity() {{setId(UUID.randomUUID());}});
+        when(purchaseRepo.save(any())).thenReturn(new PurchaseEntity() {{
+            setId(UUID.randomUUID());
+        }});
         when(purchasedSeatRepo.saveAll(any())).thenReturn(null);
 
         assertThrows(RuntimeException.class, () -> service.insertPurchase(request));

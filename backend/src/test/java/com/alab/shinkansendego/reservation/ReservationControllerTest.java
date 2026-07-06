@@ -47,7 +47,7 @@ public class ReservationControllerTest {
     @Test
     @DisplayName("予約情報の全取得ができる")
     void getReservationList_returnGetReservationListSuccess() throws Exception {
-        List<ReservationResponseDto> expectList=Arrays.asList(
+        List<ReservationResponseDto> expectList = Arrays.asList(
                 getExpectReservationResponseDto(UUID.fromString("4156b939-2e3e-46c1-92d3-7aa64b6ca575")),
                 getExpectReservationResponseDto(UUID.fromString("3136b939-2e3e-46c1-92d3-7aa64b6ca666")));
 
@@ -107,7 +107,7 @@ public class ReservationControllerTest {
                 .andExpect(jsonPath("$[1].reservedSeats[2].codeToken").value("e192e5f1-318e-4d10-b76d-2f2bf15e8b70"));
     }
 
-        @Test
+    @Test
     @DisplayName("購入情報IDから予約チケット情報が取得できる")
     void getReservation_withPurchaseId_returnGetReservationSuccess() throws Exception {
 

@@ -1,17 +1,27 @@
 package com.alab.shinkansendego.reservation;
 
-import com.alab.shinkansendego.purchase.*;
-import com.alab.shinkansendego.purchasedseat.*;
-import org.jspecify.annotations.*;
-import org.junit.jupiter.api.*;
-import org.mockito.*;
+import com.alab.shinkansendego.purchase.PurchaseEntity;
+import com.alab.shinkansendego.purchase.PurchaseRepository;
+import com.alab.shinkansendego.purchasedseat.PurchasedSeatRepository;
+import org.jspecify.annotations.NonNull;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.DisplayName;
+import org.junit.jupiter.api.Test;
+import org.mockito.InjectMocks;
+import org.mockito.Mock;
+import org.mockito.MockitoAnnotations;
 import org.springframework.data.domain.Sort;
 
-import java.time.*;
-import java.util.*;
+import java.time.LocalDate;
+import java.time.LocalTime;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
+import java.util.UUID;
 
-import static org.junit.jupiter.api.Assertions.*;
-import static org.mockito.Mockito.*;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.mockito.Mockito.when;
 
 public class ReservationServiceTest {
 
@@ -44,20 +54,20 @@ public class ReservationServiceTest {
                 reservedSeatList);
     }
 
-    private @NonNull List<PurchaseEntity> getPurchaseList(){
-        PurchaseEntity purchase1=new PurchaseEntity();
+    private @NonNull List<PurchaseEntity> getPurchaseList() {
+        PurchaseEntity purchase1 = new PurchaseEntity();
         purchase1.setId(purchaseId1);
-        purchase1.setRideDate(LocalDate.of(2026,6,1));
+        purchase1.setRideDate(LocalDate.of(2026, 6, 1));
         purchase1.setScheduleCd("THK01");
         purchase1.setDepartureStationCd("THK01");
         purchase1.setArrivalStationCd("THK02");
-        PurchaseEntity purchase2=new PurchaseEntity();
+        PurchaseEntity purchase2 = new PurchaseEntity();
         purchase2.setId(purchaseId2);
-        purchase2.setRideDate(LocalDate.of(2026,6,1));
+        purchase2.setRideDate(LocalDate.of(2026, 6, 1));
         purchase2.setScheduleCd("THK01");
         purchase2.setDepartureStationCd("THK01");
         purchase2.setArrivalStationCd("THK02");
-        return  Arrays.asList(purchase1,purchase2);
+        return Arrays.asList(purchase1, purchase2);
     }
 
     @BeforeEach
@@ -93,7 +103,7 @@ public class ReservationServiceTest {
         when(purchaseRepo.findReservationScheduleDtoByPurchaseId(purchaseId2)).thenReturn(scheduleList);
         when(purchasedSeatRepo.findReservedSeatDtoByPurchaseId(purchaseId2)).thenReturn(seatList);
 
-        List<ReservationResponseDto> expectList = Arrays.asList(getExpectReservationResponseDto(purchaseId1),getExpectReservationResponseDto(purchaseId2));
+        List<ReservationResponseDto> expectList = Arrays.asList(getExpectReservationResponseDto(purchaseId1), getExpectReservationResponseDto(purchaseId2));
 
         List<ReservationResponseDto> actualList = service.getReservationList();
 
