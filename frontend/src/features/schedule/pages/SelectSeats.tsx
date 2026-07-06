@@ -1,12 +1,15 @@
 import axios from 'axios';
 import { Suspense } from 'react';
+import { IoCardOutline } from 'react-icons/io5';
 import { LuArrowLeft } from 'react-icons/lu';
 import { useLocation, useNavigate } from 'react-router-dom';
 
 import { ENDPOINTS } from '@/api/routes';
+import { ReserveUserInfo } from '@/features/schedule/components/ReserveUserInfo';
 import { SelectedSeats } from '@/features/schedule/components/SelectedSeats';
 import { TrainCars } from '@/features/schedule/components/TrainCars/TrainCars';
 import { TrainCarsSkeleton } from '@/features/schedule/components/TrainCars/TrainCarsSkeleton';
+import { useReserveUser } from '@/features/schedule/hooks/useReserveUser';
 import { useSelectedSeats } from '@/features/schedule/hooks/useSelectedSeats';
 import type { ReserveRequestDto } from '@/features/schedule/types/ReserveRequestDto';
 
@@ -21,6 +24,8 @@ export function SelectSeats() {
     } = location.state;
     const { selectedSeats, limitSeats, handleSelectedSeats } =
         useSelectedSeats();
+    const { reserveUser, focus, handleInputChange, handleInputFocus } =
+        useReserveUser();
 
     const handleReserve = async () => {
         // TODO: try-catchをつける
@@ -71,11 +76,30 @@ export function SelectSeats() {
                     </Suspense>
                 </div>
                 <div className="w-full flex-1">
-                    <SelectedSeats
-                        selectedSeats={selectedSeats}
-                        limitSeats={limitSeats}
-                        onClick={handleReserve}
-                    />
+                    <div className="border-primary-light flex w-full flex-col gap-8 rounded-2xl border-2 p-8 text-left">
+                        <SelectedSeats
+                            selectedSeats={selectedSeats}
+                            limitSeats={limitSeats}
+                        />
+                        <form onSubmit={handleReserve}>
+                            <ReserveUserInfo
+                                reserveUser={reserveUser}
+                                focus={focus}
+                                handleInputChange={handleInputChange}
+                                handleInputFocus={handleInputFocus}
+                            />
+                            <button
+                                type="submit"
+                                className="bg-primary w-full rounded-lg p-2 text-white"
+                                disabled={selectedSeats.length === 0}
+                            >
+                                <div className="flex items-center justify-center gap-4">
+                                    <IoCardOutline />
+                                    予約を確定
+                                </div>
+                            </button>
+                        </form>
+                    </div>
                 </div>
             </div>
         </>
