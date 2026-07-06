@@ -6,18 +6,24 @@ import type { Station } from '@/features/schedule/types/Station';
 
 type useSearchRequestDtoProps = {
     stations: Station[];
+    initialDto?: SearchRequestDto;
 };
 
 export function useSearchRequestDto({
     stations = [],
+    initialDto,
 }: useSearchRequestDtoProps) {
-    const [date, setDate] = useState<string>(dayjs().format('YYYY-MM-DD'));
-    const [time, setTime] = useState<string>(dayjs().format('HH:mm'));
+    const [date, setDate] = useState<string>(
+        initialDto?.date || dayjs().format('YYYY-MM-DD'),
+    );
+    const [time, setTime] = useState<string>(
+        initialDto?.time || dayjs().format('HH:mm'),
+    );
     const [departureStation, setDepartureStation] = useState<string>(
-        stations[0].stationCd,
+        initialDto?.departureStationCd || stations[0].stationCd,
     );
     const [arrivalStation, setArrivalStation] = useState<string>(
-        stations[1].stationCd,
+        initialDto?.arrivalStationCd || stations[1].stationCd,
     );
 
     const searchRequestDto: SearchRequestDto = useMemo<SearchRequestDto>(() => {

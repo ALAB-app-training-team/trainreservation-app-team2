@@ -1,4 +1,5 @@
 import { Suspense } from 'react';
+import { useLocation } from 'react-router-dom';
 
 import { ScheduleList } from '@/features/schedule/components/ScheduleList/ScheduleList';
 import { ScheduleListSkeleton } from '@/features/schedule/components/ScheduleList/ScheduleListSkeleton';
@@ -7,6 +8,8 @@ import { useSearchRequestDto } from '@/features/schedule/hooks/useSearchRequestD
 import { useStations } from '@/features/schedule/hooks/useStations';
 
 export function ScheduleSearchBody() {
+    const location = useLocation();
+    const initialDto = location.state?.searchRequestDto;
     const { stations } = useStations();
     const {
         setTime,
@@ -18,7 +21,7 @@ export function ScheduleSearchBody() {
         getFieldError,
         maxDate,
         minDate,
-    } = useSearchRequestDto({ stations });
+    } = useSearchRequestDto({ stations, initialDto });
 
     return (
         <>
