@@ -5,6 +5,7 @@ import com.alab.shinkansendego.purchasedseat.*;
 import org.jspecify.annotations.*;
 import org.junit.jupiter.api.*;
 import org.mockito.*;
+import org.springframework.data.domain.Sort;
 
 import java.time.*;
 import java.util.*;
@@ -15,7 +16,8 @@ import static org.mockito.Mockito.*;
 public class ReservationServiceTest {
 
     private final ReservationDto purchase = new ReservationDto("やまびこ1号", "THK01", "THK09", LocalDate.of(2026, 6, 1));
-    private final UUID purchaseId = UUID.fromString("4156b939-2e3e-46c1-92d3-7aa64b6ca575");
+    private final UUID purchaseId1 = UUID.fromString("4156b939-2e3e-46c1-92d3-7aa64b6ca575");
+    private final UUID purchaseId2 = UUID.fromString("3136b939-2e3e-46c1-92d3-7aa64b6ca666");
     private final List<ReservedScheduleDto> scheduleList = new ArrayList<>();
     private final List<ReservedSeatDto> seatList = new ArrayList<>();
     private final ReservedSeatDto seat1 = new ReservedSeatDto("指定席", 1, 1, "A", UUID.fromString("60a1ab63-a41f-430d-a2d1-10a76368d0f5"));
@@ -29,9 +31,10 @@ public class ReservationServiceTest {
     @InjectMocks
     private ReservationService service;
 
-    private @NonNull ReservationResponseDto getExpectReservationResponseDto() {
+    private @NonNull ReservationResponseDto getExpectReservationResponseDto(UUID purchaseId) {
         List<ReservedSeatDto> reservedSeatList = Arrays.asList(seat1, seat2, seat3);
         return new ReservationResponseDto(
+                purchaseId,
                 "やまびこ1号",
                 "東京",
                 LocalTime.of(6, 4, 0),
@@ -39,6 +42,22 @@ public class ReservationServiceTest {
                 LocalTime.of(7, 58, 0),
                 LocalDate.of(2026, 6, 1),
                 reservedSeatList);
+    }
+
+    private @NonNull List<PurchaseEntity> getPurchaseList(){
+        PurchaseEntity purchase1=new PurchaseEntity();
+        purchase1.setId(purchaseId1);
+        purchase1.setRideDate(LocalDate.of(2026,6,1));
+        purchase1.setScheduleCd("THK01");
+        purchase1.setDepartureStationCd("THK01");
+        purchase1.setArrivalStationCd("THK02");
+        PurchaseEntity purchase2=new PurchaseEntity();
+        purchase2.setId(purchaseId2);
+        purchase2.setRideDate(LocalDate.of(2026,6,1));
+        purchase2.setScheduleCd("THK01");
+        purchase2.setDepartureStationCd("THK01");
+        purchase2.setArrivalStationCd("THK02");
+        return  Arrays.asList(purchase1,purchase2);
     }
 
     @BeforeEach
@@ -64,15 +83,33 @@ public class ReservationServiceTest {
     }
 
     @Test
+    @DisplayName("予約情報の全取得ができる")
+    void getReservationList_returnGetReservationSuccess() {
+        when(purchaseRepo.findAll(Sort.by("rideDate").ascending())).thenReturn(getPurchaseList());
+        when(purchaseRepo.findReservationDtoByPurchaseId(purchaseId1)).thenReturn(purchase);
+        when(purchaseRepo.findReservationScheduleDtoByPurchaseId(purchaseId1)).thenReturn(scheduleList);
+        when(purchasedSeatRepo.findReservedSeatDtoByPurchaseId(purchaseId1)).thenReturn(seatList);
+        when(purchaseRepo.findReservationDtoByPurchaseId(purchaseId2)).thenReturn(purchase);
+        when(purchaseRepo.findReservationScheduleDtoByPurchaseId(purchaseId2)).thenReturn(scheduleList);
+        when(purchasedSeatRepo.findReservedSeatDtoByPurchaseId(purchaseId2)).thenReturn(seatList);
+
+        List<ReservationResponseDto> expectList = Arrays.asList(getExpectReservationResponseDto(purchaseId1),getExpectReservationResponseDto(purchaseId2));
+
+        List<ReservationResponseDto> actualList = service.getReservationList();
+
+        assertEquals(expectList, actualList);
+    }
+
+    @Test
     @DisplayName("購入情報IDから予約チケット情報が取得できる")
     void getReservation_withPurchaseId_returnGetReservationSuccess() {
-        when(purchaseRepo.findReservationDtoByPurchaseId(purchaseId)).thenReturn(purchase);
-        when(purchaseRepo.findReservationScheduleDtoByPurchaseId(purchaseId)).thenReturn(scheduleList);
-        when(purchasedSeatRepo.findReservedSeatDtoByPurchaseId(purchaseId)).thenReturn(seatList);
+        when(purchaseRepo.findReservationDtoByPurchaseId(purchaseId1)).thenReturn(purchase);
+        when(purchaseRepo.findReservationScheduleDtoByPurchaseId(purchaseId1)).thenReturn(scheduleList);
+        when(purchasedSeatRepo.findReservedSeatDtoByPurchaseId(purchaseId1)).thenReturn(seatList);
 
-        ReservationResponseDto expect = getExpectReservationResponseDto();
+        ReservationResponseDto expect = getExpectReservationResponseDto(null);
 
-        ReservationResponseDto actual = service.getReservation(purchaseId);
+        ReservationResponseDto actual = service.getReservation(purchaseId1);
 
         assertEquals(expect, actual);
     }
@@ -80,10 +117,10 @@ public class ReservationServiceTest {
     @Test
     @DisplayName("購入情報データに存在しない購入情報IDがリクエストされた場合にエラーを発生させる")
     void getReservation_withNotExistPurchaseRequest_returnIllegalArgumentException() {
-        when(purchaseRepo.findReservationDtoByPurchaseId(purchaseId)).thenReturn(null);
+        when(purchaseRepo.findReservationDtoByPurchaseId(purchaseId1)).thenReturn(null);
         Exception ex = assertThrows(
                 IllegalArgumentException.class,
-                () -> service.getReservation(purchaseId)
+                () -> service.getReservation(purchaseId1)
         );
         assertEquals("PurchaseId is Not found", ex.getMessage());
     }
@@ -92,11 +129,11 @@ public class ReservationServiceTest {
     @DisplayName("出発到着時刻データに存在しない出発駅CDを持つ購入情報IDがリクエストされた場合にエラーを発生させる")
     void getReservation_withNotExistScheduleOfDepartureStationRequest_returnIllegalArgumentException() {
         purchase.setDepartureStationCd("None");
-        when(purchaseRepo.findReservationDtoByPurchaseId(purchaseId)).thenReturn(purchase);
-        when(purchaseRepo.findReservationScheduleDtoByPurchaseId(purchaseId)).thenReturn(scheduleList);
+        when(purchaseRepo.findReservationDtoByPurchaseId(purchaseId1)).thenReturn(purchase);
+        when(purchaseRepo.findReservationScheduleDtoByPurchaseId(purchaseId1)).thenReturn(scheduleList);
         Exception ex = assertThrows(
                 IllegalArgumentException.class,
-                () -> service.getReservation(purchaseId)
+                () -> service.getReservation(purchaseId1)
         );
         assertEquals("DepartureAndArrivalStation is Not Found", ex.getMessage());
     }
@@ -105,11 +142,11 @@ public class ReservationServiceTest {
     @DisplayName("出発到着時刻データに存在しない到着駅CDを持つ購入情報IDがリクエストされた場合にエラーを発生させる")
     void getReservation_withNotExistScheduleOfArrivalStationRequest_returnIllegalArgumentException() {
         purchase.setArrivalStationCd("None");
-        when(purchaseRepo.findReservationDtoByPurchaseId(purchaseId)).thenReturn(purchase);
-        when(purchaseRepo.findReservationScheduleDtoByPurchaseId(purchaseId)).thenReturn(scheduleList);
+        when(purchaseRepo.findReservationDtoByPurchaseId(purchaseId1)).thenReturn(purchase);
+        when(purchaseRepo.findReservationScheduleDtoByPurchaseId(purchaseId1)).thenReturn(scheduleList);
         Exception ex = assertThrows(
                 IllegalArgumentException.class,
-                () -> service.getReservation(purchaseId)
+                () -> service.getReservation(purchaseId1)
         );
         assertEquals("DepartureAndArrivalStation is Not Found", ex.getMessage());
     }
