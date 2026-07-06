@@ -1,13 +1,18 @@
 package com.alab.shinkansendego.station;
 
+import jakarta.persistence.*;
 import lombok.*;
 
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
-@Getter
-@Setter
+@Entity
+@Table(name = "M_Station")
 public class StationEntity {
-    private String station_cd;
+    @Id
+    @Column(name = "station_cd")
+    private String stationCd;
+
+    @Column(name = "name")
     private String name;
 }

@@ -9,6 +9,11 @@ spring:
     enabled: true
     baseline-on-migrate: true
     baseline-version: 0
+  jpa:
+    hibernate:
+      ddl-auto: none
+      naming:
+        physical-strategy: org.hibernate.boot.model.naming.PhysicalNamingStrategyStandardImpl
 springdoc:
   api-docs:
     enabled: false

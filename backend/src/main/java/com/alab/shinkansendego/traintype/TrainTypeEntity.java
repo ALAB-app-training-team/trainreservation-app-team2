@@ -1,13 +1,26 @@
 package com.alab.shinkansendego.traintype;
 
-import lombok.*;
+import jakarta.persistence.Column;
+import jakarta.persistence.Entity;
+import jakarta.persistence.Id;
+import jakarta.persistence.Table;
+import lombok.AllArgsConstructor;
+import lombok.Data;
+import lombok.NoArgsConstructor;
 
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
-@Getter
-@Setter
+@Entity
+@Table(name = "M_TrainType")
 public class TrainTypeEntity {
-    private String train_type_cd;
+    @Id
+    @Column(name = "train_type_cd")
+    private String trainTypeCd;
+
+    @Column(name = "name")
     private String name;
+
+    @Column(name = "train_series_cd")
+    private String trainSeriesCd;
 }

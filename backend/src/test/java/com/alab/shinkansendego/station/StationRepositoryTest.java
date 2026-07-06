@@ -1,24 +1,21 @@
 package com.alab.shinkansendego.station;
 
-import org.junit.jupiter.api.DisplayName;
-import org.junit.jupiter.api.Test;
-import org.mybatis.spring.boot.test.autoconfigure.MybatisTest;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.jdbc.test.autoconfigure.AutoConfigureTestDatabase;
-import org.springframework.test.context.ActiveProfiles;
-import org.springframework.test.context.DynamicPropertyRegistry;
-import org.springframework.test.context.DynamicPropertySource;
-import org.springframework.test.context.jdbc.Sql;
-import org.testcontainers.containers.PostgreSQLContainer;
+import org.junit.jupiter.api.*;
+import org.springframework.beans.factory.annotation.*;
+import org.springframework.boot.data.jpa.test.autoconfigure.*;
+import org.springframework.boot.jdbc.test.autoconfigure.*;
+import org.springframework.test.context.*;
+import org.springframework.test.context.jdbc.*;
+import org.testcontainers.containers.*;
+import org.testcontainers.junit.jupiter.*;
 import org.testcontainers.junit.jupiter.Container;
-import org.testcontainers.junit.jupiter.Testcontainers;
 
-import java.util.List;
+import java.util.*;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.*;
 
 @ActiveProfiles("test")
-@MybatisTest
+@DataJpaTest
 @AutoConfigureTestDatabase(replace = AutoConfigureTestDatabase.Replace.NONE)
 @Testcontainers
 @Sql(scripts = "classpath:com/alab/shinkansendego/sql/StationTestData.sql")
@@ -41,19 +38,19 @@ public class StationRepositoryTest {
 
     @Test
     @DisplayName("駅コードと駅名を全件取得できる")
-    void findAllStation_returnGetStationListSuccess() {
-        List<StationResponseDto> actual = repo.findAllStation();
+    void findAll_returnGetListSuccess() {
+        List<StationEntity> actual = repo.findAll();
         assertEquals(10, actual.size());
-        assertEquals("Test0", actual.get(0).getStation_cd());
-        assertEquals("Test1", actual.get(1).getStation_cd());
-        assertEquals("Test2", actual.get(2).getStation_cd());
-        assertEquals("Test3", actual.get(3).getStation_cd());
-        assertEquals("Test4", actual.get(4).getStation_cd());
-        assertEquals("Test5", actual.get(5).getStation_cd());
-        assertEquals("Test6", actual.get(6).getStation_cd());
-        assertEquals("Test7", actual.get(7).getStation_cd());
-        assertEquals("Test8", actual.get(8).getStation_cd());
-        assertEquals("Test9", actual.get(9).getStation_cd());
+        assertEquals("Test0", actual.get(0).getStationCd());
+        assertEquals("Test1", actual.get(1).getStationCd());
+        assertEquals("Test2", actual.get(2).getStationCd());
+        assertEquals("Test3", actual.get(3).getStationCd());
+        assertEquals("Test4", actual.get(4).getStationCd());
+        assertEquals("Test5", actual.get(5).getStationCd());
+        assertEquals("Test6", actual.get(6).getStationCd());
+        assertEquals("Test7", actual.get(7).getStationCd());
+        assertEquals("Test8", actual.get(8).getStationCd());
+        assertEquals("Test9", actual.get(9).getStationCd());
 
         assertEquals("TestStation00", actual.get(0).getName());
         assertEquals("TestStation01", actual.get(1).getName());
