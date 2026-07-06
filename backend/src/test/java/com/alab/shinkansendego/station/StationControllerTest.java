@@ -26,11 +26,11 @@ public class StationControllerTest {
     @MockitoBean
     private StationService service;
 
-    private static @NonNull List<StationResponseDto> getStationResponseDtosList() {
-        StationResponseDto expect01 = new StationResponseDto("Test1", "TestStation01");
-        StationResponseDto expect02 = new StationResponseDto("Test2", "TestStation02");
-        StationResponseDto expect03 = new StationResponseDto("Test3", "TestStation03");
-        StationResponseDto expect04 = new StationResponseDto("Test4", "TestStation04");
+    private static @NonNull List<StationEntity> getStationEntityList() {
+        StationEntity expect01 = new StationEntity("Test1", "TestStation01");
+        StationEntity expect02 = new StationEntity("Test2", "TestStation02");
+        StationEntity expect03 = new StationEntity("Test3", "TestStation03");
+        StationEntity expect04 = new StationEntity("Test4", "TestStation04");
         return Arrays.asList(expect01, expect02, expect03, expect04);
     }
 
@@ -38,7 +38,7 @@ public class StationControllerTest {
     @DisplayName("駅コードと駅名が全件取得できる")
     void getAllStationList_returnGetStationListSuccess() throws Exception {
 
-        List<StationResponseDto> expectList = getStationResponseDtosList();
+        List<StationEntity> expectList = getStationEntityList();
         String url = baseUrl + "station";
 
         Mockito.when(service.getAllStationList()).thenReturn(expectList);
@@ -47,10 +47,10 @@ public class StationControllerTest {
                         get(url).contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.length()").value(4))
-                .andExpect(jsonPath("$[0].station_cd").value("Test1"))
-                .andExpect(jsonPath("$[1].station_cd").value("Test2"))
-                .andExpect(jsonPath("$[2].station_cd").value("Test3"))
-                .andExpect(jsonPath("$[3].station_cd").value("Test4"))
+                .andExpect(jsonPath("$[0].stationCd").value("Test1"))
+                .andExpect(jsonPath("$[1].stationCd").value("Test2"))
+                .andExpect(jsonPath("$[2].stationCd").value("Test3"))
+                .andExpect(jsonPath("$[3].stationCd").value("Test4"))
                 .andExpect(jsonPath("$[0].name").value("TestStation01"))
                 .andExpect(jsonPath("$[1].name").value("TestStation02"))
                 .andExpect(jsonPath("$[2].name").value("TestStation03"))

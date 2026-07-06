@@ -29,9 +29,9 @@ public class ReservationControllerTest {
     private ReservationService service;
 
     private static @NonNull ReservationResponseDto getExpectReservationResponseDto() {
-        ReservedSeatDto seat1 = new ReservedSeatDto("指定席", 1, 1, "A", "60a1ab63-a41f-430d-a2d1-10a76368d0f5");
-        ReservedSeatDto seat2 = new ReservedSeatDto("グリーン車", 9, 1, "A", "3de8909e-32de-478e-bd9b-739f3fe6d6c3");
-        ReservedSeatDto seat3 = new ReservedSeatDto("グランクラス", 10, 1, "A", "e192e5f1-318e-4d10-b76d-2f2bf15e8b70");
+        ReservedSeatDto seat1 = new ReservedSeatDto("指定席", 1, 1, "A", UUID.fromString("60a1ab63-a41f-430d-a2d1-10a76368d0f5"));
+        ReservedSeatDto seat2 = new ReservedSeatDto("グリーン車", 9, 1, "A", UUID.fromString("3de8909e-32de-478e-bd9b-739f3fe6d6c3"));
+        ReservedSeatDto seat3 = new ReservedSeatDto("グランクラス", 10, 1, "A", UUID.fromString("e192e5f1-318e-4d10-b76d-2f2bf15e8b70"));
         List<ReservedSeatDto> reservedSeatList = Arrays.asList(seat1, seat2, seat3);
         return new ReservationResponseDto(
                 "やまびこ1号",
@@ -57,28 +57,28 @@ public class ReservationControllerTest {
                         get(url)
                                 .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk())
-                .andExpect(jsonPath("$.train_type_name").value("やまびこ1号"))
-                .andExpect(jsonPath("$.departure_station_name").value("東京"))
-                .andExpect(jsonPath("$.departure_time").value("12:00:00"))
-                .andExpect(jsonPath("$.arrival_station_name").value("仙台"))
-                .andExpect(jsonPath("$.arrival_time").value("13:00:00"))
-                .andExpect(jsonPath("$.ride_date").value("2026-06-01"))
-                .andExpect(jsonPath("$.reserved_seats.length()").value(3))
-                .andExpect(jsonPath("$.reserved_seats[0].train_car_type_name").value("指定席"))
-                .andExpect(jsonPath("$.reserved_seats[1].train_car_type_name").value("グリーン車"))
-                .andExpect(jsonPath("$.reserved_seats[2].train_car_type_name").value("グランクラス"))
-                .andExpect(jsonPath("$.reserved_seats[0].train_car_number").value(1))
-                .andExpect(jsonPath("$.reserved_seats[1].train_car_number").value(9))
-                .andExpect(jsonPath("$.reserved_seats[2].train_car_number").value(10))
-                .andExpect(jsonPath("$.reserved_seats[0].seat_number").value(1))
-                .andExpect(jsonPath("$.reserved_seats[1].seat_number").value(1))
-                .andExpect(jsonPath("$.reserved_seats[2].seat_number").value(1))
-                .andExpect(jsonPath("$.reserved_seats[0].seat_column").value("A"))
-                .andExpect(jsonPath("$.reserved_seats[1].seat_column").value("A"))
-                .andExpect(jsonPath("$.reserved_seats[2].seat_column").value("A"))
-                .andExpect(jsonPath("$.reserved_seats[0].code_token").value("60a1ab63-a41f-430d-a2d1-10a76368d0f5"))
-                .andExpect(jsonPath("$.reserved_seats[1].code_token").value("3de8909e-32de-478e-bd9b-739f3fe6d6c3"))
-                .andExpect(jsonPath("$.reserved_seats[2].code_token").value("e192e5f1-318e-4d10-b76d-2f2bf15e8b70"));
+                .andExpect(jsonPath("$.trainTypeName").value("やまびこ1号"))
+                .andExpect(jsonPath("$.departureStationName").value("東京"))
+                .andExpect(jsonPath("$.departureTime").value("12:00:00"))
+                .andExpect(jsonPath("$.arrivalStationName").value("仙台"))
+                .andExpect(jsonPath("$.arrivalTime").value("13:00:00"))
+                .andExpect(jsonPath("$.rideDate").value("2026-06-01"))
+                .andExpect(jsonPath("$.reservedSeats.length()").value(3))
+                .andExpect(jsonPath("$.reservedSeats[0].trainCarTypeName").value("指定席"))
+                .andExpect(jsonPath("$.reservedSeats[1].trainCarTypeName").value("グリーン車"))
+                .andExpect(jsonPath("$.reservedSeats[2].trainCarTypeName").value("グランクラス"))
+                .andExpect(jsonPath("$.reservedSeats[0].trainCarNumber").value(1))
+                .andExpect(jsonPath("$.reservedSeats[1].trainCarNumber").value(9))
+                .andExpect(jsonPath("$.reservedSeats[2].trainCarNumber").value(10))
+                .andExpect(jsonPath("$.reservedSeats[0].seatNumber").value(1))
+                .andExpect(jsonPath("$.reservedSeats[1].seatNumber").value(1))
+                .andExpect(jsonPath("$.reservedSeats[2].seatNumber").value(1))
+                .andExpect(jsonPath("$.reservedSeats[0].seatColumn").value("A"))
+                .andExpect(jsonPath("$.reservedSeats[1].seatColumn").value("A"))
+                .andExpect(jsonPath("$.reservedSeats[2].seatColumn").value("A"))
+                .andExpect(jsonPath("$.reservedSeats[0].codeToken").value("60a1ab63-a41f-430d-a2d1-10a76368d0f5"))
+                .andExpect(jsonPath("$.reservedSeats[1].codeToken").value("3de8909e-32de-478e-bd9b-739f3fe6d6c3"))
+                .andExpect(jsonPath("$.reservedSeats[2].codeToken").value("e192e5f1-318e-4d10-b76d-2f2bf15e8b70"));
     }
 
     @Test

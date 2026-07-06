@@ -7,11 +7,9 @@ import java.time.LocalTime;
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
-@Getter
-@Setter
 public class ScheduleResponseDto {
-    private String schedule_cd;
-    private String train_type_name;
-    private LocalTime departure_time;
-    private LocalTime arrival_time;
+    private String scheduleCd;
+    private String trainTypeName;
+    private LocalTime departureTime;
+    private LocalTime arrivalTime;
 }

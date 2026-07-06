@@ -1,17 +1,17 @@
 package com.alab.shinkansendego.traincar;
 
-import lombok.*;
+import lombok.AllArgsConstructor;
+import lombok.Data;
+import lombok.NoArgsConstructor;
 
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
-@Getter
-@Setter
 public class SeatResponseDto {
-    private String train_car_cd;
-    private Integer train_car_number;
-    private String seat_cd;
-    private Integer seat_number;
-    private String seat_column;
-    private Boolean is_reserved;
+    private String trainCarCd;
+    private Integer trainCarNumber;
+    private String seatCd;
+    private Integer seatNumber;
+    private String seatColumn;
+    private Boolean isReserved;
 }

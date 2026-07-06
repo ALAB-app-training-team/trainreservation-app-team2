@@ -12,11 +12,11 @@ import java.util.List;
 @Getter
 @Setter
 public class ReservationResponseDto {
-    private String train_type_name;
-    private String departure_station_name;
-    private LocalTime departure_time;
-    private String arrival_station_name;
-    private LocalTime arrival_time;
-    private LocalDate ride_date;
-    private List<ReservedSeatDto> reserved_seats;
+    private String trainTypeName;
+    private String departureStationName;
+    private LocalTime departureTime;
+    private String arrivalStationName;
+    private LocalTime arrivalTime;
+    private LocalDate rideDate;
+    private List<ReservedSeatDto> reservedSeats;
 }

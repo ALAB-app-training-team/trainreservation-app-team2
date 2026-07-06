@@ -1,25 +1,21 @@
 package com.alab.shinkansendego.traincar;
 
-import org.junit.jupiter.api.DisplayName;
-import org.junit.jupiter.api.Test;
-import org.mybatis.spring.boot.test.autoconfigure.MybatisTest;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.jdbc.test.autoconfigure.AutoConfigureTestDatabase;
-import org.springframework.test.context.ActiveProfiles;
-import org.springframework.test.context.DynamicPropertyRegistry;
-import org.springframework.test.context.DynamicPropertySource;
-import org.springframework.test.context.jdbc.Sql;
-import org.testcontainers.containers.PostgreSQLContainer;
+import org.junit.jupiter.api.*;
+import org.springframework.beans.factory.annotation.*;
+import org.springframework.boot.data.jpa.test.autoconfigure.*;
+import org.springframework.boot.jdbc.test.autoconfigure.*;
+import org.springframework.test.context.*;
+import org.springframework.test.context.jdbc.*;
+import org.testcontainers.containers.*;
+import org.testcontainers.junit.jupiter.*;
 import org.testcontainers.junit.jupiter.Container;
-import org.testcontainers.junit.jupiter.Testcontainers;
 
-import java.util.List;
+import java.util.*;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertNull;
+import static org.junit.jupiter.api.Assertions.*;
 
 @ActiveProfiles("test")
-@MybatisTest
+@DataJpaTest
 @AutoConfigureTestDatabase(replace = AutoConfigureTestDatabase.Replace.NONE)
 @Testcontainers
 @Sql(scripts = {"classpath:com/alab/shinkansendego/sql/SeatTypeTestData.sql", "classpath:com/alab/shinkansendego/sql/TrainCarTestData.sql", "classpath:com/alab/shinkansendego/sql/SeatTestData.sql"})
@@ -45,23 +41,23 @@ public class TrainCarRepositoryTest {
     void findSeatByTrainCarCd_returnGetSeatListSuccess() {
         List<SeatResponseDto> actual = repo.findSeatByTrainCarCd("E5SER01");
         assertEquals(3, actual.size());
-        assertEquals("E5SER01", actual.get(0).getTrain_car_cd());
-        assertEquals("E5SER01", actual.get(1).getTrain_car_cd());
-        assertEquals("E5SER01", actual.get(2).getTrain_car_cd());
-        assertEquals(1, actual.get(0).getTrain_car_number());
-        assertEquals(1, actual.get(1).getTrain_car_number());
-        assertEquals(1, actual.get(2).getTrain_car_number());
-        assertEquals("SEAT01001", actual.get(0).getSeat_cd());
-        assertEquals("SEAT01002", actual.get(1).getSeat_cd());
-        assertEquals("SEAT01003", actual.get(2).getSeat_cd());
-        assertEquals(1, actual.get(0).getSeat_number());
-        assertEquals(1, actual.get(1).getSeat_number());
-        assertEquals(1, actual.get(2).getSeat_number());
-        assertEquals("A", actual.get(0).getSeat_column());
-        assertEquals("B", actual.get(1).getSeat_column());
-        assertEquals("C", actual.get(2).getSeat_column());
-        assertNull(actual.get(0).getIs_reserved());
-        assertNull(actual.get(1).getIs_reserved());
-        assertNull(actual.get(2).getIs_reserved());
+        assertEquals("E5SER01", actual.get(0).getTrainCarCd());
+        assertEquals("E5SER01", actual.get(1).getTrainCarCd());
+        assertEquals("E5SER01", actual.get(2).getTrainCarCd());
+        assertEquals(1, actual.get(0).getTrainCarNumber());
+        assertEquals(1, actual.get(1).getTrainCarNumber());
+        assertEquals(1, actual.get(2).getTrainCarNumber());
+        assertEquals("SEAT01001", actual.get(0).getSeatCd());
+        assertEquals("SEAT01002", actual.get(1).getSeatCd());
+        assertEquals("SEAT01003", actual.get(2).getSeatCd());
+        assertEquals(1, actual.get(0).getSeatNumber());
+        assertEquals(1, actual.get(1).getSeatNumber());
+        assertEquals(1, actual.get(2).getSeatNumber());
+        assertEquals("A", actual.get(0).getSeatColumn());
+        assertEquals("B", actual.get(1).getSeatColumn());
+        assertEquals("C", actual.get(2).getSeatColumn());
+        assertFalse(actual.get(0).getIsReserved());
+        assertFalse(actual.get(1).getIsReserved());
+        assertFalse(actual.get(2).getIsReserved());
     }
 }

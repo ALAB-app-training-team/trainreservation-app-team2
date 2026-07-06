@@ -55,8 +55,8 @@ public class ScheduleControllerTest {
         objectMapper.disable(SerializationFeature.WRITE_DATES_AS_TIMESTAMPS);
         request.setDate(LocalDate.of(2026, 6, 1));
         request.setTime(LocalTime.of(12, 0, 0));
-        request.setDeparture_station_cd("THK01");
-        request.setArrival_station_cd("THK02");
+        request.setDepartureStationCd("THK01");
+        request.setArrivalStationCd("THK02");
     }
 
     @Test
@@ -64,7 +64,7 @@ public class ScheduleControllerTest {
     void getSchedule_withValidScheduleRequestDto_returnGetScheduleListSuccess() throws Exception {
 
         List<ScheduleResponseDto> expectList = getExpectScheduleResponseDtosList();
-        String url = baseUrl + "schedule?date=2026-06-01&time=12:00:00&departure_station_cd=THK01&arrival_station_cd=THK02";
+        String url = baseUrl + "schedule?date=2026-06-01&time=12:00:00&departureStationCd=THK01&arrivalStationCd=THK02";
 
         Mockito.when(service.getSearchedScheduleByStation(request)).thenReturn(expectList);
 
@@ -76,30 +76,30 @@ public class ScheduleControllerTest {
                                 .content(json))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.length()").value(4))
-                .andExpect(jsonPath("$[0].schedule_cd").value("THK001"))
-                .andExpect(jsonPath("$[1].schedule_cd").value("THK002"))
-                .andExpect(jsonPath("$[2].schedule_cd").value("THK003"))
-                .andExpect(jsonPath("$[3].schedule_cd").value("THK004"))
-                .andExpect(jsonPath("$[0].train_type_name").value("やまびこ2号"))
-                .andExpect(jsonPath("$[1].train_type_name").value("やまびこ3号"))
-                .andExpect(jsonPath("$[2].train_type_name").value("やまびこ4号"))
-                .andExpect(jsonPath("$[3].train_type_name").value("やまびこ6号"))
-                .andExpect(jsonPath("$[0].departure_time").value("11:00:00"))
-                .andExpect(jsonPath("$[1].departure_time").value("12:00:00"))
-                .andExpect(jsonPath("$[2].departure_time").value("13:00:00"))
-                .andExpect(jsonPath("$[3].departure_time").value("15:00:00"))
-                .andExpect(jsonPath("$[0].arrival_time").value("16:10:00"))
-                .andExpect(jsonPath("$[1].arrival_time").value("12:30:00"))
-                .andExpect(jsonPath("$[2].arrival_time").value("13:40:00"))
-                .andExpect(jsonPath("$[3].arrival_time").value("16:00:00"));
+                .andExpect(jsonPath("$[0].scheduleCd").value("THK001"))
+                .andExpect(jsonPath("$[1].scheduleCd").value("THK002"))
+                .andExpect(jsonPath("$[2].scheduleCd").value("THK003"))
+                .andExpect(jsonPath("$[3].scheduleCd").value("THK004"))
+                .andExpect(jsonPath("$[0].trainTypeName").value("やまびこ2号"))
+                .andExpect(jsonPath("$[1].trainTypeName").value("やまびこ3号"))
+                .andExpect(jsonPath("$[2].trainTypeName").value("やまびこ4号"))
+                .andExpect(jsonPath("$[3].trainTypeName").value("やまびこ6号"))
+                .andExpect(jsonPath("$[0].departureTime").value("11:00:00"))
+                .andExpect(jsonPath("$[1].departureTime").value("12:00:00"))
+                .andExpect(jsonPath("$[2].departureTime").value("13:00:00"))
+                .andExpect(jsonPath("$[3].departureTime").value("15:00:00"))
+                .andExpect(jsonPath("$[0].arrivalTime").value("16:10:00"))
+                .andExpect(jsonPath("$[1].arrivalTime").value("12:30:00"))
+                .andExpect(jsonPath("$[2].arrivalTime").value("13:40:00"))
+                .andExpect(jsonPath("$[3].arrivalTime").value("16:00:00"));
     }
 
     @Test
     @DisplayName("リクエストのカラムがNullの場合、バリデーションエラー発生")
     void getSchedule_withNotValidScheduleRequestDto_returnValidationError() throws Exception {
 
-        request.setArrival_station_cd(null);
-        String url = baseUrl + "schedule?date=2026-06-01&time=12:00:00&departure_station_cd=THK01";
+        request.setArrivalStationCd(null);
+        String url = baseUrl + "schedule?date=2026-06-01&time=12:00:00&departureStationCd=THK01";
 
         String json = objectMapper.writeValueAsString(request);
 
@@ -132,20 +132,20 @@ public class ScheduleControllerTest {
         Mockito.when(service.getTrainCarList(scheduleCd)).thenReturn(expectList);
 
         mockMvc.perform(
-                        get(url).param("schedule_cd", scheduleCd)
+                        get(url).param("scheduleCd", scheduleCd)
                                 .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.length()").value(2))
 
-                .andExpect(jsonPath("$[0].train_car_cd").value("E5SER01"))
-                .andExpect(jsonPath("$[0].train_car_number").value(1))
-                .andExpect(jsonPath("$[0].seat_type_cd").value("SEAT01"))
-                .andExpect(jsonPath("$[0].train_car_type_name").value("指定席"))
+                .andExpect(jsonPath("$[0].trainCarCd").value("E5SER01"))
+                .andExpect(jsonPath("$[0].trainCarNumber").value(1))
+                .andExpect(jsonPath("$[0].seatTypeCd").value("SEAT01"))
+                .andExpect(jsonPath("$[0].trainCarTypeName").value("指定席"))
 
-                .andExpect(jsonPath("$[1].train_car_cd").value("E5SER02"))
-                .andExpect(jsonPath("$[1].train_car_number").value(2))
-                .andExpect(jsonPath("$[1].seat_type_cd").value("SEAT01"))
-                .andExpect(jsonPath("$[1].train_car_type_name").value("指定席"));
+                .andExpect(jsonPath("$[1].trainCarCd").value("E5SER02"))
+                .andExpect(jsonPath("$[1].trainCarNumber").value(2))
+                .andExpect(jsonPath("$[1].seatTypeCd").value("SEAT01"))
+                .andExpect(jsonPath("$[1].trainCarTypeName").value("指定席"));
     }
 
     @Test
@@ -156,6 +156,6 @@ public class ScheduleControllerTest {
 
         mockMvc.perform(get(url))
                 .andExpect(status().isBadRequest())
-                .andExpect(content().string("schedule_cd is Null"));
+                .andExpect(content().string("scheduleCd is Null"));
     }
 }

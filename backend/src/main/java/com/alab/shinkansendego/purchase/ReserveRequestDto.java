@@ -13,13 +13,13 @@ import java.util.List;
 @Setter
 public class ReserveRequestDto {
     @NotNull(message = "ScheduleCd is Null")
-    private String schedule_cd;
+    private String scheduleCd;
     @NotNull(message = "Date is Null")
-    private LocalDate ride_date;
+    private LocalDate rideDate;
     @NotNull(message = "DepartureStationCd is Null")
-    private String departure_station_cd;
+    private String departureStationCd;
     @NotNull(message = "ArrivalStationCd is Null")
-    private String arrival_station_cd;
+    private String arrivalStationCd;
     @NotNull(message = "Seats is Null")
     private List<SelectedSeatDto> seats;
 
@@ -28,8 +28,8 @@ public class ReserveRequestDto {
     @AllArgsConstructor
     public static class SelectedSeatDto {
         @NotNull(message = "trainCarCd is Null")
-        private String train_car_cd;
+        private String trainCarCd;
         @NotNull(message = "seatCd is Null")
-        private String seat_cd;
+        private String seatCd;
     }
 }
