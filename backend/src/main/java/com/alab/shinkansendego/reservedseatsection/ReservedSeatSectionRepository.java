@@ -1,18 +1,24 @@
 package com.alab.shinkansendego.reservedseatsection;
 
-import org.apache.ibatis.annotations.Mapper;
-import org.apache.ibatis.annotations.Param;
+import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Query;
+import org.springframework.data.repository.query.Param;
+import org.springframework.stereotype.Repository;
 
 import java.time.LocalDate;
 import java.util.List;
+import java.util.UUID;
 
-@Mapper
-public interface ReservedSeatSectionRepository {
-    List<String> findReservedSeatCdOfTrainCarBySectionCd
-            (@Param("ride_date") LocalDate ride_date,
-             @Param("schedule_cd") String schedule_cd,
-             @Param("train_car_cd") String train_car_cd,
-             @Param("reserved_section_cd") String section_cd);
+@Repository
+public interface ReservedSeatSectionRepository extends JpaRepository<ReservedSeatSectionEntity, UUID> {
 
-    int insertReservedSeatSections(List<ReservedSeatSectionEntity> reservedSeatSections);
+    @Query("SELECT rss.seatCd "+
+           "FROM ReservedSeatSectionEntity rss "+
+           "WHERE rss.rideDate = :rideDate AND rss.scheduleCd = :scheduleCd AND rss.trainCarCd = :trainCarCd AND rss.reservedSectionCd = :sectionCd "+
+           "ORDER BY rss.seatCd")
+    List<String> findReservedSeatCdByRideDateAndScheduleCdAndTrainCarCdAndReservedSeatSectionCd
+            (LocalDate rideDate,
+             String scheduleCd,
+             String trainCarCd,
+             String sectionCd);
 }

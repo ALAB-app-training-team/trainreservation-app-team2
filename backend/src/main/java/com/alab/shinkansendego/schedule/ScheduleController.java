@@ -27,7 +27,7 @@ public class ScheduleController {
     }
 
     @GetMapping(path = "api/shinkansen-traincar")
-    public ResponseEntity<List<TrainCarFormationResponseDto>> getTrainCarList(@RequestParam(name = "schedule_cd") String scheduleCd) {
+    public ResponseEntity<List<TrainCarFormationResponseDto>> getTrainCarList(@RequestParam(name = "scheduleCd") String scheduleCd) {
         List<TrainCarFormationResponseDto> response = scheduleService.getTrainCarList(scheduleCd);
         return ResponseEntity.ok(response);
     }

@@ -2,7 +2,7 @@ package com.alab.shinkansendego.reservation;
 
 import lombok.*;
 
-import java.time.LocalDate;
+import java.time.*;
 
 @Data
 @NoArgsConstructor
@@ -10,8 +10,8 @@ import java.time.LocalDate;
 @Getter
 @Setter
 public class ReservationDto {
-    private String train_type_name;
-    private String departure_station_cd;
-    private String arrival_station_cd;
-    private LocalDate ride_date;
+    private String trainTypeName;
+    private String departureStationCd;
+    private String arrivalStationCd;
+    private LocalDate rideDate;
 }

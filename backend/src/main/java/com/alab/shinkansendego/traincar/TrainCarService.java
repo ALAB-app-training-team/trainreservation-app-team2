@@ -26,28 +26,28 @@ public class TrainCarService {
     }
 
     public List<SeatResponseDto> getSeatListWithReserved(SeatRequestDto request) {
-        List<SeatResponseDto> seatList = trainCarRepository.findSeatByTrainCarCd(request.getTrain_car_cd());
+        List<SeatResponseDto> seatList = trainCarRepository.findSeatByTrainCarCd(request.getTrainCarCd());
         if (seatList.isEmpty()) {
             throw new IllegalArgumentException("TrainCarCd is Not found");
         }
 
         List<String> seatOfSectionCdList =
-                departureArrivalTimeRepository.findSectionCdByScheduleCd(request.getSchedule_cd(), request.getDeparture_time(), request.getArrival_time());
+                departureArrivalTimeRepository.findByScheduleCdAndDepartureTimeAndArrivalTime(request.getScheduleCd(), request.getDepartureTime(), request.getArrivalTime());
         if (seatOfSectionCdList.isEmpty()) {
             throw new IllegalArgumentException("SectionCdOfSeat is Not found");
         }
 
         List<String> reservedSeatCdList = new ArrayList<>();
         for (String cd : seatOfSectionCdList) {
-            List<String> resultList = reservedSeatSectionRepository.findReservedSeatCdOfTrainCarBySectionCd(request.getDate(), request.getSchedule_cd(), request.getTrain_car_cd(), cd);
+            List<String> resultList = reservedSeatSectionRepository.findReservedSeatCdByRideDateAndScheduleCdAndTrainCarCdAndReservedSeatSectionCd(request.getDate(), request.getScheduleCd(), request.getTrainCarCd(), cd);
             reservedSeatCdList.addAll(resultList);
         }
 
         for (SeatResponseDto seat : seatList) {
-            seat.setIs_reserved(reservedSeatCdList.contains(seat.getSeat_cd()));
+            seat.setIsReserved(reservedSeatCdList.contains(seat.getSeatCd()));
         }
 
-        seatList.sort(Comparator.comparing(SeatResponseDto::getSeat_number).thenComparing(SeatResponseDto::getSeat_column));
+        seatList.sort(Comparator.comparing(SeatResponseDto::getSeatNumber).thenComparing(SeatResponseDto::getSeatColumn));
 
         return seatList;
     }
