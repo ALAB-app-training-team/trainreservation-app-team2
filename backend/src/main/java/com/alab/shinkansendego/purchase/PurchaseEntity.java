@@ -33,9 +33,9 @@ public class PurchaseEntity {
     @Column(name = "arrival_station_cd")
     private String arrivalStationCd;
 
-    @ManyToOne(fetch = FetchType.LAZY)
+    @OneToMany(fetch = FetchType.LAZY)
     @JoinColumn(name = "schedule_cd", referencedColumnName = "schedule_cd", insertable = false, updatable = false)
-    private DepartureArrivalTimeEntity departureArrivalTime;
+    private List<DepartureArrivalTimeEntity> departureArrivalTime;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "schedule_cd", referencedColumnName = "schedule_cd", insertable = false, updatable = false)

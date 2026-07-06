@@ -1,6 +1,6 @@
 package com.alab.shinkansendego.traincar;
 
-import com.alab.shinkansendego.seattype.*;
+import com.alab.shinkansendego.seattype.SeatTypeEntity;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotNull;
 import lombok.Data;
@@ -26,6 +26,6 @@ public class TrainCarEntity {
     private String seatTypeCd;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "seat_type_cd", referencedColumnName = "seat_type_cd",insertable = false, updatable = false)
+    @JoinColumn(name = "seat_type_cd", referencedColumnName = "seat_type_cd", insertable = false, updatable = false)
     private SeatTypeEntity seatType;
 }

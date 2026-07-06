@@ -19,6 +19,8 @@ export function ScheduleSearchBody() {
         searchRequestDto,
         isInvalid,
         getFieldError,
+        maxDate,
+        minDate,
     } = useSearchRequestDto({ stations, initialDto });
 
     return (
@@ -33,6 +35,8 @@ export function ScheduleSearchBody() {
                         setArrivalStation={setArrivalStation}
                         searchRequestDto={searchRequestDto}
                         getFieldError={getFieldError}
+                        maxDate={maxDate}
+                        minDate={minDate}
                     />
                     <Suspense fallback={<ScheduleListSkeleton />}>
                         <ScheduleList

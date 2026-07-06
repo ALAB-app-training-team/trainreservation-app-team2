@@ -1,18 +1,25 @@
 package com.alab.shinkansendego.purchase;
 
-import com.alab.shinkansendego.reservation.*;
-import org.junit.jupiter.api.*;
-import org.springframework.beans.factory.annotation.*;
-import org.springframework.boot.data.jpa.test.autoconfigure.*;
-import org.springframework.boot.jdbc.test.autoconfigure.*;
-import org.springframework.test.context.*;
-import org.springframework.test.context.jdbc.*;
-import org.testcontainers.containers.*;
-import org.testcontainers.junit.jupiter.*;
+import com.alab.shinkansendego.reservation.ReservationDto;
+import com.alab.shinkansendego.reservation.ReservedScheduleDto;
+import org.junit.jupiter.api.DisplayName;
+import org.junit.jupiter.api.Test;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.data.jpa.test.autoconfigure.DataJpaTest;
+import org.springframework.boot.jdbc.test.autoconfigure.AutoConfigureTestDatabase;
+import org.springframework.test.context.ActiveProfiles;
+import org.springframework.test.context.DynamicPropertyRegistry;
+import org.springframework.test.context.DynamicPropertySource;
+import org.springframework.test.context.jdbc.Sql;
+import org.testcontainers.containers.PostgreSQLContainer;
 import org.testcontainers.junit.jupiter.Container;
+import org.testcontainers.junit.jupiter.Testcontainers;
 
-import java.time.*;
-import java.util.*;
+import java.time.LocalDate;
+import java.time.LocalTime;
+import java.util.Arrays;
+import java.util.List;
+import java.util.UUID;
 
 import static org.junit.jupiter.api.Assertions.*;
 
