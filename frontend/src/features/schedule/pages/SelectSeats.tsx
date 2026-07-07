@@ -11,7 +11,7 @@ import { TrainCars } from '@/features/schedule/components/TrainCars/TrainCars';
 import { TrainCarsSkeleton } from '@/features/schedule/components/TrainCars/TrainCarsSkeleton';
 import { useReserveUser } from '@/features/schedule/hooks/useReserveUser';
 import { useSelectedSeats } from '@/features/schedule/hooks/useSelectedSeats';
-import type { CreditCardDto } from '@/features/schedule/types/CreditCardDto';
+import type { CreditCardRequestDto } from '@/features/schedule/types/CreditCardRequestDto';
 import type { ReserveRequestDto } from '@/features/schedule/types/ReserveRequestDto';
 
 export function SelectSeats() {
@@ -36,7 +36,7 @@ export function SelectSeats() {
     } = useReserveUser();
 
     const getPaymentToken = async () => {
-        const creditCardDto: CreditCardDto = {
+        const creditCardRequestDto: CreditCardRequestDto = {
             number: reserveUser.cardNumber,
             name: reserveUser.cardName,
             expiry: reserveUser.expiry,
