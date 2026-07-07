@@ -1,4 +1,4 @@
-package com.alab.shinkansendego.purchase;
+package com.alab.shinkansendego.reservation;
 
 import jakarta.validation.constraints.NotNull;
 import lombok.*;

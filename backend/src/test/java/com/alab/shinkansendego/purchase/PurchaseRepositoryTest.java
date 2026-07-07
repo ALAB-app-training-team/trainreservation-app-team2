@@ -1,5 +1,7 @@
 package com.alab.shinkansendego.purchase;
 
+import com.alab.shinkansendego.reservation.PurchaseEntity;
+import com.alab.shinkansendego.reservation.PurchaseRepository;
 import com.alab.shinkansendego.reservation.ReservationDto;
 import com.alab.shinkansendego.reservation.ReservedScheduleDto;
 import org.junit.jupiter.api.DisplayName;

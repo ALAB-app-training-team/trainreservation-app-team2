@@ -1,5 +1,6 @@
 package com.alab.shinkansendego.purchase;
 
+import com.alab.shinkansendego.reservation.ReserveRequestDto;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.SerializationFeature;
 import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;

@@ -1,7 +1,5 @@
-package com.alab.shinkansendego.purchase;
+package com.alab.shinkansendego.reservation;
 
-import com.alab.shinkansendego.reservation.ReservationDto;
-import com.alab.shinkansendego.reservation.ReservedScheduleDto;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.stereotype.Repository;

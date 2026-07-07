@@ -1,7 +1,5 @@
 package com.alab.shinkansendego.reservation;
 
-import com.alab.shinkansendego.purchase.PurchaseEntity;
-import com.alab.shinkansendego.purchase.PurchaseRepository;
 import com.alab.shinkansendego.purchasedseat.PurchasedSeatRepository;
 import org.jspecify.annotations.NonNull;
 import org.junit.jupiter.api.BeforeEach;

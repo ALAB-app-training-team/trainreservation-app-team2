@@ -1,4 +1,4 @@
-package com.alab.shinkansendego.purchase;
+package com.alab.shinkansendego.reservation;
 
 import com.alab.shinkansendego.departurearrivaltime.DepartureArrivalTimeEntity;
 import com.alab.shinkansendego.schedule.ScheduleEntity;
