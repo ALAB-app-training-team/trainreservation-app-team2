@@ -1,0 +1,51 @@
+import type { ElementType, SetStateAction } from 'react';
+import React from 'react';
+
+type GuestLoginInputProps = {
+    id: string;
+    label: string;
+    type: string;
+    value: string;
+    placeholder: string;
+    icon: ElementType;
+    setValue: React.Dispatch<SetStateAction<string>> | ((time: string) => void);
+    getFieldError?: (field: string) => string;
+} & React.InputHTMLAttributes<HTMLInputElement>;
+
+export function GuestLoginInput({
+    id,
+    label,
+    type,
+    value,
+    placeholder,
+    icon,
+    setValue,
+    getFieldError,
+}: GuestLoginInputProps) {
+    return (
+        <div className="flex w-full flex-col items-start gap-2">
+            <label className="font-bold" htmlFor={id}>
+                {label}
+            </label>
+            <div className="relative w-full">
+                {React.createElement(icon, {
+                    className:
+                        'pointer-events-none absolute left-3 top-1/2 -translate-y-1/2',
+                })}
+                <input
+                    id={id}
+                    type={type}
+                    value={value}
+                    onChange={(e) => setValue(e.target.value)}
+                    placeholder={placeholder}
+                    className="focus:border-primary bg-primary-light w-full cursor-pointer rounded-xl p-2 pl-10 outline-none focus:border-2"
+                />
+            </div>
+            {getFieldError?.(id) && (
+                <p className="text-left text-sm text-red-600">
+                    {getFieldError(id)}
+                </p>
+            )}
+        </div>
+    );
+}
