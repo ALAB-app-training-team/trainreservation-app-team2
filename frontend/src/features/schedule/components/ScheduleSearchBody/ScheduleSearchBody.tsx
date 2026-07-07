@@ -13,7 +13,7 @@ export function ScheduleSearchBody() {
     const location = useLocation();
     const initialDto = location.state?.searchRequestDto;
     const { stations } = useStations();
-    const {stationResponseDtos} = MockStationResponseDto();
+    const { stationResponseDtos } = MockStationResponseDto();
     const {
         setTime,
         setDate,
@@ -71,5 +71,4 @@ export function ScheduleSearchBody() {
             </div>
         </>
     );
-};
-
+}

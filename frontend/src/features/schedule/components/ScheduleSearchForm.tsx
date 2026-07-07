@@ -3,10 +3,10 @@ import { FiArrowRight } from 'react-icons/fi';
 
 import { DepartureDateAndTimePicker } from '@/features/schedule/components/DepartureDateAndTimePicker';
 import { StationSelect } from '@/features/schedule/components/StationSelect';
+import { useStationFilter } from '@/features/schedule/hooks/useStationFilter';
 import type { SearchRequestDto } from '@/features/schedule/types/SearchRequestDto';
-import type { Station } from '../types/Station';
-import type { StationResponseDto } from '../types/StationResponseDto';
-import { useStationFilter } from '../hooks/useStationFilter';
+import type { Station } from '@/features/schedule/types/Station';
+import type { StationResponseDto } from '@/features/schedule/types/StationResponseDto';
 
 type ScheduleSearchFormProps = {
     stations: Station[];
@@ -33,12 +33,13 @@ export function ScheduleSearchForm({
     maxDate,
     minDate,
 }: ScheduleSearchFormProps) {
-    const {availableDepartureStations, availableArrivalStations} = useStationFilter(
-        stations,
-        stationResponseDtos,
-        searchRequestDto.departureStationCd,
-        searchRequestDto.arrivalStationCd
-    );
+    const { availableDepartureStations, availableArrivalStations } =
+        useStationFilter(
+            stations,
+            stationResponseDtos,
+            searchRequestDto.departureStationCd,
+            searchRequestDto.arrivalStationCd,
+        );
 
     return (
         <>
