@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react';
+import { useState } from 'react';
 import type { Focused } from 'react-credit-cards-2';
 
 import type { ReserveUser } from '@/features/schedule/types/ReserveUser';
@@ -40,7 +40,7 @@ export function useReserveUser() {
         return value === '' || !/^\d{3,4}$/.test(value);
     };
 
-    const isInvalid = (reserveUser: ReserveUser) => {
+    const checkInvalid = (reserveUser: ReserveUser) => {
         return (
             isNameInvalid(reserveUser.name) ||
             isMailInvalid(reserveUser.mail) ||
@@ -51,9 +51,7 @@ export function useReserveUser() {
         );
     };
 
-    useEffect(() => {
-        isInvalid(reserveUser);
-    }, [reserveUser]);
+    const isInvalid = checkInvalid(reserveUser);
 
     const editValidateMessage = (field: string, value: string) => {
         const messages: InValidMessage[] = inValidMessages.filter(
