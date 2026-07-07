@@ -3,56 +3,51 @@ import { useMemo } from "react";
 import type { Station } from "@/features/schedule/types/Station";
 import type { StationResponseDto } from "@/features/schedule/types/StationResponseDto"
 
-//特定の駅CDがもつ重複のない停車分類のリストを取得
-const getStopCategoriesByStationCd = (
-    stations: StationResponseDto[],
-    stationCd: string | undefined
-): string[] => {
-    if(!stationCd) return [];
+const formatStations = (
+    rawDtos: StationResponseDto[],
+    allStations: Station[],
+    selectedStationCd: string
+):Station[] => {
+    const seen= new Set<string>();
 
-    return stations
-      .filter((s) => s.stationCd === stationCd)
-      .map((s) => s.stopCategory)
-      .filter((c): c is string => typeof c === "string" && c !== "");
+    return [...rawDtos]
+      .sort((a, b) => {
+        const codeA = a.stopStationCd ?? "";
+        const codeB = b.stopStationCd ?? "";
+        return codeA.localeCompare(codeB);
+      })
+
+      .filter((dto) => dto.stationCd !== selectedStationCd)
+
+      .filter((dto) => {
+        if (seen.has(dto.stationCd)) return false;
+        seen.add(dto.stationCd);
+        return true;
+      })
+
+      .map((dto) => allStations.find((s) => s.stationCd === dto.stationCd))
+
+      .filter((station): station is Station => !!station);
 };
 
 export function useStationFilter(
-    stations: Station[], //表示用(nameあり、重複なし)の駅リスト
-    stationResponseDtos: StationResponseDto[], //停車分類判定用のレコードリスト
+    stations: Station[],
+    departureDtos:StationResponseDto[],
+    arrivalDtos: StationResponseDto[],
     departureStationCd: string,
     arrivalStationCd: string
 ){
-    const departureCategories =useMemo(() => {
-        return getStopCategoriesByStationCd(stationResponseDtos, departureStationCd);
-    }, [stationResponseDtos, departureStationCd]);
-
-    const arrivalCategories =useMemo(() => {
-        return getStopCategoriesByStationCd(stationResponseDtos, arrivalStationCd);
-    }, [stationResponseDtos, arrivalStationCd]);
-
     const availableArrivalStations = useMemo(() => {
-        if(!departureStationCd || departureCategories.length === 0) return stations;
+        if(!departureStationCd || departureDtos.length === 0) return stations;
 
-       return stations.filter((station) => {
-        if(station.stationCd === departureStationCd) return false;
-
-        const candidateCategories = getStopCategoriesByStationCd(stationResponseDtos, station.stationCd);
-
-        return candidateCategories.some((c) => departureCategories.includes(c));
-       })
-    }, [stations, stationResponseDtos, departureStationCd, departureCategories]);
+       return formatStations(departureDtos, stations, departureStationCd);
+    }, [stations, departureStationCd, departureDtos]);
 
     const availableDepartureStations = useMemo(() => {
-        if(!arrivalStationCd || arrivalCategories.length === 0) return stations;
+        if(!arrivalStationCd || arrivalDtos.length === 0) return stations;
 
-        return stations.filter((station) => {
-        if(station.stationCd === arrivalStationCd) return false;
-
-        const candidateCategories = getStopCategoriesByStationCd(stationResponseDtos, station.stationCd);
-
-        return candidateCategories.some((c) => arrivalCategories.includes(c));
-       })
-    }, [stations, stationResponseDtos, arrivalStationCd, arrivalCategories]);
+       return formatStations(arrivalDtos, stations, arrivalStationCd);
+    }, [stations, arrivalStationCd, arrivalDtos]);
 
     return {
         availableArrivalStations,

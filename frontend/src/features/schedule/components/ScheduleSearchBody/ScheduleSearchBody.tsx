@@ -5,8 +5,8 @@ import { ScheduleList } from '@/features/schedule/components/ScheduleList/Schedu
 import { ScheduleListSkeleton } from '@/features/schedule/components/ScheduleList/ScheduleListSkeleton';
 import { ScheduleSearchForm } from '@/features/schedule/components/ScheduleSearchForm';
 import { useSearchRequestDto } from '@/features/schedule/hooks/useSearchRequestDto';
+//import { useStationResponseDtos } from '@/features/schedule/hooks/useStationResponseDtos';
 import { useStations } from '@/features/schedule/hooks/useStations';
-//import { useStationResponseDtos } from '@/features/schedule/hooks/useStationResponseDtos'
 import { MockStationResponseDto } from '@/shared/constants/MockStationResponseDto';
 
 export function ScheduleSearchBody() {
@@ -25,6 +25,8 @@ export function ScheduleSearchBody() {
         maxDate,
         minDate,
     } = useSearchRequestDto({ stations, initialDto });
+    const departureDtos = stationResponseDtos;
+    const arrivalDtos = stationResponseDtos;
 
     return (
         <>
@@ -32,7 +34,8 @@ export function ScheduleSearchBody() {
                 <div className="mx-8 my-4 flex w-full max-w-5xl flex-col gap-4">
                     <ScheduleSearchForm
                         stations={stations}
-                        stationResponseDtos={stationResponseDtos}
+                        departureDtos={departureDtos}
+                        arrivalDtos={arrivalDtos}
                         setTime={setTime}
                         setDate={setDate}
                         setDepartureStation={setDepartureStation}

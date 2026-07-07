@@ -10,7 +10,8 @@ import type { StationResponseDto } from '@/features/schedule/types/StationRespon
 
 type ScheduleSearchFormProps = {
     stations: Station[];
-    stationResponseDtos: StationResponseDto[];
+    departureDtos: StationResponseDto[];
+    arrivalDtos: StationResponseDto[];
     setTime: (time: string) => void;
     setDate: React.Dispatch<SetStateAction<string>>;
     setDepartureStation: React.Dispatch<SetStateAction<string>>;
@@ -23,7 +24,8 @@ type ScheduleSearchFormProps = {
 
 export function ScheduleSearchForm({
     stations,
-    stationResponseDtos,
+    departureDtos,
+    arrivalDtos,
     setTime,
     setDate,
     setDepartureStation,
@@ -36,7 +38,8 @@ export function ScheduleSearchForm({
     const { availableDepartureStations, availableArrivalStations } =
         useStationFilter(
             stations,
-            stationResponseDtos,
+            departureDtos,
+            arrivalDtos,
             searchRequestDto.departureStationCd,
             searchRequestDto.arrivalStationCd,
         );
