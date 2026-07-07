@@ -54,15 +54,15 @@ public class ReservationRepositoryTest {
                         LocalTime.of(7, 0, 0), "EKI02", "TestStation02", LocalTime.of(7, 55, 0), "EKI03", "TestStation03"),
                 new ReservedScheduleDto(
                         LocalTime.of(8, 0, 0), "EKI03", "TestStation03", LocalTime.of(8, 55, 0), "EKI04", "TestStation04"));
-        List<ReservedScheduleDto> actual = repo.findReservationScheduleDtoByPurchaseId(purchaseId);
+        List<ReservedScheduleDto> actual = repo.findReservationScheduleDtoByReservationId(purchaseId);
         assertEquals(expected, actual);
     }
 
     @Test
     @Sql(scripts = "classpath:com/alab/shinkansendego/sql/PurchaseTestData_Reservation.sql")
     @DisplayName("テーブルに存在しない購入情報IDを検索した場合、空の運行情報リストが返却されるか")
-    void findReservationScheduleDtoByPurchaseId_withNotExistPurchaseId_returnEmptyList() {
-        List<ReservedScheduleDto> actual = repo.findReservationScheduleDtoByPurchaseId(UUID.fromString("9996b939-2e3e-46c1-92d3-7aa64b6ca575"));
+    void findReservationScheduleDtoByPurchaseId_withNotExistReservationId_returnEmptyList() {
+        List<ReservedScheduleDto> actual = repo.findReservationScheduleDtoByReservationId(UUID.fromString("9996b939-2e3e-46c1-92d3-7aa64b6ca575"));
         assertEquals(0, actual.size());
     }
 
@@ -71,7 +71,7 @@ public class ReservationRepositoryTest {
     @DisplayName("購入情報IDから購入情報を取得できる")
     void findPurchaseByPurchaseId_withReservationDtoId_returnGetPurchaseSuccess() {
         ReservationDto expected = new ReservationDto("やまびこ1号", "EKI01", "EKI03", LocalDate.of(2026, 6, 1));
-        ReservationDto actual = repo.findReservationDtoByPurchaseId(purchaseId);
+        ReservationDto actual = repo.findReservationDtoByReservationId(purchaseId);
         assertAll(
                 () -> assertEquals(expected.getTrainTypeName(), actual.getTrainTypeName()),
                 () -> assertEquals(expected.getDepartureStationCd(), actual.getDepartureStationCd()),
@@ -84,7 +84,7 @@ public class ReservationRepositoryTest {
     @Sql(scripts = "classpath:com/alab/shinkansendego/sql/PurchaseTestData_Reservation.sql")
     @DisplayName("テーブルに存在しない購入情報IDを検索した場合、Nullが返却されるか")
     void findPurchaseByReservationDtoId_withNotExistPurchaseId_returnNull() {
-        ReservationDto actual = repo.findReservationDtoByPurchaseId(UUID.fromString("9996b939-2e3e-46c1-92d3-7aa64b6ca575"));
+        ReservationDto actual = repo.findReservationDtoByReservationId(UUID.fromString("9996b939-2e3e-46c1-92d3-7aa64b6ca575"));
         assertNull(actual);
     }
 

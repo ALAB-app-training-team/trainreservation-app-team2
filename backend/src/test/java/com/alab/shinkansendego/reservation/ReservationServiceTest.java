@@ -109,11 +109,11 @@ public class ReservationServiceTest {
     @DisplayName("予約情報の全取得ができる")
     void getReservationList_returnGetReservationSuccess() {
         when(purchaseRepo.findAll(Sort.by("rideDate").ascending())).thenReturn(getPurchaseList());
-        when(purchaseRepo.findReservationDtoByPurchaseId(purchaseId1)).thenReturn(purchase);
-        when(purchaseRepo.findReservationScheduleDtoByPurchaseId(purchaseId1)).thenReturn(scheduleList);
+        when(purchaseRepo.findReservationDtoByReservationId(purchaseId1)).thenReturn(purchase);
+        when(purchaseRepo.findReservationScheduleDtoByReservationId(purchaseId1)).thenReturn(scheduleList);
         when(purchasedSeatRepo.findReservedSeatDtoByPurchaseId(purchaseId1)).thenReturn(seatList);
-        when(purchaseRepo.findReservationDtoByPurchaseId(purchaseId2)).thenReturn(purchase);
-        when(purchaseRepo.findReservationScheduleDtoByPurchaseId(purchaseId2)).thenReturn(scheduleList);
+        when(purchaseRepo.findReservationDtoByReservationId(purchaseId2)).thenReturn(purchase);
+        when(purchaseRepo.findReservationScheduleDtoByReservationId(purchaseId2)).thenReturn(scheduleList);
         when(purchasedSeatRepo.findReservedSeatDtoByPurchaseId(purchaseId2)).thenReturn(seatList);
 
         List<ReservationResponseDto> expectList = Arrays.asList(getExpectReservationResponseDto(purchaseId1), getExpectReservationResponseDto(purchaseId2));
@@ -126,8 +126,8 @@ public class ReservationServiceTest {
     @Test
     @DisplayName("購入情報IDから予約チケット情報が取得できる")
     void getReservation_withPurchaseId_returnGetReservationSuccess() {
-        when(purchaseRepo.findReservationDtoByPurchaseId(purchaseId1)).thenReturn(purchase);
-        when(purchaseRepo.findReservationScheduleDtoByPurchaseId(purchaseId1)).thenReturn(scheduleList);
+        when(purchaseRepo.findReservationDtoByReservationId(purchaseId1)).thenReturn(purchase);
+        when(purchaseRepo.findReservationScheduleDtoByReservationId(purchaseId1)).thenReturn(scheduleList);
         when(purchasedSeatRepo.findReservedSeatDtoByPurchaseId(purchaseId1)).thenReturn(seatList);
 
         ReservationResponseDto expect = getExpectReservationResponseDto(null);
@@ -140,7 +140,7 @@ public class ReservationServiceTest {
     @Test
     @DisplayName("購入情報データに存在しない購入情報IDがリクエストされた場合にエラーを発生させる")
     void getReservation_withNotExistPurchaseRequest_returnIllegalArgumentException() {
-        when(purchaseRepo.findReservationDtoByPurchaseId(purchaseId1)).thenReturn(null);
+        when(purchaseRepo.findReservationDtoByReservationId(purchaseId1)).thenReturn(null);
         Exception ex = assertThrows(
                 IllegalArgumentException.class,
                 () -> service.getReservation(purchaseId1)
@@ -152,8 +152,8 @@ public class ReservationServiceTest {
     @DisplayName("出発到着時刻データに存在しない出発駅CDを持つ購入情報IDがリクエストされた場合にエラーを発生させる")
     void getReservation_withNotExistScheduleOfDepartureStationRequest_returnIllegalArgumentException() {
         purchase.setDepartureStationCd("None");
-        when(purchaseRepo.findReservationDtoByPurchaseId(purchaseId1)).thenReturn(purchase);
-        when(purchaseRepo.findReservationScheduleDtoByPurchaseId(purchaseId1)).thenReturn(scheduleList);
+        when(purchaseRepo.findReservationDtoByReservationId(purchaseId1)).thenReturn(purchase);
+        when(purchaseRepo.findReservationScheduleDtoByReservationId(purchaseId1)).thenReturn(scheduleList);
         Exception ex = assertThrows(
                 IllegalArgumentException.class,
                 () -> service.getReservation(purchaseId1)
@@ -165,8 +165,8 @@ public class ReservationServiceTest {
     @DisplayName("出発到着時刻データに存在しない到着駅CDを持つ購入情報IDがリクエストされた場合にエラーを発生させる")
     void getReservation_withNotExistScheduleOfArrivalStationRequest_returnIllegalArgumentException() {
         purchase.setArrivalStationCd("None");
-        when(purchaseRepo.findReservationDtoByPurchaseId(purchaseId1)).thenReturn(purchase);
-        when(purchaseRepo.findReservationScheduleDtoByPurchaseId(purchaseId1)).thenReturn(scheduleList);
+        when(purchaseRepo.findReservationDtoByReservationId(purchaseId1)).thenReturn(purchase);
+        when(purchaseRepo.findReservationScheduleDtoByReservationId(purchaseId1)).thenReturn(scheduleList);
         Exception ex = assertThrows(
                 IllegalArgumentException.class,
                 () -> service.getReservation(purchaseId1)

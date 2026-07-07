@@ -10,19 +10,19 @@ import java.util.UUID;
 @Repository
 public interface ReservationRepository extends JpaRepository<ReservationEntity, UUID> {
     @Query("SELECT new com.alab.shinkansendego.reservation.ReservedScheduleDto(d.departureTime,ss.stationCd,ss.name,d.arrivalTime,gs.stationCd,gs.name) " +
-            "FROM PurchaseEntity p " +
-            "JOIN DepartureArrivalTimeEntity d ON p.scheduleCd = d.scheduleCd " +
+            "FROM ReservationEntity r " +
+            "JOIN DepartureArrivalTimeEntity d ON r.scheduleCd = d.scheduleCd " +
             "JOIN SectionKmEntity s ON d.sectionCd = s.sectionCd " +
             "JOIN StationEntity ss ON s.startStationCd = ss.stationCd " +
             "JOIN StationEntity gs ON s.goalStationCd = gs.stationCd " +
-            "WHERE p.id = :purchaseId " +
+            "WHERE r.id = :reservationId " +
             "ORDER BY d.departureTime")
-    List<ReservedScheduleDto> findReservationScheduleDtoByPurchaseId(UUID purchaseId);
+    List<ReservedScheduleDto> findReservationScheduleDtoByReservationId(UUID reservationId);
 
-    @Query("SELECT new com.alab.shinkansendego.reservation.ReservationDto(tt.name,p.departureStationCd,p.arrivalStationCd,p.rideDate) " +
-            "FROM PurchaseEntity p " +
-            "JOIN ScheduleEntity s ON p.scheduleCd = s.scheduleCd " +
+    @Query("SELECT new com.alab.shinkansendego.reservation.ReservationDto(tt.name,r.departureStationCd,r.arrivalStationCd,r.rideDate) " +
+            "FROM ReservationEntity r " +
+            "JOIN ScheduleEntity s ON r.scheduleCd = s.scheduleCd " +
             "JOIN TrainTypeEntity tt ON s.trainTypeCd = tt.trainTypeCd " +
-            "WHERE p.id = :purchaseId")
-    ReservationDto findReservationDtoByPurchaseId(UUID purchaseId);
+            "WHERE r.id = :reservationId")
+    ReservationDto findReservationDtoByReservationId(UUID reservationId);
 }
