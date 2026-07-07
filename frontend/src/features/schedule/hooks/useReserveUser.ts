@@ -80,7 +80,9 @@ export function useReserveUser() {
     );
 
     const handleInputBlur = (e: React.ChangeEvent<HTMLInputElement>) => {
-        const messages: InValidMessage[] = [];
+        const messages: InValidMessage[] = inValidMessages.filter(
+            (item) => item.field !== e.target.id,
+        );
         if (e.target.id === 'name') {
             if (isNameInvalid) {
                 messages.push({
