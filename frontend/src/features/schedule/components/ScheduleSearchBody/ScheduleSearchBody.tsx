@@ -6,13 +6,14 @@ import { ScheduleListSkeleton } from '@/features/schedule/components/ScheduleLis
 import { ScheduleSearchForm } from '@/features/schedule/components/ScheduleSearchForm';
 import { useSearchRequestDto } from '@/features/schedule/hooks/useSearchRequestDto';
 import { useStations } from '@/features/schedule/hooks/useStations';
-import { useStationResponseDtos } from '@/features/schedule/hooks/useStationResponseDtos'
+//import { useStationResponseDtos } from '@/features/schedule/hooks/useStationResponseDtos'
+import { MockStationResponseDto } from '@/shared/constants/MockStationResponseDto';
 
 export function ScheduleSearchBody() {
     const location = useLocation();
     const initialDto = location.state?.searchRequestDto;
     const { stations } = useStations();
-    const {stationResponseDtos} = useStationResponseDtos();
+    const {stationResponseDtos} = MockStationResponseDto();
     const {
         setTime,
         setDate,
@@ -70,4 +71,5 @@ export function ScheduleSearchBody() {
             </div>
         </>
     );
-}
+};
+

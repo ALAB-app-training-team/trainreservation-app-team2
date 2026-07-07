@@ -6,13 +6,11 @@ const MOCK_STATION_RESPONSE_DTO: StationResponseDto[] = [
     {stopStationCd: 'THK0011', stationCd: 'THK01', stopCategory: 'YM'}
 ];
 
-export function MockStationResponseDto(){
+export function MockStationResponseDto() {
     const {data: stationResponseDto} = useSuspenseQuery({
         queryKey: ['stationResponseDto'],
-        queryFn: async() => {
-            return Promise.resolve(MOCK_STATION_RESPONSE_DTO);
-        },
+        queryFn: async() => MOCK_STATION_RESPONSE_DTO
     });
 
-    return {stationResponseDto};
+    return { stationResponseDto };
 };
