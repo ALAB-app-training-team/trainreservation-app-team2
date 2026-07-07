@@ -1,9 +1,5 @@
-package com.alab.shinkansendego.purchase;
+package com.alab.shinkansendego.reservation;
 
-import com.alab.shinkansendego.reservation.PurchaseEntity;
-import com.alab.shinkansendego.reservation.PurchaseRepository;
-import com.alab.shinkansendego.reservation.ReservationDto;
-import com.alab.shinkansendego.reservation.ReservedScheduleDto;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
