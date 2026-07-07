@@ -1,6 +1,6 @@
 export type ReserveUser = {
-    name: string;
-    mail: string;
+    reserverName: string;
+    reserverMail: string;
     cardNumber: string;
     cardName: string;
     expiry: string;

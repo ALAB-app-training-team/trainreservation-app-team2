@@ -29,7 +29,7 @@ export function ReserveUserInfo({
                 <ReserveUserInfoInput
                     reserveUser={reserveUser}
                     label="購入者氏名"
-                    id="name"
+                    id="reserverName"
                     type="text"
                     placeholder="山田 太郎"
                     onChange={handleInputChange}
@@ -42,7 +42,7 @@ export function ReserveUserInfo({
                 <ReserveUserInfoInput
                     reserveUser={reserveUser}
                     label="メールアドレス"
-                    id="mail"
+                    id="reserverMail"
                     type="text"
                     placeholder="demo@example.com"
                     onChange={handleInputChange}

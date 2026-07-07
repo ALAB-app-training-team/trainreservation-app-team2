@@ -5,8 +5,8 @@ import type { ReserveUser } from '@/features/schedule/types/ReserveUser';
 
 export function useReserveUser() {
     const [reserveUser, setReserveUser] = useState<ReserveUser>({
-        name: '',
-        mail: '',
+        reserverName: '',
+        reserverMail: '',
         cardNumber: '',
         cardName: '',
         expiry: '',
@@ -42,8 +42,8 @@ export function useReserveUser() {
 
     const checkInvalid = (reserveUser: ReserveUser) => {
         return (
-            isNameInvalid(reserveUser.name) ||
-            isMailInvalid(reserveUser.mail) ||
+            isNameInvalid(reserveUser.reserverName) ||
+            isMailInvalid(reserveUser.reserverMail) ||
             isCardNumberInvalid(reserveUser.cardNumber) ||
             isCardNameInvalid(reserveUser.cardName) ||
             isExpiryInvalid(reserveUser.expiry) ||
@@ -57,17 +57,17 @@ export function useReserveUser() {
         const messages: InValidMessage[] = inValidMessages.filter(
             (item) => item.field !== field,
         );
-        if (field === 'name') {
+        if (field === 'reserverName') {
             if (isNameInvalid(value)) {
                 messages.push({
-                    field: 'name',
+                    field: 'reserverName',
                     message: '購入者氏名を入力してください',
                 });
             }
-        } else if (field === 'mail') {
+        } else if (field === 'reserverMail') {
             if (isMailInvalid(value)) {
                 messages.push({
-                    field: 'mail',
+                    field: 'reserverMail',
                     message: 'メールアドレスの形式で入力してください',
                 });
             }
