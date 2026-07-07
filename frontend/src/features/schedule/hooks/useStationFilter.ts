@@ -2,7 +2,6 @@ import { useMemo } from "react";
 import type { Station } from "../types/Station";
 import type { StationResponseDto } from "@/features/schedule/types/StationResponseDto"
 
-
 //特定の駅CDがもつ重複のない停車分類のリストを取得
 const getStopCategoriesByStationCd = (
     stations: StationResponseDto[],
