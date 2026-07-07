@@ -31,7 +31,7 @@ export function useReserveUser() {
         return value === '' || !/^\d{16,22}$/.test(value);
     };
     const isCardNameInvalid = (value: string) => {
-        return value === '' || !/^[A-Z]+\s[A-Z]+$/.test(value);
+        return value === '' || !/^[A-Z\s]+$/.test(value);
     };
     const isExpiryInvalid = (value: string) => {
         return value === '' || !/^\d{2}\/\d{2}$/.test(value);
@@ -124,6 +124,7 @@ export function useReserveUser() {
     };
 
     const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+        // 自動フォーマット
         let value = e.target.value;
         if (e.target.id === 'cardNumber') {
             value = e.target.value.replace(/[^0-9]/g, '').slice(0, 22);
