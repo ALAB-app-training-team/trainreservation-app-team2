@@ -66,36 +66,36 @@ export function useReserveUser() {
                     message: '購入者氏名を入力してください',
                 });
             }
-        } else if (isMailInvalid(value)) {
-            if (value === '' || !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(value)) {
+        } else if (field === 'mail') {
+            if (isMailInvalid(value)) {
                 messages.push({
                     field: 'mail',
                     message: 'メールアドレスの形式で入力してください',
                 });
             }
-        } else if (isCardNumberInvalid(value)) {
-            if (value === '' || !/^\d{16,22}$/.test(value)) {
+        } else if (field === 'cardNumber') {
+            if (isCardNumberInvalid(value)) {
                 messages.push({
                     field: 'cardNumber',
                     message: '16-22桁の有効なカード番号を入力してください',
                 });
             }
-        } else if (isCardNameInvalid(value)) {
-            if (value === '' || !/^[A-Z\s]+$/.test(value)) {
+        } else if (field === 'cardName') {
+            if (isCardNameInvalid(value)) {
                 messages.push({
                     field: 'cardName',
                     message: '半角英大文字・半角スペースで入力してください',
                 });
             }
-        } else if (isExpiryInvalid(value)) {
-            if (value === '' || !/^\d{2}\/\d{2}$/.test(value)) {
+        } else if (field === 'expiry') {
+            if (isExpiryInvalid(value)) {
                 messages.push({
                     field: 'expiry',
                     message: 'MM/DDの形式で入力してください',
                 });
             }
-        } else if (isCvcInvalid(value)) {
-            if (value === '' || !/^\d{3,4}$/.test(value)) {
+        } else if (field === 'cvc') {
+            if (isCvcInvalid(value)) {
                 messages.push({
                     field: 'cvc',
                     message: '半角数字3-4桁で入力してください',
