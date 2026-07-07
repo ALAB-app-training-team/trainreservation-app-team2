@@ -25,7 +25,7 @@ import static org.junit.jupiter.api.Assertions.*;
 @DataJpaTest
 @AutoConfigureTestDatabase(replace = AutoConfigureTestDatabase.Replace.NONE)
 @Testcontainers
-public class PurchaseRepositoryTest {
+public class ReservationRepositoryTest {
     // テスト用DB作成
     @Container
     static PostgreSQLContainer<?> postgres = new PostgreSQLContainer<>("postgres:16")
@@ -34,7 +34,7 @@ public class PurchaseRepositoryTest {
             .withPassword("pass");
     private final UUID purchaseId = UUID.fromString("4156b939-2e3e-46c1-92d3-7aa64b6ca575");
     @Autowired
-    private PurchaseRepository repo;
+    private ReservationRepository repo;
 
     @DynamicPropertySource
     static void configure(DynamicPropertyRegistry registry) {
@@ -92,7 +92,7 @@ public class PurchaseRepositoryTest {
     @Sql(scripts = {"classpath:com/alab/shinkansendego/sql/PurchaseRepositoryTestData_Schedule.sql"})
     @DisplayName("新規購入情報が挿入できる")
     void insertPurchase_withPurchaseEntity_returnRecordCount() {
-        PurchaseEntity purchase = new PurchaseEntity();
+        ReservationEntity purchase = new ReservationEntity();
         purchase.setId(UUID.fromString("123e4567-e89b-12d3-a456-426614174000"));
         purchase.setRideDate(LocalDate.now());
         purchase.setScheduleCd("TEST01");

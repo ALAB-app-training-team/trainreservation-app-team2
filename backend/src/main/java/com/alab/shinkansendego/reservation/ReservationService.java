@@ -19,7 +19,7 @@ import java.util.UUID;
 
 @Service
 public class ReservationService {
-    private final PurchaseRepository purchaseRepository;
+    private final ReservationRepository reservationRepository;
     private final PurchasedSeatRepository purchasedSeatRepository;
     private final SectionKmRepository sectionKmRepository;
     private final DepartureArrivalTimeRepository departureArrivalTimeRepository;
@@ -27,13 +27,13 @@ public class ReservationService {
 
     @Autowired
     public ReservationService(
-            PurchaseRepository purchaseRepository,
+            ReservationRepository reservationRepository,
             PurchasedSeatRepository purchasedSeatRepository,
             SectionKmRepository sectionKmRepository,
             DepartureArrivalTimeRepository departureArrivalTimeRepository,
             ReservedSeatSectionRepository reservedSeatSectionRepository
     ) {
-        this.purchaseRepository = purchaseRepository;
+        this.reservationRepository = reservationRepository;
         this.purchasedSeatRepository = purchasedSeatRepository;
         this.sectionKmRepository = sectionKmRepository;
         this.departureArrivalTimeRepository = departureArrivalTimeRepository;
@@ -42,9 +42,9 @@ public class ReservationService {
 
     public List<ReservationResponseDto> getReservationList() {
         List<ReservationResponseDto> reservationList = new ArrayList<>();
-        List<PurchaseEntity> purchaseList = purchaseRepository.findAll(Sort.by("rideDate").ascending());
+        List<ReservationEntity> purchaseList = reservationRepository.findAll(Sort.by("rideDate").ascending());
 
-        for (PurchaseEntity purchase : purchaseList) {
+        for (ReservationEntity purchase : purchaseList) {
             ReservationResponseDto reservation = getReservation(purchase.getId());
             reservation.setPurchaseId(purchase.getId());
             reservationList.add(reservation);
@@ -57,12 +57,12 @@ public class ReservationService {
 
         ReservationResponseDto response = new ReservationResponseDto();
 
-        ReservationDto purchase = purchaseRepository.findReservationDtoByPurchaseId(request);
+        ReservationDto purchase = reservationRepository.findReservationDtoByPurchaseId(request);
         if (purchase == null) {
             throw new IllegalArgumentException("PurchaseId is Not found");
         }
 
-        List<ReservedScheduleDto> scheduleList = purchaseRepository.findReservationScheduleDtoByPurchaseId(request);
+        List<ReservedScheduleDto> scheduleList = reservationRepository.findReservationScheduleDtoByPurchaseId(request);
         //TODO:Listの1件抽出に変更したい
         List<ReservedScheduleDto> departureSchedule = scheduleList.stream().filter(schedule -> Objects.equals(schedule.getDepartureStationCd(), purchase.getDepartureStationCd())).toList();
         List<ReservedScheduleDto> arrivalSchedule = scheduleList.stream().filter(schedule -> Objects.equals(schedule.getArrivalStationCd(), purchase.getArrivalStationCd())).toList();
@@ -110,14 +110,14 @@ public class ReservationService {
         }
 
         UUID purchaseId = UUID.randomUUID();
-        PurchaseEntity purchase = new PurchaseEntity();
+        ReservationEntity purchase = new ReservationEntity();
         purchase.setId(purchaseId);
         purchase.setRideDate(reserveRequestDto.getRideDate());
         purchase.setScheduleCd(reserveRequestDto.getScheduleCd());
         purchase.setDepartureStationCd(reserveRequestDto.getDepartureStationCd());
         purchase.setArrivalStationCd(reserveRequestDto.getArrivalStationCd());
 
-        PurchaseEntity purchaseResult = purchaseRepository.save(purchase);
+        ReservationEntity purchaseResult = reservationRepository.save(purchase);
         if (purchaseResult.getId() == null) {
             throw new RuntimeException("Insert Purchase is failed");
         }

@@ -42,7 +42,7 @@ public class ReservationServiceTest {
     private final ReservedSeatDto seat3 = new ReservedSeatDto("グランクラス", 10, 1, "A", UUID.fromString("e192e5f1-318e-4d10-b76d-2f2bf15e8b70"));
 
     @Mock
-    private PurchaseRepository purchaseRepo;
+    private ReservationRepository purchaseRepo;
     @Mock
     private PurchasedSeatRepository purchasedSeatRepo;
     @Mock
@@ -67,14 +67,14 @@ public class ReservationServiceTest {
                 reservedSeatList);
     }
 
-    private @NonNull List<PurchaseEntity> getPurchaseList() {
-        PurchaseEntity purchase1 = new PurchaseEntity();
+    private @NonNull List<ReservationEntity> getPurchaseList() {
+        ReservationEntity purchase1 = new ReservationEntity();
         purchase1.setId(purchaseId1);
         purchase1.setRideDate(LocalDate.of(2026, 6, 1));
         purchase1.setScheduleCd("THK01");
         purchase1.setDepartureStationCd("THK01");
         purchase1.setArrivalStationCd("THK02");
-        PurchaseEntity purchase2 = new PurchaseEntity();
+        ReservationEntity purchase2 = new ReservationEntity();
         purchase2.setId(purchaseId2);
         purchase2.setRideDate(LocalDate.of(2026, 6, 1));
         purchase2.setScheduleCd("THK01");
@@ -188,7 +188,7 @@ public class ReservationServiceTest {
         when(sectionKmRepo.findSectionCdByGoalStationCd(request.getArrivalStationCd())).thenReturn(List.of(departureArrivalTime.getSectionCd()));
         when(departureArrivalTimeRepo.findByScheduleCdAndSectionCdIn(request.getScheduleCd(), List.of(departureArrivalTime.getSectionCd()))).thenReturn(departureArrivalTime);
         when(departureArrivalTimeRepo.findByScheduleCdAndDepartureTimeAndArrivalTime(request.getScheduleCd(), departureArrivalTime.getDepartureTime(), departureArrivalTime.getArrivalTime())).thenReturn(List.of(departureArrivalTime.getSectionCd()));
-        when(purchaseRepo.save(any())).thenReturn(new PurchaseEntity() {{
+        when(purchaseRepo.save(any())).thenReturn(new ReservationEntity() {{
             setId(UUID.randomUUID());
         }});
         when(purchasedSeatRepo.saveAll(any())).thenReturn(Stream.generate(PurchasedSeatEntity::new).limit(request.getSeats().size()).collect(Collectors.toList()));
@@ -254,7 +254,7 @@ public class ReservationServiceTest {
         when(sectionKmRepo.findSectionCdByGoalStationCd(request.getArrivalStationCd())).thenReturn(List.of(departureArrivalTime.getSectionCd()));
         when(departureArrivalTimeRepo.findByScheduleCdAndSectionCdIn(request.getScheduleCd(), List.of(departureArrivalTime.getSectionCd()))).thenReturn(departureArrivalTime);
         when(departureArrivalTimeRepo.findByScheduleCdAndDepartureTimeAndArrivalTime(request.getScheduleCd(), departureArrivalTime.getDepartureTime(), departureArrivalTime.getArrivalTime())).thenReturn(List.of(departureArrivalTime.getSectionCd()));
-        when(purchaseRepo.save(any())).thenReturn(new PurchaseEntity() {{
+        when(purchaseRepo.save(any())).thenReturn(new ReservationEntity() {{
             setId(UUID.randomUUID());
         }});
         when(purchasedSeatRepo.saveAll(any()).size()).thenThrow(new DuplicateKeyException("UNIQUE制約エラー"));
@@ -293,7 +293,7 @@ public class ReservationServiceTest {
         when(sectionKmRepo.findSectionCdByGoalStationCd(request.getArrivalStationCd())).thenReturn(List.of(departureArrivalTime.getSectionCd()));
         when(departureArrivalTimeRepo.findByScheduleCdAndSectionCdIn(request.getScheduleCd(), List.of(departureArrivalTime.getSectionCd()))).thenReturn(departureArrivalTime);
         when(departureArrivalTimeRepo.findByScheduleCdAndDepartureTimeAndArrivalTime(request.getScheduleCd(), departureArrivalTime.getDepartureTime(), departureArrivalTime.getArrivalTime())).thenReturn(List.of(departureArrivalTime.getSectionCd()));
-        when(purchaseRepo.save(any())).thenReturn(new PurchaseEntity() {{
+        when(purchaseRepo.save(any())).thenReturn(new ReservationEntity() {{
             setId(UUID.randomUUID());
         }});
         when(purchasedSeatRepo.saveAll(any())).thenReturn(null);
@@ -315,7 +315,7 @@ public class ReservationServiceTest {
         when(sectionKmRepo.findSectionCdByGoalStationCd(request.getArrivalStationCd())).thenReturn(List.of(departureArrivalTime.getSectionCd()));
         when(departureArrivalTimeRepo.findByScheduleCdAndSectionCdIn(request.getScheduleCd(), List.of(departureArrivalTime.getSectionCd()))).thenReturn(departureArrivalTime);
         when(departureArrivalTimeRepo.findByScheduleCdAndDepartureTimeAndArrivalTime(request.getScheduleCd(), departureArrivalTime.getDepartureTime(), departureArrivalTime.getArrivalTime())).thenReturn(List.of(departureArrivalTime.getSectionCd()));
-        when(purchaseRepo.save(any())).thenReturn(new PurchaseEntity() {{
+        when(purchaseRepo.save(any())).thenReturn(new ReservationEntity() {{
             setId(UUID.randomUUID());
         }});
         when(purchasedSeatRepo.saveAll(any())).thenReturn(List.of(new PurchasedSeatEntity(), new PurchasedSeatEntity()));

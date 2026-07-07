@@ -8,7 +8,7 @@ import java.util.List;
 import java.util.UUID;
 
 @Repository
-public interface PurchaseRepository extends JpaRepository<PurchaseEntity, UUID> {
+public interface ReservationRepository extends JpaRepository<ReservationEntity, UUID> {
     @Query("SELECT new com.alab.shinkansendego.reservation.ReservedScheduleDto(d.departureTime,ss.stationCd,ss.name,d.arrivalTime,gs.stationCd,gs.name) " +
             "FROM PurchaseEntity p " +
             "JOIN DepartureArrivalTimeEntity d ON p.scheduleCd = d.scheduleCd " +

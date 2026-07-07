@@ -80,7 +80,7 @@ VALUES ('SEAT00101', 'SEAT01', 1, 'A'),
        ('SEAT00107', 'SEAT01', 2, 'B');
 
 
-CREATE TABLE T_Purchase
+CREATE TABLE T_Reservation
 (
     id                   UUID PRIMARY KEY,
     ride_date            DATE       NOT NULL,
@@ -88,7 +88,7 @@ CREATE TABLE T_Purchase
     departure_station_cd VARCHAR(5) NOT NULL REFERENCES M_Station (station_cd) ON DELETE RESTRICT,
     arrival_station_cd   VARCHAR(5) NOT NULL REFERENCES M_Station (station_cd) ON DELETE RESTRICT
 );
-INSERT INTO T_Purchase (id, ride_date, schedule_cd, departure_station_cd, arrival_station_cd)
+INSERT INTO T_Reservation (id, ride_date, schedule_cd, departure_station_cd, arrival_station_cd)
 VALUES ('123e4567-e89b-12d3-a456-426614174000', '2026-06-30', 'Test01', 'Test0', 'Test1');
 
 CREATE TABLE M_SectionKm
@@ -117,7 +117,7 @@ ALTER TABLE T_ReservedSeatSection DROP COLUMN reserved_seat_id;
 ALTER TABLE T_ReservedSeatSection
     ADD COLUMN id UUID PRIMARY KEY;
 ALTER TABLE T_ReservedSeatSection
-    ADD COLUMN purchase_id UUID NOT NULL REFERENCES T_Purchase (id) ON DELETE CASCADE;
+    ADD COLUMN purchase_id UUID NOT NULL REFERENCES T_Reservation (id) ON DELETE CASCADE;
 
 INSERT INTO T_ReservedSeatSection (id, purchase_id, ride_date, schedule_cd, train_car_cd, seat_cd, reserved_section_cd)
 VALUES ('123e4567-e89b-12d3-a456-426614174000', '123e4567-e89b-12d3-a456-426614174000', '2026-06-01', 'Test01',
