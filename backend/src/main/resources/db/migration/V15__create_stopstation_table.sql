@@ -6,7 +6,7 @@ CREATE TABLE M_StopStation
 );
 
 INSERT INTO M_StopStation (stop_station_cd, station_cd, stop_category)
-VALUE ('0001', 'THK01', 'HB'),
+VALUES ('0001', 'THK01', 'HB'),
       ('0002', 'THK01', 'YM'),
       ('0003', 'THK01', 'NS'),
       ('0004', 'THK01', 'KM'),
@@ -116,6 +116,6 @@ VALUE ('0001', 'THK01', 'HB'),
       ('0108', 'HKR04', 'AS'),
       ('0109', 'HKR05', 'KK'),
       ('0110', 'HKR05', 'HT'),
-      ('0111', 'HKR05', 'AS');
+      ('0111', 'HKR05', 'AS'),
       ('0112', 'HKR06', 'HT'),
       ('0113', 'HKR07', 'HT');
