@@ -11,6 +11,7 @@ import { TrainCars } from '@/features/schedule/components/TrainCars/TrainCars';
 import { TrainCarsSkeleton } from '@/features/schedule/components/TrainCars/TrainCarsSkeleton';
 import { useReserveUser } from '@/features/schedule/hooks/useReserveUser';
 import { useSelectedSeats } from '@/features/schedule/hooks/useSelectedSeats';
+import type { CreditCardDto } from '@/features/schedule/types/CreditCardDto';
 import type { ReserveRequestDto } from '@/features/schedule/types/ReserveRequestDto';
 
 export function SelectSeats() {
@@ -34,7 +35,15 @@ export function SelectSeats() {
         getFieldError,
     } = useReserveUser();
 
-    const handleReserve = async () => {
+    const getPaymentToken = async () => {
+        const creditCardDto: CreditCardDto = {
+            number: reserveUser.cardNumber,
+            name: reserveUser.cardName,
+            expiry: reserveUser.expiry,
+            cvc: reserveUser.cvc,
+        };
+    };
+    const submitOrderWithToken = async () => {
         // TODO: try-catchをつける
         const reserveRequestDto: ReserveRequestDto = {
             scheduleCd: scheduleInfoDto.scheduleCd,
@@ -45,6 +54,8 @@ export function SelectSeats() {
                 trainCarCd: seat.trainCarCd,
                 seatCd: seat.seatCd,
             })),
+            reserverName: reserveUser.reserverName,
+            reserverMail: reserveUser.reserverMail,
         };
         const response = await axios.post(
             ENDPOINTS.PURCHASE(),
@@ -54,6 +65,8 @@ export function SelectSeats() {
             state: { purchaseId: response.data, isBack: false },
         });
     };
+
+    const handleReserve = async () => {};
 
     return (
         <>

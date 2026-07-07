@@ -9,4 +9,6 @@ export type ReserveRequestDto = {
     departureStationCd: string;
     arrivalStationCd: string;
     seats: SelectedSeats[];
+    reserverName: string;
+    reserverMail: string;
 };
