@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import type { Focused } from 'react-credit-cards-2';
 
 import type { ReserveUser } from '@/features/schedule/types/ReserveUser';
@@ -21,74 +21,80 @@ export function useReserveUser() {
         [],
     );
 
-    /* 
-    const isInvalid: boolean = useMemo(() => {
-        return inValidMessages.some((item) => item.message !== '');
-    }, [inValidMessages]);
- */
-    const isNameInvalid: boolean = reserveUser.name === '';
-    const isMailInvalid: boolean =
-        reserveUser.mail === '' ||
-        !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(reserveUser.mail);
-    const isCardNumberInvalid: boolean =
-        reserveUser.cardNumber === '' ||
-        !/^\d{16,22}$/.test(reserveUser.cardNumber);
-    const isCardNameInvalid: boolean =
-        reserveUser.cardName === '' ||
-        !/^[A-Z]+\s[A-Z]+$/.test(reserveUser.cardName);
-    const isExpiryInvalid: boolean =
-        reserveUser.expiry === '' || !/^\d{2}\/\d{2}$/.test(reserveUser.expiry);
-    const isCvcInvalid: boolean =
-        reserveUser.cvc === '' || !/^\d{3,4}$/.test(reserveUser.cvc);
+    const isNameInvalid = (value: string) => {
+        return value === '';
+    };
+    const isMailInvalid = (value: string) => {
+        return value === '' || !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(value);
+    };
+    const isCardNumberInvalid = (value: string) => {
+        return value === '' || !/^\d{16,22}$/.test(value);
+    };
+    const isCardNameInvalid = (value: string) => {
+        return value === '' || !/^[A-Z]+\s[A-Z]+$/.test(value);
+    };
+    const isExpiryInvalid = (value: string) => {
+        return value === '' || !/^\d{2}\/\d{2}$/.test(value);
+    };
+    const isCvcInvalid = (value: string) => {
+        return value === '' || !/^\d{3,4}$/.test(value);
+    };
 
-    const isInvalid: boolean =
-        isNameInvalid ||
-        isMailInvalid ||
-        isCardNumberInvalid ||
-        isCardNameInvalid ||
-        isExpiryInvalid ||
-        isCvcInvalid;
+    const isInvalid = (reserveUser: ReserveUser) => {
+        return (
+            isNameInvalid(reserveUser.name) ||
+            isMailInvalid(reserveUser.mail) ||
+            isCardNumberInvalid(reserveUser.cardNumber) ||
+            isCardNameInvalid(reserveUser.cardName) ||
+            isExpiryInvalid(reserveUser.expiry) ||
+            isCvcInvalid(reserveUser.cvc)
+        );
+    };
 
-    const updateInvalidMessage = (field: string, value: string) => {
+    useEffect(() => {
+        isInvalid(reserveUser);
+    }, [reserveUser]);
+
+    const editValidateMessage = (field: string, value: string) => {
         const messages: InValidMessage[] = inValidMessages.filter(
             (item) => item.field !== field,
         );
         if (field === 'name') {
-            if (value === '') {
+            if (isNameInvalid(value)) {
                 messages.push({
                     field: 'name',
                     message: '購入者氏名を入力してください',
                 });
             }
-        } else if (field === 'mail') {
+        } else if (isMailInvalid(value)) {
             if (value === '' || !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(value)) {
                 messages.push({
                     field: 'mail',
                     message: 'メールアドレスの形式で入力してください',
                 });
             }
-        } else if (field === 'cardNumber') {
+        } else if (isCardNumberInvalid(value)) {
             if (value === '' || !/^\d{16,22}$/.test(value)) {
                 messages.push({
                     field: 'cardNumber',
                     message: '16-22桁の有効なカード番号を入力してください',
                 });
             }
-        } else if (field === 'cardName') {
+        } else if (isCardNameInvalid(value)) {
             if (value === '' || !/^[A-Z\s]+$/.test(value)) {
                 messages.push({
                     field: 'cardName',
                     message: '半角英大文字・半角スペースで入力してください',
                 });
             }
-        } else if (field === 'expiry') {
+        } else if (isExpiryInvalid(value)) {
             if (value === '' || !/^\d{2}\/\d{2}$/.test(value)) {
                 messages.push({
                     field: 'expiry',
                     message: 'MM/DDの形式で入力してください',
                 });
             }
-        } else if (field === 'cvc') {
+        } else if (isCvcInvalid(value)) {
             if (value === '' || !/^\d{3,4}$/.test(value)) {
                 messages.push({
                     field: 'cvc',
@@ -137,11 +143,11 @@ export function useReserveUser() {
             }
         }
         setReserveUser((prev) => ({ ...prev, [e.target.id]: value }));
-        updateInvalidMessage(e.target.id, value);
+        editValidateMessage(e.target.id, value);
     };
 
     const handleInputBlur = (e: React.ChangeEvent<HTMLInputElement>) => {
-        updateInvalidMessage(e.target.id, e.target.value);
+        editValidateMessage(e.target.id, e.target.value);
     };
 
     return {
