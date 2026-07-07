@@ -29,6 +29,7 @@ export function SelectSeats() {
         focus,
         handleInputChange,
         handleInputFocus,
+        handleInputBlur,
         isInvalid,
         getFieldError,
     } = useReserveUser();
@@ -95,6 +96,7 @@ export function SelectSeats() {
                                     handleInputChange={handleInputChange}
                                     handleInputFocus={handleInputFocus}
                                     getFieldError={getFieldError}
+                                    handleInputBlur={handleInputBlur}
                                 />
                                 <button
                                     type="submit"

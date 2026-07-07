@@ -11,6 +11,7 @@ type ReserveUserInfoInputProps = {
     placeholder: string;
     onChange: (e: React.ChangeEvent<HTMLInputElement>) => void;
     onFocus: (e: React.ChangeEvent<HTMLInputElement>) => void;
+    onBlur: (e: React.ChangeEvent<HTMLInputElement>) => void;
     autoComplete: string;
     pattern?: string;
     icon?: IconType;
@@ -24,6 +25,7 @@ export function ReserveUserInfoInput({
     placeholder,
     onChange,
     onFocus,
+    onBlur,
     autoComplete,
     pattern,
     icon,
@@ -42,6 +44,7 @@ export function ReserveUserInfoInput({
                         placeholder={placeholder}
                         onChange={onChange}
                         onFocus={onFocus}
+                        onBlur={onBlur}
                         autoComplete={autoComplete}
                         pattern={pattern}
                         className="w-full"

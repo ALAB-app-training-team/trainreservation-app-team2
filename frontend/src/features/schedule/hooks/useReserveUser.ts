@@ -1,4 +1,4 @@
-import { useMemo, useState } from 'react';
+import { useState } from 'react';
 import type { Focused } from 'react-credit-cards-2';
 
 import type { ReserveUser } from '@/features/schedule/types/ReserveUser';
@@ -13,9 +13,27 @@ export function useReserveUser() {
         cvc: '',
     });
     const [focus, setFocus] = useState<Focused>('');
+
     const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-        setReserveUser((prev) => ({ ...prev, [e.target.id]: e.target.value }));
+        let value = e.target.value;
+        if (e.target.id === 'cardNumber') {
+            value = e.target.value.replace(/[^0-9]/g, '').slice(0, 22);
+        }
+        if (e.target.id === 'cardName') {
+            value = e.target.value.toUpperCase().replace(/[^A-Z\s]/g, '');
+        }
+        if (e.target.id === 'cvc') {
+            value = e.target.value.replace(/[^0-9]/g, '').slice(0, 4);
+        }
+        if (e.target.id === 'expiry') {
+            value = e.target.value.replace(/[^0-9]/g, '');
+            if (e.target.value.length > 2) {
+                value = value.slice(0, 2) + '/' + value.slice(2, 4);
+            }
+        }
+        setReserveUser((prev) => ({ ...prev, [e.target.id]: value }));
     };
+
     const handleInputFocus = (e: React.ChangeEvent<HTMLInputElement>) => {
         if (e.target.id === 'cardNumber') {
             setFocus('number');
@@ -43,8 +61,7 @@ export function useReserveUser() {
         reserveUser.cardNumber === '' ||
         !/^\d{16,22}$/.test(reserveUser.cardNumber);
     const isCardNameInvalid: boolean =
-        reserveUser.cardName === '' ||
-        !/^[A-Z]+\s[A-Z]+$/.test(reserveUser.cardName);
+        reserveUser.cardName === '' || !/^[A-Z\s]+$/.test(reserveUser.cardName);
     const isExpiryInvalid: boolean =
         reserveUser.expiry === '' || !/^\d{2}\/\d{2}$/.test(reserveUser.expiry);
     const isCvcInvalid: boolean =
@@ -58,54 +75,57 @@ export function useReserveUser() {
         isExpiryInvalid ||
         isCvcInvalid;
 
-    const inValidMessages: InValidMessage[] = useMemo(() => {
-        const messages: InValidMessage[] = [];
-        if (isNameInvalid) {
-            messages.push({
-                field: 'name',
-                message: '購入者氏名を入力してください',
-            });
-        }
-        if (isMailInvalid) {
-            messages.push({
-                field: 'mail',
-                message: 'メールアドレスの形式で入力してください',
-            });
-        }
-        if (isCardNumberInvalid) {
-            messages.push({
-                field: 'cardNumber',
-                message: '有効なカード番号を入力してください',
-            });
-        }
-        if (isCardNameInvalid) {
-            messages.push({
-                field: 'cardName',
-                message: '半角英大文字で入力してください',
-            });
-        }
-        if (isExpiryInvalid) {
-            messages.push({
-                field: 'expiry',
-                message: 'MM/DDの形式で入力してください',
-            });
-        }
-        if (isCvcInvalid) {
-            messages.push({
-                field: 'cvc',
-                message: '半角数字で入力してください',
-            });
-        }
+    const [inValidMessages, setInValidMessages] = useState<InValidMessage[]>(
+        [],
+    );
 
-        return messages;
-    }, [
-        reserveUser.name,
-        reserveUser.mail,
-        reserveUser.cardNumber,
-        reserveUser.cardName,
-        reserveUser.expiry,
-        reserveUser.cvc,
-    ]);
+    const handleInputBlur = (e: React.ChangeEvent<HTMLInputElement>) => {
+        const messages: InValidMessage[] = [];
+        if (e.target.id === 'name') {
+            if (isNameInvalid) {
+                messages.push({
+                    field: 'name',
+                    message: '購入者氏名を入力してください',
+                });
+            }
+        } else if (e.target.id === 'mail') {
+            if (isMailInvalid) {
+                messages.push({
+                    field: 'mail',
+                    message: 'メールアドレスの形式で入力してください',
+                });
+            }
+        } else if (e.target.id === 'cardNumber') {
+            if (isCardNumberInvalid) {
+                messages.push({
+                    field: 'cardNumber',
+                    message: '16-22桁の有効なカード番号を入力してください',
+                });
+            }
+        } else if (e.target.id === 'cardName') {
+            if (isCardNameInvalid) {
+                messages.push({
+                    field: 'cardName',
+                    message: '半角英大文字・半角スペースで入力してください',
+                });
+            }
+        } else if (e.target.id === 'expiry') {
+            if (isExpiryInvalid) {
+                messages.push({
+                    field: 'expiry',
+                    message: 'MM/DDの形式で入力してください',
+                });
+            }
+        } else if (e.target.id === 'cvc') {
+            if (isCvcInvalid) {
+                messages.push({
+                    field: 'cvc',
+                    message: '半角数字3-4桁で入力してください',
+                });
+            }
+        }
+        setInValidMessages(messages);
+    };
 
     const getFieldError = (field: string) => {
         return (
@@ -118,6 +138,7 @@ export function useReserveUser() {
         focus,
         handleInputChange,
         handleInputFocus,
+        handleInputBlur,
         isInvalid,
         getFieldError,
     };

@@ -11,6 +11,7 @@ type ReserveUserInfoProps = {
     focus: Focused;
     handleInputChange: (e: React.ChangeEvent<HTMLInputElement>) => void;
     handleInputFocus: (e: React.ChangeEvent<HTMLInputElement>) => void;
+    handleInputBlur: (e: React.ChangeEvent<HTMLInputElement>) => void;
     getFieldError?: (field: string) => string;
 };
 
@@ -19,6 +20,7 @@ export function ReserveUserInfo({
     focus,
     handleInputChange,
     handleInputFocus,
+    handleInputBlur,
     getFieldError,
 }: ReserveUserInfoProps) {
     return (
@@ -32,6 +34,7 @@ export function ReserveUserInfo({
                     placeholder="山田 太郎"
                     onChange={handleInputChange}
                     onFocus={handleInputFocus}
+                    onBlur={handleInputBlur}
                     autoComplete="name"
                     icon={IoPersonOutline}
                     getFieldError={getFieldError}
@@ -44,6 +47,7 @@ export function ReserveUserInfo({
                     placeholder="demo@example.com"
                     onChange={handleInputChange}
                     onFocus={handleInputFocus}
+                    onBlur={handleInputBlur}
                     autoComplete="mail"
                     icon={IoMailOutline}
                     getFieldError={getFieldError}
@@ -63,6 +67,7 @@ export function ReserveUserInfo({
                     placeholder="4111222233334444"
                     onChange={handleInputChange}
                     onFocus={handleInputFocus}
+                    onBlur={handleInputBlur}
                     autoComplete="off"
                     pattern="[\d]{16,22}"
                     icon={IoCardOutline}
@@ -76,6 +81,7 @@ export function ReserveUserInfo({
                     placeholder="TARO YAMADA"
                     onChange={handleInputChange}
                     onFocus={handleInputFocus}
+                    onBlur={handleInputBlur}
                     autoComplete="off"
                     getFieldError={getFieldError}
                 />
@@ -87,6 +93,7 @@ export function ReserveUserInfo({
                     placeholder="12/28"
                     onChange={handleInputChange}
                     onFocus={handleInputFocus}
+                    onBlur={handleInputBlur}
                     autoComplete="off"
                     pattern="\d\d/\d\d"
                     getFieldError={getFieldError}
@@ -99,6 +106,7 @@ export function ReserveUserInfo({
                     placeholder="123"
                     onChange={handleInputChange}
                     onFocus={handleInputFocus}
+                    onBlur={handleInputBlur}
                     autoComplete="off"
                     pattern="\d{3,4}"
                     getFieldError={getFieldError}
