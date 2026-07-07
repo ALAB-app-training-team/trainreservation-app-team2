@@ -6,6 +6,7 @@ import { useNavigate } from 'react-router-dom';
 
 import { ENDPOINTS } from '@/api/routes';
 import { GuestLoginInput } from '@/features/reservation/components/GuestLoginInput';
+import type { ReservationListRequestDto } from '@/features/reservation/types/ReservationListRequestDto';
 import type { ReservationResponseDto } from '@/features/reservation/types/ReservationResponseDto';
 
 export function ReservationGuestLoginBody() {
@@ -13,14 +14,20 @@ export function ReservationGuestLoginBody() {
     const [guestName, setGuestName] = useState<string>('');
     const [guestMailAddress, setGuestMailAddress] = useState<string>('');
     const [error, setError] = useState<string>('');
+    const request: ReservationListRequestDto = {
+        reserverName: '',
+        reserverMail: '',
+    };
 
     const handleGuestLogin = async () => {
         setError('');
+        request.reserverName = guestName;
+        request.reserverMail = guestMailAddress;
         const response = await axios.get<ReservationResponseDto[]>(
             ENDPOINTS.RESERVATIONLIST(),
-            // {
-            //     params: { purchaseId: purchaseId },
-            // },
+            {
+                params: request,
+            },
         );
         if (response.data.length === 0) {
             setError('予約情報が存在しません。入力内容に誤りがあります。');
@@ -35,8 +42,8 @@ export function ReservationGuestLoginBody() {
         <>
             <div className="flex justify-center">
                 <div className="flex w-full max-w-5xl flex-col gap-4">
-                    <div className="border-primary/10 flex flex-col justify-between gap-4 rounded-2xl border-2 p-4">
-                        <div className="border-primary/10 flex flex-col gap-4 border-b-2 py-2">
+                    <div className="border-primary/20 flex flex-col justify-between gap-4 rounded-2xl border-2 p-4">
+                        <div className="border-primary/20 flex flex-col gap-4 border-b-2 py-2">
                             <label className="mb-8 flex items-start font-bold">
                                 ゲスト予約の確認
                             </label>
@@ -45,7 +52,7 @@ export function ReservationGuestLoginBody() {
                             </label>
                             <GuestLoginInput
                                 id="GuestName"
-                                label="購入者氏名"
+                                label="予約者氏名"
                                 type="text"
                                 value={guestName}
                                 placeholder="山田 太郎"
@@ -62,19 +69,19 @@ export function ReservationGuestLoginBody() {
                                 setValue={setGuestMailAddress}
                             />
                             <button
-                                className="bg-primary mb-4 w-full rounded-xl p-2 text-white outline-none"
+                                className="bg-primary w-full rounded-xl p-2 text-white outline-none"
                                 onClick={handleGuestLogin}
                             >
                                 予約を検索
                             </button>
                             {error !== '' && (
-                                <p className="text-left text-sm text-red-600">
+                                <p className="mb-4 text-left text-sm text-red-600">
                                     {error}
                                 </p>
                             )}
                         </div>
                         <label>アカウントをお持ちの方はこちら</label>
-                        <button className="border-primary/10 w-full rounded-xl border-2 bg-white p-2">
+                        <button className="border-primary/20 w-full rounded-xl border-2 bg-white p-2">
                             ログインして表示
                         </button>
                     </div>

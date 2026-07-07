@@ -1,5 +1,6 @@
 package com.alab.shinkansendego.reservation;
 
+import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -21,8 +22,8 @@ public class ReservationController {
     }
 
     @GetMapping(path = "api/shinkansen-reservationlist")
-    public ResponseEntity<List<ReservationResponseDto>> getReservationList() {
-        List<ReservationResponseDto> response = reservationService.getReservationList();
+    public ResponseEntity<List<ReservationResponseDto>> getReservationList(@Valid ReservationListRequestDto request) {
+        List<ReservationResponseDto> response = reservationService.getReservationList(request);
         return ResponseEntity.ok(response);
     }
 

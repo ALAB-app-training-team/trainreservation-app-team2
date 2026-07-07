@@ -26,9 +26,9 @@ public class ReservationService {
         this.purchasedSeatRepository = purchasedSeatRepository;
     }
 
-    public List<ReservationResponseDto> getReservationList() {
+    public List<ReservationResponseDto> getReservationList(ReservationListRequestDto request) {
         List<ReservationResponseDto> reservationList = new ArrayList<>();
-        List<PurchaseEntity> purchaseList = purchaseRepository.findAll(Sort.by("rideDate").ascending());
+        List<PurchaseEntity> purchaseList = purchaseRepository.findByReserverNameANDReserverMail(request.getReserverName(), request.getReserverName(), Sort.by("rideDate").ascending());
 
         for (PurchaseEntity purchase : purchaseList) {
             ReservationResponseDto reservation = getReservation(purchase.getId());
