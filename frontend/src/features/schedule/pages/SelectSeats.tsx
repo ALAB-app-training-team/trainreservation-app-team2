@@ -51,7 +51,9 @@ export function SelectSeats() {
         return response.data;
     };
 
-    const submitOrderWithToken = async (paymentToken: string) => {
+    const submitOrderWithToken = async (
+        paymentToken: string,
+    ): Promise<string> => {
         const reserveRequestDto: ReserveRequestDto = {
             scheduleCd: scheduleInfoDto.scheduleCd,
             rideDate: scheduleInfoDto.date,
@@ -69,9 +71,7 @@ export function SelectSeats() {
             ENDPOINTS.RESERVATION(),
             reserveRequestDto,
         );
-        navigate('/reservedTicket', {
-            state: { purchaseId: response.data, isBack: false },
-        });
+        return response.data;
     };
 
     const handleReserve = async (e: React.SubmitEvent<HTMLFormElement>) => {
@@ -80,7 +80,10 @@ export function SelectSeats() {
         setIsSubmitting(true);
         try {
             const paymentToken = await getPaymentToken();
-            await submitOrderWithToken(paymentToken);
+            const purchaseId = await submitOrderWithToken(paymentToken);
+            navigate('/reservedTicket', {
+                state: { purchaseId: purchaseId, isBack: false },
+            });
         } catch {
             //TODO: エラー時にユーザーにわかりやすく表示する
             alert(

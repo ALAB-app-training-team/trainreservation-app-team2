@@ -68,7 +68,8 @@ export function useReserveUser() {
             if (isMailInvalid(value)) {
                 messages.push({
                     field: 'reserverMail',
-                    message: 'メールアドレスの形式で入力してください',
+                    message:
+                        'メールアドレスの形式（~~@~~.~~）で入力してください',
                 });
             }
         } else if (field === 'cardNumber') {
