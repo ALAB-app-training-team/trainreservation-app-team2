@@ -32,14 +32,14 @@ export function useReservationList() {
         switch (name) {
             case 'reserverName':
                 if (!value.trim()) {
-                    return '予約者氏名を入力してください。';
+                    return '予約者氏名を入力してください';
                 }
                 return '';
             case 'reserverMail':
                 if (!value.trim()) {
-                    return 'メールアドレスを入力してください。';
+                    return 'メールアドレスを入力してください';
                 } else if (!/^[^\s@]+@[^\s@]+\.[^\s@]+/.test(value)) {
-                    return '正しいメールアドレスの形式で入力してください。';
+                    return '正しいメールアドレスの形式で入力してください';
                 }
                 return '';
             default:
@@ -100,7 +100,7 @@ export function useReservationList() {
         if (response.data.length === 0) {
             setErrors((prev) => ({
                 ...prev,
-                searchReservation: '予約情報が見つかりません。',
+                searchReservation: '予約情報が見つかりません',
             }));
             return;
         }
