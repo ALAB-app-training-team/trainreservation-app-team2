@@ -50,7 +50,7 @@ export function SelectSeats() {
         return response.data;
     };
 
-    const submitOrderWithToken = async (paymentId: string) => {
+    const submitOrderWithToken = async (paymentToken: string) => {
         // TODO: try-catchをつける
         const reserveRequestDto: ReserveRequestDto = {
             scheduleCd: scheduleInfoDto.scheduleCd,
@@ -63,7 +63,7 @@ export function SelectSeats() {
             })),
             reserverName: reserveUser.reserverName,
             reserverMail: reserveUser.reserverMail,
-            paymentId: paymentId,
+            paymentToken: paymentToken,
         };
         const response = await axios.post(
             ENDPOINTS.RESERVATION(),
@@ -75,8 +75,8 @@ export function SelectSeats() {
     };
 
     const handleReserve = async () => {
-        const paymentId = await getPaymentToken();
-        await submitOrderWithToken(paymentId);
+        const paymentToken = await getPaymentToken();
+        await submitOrderWithToken(paymentToken);
     };
 
     return (

@@ -11,5 +11,5 @@ export type ReserveRequestDto = {
     seats: SelectedSeats[];
     reserverName: string;
     reserverMail: string;
-    paymentId: string;
+    paymentToken: string;
 };
