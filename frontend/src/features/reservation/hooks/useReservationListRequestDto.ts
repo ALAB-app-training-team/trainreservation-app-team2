@@ -20,13 +20,13 @@ export function useReservationListRequestDto() {
         searchReservation: '',
     });
     const removeWhiteSpace = (value: string) => {
-        return value.replace(/\s+/g, '');
+        return value.replace(/[\s\u3000]+/g, '');
     };
     const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
         const { name, value } = e.target;
         setGuestLoginForm((prev) => ({
             ...prev,
-            [name]: removeWhiteSpace(value),
+            [name]: value,
         }));
     };
     const validateField = (name: string, value: string) => {
@@ -71,10 +71,15 @@ export function useReservationListRequestDto() {
         if (newErrors.reserverName || newErrors.reserverMail) {
             return;
         }
+        const request = {
+            ...guestLoginForm,
+            reserverName: removeWhiteSpace(guestLoginForm.reserverName),
+            reserverMail: removeWhiteSpace(guestLoginForm.reserverMail),
+        };
         const response = await axios.get<ReservationResponseDto[]>(
             ENDPOINTS.RESERVATIONLIST(),
             {
-                params: guestLoginForm,
+                params: request,
             },
         );
         if (response.data.length === 0) {
