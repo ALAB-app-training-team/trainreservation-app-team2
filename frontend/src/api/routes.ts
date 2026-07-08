@@ -4,8 +4,8 @@ const SCHEDULES = `${BASE_URL}/shinkansen-schedule`;
 const STATIONS = `${BASE_URL}/shinkansen-station`;
 const SEATS = `${BASE_URL}/shinkansen-seat`;
 const TRAINCAR = `${BASE_URL}/shinkansen-traincar`;
-const RESERVATION = `${BASE_URL}/api/reservations`;
-const PAYMENT = `${BASE_URL}/api/payments`;
+const RESERVATION = `${BASE_URL}/reservations`;
+const PAYMENT = `${BASE_URL}/payments`;
 
 export const ENDPOINTS = {
     PAYMENT: () => `${PAYMENT}/token`,
