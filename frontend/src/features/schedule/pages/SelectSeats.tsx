@@ -1,5 +1,5 @@
 import axios from 'axios';
-import { Suspense } from 'react';
+import { Suspense, useState } from 'react';
 import { IoCardOutline } from 'react-icons/io5';
 import { LuArrowLeft } from 'react-icons/lu';
 import { useLocation, useNavigate } from 'react-router-dom';
@@ -34,8 +34,9 @@ export function SelectSeats() {
         isInvalid,
         getFieldError,
     } = useReserveUser();
+    const [isSubmitting, setIsSubmitting] = useState<boolean>(false);
 
-    const getPaymentToken = async () => {
+    const getPaymentToken = async (): Promise<string> => {
         const paymentRequestDto: PaymentRequestDto = {
             number: reserveUser.cardNumber,
             name: reserveUser.cardName,
@@ -43,7 +44,7 @@ export function SelectSeats() {
             cvc: reserveUser.cvc,
         };
         const response = await axios.post(
-            ENDPOINTS.PAYMENT(),
+            ENDPOINTS.PAYMENT_TOKEN(),
             paymentRequestDto,
         );
 
@@ -51,7 +52,6 @@ export function SelectSeats() {
     };
 
     const submitOrderWithToken = async (paymentToken: string) => {
-        // TODO: try-catchをつける
         const reserveRequestDto: ReserveRequestDto = {
             scheduleCd: scheduleInfoDto.scheduleCd,
             rideDate: scheduleInfoDto.date,
@@ -74,9 +74,21 @@ export function SelectSeats() {
         });
     };
 
-    const handleReserve = async () => {
-        const paymentToken = await getPaymentToken();
-        await submitOrderWithToken(paymentToken);
+    const handleReserve = async (e: React.SubmitEvent<HTMLFormElement>) => {
+        e.preventDefault();
+        if (isSubmitting) return;
+        setIsSubmitting(true);
+        try {
+            const paymentToken = await getPaymentToken();
+            await submitOrderWithToken(paymentToken);
+        } catch {
+            //TODO: エラー時にユーザーにわかりやすく表示する
+            alert(
+                '予約処理中にエラーが発生しました。お手数ですが再度お試しください。',
+            );
+        } finally {
+            setIsSubmitting(false);
+        }
     };
 
     return (
