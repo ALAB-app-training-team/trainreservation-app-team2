@@ -66,48 +66,56 @@ export function useReservationList() {
         errors.reserverMail !== '';
 
     const handleGuestLogin = async () => {
-        const newErrors = {
-            reserverName: validateField(
-                'reserverName',
-                guestLoginForm.reserverName,
-            ),
-            reserverMail: validateField(
-                'reserverMail',
-                guestLoginForm.reserverMail,
-            ),
-            searchReservation: '',
-        };
-        setErrors(newErrors);
-        if (newErrors.reserverName || newErrors.reserverMail) {
-            return;
-        }
-        //     TODO:BEのAPI実装後にリクエストParamを追加する
-        // const removeWhiteSpace = (value: string) => {
-        //     return value.replace(/[\s\u3000]+/g, '');
-        // };
-        // const request = {
-        //     ...guestLoginForm,
-        //     reserverName: removeWhiteSpace(guestLoginForm.reserverName),
-        //     reserverMail: removeWhiteSpace(guestLoginForm.reserverMail),
-        // };
-        const response = await axios.get<ReservationResponseDto[]>(
-            ENDPOINTS.RESERVATIONLIST(),
-            // TODO:BEのAPI実装後にリクエストParamを追加する
-            // {
-            //     params: request,
-            // },,
-        );
-        if (response.data.length === 0) {
+        try {
+            const newErrors = {
+                reserverName: validateField(
+                    'reserverName',
+                    guestLoginForm.reserverName,
+                ),
+                reserverMail: validateField(
+                    'reserverMail',
+                    guestLoginForm.reserverMail,
+                ),
+                searchReservation: '',
+            };
+            setErrors(newErrors);
+            if (newErrors.reserverName || newErrors.reserverMail) {
+                return;
+            }
+            //     TODO:BEのAPI実装後にリクエストParamを追加する
+            // const removeWhiteSpace = (value: string) => {
+            //     return value.replace(/[\s\u3000]+/g, '');
+            // };
+            // const request = {
+            //     ...guestLoginForm,
+            //     reserverName: removeWhiteSpace(guestLoginForm.reserverName),
+            //     reserverMail: removeWhiteSpace(guestLoginForm.reserverMail),
+            // };
+            const response = await axios.get<ReservationResponseDto[]>(
+                ENDPOINTS.RESERVATIONLIST(),
+                // TODO:BEのAPI実装後にリクエストParamを追加する
+                // {
+                //     params: request,
+                // },,
+            );
+            if (response.data.length === 0) {
+                setErrors((prev) => ({
+                    ...prev,
+                    searchReservation: '予約情報が見つかりません',
+                }));
+                return;
+            }
+            navigate('/reservationList', {
+                state: { reservationList: response.data },
+            });
+            window.scrollTo(0, 0);
+        } catch {
             setErrors((prev) => ({
                 ...prev,
-                searchReservation: '予約情報が見つかりません',
+                searchReservation: '予約取得時に何らかのエラーが発生しました',
             }));
             return;
         }
-        navigate('/reservationList', {
-            state: { reservationList: response.data },
-        });
-        window.scrollTo(0, 0);
     };
 
     return {
