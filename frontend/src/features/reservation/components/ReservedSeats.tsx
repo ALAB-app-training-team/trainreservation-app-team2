@@ -40,7 +40,6 @@ export function ReservedSeats({
                         <label>座席</label>
                     </div>
                 )}
-
                 <div className="flex flex-wrap gap-2">
                     {seats.length !== 0 ? (
                         seats
