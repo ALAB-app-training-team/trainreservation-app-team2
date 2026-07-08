@@ -24,5 +24,4 @@ public class StopStationController {
         List<StationResponseDto> response = stopStationService.getStopStationWithoutTransfer();
         return ResponseEntity.ok(response);
     }
-
 }
