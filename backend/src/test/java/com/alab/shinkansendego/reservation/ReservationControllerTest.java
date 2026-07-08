@@ -170,7 +170,14 @@ public class ReservationControllerTest {
     @DisplayName("購入情報・購入座席情報を挿入できる")
     void insertPurchase_withValidReserveRequestDto_return201AndInsertReservationId() throws Exception {
         ReserveRequestDto request = new ReserveRequestDto(
-                "Test01", LocalDate.now(), "Test0", "Test1", List.of(
+                "Test01",
+                LocalDate.now(),
+                "Test0",
+                "Test1",
+                "TestTaro",
+                "test@main",
+                "Test2",
+                List.of(
                 new ReserveRequestDto.SelectedSeatDto("E5SER01", "SEAT01001"),
                 new ReserveRequestDto.SelectedSeatDto("E5SER01", "SEAT01002")
         ));
@@ -189,7 +196,7 @@ public class ReservationControllerTest {
     @DisplayName("リクエストのカラムがNullの場合、バリデーションエラー発生")
     void insertReservation_withNotValidReserveRequestDto_returnValidationError() throws Exception {
         ReserveRequestDto request = new ReserveRequestDto(
-                null, LocalDate.now(), "Test0", "Test1", List.of(
+                null, LocalDate.now(), "Test0", "Test1","TestTaro","test@main","Test2", List.of(
                 new ReserveRequestDto.SelectedSeatDto("E5SER01", "SEAT01001"),
                 new ReserveRequestDto.SelectedSeatDto("E5SER01", "SEAT01002")
         ));
