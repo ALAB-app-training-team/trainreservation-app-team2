@@ -19,11 +19,14 @@ export function useReservationListRequestDto() {
         reserverMail: '',
         searchReservation: '',
     });
+    const removeWhiteSpace = (value: string) => {
+        return value.replace(/\s+/g, '');
+    };
     const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
         const { name, value } = e.target;
         setGuestLoginForm((prev) => ({
             ...prev,
-            [name]: value,
+            [name]: removeWhiteSpace(value),
         }));
     };
     const validateField = (name: string, value: string) => {
