@@ -7,6 +7,6 @@ import org.springframework.stereotype.Repository;
 
 @Repository
 public interface StopStationRepository extends JpaRepository<StopStationEntity, String> {
-    @EntityGraph(attributePaths = "station")
+    @EntityGraph(attributePaths = {"station"})
     List<StopStationEntity> findAll();
 }

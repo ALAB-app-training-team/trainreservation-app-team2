@@ -1,6 +1,7 @@
 package com.alab.shinkansendego.stopstation;
 
 import java.util.ArrayList;
+import java.util.Comparator;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
@@ -18,7 +19,8 @@ public class StopStationService {
     }
 
     public List<StationResponseDto> getStopStationWithoutTransfer() {
-        List<StopStationEntity> entities = stopStationRepository.findAll();
+        List<StopStationEntity> entities = stopStationRepository.findAll()
+                .stream().sorted(Comparator.comparing(StopStationEntity::getStopStationCd)).collect(Collectors.toList());
         Map<String, StationResponseDto> dtoMap = new LinkedHashMap<>();
 
         for (StopStationEntity ss : entities) {
@@ -29,7 +31,6 @@ public class StopStationService {
                 dto.getCategories().add(ss.getStopCategory());
             }
         }
-
         return new ArrayList<>(dtoMap.values());
     }
 }

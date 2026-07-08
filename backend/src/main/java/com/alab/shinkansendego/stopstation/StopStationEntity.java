@@ -9,6 +9,7 @@ import lombok.*;
 @Data
 @Entity
 @RequiredArgsConstructor
+@AllArgsConstructor
 @Table(name = "M_StopStation")
 public class StopStationEntity {
     @Id
