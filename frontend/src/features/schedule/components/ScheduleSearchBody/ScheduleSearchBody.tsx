@@ -7,7 +7,6 @@ import { ScheduleSearchForm } from '@/features/schedule/components/ScheduleSearc
 import { useSearchRequestDto } from '@/features/schedule/hooks/useSearchRequestDto';
 import { useStationResponseDtos } from '@/features/schedule/hooks/useStationResponseDtos';
 import { useStations } from '@/features/schedule/hooks/useStations';
-// import { MockStationResponseDto } from '@/shared/constants/MockStationResponseDto';
 
 export function ScheduleSearchBody() {
     const location = useLocation();
