@@ -1,4 +1,4 @@
-export type CreditCardRequestDto = {
+export type PaymentRequestDto = {
     number: string;
     name: string;
     expiry: string;

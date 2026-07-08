@@ -11,7 +11,7 @@ import { TrainCars } from '@/features/schedule/components/TrainCars/TrainCars';
 import { TrainCarsSkeleton } from '@/features/schedule/components/TrainCars/TrainCarsSkeleton';
 import { useReserveUser } from '@/features/schedule/hooks/useReserveUser';
 import { useSelectedSeats } from '@/features/schedule/hooks/useSelectedSeats';
-import type { CreditCardRequestDto } from '@/features/schedule/types/CreditCardRequestDto';
+import type { PaymentRequestDto } from '@/features/schedule/types/PaymentRequestDto';
 import type { ReserveRequestDto } from '@/features/schedule/types/ReserveRequestDto';
 
 export function SelectSeats() {
@@ -36,14 +36,21 @@ export function SelectSeats() {
     } = useReserveUser();
 
     const getPaymentToken = async () => {
-        const creditCardRequestDto: CreditCardRequestDto = {
+        const paymentRequestDto: PaymentRequestDto = {
             number: reserveUser.cardNumber,
             name: reserveUser.cardName,
             expiry: reserveUser.expiry,
             cvc: reserveUser.cvc,
         };
+        const response = await axios.post(
+            ENDPOINTS.PAYMENT(),
+            paymentRequestDto,
+        );
+
+        return response.data;
     };
-    const submitOrderWithToken = async () => {
+
+    const submitOrderWithToken = async (paymentId: string) => {
         // TODO: try-catchをつける
         const reserveRequestDto: ReserveRequestDto = {
             scheduleCd: scheduleInfoDto.scheduleCd,
@@ -56,6 +63,7 @@ export function SelectSeats() {
             })),
             reserverName: reserveUser.reserverName,
             reserverMail: reserveUser.reserverMail,
+            paymentId: paymentId,
         };
         const response = await axios.post(
             ENDPOINTS.RESERVATION(),
@@ -66,7 +74,10 @@ export function SelectSeats() {
         });
     };
 
-    const handleReserve = async () => {};
+    const handleReserve = async () => {
+        const paymentId = await getPaymentToken();
+        await submitOrderWithToken(paymentId);
+    };
 
     return (
         <>
