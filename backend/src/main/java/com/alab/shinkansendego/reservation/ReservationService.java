@@ -8,13 +8,11 @@ import com.alab.shinkansendego.reservedseat.ReservedSeatRepository;
 import com.alab.shinkansendego.reservedseatsection.ReservedSeatSectionEntity;
 import com.alab.shinkansendego.reservedseatsection.ReservedSeatSectionRepository;
 import com.alab.shinkansendego.sectionkm.SectionKmRepository;
-import jakarta.servlet.http.HttpServletRequest;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Sort;
 import org.springframework.http.MediaType;
-import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.client.RestClient;
@@ -27,6 +25,7 @@ import java.util.UUID;
 
 @Service
 public class ReservationService {
+    private final RestClient.Builder restClientBuilder;
     private final ReservationRepository reservationRepository;
     private final ReservedSeatRepository reservedSeatRepository;
     private final SectionKmRepository sectionKmRepository;
@@ -41,13 +40,15 @@ public class ReservationService {
             ReservedSeatRepository reservedSeatRepository,
             SectionKmRepository sectionKmRepository,
             DepartureArrivalTimeRepository departureArrivalTimeRepository,
-            ReservedSeatSectionRepository reservedSeatSectionRepository
+            ReservedSeatSectionRepository reservedSeatSectionRepository,
+            RestClient.Builder restClientBuilder
     ) {
         this.reservationRepository = reservationRepository;
         this.reservedSeatRepository = reservedSeatRepository;
         this.sectionKmRepository = sectionKmRepository;
         this.departureArrivalTimeRepository = departureArrivalTimeRepository;
         this.reservedSeatSectionRepository = reservedSeatSectionRepository;
+        this.restClientBuilder = restClientBuilder;
     }
 
     public List<ReservationResponseDto> getReservationList() {
@@ -121,14 +122,14 @@ public class ReservationService {
 
         String currentUrl = ServletUriComponentsBuilder.fromCurrentRequestUri().toUriString();
         String paymentUrl = currentUrl.replace("reservations", "payments");
-        RestClient restClient = RestClient.builder().build();
+        RestClient restClient = this.restClientBuilder.build();
         String paymentTrackingId = restClient.post()
                 .uri(paymentUrl)
                 .contentType(MediaType.APPLICATION_JSON)
                 .body(reserveRequestDto.getPaymentToken())
                 .retrieve()
                 .body(String.class);
-        if(StringUtil.isNullOrEmpty(paymentTrackingId)){
+        if (StringUtil.isNullOrEmpty(paymentTrackingId)) {
             throw new RuntimeException("Get PaymentTrackingId is failed");
         }
 
