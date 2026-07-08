@@ -1,6 +1,6 @@
 package com.alab.shinkansendego.payment;
 
-import jakarta.validation.constraints.NotNull;
+import jakarta.validation.constraints.NotBlank;
 import lombok.*;
 
 @Data
@@ -9,12 +9,12 @@ import lombok.*;
 @Getter
 @Setter
 public class PaymentRequestDto {
-    @NotNull(message = "number is Null")
+    @NotBlank(message = "number is Blank")
     private String number;
-    @NotNull(message = "name is Null")
+    @NotBlank(message = "name is Blank")
     private String name;
-    @NotNull(message = "expiry is Null")
+    @NotBlank(message = "expiry is Blank")
     private String expiry;
-    @NotNull(message = "cvc is Null")
+    @NotBlank(message = "cvc is Blank")
     private String cvc;
 }
