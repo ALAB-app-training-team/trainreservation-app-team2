@@ -86,10 +86,13 @@ CREATE TABLE T_Reservation
     ride_date            DATE       NOT NULL,
     schedule_cd          VARCHAR(6) NOT NULL REFERENCES M_Schedule (schedule_cd) ON DELETE RESTRICT,
     departure_station_cd VARCHAR(5) NOT NULL REFERENCES M_Station (station_cd) ON DELETE RESTRICT,
-    arrival_station_cd   VARCHAR(5) NOT NULL REFERENCES M_Station (station_cd) ON DELETE RESTRICT
+    arrival_station_cd   VARCHAR(5) NOT NULL REFERENCES M_Station (station_cd) ON DELETE RESTRICT,
+    payment_tracking_id VARCHAR(36) NOT NULL,
+    reserver_name VARCHAR(255),
+    reserver_mail VARCHAR(255)
 );
-INSERT INTO T_Reservation (id, ride_date, schedule_cd, departure_station_cd, arrival_station_cd)
-VALUES ('123e4567-e89b-12d3-a456-426614174000', '2026-06-30', 'Test01', 'Test0', 'Test1');
+INSERT INTO T_Reservation (id, ride_date, schedule_cd, departure_station_cd, arrival_station_cd, payment_tracking_id)
+VALUES ('123e4567-e89b-12d3-a456-426614174000', '2026-06-30', 'Test01', 'Test0', 'Test1', 'Test2');
 
 CREATE TABLE M_SectionKm
 (
@@ -117,9 +120,9 @@ ALTER TABLE T_ReservedSeatSection DROP COLUMN reserved_seat_id;
 ALTER TABLE T_ReservedSeatSection
     ADD COLUMN id UUID PRIMARY KEY;
 ALTER TABLE T_ReservedSeatSection
-    ADD COLUMN purchase_id UUID NOT NULL REFERENCES T_Reservation (id) ON DELETE CASCADE;
+    ADD COLUMN reservation_id UUID NOT NULL REFERENCES T_Reservation (id) ON DELETE CASCADE;
 
-INSERT INTO T_ReservedSeatSection (id, purchase_id, ride_date, schedule_cd, train_car_cd, seat_cd, reserved_section_cd)
+INSERT INTO T_ReservedSeatSection (id, reservation_id, ride_date, schedule_cd, train_car_cd, seat_cd, reserved_section_cd)
 VALUES ('123e4567-e89b-12d3-a456-426614174000', '123e4567-e89b-12d3-a456-426614174000', '2026-06-01', 'Test01',
         'E5SER01', 'SEAT00101', 'Test1'),
        ('123e4567-e89b-12d3-a456-426614174001', '123e4567-e89b-12d3-a456-426614174000', '2026-06-01', 'Test02',

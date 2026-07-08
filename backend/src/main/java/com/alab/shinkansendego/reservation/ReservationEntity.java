@@ -33,6 +33,15 @@ public class ReservationEntity {
     @Column(name = "arrival_station_cd")
     private String arrivalStationCd;
 
+    @Column(name = "payment_tracking_id")
+    private String paymentTrackingId;
+
+    @Column(name="reserver_name")
+    private String reserverName;
+
+    @Column(name="reserver_mail")
+    private String reserverMail;
+
     @OneToMany(fetch = FetchType.LAZY)
     @JoinColumn(name = "schedule_cd", referencedColumnName = "schedule_cd", insertable = false, updatable = false)
     private List<DepartureArrivalTimeEntity> departureArrivalTime;

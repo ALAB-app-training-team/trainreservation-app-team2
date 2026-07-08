@@ -2,8 +2,8 @@ package com.alab.shinkansendego.reservation;
 
 import com.alab.shinkansendego.departurearrivaltime.DepartureArrivalTimeEntity;
 import com.alab.shinkansendego.departurearrivaltime.DepartureArrivalTimeRepository;
-import com.alab.shinkansendego.purchasedseat.PurchasedSeatEntity;
-import com.alab.shinkansendego.purchasedseat.PurchasedSeatRepository;
+import com.alab.shinkansendego.reservedseat.ReservedSeatEntity;
+import com.alab.shinkansendego.reservedseat.ReservedSeatRepository;
 import com.alab.shinkansendego.reservedseatsection.ReservedSeatSectionEntity;
 import com.alab.shinkansendego.reservedseatsection.ReservedSeatSectionRepository;
 import com.alab.shinkansendego.sectionkm.SectionKmRepository;
@@ -20,7 +20,7 @@ import java.util.UUID;
 @Service
 public class ReservationService {
     private final ReservationRepository reservationRepository;
-    private final PurchasedSeatRepository purchasedSeatRepository;
+    private final ReservedSeatRepository reservedSeatRepository;
     private final SectionKmRepository sectionKmRepository;
     private final DepartureArrivalTimeRepository departureArrivalTimeRepository;
     private final ReservedSeatSectionRepository reservedSeatSectionRepository;
@@ -28,13 +28,13 @@ public class ReservationService {
     @Autowired
     public ReservationService(
             ReservationRepository reservationRepository,
-            PurchasedSeatRepository purchasedSeatRepository,
+            ReservedSeatRepository reservedSeatRepository,
             SectionKmRepository sectionKmRepository,
             DepartureArrivalTimeRepository departureArrivalTimeRepository,
             ReservedSeatSectionRepository reservedSeatSectionRepository
     ) {
         this.reservationRepository = reservationRepository;
-        this.purchasedSeatRepository = purchasedSeatRepository;
+        this.reservedSeatRepository = reservedSeatRepository;
         this.sectionKmRepository = sectionKmRepository;
         this.departureArrivalTimeRepository = departureArrivalTimeRepository;
         this.reservedSeatSectionRepository = reservedSeatSectionRepository;
@@ -70,7 +70,7 @@ public class ReservationService {
             throw new IllegalArgumentException("DepartureAndArrivalStation is Not Found");
         }
 
-        List<ReservedSeatDto> reservedSeatList = purchasedSeatRepository.findReservedSeatDtoByPurchaseId(request);
+        List<ReservedSeatDto> reservedSeatList = reservedSeatRepository.findReservedSeatDtoByReservationId(request);
 
         response.setTrainTypeName(purchase.getTrainTypeName());
         response.setDepartureStationName(departureSchedule.getFirst().getDepartureStationName());
@@ -122,17 +122,17 @@ public class ReservationService {
             throw new RuntimeException("Insert Purchase is failed");
         }
 
-        List<PurchasedSeatEntity> purchasedSeats = new ArrayList<>();
+        List<ReservedSeatEntity> purchasedSeats = new ArrayList<>();
         for (ReserveRequestDto.SelectedSeatDto seatDto : reserveRequestDto.getSeats()) {
-            PurchasedSeatEntity purchasedSeat = new PurchasedSeatEntity();
+            ReservedSeatEntity purchasedSeat = new ReservedSeatEntity();
             purchasedSeat.setId(UUID.randomUUID());
-            purchasedSeat.setPurchaseId(purchaseResult.getId());
+            purchasedSeat.setReservationId(purchaseResult.getId());
             purchasedSeat.setTrainCarCd(seatDto.getTrainCarCd());
             purchasedSeat.setSeatCd(seatDto.getSeatCd());
             purchasedSeat.setCodeToken(UUID.randomUUID());
             purchasedSeats.add(purchasedSeat);
         }
-        int purchasedSeatResult = purchasedSeatRepository.saveAll(purchasedSeats).size();
+        int purchasedSeatResult = reservedSeatRepository.saveAll(purchasedSeats).size();
         if (purchasedSeatResult != reserveRequestDto.getSeats().size()) {
             throw new RuntimeException("Insert PurchasedSeats is failed");
         }

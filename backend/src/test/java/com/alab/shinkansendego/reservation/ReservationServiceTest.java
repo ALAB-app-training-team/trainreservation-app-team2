@@ -2,8 +2,8 @@ package com.alab.shinkansendego.reservation;
 
 import com.alab.shinkansendego.departurearrivaltime.DepartureArrivalTimeEntity;
 import com.alab.shinkansendego.departurearrivaltime.DepartureArrivalTimeRepository;
-import com.alab.shinkansendego.purchasedseat.PurchasedSeatEntity;
-import com.alab.shinkansendego.purchasedseat.PurchasedSeatRepository;
+import com.alab.shinkansendego.reservedseat.ReservedSeatEntity;
+import com.alab.shinkansendego.reservedseat.ReservedSeatRepository;
 import com.alab.shinkansendego.reservedseatsection.ReservedSeatSectionEntity;
 import com.alab.shinkansendego.reservedseatsection.ReservedSeatSectionRepository;
 import com.alab.shinkansendego.sectionkm.SectionKmRepository;
@@ -44,7 +44,7 @@ public class ReservationServiceTest {
     @Mock
     private ReservationRepository purchaseRepo;
     @Mock
-    private PurchasedSeatRepository purchasedSeatRepo;
+    private ReservedSeatRepository purchasedSeatRepo;
     @Mock
     private SectionKmRepository sectionKmRepo;
     @Mock
@@ -111,10 +111,10 @@ public class ReservationServiceTest {
         when(purchaseRepo.findAll(Sort.by("rideDate").ascending())).thenReturn(getPurchaseList());
         when(purchaseRepo.findReservationDtoByReservationId(purchaseId1)).thenReturn(purchase);
         when(purchaseRepo.findReservationScheduleDtoByReservationId(purchaseId1)).thenReturn(scheduleList);
-        when(purchasedSeatRepo.findReservedSeatDtoByPurchaseId(purchaseId1)).thenReturn(seatList);
+        when(purchasedSeatRepo.findReservedSeatDtoByReservationId(purchaseId1)).thenReturn(seatList);
         when(purchaseRepo.findReservationDtoByReservationId(purchaseId2)).thenReturn(purchase);
         when(purchaseRepo.findReservationScheduleDtoByReservationId(purchaseId2)).thenReturn(scheduleList);
-        when(purchasedSeatRepo.findReservedSeatDtoByPurchaseId(purchaseId2)).thenReturn(seatList);
+        when(purchasedSeatRepo.findReservedSeatDtoByReservationId(purchaseId2)).thenReturn(seatList);
 
         List<ReservationResponseDto> expectList = Arrays.asList(getExpectReservationResponseDto(purchaseId1), getExpectReservationResponseDto(purchaseId2));
 
@@ -128,7 +128,7 @@ public class ReservationServiceTest {
     void getReservation_withPurchaseId_returnGetReservationSuccess() {
         when(purchaseRepo.findReservationDtoByReservationId(purchaseId1)).thenReturn(purchase);
         when(purchaseRepo.findReservationScheduleDtoByReservationId(purchaseId1)).thenReturn(scheduleList);
-        when(purchasedSeatRepo.findReservedSeatDtoByPurchaseId(purchaseId1)).thenReturn(seatList);
+        when(purchasedSeatRepo.findReservedSeatDtoByReservationId(purchaseId1)).thenReturn(seatList);
 
         ReservationResponseDto expect = getExpectReservationResponseDto(null);
 
@@ -191,7 +191,7 @@ public class ReservationServiceTest {
         when(purchaseRepo.save(any())).thenReturn(new ReservationEntity() {{
             setId(UUID.randomUUID());
         }});
-        when(purchasedSeatRepo.saveAll(any())).thenReturn(Stream.generate(PurchasedSeatEntity::new).limit(request.getSeats().size()).collect(Collectors.toList()));
+        when(purchasedSeatRepo.saveAll(any())).thenReturn(Stream.generate(ReservedSeatEntity::new).limit(request.getSeats().size()).collect(Collectors.toList()));
         when(reservedSeatSectionRepo.saveAll(any())).
                 thenReturn(Stream.generate(ReservedSeatSectionEntity::new).
                         limit((List.of(departureArrivalTime.getSectionCd())).size() * request.getSeats().size())
@@ -318,7 +318,7 @@ public class ReservationServiceTest {
         when(purchaseRepo.save(any())).thenReturn(new ReservationEntity() {{
             setId(UUID.randomUUID());
         }});
-        when(purchasedSeatRepo.saveAll(any())).thenReturn(List.of(new PurchasedSeatEntity(), new PurchasedSeatEntity()));
+        when(purchasedSeatRepo.saveAll(any())).thenReturn(List.of(new ReservedSeatEntity(), new ReservedSeatEntity()));
         when(reservedSeatSectionRepo.saveAll(any())).thenThrow(new DuplicateKeyException("UNIQUE制約エラー"));
 
         assertThrows(org.springframework.dao.DataAccessException.class, () -> service.insertPurchase(request));
@@ -340,10 +340,10 @@ public class ReservationServiceTest {
         when(sectionKmRepo.findSectionCdByGoalStationCd(request.getArrivalStationCd())).thenReturn(List.of(departureArrivalTime.getSectionCd()));
         when(departureArrivalTimeRepo.findByScheduleCdAndSectionCdIn(request.getScheduleCd(), List.of(departureArrivalTime.getSectionCd()))).thenReturn(departureArrivalTime);
         when(departureArrivalTimeRepo.findByScheduleCdAndDepartureTimeAndArrivalTime(request.getScheduleCd(), departureArrivalTime.getDepartureTime(), departureArrivalTime.getArrivalTime())).thenReturn(List.of(departureArrivalTime.getSectionCd()));
-        when(purchaseRepo.save(any())).thenReturn(new PurchasedSeatEntity() {{
+        when(purchaseRepo.save(any())).thenReturn(new ReservedSeatEntity() {{
             setId(UUID.randomUUID());
         }});
-        when(purchasedSeatRepo.saveAll(any())).thenReturn(List.of(new PurchasedSeatEntity(), new PurchasedSeatEntity()));
+        when(purchasedSeatRepo.saveAll(any())).thenReturn(List.of(new ReservedSeatEntity(), new ReservedSeatEntity()));
         when(reservedSeatSectionRepo.saveAll(any())).thenReturn(List.of());
         assertThrows(RuntimeException.class, () -> service.insertPurchase(request));
     }

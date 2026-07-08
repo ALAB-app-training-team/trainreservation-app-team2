@@ -44,7 +44,7 @@ public class ReservationRepositoryTest {
     }
 
     @Test
-    @Sql(scripts = "classpath:com/alab/shinkansendego/sql/PurchaseTestData_Reservation.sql")
+    @Sql(scripts = "classpath:com/alab/shinkansendego/sql/ReservationTestData.sql")
     @DisplayName("購入情報IDから購入した座席の運行情報を取得できる")
     void findScheduleByPurchaseId_withPurchaseId_returnGetSuccess() {
         List<ReservedScheduleDto> expected = Arrays.asList(
@@ -59,7 +59,7 @@ public class ReservationRepositoryTest {
     }
 
     @Test
-    @Sql(scripts = "classpath:com/alab/shinkansendego/sql/PurchaseTestData_Reservation.sql")
+    @Sql(scripts = "classpath:com/alab/shinkansendego/sql/ReservationTestData.sql")
     @DisplayName("テーブルに存在しない購入情報IDを検索した場合、空の運行情報リストが返却されるか")
     void findReservationScheduleDtoByPurchaseId_withNotExistReservationId_returnEmptyList() {
         List<ReservedScheduleDto> actual = repo.findReservationScheduleDtoByReservationId(UUID.fromString("9996b939-2e3e-46c1-92d3-7aa64b6ca575"));
@@ -67,7 +67,7 @@ public class ReservationRepositoryTest {
     }
 
     @Test
-    @Sql(scripts = "classpath:com/alab/shinkansendego/sql/PurchaseTestData_Reservation.sql")
+    @Sql(scripts = "classpath:com/alab/shinkansendego/sql/ReservationTestData.sql")
     @DisplayName("購入情報IDから購入情報を取得できる")
     void findPurchaseByPurchaseId_withReservationDtoId_returnGetPurchaseSuccess() {
         ReservationDto expected = new ReservationDto("やまびこ1号", "EKI01", "EKI03", LocalDate.of(2026, 6, 1));
@@ -81,7 +81,7 @@ public class ReservationRepositoryTest {
     }
 
     @Test
-    @Sql(scripts = "classpath:com/alab/shinkansendego/sql/PurchaseTestData_Reservation.sql")
+    @Sql(scripts = "classpath:com/alab/shinkansendego/sql/ReservationTestData.sql")
     @DisplayName("テーブルに存在しない購入情報IDを検索した場合、Nullが返却されるか")
     void findPurchaseByReservationDtoId_withNotExistPurchaseId_returnNull() {
         ReservationDto actual = repo.findReservationDtoByReservationId(UUID.fromString("9996b939-2e3e-46c1-92d3-7aa64b6ca575"));
@@ -89,16 +89,17 @@ public class ReservationRepositoryTest {
     }
 
     @Test
-    @Sql(scripts = {"classpath:com/alab/shinkansendego/sql/PurchaseRepositoryTestData_Schedule.sql"})
+    @Sql(scripts = {"classpath:com/alab/shinkansendego/sql/ReservationRepositoryTestData_Schedule.sql"})
     @DisplayName("新規購入情報が挿入できる")
     void insertPurchase_withPurchaseEntity_returnRecordCount() {
-        ReservationEntity purchase = new ReservationEntity();
-        purchase.setId(UUID.fromString("123e4567-e89b-12d3-a456-426614174000"));
-        purchase.setRideDate(LocalDate.now());
-        purchase.setScheduleCd("TEST01");
-        purchase.setDepartureStationCd("Test0");
-        purchase.setArrivalStationCd("Test1");
-        UUID result = repo.save(purchase).getId();
+        ReservationEntity reservation = new ReservationEntity();
+        reservation.setId(UUID.fromString("123e4567-e89b-12d3-a456-426614174000"));
+        reservation.setRideDate(LocalDate.now());
+        reservation.setScheduleCd("TEST01");
+        reservation.setDepartureStationCd("Test0");
+        reservation.setArrivalStationCd("Test1");
+        reservation.setPaymentTrackingId("Test1");
+        UUID result = repo.save(reservation).getId();
         assertNotNull(result);
     }
 }
