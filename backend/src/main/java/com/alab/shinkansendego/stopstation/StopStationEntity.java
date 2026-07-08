@@ -8,18 +8,22 @@ import lombok.*;
 
 @Data
 @Entity
+@RequiredArgsConstructor
 @Table(name = "M_StopStation")
 public class StopStationEntity {
     @Id
     @NotNull
+    @NonNull
     @Column(name = "stop_station_cd")
     private String stopStationCd;
 
     @NotNull
+    @NonNull
     @Column(name = "station_cd")
     private String stationCd;
 
     @NotNull
+    @NonNull
     @Column(name = "stop_category")
     private String stopCategory;
 

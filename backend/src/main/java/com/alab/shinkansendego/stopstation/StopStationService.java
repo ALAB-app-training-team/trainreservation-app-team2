@@ -29,8 +29,8 @@ public class StopStationService {
             String cd = ss.getStationCd();
             StationResponseDto dto = dtoMap.computeIfAbsent(cd, key ->
                     new StationResponseDto(cd, ss.getStation().getName(), new ArrayList<>()));
-            if (!dto.getCategoryNames().contains(ss.getStopCategory())) {
-                dto.getCategoryNames().add(ss.getStopCategory());
+            if (!dto.getCategories().contains(ss.getStopCategory())) {
+                dto.getCategories().add(ss.getStopCategory());
             }
         }
 
