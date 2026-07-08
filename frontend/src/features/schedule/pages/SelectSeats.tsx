@@ -138,7 +138,9 @@ export function SelectSeats() {
                                     type="submit"
                                     className="bg-primary w-full rounded-lg p-2 text-white"
                                     disabled={
-                                        selectedSeats.length === 0 || isInvalid
+                                        selectedSeats.length === 0 ||
+                                        isInvalid ||
+                                        isSubmitting
                                     }
                                 >
                                     <div className="flex items-center justify-center gap-4">
