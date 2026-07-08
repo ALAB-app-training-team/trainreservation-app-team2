@@ -8,7 +8,7 @@ const RESERVATION = `${BASE_URL}/reservations`;
 const PAYMENT = `${BASE_URL}/payments`;
 
 export const ENDPOINTS = {
-    PAYMENT_TOKEN: () => `${PAYMENT}/token`,
+    PAYMENT_TOKEN: () => `${PAYMENT}/tokens`,
     RESERVATION: (id?: string) => (id ? `${RESERVATION}/${id}` : RESERVATION),
     SCHEDULES_SEARCH: () => SCHEDULES,
     STATIONS: () => STATIONS,
