@@ -20,6 +20,12 @@ public class ReserveRequestDto {
     private String departureStationCd;
     @NotNull(message = "ArrivalStationCd is Null")
     private String arrivalStationCd;
+    @NotNull(message = "ReserverName is Null")
+    private String reserverName;
+    @NotNull(message = "ReserverMail is Null")
+    private String reserverMail;
+    @NotNull(message = "PaymentToken is Null")
+    private String paymentToken;
     @NotNull(message = "Seats is Null")
     private List<SelectedSeatDto> seats;
 

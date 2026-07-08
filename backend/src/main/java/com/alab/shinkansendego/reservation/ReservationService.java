@@ -1,5 +1,6 @@
 package com.alab.shinkansendego.reservation;
 
+import ch.qos.logback.core.util.StringUtil;
 import com.alab.shinkansendego.departurearrivaltime.DepartureArrivalTimeEntity;
 import com.alab.shinkansendego.departurearrivaltime.DepartureArrivalTimeRepository;
 import com.alab.shinkansendego.reservedseat.ReservedSeatEntity;
@@ -7,10 +8,17 @@ import com.alab.shinkansendego.reservedseat.ReservedSeatRepository;
 import com.alab.shinkansendego.reservedseatsection.ReservedSeatSectionEntity;
 import com.alab.shinkansendego.reservedseatsection.ReservedSeatSectionRepository;
 import com.alab.shinkansendego.sectionkm.SectionKmRepository;
+import jakarta.servlet.http.HttpServletRequest;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Sort;
+import org.springframework.http.MediaType;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.client.RestClient;
+import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -24,6 +32,8 @@ public class ReservationService {
     private final SectionKmRepository sectionKmRepository;
     private final DepartureArrivalTimeRepository departureArrivalTimeRepository;
     private final ReservedSeatSectionRepository reservedSeatSectionRepository;
+
+    private static final Logger logger = LoggerFactory.getLogger(ReservationService.class);
 
     @Autowired
     public ReservationService(
@@ -109,6 +119,19 @@ public class ReservationService {
             throw new IllegalArgumentException("SectionCd is Not found");
         }
 
+        String currentUrl = ServletUriComponentsBuilder.fromCurrentRequestUri().toUriString();
+        String paymentUrl = currentUrl.replace("reservations", "payments");
+        RestClient restClient = RestClient.builder().build();
+        String paymentTrackingId = restClient.post()
+                .uri(paymentUrl)
+                .contentType(MediaType.APPLICATION_JSON)
+                .body(reserveRequestDto.getPaymentToken())
+                .retrieve()
+                .body(String.class);
+        if(StringUtil.isNullOrEmpty(paymentTrackingId)){
+            throw new RuntimeException("Get PaymentTrackingId is failed");
+        }
+
         UUID reservationId = UUID.randomUUID();
         ReservationEntity purchase = new ReservationEntity();
         purchase.setId(reservationId);
@@ -116,6 +139,9 @@ public class ReservationService {
         purchase.setScheduleCd(reserveRequestDto.getScheduleCd());
         purchase.setDepartureStationCd(reserveRequestDto.getDepartureStationCd());
         purchase.setArrivalStationCd(reserveRequestDto.getArrivalStationCd());
+        purchase.setReserverName(reserveRequestDto.getReserverName());
+        purchase.setReserverMail(reserveRequestDto.getReserverMail());
+        purchase.setPaymentTrackingId(paymentTrackingId);
 
         ReservationEntity purchaseResult = reservationRepository.save(purchase);
         if (purchaseResult.getId() == null) {
