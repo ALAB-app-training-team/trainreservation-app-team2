@@ -2,7 +2,7 @@ import { CiMail } from 'react-icons/ci';
 import { FiUser } from 'react-icons/fi';
 
 import { GuestLoginInput } from '@/features/reservation/components/GuestLoginInput';
-import { useReservationListRequestDto } from '@/features/reservation/hooks/useReservationListRequestDto';
+import { useReservationListRequestDto } from '@/features/reservation/hooks/useReservationList';
 
 export function ReservationGuestLoginBody() {
     const {
