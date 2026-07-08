@@ -72,17 +72,16 @@ export function ReservationSelectItem({ details }: ReservationSelectItemProps) {
                 </div>
             </div>
             <div className="border-primary/20 border-b-2 py-2">
-                <div className="flex items-start">
-                    <MdAirlineSeatReclineExtra className="me-2 mt-1 flex-shrink-0" />
-                    <div className="-ml-8 flex w-full flex-col items-start gap-2 self-start">
-                        <div className="w-full pl-8">
-                            <ReservedSeats
-                                id="reservationList"
-                                title="座席"
-                                seats={details.reservedSeats}
-                            />
-                        </div>
+                <div className="flex flex-col gap-2">
+                    <div className="flex items-center gap-2">
+                        <MdAirlineSeatReclineExtra className="mt-0.5" />
+                        <label>座席</label>
                     </div>
+                    <ReservedSeats
+                        id="reservationList"
+                        title=""
+                        seats={details.reservedSeats}
+                    />
                 </div>
             </div>
             <div>
