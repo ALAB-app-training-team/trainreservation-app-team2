@@ -6,31 +6,82 @@ import { useNavigate } from 'react-router-dom';
 
 import { ENDPOINTS } from '@/api/routes';
 import { GuestLoginInput } from '@/features/reservation/components/GuestLoginInput';
+import type { GuestLoginFormError } from '@/features/reservation/types/GuestLoginFormError';
 import type { ReservationListRequestDto } from '@/features/reservation/types/ReservationListRequestDto';
 import type { ReservationResponseDto } from '@/features/reservation/types/ReservationResponseDto';
 
 export function ReservationGuestLoginBody() {
     const navigate = useNavigate();
-    const [guestName, setGuestName] = useState<string>('');
-    const [guestMailAddress, setGuestMailAddress] = useState<string>('');
-    const [error, setError] = useState<string>('');
-    const request: ReservationListRequestDto = {
+    const [guestLoginForm, setGuestLoginForm] =
+        useState<ReservationListRequestDto>({
+            reserverName: '',
+            reserverMail: '',
+        });
+    const [errors, setErrors] = useState<GuestLoginFormError>({
         reserverName: '',
         reserverMail: '',
+        searchReservation: '',
+    });
+    const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+        const { name, value } = e.target;
+        setGuestLoginForm((prev) => ({
+            ...prev,
+            [name]: value,
+        }));
+    };
+    const validateField = (name: string, value: string) => {
+        switch (name) {
+            case 'reserverName':
+                if (!value.trim()) {
+                    return '予約者氏名を入力してください。';
+                }
+                return '';
+            case 'reserverMail':
+                if (!value.trim()) {
+                    return 'メールアドレスを入力してください。';
+                } else if (!/\S+@\S+/.test(value)) {
+                    return 'メールアドレスの形式が正しくありません。';
+                }
+                return '';
+            default:
+                return '';
+        }
+    };
+    const handleBlur = (e: React.FocusEvent<HTMLInputElement>) => {
+        const { name, value } = e.target;
+        setErrors((prev) => ({
+            ...prev,
+            [name]: validateField(name, value),
+        }));
     };
 
     const handleGuestLogin = async () => {
-        setError('');
-        request.reserverName = guestName;
-        request.reserverMail = guestMailAddress;
+        const newErrors = {
+            reserverName: validateField(
+                'reserverName',
+                guestLoginForm.reserverName,
+            ),
+            reserverMail: validateField(
+                'reserverMail',
+                guestLoginForm.reserverMail,
+            ),
+            searchReservation: '',
+        };
+        setErrors(newErrors);
+        if (newErrors.reserverName || newErrors.reserverMail) {
+            return;
+        }
         const response = await axios.get<ReservationResponseDto[]>(
             ENDPOINTS.RESERVATIONLIST(),
             {
-                params: request,
+                params: guestLoginForm,
             },
         );
         if (response.data.length === 0) {
-            setError('予約情報が存在しません。入力内容に誤りがあります。');
+            setErrors((prev) => ({
+                ...prev,
+                searchReservation: '予約情報が見つかりません。',
+            }));
             return;
         }
         navigate('/reservationList', {
@@ -51,22 +102,26 @@ export function ReservationGuestLoginBody() {
                                 予約時に入力した氏名とメールアドレスを入力してください
                             </label>
                             <GuestLoginInput
-                                id="GuestName"
+                                id="reserverName"
                                 label="予約者氏名"
                                 type="text"
-                                value={guestName}
+                                value={guestLoginForm.reserverName}
                                 placeholder="山田 太郎"
                                 icon={FiUser}
-                                setValue={setGuestName}
+                                onChange={handleChange}
+                                onBlur={handleBlur}
+                                error={errors.reserverName}
                             />
                             <GuestLoginInput
-                                id="GuestMailAddress"
+                                id="reserverMail"
                                 label="メールアドレス"
                                 type="email"
-                                value={guestMailAddress}
+                                value={guestLoginForm.reserverMail}
                                 placeholder="example@email.com"
                                 icon={CiMail}
-                                setValue={setGuestMailAddress}
+                                onChange={handleChange}
+                                onBlur={handleBlur}
+                                error={errors.reserverMail}
                             />
                             <button
                                 className="bg-primary w-full rounded-xl p-2 text-white outline-none"
@@ -74,9 +129,9 @@ export function ReservationGuestLoginBody() {
                             >
                                 予約を検索
                             </button>
-                            {error !== '' && (
-                                <p className="mb-4 text-left text-sm text-red-600">
-                                    {error}
+                            {errors.searchReservation && (
+                                <p className="text-left text-sm text-red-600">
+                                    {errors.searchReservation}
                                 </p>
                             )}
                         </div>

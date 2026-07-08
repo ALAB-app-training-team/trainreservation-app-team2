@@ -1,4 +1,4 @@
-import type { ElementType, SetStateAction } from 'react';
+import type { ElementType } from 'react';
 import React from 'react';
 
 type GuestLoginInputProps = {
@@ -8,8 +8,9 @@ type GuestLoginInputProps = {
     value: string;
     placeholder: string;
     icon: ElementType;
-    setValue: React.Dispatch<SetStateAction<string>> | ((time: string) => void);
-    getFieldError?: (field: string) => string;
+    onChange: (e: React.ChangeEvent<HTMLInputElement>) => void;
+    onBlur: (e: React.FocusEvent<HTMLInputElement>) => void;
+    error?: string;
 } & React.InputHTMLAttributes<HTMLInputElement>;
 
 export function GuestLoginInput({
@@ -19,8 +20,9 @@ export function GuestLoginInput({
     value,
     placeholder,
     icon,
-    setValue,
-    getFieldError,
+    onChange,
+    onBlur,
+    error,
 }: GuestLoginInputProps) {
     return (
         <div className="flex w-full flex-col items-start gap-2">
@@ -34,18 +36,16 @@ export function GuestLoginInput({
                 })}
                 <input
                     id={id}
+                    name={id}
                     type={type}
                     value={value}
-                    onChange={(e) => setValue(e.target.value)}
+                    onChange={onChange}
+                    onBlur={onBlur}
                     placeholder={placeholder}
                     className="focus:border-primary bg-primary-light w-full cursor-pointer rounded-xl p-2 pl-10 outline-none focus:border-2"
                 />
             </div>
-            {getFieldError?.(id) && (
-                <p className="text-left text-sm text-red-600">
-                    {getFieldError(id)}
-                </p>
-            )}
+            {error && <p className="text-left text-sm text-red-600">{error}</p>}
         </div>
     );
 }
