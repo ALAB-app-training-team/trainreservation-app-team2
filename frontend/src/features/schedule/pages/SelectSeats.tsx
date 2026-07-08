@@ -58,7 +58,7 @@ export function SelectSeats() {
             reserverMail: reserveUser.reserverMail,
         };
         const response = await axios.post(
-            ENDPOINTS.PURCHASE(),
+            ENDPOINTS.RESERVATION(),
             reserveRequestDto,
         );
         navigate('/reservedTicket', {

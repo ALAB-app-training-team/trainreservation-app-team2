@@ -9,7 +9,7 @@ export function useReservationList() {
         queryKey: ['reservationList'],
         queryFn: async () => {
             const response = await axios.get<ReservationResponseDto[]>(
-                ENDPOINTS.RESERVATIONLIST(),
+                ENDPOINTS.RESERVATION(),
             );
             return response.data;
         },
