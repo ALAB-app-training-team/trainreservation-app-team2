@@ -70,6 +70,17 @@ public class PaymentControllerTest {
     }
 
     @Test
+    @DisplayName("クレジットカード情報が半角スペースの場合、400BadRequestを返す")
+    void insertCreditCard_withBlankPaymentRequestDto_return400BadRequest() throws Exception {
+        String url = baseUrl + "/tokens";
+        PaymentRequestDto request = new PaymentRequestDto(" ", "TARO YAMADA", "12/28", "123");
+        mockMvc.perform(post(url)
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(objectMapper.writeValueAsString(request)))
+                .andExpect(status().isBadRequest());
+    }
+
+    @Test
     @DisplayName("トークンを受け取り、決済IDを発行できる")
     void payByPaymentToken_withPaymentToken_return201StatusCodeAndPaymentId() throws Exception {
         String request = UUID.randomUUID().toString();
