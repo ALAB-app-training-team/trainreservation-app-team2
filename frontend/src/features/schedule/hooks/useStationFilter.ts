@@ -10,22 +10,19 @@ const formatStations = (
 ): Station[] => {
     if (!selectedStationCd) return allStations;
 
-    const targetStopCategories = rawDtos
-        .filter((dto) => dto.stationCd === selectedStationCd)
-        .map((dto) => dto.stopCategory);
+    const selectDto = rawDtos.find(
+        (dto) => dto.stationCd === selectedStationCd,
+    );
+    if (!selectDto) return [];
 
-    const seen = new Set<string>();
+    const targetCategories = selectDto.categories;
 
-    return [...rawDtos]
-        .filter((dto) => targetStopCategories.includes(dto.stopCategory))
-
+    return rawDtos
         .filter((dto) => dto.stationCd !== selectedStationCd)
 
-        .filter((dto) => {
-            if (seen.has(dto.stationCd)) return false;
-            seen.add(dto.stationCd);
-            return true;
-        })
+        .filter((dto) =>
+            dto.categories.some((c) => targetCategories.includes(c)),
+        )
 
         .map((dto) => allStations.find((s) => s.stationCd === dto.stationCd))
 

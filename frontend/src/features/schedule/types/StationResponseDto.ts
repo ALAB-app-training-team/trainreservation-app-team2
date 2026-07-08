@@ -1,5 +1,5 @@
 export type StationResponseDto = {
-    stopStationCd: string;
     stationCd: string;
-    stopCategory: string;
+    stationName: string;
+    categories: string[];
 };
