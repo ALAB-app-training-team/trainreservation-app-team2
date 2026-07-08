@@ -20,8 +20,8 @@ public class StopStationController {
     }
 
     @GetMapping(value = "{code}")
-    public ResponseEntity<List<String>> getStopStation(@PathVariable("code") String stationCd) {
-        List<String> response = stopStationService.getStopStationWithoutTransfer(stationCd);
+    public ResponseEntity<List<StationResponseDto>> getStopStation(@PathVariable("code") String stationCd) {
+        List<StationResponseDto> response = stopStationService.getStopStationWithoutTransfer(stationCd);
         return ResponseEntity.ok(response);
     }
 

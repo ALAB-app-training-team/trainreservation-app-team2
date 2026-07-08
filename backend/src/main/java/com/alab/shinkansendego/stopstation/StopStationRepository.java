@@ -7,6 +7,8 @@ import org.springframework.stereotype.Repository;
 
 @Repository
 public interface StopStationRepository extends JpaRepository<StopStationEntity, String> {
-    @EntityGraph(attributePaths = {"station", "sameCategoryStopStations"})
     List<StopStationEntity> findByStationCd(String stationCd);
+
+    @EntityGraph(attributePaths = "station")
+    List<StopStationEntity> findByStopCategoryIn(List<String> categories);
 }

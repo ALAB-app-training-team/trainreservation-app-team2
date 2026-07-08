@@ -24,11 +24,6 @@ public class StopStationEntity {
     private String stopCategory;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "station_cd", referencedColumnName = "station_cd")
+    @JoinColumn(name = "station_cd", referencedColumnName = "station_cd", insertable = false, updatable = false)
     private StationEntity station;
-
-    @ToString.Exclude
-    @OneToMany(fetch = FetchType.LAZY)
-    @JoinColumn(name = "stop_category", referencedColumnName = "stop_category")
-    private List<StopStationEntity> sameCategoryStopStations;
 }

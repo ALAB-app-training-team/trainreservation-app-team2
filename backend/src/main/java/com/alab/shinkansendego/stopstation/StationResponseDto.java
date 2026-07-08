@@ -10,5 +10,5 @@ import lombok.*;
 public class StationResponseDto {
     private String stationCd;
     private String stationName;
-    private List<String> categoryName;
+    private List<String> categoryNames;
 }
