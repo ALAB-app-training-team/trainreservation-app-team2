@@ -2,7 +2,7 @@ import { CiMail } from 'react-icons/ci';
 import { FiUser } from 'react-icons/fi';
 
 import { GuestLoginInput } from '@/features/reservation/components/GuestLoginInput';
-import { useReservationListRequestDto } from '@/features/reservation/hooks/useReservationList';
+import { useReservationList } from '@/features/reservation/hooks/useReservationList';
 
 export function ReservationGuestLoginBody() {
     const {
@@ -12,7 +12,7 @@ export function ReservationGuestLoginBody() {
         handleBlur,
         isInvalid,
         handleGuestLogin,
-    } = useReservationListRequestDto();
+    } = useReservationList();
     return (
         <>
             <div className="flex justify-center">

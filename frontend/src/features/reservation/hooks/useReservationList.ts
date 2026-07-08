@@ -10,7 +10,7 @@ import type {
 import type { ReservationListRequestDto } from '@/features/reservation/types/ReservationListRequestDto';
 import type { ReservationResponseDto } from '@/features/reservation/types/ReservationResponseDto';
 
-export function useReservationListRequestDto() {
+export function useReservationList() {
     const navigate = useNavigate();
     const [guestLoginForm, setGuestLoginForm] =
         useState<ReservationListRequestDto>({
