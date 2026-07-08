@@ -4,7 +4,6 @@ import { BsQrCode } from 'react-icons/bs';
 import { FaClock, FaSearch } from 'react-icons/fa';
 import { IoTrashOutline } from 'react-icons/io5';
 import { LuTicket } from 'react-icons/lu';
-import { MdAirlineSeatReclineExtra } from 'react-icons/md';
 import { useNavigate } from 'react-router-dom';
 
 import { ReservedSeats } from '@/features/reservation/components/ReservedSeats';
@@ -72,17 +71,11 @@ export function ReservationSelectItem({ details }: ReservationSelectItemProps) {
                 </div>
             </div>
             <div className="border-primary/20 border-b-2 py-2">
-                <div className="flex flex-col gap-2">
-                    <div className="flex items-center gap-2">
-                        <MdAirlineSeatReclineExtra className="mt-0.5" />
-                        <label>座席</label>
-                    </div>
-                    <ReservedSeats
-                        id="reservationList"
-                        title=""
-                        seats={details.reservedSeats}
-                    />
-                </div>
+                <ReservedSeats
+                    id="reservationList"
+                    title="座席"
+                    seats={details.reservedSeats}
+                />
             </div>
             <div>
                 <div className="flex justify-end">
