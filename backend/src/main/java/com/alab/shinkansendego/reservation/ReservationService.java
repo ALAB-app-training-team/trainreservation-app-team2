@@ -85,7 +85,7 @@ public class ReservationService {
     }
 
     @Transactional
-    public UUID insertPurchase(ReserveRequestDto reserveRequestDto) {
+    public UUID insertReservation(ReserveRequestDto reserveRequestDto) {
         if (reserveRequestDto.getSeats() == null || reserveRequestDto.getSeats().isEmpty()) {
             throw new IllegalArgumentException("Seats is Not found");
         }
@@ -109,9 +109,9 @@ public class ReservationService {
             throw new IllegalArgumentException("SectionCd is Not found");
         }
 
-        UUID purchaseId = UUID.randomUUID();
+        UUID reservationId = UUID.randomUUID();
         ReservationEntity purchase = new ReservationEntity();
-        purchase.setId(purchaseId);
+        purchase.setId(reservationId);
         purchase.setRideDate(reserveRequestDto.getRideDate());
         purchase.setScheduleCd(reserveRequestDto.getScheduleCd());
         purchase.setDepartureStationCd(reserveRequestDto.getDepartureStationCd());
@@ -141,7 +141,7 @@ public class ReservationService {
         for (ReserveRequestDto.SelectedSeatDto seatDto : reserveRequestDto.getSeats()) {
             for (String sectionCd : sectionCdList) {
                 ReservedSeatSectionEntity reservedSeatSection = new ReservedSeatSectionEntity(
-                        UUID.randomUUID(), purchaseId, reserveRequestDto.getRideDate(), reserveRequestDto.getScheduleCd(),
+                        UUID.randomUUID(), reservationId, reserveRequestDto.getRideDate(), reserveRequestDto.getScheduleCd(),
                         seatDto.getTrainCarCd(),
                         seatDto.getSeatCd(), sectionCd
                 );
@@ -153,6 +153,6 @@ public class ReservationService {
             throw new RuntimeException("Insert ReservedSeatSections is failed");
         }
 
-        return purchaseId;
+        return reservationId;
     }
 }

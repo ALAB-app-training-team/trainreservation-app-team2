@@ -176,7 +176,7 @@ public class ReservationServiceTest {
 
     @Test
     @DisplayName("購入情報・購入座席情報を挿入できる")
-    void savePurchase_withValidReserveRequestDto_returnInsertPurchaseId() {
+    void savePurchase_withValidReserveRequestDto_returnInsertReservationId() {
         ReserveRequestDto request = new ReserveRequestDto("Test01", LocalDate.now(), "Test0", "Test1", List.of(new ReserveRequestDto.SelectedSeatDto("E5SER01", "SEAT01001"), new ReserveRequestDto.SelectedSeatDto("E5SER01", "SEAT01002"), new ReserveRequestDto.SelectedSeatDto("E5SER01", "SEAT01003"), new ReserveRequestDto.SelectedSeatDto("E5SER01", "SEAT01004"), new ReserveRequestDto.SelectedSeatDto("E5SER01", "SEAT01005"), new ReserveRequestDto.SelectedSeatDto("E5SER01", "SEAT01006")));
         DepartureArrivalTimeEntity departureArrivalTime = new DepartureArrivalTimeEntity();
         departureArrivalTime.setTimeCd("Test1");
@@ -197,7 +197,7 @@ public class ReservationServiceTest {
                         limit((List.of(departureArrivalTime.getSectionCd())).size() * request.getSeats().size())
                         .collect(Collectors.toList()));
 
-        UUID result = service.insertPurchase(request);
+        UUID result = service.insertReservation(request);
         assertNotNull(result);
     }
 
@@ -205,21 +205,21 @@ public class ReservationServiceTest {
     @DisplayName("座席リストが空の場合、IllegalArgumentExceptionが発生する")
     void savePurchase_withEmptySelectedSeatDto_throwsIllegalArgumentException() {
         ReserveRequestDto request = new ReserveRequestDto("Test01", LocalDate.now(), "Test0", "Test1", List.of());
-        assertThrows(IllegalArgumentException.class, () -> service.insertPurchase(request));
+        assertThrows(IllegalArgumentException.class, () -> service.insertReservation(request));
     }
 
     @Test
     @DisplayName("座席リストがnullの場合、IllegalArgumentExceptionが発生する")
     void savePurchase_withNullSelectedSeatDto_throwsIllegalArgumentException() {
         ReserveRequestDto request = new ReserveRequestDto("Test01", LocalDate.now(), "Test0", "Test1", null);
-        assertThrows(IllegalArgumentException.class, () -> service.insertPurchase(request));
+        assertThrows(IllegalArgumentException.class, () -> service.insertReservation(request));
     }
 
     @Test
     @DisplayName("座席リストが6以上の場合、IllegalArgumentExceptionが発生する")
     void savePurchase_withMaxSelectedSeatDto_throwsIllegalArgumentException() {
         ReserveRequestDto request = new ReserveRequestDto("Test01", LocalDate.now(), "Test0", "Test1", List.of(new ReserveRequestDto.SelectedSeatDto("E5SER01", "SEAT01001"), new ReserveRequestDto.SelectedSeatDto("E5SER01", "SEAT01001"), new ReserveRequestDto.SelectedSeatDto("E5SER01", "SEAT01001"), new ReserveRequestDto.SelectedSeatDto("E5SER01", "SEAT01001"), new ReserveRequestDto.SelectedSeatDto("E5SER01", "SEAT01001"), new ReserveRequestDto.SelectedSeatDto("E5SER01", "SEAT01001"), new ReserveRequestDto.SelectedSeatDto("E5SER01", "SEAT01001")));
-        assertThrows(IllegalArgumentException.class, () -> service.insertPurchase(request));
+        assertThrows(IllegalArgumentException.class, () -> service.insertReservation(request));
     }
 
     @Test
@@ -237,7 +237,7 @@ public class ReservationServiceTest {
         when(departureArrivalTimeRepo.findByScheduleCdAndSectionCdIn(request.getScheduleCd(), List.of(departureArrivalTime.getSectionCd()))).thenReturn(null);
         when(departureArrivalTimeRepo.findByScheduleCdAndDepartureTimeAndArrivalTime(request.getScheduleCd(), departureArrivalTime.getDepartureTime(), departureArrivalTime.getArrivalTime())).thenReturn(List.of());
 
-        assertThrows(IllegalArgumentException.class, () -> service.insertPurchase(request));
+        assertThrows(IllegalArgumentException.class, () -> service.insertReservation(request));
     }
 
     @Test
@@ -258,12 +258,12 @@ public class ReservationServiceTest {
             setId(UUID.randomUUID());
         }});
         when(purchasedSeatRepo.saveAll(any()).size()).thenThrow(new DuplicateKeyException("UNIQUE制約エラー"));
-        assertThrows(org.springframework.dao.DataAccessException.class, () -> service.insertPurchase(request));
+        assertThrows(org.springframework.dao.DataAccessException.class, () -> service.insertReservation(request));
     }
 
     @Test
     @DisplayName("insertPurchaseが失敗した場合、RuntimeExceptionが発生する")
-    void savePurchase_withInsertInsertPurchaseFails_throwsRuntimeException() {
+    void savePurchase_withInsertInsertReservationFails_throwsRuntimeException() {
         ReserveRequestDto request = new ReserveRequestDto("Test01", LocalDate.now(), "Test0", "Test1", List.of(new ReserveRequestDto.SelectedSeatDto("E5SER01", "SEAT01001"), new ReserveRequestDto.SelectedSeatDto("E5SER01", "SEAT01001")));
         DepartureArrivalTimeEntity departureArrivalTime = new DepartureArrivalTimeEntity();
         departureArrivalTime.setTimeCd("Test1");
@@ -276,7 +276,7 @@ public class ReservationServiceTest {
         when(departureArrivalTimeRepo.findByScheduleCdAndSectionCdIn(request.getScheduleCd(), List.of(departureArrivalTime.getSectionCd()))).thenReturn(departureArrivalTime);
         when(departureArrivalTimeRepo.findByScheduleCdAndDepartureTimeAndArrivalTime(request.getScheduleCd(), departureArrivalTime.getDepartureTime(), departureArrivalTime.getArrivalTime())).thenReturn(List.of(departureArrivalTime.getSectionCd()));
         when(purchaseRepo.save(any())).thenReturn(null);
-        assertThrows(RuntimeException.class, () -> service.insertPurchase(request));
+        assertThrows(RuntimeException.class, () -> service.insertReservation(request));
     }
 
     @Test
@@ -298,7 +298,7 @@ public class ReservationServiceTest {
         }});
         when(purchasedSeatRepo.saveAll(any())).thenReturn(null);
 
-        assertThrows(RuntimeException.class, () -> service.insertPurchase(request));
+        assertThrows(RuntimeException.class, () -> service.insertReservation(request));
     }
 
     @Test
@@ -321,7 +321,7 @@ public class ReservationServiceTest {
         when(purchasedSeatRepo.saveAll(any())).thenReturn(List.of(new ReservedSeatEntity(), new ReservedSeatEntity()));
         when(reservedSeatSectionRepo.saveAll(any())).thenThrow(new DuplicateKeyException("UNIQUE制約エラー"));
 
-        assertThrows(org.springframework.dao.DataAccessException.class, () -> service.insertPurchase(request));
+        assertThrows(org.springframework.dao.DataAccessException.class, () -> service.insertReservation(request));
     }
 
     @Test
@@ -345,6 +345,6 @@ public class ReservationServiceTest {
         }});
         when(purchasedSeatRepo.saveAll(any())).thenReturn(List.of(new ReservedSeatEntity(), new ReservedSeatEntity()));
         when(reservedSeatSectionRepo.saveAll(any())).thenReturn(List.of());
-        assertThrows(RuntimeException.class, () -> service.insertPurchase(request));
+        assertThrows(RuntimeException.class, () -> service.insertReservation(request));
     }
 }

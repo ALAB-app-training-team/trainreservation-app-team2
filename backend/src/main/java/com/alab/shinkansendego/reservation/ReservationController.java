@@ -32,8 +32,8 @@ public class ReservationController {
     }
 
     @PostMapping
-    public ResponseEntity<UUID> insertPurchase(@Valid @RequestBody ReserveRequestDto request) {
-        UUID response = reservationService.insertPurchase(request);
+    public ResponseEntity<UUID> insertReservation(@Valid @RequestBody ReserveRequestDto request) {
+        UUID response = reservationService.insertReservation(request);
         return ResponseEntity.status(HttpStatus.CREATED).body(response);
     }
 }
