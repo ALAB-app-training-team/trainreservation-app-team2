@@ -22,14 +22,10 @@ export function useReservationListRequestDto() {
         reserverMail: '',
         searchReservation: '',
     });
-    const removeWhiteSpace = (value: string) => {
-        return value.replace(/[\s\u3000]+/g, '');
-    };
-    const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-        const { name, value } = e.target;
-        setGuestLoginForm((prev) => ({
+    const setError = (name: string, value: string) => {
+        setErrors((prev) => ({
             ...prev,
-            [name]: value,
+            [name]: validateField(name as GuestLoginErrorKey, value),
         }));
     };
     const validateField = (name: GuestLoginErrorKey, value: string) => {
@@ -50,13 +46,24 @@ export function useReservationListRequestDto() {
                 return '';
         }
     };
+    const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+        const { name, value } = e.target;
+        setGuestLoginForm((prev) => ({
+            ...prev,
+            [name]: value,
+        }));
+        setError(name, value);
+    };
     const handleBlur = (e: React.FocusEvent<HTMLInputElement>) => {
         const { name, value } = e.target;
-        setErrors((prev) => ({
-            ...prev,
-            [name]: validateField(name as GuestLoginErrorKey, value),
-        }));
+        setError(name, value);
     };
+
+    const isInvalid: boolean =
+        guestLoginForm.reserverName === '' ||
+        guestLoginForm.reserverMail === '' ||
+        errors.reserverName !== '' ||
+        errors.reserverMail !== '';
 
     const handleGuestLogin = async () => {
         const newErrors = {
@@ -74,25 +81,21 @@ export function useReservationListRequestDto() {
         if (newErrors.reserverName || newErrors.reserverMail) {
             return;
         }
-        {
-            /*TODO:BEのAPI実装後にリクエストParamを追加する
-        const removeWhiteSpace = (value: string) => {
-            return value.replace(/[\s\u3000]+/g, '');
-        };
-        const request = {
-            ...guestLoginForm,
-            reserverName: removeWhiteSpace(guestLoginForm.reserverName),
-            reserverMail: removeWhiteSpace(guestLoginForm.reserverMail),
-        };*/
-        }
+        //     TODO:BEのAPI実装後にリクエストParamを追加する
+        // const removeWhiteSpace = (value: string) => {
+        //     return value.replace(/[\s\u3000]+/g, '');
+        // };
+        // const request = {
+        //     ...guestLoginForm,
+        //     reserverName: removeWhiteSpace(guestLoginForm.reserverName),
+        //     reserverMail: removeWhiteSpace(guestLoginForm.reserverMail),
+        // };
         const response = await axios.get<ReservationResponseDto[]>(
             ENDPOINTS.RESERVATIONLIST(),
-            {
-                /*TODO:BEのAPI実装後にリクエストParamを追加する
-            {
-                params: request,
-            },*/
-            },
+            // TODO:BEのAPI実装後にリクエストParamを追加する
+            // {
+            //     params: request,
+            // },,
         );
         if (response.data.length === 0) {
             setErrors((prev) => ({
@@ -113,5 +116,6 @@ export function useReservationListRequestDto() {
         handleChange,
         handleBlur,
         handleGuestLogin,
+        isInvalid,
     };
 }

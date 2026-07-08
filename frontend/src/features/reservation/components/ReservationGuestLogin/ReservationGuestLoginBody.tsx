@@ -10,6 +10,7 @@ export function ReservationGuestLoginBody() {
         errors,
         handleChange,
         handleBlur,
+        isInvalid,
         handleGuestLogin,
     } = useReservationListRequestDto();
     return (
@@ -48,6 +49,7 @@ export function ReservationGuestLoginBody() {
                             />
                             <button
                                 className="bg-primary w-full rounded-xl p-2 text-white outline-none"
+                                disabled={isInvalid}
                                 onClick={handleGuestLogin}
                             >
                                 予約を検索
