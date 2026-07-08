@@ -21,16 +21,22 @@ public class StopStationServiceTest {
     @InjectMocks
     private StopStationService service;
 
-    List<StopStationEntity> sameStationCds;
-    List<StopStationEntity> sameCateStations;
+    List<StopStationEntity> allStation;
+    List<StopStationEntity> stationsWithSameStationCd;
 
     @BeforeEach
     void setUp() {
-        sameStationCds = List.of(
+        allStation = List.of(
+                new StopStationEntity("0061", "CMN03", "HB"),
+                new StopStationEntity("0011", "THK02", "HB"),
                 new StopStationEntity("0001", "THK01", "HB"),
-                new StopStationEntity("0002", "THK01", "YM"),
-                new StopStationEntity("0003", "THK01", "NS"),
-                new StopStationEntity("0004", "THK01", "KM")
+                new StopStationEntity("0021", "CMN01", "HB")
+        );
+
+        stationsWithSameStationCd = List.of(
+                new StopStationEntity("0061", "CMN03", "HB"),
+                new StopStationEntity("0062", "CMN03", "YM"),
+                new StopStationEntity("0063", "CMN03", "NS")
         );
 
         sameCateStations = List.of(
@@ -41,8 +47,7 @@ public class StopStationServiceTest {
     @Test
     @DisplayName("同じ停車カテゴリの停車駅を取得できる")
     void getStopStationWithoutTransfer() {
-        when(stopStationRepository.findByStationCd(anyString())).thenReturn(sameStationCds);
-        when(stopStationRepository.findByStopCategoryIn(anyList())).thenReturn();
+        when(stopStationRepository.findAll()).thenReturn(sameStationCds);
         assertEquals(2, 1 + 1);
     }
 }

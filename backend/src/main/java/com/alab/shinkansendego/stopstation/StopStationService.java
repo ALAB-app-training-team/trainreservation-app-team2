@@ -17,12 +17,8 @@ public class StopStationService {
         this.stopStationRepository = repository;
     }
 
-    public List<StationResponseDto> getStopStationWithoutTransfer(String stationCd) {
-        List<String> cates = stopStationRepository.findByStationCd(stationCd)
-                .stream().map(entity -> entity.getStopCategory())
-                .collect(Collectors.toList());
-
-        List<StopStationEntity> entities = stopStationRepository.findByStopCategoryIn(cates);
+    public List<StationResponseDto> getStopStationWithoutTransfer() {
+        List<StopStationEntity> entities = stopStationRepository.findAll();
         Map<String, StationResponseDto> dtoMap = new LinkedHashMap<>();
 
         for (StopStationEntity ss : entities) {

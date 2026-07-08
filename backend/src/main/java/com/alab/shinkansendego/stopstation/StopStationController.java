@@ -10,7 +10,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 @RestController
-@RequestMapping("api/shinkansen-stopstationlist")
+@RequestMapping("api/stopstations")
 public class StopStationController {
     private final StopStationService stopStationService;
 
@@ -19,9 +19,9 @@ public class StopStationController {
         this.stopStationService = service;
     }
 
-    @GetMapping(value = "{code}")
-    public ResponseEntity<List<StationResponseDto>> getStopStation(@PathVariable("code") String stationCd) {
-        List<StationResponseDto> response = stopStationService.getStopStationWithoutTransfer(stationCd);
+    @GetMapping
+    public ResponseEntity<List<StationResponseDto>> getStopStation() {
+        List<StationResponseDto> response = stopStationService.getStopStationWithoutTransfer();
         return ResponseEntity.ok(response);
     }
 
