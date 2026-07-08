@@ -1,56 +1,58 @@
-import { useMemo } from "react";
+import { useMemo } from 'react';
 
-import type { Station } from "@/features/schedule/types/Station";
-import type { StationResponseDto } from "@/features/schedule/types/StationResponseDto"
+import type { Station } from '@/features/schedule/types/Station';
+import type { StationResponseDto } from '@/features/schedule/types/StationResponseDto';
 
 const formatStations = (
     rawDtos: StationResponseDto[],
     allStations: Station[],
-    selectedStationCd: string
-):Station[] => {
-    const seen= new Set<string>();
+    selectedStationCd: string,
+): Station[] => {
+    if (!selectedStationCd) return allStations;
+
+    const targetStopCategories = rawDtos
+        .filter((dto) => dto.stationCd === selectedStationCd)
+        .map((dto) => dto.stopCategory);
+
+    const seen = new Set<string>();
 
     return [...rawDtos]
-      .sort((a, b) => {
-        const codeA = a.stopStationCd ?? "";
-        const codeB = b.stopStationCd ?? "";
-        return codeA.localeCompare(codeB);
-      })
+        .filter((dto) => targetStopCategories.includes(dto.stopCategory))
 
-      .filter((dto) => dto.stationCd !== selectedStationCd)
+        .filter((dto) => dto.stationCd !== selectedStationCd)
 
-      .filter((dto) => {
-        if (seen.has(dto.stationCd)) return false;
-        seen.add(dto.stationCd);
-        return true;
-      })
+        .filter((dto) => {
+            if (seen.has(dto.stationCd)) return false;
+            seen.add(dto.stationCd);
+            return true;
+        })
 
-      .map((dto) => allStations.find((s) => s.stationCd === dto.stationCd))
+        .map((dto) => allStations.find((s) => s.stationCd === dto.stationCd))
 
-      .filter((station): station is Station => !!station);
+        .filter((station): station is Station => !!station);
 };
 
 export function useStationFilter(
     stations: Station[],
-    departureDtos:StationResponseDto[],
+    departureDtos: StationResponseDto[],
     arrivalDtos: StationResponseDto[],
     departureStationCd: string,
-    arrivalStationCd: string
-){
+    arrivalStationCd: string,
+) {
     const availableArrivalStations = useMemo(() => {
-        if(!departureStationCd || departureDtos.length === 0) return stations;
+        if (!departureStationCd || departureDtos.length === 0) return stations;
 
-       return formatStations(departureDtos, stations, departureStationCd);
+        return formatStations(departureDtos, stations, departureStationCd);
     }, [stations, departureStationCd, departureDtos]);
 
     const availableDepartureStations = useMemo(() => {
-        if(!arrivalStationCd || arrivalDtos.length === 0) return stations;
+        if (!arrivalStationCd || arrivalDtos.length === 0) return stations;
 
-       return formatStations(arrivalDtos, stations, arrivalStationCd);
+        return formatStations(arrivalDtos, stations, arrivalStationCd);
     }, [stations, arrivalStationCd, arrivalDtos]);
 
     return {
         availableArrivalStations,
-        availableDepartureStations
+        availableDepartureStations,
     };
 }
