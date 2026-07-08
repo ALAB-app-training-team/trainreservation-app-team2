@@ -3,7 +3,10 @@ import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 
 import { ENDPOINTS } from '@/api/routes';
-import type { GuestLoginFormError } from '@/features/reservation/types/GuestLoginFormError';
+import type {
+    GuestLoginError,
+    GuestLoginErrorKey,
+} from '@/features/reservation/types/GuestLoginError';
 import type { ReservationListRequestDto } from '@/features/reservation/types/ReservationListRequestDto';
 import type { ReservationResponseDto } from '@/features/reservation/types/ReservationResponseDto';
 
@@ -14,7 +17,7 @@ export function useReservationListRequestDto() {
             reserverName: '',
             reserverMail: '',
         });
-    const [errors, setErrors] = useState<GuestLoginFormError>({
+    const [errors, setErrors] = useState<GuestLoginError>({
         reserverName: '',
         reserverMail: '',
         searchReservation: '',
@@ -29,7 +32,7 @@ export function useReservationListRequestDto() {
             [name]: value,
         }));
     };
-    const validateField = (name: string, value: string) => {
+    const validateField = (name: GuestLoginErrorKey, value: string) => {
         switch (name) {
             case 'reserverName':
                 if (!value.trim()) {
@@ -51,7 +54,7 @@ export function useReservationListRequestDto() {
         const { name, value } = e.target;
         setErrors((prev) => ({
             ...prev,
-            [name]: validateField(name, value),
+            [name]: validateField(name as GuestLoginErrorKey, value),
         }));
     };
 
@@ -71,15 +74,24 @@ export function useReservationListRequestDto() {
         if (newErrors.reserverName || newErrors.reserverMail) {
             return;
         }
+        {
+            /*TODO:BEのAPI実装後にリクエストParamを追加する
+        const removeWhiteSpace = (value: string) => {
+            return value.replace(/[\s\u3000]+/g, '');
+        };
         const request = {
             ...guestLoginForm,
             reserverName: removeWhiteSpace(guestLoginForm.reserverName),
             reserverMail: removeWhiteSpace(guestLoginForm.reserverMail),
-        };
+        };*/
+        }
         const response = await axios.get<ReservationResponseDto[]>(
             ENDPOINTS.RESERVATIONLIST(),
             {
+                /*TODO:BEのAPI実装後にリクエストParamを追加する
+            {
                 params: request,
+            },*/
             },
         );
         if (response.data.length === 0) {
