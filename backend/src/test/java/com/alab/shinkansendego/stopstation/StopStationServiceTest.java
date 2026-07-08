@@ -55,6 +55,19 @@ public class StopStationServiceTest {
     }
 
     @Test
+    @DisplayName("異なる駅CDを持つ駅をソートして返すことができる")
+    void getStopStationWithoutTransfer_returnDTOSorted() {
+        when(stopStationRepository.findAll()).thenReturn(allStation);
+        List<StationResponseDto> result = service.getStopStationWithoutTransfer();
+        assertAll(
+                () -> assertEquals("THK01", result.get(0).getStationCd()),
+                () -> assertEquals("THK02", result.get(1).getStationCd()),
+                () -> assertEquals("CMN01", result.get(2).getStationCd()),
+                () -> assertEquals("CMN03", result.get(3).getStationCd())
+        );
+    }
+
+    @Test
     @DisplayName("同じ駅CDを持つ駅をまとめて返すことができる")
     void getStopStationWithoutTransfer_returnDTOWithIntegrateForSameStationCd() {
         when(stopStationRepository.findAll()).thenReturn(stationsWithSameStationCd);
