@@ -43,7 +43,7 @@ export function ReserveUserInfo({
                     reserveUser={reserveUser}
                     label="メールアドレス"
                     id="reserverMail"
-                    type="text"
+                    type="email"
                     placeholder="demo@example.com"
                     onChange={handleInputChange}
                     onFocus={handleInputFocus}
