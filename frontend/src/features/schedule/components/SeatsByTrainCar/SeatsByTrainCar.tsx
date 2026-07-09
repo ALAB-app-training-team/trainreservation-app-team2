@@ -8,12 +8,14 @@ import type { SeatsRequestDto } from '@/features/schedule/types/SeatsRequestDto'
 type SeatsByTrainCarProps = {
     seatsRequestDto: SeatsRequestDto;
     selectedSeats: SeatResponseDto[];
+    limitSeats: number;
     handleSelectedSeats: (seat: SeatResponseDto) => void;
 };
 
 export function SeatsByTrainCar({
     seatsRequestDto,
     selectedSeats,
+    limitSeats,
     handleSelectedSeats,
 }: SeatsByTrainCarProps) {
     const { seats } = useSeatsByTrainCar(seatsRequestDto);
@@ -58,7 +60,8 @@ export function SeatsByTrainCar({
                                         selectedSeat.trainCarCd ===
                                             seatsRequestDto.trainCarCd,
                                 );
-                                const isMaxSelected = selectedSeats.length >= 6;
+                                const isMaxSelected =
+                                    selectedSeats.length >= limitSeats;
                                 return (
                                     <Seat
                                         key={seat.seatCd}

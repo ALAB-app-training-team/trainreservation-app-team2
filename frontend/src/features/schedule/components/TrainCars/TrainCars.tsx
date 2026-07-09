@@ -11,12 +11,14 @@ import type { SeatTypeCd } from '@/features/schedule/types/SeatTypeCd';
 type TrainCarsProps = {
     scheduleInfoDto: ScheduleInfoDto;
     selectedSeats: SeatResponseDto[];
+    limitSeats: number;
     handleSelectedSeats: (seat: SeatResponseDto) => void;
 };
 
 export function TrainCars({
     scheduleInfoDto,
     selectedSeats,
+    limitSeats,
     handleSelectedSeats,
 }: TrainCarsProps) {
     const {
@@ -84,6 +86,7 @@ export function TrainCars({
                     <SeatsByTrainCar
                         seatsRequestDto={seatsRequestDto}
                         selectedSeats={selectedSeats}
+                        limitSeats={limitSeats}
                         handleSelectedSeats={handleSelectedSeats}
                     />
                 </Suspense>

@@ -10,7 +10,7 @@ type seatProps = {
 export function Seat({ seat, onClick, disabled, type }: seatProps) {
     const styles = {
         reserveModeStyle: 'w-12 h-12 rounded-lg',
-        nonReserveModeStyle: 'w-8 h-8 rounded-md',
+        nonReserveModeStyle: 'w-8 h-8 rounded-md !cursor-default',
         unreservable: '!cursor-not-allowed border-none bg-gray-200',
         isSelected: 'cursor-pointer border-none bg-primary text-white',
         reservable: 'cursor-pointer border-2 border-primary-light',
@@ -30,7 +30,7 @@ export function Seat({ seat, onClick, disabled, type }: seatProps) {
                 </button>
             ) : (
                 <div
-                    className={`${styles['nonReserveModeStyle']} ${styles[type]} !cursor-default`}
+                    className={`${styles['nonReserveModeStyle']} ${styles[type]}`}
                 />
             )}
         </>
