@@ -28,7 +28,7 @@ export function useReserveUser() {
         return value === '' || !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(value);
     };
     const isCardNumberInvalid = (value: string) => {
-        return value === '' || !/^\d{16,22}$/.test(value);
+        return value === '' || !/^\d{14,16}$/.test(value);
     };
     const isCardNameInvalid = (value: string) => {
         return value === '' || !/^[A-Z\s]+$/.test(value);

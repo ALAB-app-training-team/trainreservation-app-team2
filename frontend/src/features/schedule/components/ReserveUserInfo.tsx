@@ -69,7 +69,6 @@ export function ReserveUserInfo({
                     onFocus={handleInputFocus}
                     onBlur={handleInputBlur}
                     autoComplete="off"
-                    pattern="[\d]{16,22}"
                     icon={IoCardOutline}
                     getFieldError={getFieldError}
                 />
@@ -95,7 +94,6 @@ export function ReserveUserInfo({
                     onFocus={handleInputFocus}
                     onBlur={handleInputBlur}
                     autoComplete="off"
-                    pattern="\d\d/\d\d"
                     getFieldError={getFieldError}
                 />
                 <ReserveUserInfoInput
@@ -108,7 +106,6 @@ export function ReserveUserInfo({
                     onFocus={handleInputFocus}
                     onBlur={handleInputBlur}
                     autoComplete="off"
-                    pattern="\d{3,4}"
                     getFieldError={getFieldError}
                 />
             </div>

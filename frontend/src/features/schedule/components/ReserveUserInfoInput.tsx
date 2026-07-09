@@ -13,7 +13,6 @@ type ReserveUserInfoInputProps = {
     onFocus: (e: React.ChangeEvent<HTMLInputElement>) => void;
     onBlur: (e: React.ChangeEvent<HTMLInputElement>) => void;
     autoComplete: string;
-    pattern?: string;
     icon?: IconType;
     getFieldError?: (field: string) => string;
 };
@@ -27,7 +26,6 @@ export function ReserveUserInfoInput({
     onFocus,
     onBlur,
     autoComplete,
-    pattern,
     icon,
     getFieldError,
 }: ReserveUserInfoInputProps) {
@@ -46,7 +44,6 @@ export function ReserveUserInfoInput({
                         onFocus={onFocus}
                         onBlur={onBlur}
                         autoComplete={autoComplete}
-                        pattern={pattern}
                         className="w-full text-gray-900 outline-none"
                         required
                     />
