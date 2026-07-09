@@ -38,7 +38,11 @@ export function useReservationList() {
             case 'reserverMail':
                 if (!value.trim()) {
                     return 'メールアドレスを入力してください';
-                } else if (!/^[^\s@]+@[^\s@]+\.[^\s@]+/.test(value)) {
+                } else if (
+                    !/^[a-zA-Z0-9]+([._+-][a-zA-Z0-9]+)*@([a-zA-Z0-9][a-zA-Z0-9-]*[a-zA-Z0-9]*\.)+[a-zA-Z]{2,}$/.test(
+                        value,
+                    )
+                ) {
                     return '正しいメールアドレスの形式で入力してください';
                 }
                 return '';
