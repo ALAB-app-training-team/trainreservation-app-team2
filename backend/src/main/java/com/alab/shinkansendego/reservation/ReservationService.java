@@ -120,37 +120,37 @@ public class ReservationService {
 
         String paymentTrackingId = "";
         UUID reservationId = UUID.randomUUID();
-        ReservationEntity purchase = new ReservationEntity();
-        purchase.setId(reservationId);
-        purchase.setRideDate(reserveRequestDto.getRideDate());
-        purchase.setScheduleCd(reserveRequestDto.getScheduleCd());
-        purchase.setDepartureStationCd(reserveRequestDto.getDepartureStationCd());
-        purchase.setArrivalStationCd(reserveRequestDto.getArrivalStationCd());
-        purchase.setReserverName(reserveRequestDto.getReserverName());
-        purchase.setReserverMail(reserveRequestDto.getReserverMail());
-        purchase.setPaymentTrackingId(paymentTrackingId);
+        ReservationEntity reservationToPost = new ReservationEntity();
+        reservationToPost.setId(reservationId);
+        reservationToPost.setRideDate(reserveRequestDto.getRideDate());
+        reservationToPost.setScheduleCd(reserveRequestDto.getScheduleCd());
+        reservationToPost.setDepartureStationCd(reserveRequestDto.getDepartureStationCd());
+        reservationToPost.setArrivalStationCd(reserveRequestDto.getArrivalStationCd());
+        reservationToPost.setReserverName(reserveRequestDto.getReserverName());
+        reservationToPost.setReserverMail(reserveRequestDto.getReserverMail());
+        reservationToPost.setPaymentTrackingId(paymentTrackingId);
 
-        ReservationEntity purchaseResult = reservationRepository.save(purchase);
-        if (purchaseResult.getId() == null) {
+        ReservationEntity reservationResult = reservationRepository.save(reservationToPost);
+        if (reservationResult.getId() == null) {
             throw new RuntimeException("Insert Purchase is failed");
         }
 
-        List<ReservedSeatEntity> purchasedSeats = new ArrayList<>();
+        List<ReservedSeatEntity> reservedSeatsToPost = new ArrayList<>();
         for (ReserveRequestDto.SelectedSeatDto seatDto : reserveRequestDto.getSeats()) {
-            ReservedSeatEntity purchasedSeat = new ReservedSeatEntity();
-            purchasedSeat.setId(UUID.randomUUID());
-            purchasedSeat.setReservationId(purchaseResult.getId());
-            purchasedSeat.setTrainCarCd(seatDto.getTrainCarCd());
-            purchasedSeat.setSeatCd(seatDto.getSeatCd());
-            purchasedSeat.setCodeToken(UUID.randomUUID());
-            purchasedSeats.add(purchasedSeat);
+            ReservedSeatEntity reservedSeat = new ReservedSeatEntity();
+            reservedSeat.setId(UUID.randomUUID());
+            reservedSeat.setReservationId(reservationResult.getId());
+            reservedSeat.setTrainCarCd(seatDto.getTrainCarCd());
+            reservedSeat.setSeatCd(seatDto.getSeatCd());
+            reservedSeat.setCodeToken(UUID.randomUUID());
+            reservedSeatsToPost.add(reservedSeat);
         }
-        int purchasedSeatResult = reservedSeatRepository.saveAll(purchasedSeats).size();
-        if (purchasedSeatResult != reserveRequestDto.getSeats().size()) {
+        int reservedSeatResult = reservedSeatRepository.saveAll(reservedSeatsToPost).size();
+        if (reservedSeatResult != reserveRequestDto.getSeats().size()) {
             throw new RuntimeException("Insert PurchasedSeats is failed");
         }
 
-        List<ReservedSeatSectionEntity> reservedSeatSections = new ArrayList<>();
+        List<ReservedSeatSectionEntity> reservedSeatSectionsToPost = new ArrayList<>();
         for (ReserveRequestDto.SelectedSeatDto seatDto : reserveRequestDto.getSeats()) {
             for (String sectionCd : sectionCdList) {
                 ReservedSeatSectionEntity reservedSeatSection = new ReservedSeatSectionEntity(
@@ -158,10 +158,10 @@ public class ReservationService {
                         seatDto.getTrainCarCd(),
                         seatDto.getSeatCd(), sectionCd
                 );
-                reservedSeatSections.add(reservedSeatSection);
+                reservedSeatSectionsToPost.add(reservedSeatSection);
             }
         }
-        int reservedSeatSectionResult = reservedSeatSectionRepository.saveAll(reservedSeatSections).size();
+        int reservedSeatSectionResult = reservedSeatSectionRepository.saveAll(reservedSeatSectionsToPost).size();
         if (reservedSeatSectionResult != sectionCdList.size() * reserveRequestDto.getSeats().size()) {
             throw new RuntimeException("Insert ReservedSeatSections is failed");
         }
@@ -178,8 +178,8 @@ public class ReservationService {
             throw new RuntimeException("Get PaymentTrackingId is failed");
         }
 
-        purchaseResult.setPaymentTrackingId(paymentTrackingId);
-        reservationRepository.save(purchaseResult);
+        reservationResult.setPaymentTrackingId(paymentTrackingId);
+        reservationRepository.save(reservationResult);
 
         return reservationId;
     }

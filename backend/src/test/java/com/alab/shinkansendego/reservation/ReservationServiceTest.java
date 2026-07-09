@@ -194,7 +194,7 @@ public class ReservationServiceTest {
 
     @Test
     @DisplayName("購入情報・購入座席情報を挿入できる")
-    void savePurchase_withValidReserveRequestDto_returnInsertReservationId() {
+    void insertReservation_withValidReserveRequestDto_returnInsertReservationId() {
         ReserveRequestDto request = new ReserveRequestDto("Test01", LocalDate.now(), "Test0", "Test1", "TestTaro", "test@main", "Test2", List.of(new ReserveRequestDto.SelectedSeatDto("E5SER01", "SEAT01001"), new ReserveRequestDto.SelectedSeatDto("E5SER01", "SEAT01002"), new ReserveRequestDto.SelectedSeatDto("E5SER01", "SEAT01003"), new ReserveRequestDto.SelectedSeatDto("E5SER01", "SEAT01004"), new ReserveRequestDto.SelectedSeatDto("E5SER01", "SEAT01005"), new ReserveRequestDto.SelectedSeatDto("E5SER01", "SEAT01006")));
         DepartureArrivalTimeEntity departureArrivalTime = new DepartureArrivalTimeEntity();
         departureArrivalTime.setTimeCd("Test1");
@@ -235,28 +235,28 @@ public class ReservationServiceTest {
 
     @Test
     @DisplayName("座席リストが空の場合、IllegalArgumentExceptionが発生する")
-    void savePurchase_withEmptySelectedSeatDto_throwsIllegalArgumentException() {
+    void insertReservation_withEmptySelectedSeatDto_throwsIllegalArgumentException() {
         ReserveRequestDto request = new ReserveRequestDto("Test01", LocalDate.now(), "Test0", "Test1", "TestTaro", "test@main", "Test2", List.of());
         assertThrows(IllegalArgumentException.class, () -> service.insertReservation(request));
     }
 
     @Test
     @DisplayName("座席リストがnullの場合、IllegalArgumentExceptionが発生する")
-    void savePurchase_withNullSelectedSeatDto_throwsIllegalArgumentException() {
+    void insertReservation_withNullSelectedSeatDto_throwsIllegalArgumentException() {
         ReserveRequestDto request = new ReserveRequestDto("Test01", LocalDate.now(), "Test0", "Test1", "TestTaro", "test@main", "Test2", null);
         assertThrows(IllegalArgumentException.class, () -> service.insertReservation(request));
     }
 
     @Test
     @DisplayName("座席リストが6以上の場合、IllegalArgumentExceptionが発生する")
-    void savePurchase_withMaxSelectedSeatDto_throwsIllegalArgumentException() {
+    void insertReservation_withMaxSelectedSeatDto_throwsIllegalArgumentException() {
         ReserveRequestDto request = new ReserveRequestDto("Test01", LocalDate.now(), "Test0", "Test1", "TestTaro", "test@main", "Test2", List.of(new ReserveRequestDto.SelectedSeatDto("E5SER01", "SEAT01001"), new ReserveRequestDto.SelectedSeatDto("E5SER01", "SEAT01001"), new ReserveRequestDto.SelectedSeatDto("E5SER01", "SEAT01001"), new ReserveRequestDto.SelectedSeatDto("E5SER01", "SEAT01001"), new ReserveRequestDto.SelectedSeatDto("E5SER01", "SEAT01001"), new ReserveRequestDto.SelectedSeatDto("E5SER01", "SEAT01001"), new ReserveRequestDto.SelectedSeatDto("E5SER01", "SEAT01001")));
         assertThrows(IllegalArgumentException.class, () -> service.insertReservation(request));
     }
 
     @Test
     @DisplayName("該当区間の出発到着時刻が存在しない場合、IllegalArgumentExceptionが発生する")
-    void savePurchase_withNotExistingSection_throwsIllegalArgumentException() {
+    void insertReservation_withNotExistingSection_throwsIllegalArgumentException() {
         ReserveRequestDto request = new ReserveRequestDto("Test01", LocalDate.now(), "Test0", "Test1", "TestTaro", "test@main", "Test2", List.of(new ReserveRequestDto.SelectedSeatDto("E5SER01", "SEAT01001"), new ReserveRequestDto.SelectedSeatDto("E5SER01", "SEAT01002"), new ReserveRequestDto.SelectedSeatDto("E5SER01", "SEAT01003"), new ReserveRequestDto.SelectedSeatDto("E5SER01", "SEAT01004"), new ReserveRequestDto.SelectedSeatDto("E5SER01", "SEAT01005"), new ReserveRequestDto.SelectedSeatDto("E5SER01", "SEAT01006")));
         DepartureArrivalTimeEntity departureArrivalTime = new DepartureArrivalTimeEntity();
         departureArrivalTime.setTimeCd("Test1");
@@ -274,7 +274,7 @@ public class ReservationServiceTest {
 
     @Test
     @DisplayName("同一購入情報IDで重複した座席を予約しようとした場合、DataAccessExceptionが発生する")
-    void savePurchase_withSameSelectedSeatDto_throwsDataAccessException() {
+    void insertReservation_withSameSelectedSeatDto_throwsDataAccessException() {
         ReserveRequestDto request = new ReserveRequestDto("Test01", LocalDate.now(), "Test0", "Test1", "TestTaro", "test@main", "Test2", List.of(new ReserveRequestDto.SelectedSeatDto("E5SER01", "SEAT01001"), new ReserveRequestDto.SelectedSeatDto("E5SER01", "SEAT01001")));
         DepartureArrivalTimeEntity departureArrivalTime = new DepartureArrivalTimeEntity();
         departureArrivalTime.setTimeCd("Test1");
@@ -296,7 +296,7 @@ public class ReservationServiceTest {
 
     @Test
     @DisplayName("insertPurchaseが失敗した場合、RuntimeExceptionが発生する")
-    void savePurchase_withInsertInsertReservationFails_throwsRuntimeException() {
+    void insertReservation_withInsertInsertReservationFails_throwsRuntimeException() {
         ReserveRequestDto request = new ReserveRequestDto("Test01", LocalDate.now(), "Test0", "Test1", "TestTaro", "test@main", "Test2", List.of(new ReserveRequestDto.SelectedSeatDto("E5SER01", "SEAT01001"), new ReserveRequestDto.SelectedSeatDto("E5SER01", "SEAT01001")));
         DepartureArrivalTimeEntity departureArrivalTime = new DepartureArrivalTimeEntity();
         departureArrivalTime.setTimeCd("Test1");
@@ -315,7 +315,7 @@ public class ReservationServiceTest {
 
     @Test
     @DisplayName("saveAllが失敗した場合、RuntimeExceptionが発生する")
-    void savePurchase_withInsertPurchasedFails_throwsRuntimeException() {
+    void insertReservation_withInsertPurchasedFails_throwsRuntimeException() {
         ReserveRequestDto request = new ReserveRequestDto("Test01", LocalDate.now(), "Test0", "Test1", "TestTaro", "test@main", "Test2", List.of(new ReserveRequestDto.SelectedSeatDto("E5SER01", "SEAT01001"), new ReserveRequestDto.SelectedSeatDto("E5SER01", "SEAT01001")));
         DepartureArrivalTimeEntity departureArrivalTime = new DepartureArrivalTimeEntity();
         departureArrivalTime.setTimeCd("Test1");
@@ -337,7 +337,7 @@ public class ReservationServiceTest {
 
     @Test
     @DisplayName("既に予約済みの座席を予約しようとした場合、DataAccessExceptionが発生する")
-    void savePurchase_withAlreadyReservedSeat_throwsDataAccessException() {
+    void insertReservation_withAlreadyReservedSeat_throwsDataAccessException() {
         ReserveRequestDto request = new ReserveRequestDto("Test01", LocalDate.now(), "Test0", "Test1", "TestTaro", "test@main", "Test2", List.of(new ReserveRequestDto.SelectedSeatDto("E5SER01", "SEAT01001"), new ReserveRequestDto.SelectedSeatDto("E5SER01", "SEAT01001")));
         DepartureArrivalTimeEntity departureArrivalTime = new DepartureArrivalTimeEntity();
         departureArrivalTime.setTimeCd("Test1");
@@ -360,7 +360,7 @@ public class ReservationServiceTest {
 
     @Test
     @DisplayName("saveAllReservedSeatSectionsが失敗した場合、RuntimeExceptionが発生する")
-    void savePurchase_withSaveAllReservedSeatSectionsFails_throwsRuntimeException() {
+    void insertReservation_withSaveAllReservedSeatSectionsFails_throwsRuntimeException() {
         ReserveRequestDto request = new ReserveRequestDto("Test01", LocalDate.now(), "Test0", "Test1", "TestTaro", "test@main", "Test2", List.of(new ReserveRequestDto.SelectedSeatDto("E5SER01", "SEAT01001"), new ReserveRequestDto.SelectedSeatDto("E5SER01", "SEAT01001")));
         DepartureArrivalTimeEntity departureArrivalTime = new DepartureArrivalTimeEntity();
 
@@ -399,7 +399,7 @@ public class ReservationServiceTest {
 
     @Test
     @DisplayName("決済会社に問い合わせて決済IDの発行に失敗した場合、RuntimeExcptionが発生する")
-    void savePurchase_withGetPaymentTrackingIdFailed_throwsRuntimeException(){
+    void insertReservation_withGetPaymentTrackingIdFailed_throwsRuntimeException(){
         ReserveRequestDto request = new ReserveRequestDto("Test01", LocalDate.now(), "Test0", "Test1", "TestTaro", "test@main", "Test2", List.of(new ReserveRequestDto.SelectedSeatDto("E5SER01", "SEAT01001"), new ReserveRequestDto.SelectedSeatDto("E5SER01", "SEAT01002"), new ReserveRequestDto.SelectedSeatDto("E5SER01", "SEAT01003"), new ReserveRequestDto.SelectedSeatDto("E5SER01", "SEAT01004"), new ReserveRequestDto.SelectedSeatDto("E5SER01", "SEAT01005"), new ReserveRequestDto.SelectedSeatDto("E5SER01", "SEAT01006")));
         DepartureArrivalTimeEntity departureArrivalTime = new DepartureArrivalTimeEntity();
         departureArrivalTime.setTimeCd("Test1");
