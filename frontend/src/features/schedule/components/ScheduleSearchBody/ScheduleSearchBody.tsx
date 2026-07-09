@@ -5,14 +5,14 @@ import { ScheduleList } from '@/features/schedule/components/ScheduleList/Schedu
 import { ScheduleListSkeleton } from '@/features/schedule/components/ScheduleList/ScheduleListSkeleton';
 import { ScheduleSearchForm } from '@/features/schedule/components/ScheduleSearchForm';
 import { useSearchRequestDto } from '@/features/schedule/hooks/useSearchRequestDto';
-import { useStationResponseDtos } from '@/features/schedule/hooks/useStationResponseDtos';
 import { useStations } from '@/features/schedule/hooks/useStations';
+import { useStopStations } from '@/features/schedule/hooks/useStopStations';
 
 export function ScheduleSearchBody() {
     const location = useLocation();
     const initialDto = location.state?.searchRequestDto;
     const { stations } = useStations();
-    const { stationResponseDtos } = useStationResponseDtos();
+    const { stationResponseDtos } = useStopStations();
     const {
         setTime,
         setDate,
