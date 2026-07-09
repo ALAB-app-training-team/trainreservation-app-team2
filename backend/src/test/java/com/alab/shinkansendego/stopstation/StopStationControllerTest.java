@@ -24,12 +24,12 @@ public class StopStationControllerTest {
 
     @Test
     @DisplayName("すべての駅の情報を取得することができる")
-    void getStopStationTest() throws Exception {
+    void getStopStations_returnAllStopStations() throws Exception {
         List<StationResponseDto> dtos = List.of(
                 new StationResponseDto("THK01", "東京", List.of("HB", "MY", "NS")),
                 new StationResponseDto("THK02", "上野", List.of("HB", "MY", "NS"))
         );
-        when(stopStationService.getStopStationWithoutTransfers()).thenReturn(dtos);
+        when(stopStationService.getStopStationsWithoutTransfer()).thenReturn(dtos);
 
         mockMvc.perform(get(baseUrl)
                         .contentType(MediaType.APPLICATION_JSON))

@@ -18,7 +18,7 @@ public class StopStationService {
         this.stopStationRepository = repository;
     }
 
-    public List<StationResponseDto> getStopStationWithoutTransfers() {
+    public List<StationResponseDto> getStopStationsWithoutTransfer() {
         List<StopStationEntity> entities = stopStationRepository.findAll()
                 .stream().sorted(Comparator.comparing(StopStationEntity::getStopStationCd)).collect(Collectors.toList());
 

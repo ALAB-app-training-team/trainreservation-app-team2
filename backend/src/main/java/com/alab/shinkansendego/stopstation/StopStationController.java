@@ -19,7 +19,7 @@ public class StopStationController {
 
     @GetMapping
     public ResponseEntity<List<StationResponseDto>> getStopStations() {
-        List<StationResponseDto> response = stopStationService.getStopStationWithoutTransfers();
+        List<StationResponseDto> response = stopStationService.getStopStationsWithoutTransfer();
         return ResponseEntity.ok(response);
     }
 }
