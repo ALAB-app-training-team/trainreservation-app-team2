@@ -1,4 +1,4 @@
-type SelectedSeats = {
+type SelectedSeat = {
     trainCarCd: string;
     seatCd: string;
 };
@@ -8,5 +8,8 @@ export type ReserveRequestDto = {
     rideDate: string;
     departureStationCd: string;
     arrivalStationCd: string;
-    seats: SelectedSeats[];
+    seats: SelectedSeat[];
+    reserverName: string;
+    reserverMail: string;
+    paymentToken: string;
 };

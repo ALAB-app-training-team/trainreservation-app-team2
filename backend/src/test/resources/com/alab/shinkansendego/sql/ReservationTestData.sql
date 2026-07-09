@@ -1,4 +1,4 @@
-CREATE TABLE T_Purchase
+CREATE TABLE T_Reservation
 (
     id                   UUID PRIMARY KEY,
     ride_date            DATE       NOT NULL,
@@ -7,7 +7,7 @@ CREATE TABLE T_Purchase
     arrival_station_cd   VARCHAR(5) NOT NULL
 );
 
-INSERT INTO T_Purchase (id, ride_date, schedule_cd, departure_station_cd, arrival_station_cd)
+INSERT INTO T_Reservation (id, ride_date, schedule_cd, departure_station_cd, arrival_station_cd)
 VALUES ('4156b939-2e3e-46c1-92d3-7aa64b6ca575', '2026-06-01', 'TEST01', 'EKI01', 'EKI03');
 
 CREATE TABLE M_DepartureArrivalTime
