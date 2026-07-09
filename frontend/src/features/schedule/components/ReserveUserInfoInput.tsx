@@ -47,7 +47,7 @@ export function ReserveUserInfoInput({
                         onBlur={onBlur}
                         autoComplete={autoComplete}
                         pattern={pattern}
-                        className="w-full outline-none"
+                        className="w-full text-gray-900 outline-none"
                         required
                     />
                 </div>
