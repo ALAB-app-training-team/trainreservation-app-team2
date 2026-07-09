@@ -86,10 +86,10 @@ export function ReserveUserInfo({
                 />
                 <ReserveUserInfoInput
                     reserveUser={reserveUser}
-                    label="有効期限"
+                    label="有効期限（月/年）"
                     id="expiry"
                     type="tel"
-                    placeholder="12/28"
+                    placeholder="MM/YY"
                     onChange={handleInputChange}
                     onFocus={handleInputFocus}
                     onBlur={handleInputBlur}

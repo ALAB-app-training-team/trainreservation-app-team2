@@ -110,7 +110,7 @@ export function useReserveUser() {
             if (isExpiryInvalid(value)) {
                 messages.push({
                     field: 'expiry',
-                    message: '月/年の形式で入力してください',
+                    message: 'MM/YY（月/年）の形式で入力してください',
                 });
             }
         } else if (field === 'cvc') {
