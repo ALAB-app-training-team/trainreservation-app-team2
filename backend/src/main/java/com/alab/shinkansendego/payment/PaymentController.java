@@ -10,7 +10,7 @@ import java.util.UUID;
 
 @RestController
 @RequestMapping(path = "api/payments")
-@CrossOrigin(origins = "*")
+@CrossOrigin(origins = "*", allowCredentials = "false")
 public class PaymentController {
     @Autowired
     public PaymentController() {
