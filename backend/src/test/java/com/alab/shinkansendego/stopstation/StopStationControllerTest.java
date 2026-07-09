@@ -1,17 +1,13 @@
 package com.alab.shinkansendego.stopstation;
 
-import java.util.ArrayList;
 import java.util.List;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
-import org.mockito.InjectMocks;
-import org.mockito.Mock;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.webmvc.test.autoconfigure.WebMvcTest;
 import org.springframework.http.MediaType;
 import org.springframework.test.context.bean.override.mockito.MockitoBean;
 import org.springframework.test.web.servlet.MockMvc;
-import org.testcontainers.shaded.org.checkerframework.checker.units.qual.A;
 
 import static org.mockito.Mockito.when;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
@@ -33,7 +29,7 @@ public class StopStationControllerTest {
                 new StationResponseDto("THK01", "東京", List.of("HB", "MY", "NS")),
                 new StationResponseDto("THK02", "上野", List.of("HB", "MY", "NS"))
         );
-        when(stopStationService.getStopStationWithoutTransfer()).thenReturn(dtos);
+        when(stopStationService.getStopStationWithoutTransfers()).thenReturn(dtos);
 
         mockMvc.perform(get(baseUrl)
                         .contentType(MediaType.APPLICATION_JSON))

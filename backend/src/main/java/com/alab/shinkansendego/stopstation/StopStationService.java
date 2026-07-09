@@ -7,7 +7,6 @@ import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
 @Service
@@ -19,7 +18,7 @@ public class StopStationService {
         this.stopStationRepository = repository;
     }
 
-    public List<StationResponseDto> getStopStationWithoutTransfer() {
+    public List<StationResponseDto> getStopStationWithoutTransfers() {
         List<StopStationEntity> entities = stopStationRepository.findAll()
                 .stream().sorted(Comparator.comparing(StopStationEntity::getStopStationCd)).collect(Collectors.toList());
 
