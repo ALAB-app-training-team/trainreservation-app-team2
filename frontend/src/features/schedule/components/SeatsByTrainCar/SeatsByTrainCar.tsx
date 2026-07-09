@@ -8,12 +8,14 @@ import type { SeatsRequestDto } from '@/features/schedule/types/SeatsRequestDto'
 type SeatsByTrainCarProps = {
     seatsRequestDto: SeatsRequestDto;
     selectedSeats: SeatResponseDto[];
+    limitSeats: number;
     handleSelectedSeats: (seat: SeatResponseDto) => void;
 };
 
 export function SeatsByTrainCar({
     seatsRequestDto,
     selectedSeats,
+    limitSeats,
     handleSelectedSeats,
 }: SeatsByTrainCarProps) {
     const { seats } = useSeatsByTrainCar(seatsRequestDto);
@@ -48,28 +50,37 @@ export function SeatsByTrainCar({
                                         seat.seatColumn === column &&
                                         seat.seatNumber === row,
                                 );
-                                return seat ? (
+                                if (!seat) {
+                                    return <div key={column + row} />;
+                                }
+
+                                const isSelected = selectedSeats.some(
+                                    (selectedSeat) =>
+                                        selectedSeat.seatCd === seat.seatCd &&
+                                        selectedSeat.trainCarCd ===
+                                            seatsRequestDto.trainCarCd,
+                                );
+                                const isMaxSelected =
+                                    selectedSeats.length >= limitSeats;
+                                return (
                                     <Seat
                                         key={seat.seatCd}
                                         seat={seat}
                                         onClick={handleSelectedSeats}
-                                        disabled={seat.isReserved}
+                                        disabled={
+                                            seat.isReserved ||
+                                            (isMaxSelected && !isSelected)
+                                        }
                                         type={
                                             seat.isReserved
-                                                ? 'isReserved'
-                                                : selectedSeats.some(
-                                                        (selectedSeat) =>
-                                                            selectedSeat.seatCd ===
-                                                                seat.seatCd &&
-                                                            selectedSeat.trainCarCd ===
-                                                                seatsRequestDto.trainCarCd,
-                                                    )
+                                                ? 'unreservable'
+                                                : isSelected
                                                   ? 'isSelected'
-                                                  : 'reservable'
+                                                  : isMaxSelected
+                                                    ? 'unreservable'
+                                                    : 'reservable'
                                         }
                                     />
-                                ) : (
-                                    <div key={column + row} />
                                 );
                             })}
                         </Fragment>
@@ -85,7 +96,7 @@ export function SeatsByTrainCar({
                         <div className="text-sm">選択中</div>
                     </div>
                     <div className="flex items-center gap-1">
-                        <Seat type="isReserved" />
+                        <Seat type="unreservable" />
                         <div className="text-sm">予約済み</div>
                     </div>
                 </div>
