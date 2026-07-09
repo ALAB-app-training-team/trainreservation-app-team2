@@ -1,4 +1,5 @@
 import { BsTrainFreightFrontFill } from 'react-icons/bs';
+import { MdAirlineSeatReclineExtra } from 'react-icons/md';
 import { tv, type VariantProps } from 'tailwind-variants';
 
 import type { ReservedSeatDto } from '@/features/reservation/types/ReservedSeatDto';
@@ -33,7 +34,12 @@ export function ReservedSeats({
     return (
         <>
             <div className="flex w-full flex-col items-start gap-2">
-                <label htmlFor={id}>{title}</label>
+                {title && (
+                    <div className="flex items-center gap-2">
+                        <MdAirlineSeatReclineExtra className="mt-0.5" />
+                        <label>座席</label>
+                    </div>
+                )}
                 <div className="flex flex-wrap gap-2">
                     {seats.length !== 0 ? (
                         seats

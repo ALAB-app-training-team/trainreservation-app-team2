@@ -48,8 +48,8 @@ export function ReservedTicketQrCode({
                                     }
                                     className="border-primary-light flex flex-col justify-between gap-2 rounded-2xl border-2 p-4"
                                 >
-                                    <h2>{trainTypeName}</h2>
-                                    <div className="text-sm">
+                                    <div>{trainTypeName}</div>
+                                    <div className="text-xl font-bold">
                                         {`${reservedSeat.trainCarNumber}号車` +
                                             `${reservedSeat.seatNumber}番` +
                                             `${reservedSeat.seatColumn}席`}
