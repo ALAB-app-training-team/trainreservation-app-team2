@@ -25,14 +25,12 @@ import java.util.UUID;
 
 @Service
 public class ReservationService {
-    private final RestClient.Builder restClientBuilder;
+    private final RestClient restClient;
     private final ReservationRepository reservationRepository;
     private final ReservedSeatRepository reservedSeatRepository;
     private final SectionKmRepository sectionKmRepository;
     private final DepartureArrivalTimeRepository departureArrivalTimeRepository;
     private final ReservedSeatSectionRepository reservedSeatSectionRepository;
-
-    private static final Logger logger = LoggerFactory.getLogger(ReservationService.class);
 
     @Autowired
     public ReservationService(
@@ -48,7 +46,7 @@ public class ReservationService {
         this.sectionKmRepository = sectionKmRepository;
         this.departureArrivalTimeRepository = departureArrivalTimeRepository;
         this.reservedSeatSectionRepository = reservedSeatSectionRepository;
-        this.restClientBuilder = restClientBuilder;
+        this.restClient = restClientBuilder.build();
     }
 
     public List<ReservationResponseDto> getReservationList() {
@@ -170,7 +168,6 @@ public class ReservationService {
 
         String currentUrl = ServletUriComponentsBuilder.fromCurrentRequestUri().toUriString();
         String paymentUrl = currentUrl.replace("reservations", "payments");
-        RestClient restClient = this.restClientBuilder.build();
         paymentTrackingId = restClient.post()
                 .uri(paymentUrl)
                 .contentType(MediaType.APPLICATION_JSON)

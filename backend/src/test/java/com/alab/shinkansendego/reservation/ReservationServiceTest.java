@@ -13,6 +13,7 @@ import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DuplicateKeyException;
 import org.springframework.data.domain.Sort;
 import org.springframework.http.HttpMethod;
@@ -92,10 +93,13 @@ public class ReservationServiceTest {
         return Arrays.asList(purchase1, purchase2);
     }
 
+    @Autowired
+    private RestClient.Builder restClientBuilder;
+
     @BeforeEach
     void setUp() {
         MockitoAnnotations.openMocks(this);
-        RestClient.Builder restClientBuilder = RestClient.builder();
+        restClientBuilder = RestClient.builder();
         this.mockRestServiceServer = MockRestServiceServer.bindTo(restClientBuilder).build();
         this.service = new ReservationService(
                 purchaseRepo, purchasedSeatRepo, sectionKmRepo, departureArrivalTimeRepo, reservedSeatSectionRepo, restClientBuilder
