@@ -1,17 +1,16 @@
 package com.alab.shinkansendego.reservation;
 
+import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 import java.util.UUID;
 
 @RestController
-@RequestMapping
+@RequestMapping(path = "api/reservations")
 public class ReservationController {
     private final ReservationService reservationService;
 
@@ -20,15 +19,21 @@ public class ReservationController {
         this.reservationService = reservationService;
     }
 
-    @GetMapping(path = "api/shinkansen-reservationlist")
+    @GetMapping
     public ResponseEntity<List<ReservationResponseDto>> getReservationList() {
         List<ReservationResponseDto> response = reservationService.getReservationList();
         return ResponseEntity.ok(response);
     }
 
-    @GetMapping(path = "api/shinkansen-reservation")
-    public ResponseEntity<ReservationResponseDto> getReservation(@RequestParam("purchaseId") UUID request) {
+    @GetMapping(value = "{id}")
+    public ResponseEntity<ReservationResponseDto> getReservation(@PathVariable("id") UUID request) {
         ReservationResponseDto response = reservationService.getReservation(request);
         return ResponseEntity.ok(response);
+    }
+
+    @PostMapping
+    public ResponseEntity<UUID> insertReservation(@Valid @RequestBody ReserveRequestDto request) {
+        UUID response = reservationService.insertReservation(request);
+        return ResponseEntity.status(HttpStatus.CREATED).body(response);
     }
 }
