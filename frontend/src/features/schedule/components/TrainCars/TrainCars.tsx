@@ -80,6 +80,7 @@ export function TrainCars({
                         <SeatsByTrainCar
                             seatsRequestDto={seatsRequestDto}
                             selectedSeats={selectedSeats}
+                            limitSeats={limitSeats}
                             handleSelectedSeats={handleSelectedSeats}
                         />
                     </Suspense>
