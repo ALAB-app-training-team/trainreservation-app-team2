@@ -1,6 +1,10 @@
 package com.alab.shinkansendego.reservation;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.databind.SerializationFeature;
+import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
 import org.jspecify.annotations.NonNull;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;
@@ -17,12 +21,14 @@ import java.util.List;
 import java.util.UUID;
 
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
 @WebMvcTest(ReservationController.class)
 public class ReservationControllerTest {
+    private final ObjectMapper objectMapper = new ObjectMapper();
+    private final String baseUrl = "/api/reservations";
 
-    private final String baseUrl = "/api/shinkansen-";
     @Autowired
     private MockMvc mockMvc;
     @MockitoBean
@@ -44,6 +50,12 @@ public class ReservationControllerTest {
                 reservedSeatList);
     }
 
+    @BeforeEach
+    void setUp() {
+        objectMapper.registerModule(new JavaTimeModule());
+        objectMapper.disable(SerializationFeature.WRITE_DATES_AS_TIMESTAMPS);
+    }
+
     @Test
     @DisplayName("予約情報の全取得ができる")
     void getReservationList_returnGetReservationListSuccess() throws Exception {
@@ -51,12 +63,10 @@ public class ReservationControllerTest {
                 getExpectReservationResponseDto(UUID.fromString("4156b939-2e3e-46c1-92d3-7aa64b6ca575")),
                 getExpectReservationResponseDto(UUID.fromString("3136b939-2e3e-46c1-92d3-7aa64b6ca666")));
 
-        String url = baseUrl + "reservationlist";
-
         Mockito.when(service.getReservationList()).thenReturn(expectList);
 
         mockMvc.perform(
-                        get(url)
+                        get(baseUrl)
                                 .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$[0].purchaseId").value("4156b939-2e3e-46c1-92d3-7aa64b6ca575"))
@@ -113,7 +123,7 @@ public class ReservationControllerTest {
 
         UUID request = UUID.fromString("4156b939-2e3e-46c1-92d3-7aa64b6ca575");
         ReservationResponseDto expect = getExpectReservationResponseDto(request);
-        String url = baseUrl + "reservation?purchaseId=4156b939-2e3e-46c1-92d3-7aa64b6ca575";
+        String url = baseUrl + "/4156b939-2e3e-46c1-92d3-7aa64b6ca575";
 
         Mockito.when(service.getReservation(request)).thenReturn(expect);
 
@@ -147,13 +157,64 @@ public class ReservationControllerTest {
     }
 
     @Test
-    @DisplayName("リクエストがNullの場合、パラメーターエラー発生")
+    @DisplayName("idがNullの場合、NOTFOUNDを返す")
     void getReservation_withPurchaseIdIsNull_returnRequestParamError() throws Exception {
-        String url = baseUrl + "reservation?";
+        String url = baseUrl + "/";
 
         mockMvc.perform(get(url))
-                .andExpect(status().isBadRequest())
-                .andExpect(content().string("purchaseId is Null"));
+                .andExpect(status().isNotFound());
+    }
 
+
+    @Test
+    @DisplayName("購入情報・購入座席情報を挿入できる")
+    void insertPurchase_withValidReserveRequestDto_return201AndInsertReservationId() throws Exception {
+        ReserveRequestDto request = new ReserveRequestDto(
+                "Test01",
+                LocalDate.now(),
+                "Test0",
+                "Test1",
+                "TestTaro",
+                "test@main",
+                "Test2",
+                List.of(
+                        new ReserveRequestDto.SelectedSeatDto("E5SER01", "SEAT01001"),
+                        new ReserveRequestDto.SelectedSeatDto("E5SER01", "SEAT01002")
+                ));
+        UUID mockedPurchaseId = UUID.randomUUID();
+        Mockito.when(service.insertReservation(request)).thenReturn(mockedPurchaseId);
+
+        mockMvc.perform(post(baseUrl)
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(objectMapper.writeValueAsString(request)))
+                .andExpect(status().isCreated())
+                .andExpect(content().string("\"" + mockedPurchaseId + "\""));
+    }
+
+
+    @Test
+    @DisplayName("リクエストのカラムがNullの場合、バリデーションエラー発生")
+    void insertReservation_withNotValidReserveRequestDto_returnValidationError() throws Exception {
+        ReserveRequestDto request = new ReserveRequestDto(
+                null, LocalDate.now(), "Test0", "Test1", "TestTaro", "test@main", "Test2", List.of(
+                new ReserveRequestDto.SelectedSeatDto("E5SER01", "SEAT01001"),
+                new ReserveRequestDto.SelectedSeatDto("E5SER01", "SEAT01002")
+        ));
+
+        mockMvc.perform(post(baseUrl)
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(objectMapper.writeValueAsString(request)))
+                .andExpect(status().isBadRequest())
+                .andExpect(content().string("ScheduleCd is Null"));
+    }
+
+    @Test
+    @DisplayName("リクエストDTO自体がNullの場合、バインドエラー発生")
+    void insertReservation_withReserveRequestDtoIsNull_returnBindError() throws Exception {
+        //バインド順が毎回異なるためエラーメッセージの比較は行わない
+        mockMvc.perform(post(baseUrl)
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(objectMapper.writeValueAsString(new ReserveRequestDto())))
+                .andExpect(status().isBadRequest());
     }
 }
