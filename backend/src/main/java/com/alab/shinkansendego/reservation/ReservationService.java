@@ -120,19 +120,7 @@ public class ReservationService {
             throw new IllegalArgumentException("SectionCd is Not found");
         }
 
-        String currentUrl = ServletUriComponentsBuilder.fromCurrentRequestUri().toUriString();
-        String paymentUrl = currentUrl.replace("reservations", "payments");
-        RestClient restClient = this.restClientBuilder.build();
-        String paymentTrackingId = restClient.post()
-                .uri(paymentUrl)
-                .contentType(MediaType.APPLICATION_JSON)
-                .body(reserveRequestDto.getPaymentToken())
-                .retrieve()
-                .body(String.class);
-        if (StringUtil.isNullOrEmpty(paymentTrackingId)) {
-            throw new RuntimeException("Get PaymentTrackingId is failed");
-        }
-
+        String paymentTrackingId = "";
         UUID reservationId = UUID.randomUUID();
         ReservationEntity purchase = new ReservationEntity();
         purchase.setId(reservationId);
@@ -179,6 +167,22 @@ public class ReservationService {
         if (reservedSeatSectionResult != sectionCdList.size() * reserveRequestDto.getSeats().size()) {
             throw new RuntimeException("Insert ReservedSeatSections is failed");
         }
+
+        String currentUrl = ServletUriComponentsBuilder.fromCurrentRequestUri().toUriString();
+        String paymentUrl = currentUrl.replace("reservations", "payments");
+        RestClient restClient = this.restClientBuilder.build();
+        paymentTrackingId = restClient.post()
+                .uri(paymentUrl)
+                .contentType(MediaType.APPLICATION_JSON)
+                .body(reserveRequestDto.getPaymentToken())
+                .retrieve()
+                .body(String.class);
+        if (StringUtil.isNullOrEmpty(paymentTrackingId)) {
+            throw new RuntimeException("Get PaymentTrackingId is failed");
+        }
+
+        purchaseResult.setPaymentTrackingId(paymentTrackingId);
+        reservationRepository.save(purchaseResult);
 
         return reservationId;
     }
