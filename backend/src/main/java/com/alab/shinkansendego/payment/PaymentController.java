@@ -1,15 +1,14 @@
 package com.alab.shinkansendego.payment;
 
-import com.alab.shinkansendego.reservation.ReservationResponseDto;
-import com.alab.shinkansendego.reservation.ReservationService;
-import com.alab.shinkansendego.reservation.ReserveRequestDto;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
 
-import java.util.List;
 import java.util.UUID;
 
 @RestController
@@ -19,7 +18,7 @@ public class PaymentController {
     public PaymentController() {
     }
 
-    @PostMapping(path="tokens")
+    @PostMapping(path = "tokens")
     public ResponseEntity<String> insertCreditCard(@Valid @RequestBody PaymentRequestDto request) {
         UUID paymentToken = UUID.randomUUID();
         return ResponseEntity.status(HttpStatus.CREATED).body(paymentToken.toString());

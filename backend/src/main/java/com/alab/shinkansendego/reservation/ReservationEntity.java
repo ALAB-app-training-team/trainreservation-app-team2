@@ -36,10 +36,10 @@ public class ReservationEntity {
     @Column(name = "payment_tracking_id")
     private String paymentTrackingId;
 
-    @Column(name="reserver_name")
+    @Column(name = "reserver_name")
     private String reserverName;
 
-    @Column(name="reserver_mail")
+    @Column(name = "reserver_mail")
     private String reserverMail;
 
     @OneToMany(fetch = FetchType.LAZY)

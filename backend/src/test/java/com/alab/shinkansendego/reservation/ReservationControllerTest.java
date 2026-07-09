@@ -178,9 +178,9 @@ public class ReservationControllerTest {
                 "test@main",
                 "Test2",
                 List.of(
-                new ReserveRequestDto.SelectedSeatDto("E5SER01", "SEAT01001"),
-                new ReserveRequestDto.SelectedSeatDto("E5SER01", "SEAT01002")
-        ));
+                        new ReserveRequestDto.SelectedSeatDto("E5SER01", "SEAT01001"),
+                        new ReserveRequestDto.SelectedSeatDto("E5SER01", "SEAT01002")
+                ));
         UUID mockedPurchaseId = UUID.randomUUID();
         Mockito.when(service.insertReservation(request)).thenReturn(mockedPurchaseId);
 
@@ -196,7 +196,7 @@ public class ReservationControllerTest {
     @DisplayName("リクエストのカラムがNullの場合、バリデーションエラー発生")
     void insertReservation_withNotValidReserveRequestDto_returnValidationError() throws Exception {
         ReserveRequestDto request = new ReserveRequestDto(
-                null, LocalDate.now(), "Test0", "Test1","TestTaro","test@main","Test2", List.of(
+                null, LocalDate.now(), "Test0", "Test1", "TestTaro", "test@main", "Test2", List.of(
                 new ReserveRequestDto.SelectedSeatDto("E5SER01", "SEAT01001"),
                 new ReserveRequestDto.SelectedSeatDto("E5SER01", "SEAT01002")
         ));

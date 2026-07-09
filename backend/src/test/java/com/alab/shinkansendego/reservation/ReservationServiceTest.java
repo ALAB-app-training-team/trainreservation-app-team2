@@ -63,6 +63,8 @@ public class ReservationServiceTest {
     private ReservedSeatSectionRepository reservedSeatSectionRepo;
     private ReservationService service;
     private MockRestServiceServer mockRestServiceServer;
+    @Autowired
+    private RestClient.Builder restClientBuilder;
 
     private @NonNull ReservationResponseDto getExpectReservationResponseDto(UUID purchaseId) {
         List<ReservedSeatDto> reservedSeatList = Arrays.asList(seat1, seat2, seat3);
@@ -92,9 +94,6 @@ public class ReservationServiceTest {
         purchase2.setArrivalStationCd("THK02");
         return Arrays.asList(purchase1, purchase2);
     }
-
-    @Autowired
-    private RestClient.Builder restClientBuilder;
 
     @BeforeEach
     void setUp() {
@@ -399,7 +398,7 @@ public class ReservationServiceTest {
 
     @Test
     @DisplayName("決済会社に問い合わせて決済IDの発行に失敗した場合、RuntimeExcptionが発生する")
-    void insertReservation_withGetPaymentTrackingIdFailed_throwsRuntimeException(){
+    void insertReservation_withGetPaymentTrackingIdFailed_throwsRuntimeException() {
         ReserveRequestDto request = new ReserveRequestDto("Test01", LocalDate.now(), "Test0", "Test1", "TestTaro", "test@main", "Test2", List.of(new ReserveRequestDto.SelectedSeatDto("E5SER01", "SEAT01001"), new ReserveRequestDto.SelectedSeatDto("E5SER01", "SEAT01002"), new ReserveRequestDto.SelectedSeatDto("E5SER01", "SEAT01003"), new ReserveRequestDto.SelectedSeatDto("E5SER01", "SEAT01004"), new ReserveRequestDto.SelectedSeatDto("E5SER01", "SEAT01005"), new ReserveRequestDto.SelectedSeatDto("E5SER01", "SEAT01006")));
         DepartureArrivalTimeEntity departureArrivalTime = new DepartureArrivalTimeEntity();
         departureArrivalTime.setTimeCd("Test1");
