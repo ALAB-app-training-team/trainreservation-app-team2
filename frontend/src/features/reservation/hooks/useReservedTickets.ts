@@ -9,10 +9,7 @@ export function useReservedTickets(purchaseId: string) {
         queryKey: ['reservedTickets', purchaseId],
         queryFn: async () => {
             const response = await axios.get<ReservationResponseDto>(
-                ENDPOINTS.RESERVATION(),
-                {
-                    params: { purchaseId: purchaseId },
-                },
+                ENDPOINTS.RESERVATION(purchaseId),
             );
             return response.data;
         },
