@@ -96,7 +96,7 @@ export function useReservationList() {
             //     reserverMail: removeWhiteSpace(guestLoginForm.reserverMail),
             // };
             const response = await axios.get<ReservationResponseDto[]>(
-                ENDPOINTS.RESERVATIONLIST(),
+                ENDPOINTS.RESERVATION(),
                 // TODO:BEのAPI実装後にリクエストParamを追加する
                 // {
                 //     params: request,

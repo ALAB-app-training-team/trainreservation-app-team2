@@ -84,7 +84,7 @@ public class ReservedSeatSectionRepositoryTest {
         for (int i = 1; i < 3; i++) {
             ReservedSeatSectionEntity reservedSeatSection = new ReservedSeatSectionEntity();
             reservedSeatSection.setId(UUID.randomUUID());
-            reservedSeatSection.setPurchaseId(UUID.fromString("123e4567-e89b-12d3-a456-426614174000"));
+            reservedSeatSection.setReservationId(UUID.fromString("123e4567-e89b-12d3-a456-426614174000"));
             reservedSeatSection.setRideDate(LocalDate.now());
             reservedSeatSection.setScheduleCd("Test01");
             reservedSeatSection.setTrainCarCd("E5SER01");
@@ -103,7 +103,7 @@ public class ReservedSeatSectionRepositoryTest {
         for (int i = 1; i < 3; i++) {
             ReservedSeatSectionEntity reservedSeatSection = new ReservedSeatSectionEntity();
             reservedSeatSection.setId(UUID.randomUUID());
-            reservedSeatSection.setPurchaseId(UUID.fromString("123e4567-e89b-12d3-a456-426614174000"));
+            reservedSeatSection.setReservationId(UUID.fromString("123e4567-e89b-12d3-a456-426614174000"));
             reservedSeatSection.setRideDate(LocalDate.parse("2026-06-01"));
             reservedSeatSection.setScheduleCd("Test01");
             reservedSeatSection.setTrainCarCd("E5SER01");

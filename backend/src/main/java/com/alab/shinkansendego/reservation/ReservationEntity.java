@@ -1,4 +1,4 @@
-package com.alab.shinkansendego.purchase;
+package com.alab.shinkansendego.reservation;
 
 import com.alab.shinkansendego.departurearrivaltime.DepartureArrivalTimeEntity;
 import com.alab.shinkansendego.schedule.ScheduleEntity;
@@ -15,8 +15,8 @@ import java.util.UUID;
 @NoArgsConstructor
 @AllArgsConstructor
 @Entity
-@Table(name = "T_Purchase")
-public class PurchaseEntity {
+@Table(name = "T_Reservation")
+public class ReservationEntity {
     @Id
     @Column(name = "id")
     private UUID id;
@@ -32,6 +32,15 @@ public class PurchaseEntity {
 
     @Column(name = "arrival_station_cd")
     private String arrivalStationCd;
+
+    @Column(name = "payment_tracking_id")
+    private String paymentTrackingId;
+
+    @Column(name = "reserver_name")
+    private String reserverName;
+
+    @Column(name = "reserver_mail")
+    private String reserverMail;
 
     @OneToMany(fetch = FetchType.LAZY)
     @JoinColumn(name = "schedule_cd", referencedColumnName = "schedule_cd", insertable = false, updatable = false)
