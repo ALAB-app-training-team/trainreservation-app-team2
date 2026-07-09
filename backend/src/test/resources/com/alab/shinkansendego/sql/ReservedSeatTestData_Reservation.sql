@@ -1,13 +1,13 @@
-CREATE TABLE T_PurchasedSeat
+CREATE TABLE T_ReservedSeat
 (
     id           UUID PRIMARY KEY,
-    purchase_id  UUID       NOT NULL,
+    reservation_id  UUID       NOT NULL,
     train_car_cd VARCHAR(7) NOT NULL,
     seat_cd      VARCHAR(9) NOT NULL,
     code_token   UUID       NOT NULL
 );
 
-INSERT INTO T_PurchasedSeat (id, purchase_id, train_car_cd, seat_cd, code_token)
+INSERT INTO T_ReservedSeat (id, reservation_id, train_car_cd, seat_cd, code_token)
 VALUES ('e192e5f1-318e-4d10-b76d-2f2bf15e8b70', '4156b939-2e3e-46c1-92d3-7aa64b6ca575', 'E5SER01', 'SEAT01001',
         'fe529692-fbac-4332-b70f-263ab1c1e216'),
        ('5372aad0-6dfd-41d9-a7dc-39e8af644253', '4156b939-2e3e-46c1-92d3-7aa64b6ca575', 'E5SER02', 'SEAT02001',

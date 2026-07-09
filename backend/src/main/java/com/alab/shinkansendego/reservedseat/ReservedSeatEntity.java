@@ -1,4 +1,4 @@
-package com.alab.shinkansendego.purchasedseat;
+package com.alab.shinkansendego.reservedseat;
 
 import com.alab.shinkansendego.seat.SeatEntity;
 import com.alab.shinkansendego.traincar.TrainCarEntity;
@@ -9,14 +9,14 @@ import java.util.UUID;
 
 @Data
 @Entity
-@Table(name = "T_PurchasedSeat")
-public class PurchasedSeatEntity {
+@Table(name = "T_ReservedSeat")
+public class ReservedSeatEntity {
     @Id
     @Column(name = "id")
     private UUID id;
 
-    @Column(name = "purchase_id")
-    private UUID purchaseId;
+    @Column(name = "reservation_id")
+    private UUID reservationId;
 
     @Column(name = "train_car_cd")
     private String trainCarCd;
