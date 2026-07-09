@@ -21,8 +21,8 @@ public class ReservedSeatSectionEntity {
     @Column(name = "id")
     private UUID id;
 
-    @Column(name = "purchase_id")
-    private UUID purchaseId;
+    @Column(name = "reservation_id")
+    private UUID reservationId;
 
     @Column(name = "ride_date")
     private LocalDate rideDate;
