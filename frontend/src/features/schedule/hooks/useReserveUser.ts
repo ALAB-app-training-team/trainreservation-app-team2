@@ -21,11 +21,17 @@ export function useReserveUser() {
         [],
     );
 
-    const isNameInvalid = (value: string) => {
+    const isNameEmpty = (value: string) => {
         return value === '';
+    };
+    const isNameMaxLength = (value: string) => {
+        return value.length > 255;
     };
     const isMailInvalid = (value: string) => {
         return value === '' || !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(value);
+    };
+    const isMailMaxLength = (value: string) => {
+        return value.length > 255;
     };
     const isCardNumberInvalid = (value: string) => {
         return value === '' || !/^\d{14,16}$/.test(value);
@@ -42,8 +48,10 @@ export function useReserveUser() {
 
     const checkInvalid = (reserveUser: ReserveUser) => {
         return (
-            isNameInvalid(reserveUser.reserverName) ||
+            isNameEmpty(reserveUser.reserverName) ||
+            isNameMaxLength(reserveUser.reserverName) ||
             isMailInvalid(reserveUser.reserverMail) ||
+            isMailMaxLength(reserveUser.reserverMail) ||
             isCardNumberInvalid(reserveUser.cardNumber) ||
             isCardNameInvalid(reserveUser.cardName) ||
             isExpiryInvalid(reserveUser.expiry) ||
@@ -58,13 +66,25 @@ export function useReserveUser() {
             (item) => item.field !== field,
         );
         if (field === 'reserverName') {
-            if (isNameInvalid(value)) {
+            if (isNameEmpty(value)) {
                 messages.push({
                     field: 'reserverName',
                     message: '購入者氏名を入力してください',
                 });
             }
+            if (isNameMaxLength(value)) {
+                messages.push({
+                    field: 'reserverName',
+                    message: '購入者氏名は255文字以内で入力してください',
+                });
+            }
         } else if (field === 'reserverMail') {
+            if (isMailMaxLength(value)) {
+                messages.push({
+                    field: 'reserverMail',
+                    message: 'メールアドレスは255文字以内で入力してください',
+                });
+            }
             if (isMailInvalid(value)) {
                 messages.push({
                     field: 'reserverMail',
