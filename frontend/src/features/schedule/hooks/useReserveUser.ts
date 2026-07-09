@@ -76,7 +76,7 @@ export function useReserveUser() {
             if (isCardNumberInvalid(value)) {
                 messages.push({
                     field: 'cardNumber',
-                    message: '16-22桁の有効なカード番号を入力してください',
+                    message: '14-16桁の有効なカード番号を入力してください',
                 });
             }
         } else if (field === 'cardName') {
