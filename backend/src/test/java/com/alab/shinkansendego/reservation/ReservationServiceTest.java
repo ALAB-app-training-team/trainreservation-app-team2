@@ -290,20 +290,7 @@ public class ReservationServiceTest {
             setId(UUID.randomUUID());
         }});
         when(purchasedSeatRepo.saveAll(any()).size()).thenThrow(new DuplicateKeyException("UNIQUE制約エラー"));
-        MockHttpServletRequest mockRequest = new MockHttpServletRequest();
-        mockRequest.setRequestURI("/api/reservations");
-        mockRequest.setServerName("localhost");
-        mockRequest.setServerPort(8080);
-        mockRequest.setScheme("http");
 
-        RequestContextHolder.setRequestAttributes(new ServletRequestAttributes(mockRequest));
-
-        this.mockRestServiceServer.expect(requestTo("http://localhost:8080/api/payments"))
-                .andExpect(method(HttpMethod.POST))
-                .andExpect(header("Content-Type", "application/json"))
-                .andRespond(withStatus(HttpStatus.CREATED)
-                        .contentType(MediaType.TEXT_PLAIN)
-                        .body("paymentTrackingId"));
         assertThrows(org.springframework.dao.DataAccessException.class, () -> service.insertReservation(request));
     }
 
@@ -322,20 +309,7 @@ public class ReservationServiceTest {
         when(departureArrivalTimeRepo.findByScheduleCdAndSectionCdIn(request.getScheduleCd(), List.of(departureArrivalTime.getSectionCd()))).thenReturn(departureArrivalTime);
         when(departureArrivalTimeRepo.findByScheduleCdAndDepartureTimeAndArrivalTime(request.getScheduleCd(), departureArrivalTime.getDepartureTime(), departureArrivalTime.getArrivalTime())).thenReturn(List.of(departureArrivalTime.getSectionCd()));
         when(purchaseRepo.save(any())).thenReturn(null);
-        MockHttpServletRequest mockRequest = new MockHttpServletRequest();
-        mockRequest.setRequestURI("/api/reservations");
-        mockRequest.setServerName("localhost");
-        mockRequest.setServerPort(8080);
-        mockRequest.setScheme("http");
 
-        RequestContextHolder.setRequestAttributes(new ServletRequestAttributes(mockRequest));
-
-        this.mockRestServiceServer.expect(requestTo("http://localhost:8080/api/payments"))
-                .andExpect(method(HttpMethod.POST))
-                .andExpect(header("Content-Type", "application/json"))
-                .andRespond(withStatus(HttpStatus.CREATED)
-                        .contentType(MediaType.TEXT_PLAIN)
-                        .body("paymentTrackingId"));
         assertThrows(RuntimeException.class, () -> service.insertReservation(request));
     }
 
@@ -357,20 +331,6 @@ public class ReservationServiceTest {
             setId(UUID.randomUUID());
         }});
         when(purchasedSeatRepo.saveAll(any())).thenReturn(null);
-        MockHttpServletRequest mockRequest = new MockHttpServletRequest();
-        mockRequest.setRequestURI("/api/reservations");
-        mockRequest.setServerName("localhost");
-        mockRequest.setServerPort(8080);
-        mockRequest.setScheme("http");
-
-        RequestContextHolder.setRequestAttributes(new ServletRequestAttributes(mockRequest));
-
-        this.mockRestServiceServer.expect(requestTo("http://localhost:8080/api/payments"))
-                .andExpect(method(HttpMethod.POST))
-                .andExpect(header("Content-Type", "application/json"))
-                .andRespond(withStatus(HttpStatus.CREATED)
-                        .contentType(MediaType.TEXT_PLAIN)
-                        .body("paymentTrackingId"));
 
         assertThrows(RuntimeException.class, () -> service.insertReservation(request));
     }
@@ -394,20 +354,6 @@ public class ReservationServiceTest {
         }});
         when(purchasedSeatRepo.saveAll(any())).thenReturn(List.of(new ReservedSeatEntity(), new ReservedSeatEntity()));
         when(reservedSeatSectionRepo.saveAll(any())).thenThrow(new DuplicateKeyException("UNIQUE制約エラー"));
-        MockHttpServletRequest mockRequest = new MockHttpServletRequest();
-        mockRequest.setRequestURI("/api/reservations");
-        mockRequest.setServerName("localhost");
-        mockRequest.setServerPort(8080);
-        mockRequest.setScheme("http");
-
-        RequestContextHolder.setRequestAttributes(new ServletRequestAttributes(mockRequest));
-
-        this.mockRestServiceServer.expect(requestTo("http://localhost:8080/api/payments"))
-                .andExpect(method(HttpMethod.POST))
-                .andExpect(header("Content-Type", "application/json"))
-                .andRespond(withStatus(HttpStatus.CREATED)
-                        .contentType(MediaType.TEXT_PLAIN)
-                        .body("paymentTrackingId"));
 
         assertThrows(org.springframework.dao.DataAccessException.class, () -> service.insertReservation(request));
     }
@@ -449,5 +395,44 @@ public class ReservationServiceTest {
                         .body("paymentTrackingId"));
 
         assertThrows(RuntimeException.class, () -> service.insertReservation(request));
+    }
+
+    @Test
+    @DisplayName("決済会社に問い合わせて決済IDの発行に失敗した場合、RuntimeExcptionが発生する")
+    void savePurchase_withGetPaymentTrackingIdFailed_throwsRuntimeException(){
+        ReserveRequestDto request = new ReserveRequestDto("Test01", LocalDate.now(), "Test0", "Test1", "TestTaro", "test@main", "Test2", List.of(new ReserveRequestDto.SelectedSeatDto("E5SER01", "SEAT01001"), new ReserveRequestDto.SelectedSeatDto("E5SER01", "SEAT01002"), new ReserveRequestDto.SelectedSeatDto("E5SER01", "SEAT01003"), new ReserveRequestDto.SelectedSeatDto("E5SER01", "SEAT01004"), new ReserveRequestDto.SelectedSeatDto("E5SER01", "SEAT01005"), new ReserveRequestDto.SelectedSeatDto("E5SER01", "SEAT01006")));
+        DepartureArrivalTimeEntity departureArrivalTime = new DepartureArrivalTimeEntity();
+        departureArrivalTime.setTimeCd("Test1");
+        departureArrivalTime.setScheduleCd(request.getScheduleCd());
+        departureArrivalTime.setDepartureTime(LocalTime.of(6, 4));
+        departureArrivalTime.setArrivalTime(LocalTime.of(6, 9));
+        departureArrivalTime.setSectionCd("Test1");
+        when(sectionKmRepo.findSectionCdByStartStationCd(request.getDepartureStationCd())).thenReturn(List.of(departureArrivalTime.getSectionCd()));
+        when(sectionKmRepo.findSectionCdByGoalStationCd(request.getArrivalStationCd())).thenReturn(List.of(departureArrivalTime.getSectionCd()));
+        when(departureArrivalTimeRepo.findByScheduleCdAndSectionCdIn(request.getScheduleCd(), List.of(departureArrivalTime.getSectionCd()))).thenReturn(departureArrivalTime);
+        when(departureArrivalTimeRepo.findByScheduleCdAndDepartureTimeAndArrivalTime(request.getScheduleCd(), departureArrivalTime.getDepartureTime(), departureArrivalTime.getArrivalTime())).thenReturn(List.of(departureArrivalTime.getSectionCd()));
+        when(purchaseRepo.save(any())).thenReturn(new ReservationEntity() {{
+            setId(UUID.randomUUID());
+        }});
+        when(purchasedSeatRepo.saveAll(any())).thenReturn(Stream.generate(ReservedSeatEntity::new).limit(request.getSeats().size()).collect(Collectors.toList()));
+        when(reservedSeatSectionRepo.saveAll(any())).
+                thenReturn(Stream.generate(ReservedSeatSectionEntity::new).
+                        limit((List.of(departureArrivalTime.getSectionCd())).size() * request.getSeats().size())
+                        .collect(Collectors.toList()));
+        MockHttpServletRequest mockRequest = new MockHttpServletRequest();
+        mockRequest.setRequestURI("/api/reservations");
+        mockRequest.setServerName("localhost");
+        mockRequest.setServerPort(8080);
+        mockRequest.setScheme("http");
+
+        RequestContextHolder.setRequestAttributes(new ServletRequestAttributes(mockRequest));
+
+        this.mockRestServiceServer.expect(requestTo("http://localhost:8080/api/payments"))
+                .andExpect(method(HttpMethod.POST))
+                .andExpect(header("Content-Type", "application/json"))
+                .andRespond(withStatus(HttpStatus.INTERNAL_SERVER_ERROR));
+
+        assertThrows(RuntimeException.class, () -> service.insertReservation(request));
+        this.mockRestServiceServer.verify();
     }
 }
