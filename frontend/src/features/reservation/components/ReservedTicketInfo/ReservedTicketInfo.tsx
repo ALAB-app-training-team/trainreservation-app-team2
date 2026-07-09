@@ -34,7 +34,7 @@ export function ReservedTicketInfo({ ticketInfo }: ReservedTicketInfoProps) {
                                 station={ticketInfo.arrivalStationName}
                             />
                         </div>
-                        <div className="flex items-center gap-2">
+                        <div className="flex items-center gap-2 text-xl font-bold">
                             <FaClock />
                             <div>
                                 {formatter.format(
