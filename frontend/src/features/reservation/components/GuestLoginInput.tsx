@@ -6,6 +6,7 @@ type GuestLoginInputProps = {
     label: string;
     type: string;
     value: string;
+    inputMode: React.HTMLAttributes<HTMLInputElement>['inputMode'];
     placeHolder: string;
     autoComplete: string;
     icon: ElementType;
@@ -19,6 +20,7 @@ export function GuestLoginInput({
     label,
     type,
     value,
+    inputMode,
     placeHolder,
     autoComplete,
     icon,
@@ -40,6 +42,7 @@ export function GuestLoginInput({
                     id={id}
                     name={id}
                     type={type}
+                    inputMode={inputMode}
                     value={value}
                     onChange={onChange}
                     onBlur={onBlur}

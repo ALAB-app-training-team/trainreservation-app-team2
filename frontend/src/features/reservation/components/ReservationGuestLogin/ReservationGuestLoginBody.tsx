@@ -79,6 +79,7 @@ export function ReservationGuestLoginBody() {
                                     id="reserverName"
                                     label="予約者氏名"
                                     type="text"
+                                    inputMode="text"
                                     value={guestLoginForm.reserverName}
                                     placeHolder="山田 太郎"
                                     autoComplete="name"
@@ -90,7 +91,8 @@ export function ReservationGuestLoginBody() {
                                 <GuestLoginInput
                                     id="reserverMail"
                                     label="メールアドレス"
-                                    type="email"
+                                    type="text"
+                                    inputMode="email"
                                     value={guestLoginForm.reserverMail}
                                     placeHolder="example@email.com"
                                     autoComplete="email"
