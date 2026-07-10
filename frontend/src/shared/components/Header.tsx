@@ -10,7 +10,7 @@ export function Header() {
         },
         {
             label: '予約確認',
-            to: '/reservationList',
+            to: '/reservationGuestLogin',
         },
     ];
 
