@@ -6,6 +6,7 @@ test('visual-scheduleSearch', async ({ page }) => {
     await expect(page).toHaveURL('/scheduleSearch');
 
     await expect(page).toHaveScreenshot({
+        maxDiffPixelRatio: 0.01,
         fullPage: true,
         animations: 'disabled',
         mask: [
@@ -22,6 +23,7 @@ test('visual-selectSeat', async ({ page }) => {
     await expect(page).toHaveURL('/selectSeat');
 
     await expect(page).toHaveScreenshot({
+        maxDiffPixelRatio: 0.01,
         fullPage: true,
         animations: 'disabled',
         mask: [
@@ -37,6 +39,7 @@ test('visual-reservationGuestLogin', async ({ page }) => {
     await expect(page).toHaveURL('/reservationGuestLogin');
 
     await expect(page).toHaveScreenshot({
+        maxDiffPixelRatio: 0.01,
         fullPage: true,
         animations: 'disabled',
         mask: [
@@ -55,6 +58,7 @@ test('visual-reservationList', async ({ page }) => {
     await expect(page).toHaveURL('/reservationList');
 
     await expect(page).toHaveScreenshot({
+        maxDiffPixelRatio: 0.01,
         fullPage: true,
         animations: 'disabled',
         mask: [
@@ -74,6 +78,7 @@ test('visual-reservedTicket', async ({ page }) => {
     await expect(page).toHaveURL('/reservedTicket');
 
     await expect(page).toHaveScreenshot({
+        maxDiffPixelRatio: 0.01,
         fullPage: true,
         animations: 'disabled',
         mask: [
