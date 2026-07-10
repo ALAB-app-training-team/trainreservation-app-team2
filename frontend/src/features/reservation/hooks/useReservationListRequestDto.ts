@@ -15,6 +15,7 @@ export function useReservationListRequestDto() {
     const [inValidMessages, setInValidMessages] = useState<InValidMessage[]>(
         [],
     );
+
     const isNameEmpty = (value: string) => {
         return value === '';
     };
@@ -26,6 +27,7 @@ export function useReservationListRequestDto() {
             value,
         );
     };
+
     const editValidateMessage = (field: string, value: string) => {
         const messages: InValidMessage[] = inValidMessages.filter(
             (item) => item.field !== field,
@@ -52,11 +54,13 @@ export function useReservationListRequestDto() {
         }
         setInValidMessages(messages);
     };
+
     const getFieldError = (field: string) => {
         return (
             inValidMessages.find((item) => item.field === field)?.message ?? ''
         );
     };
+
     const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
         const { name, value } = e.target;
         setGuestLoginForm((prev) => ({
@@ -65,6 +69,7 @@ export function useReservationListRequestDto() {
         }));
         editValidateMessage(name, value);
     };
+
     const handleBlur = (e: React.FocusEvent<HTMLInputElement>) => {
         const { name, value } = e.target;
         editValidateMessage(name, value);
