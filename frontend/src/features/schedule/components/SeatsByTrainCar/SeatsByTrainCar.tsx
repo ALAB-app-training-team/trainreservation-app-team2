@@ -6,6 +6,7 @@ import type { SeatResponseDto } from '@/features/schedule/types/SeatResponseDto'
 import type { SeatsRequestDto } from '@/features/schedule/types/SeatsRequestDto';
 
 type SeatsByTrainCarProps = {
+    selectTrainCarCd: string;
     seatsRequestDto: SeatsRequestDto;
     selectedSeats: SeatResponseDto[];
     limitSeats: number;
@@ -13,12 +14,13 @@ type SeatsByTrainCarProps = {
 };
 
 export function SeatsByTrainCar({
+    selectTrainCarCd,
     seatsRequestDto,
     selectedSeats,
     limitSeats,
     handleSelectedSeats,
 }: SeatsByTrainCarProps) {
-    const { seats } = useSeatsByTrainCar(seatsRequestDto);
+    const { seats } = useSeatsByTrainCar(selectTrainCarCd, seatsRequestDto);
 
     const columns: string[] = Array.from(
         new Set(seats.map((seat) => seat.seatColumn)),

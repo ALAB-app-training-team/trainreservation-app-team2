@@ -1,10 +1,9 @@
 const apiBaseUrl = import.meta.env.VITE_API_BASE_URL;
 const BASE_URL = `${apiBaseUrl}/api`;
 const SCHEDULES = `${BASE_URL}/shinkansen-schedule`;
-const STATIONS = `${BASE_URL}/shinkansen-station`;
+const STATIONS = `${BASE_URL}/stations`;
 const STOPSTATIONS = `${BASE_URL}/stopstations`;
-const SEATS = `${BASE_URL}/shinkansen-seat`;
-const TRAINCAR = `${BASE_URL}/shinkansen-traincar`;
+const TRAINCARS = `${BASE_URL}/traincars`;
 const RESERVATION = `${BASE_URL}/reservations`;
 const PAYMENT = `${BASE_URL}/payments`;
 
@@ -14,6 +13,6 @@ export const ENDPOINTS = {
     SCHEDULES_SEARCH: () => SCHEDULES,
     STATIONS: () => STATIONS,
     STOPSTATIONS: () => STOPSTATIONS,
-    SEATS_SELECT: () => SEATS,
-    TRAINCAR: () => TRAINCAR,
+    SEATS_SELECT: (trainCarCd: string) => `${TRAINCARS}/${trainCarCd}/seats`,
+    TRAINCAR: () => TRAINCARS,
 };
