@@ -35,7 +35,10 @@ export function SelectedSeats({
                         .map((selectedSeat) => {
                             return (
                                 <div
-                                    key={selectedSeat.seatCd}
+                                    key={
+                                        selectedSeat.trainCarCd +
+                                        selectedSeat.seatCd
+                                    }
                                     className="flex items-center gap-2"
                                 >
                                     <div className="border-primary-light rounded-lg border-2 px-2">{`${selectedSeat.trainCarNumber}号車`}</div>
