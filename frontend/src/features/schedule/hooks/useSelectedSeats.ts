@@ -46,7 +46,7 @@ export function useSelectedSeats() {
                 ),
             );
             alert(
-                '選択中の座席がほかの人に予約されたため、以下の座席の選択を解除しました。' +
+                '選択中の座席が購入されたため、以下の座席の選択を解除しました。' +
                     reservedSeatsInSelectedSeats
                         .map(
                             (seat: SeatResponseDto) =>
