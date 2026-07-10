@@ -1,3 +1,5 @@
+import { FaTrashCan } from 'react-icons/fa6';
+
 import type { SeatResponseDto } from '@/features/schedule/types/SeatResponseDto';
 
 type SelectedSeatsProps = {
@@ -13,14 +15,14 @@ export function SelectedSeats({
 }: SelectedSeatsProps) {
     return (
         <div className="flex flex-col gap-4">
-            <div className="flex items-center justify-between">
+            <div className="flex items-center gap-4">
                 <h1 className="!mt-0 !mb-0 !text-lg">選択した座席</h1>
                 <button
                     type="button"
                     onClick={handleClear}
-                    className="border-primary-light rounded-lg border-2 p-2"
+                    className="border-primary text-primary rounded-lg border-2 p-1"
                 >
-                    座席をすべて選択解除
+                    <FaTrashCan />
                 </button>
             </div>
             <div className="flex flex-col gap-2">
