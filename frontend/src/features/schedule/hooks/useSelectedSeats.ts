@@ -10,7 +10,9 @@ export function useSelectedSeats() {
         if (selectedSeats.includes(seat)) {
             setSelectedSeats((prevSeats) =>
                 prevSeats.filter(
-                    (selectedSeat) => selectedSeat.seatCd !== seat.seatCd,
+                    (selectedSeat) =>
+                        selectedSeat.trainCarCd !== seat.trainCarCd &&
+                        selectedSeat.seatCd !== seat.seatCd,
                 ),
             );
         } else if (selectedSeats.length < limitSeats) {
@@ -22,5 +24,47 @@ export function useSelectedSeats() {
         setSelectedSeats([]);
     };
 
-    return { selectedSeats, limitSeats, handleSelectedSeats, handleClear };
+    const checkReservedSeats = (seats: SeatResponseDto[]) => {
+        const reservedSeatCds = new Set(
+            seats
+                .filter((seat) => seat.isReserved)
+                .map((seat) => seat.trainCarCd + seat.seatCd),
+        );
+        const reservedSeatsInSelectedSeats: SeatResponseDto[] =
+            selectedSeats.filter((selectedSeat) =>
+                reservedSeatCds.has(
+                    selectedSeat.trainCarCd + selectedSeat.seatCd,
+                ),
+            );
+        if (reservedSeatsInSelectedSeats.length > 0) {
+            setSelectedSeats((prevSeats) =>
+                prevSeats.filter(
+                    (selectedSeat) =>
+                        !reservedSeatCds.has(
+                            selectedSeat.trainCarCd + selectedSeat.seatCd,
+                        ),
+                ),
+            );
+            alert(
+                '選択中の座席がほかの人に予約されたため、以下の座席の選択を解除しました。' +
+                    reservedSeatsInSelectedSeats
+                        .map(
+                            (seat: SeatResponseDto) =>
+                                seat.trainCarNumber +
+                                '号車' +
+                                seat.seatNumber +
+                                seat.seatColumn,
+                        )
+                        .join(','),
+            );
+        }
+    };
+
+    return {
+        selectedSeats,
+        limitSeats,
+        handleSelectedSeats,
+        handleClear,
+        checkReservedSeats,
+    };
 }
