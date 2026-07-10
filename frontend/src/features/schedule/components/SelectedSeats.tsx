@@ -3,15 +3,26 @@ import type { SeatResponseDto } from '@/features/schedule/types/SeatResponseDto'
 type SelectedSeatsProps = {
     selectedSeats: SeatResponseDto[];
     limitSeats: number;
+    handleClear: () => void;
 };
 
 export function SelectedSeats({
     selectedSeats,
     limitSeats,
+    handleClear,
 }: SelectedSeatsProps) {
     return (
         <div className="flex flex-col gap-4">
-            <h1 className="!mt-0 !mb-0 !text-lg">選択した座席</h1>
+            <div className="flex items-center justify-between">
+                <h1 className="!mt-0 !mb-0 !text-lg">選択した座席</h1>
+                <button
+                    type="button"
+                    onClick={handleClear}
+                    className="border-primary-light rounded-lg border-2 p-2"
+                >
+                    座席をすべて選択解除
+                </button>
+            </div>
             <div className="flex flex-col gap-2">
                 {selectedSeats.length !== 0 ? (
                     selectedSeats

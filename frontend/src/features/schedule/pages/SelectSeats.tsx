@@ -23,7 +23,7 @@ export function SelectSeats() {
         arrivalStationCd,
         searchRequestDto,
     } = location.state;
-    const { selectedSeats, limitSeats, handleSelectedSeats } =
+    const { selectedSeats, limitSeats, handleSelectedSeats, handleClear } =
         useSelectedSeats();
     const {
         reserveUser,
@@ -127,6 +127,7 @@ export function SelectSeats() {
                         <SelectedSeats
                             selectedSeats={selectedSeats}
                             limitSeats={limitSeats}
+                            handleClear={handleClear}
                         />
                         <form onSubmit={handleReserve}>
                             <div className="flex flex-col gap-8">

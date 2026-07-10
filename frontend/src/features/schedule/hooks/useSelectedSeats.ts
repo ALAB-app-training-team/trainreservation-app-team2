@@ -10,7 +10,7 @@ export function useSelectedSeats() {
         if (selectedSeats.includes(seat)) {
             setSelectedSeats((prevSeats) =>
                 prevSeats.filter(
-                    (selectedSeatCds) => selectedSeatCds.seatCd !== seat.seatCd,
+                    (selectedSeat) => selectedSeat.seatCd !== seat.seatCd,
                 ),
             );
         } else if (selectedSeats.length < limitSeats) {
@@ -18,5 +18,9 @@ export function useSelectedSeats() {
         }
     };
 
-    return { selectedSeats, limitSeats, handleSelectedSeats };
+    const handleClear = () => {
+        setSelectedSeats([]);
+    };
+
+    return { selectedSeats, limitSeats, handleSelectedSeats, handleClear };
 }
