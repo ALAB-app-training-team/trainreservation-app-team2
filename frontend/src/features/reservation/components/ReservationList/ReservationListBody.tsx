@@ -1,20 +1,39 @@
+import { useQuery, useQueryClient } from '@tanstack/react-query';
 import { useState } from 'react';
 import { CiCalendar } from 'react-icons/ci';
 import { RiGroupLine } from 'react-icons/ri';
+import { useNavigate } from 'react-router-dom';
 
 import { ReservationSelectItem } from '@/features/reservation/components/ReservationList/ReservationSelectItem';
 import { RESERVATION_TAB } from '@/features/reservation/constants/ReservationTab';
-import type { ReservationResponseDto } from '@/features/reservation/types/ReservationResponseDto';
+import { useReservationList } from '@/features/reservation/hooks/useReservationList';
+import type { ReservationListRequestDto } from '@/features/reservation/types/ReservationListRequestDto';
 import type { ReservationTabCd } from '@/features/reservation/types/ReservationTabCd';
 
-type ReservationListBodyProps = {
-    reservationList: ReservationResponseDto[];
-};
-
-export function ReservationListBody({
-    reservationList: reservationList,
-}: ReservationListBodyProps) {
+export function ReservationListBody() {
     const [selectedTab, setSelectedTab] = useState<ReservationTabCd>('ACTIVE');
+    const { getReservation } = useReservationList();
+    const navigate = useNavigate();
+    const queryClient = useQueryClient();
+    const guestLoginInfo = () => {
+        const info = queryClient.getQueryData<ReservationListRequestDto>([
+            'guestLoginInfo',
+        ]);
+        if (info === undefined) {
+            alert('ログイン情報が不正です。再ログインしてください。');
+            navigate('/reservationGuestLogin');
+            return { reserverName: '', reserverMail: '' };
+        } else {
+            return info;
+        }
+    };
+
+    const { data: reservationList = [] } = useQuery({
+        queryKey: ['reservationList'],
+        queryFn: () => getReservation(guestLoginInfo()),
+        initialData: () => [],
+        refetchOnMount: true,
+    });
 
     const now = new Date();
     now.setHours(0, 0, 0, 0);

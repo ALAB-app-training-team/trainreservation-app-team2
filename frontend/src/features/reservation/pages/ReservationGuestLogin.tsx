@@ -1,9 +1,15 @@
-import { Suspense } from 'react';
+import { useQueryClient } from '@tanstack/react-query';
+import { Suspense, useEffect } from 'react';
 
 import { ReservationGuestLoginBody } from '@/features/reservation/components/ReservationGuestLogin/ReservationGuestLoginBody';
 import { ReservationGuestLoginBodySkeleton } from '@/features/reservation/components/ReservationGuestLogin/ReservationGuestLoginBodySkeleton';
 
 export function ReservationGuestLogin() {
+    const queryClient = useQueryClient();
+    useEffect(() => {
+        queryClient.removeQueries({ queryKey: ['guestLoginInfo'] });
+        queryClient.removeQueries({ queryKey: ['reservationList'] });
+    }, [queryClient]);
     return (
         <>
             <div className="flex w-full flex-col items-center gap-4 p-4">

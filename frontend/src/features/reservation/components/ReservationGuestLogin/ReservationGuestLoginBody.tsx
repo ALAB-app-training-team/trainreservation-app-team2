@@ -1,13 +1,12 @@
-import axios from 'axios';
+import { useQueryClient } from '@tanstack/react-query';
 import { useState } from 'react';
 import { CiMail } from 'react-icons/ci';
 import { FiUser } from 'react-icons/fi';
 import { useNavigate } from 'react-router-dom';
 
-import { ENDPOINTS } from '@/api/routes';
 import { GuestLoginInput } from '@/features/reservation/components/GuestLoginInput';
+import { useReservationList } from '@/features/reservation/hooks/useReservationList';
 import { useReservationListRequestDto } from '@/features/reservation/hooks/useReservationListRequestDto';
-import type { ReservationResponseDto } from '@/features/reservation/types/ReservationResponseDto';
 
 export function ReservationGuestLoginBody() {
     const {
@@ -17,9 +16,11 @@ export function ReservationGuestLoginBody() {
         getFieldError,
         isInvalid,
     } = useReservationListRequestDto();
+    const { getReservation } = useReservationList();
     const [isSubmitting, setIsSubmitting] = useState<boolean>(false);
     const [requestError, setRequestError] = useState<string>('');
     const navigate = useNavigate();
+    const queryClient = useQueryClient();
     const handleGuestLogin = async (e: React.SubmitEvent<HTMLFormElement>) => {
         e.preventDefault();
         if (isSubmitting) return;
@@ -28,29 +29,23 @@ export function ReservationGuestLoginBody() {
             if (isInvalid) {
                 return;
             }
-            //     TODO:BEのAPI実装後にリクエストParamを追加する
-            // const removeWhiteSpace = (value: string) => {
-            //     return value.replace(/[\s\u3000]+/g, '');
-            // };
-            // const request = {
-            //     ...guestLoginForm,
-            //     reserverName: removeWhiteSpace(guestLoginForm.reserverName),
-            //     reserverMail: removeWhiteSpace(guestLoginForm.reserverMail),
-            // };
-            const response = await axios.get<ReservationResponseDto[]>(
-                ENDPOINTS.RESERVATION(),
-                // TODO:BEのAPI実装後にリクエストParamを追加する
-                // {
-                //     params: request,
-                // },,
-            );
-            if (response.data.length === 0) {
+            const removeWhiteSpace = (value: string) => {
+                return value.replace(/[\s\u3000]+/g, '');
+            };
+            const request = {
+                ...guestLoginForm,
+                reserverName: removeWhiteSpace(guestLoginForm.reserverName),
+                reserverMail: removeWhiteSpace(guestLoginForm.reserverMail),
+            };
+            const reservationList = await getReservation(request);
+            console.log(reservationList.length);
+            if (reservationList.length === 0) {
                 setRequestError('予約情報が見つかりません');
                 return;
             }
-            navigate('/reservationList', {
-                state: { reservationList: response.data },
-            });
+            queryClient.setQueryData(['reservationList'], reservationList);
+            queryClient.setQueryData(['guestLoginInfo'], request);
+            navigate('/reservationList');
             window.scrollTo(0, 0);
         } catch {
             setRequestError('予約取得時に何らかのエラーが発生しました');
