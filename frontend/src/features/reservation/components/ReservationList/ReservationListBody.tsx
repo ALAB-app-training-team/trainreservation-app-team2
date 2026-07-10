@@ -1,4 +1,4 @@
-import { useQuery, useQueryClient } from '@tanstack/react-query';
+import { useQuery } from '@tanstack/react-query';
 import { useState } from 'react';
 import { CiCalendar } from 'react-icons/ci';
 import { RiGroupLine } from 'react-icons/ri';
@@ -14,17 +14,15 @@ export function ReservationListBody() {
     const [selectedTab, setSelectedTab] = useState<ReservationTabCd>('ACTIVE');
     const { getReservation } = useReservationList();
     const navigate = useNavigate();
-    const queryClient = useQueryClient();
     const guestLoginInfo = () => {
-        const info = queryClient.getQueryData<ReservationListRequestDto>([
-            'guestLoginInfo',
-        ]);
-        if (info === undefined) {
-            alert('ログイン情報が不正です。再ログインしてください。');
+        const info = sessionStorage.getItem('guestLoginInfo');
+        if (info === null) {
+            alert('セッションが切れました。再ログインしてください。');
             navigate('/reservationGuestLogin');
             return { reserverName: '', reserverMail: '' };
         } else {
-            return info;
+            const resultJson: ReservationListRequestDto = JSON.parse(info);
+            return resultJson;
         }
     };
 

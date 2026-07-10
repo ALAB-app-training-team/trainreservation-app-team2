@@ -44,7 +44,7 @@ export function ReservationGuestLoginBody() {
                 return;
             }
             queryClient.setQueryData(['reservationList'], reservationList);
-            queryClient.setQueryData(['guestLoginInfo'], request);
+            sessionStorage.setItem('guestLoginInfo', JSON.stringify(request));
             navigate('/reservationList');
             window.scrollTo(0, 0);
         } catch {

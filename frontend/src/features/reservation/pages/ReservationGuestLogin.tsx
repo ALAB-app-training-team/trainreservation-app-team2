@@ -7,9 +7,10 @@ import { ReservationGuestLoginBodySkeleton } from '@/features/reservation/compon
 export function ReservationGuestLogin() {
     const queryClient = useQueryClient();
     useEffect(() => {
-        queryClient.removeQueries({ queryKey: ['guestLoginInfo'] });
+        sessionStorage.removeItem('guestLoginInfo');
         queryClient.removeQueries({ queryKey: ['reservationList'] });
-    }, [queryClient]);
+        console.log(sessionStorage.getItem('guestLoginInfo'));
+    }, []);
     return (
         <>
             <div className="flex w-full flex-col items-center gap-4 p-4">
