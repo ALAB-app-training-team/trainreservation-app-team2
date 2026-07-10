@@ -3,5 +3,3 @@ export type GuestLoginError = {
     reserverMail: string;
     searchReservation: string;
 };
-
-export type GuestLoginErrorKey = keyof GuestLoginError;
