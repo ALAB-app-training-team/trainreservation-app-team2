@@ -1,5 +1,6 @@
 package com.alab.shinkansendego.reservation;
 
+import org.springframework.data.jpa.repository.EntityGraph;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.stereotype.Repository;
@@ -25,4 +26,15 @@ public interface ReservationRepository extends JpaRepository<ReservationEntity, 
             "JOIN TrainTypeEntity tt ON s.trainTypeCd = tt.trainTypeCd " +
             "WHERE r.id = :reservationId")
     ReservationDto findReservationDtoByReservationId(UUID reservationId);
+
+    @EntityGraph(attributePaths = {"schedule", "schedule.trainType"})
+    ReservationEntity findByReservationId(UUID reservationId);
+
+    @EntityGraph(attributePaths = {
+            "schedule", "schedule.trainType",
+            "departureArrivalTime",
+            "departureArrivalTime.sectionKm",
+            "departureArrivalTime.sectionKm.startStation",
+            "departureArrivalTime.sectionKm.goalSection"})
+    List<ReservationEntity> findByReserverNameAndReserverMail(String name, String email);
 }

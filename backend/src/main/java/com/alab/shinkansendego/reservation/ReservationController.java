@@ -20,8 +20,8 @@ public class ReservationController {
     }
 
     @GetMapping
-    public ResponseEntity<List<ReservationResponseDto>> getReservationList() {
-        List<ReservationResponseDto> response = reservationService.getReservationList();
+    public ResponseEntity<List<ReservationResponseDto>> getReservationList(@RequestParam("name") String name, @RequestParam("email") String email) {
+        List<ReservationResponseDto> response = reservationService.getReservationList(name, email);
         return ResponseEntity.ok(response);
     }
 

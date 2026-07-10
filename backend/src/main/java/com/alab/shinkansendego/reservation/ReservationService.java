@@ -8,11 +8,17 @@ import com.alab.shinkansendego.reservedseat.ReservedSeatRepository;
 import com.alab.shinkansendego.reservedseatsection.ReservedSeatSectionEntity;
 import com.alab.shinkansendego.reservedseatsection.ReservedSeatSectionRepository;
 import com.alab.shinkansendego.sectionkm.SectionKmRepository;
+import java.util.Comparator;
+import java.util.Map;
+import java.util.Optional;
+import java.util.stream.Collectors;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.dao.DataAccessException;
 import org.springframework.data.domain.Sort;
 import org.springframework.http.MediaType;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.client.HttpServerErrorException;
 import org.springframework.web.client.RestClient;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
@@ -47,24 +53,84 @@ public class ReservationService {
         this.restClient = restClientBuilder.build();
     }
 
-    public List<ReservationResponseDto> getReservationList() {
+    /**
+     * 予約時に登録した氏名とメールアドレスをもとに、紐づく予約情報を全権取得するメソッド
+     *
+     * @param name  予約者氏名
+     * @param email 予約者メールアドレス
+     * @return 氏名とメールアドレスに紐づくReservationResponseDto(複数件)
+     */
+    public List<ReservationResponseDto> getReservationList(String name, String email) {
         List<ReservationResponseDto> reservationList = new ArrayList<>();
-        List<ReservationEntity> purchaseList = reservationRepository.findAll(Sort.by("rideDate").ascending());
+        List<ReservationEntity> reservationEntityList = reservationRepository.findByReserverNameAndReserverMail(name, email);
+        if (reservationEntityList.isEmpty()) {
+            return reservationList;
+        }
 
-        for (ReservationEntity purchase : purchaseList) {
-            ReservationResponseDto reservation = getReservation(purchase.getId());
-            reservation.setPurchaseId(purchase.getId());
-            reservationList.add(reservation);
+        List<UUID> reservationIdList = reservationEntityList.stream()
+                .map(ReservationEntity::getId)
+                .toList();
+        Map<UUID, List<ReservedSeatEntity>> reservedSeatEntityMap = reservedSeatRepository.findByReservationIdIn(reservationIdList)
+                .stream().collect(Collectors.groupingBy(ReservedSeatEntity::getReservationId));
+
+        for (ReservationEntity reservation : reservationEntityList) {
+            ReservationResponseDto dto = new ReservationResponseDto();
+
+            List<DepartureArrivalTimeEntity> scheduleList = reservation.getDepartureArrivalTime();
+
+            DepartureArrivalTimeEntity departureSchedule = scheduleList.stream().filter(
+                            schedule -> Objects.equals(
+                                    schedule.getSectionKm().getStartStationCd(),
+                                    reservation.getDepartureStationCd())
+                    )
+                    .min(Comparator.comparing(DepartureArrivalTimeEntity::getDepartureTime))
+                    .orElseThrow(() -> new IllegalStateException("出発時間が見つかりませんでした"));
+
+            DepartureArrivalTimeEntity arrivalSchedule = scheduleList.stream().filter(
+                            schedule -> Objects.equals(
+                                    schedule.getSectionKm().getGoalStationCd(),
+                                    reservation.getDepartureStationCd())
+                    )
+                    .min(Comparator.comparing(DepartureArrivalTimeEntity::getDepartureTime))
+                    .orElseThrow(() -> new IllegalStateException("到着時間が見つかりませんでした"));
+
+
+            List<ReservedSeatDto> reservedSeatDtos = reservedSeatEntityMap
+                    .getOrDefault(reservation.getId(), new ArrayList<>()).stream()
+                    .map(seat -> new ReservedSeatDto(
+                            seat.getTrainCar().getSeatType().getTrainCarType().getName(),
+                            seat.getTrainCar().getTrainCarNumber(),
+                            seat.getSeat().getSeatNumber(),
+                            seat.getSeat().getSeatColumn(),
+                            seat.getCodeToken()))
+                    .toList();
+
+            dto.setPurchaseId(reservation.getId());
+            dto.setTrainTypeName(reservation.getSchedule().getTrainType().getName());
+            dto.setDepartureStationName(departureSchedule.getSectionKm().getStartStation().getName());
+            dto.setDepartureTime(departureSchedule.getDepartureTime());
+            dto.setArrivalStationName(arrivalSchedule.getSectionKm().getGoalStation().getName());
+            dto.setArrivalTime(arrivalSchedule.getArrivalTime());
+            dto.setRideDate(reservation.getRideDate());
+            dto.setReservedSeats(reservedSeatDtos);
+
+            reservationList.add(dto);
         }
 
         return reservationList;
     }
 
+    /**
+     * 特定の予約IDを入力としてIDに紐づく予約情報を1件取得するメソッド
+     *
+     * @param request 情報を取ってきたい予約ID(1件)
+     * @return 予約情報の入ったReservationResponseDto(1件)
+     */
     public ReservationResponseDto getReservation(UUID request) {
 
         ReservationResponseDto response = new ReservationResponseDto();
 
-        ReservationDto purchase = reservationRepository.findReservationDtoByReservationId(request);
+        ReservationEntity purchase = reservationRepository.findByReservationId(request);
         if (purchase == null) {
             throw new IllegalArgumentException("PurchaseId is Not found");
         }
@@ -79,7 +145,7 @@ public class ReservationService {
 
         List<ReservedSeatDto> reservedSeatList = reservedSeatRepository.findReservedSeatDtoByReservationId(request);
 
-        response.setTrainTypeName(purchase.getTrainTypeName());
+        response.setTrainTypeName(purchase.getSchedule().getTrainType().getName());
         response.setDepartureStationName(departureSchedule.getFirst().getDepartureStationName());
         response.setDepartureTime(departureSchedule.getFirst().getDepartureTime());
         response.setArrivalStationName(arrivalSchedule.getFirst().getArrivalStationName());
@@ -88,7 +154,6 @@ public class ReservationService {
         response.setReservedSeats(reservedSeatList);
 
         return response;
-
     }
 
     @Transactional
