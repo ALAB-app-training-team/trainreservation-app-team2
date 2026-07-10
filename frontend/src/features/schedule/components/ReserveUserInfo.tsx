@@ -26,7 +26,7 @@ export function ReserveUserInfo({
     return (
         <>
             <div className="flex flex-col items-start gap-8">
-                <div className="flex flex-col gap-4">
+                <div className="flex w-full flex-col gap-4">
                     <h1 className="!mt-0 !mb-0 !text-lg">購入者情報</h1>
                     <ReserveUserInfoInput
                         reserveUser={reserveUser}
@@ -55,7 +55,7 @@ export function ReserveUserInfo({
                         getFieldError={getFieldError}
                     />
                 </div>
-                <div className="flex flex-col gap-4">
+                <div className="flex w-full flex-col gap-4">
                     <h1 className="!mt-0 !mb-0 !text-lg">
                         クレジットカード情報
                     </h1>
