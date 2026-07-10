@@ -72,7 +72,7 @@ export default defineConfig({
         },
         {
             command:
-                "cd ../backend && ./gradlew bootRun --args='--spring.profiles.active=local'",
+                "cd ../backend && chmod +x gradlew && ./gradlew bootRun --args='--spring.profiles.active=local'",
             url: process.env.VITA_API_BASE_URL,
             reuseExistingServer: !process.env.CI,
         },
