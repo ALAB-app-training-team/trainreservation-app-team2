@@ -11,8 +11,8 @@ export function useSelectedSeats() {
             setSelectedSeats((prevSeats) =>
                 prevSeats.filter(
                     (selectedSeat) =>
-                        selectedSeat.trainCarCd !== seat.trainCarCd &&
-                        selectedSeat.seatCd !== seat.seatCd,
+                        selectedSeat.trainCarCd + selectedSeat.seatCd !==
+                        seat.trainCarCd + seat.seatCd,
                 ),
             );
         } else if (selectedSeats.length < limitSeats) {
