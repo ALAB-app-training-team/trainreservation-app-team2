@@ -6,7 +6,8 @@ type GuestLoginInputProps = {
     label: string;
     type: string;
     value: string;
-    placeholder: string;
+    placeHolder: string;
+    autoComplete: string;
     icon: ElementType;
     onChange: (e: React.ChangeEvent<HTMLInputElement>) => void;
     onBlur: (e: React.FocusEvent<HTMLInputElement>) => void;
@@ -18,7 +19,8 @@ export function GuestLoginInput({
     label,
     type,
     value,
-    placeholder,
+    placeHolder,
+    autoComplete,
     icon,
     onChange,
     onBlur,
@@ -41,7 +43,8 @@ export function GuestLoginInput({
                     value={value}
                     onChange={onChange}
                     onBlur={onBlur}
-                    placeholder={placeholder}
+                    autoComplete={autoComplete}
+                    placeholder={placeHolder}
                     className="focus:border-primary bg-primary-light w-full cursor-pointer rounded-xl p-2 pl-10 outline-none focus:border-2"
                 />
             </div>

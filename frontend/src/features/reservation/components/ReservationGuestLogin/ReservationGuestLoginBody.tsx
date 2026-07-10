@@ -80,7 +80,8 @@ export function ReservationGuestLoginBody() {
                                     label="予約者氏名"
                                     type="text"
                                     value={guestLoginForm.reserverName}
-                                    placeholder="山田 太郎"
+                                    placeHolder="山田 太郎"
+                                    autoComplete="name"
                                     icon={FiUser}
                                     onChange={handleChange}
                                     onBlur={handleBlur}
@@ -91,7 +92,8 @@ export function ReservationGuestLoginBody() {
                                     label="メールアドレス"
                                     type="email"
                                     value={guestLoginForm.reserverMail}
-                                    placeholder="example@email.com"
+                                    placeHolder="example@email.com"
+                                    autoComplete="email"
                                     icon={CiMail}
                                     onChange={handleChange}
                                     onBlur={handleBlur}
