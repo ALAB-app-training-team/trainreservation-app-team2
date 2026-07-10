@@ -2,7 +2,7 @@ import { useState } from 'react';
 
 import type { ReservationListRequestDto } from '@/features/reservation/types/ReservationListRequestDto';
 
-export function useReservationList() {
+export function useReservationListRequestDto() {
     const [guestLoginForm, setGuestLoginForm] =
         useState<ReservationListRequestDto>({
             reserverName: '',

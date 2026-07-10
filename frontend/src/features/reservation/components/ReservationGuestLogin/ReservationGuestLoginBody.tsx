@@ -6,7 +6,7 @@ import { useNavigate } from 'react-router-dom';
 
 import { ENDPOINTS } from '@/api/routes';
 import { GuestLoginInput } from '@/features/reservation/components/GuestLoginInput';
-import { useReservationList } from '@/features/reservation/hooks/useReservationList';
+import { useReservationListRequestDto } from '@/features/reservation/hooks/useReservationListRequestDto';
 import type { ReservationResponseDto } from '@/features/reservation/types/ReservationResponseDto';
 
 export function ReservationGuestLoginBody() {
@@ -16,7 +16,7 @@ export function ReservationGuestLoginBody() {
         handleBlur,
         getFieldError,
         isInvalid,
-    } = useReservationList();
+    } = useReservationListRequestDto();
     const [isSubmitting, setIsSubmitting] = useState<boolean>(false);
     const [requestError, setRequestError] = useState<string>('');
     const navigate = useNavigate();
