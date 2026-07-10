@@ -4,17 +4,22 @@ import { RiGroupLine } from 'react-icons/ri';
 
 import { ReservationSelectItem } from '@/features/reservation/components/ReservationList/ReservationSelectItem';
 import { RESERVATION_TAB } from '@/features/reservation/constants/ReservationTab';
-import { useReservationList } from '@/features/reservation/hooks/useReservationList';
+import type { ReservationResponseDto } from '@/features/reservation/types/ReservationResponseDto';
 import type { ReservationTabCd } from '@/features/reservation/types/ReservationTabCd';
 
-export function ReservationListBody() {
+type ReservationListBodyProps = {
+    reservationList: ReservationResponseDto[];
+};
+
+export function ReservationListBody({
+    reservationList: reservationList,
+}: ReservationListBodyProps) {
     const [selectedTab, setSelectedTab] = useState<ReservationTabCd>('ACTIVE');
-    const { reservations } = useReservationList();
 
     const now = new Date();
     now.setHours(0, 0, 0, 0);
 
-    const activeReservations = reservations
+    const activeReservations = reservationList
         ?.filter((reservation) => {
             const departureDate = new Date(reservation.rideDate);
             return departureDate >= now;
@@ -26,7 +31,7 @@ export function ReservationListBody() {
                 a.departureTime.localeCompare(b.departureTime),
         );
 
-    const pastReservations = reservations
+    const pastReservations = reservationList
         ?.filter((reservation) => {
             const departureDate = new Date(reservation.rideDate);
             return departureDate < now;

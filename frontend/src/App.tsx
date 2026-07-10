@@ -4,6 +4,7 @@ import {
     RouterProvider,
 } from 'react-router-dom';
 
+import { ReservationGuestLogin } from '@/features/reservation/pages/ReservationGuestLogin';
 import { ReservationList } from '@/features/reservation/pages/ReservationList';
 import { ReservedTicket } from '@/features/reservation/pages/ReservedTicket';
 import { ScheduleSearch } from '@/features/schedule/pages/ScheduleSearch';
@@ -39,6 +40,11 @@ const router = createBrowserRouter([
             {
                 path: '/reservationList',
                 element: <ReservationList />,
+                errorElement: <Error />,
+            },
+            {
+                path: '/reservationGuestLogin',
+                element: <ReservationGuestLogin />,
                 errorElement: <Error />,
             },
             { path: '/error', element: <Error /> },

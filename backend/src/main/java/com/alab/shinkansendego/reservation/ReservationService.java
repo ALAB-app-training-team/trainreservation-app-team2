@@ -20,7 +20,6 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.client.HttpServerErrorException;
 import org.springframework.web.client.RestClient;
-import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -29,6 +28,7 @@ import java.util.UUID;
 
 @Service
 public class ReservationService {
+
     private final RestClient restClient;
     private final ReservationRepository reservationRepository;
     private final ReservedSeatRepository reservedSeatRepository;
@@ -229,8 +229,7 @@ public class ReservationService {
             throw new RuntimeException("Insert ReservedSeatSections is failed");
         }
 
-        String currentUrl = ServletUriComponentsBuilder.fromCurrentRequestUri().toUriString();
-        String paymentUrl = currentUrl.replace("reservations", "payments");
+        String paymentUrl = "http://localhost:8080/api/payments";
         paymentTrackingId = restClient.post()
                 .uri(paymentUrl)
                 .contentType(MediaType.APPLICATION_JSON)
