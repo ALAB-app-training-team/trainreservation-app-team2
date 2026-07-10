@@ -54,7 +54,7 @@ public class ReservationService {
     }
 
     /**
-     * 予約時に登録した氏名とメールアドレスをもとに、紐づく予約情報を全権取得するメソッド
+     * 予約時に登録した氏名とメールアドレスをもとに、紐づく予約情報一覧を取得するメソッド
      *
      * @param name  予約者氏名
      * @param email 予約者メールアドレス
@@ -89,7 +89,7 @@ public class ReservationService {
             DepartureArrivalTimeEntity arrivalSchedule = scheduleList.stream().filter(
                             schedule -> Objects.equals(
                                     schedule.getSectionKm().getGoalStationCd(),
-                                    reservation.getDepartureStationCd())
+                                    reservation.getArrivalStationCd())
                     )
                     .min(Comparator.comparing(DepartureArrivalTimeEntity::getDepartureTime))
                     .orElseThrow(() -> new IllegalStateException("到着時間が見つかりませんでした"));
@@ -130,7 +130,7 @@ public class ReservationService {
 
         ReservationResponseDto response = new ReservationResponseDto();
 
-        ReservationEntity purchase = reservationRepository.findByReservationId(request);
+        ReservationDto purchase = reservationRepository.findReservationDtoByReservationId(request);
         if (purchase == null) {
             throw new IllegalArgumentException("PurchaseId is Not found");
         }
@@ -145,7 +145,7 @@ public class ReservationService {
 
         List<ReservedSeatDto> reservedSeatList = reservedSeatRepository.findReservedSeatDtoByReservationId(request);
 
-        response.setTrainTypeName(purchase.getSchedule().getTrainType().getName());
+        response.setTrainTypeName(purchase.getTrainTypeName());
         response.setDepartureStationName(departureSchedule.getFirst().getDepartureStationName());
         response.setDepartureTime(departureSchedule.getFirst().getDepartureTime());
         response.setArrivalStationName(arrivalSchedule.getFirst().getArrivalStationName());
