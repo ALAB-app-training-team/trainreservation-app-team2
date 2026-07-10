@@ -7,6 +7,18 @@ test('has title', async ({ page }) => {
     await expect(page).toHaveTitle('frontend');
 });
 
+test('navigate-schedule', async ({ page }) => {
+    await page.goto('/');
+    await expect(page).toHaveURL('/scheduleSearch');
+    await page.getByRole('button', { name: '詳細を見る' }).first().click();
+    await expect(page).toHaveURL('/selectSeat');
+    await page.getByRole('button', { name: '1A', exact: true }).click();
+    await page.getByRole('button', { name: '予約を確定' }).click();
+    await expect(page).toHaveURL('/reservedTicket');
+});
+
+
+
 // test('get started link', async ({ page }) => {
 //     await page.goto('https://playwright.dev/');
 
