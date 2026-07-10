@@ -5,7 +5,7 @@ import com.alab.shinkansendego.traincartype.TrainCarTypeEntity;
 import jakarta.persistence.*;
 import lombok.Data;
 
-import java.util.*;
+import java.util.List;
 
 @Data
 @Entity

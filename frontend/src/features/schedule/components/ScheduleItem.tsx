@@ -1,12 +1,14 @@
+import dayjs from 'dayjs';
+import customParseFormat from 'dayjs/plugin/customParseFormat';
 import { FiArrowRight } from 'react-icons/fi';
 import { PiTrainBold } from 'react-icons/pi';
 import { useNavigate } from 'react-router-dom';
 import { tv } from 'tailwind-variants';
 
 import type { ScheduleInfoDto } from '@/features/schedule/types/ScheduleInfoDto';
+import type { SearchRequestDto } from '@/features/schedule/types/SearchRequestDto';
 import type { SearchResponseDto } from '@/features/schedule/types/SearchResponseDto';
 import { TRAIN_TYPE_COLOR } from '@/shared/constants/TrainTypeColor';
-import { FormatTime } from '@/shared/hooks/useFormatTime.ts';
 
 type ScheduleItemProps = {
     schedule: SearchResponseDto;
@@ -15,6 +17,7 @@ type ScheduleItemProps = {
     departureStationName: string;
     arrivalStationCd: string;
     arrivalStationName: string;
+    searchRequestDto: SearchRequestDto;
 };
 
 export function ScheduleItem({
@@ -24,6 +27,7 @@ export function ScheduleItem({
     departureStationName,
     arrivalStationCd,
     arrivalStationName,
+    searchRequestDto,
 }: ScheduleItemProps) {
     const navigate = useNavigate();
 
@@ -59,6 +63,7 @@ export function ScheduleItem({
                 scheduleInfoDto,
                 departureStationCd,
                 arrivalStationCd,
+                searchRequestDto,
             },
         });
         window.scrollTo(0, 0);
@@ -93,6 +98,8 @@ export function ScheduleItem({
 
     const colorCd = foundColor ? foundColor.colorCd : 'primary';
 
+    dayjs.extend(customParseFormat);
+
     return (
         <>
             <div className="border-primary-light flex w-full flex-row flex-wrap items-center justify-start gap-4 rounded-2xl border-2 p-8 md:items-center">
@@ -121,7 +128,9 @@ export function ScheduleItem({
                 <div className="order-3 flex w-full items-center justify-between gap-4 md:order-2 md:flex-1">
                     <div className="text-left">
                         <div className="text-2xl font-black">
-                            {FormatTime(schedule.departureTime)}
+                            {dayjs(schedule.departureTime, 'HH:mm:ss').format(
+                                'HH:mm',
+                            )}
                         </div>
                         <div>{departureStationName}</div>
                     </div>
@@ -140,7 +149,9 @@ export function ScheduleItem({
                     </div>
                     <div className="text-left">
                         <div className="text-2xl font-black">
-                            {FormatTime(schedule.arrivalTime)}
+                            {dayjs(schedule.arrivalTime, 'HH:mm:ss').format(
+                                'HH:mm',
+                            )}
                         </div>
                         <div>{arrivalStationName}</div>
                     </div>

@@ -1,13 +1,18 @@
 import { Suspense } from 'react';
+import { useLocation } from 'react-router-dom';
 
 import { ScheduleList } from '@/features/schedule/components/ScheduleList/ScheduleList';
 import { ScheduleListSkeleton } from '@/features/schedule/components/ScheduleList/ScheduleListSkeleton';
 import { ScheduleSearchForm } from '@/features/schedule/components/ScheduleSearchForm';
 import { useSearchRequestDto } from '@/features/schedule/hooks/useSearchRequestDto';
 import { useStations } from '@/features/schedule/hooks/useStations';
+import { useStopStations } from '@/features/schedule/hooks/useStopStations';
 
 export function ScheduleSearchBody() {
+    const location = useLocation();
+    const initialDto = location.state?.searchRequestDto;
     const { stations } = useStations();
+    const { stationResponseDtos } = useStopStations();
     const {
         setTime,
         setDate,
@@ -16,7 +21,11 @@ export function ScheduleSearchBody() {
         searchRequestDto,
         isInvalid,
         getFieldError,
-    } = useSearchRequestDto({ stations });
+        maxDate,
+        minDate,
+    } = useSearchRequestDto({ stations, initialDto });
+    const departureDtos = stationResponseDtos;
+    const arrivalDtos = stationResponseDtos;
 
     return (
         <>
@@ -24,12 +33,16 @@ export function ScheduleSearchBody() {
                 <div className="mx-8 my-4 flex w-full max-w-5xl flex-col gap-4">
                     <ScheduleSearchForm
                         stations={stations}
+                        departureDtos={departureDtos}
+                        arrivalDtos={arrivalDtos}
                         setTime={setTime}
                         setDate={setDate}
                         setDepartureStation={setDepartureStation}
                         setArrivalStation={setArrivalStation}
                         searchRequestDto={searchRequestDto}
                         getFieldError={getFieldError}
+                        maxDate={maxDate}
+                        minDate={minDate}
                     />
                     <Suspense fallback={<ScheduleListSkeleton />}>
                         <ScheduleList

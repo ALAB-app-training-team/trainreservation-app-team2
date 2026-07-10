@@ -34,7 +34,7 @@ export function ReservedTicketInfo({ ticketInfo }: ReservedTicketInfoProps) {
                                 station={ticketInfo.arrivalStationName}
                             />
                         </div>
-                        <div className="flex items-center gap-2">
+                        <div className="flex items-center gap-2 text-xl font-bold">
                             <FaClock />
                             <div>
                                 {formatter.format(
@@ -44,7 +44,7 @@ export function ReservedTicketInfo({ ticketInfo }: ReservedTicketInfoProps) {
                         </div>
                         <div className="flex flex-col justify-between gap-4 md:flex-row">
                             <ReservedSeats
-                                id="seats"
+                                id="reservationDetail"
                                 title="座席"
                                 seats={ticketInfo.reservedSeats}
                             />

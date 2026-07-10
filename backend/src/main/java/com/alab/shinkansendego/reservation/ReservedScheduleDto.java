@@ -1,8 +1,10 @@
 package com.alab.shinkansendego.reservation;
 
-import lombok.*;
+import lombok.AllArgsConstructor;
+import lombok.Data;
+import lombok.NoArgsConstructor;
 
-import java.time.*;
+import java.time.LocalTime;
 
 @Data
 @NoArgsConstructor

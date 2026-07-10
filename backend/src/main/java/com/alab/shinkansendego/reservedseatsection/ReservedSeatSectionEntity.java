@@ -1,10 +1,15 @@
 package com.alab.shinkansendego.reservedseatsection;
 
-import jakarta.persistence.*;
-import lombok.*;
+import jakarta.persistence.Column;
+import jakarta.persistence.Entity;
+import jakarta.persistence.Id;
+import jakarta.persistence.Table;
+import lombok.AllArgsConstructor;
+import lombok.Data;
+import lombok.NoArgsConstructor;
 
-import java.time.*;
-import java.util.*;
+import java.time.LocalDate;
+import java.util.UUID;
 
 @Data
 @NoArgsConstructor
@@ -16,8 +21,8 @@ public class ReservedSeatSectionEntity {
     @Column(name = "id")
     private UUID id;
 
-    @Column(name = "purchase_id")
-    private UUID purchaseId;
+    @Column(name = "reservation_id")
+    private UUID reservationId;
 
     @Column(name = "ride_date")
     private LocalDate rideDate;

@@ -1,5 +1,6 @@
 import { Suspense } from 'react';
-import { useLocation } from 'react-router-dom';
+import { LuArrowLeft } from 'react-icons/lu';
+import { useLocation, useNavigate } from 'react-router-dom';
 
 import { ReservedTicketInfo } from '@/features/reservation/components/ReservedTicketInfo/ReservedTicketInfo';
 import { ReservedTicketInfoSkeleton } from '@/features/reservation/components/ReservedTicketInfo/ReservedTicketInfoSkeleton';
@@ -9,15 +10,33 @@ import { useReservedTickets } from '@/features/reservation/hooks/useReservedTick
 
 export function ReservedTicket() {
     const location = useLocation();
-    const { purchaseId } = location.state;
+    const navigate = useNavigate();
+    const { purchaseId, isBack } = location.state;
     const { reservedTickets } = useReservedTickets(purchaseId);
 
     return (
         <>
             <div className="flex w-full flex-col items-center gap-4 p-4">
-                {/* TODO: 戻るボタンを作る */}
-                <div className="w-full min-w-[360px] md:w-7/10">
-                    <h1 className="!m-0 text-left !text-3xl">予約完了</h1>
+                <div className="w-full max-w-5xl min-w-[360px] md:w-7/10">
+                    <div className="flex items-center justify-start">
+                        {isBack ? (
+                            <button
+                                type="button"
+                                onClick={() => {
+                                    navigate('/reservationList');
+                                }}
+                            >
+                                <div className="flex items-center gap-2">
+                                    <LuArrowLeft />
+                                    予約一覧へ戻る
+                                </div>
+                            </button>
+                        ) : (
+                            <h1 className="!m-0 text-left !text-3xl">
+                                予約完了
+                            </h1>
+                        )}
+                    </div>
                     <Suspense fallback={<ReservedTicketQrCodeSkeleton />}>
                         <ReservedTicketQrCode
                             trainTypeName={reservedTickets.trainTypeName}
