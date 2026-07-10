@@ -4,7 +4,7 @@ export class Header {
     readonly page: Page;
     readonly systemName: Locator;
     readonly scheduleSearchLink: Locator;
-    readonly reservationListLink: Locator;
+    readonly reservationGuestLoginLink: Locator;
 
     constructor(page: Page) {
         this.page = page;
@@ -12,7 +12,7 @@ export class Header {
         this.scheduleSearchLink = page.getByRole('link', {
             name: '新幹線を探す',
         });
-        this.reservationListLink = page.getByRole('link', {
+        this.reservationGuestLoginLink = page.getByRole('link', {
             name: '予約確認',
         });
     }
@@ -24,7 +24,7 @@ export class Header {
     async gotoScheduleSearch() {
         await this.scheduleSearchLink.first().click();
     }
-    async gotoReservationList() {
-        await this.reservationListLink.first().click();
+    async gotoReservationGuestLogin() {
+        await this.reservationGuestLoginLink.first().click();
     }
 }

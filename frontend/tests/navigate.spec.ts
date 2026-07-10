@@ -1,12 +1,16 @@
 import { test, expect } from '@playwright/test';
-import { ScheduleSearchPage } from './pages/ScheduleSearchPage';
-import { SelectSeatPage } from './pages/SelectSeatPage';
-import { ReservationListPage } from './pages/ReservationListPage';
-import { ReservedTicketPage } from './pages/ReservedTicketPage';
+import { ScheduleSearchPage } from './pages/ScheduleSearch/ScheduleSearchPage';
+import { SelectSeatPage } from './pages/SelectSeat/SelectSeatPage';
+import { ReservationListPage } from './pages/ReservationList/ReservationListPage';
+import { ReservedTicketPage } from './pages/ReservedTicket/ReservedTicketPage';
+import { ReservationGuestLogin } from './pages/ReservationGuestLogin/ReservationGuestLoginPage';
 
-test('navigate-schedule', async ({ page }) => {
+test('navigate-検索～予約確認', async ({ page }) => {
     const scheduleSearchPage = new ScheduleSearchPage(page);
     const selectSeatPage = new SelectSeatPage(page);
+    const reservationGuestLogin = new ReservationGuestLogin(page);
+    const reservationListPage = new ReservationListPage(page);
+    const reservedTicketPage = new ReservedTicketPage(page);
 
     await scheduleSearchPage.goto();
     await expect(page).toHaveURL('/scheduleSearch');
@@ -21,13 +25,11 @@ test('navigate-schedule', async ({ page }) => {
     await selectSeatPage.inputCardInfo();
     await selectSeatPage.clickReseveButton();
     await expect(page).toHaveURL('/reservedTicket');
-});
 
-test('navigate-reservation', async ({ page }) => {
-    const reservationListPage = new ReservationListPage(page);
-    const reservedTicketPage = new ReservedTicketPage(page);
-
-    await reservationListPage.goto();
+    await reservationGuestLogin.goto();
+    await expect(page).toHaveURL('/reservationGuestLogin');
+    await reservationGuestLogin.inputGuestLoginInfo();
+    await reservationGuestLogin.clickGuestLoginButton();
     await expect(page).toHaveURL('/reservationList');
     await reservationListPage.clickTicketButton();
     await expect(page).toHaveURL('/reservedTicket');
@@ -36,15 +38,15 @@ test('navigate-reservation', async ({ page }) => {
 });
 
 test('navigate-header', async ({ page }) => {
-    const reservationListPage = new ReservationListPage(page);
+    const reservationGuestLoginPage = new ReservationGuestLogin(page);
     const scheduleSearchPage = new ScheduleSearchPage(page);
 
-    await reservationListPage.goto();
-    await expect(page).toHaveURL('/reservationList');
-    await reservationListPage.header.goToSchduleSearchBySystemName();
+    await reservationGuestLoginPage.goto();
+    await expect(page).toHaveURL('/reservationGuestLogin');
+    await reservationGuestLoginPage.header.goToSchduleSearchBySystemName();
     await expect(page).toHaveURL('/scheduleSearch');
-    await scheduleSearchPage.header.gotoReservationList();
-    await expect(page).toHaveURL('/reservationList');
-    await reservationListPage.header.gotoScheduleSearch();
+    await scheduleSearchPage.header.gotoReservationGuestLogin();
+    await expect(page).toHaveURL('/reservationGuestLogin');
+    await reservationGuestLoginPage.header.gotoScheduleSearch();
     await expect(page).toHaveURL('/scheduleSearch');
 });

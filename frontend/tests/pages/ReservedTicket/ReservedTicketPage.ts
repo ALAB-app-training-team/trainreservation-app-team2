@@ -1,5 +1,5 @@
 import { expect, type Locator, type Page } from '@playwright/test';
-import { Header } from './shared/Header';
+import { Header } from '../shared/Header';
 
 export class ReservedTicketPage {
     readonly page: Page;
