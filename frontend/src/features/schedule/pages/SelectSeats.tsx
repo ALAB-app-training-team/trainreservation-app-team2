@@ -117,6 +117,7 @@ export function SelectSeats() {
                         <TrainCars
                             scheduleInfoDto={scheduleInfoDto}
                             selectedSeats={selectedSeats}
+                            limitSeats={limitSeats}
                             handleSelectedSeats={handleSelectedSeats}
                         />
                     </Suspense>
