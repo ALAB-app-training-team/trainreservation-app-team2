@@ -84,7 +84,7 @@ public class ReservationService {
                                     reservation.getDepartureStationCd())
                     )
                     .min(Comparator.comparing(DepartureArrivalTimeEntity::getDepartureTime))
-                    .orElseThrow(() -> new IllegalStateException("出発時間が見つかりませんでした"));
+                    .orElseThrow(() -> new IllegalStateException("DepartureSchedule is NOT found"));
 
             DepartureArrivalTimeEntity arrivalSchedule = scheduleList.stream().filter(
                             schedule -> Objects.equals(
@@ -92,7 +92,7 @@ public class ReservationService {
                                     reservation.getArrivalStationCd())
                     )
                     .min(Comparator.comparing(DepartureArrivalTimeEntity::getDepartureTime))
-                    .orElseThrow(() -> new IllegalStateException("到着時間が見つかりませんでした"));
+                    .orElseThrow(() -> new IllegalStateException("ArrivalSchedule is NOT found"));
 
 
             List<ReservedSeatDto> reservedSeatDtos = reservedSeatEntityMap

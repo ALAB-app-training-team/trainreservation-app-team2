@@ -27,9 +27,6 @@ public interface ReservationRepository extends JpaRepository<ReservationEntity, 
             "WHERE r.id = :reservationId")
     ReservationDto findReservationDtoByReservationId(UUID reservationId);
 
-    @EntityGraph(attributePaths = {"schedule", "schedule.trainType"})
-    ReservationEntity findByReservationId(UUID reservationId);
-
     @EntityGraph(attributePaths = {
             "schedule", "schedule.trainType",
             "departureArrivalTime",
