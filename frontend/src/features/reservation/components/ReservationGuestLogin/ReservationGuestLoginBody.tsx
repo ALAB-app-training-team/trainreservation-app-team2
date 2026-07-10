@@ -85,7 +85,7 @@ export function ReservationGuestLoginBody() {
                                     icon={FiUser}
                                     onChange={handleChange}
                                     onBlur={handleBlur}
-                                    valid={getFieldError('reserverName')}
+                                    validMessage={getFieldError('reserverName')}
                                 />
                                 <GuestLoginInput
                                     id="reserverMail"
@@ -97,7 +97,7 @@ export function ReservationGuestLoginBody() {
                                     icon={CiMail}
                                     onChange={handleChange}
                                     onBlur={handleBlur}
-                                    valid={getFieldError('reserverMail')}
+                                    validMessage={getFieldError('reserverMail')}
                                 />
                                 <button
                                     type="submit"

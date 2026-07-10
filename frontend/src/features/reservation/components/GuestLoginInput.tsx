@@ -11,7 +11,7 @@ type GuestLoginInputProps = {
     icon: ElementType;
     onChange: (e: React.ChangeEvent<HTMLInputElement>) => void;
     onBlur: (e: React.FocusEvent<HTMLInputElement>) => void;
-    valid: string;
+    validMessage: string;
 } & React.InputHTMLAttributes<HTMLInputElement>;
 
 export function GuestLoginInput({
@@ -24,7 +24,7 @@ export function GuestLoginInput({
     icon,
     onChange,
     onBlur,
-    valid,
+    validMessage,
 }: GuestLoginInputProps) {
     return (
         <div className="flex w-full flex-col items-start gap-2">
@@ -48,8 +48,8 @@ export function GuestLoginInput({
                     className="focus:border-primary bg-primary-light w-full cursor-pointer rounded-xl p-2 pl-10 outline-none focus:border-2"
                 />
             </div>
-            {valid !== '' && (
-                <p className="text-left text-sm text-red-600">{valid}</p>
+            {validMessage !== '' && (
+                <p className="text-left text-sm text-red-600">{validMessage}</p>
             )}
         </div>
     );
