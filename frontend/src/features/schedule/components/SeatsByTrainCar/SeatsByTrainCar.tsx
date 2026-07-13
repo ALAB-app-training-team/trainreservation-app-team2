@@ -14,13 +14,12 @@ type SeatsByTrainCarProps = {
 };
 
 export function SeatsByTrainCar({
-    selectTrainCarCd,
     seatsRequestDto,
     selectedSeats,
     limitSeats,
     handleSelectedSeats,
 }: SeatsByTrainCarProps) {
-    const { seats } = useSeatsByTrainCar(selectTrainCarCd, seatsRequestDto);
+    const { seats } = useSeatsByTrainCar(seatsRequestDto);
 
     const columns: string[] = Array.from(
         new Set(seats.map((seat) => seat.seatColumn)),

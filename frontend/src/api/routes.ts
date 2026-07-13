@@ -13,6 +13,6 @@ export const ENDPOINTS = {
     SCHEDULES_SEARCH: () => SCHEDULES,
     STATIONS: () => STATIONS,
     STOPSTATIONS: () => STOPSTATIONS,
-    SEATS_SELECT: (trainCarCd: string) => `${TRAINCARS}/${trainCarCd}/seats`,
+    SEATS_SELECT: () => `${TRAINCARS}/seats`,
     TRAINCAR: (id: string) => `${SCHEDULES}/${id}/traincars`,
 };
