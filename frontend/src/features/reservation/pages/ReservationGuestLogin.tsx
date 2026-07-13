@@ -9,7 +9,6 @@ export function ReservationGuestLogin() {
     useEffect(() => {
         sessionStorage.removeItem('guestLoginInfo');
         queryClient.removeQueries({ queryKey: ['reservationList'] });
-        console.log(sessionStorage.getItem('guestLoginInfo'));
     }, []);
     return (
         <>
