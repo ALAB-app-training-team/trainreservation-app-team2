@@ -67,14 +67,14 @@ export default defineConfig({
     webServer: [
         {
             command: 'npm run dev',
-            url: 'http://localhost:5173',
+            url: 'http://127.0.0.1:5173',
             reuseExistingServer: !process.env.CI,
         },
         {
             command: `cd ../backend && chmod +x gradlew && ./gradlew bootRun --args='--spring.profiles.active=local' -Dorg.gradle.jvmargs="-Xmx2g" --no-daemon --stacktrace`,
-            url: 'http://localhost:8080',
+            url: 'http://127.0.0.1:8080',
             reuseExistingServer: !process.env.CI,
-            timeout: 300 * 1000,
+            timeout: 600 * 1000,
         },
     ],
 });
