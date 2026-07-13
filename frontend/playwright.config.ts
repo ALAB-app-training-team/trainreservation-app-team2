@@ -71,9 +71,10 @@ export default defineConfig({
             reuseExistingServer: !process.env.CI,
         },
         {
-            command: `cd ../backend && chmod +x gradlew && docker run --name postgres -e POSTGRES_USER=appuser -e POSTGRES_PASSWORD=postgres -e POSTGRES_DB=postgres -p 5432:5432 -d postgres:latest && echo "Waiting for DB..." && sleep 10 && ./gradlew bootRun --args='--spring.profiles.active=local' -Dorg.gradle.jvmargs="-Xmx2g" --no-daemon --stacktrace`,
+            command: `cd ../backend && chmod +x gradlew && docker run --rm --name postgres -e POSTGRES_USER=appuser -e POSTGRES_PASSWORD=postgres -e POSTGRES_DB=postgres -p 5432:5432 -d postgres:latest && echo "Waiting for DB..." && sleep 10 && ./gradlew bootRun --args='--spring.profiles.active=local' -Dorg.gradle.jvmargs="-Xmx2g" --no-daemon --stacktrace`,
             url: 'http://localhost:8081',
             reuseExistingServer: !process.env.CI,
+            timeout: 180 * 1000,
         },
     ],
 });
