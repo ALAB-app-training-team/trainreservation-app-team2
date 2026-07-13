@@ -1,4 +1,4 @@
-import { Fragment } from 'react';
+import { Fragment, useEffect } from 'react';
 
 import { Seat } from '@/features/schedule/components/Seat';
 import { useSeatsByTrainCar } from '@/features/schedule/hooks/useSeatsByTrainCar';
@@ -10,6 +10,7 @@ type SeatsByTrainCarProps = {
     selectedSeats: SeatResponseDto[];
     limitSeats: number;
     handleSelectedSeats: (seat: SeatResponseDto) => void;
+    checkReservedSeats: (seats: SeatResponseDto[]) => void;
 };
 
 export function SeatsByTrainCar({
@@ -17,6 +18,7 @@ export function SeatsByTrainCar({
     selectedSeats,
     limitSeats,
     handleSelectedSeats,
+    checkReservedSeats,
 }: SeatsByTrainCarProps) {
     const { seats } = useSeatsByTrainCar(seatsRequestDto);
 
@@ -26,6 +28,10 @@ export function SeatsByTrainCar({
     const rows: number[] = Array.from(
         new Set(seats.map((seat) => seat.seatNumber)),
     ).sort((a, b) => a - b);
+
+    useEffect(() => {
+        checkReservedSeats(seats);
+    }, [seats]);
 
     return (
         <>

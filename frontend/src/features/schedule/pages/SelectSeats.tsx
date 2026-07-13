@@ -27,8 +27,13 @@ export function SelectSeats() {
         arrivalStationCd,
         searchRequestDto,
     } = location.state;
-    const { selectedSeats, limitSeats, handleSelectedSeats } =
-        useSelectedSeats();
+    const {
+        selectedSeats,
+        limitSeats,
+        handleSelectedSeats,
+        handleClear,
+        checkReservedSeats,
+    } = useSelectedSeats();
     const {
         reserveUser,
         focus,
@@ -131,6 +136,7 @@ export function SelectSeats() {
                             selectedSeats={selectedSeats}
                             limitSeats={limitSeats}
                             handleSelectedSeats={handleSelectedSeats}
+                            checkReservedSeats={checkReservedSeats}
                         />
                     </Suspense>
                 </div>
@@ -139,6 +145,7 @@ export function SelectSeats() {
                         <SelectedSeats
                             selectedSeats={selectedSeats}
                             limitSeats={limitSeats}
+                            handleClear={handleClear}
                         />
                         <form
                             onSubmit={(e) => {
