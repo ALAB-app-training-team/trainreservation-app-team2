@@ -71,7 +71,7 @@ export default defineConfig({
             reuseExistingServer: !process.env.CI,
         },
         {
-            command: `cd ../backend && chmod +x gradlew && ./gradlew bootRun --args='--spring.profiles.active=local' -Dorg.gradle.jvmargs="-Xmx2g" --no-daemon --stacktrace`,
+            command: `cd ../backend && chmod +x gradlew && ./gradlew bootRun --args='--spring.profiles.active=local' --stacktrace`,
             url: 'http://localhost:8080',
             reuseExistingServer: !process.env.CI,
             timeout: 300 * 1000,
