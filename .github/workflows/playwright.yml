@@ -27,7 +27,6 @@ jobs:
                   java-version: "21"
                   distribution: "temurin"
                   cache: gradle
-              working-directory: ./backend
 
             - uses: gradle/actions/setup-gradle@v4
 
