@@ -70,7 +70,7 @@ public class ReservationControllerTest {
         Mockito.when(service.getReservationList(name, email)).thenReturn(expectList);
 
         mockMvc.perform(
-                        get(baseUrl + "?name=" + name + "&email=" + email)
+                        get(baseUrl + "?reserverName=" + name + "&reserverMail=" + email)
                                 .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$[0].purchaseId").value("4156b939-2e3e-46c1-92d3-7aa64b6ca575"))
@@ -131,7 +131,7 @@ public class ReservationControllerTest {
         Mockito.when(service.getReservationList(name, email)).thenReturn(expectList);
 
         mockMvc.perform(
-                        get(baseUrl + "?name=" + name + "&email=" + email)
+                        get(baseUrl + "?reserverName=" + name + "&reserverMail=" + email)
                                 .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$").isArray())
