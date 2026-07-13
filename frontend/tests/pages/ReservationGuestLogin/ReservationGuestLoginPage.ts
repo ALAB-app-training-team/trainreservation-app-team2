@@ -1,7 +1,7 @@
 import { expect, type Locator, type Page } from '@playwright/test';
 import { Header } from '../shared/Header';
 
-export class ReservationGuestLogin {
+export class ReservationGuestLoginPage {
     readonly page: Page;
     readonly header: Header;
     readonly name: Locator;

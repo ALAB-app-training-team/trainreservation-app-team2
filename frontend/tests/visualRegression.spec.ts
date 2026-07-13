@@ -1,9 +1,16 @@
 import { test, expect } from '@playwright/test';
-import { ReservationGuestLogin } from './pages/ReservationGuestLogin/ReservationGuestLoginPage';
+import { ReservationGuestLoginPage } from './pages/ReservationGuestLogin/ReservationGuestLoginPage';
+import { ReservedTicketPage } from './pages/ReservedTicket/ReservedTicketPage';
+import { ReservationListPage } from './pages/ReservationList/ReservationListPage';
+import { ScheduleSearchPage } from './pages/ScheduleSearch/ScheduleSearchPage';
+import { SelectSeatPage } from './pages/SelectSeat/SelectSeatPage';
 
 test('visual-scheduleSearch', async ({ page }) => {
-    await page.goto('/scheduleSearch');
+    const scheduleSearchPage = new ScheduleSearchPage(page);
+
+    await scheduleSearchPage.goto();
     await expect(page).toHaveURL('/scheduleSearch');
+    await scheduleSearchPage.arrivalStation.waitFor({ state: 'visible' });
 
     await expect(page).toHaveScreenshot({
         maxDiffPixelRatio: 0.01,
@@ -18,9 +25,13 @@ test('visual-scheduleSearch', async ({ page }) => {
 });
 
 test('visual-selectSeat', async ({ page }) => {
-    await page.goto('/scheduleSearch');
-    await page.getByRole('button', { name: '詳細を見る' }).first().click();
+    const scheduleSearchPage = new ScheduleSearchPage(page);
+    const selectSeatPage = new SelectSeatPage(page);
+
+    await scheduleSearchPage.goto();
+    await scheduleSearchPage.clickDetailButton();
     await expect(page).toHaveURL('/selectSeat');
+    await selectSeatPage.emptySeat.waitFor({ state: 'visible' });
 
     await expect(page).toHaveScreenshot({
         maxDiffPixelRatio: 0.01,
@@ -35,8 +46,11 @@ test('visual-selectSeat', async ({ page }) => {
 });
 
 test('visual-reservationGuestLogin', async ({ page }) => {
-    await page.goto('/reservationGuestLogin');
+    const reservationGuestLoginPage = new ReservationGuestLoginPage(page);
+
+    await reservationGuestLoginPage.goto();
     await expect(page).toHaveURL('/reservationGuestLogin');
+    await reservationGuestLoginPage.name.waitFor({ state: 'visible' });
 
     await expect(page).toHaveScreenshot({
         maxDiffPixelRatio: 0.01,
@@ -51,11 +65,14 @@ test('visual-reservationGuestLogin', async ({ page }) => {
 });
 
 test('visual-reservationList', async ({ page }) => {
-    const reservationGuestLogin = new ReservationGuestLogin(page);
-    reservationGuestLogin.goto();
-    reservationGuestLogin.inputGuestLoginInfo();
-    reservationGuestLogin.clickGuestLoginButton();
+    const reservationGuestLoginPage = new ReservationGuestLoginPage(page);
+    const reservationListPage = new ReservationListPage(page);
+
+    await reservationGuestLoginPage.goto();
+    await reservationGuestLoginPage.inputGuestLoginInfo();
+    await reservationGuestLoginPage.clickGuestLoginButton();
     await expect(page).toHaveURL('/reservationList');
+    await reservationListPage.ticketButton.waitFor({ state: 'visible' });
 
     await expect(page).toHaveScreenshot({
         maxDiffPixelRatio: 0.01,
@@ -70,12 +87,16 @@ test('visual-reservationList', async ({ page }) => {
 });
 
 test('visual-reservedTicket', async ({ page }) => {
-    const reservationGuestLogin = new ReservationGuestLogin(page);
-    reservationGuestLogin.goto();
-    reservationGuestLogin.inputGuestLoginInfo();
-    reservationGuestLogin.clickGuestLoginButton();
-    await page.getByRole('button', { name: 'チケットを表示' }).first().click();
+    const reservationGuestLoginPage = new ReservationGuestLoginPage(page);
+    const reservationListPage = new ReservationListPage(page);
+    const reservedTicketPage = new ReservedTicketPage(page);
+
+    await reservationGuestLoginPage.goto();
+    await reservationGuestLoginPage.inputGuestLoginInfo();
+    await reservationGuestLoginPage.clickGuestLoginButton();
+    await reservationListPage.clickTicketButton();
     await expect(page).toHaveURL('/reservedTicket');
+    await reservedTicketPage.backButton.waitFor({ state: 'visible' });
 
     await expect(page).toHaveScreenshot({
         maxDiffPixelRatio: 0.01,
