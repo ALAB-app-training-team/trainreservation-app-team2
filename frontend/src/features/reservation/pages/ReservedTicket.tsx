@@ -1,3 +1,4 @@
+import { useSuspenseQuery } from '@tanstack/react-query';
 import { Suspense } from 'react';
 import { LuArrowLeft } from 'react-icons/lu';
 import { useLocation, useNavigate } from 'react-router-dom';
@@ -7,12 +8,30 @@ import { ReservedTicketInfoSkeleton } from '@/features/reservation/components/Re
 import { ReservedTicketQrCode } from '@/features/reservation/components/ReservedTicketQrCode/ReservedTicketQrCode';
 import { ReservedTicketQrCodeSkeleton } from '@/features/reservation/components/ReservedTicketQrCode/ReservedTicketQrCodeSkeleton';
 import { useReservedTickets } from '@/features/reservation/hooks/useReservedTickets';
+import type { ReservationListRequestDto } from '@/features/reservation/types/ReservationListRequestDto';
 
 export function ReservedTicket() {
     const location = useLocation();
     const navigate = useNavigate();
+    const { getReservedTickets } = useReservedTickets();
     const { purchaseId, isBack } = location.state;
-    const { reservedTickets } = useReservedTickets(purchaseId);
+    const guestLoginInfo = () => {
+        const info = sessionStorage.getItem('guestLoginInfo');
+        if (info === null) {
+            alert('セッションが切れました。再ログインしてください。');
+            navigate('/reservationGuestLogin');
+            return { reserverName: '', reserverMail: '' };
+        } else {
+            const resultJson: ReservationListRequestDto = JSON.parse(info);
+            return resultJson;
+        }
+    };
+    const { data: reservedTickets } = useSuspenseQuery({
+        queryKey: ['reservationTickets', purchaseId],
+        queryFn: () => getReservedTickets(purchaseId, guestLoginInfo()),
+    });
+
+    console.log(reservedTickets);
 
     return (
         <>

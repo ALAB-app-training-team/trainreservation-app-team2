@@ -1,4 +1,4 @@
-import { useQuery } from '@tanstack/react-query';
+import { useSuspenseQuery } from '@tanstack/react-query';
 import { useState } from 'react';
 import { CiCalendar } from 'react-icons/ci';
 import { RiGroupLine } from 'react-icons/ri';
@@ -26,7 +26,7 @@ export function ReservationListBody() {
         }
     };
 
-    const { data: reservationList = [] } = useQuery({
+    const { data: reservationList = [] } = useSuspenseQuery({
         queryKey: ['reservationList'],
         queryFn: () => getReservation(guestLoginInfo()),
         initialData: () => [],
