@@ -73,7 +73,7 @@ export default defineConfig({
         {
             command:
                 "cd ../backend && chmod +x gradlew && docker run --name postgres -e POSTGRES_USER=appuser -e POSTGRES_PASSWORD=postgres -e POSTGRES_DB=postgres -p 5432:5432 -d postgres:latest && ./gradlew bootRun --args='--spring.profiles.active=local' --stacktrace",
-            url: 'http://localhost:8080',
+            url: 'http://localhost:8081',
             reuseExistingServer: !process.env.CI,
         },
     ],
