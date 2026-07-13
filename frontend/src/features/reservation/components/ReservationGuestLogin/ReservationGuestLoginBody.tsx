@@ -28,21 +28,19 @@ export function ReservationGuestLoginBody() {
             if (isInvalid) {
                 return;
             }
-            //     TODO:BEのAPI実装後にリクエストParamを追加する
-            // const removeWhiteSpace = (value: string) => {
-            //     return value.replace(/[\s\u3000]+/g, '');
-            // };
-            // const request = {
-            //     ...guestLoginForm,
-            //     reserverName: removeWhiteSpace(guestLoginForm.reserverName),
-            //     reserverMail: removeWhiteSpace(guestLoginForm.reserverMail),
-            // };
+            const removeWhiteSpace = (value: string) => {
+                return value.replace(/[\s\u3000]+/g, '');
+            };
+            const request = {
+                ...guestLoginForm,
+                reserverName: removeWhiteSpace(guestLoginForm.reserverName),
+                reserverMail: removeWhiteSpace(guestLoginForm.reserverMail),
+            };
             const response = await axios.get<ReservationResponseDto[]>(
                 ENDPOINTS.RESERVATION(),
-                // TODO:BEのAPI実装後にリクエストParamを追加する
-                // {
-                //     params: request,
-                // },,
+                {
+                    params: request,
+                },
             );
             if (response.data.length === 0) {
                 setRequestError('予約情報が見つかりません');
