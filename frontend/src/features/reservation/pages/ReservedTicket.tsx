@@ -7,31 +7,20 @@ import { ReservedTicketInfo } from '@/features/reservation/components/ReservedTi
 import { ReservedTicketInfoSkeleton } from '@/features/reservation/components/ReservedTicketInfo/ReservedTicketInfoSkeleton';
 import { ReservedTicketQrCode } from '@/features/reservation/components/ReservedTicketQrCode/ReservedTicketQrCode';
 import { ReservedTicketQrCodeSkeleton } from '@/features/reservation/components/ReservedTicketQrCode/ReservedTicketQrCodeSkeleton';
+import { useGuestLoginInfo } from '@/features/reservation/hooks/useGuestLoginInfo';
 import { useReservedTickets } from '@/features/reservation/hooks/useReservedTickets';
-import type { ReservationListRequestDto } from '@/features/reservation/types/ReservationListRequestDto';
 
 export function ReservedTicket() {
     const location = useLocation();
     const navigate = useNavigate();
     const { getReservedTickets } = useReservedTickets();
+    const { getGuestLoginInfo } = useGuestLoginInfo();
     const { purchaseId, isBack } = location.state;
-    const guestLoginInfo = () => {
-        const info = sessionStorage.getItem('guestLoginInfo');
-        if (info === null) {
-            alert('セッションが切れました。再ログインしてください。');
-            navigate('/reservationGuestLogin');
-            return { reserverName: '', reserverMail: '' };
-        } else {
-            const resultJson: ReservationListRequestDto = JSON.parse(info);
-            return resultJson;
-        }
-    };
     const { data: reservedTickets } = useSuspenseQuery({
         queryKey: ['reservationTickets', purchaseId],
-        queryFn: () => getReservedTickets(purchaseId, guestLoginInfo()),
+        queryFn: () => getReservedTickets(purchaseId, getGuestLoginInfo()),
+        refetchOnMount: true,
     });
-
-    console.log(reservedTickets);
 
     return (
         <>

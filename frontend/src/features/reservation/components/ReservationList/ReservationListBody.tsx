@@ -2,33 +2,20 @@ import { useSuspenseQuery } from '@tanstack/react-query';
 import { useState } from 'react';
 import { CiCalendar } from 'react-icons/ci';
 import { RiGroupLine } from 'react-icons/ri';
-import { useNavigate } from 'react-router-dom';
 
 import { ReservationSelectItem } from '@/features/reservation/components/ReservationList/ReservationSelectItem';
 import { RESERVATION_TAB } from '@/features/reservation/constants/ReservationTab';
+import { useGuestLoginInfo } from '@/features/reservation/hooks/useGuestLoginInfo';
 import { useReservationList } from '@/features/reservation/hooks/useReservationList';
-import type { ReservationListRequestDto } from '@/features/reservation/types/ReservationListRequestDto';
 import type { ReservationTabCd } from '@/features/reservation/types/ReservationTabCd';
 
 export function ReservationListBody() {
     const [selectedTab, setSelectedTab] = useState<ReservationTabCd>('ACTIVE');
     const { getReservation } = useReservationList();
-    const navigate = useNavigate();
-    const guestLoginInfo = () => {
-        const info = sessionStorage.getItem('guestLoginInfo');
-        if (info === null) {
-            alert('セッションが切れました。再ログインしてください。');
-            navigate('/reservationGuestLogin');
-            return { reserverName: '', reserverMail: '' };
-        } else {
-            const resultJson: ReservationListRequestDto = JSON.parse(info);
-            return resultJson;
-        }
-    };
-
+    const { getGuestLoginInfo } = useGuestLoginInfo();
     const { data: reservationList = [] } = useSuspenseQuery({
         queryKey: ['reservationList'],
-        queryFn: () => getReservation(guestLoginInfo()),
+        queryFn: () => getReservation(getGuestLoginInfo()),
         initialData: () => [],
         refetchOnMount: true,
     });
