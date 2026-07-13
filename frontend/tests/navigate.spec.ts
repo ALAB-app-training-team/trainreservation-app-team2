@@ -40,11 +40,11 @@ test('navigate-検索～予約確認', async ({ page }) => {
     await expect(page).toHaveURL('/reservedTicket');
     await reservedTicketPage.clickBackButton();
     await expect(page).toHaveURL('/reservationList');
-    // await expect(
-    //     page.getByText(
-    //         'エラーが発生しました。しばらくしてから再度お試しください。',
-    //     ),
-    // ).toBeHidden();
+    await expect(
+        page.getByText(
+            'エラーが発生しました。しばらくしてから再度お試しください。',
+        ),
+    ).toBeHidden();
 });
 
 test('navigate-header', async ({ page }) => {
