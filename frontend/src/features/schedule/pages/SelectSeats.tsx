@@ -5,7 +5,7 @@ import { LuArrowLeft } from 'react-icons/lu';
 import { useLocation, useNavigate } from 'react-router-dom';
 
 import { ENDPOINTS } from '@/api/routes';
-import { ReserveConfirmModal } from '@/features/schedule/components/reserveConfirmModal';
+import { ReserveConfirmModal } from '@/features/schedule/components/ReserveConfirmModal';
 import { ReserveUserInfo } from '@/features/schedule/components/ReserveUserInfo';
 import { SelectedSeats } from '@/features/schedule/components/SelectedSeats';
 import { TrainCars } from '@/features/schedule/components/TrainCars/TrainCars';
@@ -78,8 +78,7 @@ export function SelectSeats() {
         return response.data;
     };
 
-    const handleReserve = async (e: React.SubmitEvent<HTMLFormElement>) => {
-        e.preventDefault();
+    const handleReserve = async () => {
         if (isSubmitting) return;
         setIsSubmitting(true);
         try {
@@ -95,6 +94,7 @@ export function SelectSeats() {
             );
         } finally {
             setIsSubmitting(false);
+            onRequestClose();
         }
     };
 
@@ -132,7 +132,12 @@ export function SelectSeats() {
                             selectedSeats={selectedSeats}
                             limitSeats={limitSeats}
                         />
-                        <form onSubmit={handleReserve}>
+                        <form
+                            onSubmit={(e) => {
+                                e.preventDefault();
+                                handleModalOpen();
+                            }}
+                        >
                             <div className="flex flex-col gap-8">
                                 <ReserveUserInfo
                                     reserveUser={reserveUser}
