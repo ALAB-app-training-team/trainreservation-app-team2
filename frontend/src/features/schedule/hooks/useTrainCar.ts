@@ -14,7 +14,7 @@ export function useTrainCar(scheduleInfoDto: ScheduleInfoDto) {
         queryKey: ['ScheduleCd', scheduleInfoDto.scheduleCd],
         queryFn: async () => {
             const response = await axios.get<TrainCarFormationResponseDto[]>(
-                ENDPOINTS.TRAINCAR(),
+                ENDPOINTS.TRAINCAR(scheduleInfoDto.scheduleCd),
                 {
                     params: { scheduleCd: scheduleInfoDto.scheduleCd },
                 },

@@ -9,6 +9,7 @@ import type { SeatResponseDto } from '@/features/schedule/types/SeatResponseDto'
 import type { SeatTypeCd } from '@/features/schedule/types/SeatTypeCd';
 
 type TrainCarsProps = {
+    selectTrainCarCd: string;
     scheduleInfoDto: ScheduleInfoDto;
     selectedSeats: SeatResponseDto[];
     limitSeats: number;
@@ -78,6 +79,7 @@ export function TrainCars({
                     </div>
                     <Suspense fallback={<SeatsByTrainCarSkeleton />}>
                         <SeatsByTrainCar
+                            selectTrainCarCd={activeTrainCarCd}
                             seatsRequestDto={seatsRequestDto}
                             selectedSeats={selectedSeats}
                             limitSeats={limitSeats}
