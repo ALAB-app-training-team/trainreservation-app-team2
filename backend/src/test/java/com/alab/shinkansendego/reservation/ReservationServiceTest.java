@@ -186,7 +186,7 @@ public class ReservationServiceTest {
 
     @Test
     @DisplayName("予約者氏名とメールアドレスで予約した予約情報の一覧取得ができる")
-    void getReservationList_returnGetReservationSuccess() {
+    void getReservationList_withReserverNameAndReserverMail_returnGetReservationSuccess() {
         String name = "山田太郎";
         String email = "yamada@some.example.jp";
         List<ReservationEntity> reservationList = Arrays.asList(buildReservation(purchaseId1), buildReservation(purchaseId2));
@@ -216,7 +216,7 @@ public class ReservationServiceTest {
 
     @Test
     @DisplayName("購入者情報に一致する予約がなかった場合に空のリストを返す")
-    void getReservationList_withNoMatch_returnEmptyList() {
+    void getReservationList_withNoMatchReserver_returnEmptyList() {
         String name = "該当無し雄";
         String email = "none@some.example.jp";
         when(reservationRepo.findByReserverNameAndReserverMail(name, email)).thenReturn(new ArrayList<>());
@@ -227,8 +227,8 @@ public class ReservationServiceTest {
     }
 
     @Test
-    @DisplayName("購入情報IDから予約チケット情報が取得できる")
-    void getReservation_withPurchaseId_returnGetReservationSuccess() {
+    @DisplayName("購入情報IDと購入者氏名とメールアドレスから予約チケット情報が取得できる")
+    void getReservation_withReservationIdAndReserverNameAndReserverMail_returnGetReservationSuccess() {
         when(reservationRepo.findReservationDtoByReservationIdAndReserverNameAndReserverMail(purchaseId1, "山田太郎", "email@sample.com")).thenReturn(purchase);
         when(reservationRepo.findReservationScheduleDtoByReservationId(purchaseId1)).thenReturn(scheduleList);
         when(reservedSeatRepo.findReservedSeatDtoByReservationId(purchaseId1)).thenReturn(seatList);

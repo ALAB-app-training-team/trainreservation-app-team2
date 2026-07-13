@@ -119,26 +119,26 @@ public class ReservationService {
     /**
      * 特定の予約IDと予約者名、予約メールアドレスを入力としてIDに紐づく予約情報を1件取得するメソッド
      *
-     * @param request 情報を取ってきたい予約ID(1件)
+     * @param reservationId 情報を取ってきたい予約ID(1件)
      * @return 予約情報の入ったReservationResponseDto(1件)
      */
-    public ReservationResponseDto getReservation(UUID request, String name, String email) {
+    public ReservationResponseDto getReservation(UUID reservationId, String name, String email) {
 
         ReservationResponseDto response = new ReservationResponseDto();
 
-        ReservationDto purchase = reservationRepository.findReservationDtoByReservationIdAndReserverNameAndReserverMail(request, this.removeSpaces(name), this.removeSpaces(email));
+        ReservationDto purchase = reservationRepository.findReservationDtoByReservationIdAndReserverNameAndReserverMail(reservationId, this.removeSpaces(name), this.removeSpaces(email));
         if (purchase == null) {
             throw new IllegalArgumentException("PurchaseId is Not found");
         }
 
-        List<ReservedScheduleDto> scheduleList = reservationRepository.findReservationScheduleDtoByReservationId(request);
+        List<ReservedScheduleDto> scheduleList = reservationRepository.findReservationScheduleDtoByReservationId(reservationId);
         List<ReservedScheduleDto> departureSchedule = scheduleList.stream().filter(schedule -> Objects.equals(schedule.getDepartureStationCd(), purchase.getDepartureStationCd())).toList();
         List<ReservedScheduleDto> arrivalSchedule = scheduleList.stream().filter(schedule -> Objects.equals(schedule.getArrivalStationCd(), purchase.getArrivalStationCd())).toList();
         if (departureSchedule.size() != 1 || arrivalSchedule.size() != 1) {
             throw new IllegalArgumentException("DepartureAndArrivalStation is Not Found");
         }
 
-        List<ReservedSeatDto> reservedSeatList = reservedSeatRepository.findReservedSeatDtoByReservationId(request);
+        List<ReservedSeatDto> reservedSeatList = reservedSeatRepository.findReservedSeatDtoByReservationId(reservationId);
 
         response.setTrainTypeName(purchase.getTrainTypeName());
         response.setDepartureStationName(departureSchedule.getFirst().getDepartureStationName());

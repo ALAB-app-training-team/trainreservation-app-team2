@@ -139,8 +139,8 @@ public class ReservationControllerTest {
     }
 
     @Test
-    @DisplayName("購入情報IDから予約チケット情報が取得できる")
-    void getReservation_withPurchaseId_returnGetReservationSuccess() throws Exception {
+    @DisplayName("予約情報IDと予約者氏名とメールアドレスから予約チケット情報が取得できる")
+    void getReservation_withReservationIdAndReserverNameAndReserverMail_returnGetReservationSuccess() throws Exception {
 
         UUID request = UUID.fromString("4156b939-2e3e-46c1-92d3-7aa64b6ca575");
         ReservationResponseDto expect = getExpectReservationResponseDto(request);
