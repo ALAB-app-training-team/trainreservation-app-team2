@@ -13,7 +13,7 @@ jobs:
                 image: postgres:latest
                 env:
                     POSTGRES_UESR: appuser
-                    POSTGRES_PASSWORD: postgres
+                    POSTGRES_PASSWORD: localpassword
                     POSTGRES_DB: postgres
                 ports:
                     - 5432:5432
