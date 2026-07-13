@@ -170,7 +170,13 @@ export function SelectSeats() {
                 <CustomModal
                     isOpen={isOpen}
                     onRequestClose={onRequestClose}
-                    content={<ReserveConfirmModal onClick={handleReserve} />}
+                    content={
+                        <ReserveConfirmModal
+                            onClick={handleReserve}
+                            onRequestClose={onRequestClose}
+                            isSubmitting={isSubmitting}
+                        />
+                    }
                 />
             )}
         </>
