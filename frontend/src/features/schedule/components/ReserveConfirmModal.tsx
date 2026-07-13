@@ -14,7 +14,7 @@ export function ReserveConfirmModal({
             <div className="flex flex-col items-start justify-center gap-4">
                 <h1 className="!m-0 text-left !text-xl">予約確認</h1>
                 <div>本当に予約しますか？</div>
-                <div className="flex gap-4">
+                <div className="flex w-full items-center justify-end gap-4">
                     <button
                         onClick={onRequestClose}
                         disabled={isSubmitting}
