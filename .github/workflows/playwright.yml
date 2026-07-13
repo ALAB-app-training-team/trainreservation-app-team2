@@ -12,7 +12,7 @@ jobs:
             postgres:
                 image: postgres:latest
                 env:
-                    POSTGRES_UESR: appuser
+                    POSTGRES_USER: appuser
                     POSTGRES_PASSWORD: localpassword
                     POSTGRES_DB: postgres
                     POSTGRES_HOST_AUTH_METHOD: trust
