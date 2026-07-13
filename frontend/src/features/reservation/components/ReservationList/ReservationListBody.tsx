@@ -1,20 +1,24 @@
+import { useSuspenseQuery } from '@tanstack/react-query';
 import { useState } from 'react';
 import { CiCalendar } from 'react-icons/ci';
 import { RiGroupLine } from 'react-icons/ri';
 
 import { ReservationSelectItem } from '@/features/reservation/components/ReservationList/ReservationSelectItem';
 import { RESERVATION_TAB } from '@/features/reservation/constants/ReservationTab';
-import type { ReservationResponseDto } from '@/features/reservation/types/ReservationResponseDto';
+import { useGuestLoginInfo } from '@/features/reservation/hooks/useGuestLoginInfo';
+import { useReservationList } from '@/features/reservation/hooks/useReservationList';
 import type { ReservationTabCd } from '@/features/reservation/types/ReservationTabCd';
 
-type ReservationListBodyProps = {
-    reservationList: ReservationResponseDto[];
-};
-
-export function ReservationListBody({
-    reservationList: reservationList,
-}: ReservationListBodyProps) {
+export function ReservationListBody() {
     const [selectedTab, setSelectedTab] = useState<ReservationTabCd>('ACTIVE');
+    const { getReservation } = useReservationList();
+    const { getGuestLoginInfo } = useGuestLoginInfo();
+    const { data: reservationList = [] } = useSuspenseQuery({
+        queryKey: ['reservationList'],
+        queryFn: () => getReservation(getGuestLoginInfo()),
+        initialData: () => [],
+        refetchOnMount: true,
+    });
 
     const now = new Date();
     now.setHours(0, 0, 0, 0);
