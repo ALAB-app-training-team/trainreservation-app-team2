@@ -25,7 +25,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 @WebMvcTest(TrainCarController.class)
 public class TrainCarControllerTest {
 
-    private final String baseUrl = "/api/shinkansen-";
+    private final String baseUrl = "/api/traincars/";
     private final SeatRequestDto request = new SeatRequestDto();
 
     // TODO:リクエストのLocalDateとの相性が悪くエラーが出たため以下処理としたが、@Autowiredが推奨されるためいつか変更したい
@@ -59,8 +59,8 @@ public class TrainCarControllerTest {
     void getSeatList_returnGetSeatListSuccess() throws Exception {
 
         List<SeatResponseDto> expectList = getSeatResponseDtosList();
-        String url = baseUrl
-                + "Test001/seat?scheduleCd=Test01&date=2026-06-01&departureTime=12:00:00&arrivalTime=13:00:00";
+        String url = baseUrl + "Test001/seats"
+                + "?scheduleCd=Test01&date=2026-06-01&departureTime=12:00:00&arrivalTime=13:00:00";
 
         Mockito.when(service.getSeatListWithReserved("Test001", request)).thenReturn(expectList);
 
@@ -98,9 +98,9 @@ public class TrainCarControllerTest {
     @DisplayName("リクエストのカラムがNullの場合、バリデーションエラー発生")
     void getSeatList_withNotValidSeatRequestDto_returnValidationError() throws Exception {
 
-        request.setTrainCarCd(null);
-        String url = baseUrl
-                + "seat?scheduleCd=THK055&date=2026-06-23&departureTime=17:20:00&arrivalTime=20:40:00";
+        request.setScheduleCd(null);
+        String url = baseUrl + "Test001/seats"
+                + "?date=2026-06-23&departureTime=17:20:00&arrivalTime=20:40:00";
 
         String json = objectMapper.writeValueAsString(request);
 
@@ -108,14 +108,14 @@ public class TrainCarControllerTest {
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(json))
                 .andExpect(status().isBadRequest())
-                .andExpect(content().string("TrainCarCd is Null"));
+                .andExpect(content().string("ScheduleCd is Null"));
     }
 
     @Test
     @DisplayName("リクエストDTO自体がNullの場合、パラメーターエラー発生")
     void getSeatList_withSeatRequestDtoIsNull_returnRequestParamError() throws Exception {
 
-        String url = baseUrl + "seat?";
+        String url = baseUrl+ "Test001/seats";
 
         mockMvc.perform(get(url))
                 .andExpect(status().isBadRequest());
