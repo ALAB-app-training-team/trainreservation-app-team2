@@ -67,13 +67,13 @@ export default defineConfig({
     webServer: [
         {
             command: 'npm run dev',
-            url: process.env.VITA_WEB_BASE_URL,
+            url: 'http://localhost:5173',
             reuseExistingServer: !process.env.CI,
         },
         {
             command:
                 "cd ../backend && chmod +x gradlew && ./gradlew bootRun --args='--spring.profiles.active=local'",
-            url: process.env.VITA_API_BASE_URL,
+            url: 'http://localhost:8080',
             reuseExistingServer: !process.env.CI,
         },
     ],
