@@ -41,5 +41,10 @@ public class GlobalExceptionHandler {
         return ResponseEntity.badRequest().body(ex.getParameterName() + " is Null");
     }
 
+    @ExceptionHandler(IllegalStateException.class)
+    public ResponseEntity<String> handleIllegalStateException(IllegalStateException ex) {
+        return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(ex.getMessage());
+    }
+
     //TODO:NoResourceFoundExceptionの追加
 }
