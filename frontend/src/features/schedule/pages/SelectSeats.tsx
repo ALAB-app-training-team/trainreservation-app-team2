@@ -81,6 +81,19 @@ export function SelectSeats() {
         try {
             const paymentToken = await getPaymentToken();
             const purchaseId = await submitOrderWithToken(paymentToken);
+            sessionStorage.setItem(
+                'guestLoginInfo',
+                JSON.stringify({
+                    reserverName: reserveUser.reserverName.replace(
+                        /[\s\u3000]+/g,
+                        '',
+                    ),
+                    reserverMail: reserveUser.reserverMail.replace(
+                        /[\s\u3000]+/g,
+                        '',
+                    ),
+                }),
+            );
             navigate('/reservedTicket', {
                 state: { purchaseId: purchaseId, isBack: false },
             });
