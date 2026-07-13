@@ -72,7 +72,7 @@ export default defineConfig({
         },
         {
             command:
-                "cd ../backend && chmod +x gradlew && ./gradlew bootRun --args='--spring.profiles.active=test'",
+                "cd ../backend && chmod +x gradlew && ./gradlew bootRun --args='--spring.profiles.active=local'",
             url: 'http://localhost:8080',
             reuseExistingServer: !process.env.CI,
         },
