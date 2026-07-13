@@ -62,7 +62,7 @@ public class ReservationService {
      */
     public List<ReservationResponseDto> getReservationList(String name, String email) {
         List<ReservationResponseDto> reservationList = new ArrayList<>();
-        List<ReservationEntity> reservationEntityList = reservationRepository.findByReserverNameAndReserverMail(name, email);
+        List<ReservationEntity> reservationEntityList = reservationRepository.findByReserverNameAndReserverMail(this.removeSpaces(name), this.removeSpaces(email));
         if (reservationEntityList.isEmpty()) {
             return reservationList;
         }
@@ -189,8 +189,8 @@ public class ReservationService {
         reservationToPost.setScheduleCd(reserveRequestDto.getScheduleCd());
         reservationToPost.setDepartureStationCd(reserveRequestDto.getDepartureStationCd());
         reservationToPost.setArrivalStationCd(reserveRequestDto.getArrivalStationCd());
-        reservationToPost.setReserverName(reserveRequestDto.getReserverName());
-        reservationToPost.setReserverMail(reserveRequestDto.getReserverMail());
+        reservationToPost.setReserverName(this.removeSpaces(reserveRequestDto.getReserverName()));
+        reservationToPost.setReserverMail(this.removeSpaces(reserveRequestDto.getReserverMail()));
         reservationToPost.setPaymentTrackingId(paymentTrackingId);
 
         ReservationEntity reservationResult = reservationRepository.save(reservationToPost);
@@ -244,5 +244,15 @@ public class ReservationService {
         reservationRepository.save(reservationResult);
 
         return reservationId;
+    }
+
+    /**
+     * 文字列から全角半角の空白をすべて除く
+     *
+     * @param value 対象の文字列
+     * @return 空白がすべて除かれた対象文字列
+     */
+    private static String removeSpaces(String value) {
+        return value == null ? null : value.replaceAll("[\\s\u3000]", "");
     }
 }
