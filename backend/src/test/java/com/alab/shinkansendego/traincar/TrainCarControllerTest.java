@@ -100,7 +100,7 @@ public class TrainCarControllerTest {
 
         request.setTrainCarCd(null);
         String url = baseUrl
-                + "seats?date=2026-06-23&departureTime=17:20:00&arrivalTime=20:40:00";
+                + "seats?scheduleCd=Test01&date=2026-06-23&departureTime=17:20:00&arrivalTime=20:40:00";
 
         String json = objectMapper.writeValueAsString(request);
 
