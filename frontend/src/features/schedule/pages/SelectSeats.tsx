@@ -13,6 +13,7 @@ import { useReserveUser } from '@/features/schedule/hooks/useReserveUser';
 import { useSelectedSeats } from '@/features/schedule/hooks/useSelectedSeats';
 import type { PaymentRequestDto } from '@/features/schedule/types/PaymentRequestDto';
 import type { ReserveRequestDto } from '@/features/schedule/types/ReserveRequestDto';
+import { removeWhiteSpace } from '@/shared/utils/RemoveWhiteSpace';
 
 export function SelectSeats() {
     const navigate = useNavigate();
@@ -23,8 +24,13 @@ export function SelectSeats() {
         arrivalStationCd,
         searchRequestDto,
     } = location.state;
-    const { selectedSeats, limitSeats, handleSelectedSeats } =
-        useSelectedSeats();
+    const {
+        selectedSeats,
+        limitSeats,
+        handleSelectedSeats,
+        handleClear,
+        checkReservedSeats,
+    } = useSelectedSeats();
     const {
         reserveUser,
         focus,
@@ -81,6 +87,13 @@ export function SelectSeats() {
         try {
             const paymentToken = await getPaymentToken();
             const purchaseId = await submitOrderWithToken(paymentToken);
+            sessionStorage.setItem(
+                'guestLoginInfo',
+                JSON.stringify({
+                    reserverName: removeWhiteSpace(reserveUser.reserverName),
+                    reserverMail: removeWhiteSpace(reserveUser.reserverMail),
+                }),
+            );
             navigate('/reservedTicket', {
                 state: { purchaseId: purchaseId, isBack: false },
             });
@@ -119,6 +132,7 @@ export function SelectSeats() {
                             selectedSeats={selectedSeats}
                             limitSeats={limitSeats}
                             handleSelectedSeats={handleSelectedSeats}
+                            checkReservedSeats={checkReservedSeats}
                         />
                     </Suspense>
                 </div>
@@ -127,6 +141,7 @@ export function SelectSeats() {
                         <SelectedSeats
                             selectedSeats={selectedSeats}
                             limitSeats={limitSeats}
+                            handleClear={handleClear}
                         />
                         <form onSubmit={handleReserve}>
                             <div className="flex flex-col gap-8">

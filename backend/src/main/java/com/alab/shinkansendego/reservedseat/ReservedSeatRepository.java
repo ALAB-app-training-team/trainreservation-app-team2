@@ -1,6 +1,7 @@
 package com.alab.shinkansendego.reservedseat;
 
 import com.alab.shinkansendego.reservation.ReservedSeatDto;
+import org.springframework.data.jpa.repository.EntityGraph;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.stereotype.Repository;
@@ -18,4 +19,8 @@ public interface ReservedSeatRepository extends JpaRepository<ReservedSeatEntity
             "INNER JOIN TrainCarTypeEntity tct ON st.trainCarTypeCd = tct.trainCarTypeCd " +
             "ORDER BY tc.trainCarNumber,s.seatNumber,s.seatColumn")
     List<ReservedSeatDto> findReservedSeatDtoByReservationId(UUID reservationId);
+
+    @EntityGraph(attributePaths = {
+            "trainCar", "trainCar.seatType", "trainCar.seatType.trainCarType", "seat"})
+    List<ReservedSeatEntity> findByReservationIdIn(List<UUID> reservationIds);
 }

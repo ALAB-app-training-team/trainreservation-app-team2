@@ -48,7 +48,7 @@ export function GuestLoginInput({
                     onBlur={onBlur}
                     autoComplete={autoComplete}
                     placeholder={placeHolder}
-                    className="focus:border-primary bg-primary-light w-full cursor-pointer rounded-xl p-2 pl-10 outline-none focus:border-2"
+                    className="focus:border-primary bg-primary-light w-full rounded-xl p-2 pl-10 outline-none focus:border-2"
                 />
             </div>
             {validMessage !== '' && (
