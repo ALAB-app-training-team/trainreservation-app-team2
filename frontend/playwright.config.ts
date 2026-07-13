@@ -74,7 +74,7 @@ export default defineConfig({
         },
         {
             command: `cd ../backend && chmod +x gradlew && ./gradlew bootRun --args='--spring.profiles.active=local' --stacktrace`,
-            url: 'http://localhost:8080',
+            url: 'http://localhost:8080/api/reservations',
             reuseExistingServer: !process.env.CI,
             timeout: 300 * 1000,
             stdout: 'pipe',
