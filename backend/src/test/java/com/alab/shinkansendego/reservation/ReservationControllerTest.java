@@ -3,6 +3,7 @@ package com.alab.shinkansendego.reservation;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.SerializationFeature;
 import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
+import java.util.ArrayList;
 import org.jspecify.annotations.NonNull;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
@@ -20,6 +21,7 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.UUID;
 
+import static org.mockito.ArgumentMatchers.any;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
@@ -57,16 +59,18 @@ public class ReservationControllerTest {
     }
 
     @Test
-    @DisplayName("予約情報の全取得ができる")
-    void getReservationList_returnGetReservationListSuccess() throws Exception {
+    @DisplayName("予約者氏名と予約者メールアドレスから予約情報の取得ができる")
+    void getReservationList_withReserverNameAndEmail_returnGetReservationListSuccess() throws Exception {
+        String email = "email@some.example.jp";
+        String name = "山田太郎";
         List<ReservationResponseDto> expectList = Arrays.asList(
                 getExpectReservationResponseDto(UUID.fromString("4156b939-2e3e-46c1-92d3-7aa64b6ca575")),
                 getExpectReservationResponseDto(UUID.fromString("3136b939-2e3e-46c1-92d3-7aa64b6ca666")));
 
-        Mockito.when(service.getReservationList()).thenReturn(expectList);
+        Mockito.when(service.getReservationList(name, email)).thenReturn(expectList);
 
         mockMvc.perform(
-                        get(baseUrl)
+                        get(baseUrl + "?reserverName=" + name + "&reserverMail=" + email)
                                 .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$[0].purchaseId").value("4156b939-2e3e-46c1-92d3-7aa64b6ca575"))
@@ -118,17 +122,34 @@ public class ReservationControllerTest {
     }
 
     @Test
-    @DisplayName("購入情報IDから予約チケット情報が取得できる")
-    void getReservation_withPurchaseId_returnGetReservationSuccess() throws Exception {
+    @DisplayName("予約者氏名と予約者メールアドレスに該当する予約がない場合、空のリストを返す")
+    void getReservationList_withNoMatchNameAndEmail_returnEmptyList() throws Exception {
+        String email = "email@some.example.jp";
+        String name = "山田太郎";
+        List<ReservationResponseDto> expectList = new ArrayList<>();
+
+        Mockito.when(service.getReservationList(name, email)).thenReturn(expectList);
+
+        mockMvc.perform(
+                        get(baseUrl + "?reserverName=" + name + "&reserverMail=" + email)
+                                .contentType(MediaType.APPLICATION_JSON))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$").isArray())
+                .andExpect(jsonPath("$").isEmpty());
+    }
+
+    @Test
+    @DisplayName("予約情報IDと予約者氏名とメールアドレスから予約チケット情報が取得できる")
+    void getReservation_withReservationIdAndReserverNameAndReserverMail_returnGetReservationSuccess() throws Exception {
 
         UUID request = UUID.fromString("4156b939-2e3e-46c1-92d3-7aa64b6ca575");
         ReservationResponseDto expect = getExpectReservationResponseDto(request);
         String url = baseUrl + "/4156b939-2e3e-46c1-92d3-7aa64b6ca575";
 
-        Mockito.when(service.getReservation(request)).thenReturn(expect);
+        Mockito.when(service.getReservation(request, "山田太郎", "email@sample.com")).thenReturn(expect);
 
         mockMvc.perform(
-                        get(url)
+                        get(url + "?reserverName=山田太郎&reserverMail=email@sample.com")
                                 .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.purchaseId").value("4156b939-2e3e-46c1-92d3-7aa64b6ca575"))
