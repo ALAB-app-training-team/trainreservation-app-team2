@@ -3,12 +3,12 @@ import { ScheduleSearchPage } from './pages/ScheduleSearch/ScheduleSearchPage';
 import { SelectSeatPage } from './pages/SelectSeat/SelectSeatPage';
 import { ReservationListPage } from './pages/ReservationList/ReservationListPage';
 import { ReservedTicketPage } from './pages/ReservedTicket/ReservedTicketPage';
-import { ReservationGuestLogin } from './pages/ReservationGuestLogin/ReservationGuestLoginPage';
+import { ReservationGuestLoginPage } from './pages/ReservationGuestLogin/ReservationGuestLoginPage';
 
 test('navigate-検索～予約確認', async ({ page }) => {
     const scheduleSearchPage = new ScheduleSearchPage(page);
     const selectSeatPage = new SelectSeatPage(page);
-    const reservationGuestLogin = new ReservationGuestLogin(page);
+    const reservationGuestLogin = new ReservationGuestLoginPage(page);
     const reservationListPage = new ReservationListPage(page);
     const reservedTicketPage = new ReservedTicketPage(page);
 
@@ -48,7 +48,7 @@ test('navigate-検索～予約確認', async ({ page }) => {
 });
 
 test('navigate-header', async ({ page }) => {
-    const reservationGuestLoginPage = new ReservationGuestLogin(page);
+    const reservationGuestLoginPage = new ReservationGuestLoginPage(page);
     const scheduleSearchPage = new ScheduleSearchPage(page);
 
     await reservationGuestLoginPage.goto();
