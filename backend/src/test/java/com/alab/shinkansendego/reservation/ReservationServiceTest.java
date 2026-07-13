@@ -15,8 +15,6 @@ import com.alab.shinkansendego.station.StationEntity;
 import com.alab.shinkansendego.traincar.TrainCarEntity;
 import com.alab.shinkansendego.traincartype.TrainCarTypeEntity;
 import com.alab.shinkansendego.traintype.TrainTypeEntity;
-import java.lang.reflect.Array;
-import net.bytebuddy.asm.Advice;
 import org.jspecify.annotations.NonNull;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
@@ -25,7 +23,6 @@ import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DuplicateKeyException;
-import org.springframework.data.domain.Sort;
 import org.springframework.http.HttpMethod;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
@@ -232,13 +229,13 @@ public class ReservationServiceTest {
     @Test
     @DisplayName("購入情報IDから予約チケット情報が取得できる")
     void getReservation_withPurchaseId_returnGetReservationSuccess() {
-        when(reservationRepo.findReservationDtoByReservationId(purchaseId1)).thenReturn(purchase);
+        when(reservationRepo.findReservationDtoByReservationIdAndReserverNameAndReserverMail(purchaseId1, "山田太郎", "email@sample.com")).thenReturn(purchase);
         when(reservationRepo.findReservationScheduleDtoByReservationId(purchaseId1)).thenReturn(scheduleList);
         when(reservedSeatRepo.findReservedSeatDtoByReservationId(purchaseId1)).thenReturn(seatList);
 
         ReservationResponseDto expect = getExpectReservationResponseDto(null);
 
-        ReservationResponseDto actual = service.getReservation(purchaseId1);
+        ReservationResponseDto actual = service.getReservation(purchaseId1, "山田太郎", "email@sample.com");
 
         assertEquals(expect, actual);
     }
@@ -246,10 +243,21 @@ public class ReservationServiceTest {
     @Test
     @DisplayName("購入情報データに存在しない購入情報IDがリクエストされた場合にエラーを発生させる")
     void getReservation_withNotExistPurchaseRequest_returnIllegalArgumentException() {
-        when(reservationRepo.findReservationDtoByReservationId(purchaseId1)).thenReturn(null);
+        when(reservationRepo.findReservationDtoByReservationIdAndReserverNameAndReserverMail(purchaseId1, "山田太郎", "email@sample.com")).thenReturn(null);
         Exception ex = assertThrows(
                 IllegalArgumentException.class,
-                () -> service.getReservation(purchaseId1)
+                () -> service.getReservation(purchaseId1, "山田太郎", "email@sample.com")
+        );
+        assertEquals("PurchaseId is Not found", ex.getMessage());
+    }
+
+    @Test
+    @DisplayName("購入情報データに存在しない購入者氏名がリクエストされた場合にエラーを発生させる")
+    void getReservation_withNotExistReserverName_returnIllegalArgumentException() {
+        when(reservationRepo.findReservationDtoByReservationIdAndReserverNameAndReserverMail(purchaseId1, "NotFound太郎", "email@sample.com")).thenReturn(null);
+        Exception ex = assertThrows(
+                IllegalArgumentException.class,
+                () -> service.getReservation(purchaseId1, "NotFound太郎", "email@sample.com")
         );
         assertEquals("PurchaseId is Not found", ex.getMessage());
     }
@@ -258,11 +266,11 @@ public class ReservationServiceTest {
     @DisplayName("出発到着時刻データに存在しない出発駅CDを持つ購入情報IDがリクエストされた場合にエラーを発生させる")
     void getReservation_withNotExistScheduleOfDepartureStationRequest_returnIllegalArgumentException() {
         purchase.setDepartureStationCd("None");
-        when(reservationRepo.findReservationDtoByReservationId(purchaseId1)).thenReturn(purchase);
+        when(reservationRepo.findReservationDtoByReservationIdAndReserverNameAndReserverMail(purchaseId1, "山田太郎", "email@sample.com")).thenReturn(purchase);
         when(reservationRepo.findReservationScheduleDtoByReservationId(purchaseId1)).thenReturn(scheduleList);
         Exception ex = assertThrows(
                 IllegalArgumentException.class,
-                () -> service.getReservation(purchaseId1)
+                () -> service.getReservation(purchaseId1, "山田太郎", "email@sample.com")
         );
         assertEquals("DepartureAndArrivalStation is Not Found", ex.getMessage());
     }
@@ -271,11 +279,11 @@ public class ReservationServiceTest {
     @DisplayName("出発到着時刻データに存在しない到着駅CDを持つ購入情報IDがリクエストされた場合にエラーを発生させる")
     void getReservation_withNotExistScheduleOfArrivalStationRequest_returnIllegalArgumentException() {
         purchase.setArrivalStationCd("None");
-        when(reservationRepo.findReservationDtoByReservationId(purchaseId1)).thenReturn(purchase);
+        when(reservationRepo.findReservationDtoByReservationIdAndReserverNameAndReserverMail(purchaseId1, "山田太郎", "email@sample.com")).thenReturn(purchase);
         when(reservationRepo.findReservationScheduleDtoByReservationId(purchaseId1)).thenReturn(scheduleList);
         Exception ex = assertThrows(
                 IllegalArgumentException.class,
-                () -> service.getReservation(purchaseId1)
+                () -> service.getReservation(purchaseId1, "山田太郎", "email@sample.com")
         );
         assertEquals("DepartureAndArrivalStation is Not Found", ex.getMessage());
     }

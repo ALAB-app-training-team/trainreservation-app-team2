@@ -27,8 +27,8 @@ public class ReservationController {
     }
 
     @GetMapping(value = "{id}")
-    public ResponseEntity<ReservationResponseDto> getReservation(@PathVariable("id") UUID request) {
-        ReservationResponseDto response = reservationService.getReservation(request);
+    public ResponseEntity<ReservationResponseDto> getReservation(@PathVariable("id") UUID request, @RequestParam("reserverName") String name, @RequestParam("reserverMail") String email) {
+        ReservationResponseDto response = reservationService.getReservation(request, name, email);
         return ResponseEntity.ok(response);
     }
 

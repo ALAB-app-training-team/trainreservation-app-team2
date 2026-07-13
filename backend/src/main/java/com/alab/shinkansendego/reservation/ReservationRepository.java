@@ -24,8 +24,8 @@ public interface ReservationRepository extends JpaRepository<ReservationEntity, 
             "FROM ReservationEntity r " +
             "JOIN ScheduleEntity s ON r.scheduleCd = s.scheduleCd " +
             "JOIN TrainTypeEntity tt ON s.trainTypeCd = tt.trainTypeCd " +
-            "WHERE r.id = :reservationId")
-    ReservationDto findReservationDtoByReservationId(UUID reservationId);
+            "WHERE r.id = :reservationId AND r.reserverName = :reserverName AND r.reserverMail = :reserverMail")
+    ReservationDto findReservationDtoByReservationIdAndReserverNameAndReserverMail(UUID reservationId, String reserverName, String reserverMail);
 
     @EntityGraph(attributePaths = {
             "schedule", "schedule.trainType",

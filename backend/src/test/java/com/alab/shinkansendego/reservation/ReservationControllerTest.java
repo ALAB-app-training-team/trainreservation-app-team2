@@ -146,10 +146,10 @@ public class ReservationControllerTest {
         ReservationResponseDto expect = getExpectReservationResponseDto(request);
         String url = baseUrl + "/4156b939-2e3e-46c1-92d3-7aa64b6ca575";
 
-        Mockito.when(service.getReservation(request)).thenReturn(expect);
+        Mockito.when(service.getReservation(request, "山田太郎", "email@sample.com")).thenReturn(expect);
 
         mockMvc.perform(
-                        get(url)
+                        get(url + "?reserverName=山田太郎&reserverMail=email@sample.com")
                                 .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.purchaseId").value("4156b939-2e3e-46c1-92d3-7aa64b6ca575"))

@@ -10,15 +10,11 @@ import com.alab.shinkansendego.reservedseatsection.ReservedSeatSectionRepository
 import com.alab.shinkansendego.sectionkm.SectionKmRepository;
 import java.util.Comparator;
 import java.util.Map;
-import java.util.Optional;
 import java.util.stream.Collectors;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.dao.DataAccessException;
-import org.springframework.data.domain.Sort;
 import org.springframework.http.MediaType;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import org.springframework.web.client.HttpServerErrorException;
 import org.springframework.web.client.RestClient;
 
 import java.util.ArrayList;
@@ -121,22 +117,21 @@ public class ReservationService {
     }
 
     /**
-     * 特定の予約IDを入力としてIDに紐づく予約情報を1件取得するメソッド
+     * 特定の予約IDと予約者名、予約メールアドレスを入力としてIDに紐づく予約情報を1件取得するメソッド
      *
      * @param request 情報を取ってきたい予約ID(1件)
      * @return 予約情報の入ったReservationResponseDto(1件)
      */
-    public ReservationResponseDto getReservation(UUID request) {
+    public ReservationResponseDto getReservation(UUID request, String name, String email) {
 
         ReservationResponseDto response = new ReservationResponseDto();
 
-        ReservationDto purchase = reservationRepository.findReservationDtoByReservationId(request);
+        ReservationDto purchase = reservationRepository.findReservationDtoByReservationIdAndReserverNameAndReserverMail(request, this.removeSpaces(name), this.removeSpaces(email));
         if (purchase == null) {
             throw new IllegalArgumentException("PurchaseId is Not found");
         }
 
         List<ReservedScheduleDto> scheduleList = reservationRepository.findReservationScheduleDtoByReservationId(request);
-        //TODO:Listの1件抽出に変更したい
         List<ReservedScheduleDto> departureSchedule = scheduleList.stream().filter(schedule -> Objects.equals(schedule.getDepartureStationCd(), purchase.getDepartureStationCd())).toList();
         List<ReservedScheduleDto> arrivalSchedule = scheduleList.stream().filter(schedule -> Objects.equals(schedule.getArrivalStationCd(), purchase.getArrivalStationCd())).toList();
         if (departureSchedule.size() != 1 || arrivalSchedule.size() != 1) {

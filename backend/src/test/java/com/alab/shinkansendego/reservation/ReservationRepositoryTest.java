@@ -68,10 +68,10 @@ public class ReservationRepositoryTest {
 
     @Test
     @Sql(scripts = "classpath:com/alab/shinkansendego/sql/ReservationTestData.sql")
-    @DisplayName("購入情報IDから購入情報を取得できる")
+    @DisplayName("購入情報IDと予約者氏名メールアドレスから購入情報を取得できる")
     void findPurchaseByPurchaseId_withReservationDtoId_returnGetPurchaseSuccess() {
         ReservationDto expected = new ReservationDto("やまびこ1号", "EKI01", "EKI03", LocalDate.of(2026, 6, 1));
-        ReservationDto actual = repo.findReservationDtoByReservationId(purchaseId);
+        ReservationDto actual = repo.findReservationDtoByReservationIdAndReserverNameAndReserverMail(purchaseId, "山田太郎", "email@sample.com");
         assertAll(
                 () -> assertEquals(expected.getTrainTypeName(), actual.getTrainTypeName()),
                 () -> assertEquals(expected.getDepartureStationCd(), actual.getDepartureStationCd()),
@@ -84,7 +84,7 @@ public class ReservationRepositoryTest {
     @Sql(scripts = "classpath:com/alab/shinkansendego/sql/ReservationTestData.sql")
     @DisplayName("テーブルに存在しない購入情報IDを検索した場合、Nullが返却されるか")
     void findPurchaseByReservationDtoId_withNotExistPurchaseId_returnNull() {
-        ReservationDto actual = repo.findReservationDtoByReservationId(UUID.fromString("9996b939-2e3e-46c1-92d3-7aa64b6ca575"));
+        ReservationDto actual = repo.findReservationDtoByReservationIdAndReserverNameAndReserverMail(UUID.fromString("9996b939-2e3e-46c1-92d3-7aa64b6ca575"), "NotFount太郎", "notfound@nomail.com");
         assertNull(actual);
     }
 
