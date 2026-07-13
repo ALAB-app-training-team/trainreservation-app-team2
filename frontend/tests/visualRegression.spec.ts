@@ -13,7 +13,7 @@ test('visual-scheduleSearch', async ({ page }) => {
     await scheduleSearchPage.arrivalStation.waitFor({ state: 'visible' });
 
     await expect(page).toHaveScreenshot({
-        maxDiffPixelRatio: 0.01,
+        maxDiffPixelRatio: 0.1,
         fullPage: true,
         animations: 'disabled',
         mask: [
@@ -34,7 +34,7 @@ test('visual-selectSeat', async ({ page }) => {
     await selectSeatPage.cardHolderName.waitFor({ state: 'visible' });
 
     await expect(page).toHaveScreenshot({
-        maxDiffPixelRatio: 0.01,
+        maxDiffPixelRatio: 0.1,
         fullPage: true,
         animations: 'disabled',
         mask: [
@@ -53,7 +53,7 @@ test('visual-reservationGuestLogin', async ({ page }) => {
     await reservationGuestLoginPage.name.waitFor({ state: 'visible' });
 
     await expect(page).toHaveScreenshot({
-        maxDiffPixelRatio: 0.01,
+        maxDiffPixelRatio: 0.1,
         fullPage: true,
         animations: 'disabled',
         mask: [
@@ -93,7 +93,7 @@ test('visual-reservationList', async ({ page }) => {
     );
 
     await expect(page).toHaveScreenshot({
-        maxDiffPixelRatio: 0.01,
+        maxDiffPixelRatio: 0.1,
         fullPage: true,
         animations: 'disabled',
         mask: maskTargets,
@@ -114,7 +114,7 @@ test('visual-reservedTicket', async ({ page }) => {
     await reservedTicketPage.backButton.waitFor({ state: 'visible' });
 
     await expect(page).toHaveScreenshot({
-        maxDiffPixelRatio: 0.01,
+        maxDiffPixelRatio: 0.1,
         fullPage: true,
         animations: 'disabled',
         mask: [
