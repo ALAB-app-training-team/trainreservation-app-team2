@@ -85,16 +85,11 @@ export function useReservationListRequestDto() {
 
     const isInvalid = checkInvalid(guestLoginForm);
 
-    const removeWhiteSpace = (value: string) => {
-        return value.replace(/[\s\u3000]+/g, '');
-    };
-
     return {
         guestLoginForm,
         handleChange,
         handleBlur,
         getFieldError,
         isInvalid,
-        removeWhiteSpace,
     };
 }

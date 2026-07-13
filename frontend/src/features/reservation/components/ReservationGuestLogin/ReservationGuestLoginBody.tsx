@@ -7,6 +7,7 @@ import { useNavigate } from 'react-router-dom';
 import { GuestLoginInput } from '@/features/reservation/components/GuestLoginInput';
 import { useReservationList } from '@/features/reservation/hooks/useReservationList';
 import { useReservationListRequestDto } from '@/features/reservation/hooks/useReservationListRequestDto';
+import { removeWhiteSpace } from '@/shared/utils/RemoveWhiteSpace';
 
 export function ReservationGuestLoginBody() {
     const {
@@ -15,7 +16,6 @@ export function ReservationGuestLoginBody() {
         handleBlur,
         getFieldError,
         isInvalid,
-        removeWhiteSpace,
     } = useReservationListRequestDto();
     const { getReservation } = useReservationList();
     const [isSubmitting, setIsSubmitting] = useState<boolean>(false);
