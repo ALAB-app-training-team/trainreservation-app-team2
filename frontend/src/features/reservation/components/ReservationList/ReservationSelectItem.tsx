@@ -84,20 +84,20 @@ export function ReservationSelectItem({ details }: ReservationSelectItemProps) {
                         <>
                             <button className="text-primary flex items-center justify-center gap-2 rounded-xl px-3 text-sm">
                                 <IoTrashOutline />
-                                <label>キャンセル</label>
+                                キャンセル
                             </button>
                             <button
                                 onClick={handleReservationDetail}
                                 className="bg-primary flex items-center justify-center gap-4 rounded-md px-4 py-2 text-sm text-white"
                             >
                                 <BsQrCode />
-                                <label>チケットを表示</label>
+                                チケットを表示
                             </button>
                         </>
                     ) : (
                         <button className="bg-primary flex items-center justify-center gap-4 rounded-md px-4 py-2 text-sm text-white">
                             <FaSearch />
-                            <label>同じ区間で検索</label>
+                            同じ区間で検索
                         </button>
                     )}
                 </div>

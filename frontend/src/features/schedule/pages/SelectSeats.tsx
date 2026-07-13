@@ -13,6 +13,7 @@ import { useReserveUser } from '@/features/schedule/hooks/useReserveUser';
 import { useSelectedSeats } from '@/features/schedule/hooks/useSelectedSeats';
 import type { PaymentRequestDto } from '@/features/schedule/types/PaymentRequestDto';
 import type { ReserveRequestDto } from '@/features/schedule/types/ReserveRequestDto';
+import { removeWhiteSpace } from '@/shared/utils/RemoveWhiteSpace';
 
 export function SelectSeats() {
     const navigate = useNavigate();
@@ -81,6 +82,13 @@ export function SelectSeats() {
         try {
             const paymentToken = await getPaymentToken();
             const purchaseId = await submitOrderWithToken(paymentToken);
+            sessionStorage.setItem(
+                'guestLoginInfo',
+                JSON.stringify({
+                    reserverName: removeWhiteSpace(reserveUser.reserverName),
+                    reserverMail: removeWhiteSpace(reserveUser.reserverMail),
+                }),
+            );
             navigate('/reservedTicket', {
                 state: { purchaseId: purchaseId, isBack: false },
             });
