@@ -18,9 +18,9 @@ export function CustomModal({
                 isOpen={isOpen}
                 onRequestClose={onRequestClose}
                 overlayClassName="fixed inset-0 bg-black/50 flex items-center justify-center backdrop-blur-sm transition-opacity"
-                className="mx-4 w-full max-w-md rounded-xl bg-white p-6 shadow-2xl transition-all focus:outline-none"
+                className="w-full max-w-md rounded-xl bg-white p-6 shadow-2xl transition-all focus:outline-none"
             >
-                <div>{content}</div>
+                <div className="w-full overflow-y-auto">{content}</div>
             </Modal>
         </>
     );
