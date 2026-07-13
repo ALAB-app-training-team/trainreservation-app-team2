@@ -5,6 +5,7 @@ import { LuArrowLeft } from 'react-icons/lu';
 import { useLocation, useNavigate } from 'react-router-dom';
 
 import { ENDPOINTS } from '@/api/routes';
+import { ReserveConfirmModal } from '@/features/schedule/components/reserveConfirmModal';
 import { ReserveUserInfo } from '@/features/schedule/components/ReserveUserInfo';
 import { SelectedSeats } from '@/features/schedule/components/SelectedSeats';
 import { TrainCars } from '@/features/schedule/components/TrainCars/TrainCars';
@@ -13,6 +14,8 @@ import { useReserveUser } from '@/features/schedule/hooks/useReserveUser';
 import { useSelectedSeats } from '@/features/schedule/hooks/useSelectedSeats';
 import type { PaymentRequestDto } from '@/features/schedule/types/PaymentRequestDto';
 import type { ReserveRequestDto } from '@/features/schedule/types/ReserveRequestDto';
+import { CustomModal } from '@/shared/components/Modal';
+import { useModal } from '@/shared/hooks/useModal';
 
 export function SelectSeats() {
     const navigate = useNavigate();
@@ -34,6 +37,7 @@ export function SelectSeats() {
         isInvalid,
         getFieldError,
     } = useReserveUser();
+    const { isOpen, handleModalOpen, onRequestClose } = useModal();
     const [isSubmitting, setIsSubmitting] = useState<boolean>(false);
 
     const getPaymentToken = async (): Promise<string> => {
@@ -157,6 +161,13 @@ export function SelectSeats() {
                     </div>
                 </div>
             </div>
+            {isOpen && (
+                <CustomModal
+                    isOpen={isOpen}
+                    onRequestClose={onRequestClose}
+                    content={<ReserveConfirmModal onClick={handleReserve} />}
+                />
+            )}
         </>
     );
 }
