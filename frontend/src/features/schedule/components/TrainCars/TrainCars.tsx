@@ -13,6 +13,7 @@ type TrainCarsProps = {
     selectedSeats: SeatResponseDto[];
     limitSeats: number;
     handleSelectedSeats: (seat: SeatResponseDto) => void;
+    checkReservedSeats: (seats: SeatResponseDto[]) => void;
 };
 
 export function TrainCars({
@@ -20,6 +21,7 @@ export function TrainCars({
     selectedSeats,
     limitSeats,
     handleSelectedSeats,
+    checkReservedSeats,
 }: TrainCarsProps) {
     const {
         trainCars,
@@ -82,6 +84,7 @@ export function TrainCars({
                             selectedSeats={selectedSeats}
                             limitSeats={limitSeats}
                             handleSelectedSeats={handleSelectedSeats}
+                            checkReservedSeats={checkReservedSeats}
                         />
                     </Suspense>
                 </>

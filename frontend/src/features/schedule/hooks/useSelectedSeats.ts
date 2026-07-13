@@ -10,7 +10,9 @@ export function useSelectedSeats() {
         if (selectedSeats.includes(seat)) {
             setSelectedSeats((prevSeats) =>
                 prevSeats.filter(
-                    (selectedSeatCds) => selectedSeatCds.seatCd !== seat.seatCd,
+                    (selectedSeat) =>
+                        selectedSeat.trainCarCd + selectedSeat.seatCd !==
+                        seat.trainCarCd + seat.seatCd,
                 ),
             );
         } else if (selectedSeats.length < limitSeats) {
@@ -18,5 +20,51 @@ export function useSelectedSeats() {
         }
     };
 
-    return { selectedSeats, limitSeats, handleSelectedSeats };
+    const handleClear = () => {
+        setSelectedSeats([]);
+    };
+
+    const checkReservedSeats = (seats: SeatResponseDto[]) => {
+        const reservedSeatCds = new Set(
+            seats
+                .filter((seat) => seat.isReserved)
+                .map((seat) => seat.trainCarCd + seat.seatCd),
+        );
+        const reservedSeatsInSelectedSeats: SeatResponseDto[] =
+            selectedSeats.filter((selectedSeat) =>
+                reservedSeatCds.has(
+                    selectedSeat.trainCarCd + selectedSeat.seatCd,
+                ),
+            );
+        if (reservedSeatsInSelectedSeats.length > 0) {
+            setSelectedSeats((prevSeats) =>
+                prevSeats.filter(
+                    (selectedSeat) =>
+                        !reservedSeatCds.has(
+                            selectedSeat.trainCarCd + selectedSeat.seatCd,
+                        ),
+                ),
+            );
+            alert(
+                '選択中の座席が購入されたため、以下の座席の選択を解除しました。' +
+                    reservedSeatsInSelectedSeats
+                        .map(
+                            (seat: SeatResponseDto) =>
+                                seat.trainCarNumber +
+                                '号車' +
+                                seat.seatNumber +
+                                seat.seatColumn,
+                        )
+                        .join(','),
+            );
+        }
+    };
+
+    return {
+        selectedSeats,
+        limitSeats,
+        handleSelectedSeats,
+        handleClear,
+        checkReservedSeats,
+    };
 }
