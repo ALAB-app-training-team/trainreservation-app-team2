@@ -28,7 +28,7 @@ public class ScheduleControllerTest {
 
     // TODO:リクエストのLocalDateとの相性が悪くエラーが出たため以下処理としたが、@Autowiredが推奨されるためいつか変更したい
     private final ObjectMapper objectMapper = new ObjectMapper();
-    private final String baseUrl = "/api/shinkansen-";
+    private final String baseUrl = "/api/schedules";
     @Autowired
     private MockMvc mockMvc;
     @MockitoBean
@@ -64,7 +64,7 @@ public class ScheduleControllerTest {
     void getSchedule_withValidScheduleRequestDto_returnGetScheduleListSuccess() throws Exception {
 
         List<ScheduleResponseDto> expectList = getExpectScheduleResponseDtosList();
-        String url = baseUrl + "schedule?date=2026-06-01&time=12:00:00&departureStationCd=THK01&arrivalStationCd=THK02";
+        String url = baseUrl + "?date=2026-06-01&time=12:00:00&departureStationCd=THK01&arrivalStationCd=THK02";
 
         Mockito.when(service.getSearchedScheduleByStation(request)).thenReturn(expectList);
 
@@ -99,7 +99,7 @@ public class ScheduleControllerTest {
     void getSchedule_withNotValidScheduleRequestDto_returnValidationError() throws Exception {
 
         request.setArrivalStationCd(null);
-        String url = baseUrl + "schedule?date=2026-06-01&time=12:00:00&departureStationCd=THK01";
+        String url = baseUrl + "?date=2026-06-01&time=12:00:00&departureStationCd=THK01";
 
         String json = objectMapper.writeValueAsString(request);
 
@@ -114,7 +114,7 @@ public class ScheduleControllerTest {
     @DisplayName("リクエストDTO自体がNullの場合、バインドエラー発生")
     void getSchedule_withScheduleRequestDtoIsNull_returnBindError() throws Exception {
 
-        String url = baseUrl + "schedule?";
+        String url = baseUrl + "?";
 
         //バインド順が毎回異なるためエラーメッセージの比較は行わない
         mockMvc.perform(get(url))
@@ -127,12 +127,12 @@ public class ScheduleControllerTest {
 
         String scheduleCd = "TEST01";
         List<TrainCarFormationResponseDto> expectList = getTrainCarResponseDtosList();
-        String url = baseUrl + "traincar";
+        String url = baseUrl + "/" + scheduleCd + "/traincars";
 
         Mockito.when(service.getTrainCarList(scheduleCd)).thenReturn(expectList);
 
         mockMvc.perform(
-                        get(url).param("scheduleCd", scheduleCd)
+                        get(url)
                                 .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.length()").value(2))
@@ -146,16 +146,5 @@ public class ScheduleControllerTest {
                 .andExpect(jsonPath("$[1].trainCarNumber").value(2))
                 .andExpect(jsonPath("$[1].seatTypeCd").value("SEAT01"))
                 .andExpect(jsonPath("$[1].trainCarTypeName").value("指定席"));
-    }
-
-    @Test
-    @DisplayName("リクエストがNullの場合、パラメーターエラー発生")
-    void getTrainCarList_withScheduleCdIsNull_returnRequestParamError() throws Exception {
-
-        String url = baseUrl + "traincar?";
-
-        mockMvc.perform(get(url))
-                .andExpect(status().isBadRequest())
-                .andExpect(content().string("scheduleCd is Null"));
     }
 }

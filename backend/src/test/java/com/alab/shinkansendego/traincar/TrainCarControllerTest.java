@@ -60,9 +60,9 @@ public class TrainCarControllerTest {
 
         List<SeatResponseDto> expectList = getSeatResponseDtosList();
         String url = baseUrl
-                + "seat?scheduleCd=Test01&date=2026-06-01&departureTime=12:00:00&arrivalTime=13:00:00&trainCarCd=Test001";
+                + "Test001/seat?scheduleCd=Test01&date=2026-06-01&departureTime=12:00:00&arrivalTime=13:00:00";
 
-        Mockito.when(service.getSeatListWithReserved(request)).thenReturn(expectList);
+        Mockito.when(service.getSeatListWithReserved("Test001", request)).thenReturn(expectList);
 
         mockMvc.perform(
                         get(url).contentType(MediaType.APPLICATION_JSON))

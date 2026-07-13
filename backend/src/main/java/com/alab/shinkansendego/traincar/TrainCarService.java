@@ -25,8 +25,8 @@ public class TrainCarService {
         this.reservedSeatSectionRepository = reservedSeatSectionRepository;
     }
 
-    public List<SeatResponseDto> getSeatListWithReserved(SeatRequestDto request) {
-        List<SeatResponseDto> seatList = trainCarRepository.findSeatByTrainCarCd(request.getTrainCarCd());
+    public List<SeatResponseDto> getSeatListWithReserved(String trainCarCd, SeatRequestDto request) {
+        List<SeatResponseDto> seatList = trainCarRepository.findSeatByTrainCarCd(trainCarCd);
         if (seatList.isEmpty()) {
             throw new IllegalArgumentException("TrainCarCd is Not found");
         }
@@ -39,7 +39,7 @@ public class TrainCarService {
 
         List<String> reservedSeatCdList = new ArrayList<>();
         for (String cd : seatOfSectionCdList) {
-            List<String> resultList = reservedSeatSectionRepository.findReservedSeatCdByRideDateAndScheduleCdAndTrainCarCdAndReservedSeatSectionCd(request.getDate(), request.getScheduleCd(), request.getTrainCarCd(), cd);
+            List<String> resultList = reservedSeatSectionRepository.findReservedSeatCdByRideDateAndScheduleCdAndTrainCarCdAndReservedSeatSectionCd(request.getDate(), request.getScheduleCd(), trainCarCd, cd);
             reservedSeatCdList.addAll(resultList);
         }
 
