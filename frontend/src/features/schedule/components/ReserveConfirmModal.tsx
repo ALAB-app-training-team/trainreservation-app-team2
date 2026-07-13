@@ -18,7 +18,7 @@ export function ReserveConfirmModal({
                     <button
                         onClick={onRequestClose}
                         disabled={isSubmitting}
-                        className="border-primary text-primary rounded-lg border-2 p-2"
+                        className="border-primary text-primary rounded-lg border-2 p-2 disabled:border-gray-300 disabled:bg-gray-300 disabled:text-white"
                     >
                         キャンセル
                     </button>
