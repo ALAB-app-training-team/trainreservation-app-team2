@@ -78,7 +78,6 @@ export function TrainCars({
                     </div>
                     <Suspense fallback={<SeatsByTrainCarSkeleton />}>
                         <SeatsByTrainCar
-                            selectTrainCarCd={activeTrainCarCd}
                             seatsRequestDto={seatsRequestDto}
                             selectedSeats={selectedSeats}
                             limitSeats={limitSeats}

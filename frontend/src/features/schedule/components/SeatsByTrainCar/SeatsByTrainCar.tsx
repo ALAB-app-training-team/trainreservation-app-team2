@@ -6,7 +6,6 @@ import type { SeatResponseDto } from '@/features/schedule/types/SeatResponseDto'
 import type { SeatsRequestDto } from '@/features/schedule/types/SeatsRequestDto';
 
 type SeatsByTrainCarProps = {
-    selectTrainCarCd: string;
     seatsRequestDto: SeatsRequestDto;
     selectedSeats: SeatResponseDto[];
     limitSeats: number;
