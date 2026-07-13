@@ -1,22 +1,25 @@
-import { useSuspenseQuery } from '@tanstack/react-query';
 import axios from 'axios';
 
 import { ENDPOINTS } from '@/api/routes';
+import type { ReservationListRequestDto } from '@/features/reservation/types/ReservationListRequestDto';
 import type { ReservationResponseDto } from '@/features/reservation/types/ReservationResponseDto';
 
-export function useReservedTickets(purchaseId: string) {
-    const { data: reservedTickets } = useSuspenseQuery({
-        queryKey: ['reservedTickets', purchaseId],
-        queryFn: async () => {
-            const response = await axios.get<ReservationResponseDto>(
-                ENDPOINTS.RESERVATION(),
-                {
-                    params: { purchaseId: purchaseId },
+export function useReservedTickets() {
+    const getReservedTickets = async (
+        purchaseId: string,
+        guestLoginInfo: ReservationListRequestDto,
+    ): Promise<ReservationResponseDto> => {
+        const response = await axios.get<ReservationResponseDto>(
+            ENDPOINTS.RESERVATION(purchaseId),
+            {
+                params: {
+                    reserverName: guestLoginInfo.reserverName,
+                    reserverMail: guestLoginInfo.reserverMail,
                 },
-            );
-            return response.data;
-        },
-    });
+            },
+        );
+        return response.data;
+    };
 
-    return { reservedTickets };
+    return { getReservedTickets };
 }

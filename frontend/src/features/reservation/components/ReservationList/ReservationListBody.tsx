@@ -1,20 +1,29 @@
+import { useSuspenseQuery } from '@tanstack/react-query';
 import { useState } from 'react';
 import { CiCalendar } from 'react-icons/ci';
 import { RiGroupLine } from 'react-icons/ri';
 
 import { ReservationSelectItem } from '@/features/reservation/components/ReservationList/ReservationSelectItem';
 import { RESERVATION_TAB } from '@/features/reservation/constants/ReservationTab';
+import { useGuestLoginInfo } from '@/features/reservation/hooks/useGuestLoginInfo';
 import { useReservationList } from '@/features/reservation/hooks/useReservationList';
 import type { ReservationTabCd } from '@/features/reservation/types/ReservationTabCd';
 
 export function ReservationListBody() {
     const [selectedTab, setSelectedTab] = useState<ReservationTabCd>('ACTIVE');
-    const { reservations } = useReservationList();
+    const { getReservation } = useReservationList();
+    const { getGuestLoginInfo } = useGuestLoginInfo();
+    const { data: reservationList = [] } = useSuspenseQuery({
+        queryKey: ['reservationList'],
+        queryFn: () => getReservation(getGuestLoginInfo()),
+        initialData: () => [],
+        refetchOnMount: true,
+    });
 
     const now = new Date();
     now.setHours(0, 0, 0, 0);
 
-    const activeReservations = reservations
+    const activeReservations = reservationList
         ?.filter((reservation) => {
             const departureDate = new Date(reservation.rideDate);
             return departureDate >= now;
@@ -26,7 +35,7 @@ export function ReservationListBody() {
                 a.departureTime.localeCompare(b.departureTime),
         );
 
-    const pastReservations = reservations
+    const pastReservations = reservationList
         ?.filter((reservation) => {
             const departureDate = new Date(reservation.rideDate);
             return departureDate < now;

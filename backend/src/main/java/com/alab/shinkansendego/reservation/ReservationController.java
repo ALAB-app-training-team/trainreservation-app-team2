@@ -1,17 +1,17 @@
 package com.alab.shinkansendego.reservation;
 
+import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.stereotype.Repository;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 import java.util.UUID;
 
 @RestController
-@RequestMapping
+@RequestMapping(path = "api/reservations")
 public class ReservationController {
     private final ReservationService reservationService;
 
@@ -20,15 +20,21 @@ public class ReservationController {
         this.reservationService = reservationService;
     }
 
-    @GetMapping(path = "api/shinkansen-reservationlist")
-    public ResponseEntity<List<ReservationResponseDto>> getReservationList() {
-        List<ReservationResponseDto> response = reservationService.getReservationList();
+    @GetMapping
+    public ResponseEntity<List<ReservationResponseDto>> getReservationList(@RequestParam("reserverName") String name, @RequestParam("reserverMail") String email) {
+        List<ReservationResponseDto> response = reservationService.getReservationList(name, email);
         return ResponseEntity.ok(response);
     }
 
-    @GetMapping(path = "api/shinkansen-reservation")
-    public ResponseEntity<ReservationResponseDto> getReservation(@RequestParam("purchaseId") UUID request) {
-        ReservationResponseDto response = reservationService.getReservation(request);
+    @GetMapping(value = "{id}")
+    public ResponseEntity<ReservationResponseDto> getReservation(@PathVariable("id") UUID reservationId, @RequestParam("reserverName") String name, @RequestParam("reserverMail") String email) {
+        ReservationResponseDto response = reservationService.getReservation(reservationId, name, email);
         return ResponseEntity.ok(response);
+    }
+
+    @PostMapping
+    public ResponseEntity<UUID> insertReservation(@Valid @RequestBody ReserveRequestDto request) {
+        UUID response = reservationService.insertReservation(request);
+        return ResponseEntity.status(HttpStatus.CREATED).body(response);
     }
 }

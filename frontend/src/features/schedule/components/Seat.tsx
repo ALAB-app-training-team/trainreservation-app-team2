@@ -4,16 +4,25 @@ type seatProps = {
     seat?: SeatResponseDto;
     onClick?: (seat: SeatResponseDto) => void;
     disabled?: boolean;
-    type: 'isReserved' | 'isSelected' | 'reservable';
+    type: 'unreservable' | 'isSelected' | 'reservable';
 };
 
 export function Seat({ seat, onClick, disabled, type }: seatProps) {
     const styles = {
         reserveModeStyle: 'w-12 h-12 rounded-lg',
-        nonReserveModeStyle: 'w-8 h-8 rounded-md',
-        isReserved: 'cursor-not-allowed border-none bg-gray-200',
-        isSelected: 'cursor-pointer border-none bg-primary text-white',
-        reservable: 'cursor-pointer border-2 border-primary-light',
+        nonReserveModeStyle: 'w-8 h-8 rounded-md !cursor-default',
+        unreservable: {
+            visual: ' border-none bg-gray-200',
+            cursor: '!cursor-not-allowed',
+        },
+        isSelected: {
+            visual: 'border-none bg-primary text-white',
+            cursor: 'cursor-pointer',
+        },
+        reservable: {
+            visual: ' border-2 border-primary-light',
+            cursor: 'cursor-pointer',
+        },
     };
 
     return (
@@ -23,14 +32,14 @@ export function Seat({ seat, onClick, disabled, type }: seatProps) {
                     onClick={() => {
                         onClick(seat);
                     }}
-                    className={`${styles['reserveModeStyle']} ${styles[type]}`}
+                    className={`${styles['reserveModeStyle']} ${styles[type].visual} ${styles[type].cursor}`}
                     disabled={disabled}
                 >
                     {seat.seatNumber + seat.seatColumn}
                 </button>
             ) : (
                 <div
-                    className={`${styles['nonReserveModeStyle']} ${styles[type]}`}
+                    className={`${styles['nonReserveModeStyle']} ${styles[type].visual}`}
                 />
             )}
         </>
