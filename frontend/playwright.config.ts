@@ -69,12 +69,16 @@ export default defineConfig({
             command: 'npm run dev',
             url: 'http://localhost:5173',
             reuseExistingServer: !process.env.CI,
+            stdout: 'pipe',
+            stderr: 'pipe',
         },
         {
             command: `cd ../backend && chmod +x gradlew && ./gradlew bootRun --args='--spring.profiles.active=local' --stacktrace`,
             url: 'http://localhost:8080',
             reuseExistingServer: !process.env.CI,
             timeout: 300 * 1000,
+            stdout: 'pipe',
+            stderr: 'pipe',
         },
     ],
 });
