@@ -11,5 +11,4 @@ class ShinkansenDeGoApplicationTests {
     @Test
     void contextLoads() {
     }
-
 }

@@ -4,6 +4,7 @@ import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.stereotype.Repository;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -20,14 +21,14 @@ public class ReservationController {
     }
 
     @GetMapping
-    public ResponseEntity<List<ReservationResponseDto>> getReservationList() {
-        List<ReservationResponseDto> response = reservationService.getReservationList();
+    public ResponseEntity<List<ReservationResponseDto>> getReservationList(@RequestParam("reserverName") String name, @RequestParam("reserverMail") String email) {
+        List<ReservationResponseDto> response = reservationService.getReservationList(name, email);
         return ResponseEntity.ok(response);
     }
 
     @GetMapping(value = "{id}")
-    public ResponseEntity<ReservationResponseDto> getReservation(@PathVariable("id") UUID request) {
-        ReservationResponseDto response = reservationService.getReservation(request);
+    public ResponseEntity<ReservationResponseDto> getReservation(@PathVariable("id") UUID reservationId, @RequestParam("reserverName") String name, @RequestParam("reserverMail") String email) {
+        ReservationResponseDto response = reservationService.getReservation(reservationId, name, email);
         return ResponseEntity.ok(response);
     }
 
