@@ -15,6 +15,7 @@ export function ReservationGuestLoginBody() {
         handleBlur,
         getFieldError,
         isInvalid,
+        removeWhiteSpace,
     } = useReservationListRequestDto();
     const { getReservation } = useReservationList();
     const [isSubmitting, setIsSubmitting] = useState<boolean>(false);
@@ -29,16 +30,12 @@ export function ReservationGuestLoginBody() {
             if (isInvalid) {
                 return;
             }
-            const removeWhiteSpace = (value: string) => {
-                return value.replace(/[\s\u3000]+/g, '');
-            };
             const request = {
                 ...guestLoginForm,
                 reserverName: removeWhiteSpace(guestLoginForm.reserverName),
                 reserverMail: removeWhiteSpace(guestLoginForm.reserverMail),
             };
             const reservationList = await getReservation(request);
-            console.log(reservationList.length);
             if (reservationList.length === 0) {
                 setRequestError('予約情報が見つかりません');
                 return;
