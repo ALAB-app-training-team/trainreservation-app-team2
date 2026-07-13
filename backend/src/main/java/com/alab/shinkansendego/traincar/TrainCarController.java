@@ -20,9 +20,9 @@ public class TrainCarController {
         this.traincarService = traincarService;
     }
 
-    @GetMapping(path = "/{trainCarCd}/seats")
-    public ResponseEntity<List<SeatResponseDto>> getSeatList(@PathVariable String trainCarCd, @Valid SeatRequestDto seatRequestDto) {
-        List<SeatResponseDto> response = traincarService.getSeatListWithReserved(trainCarCd, seatRequestDto);
+    @GetMapping(path = "/seats")
+    public ResponseEntity<List<SeatResponseDto>> getSeatList(@Valid SeatRequestDto seatRequestDto) {
+        List<SeatResponseDto> response = traincarService.getSeatListWithReserved(seatRequestDto);
         return ResponseEntity.ok(response);
     }
 }

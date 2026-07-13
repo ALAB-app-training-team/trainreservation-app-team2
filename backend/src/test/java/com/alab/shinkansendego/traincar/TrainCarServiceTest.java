@@ -86,7 +86,7 @@ public class TrainCarServiceTest {
 
         List<SeatResponseDto> expectList = getSeatResponseDtosList();
 
-        List<SeatResponseDto> actualList = service.getSeatListWithReserved("Test001", request);
+        List<SeatResponseDto> actualList = service.getSeatListWithReserved(request);
 
         assertEquals(4, actualList.size());
         assertEquals(expectList, actualList);
@@ -99,7 +99,7 @@ public class TrainCarServiceTest {
         request.setTrainCarCd("9999999");
         Exception ex = assertThrows(
                 IllegalArgumentException.class,
-                () -> service.getSeatListWithReserved("9999999", request)
+                () -> service.getSeatListWithReserved(request)
         );
         assertEquals("TrainCarCd is Not found", ex.getMessage());
     }
@@ -117,7 +117,7 @@ public class TrainCarServiceTest {
         request.setScheduleCd("9999999");
         Exception ex = assertThrows(
                 IllegalArgumentException.class,
-                () -> service.getSeatListWithReserved("Test001", request)
+                () -> service.getSeatListWithReserved(request)
         );
         assertEquals("SectionCdOfSeat is Not found", ex.getMessage());
     }

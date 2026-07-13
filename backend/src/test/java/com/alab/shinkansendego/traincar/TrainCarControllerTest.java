@@ -59,10 +59,10 @@ public class TrainCarControllerTest {
     void getSeatList_returnGetSeatListSuccess() throws Exception {
 
         List<SeatResponseDto> expectList = getSeatResponseDtosList();
-        String url = baseUrl + "Test001/seats"
-                + "?scheduleCd=Test01&date=2026-06-01&departureTime=12:00:00&arrivalTime=13:00:00";
+        String url = baseUrl
+                + "seats?trainCarCd=Test001&scheduleCd=Test01&date=2026-06-01&departureTime=12:00:00&arrivalTime=13:00:00";
 
-        Mockito.when(service.getSeatListWithReserved("Test001", request)).thenReturn(expectList);
+        Mockito.when(service.getSeatListWithReserved(request)).thenReturn(expectList);
 
         mockMvc.perform(
                         get(url).contentType(MediaType.APPLICATION_JSON))
@@ -98,9 +98,9 @@ public class TrainCarControllerTest {
     @DisplayName("リクエストのカラムがNullの場合、バリデーションエラー発生")
     void getSeatList_withNotValidSeatRequestDto_returnValidationError() throws Exception {
 
-        request.setScheduleCd(null);
-        String url = baseUrl + "Test001/seats"
-                + "?date=2026-06-23&departureTime=17:20:00&arrivalTime=20:40:00";
+        request.setTrainCarCd(null);
+        String url = baseUrl
+                + "seats?date=2026-06-23&departureTime=17:20:00&arrivalTime=20:40:00";
 
         String json = objectMapper.writeValueAsString(request);
 
@@ -108,14 +108,14 @@ public class TrainCarControllerTest {
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(json))
                 .andExpect(status().isBadRequest())
-                .andExpect(content().string("ScheduleCd is Null"));
+                .andExpect(content().string("TrainCarCd is Null"));
     }
 
     @Test
     @DisplayName("リクエストDTO自体がNullの場合、パラメーターエラー発生")
     void getSeatList_withSeatRequestDtoIsNull_returnRequestParamError() throws Exception {
 
-        String url = baseUrl+ "Test001/seats";
+        String url = baseUrl+ "seats";
 
         mockMvc.perform(get(url))
                 .andExpect(status().isBadRequest());
