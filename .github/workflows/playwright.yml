@@ -15,6 +15,7 @@ jobs:
                     POSTGRES_UESR: appuser
                     POSTGRES_PASSWORD: localpassword
                     POSTGRES_DB: postgres
+                    POSTGRES_HOST_AUTH_METHOD: trust
                 ports:
                     - 5432:5432
                 options: --health-cmd pg_isready --health-interval 10s --health-timeout 5s --health-retries 5
