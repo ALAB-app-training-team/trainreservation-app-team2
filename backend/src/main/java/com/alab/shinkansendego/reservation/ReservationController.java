@@ -21,7 +21,7 @@ public class ReservationController {
     }
 
     @GetMapping
-    public ResponseEntity<List<ReservationResponseDto>> getReservationList(@RequestParam("name") String name, @RequestParam("email") String email) {
+    public ResponseEntity<List<ReservationResponseDto>> getReservationList(@RequestParam("reserverName") String name, @RequestParam("reserverMail") String email) {
         List<ReservationResponseDto> response = reservationService.getReservationList(name, email);
         return ResponseEntity.ok(response);
     }

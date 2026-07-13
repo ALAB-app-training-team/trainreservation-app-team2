@@ -32,6 +32,6 @@ public interface ReservationRepository extends JpaRepository<ReservationEntity, 
             "departureArrivalTime",
             "departureArrivalTime.sectionKm",
             "departureArrivalTime.sectionKm.startStation",
-            "departureArrivalTime.sectionKm.goalSection"})
+            "departureArrivalTime.sectionKm.goalStation"})
     List<ReservationEntity> findByReserverNameAndReserverMail(String name, String email);
 }
