@@ -3,12 +3,12 @@ import Modal from 'react-modal';
 type CustomModalProps = {
     isOpen: boolean;
     onRequestClose: () => void;
-    content: React.ReactNode;
+    children: React.ReactNode;
 };
 export function CustomModal({
     isOpen,
     onRequestClose,
-    content,
+    children,
 }: CustomModalProps) {
     Modal.setAppElement('#root');
 
@@ -21,7 +21,7 @@ export function CustomModal({
                 className="w-full max-w-md rounded-xl bg-white p-6 shadow-2xl transition-all focus:outline-none"
             >
                 {isOpen && (
-                    <div className="w-full overflow-y-auto">{content}</div>
+                    <div className="w-full overflow-y-auto">{children}</div>
                 )}
             </Modal>
         </>
