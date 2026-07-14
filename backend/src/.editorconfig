@@ -15,7 +15,7 @@ ij_java_method_brace_style = end_of_line
 ij_java_block_brace_style = end_of_line
 
 # --- 1行で済むifに｛｝を付けない ---
-ij_java_if_brace_force = never
+ij_java_if_brace_force = if_multiline
 ij_java_for_brace_force = if_multiline
 ij_java_while_brace_force = if_multiline
 ij_java_do_while_brace_force = if_multiline
