@@ -1,5 +1,5 @@
-import { expect, type Locator, type Page } from '@playwright/test';
-import { Header } from '../shared/Header';
+import { type Locator, type Page } from '@playwright/test';
+import { Header } from '@tests/pages/shared/Header';
 
 export class SelectSeatPage {
     readonly page: Page;
@@ -34,10 +34,6 @@ export class SelectSeatPage {
             name: 'セキュリティコード',
         });
         this.reserveButton = page.getByRole('button', { name: '予約を確定' });
-    }
-
-    async goto() {
-        await this.page.goto('/');
     }
 
     async clickBackButton() {

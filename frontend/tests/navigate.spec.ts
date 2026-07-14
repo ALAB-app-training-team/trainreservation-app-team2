@@ -1,9 +1,9 @@
 import { test, expect } from '@playwright/test';
-import { ScheduleSearchPage } from './pages/ScheduleSearch/ScheduleSearchPage';
-import { SelectSeatPage } from './pages/SelectSeat/SelectSeatPage';
-import { ReservationListPage } from './pages/ReservationList/ReservationListPage';
-import { ReservedTicketPage } from './pages/ReservedTicket/ReservedTicketPage';
-import { ReservationGuestLoginPage } from './pages/ReservationGuestLogin/ReservationGuestLoginPage';
+import { ScheduleSearchPage } from '@tests/pages/ScheduleSearch/ScheduleSearchPage';
+import { SelectSeatPage } from '@tests/pages/SelectSeat/SelectSeatPage';
+import { ReservationListPage } from '@tests/pages/ReservationList/ReservationListPage';
+import { ReservedTicketPage } from '@tests/pages/ReservedTicket/ReservedTicketPage';
+import { ReservationGuestLoginPage } from '@tests/pages/ReservationGuestLogin/ReservationGuestLoginPage';
 
 test('navigate-検索～予約確認', async ({ page }) => {
     const scheduleSearchPage = new ScheduleSearchPage(page);

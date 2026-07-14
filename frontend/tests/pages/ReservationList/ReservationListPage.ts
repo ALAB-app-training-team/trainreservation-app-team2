@@ -1,5 +1,5 @@
-import { expect, type Locator, type Page } from '@playwright/test';
-import { Header } from '../shared/Header';
+import { type Locator, type Page } from '@playwright/test';
+import { Header } from '@tests/pages/shared/Header';
 
 export class ReservationListPage {
     readonly page: Page;
@@ -12,10 +12,6 @@ export class ReservationListPage {
         this.ticketButton = page.getByRole('button', {
             name: 'チケットを表示',
         });
-    }
-
-    async goto() {
-        await this.page.goto('/reservationList');
     }
 
     async clickTicketButton() {

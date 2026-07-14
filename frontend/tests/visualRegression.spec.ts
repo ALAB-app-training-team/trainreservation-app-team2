@@ -1,9 +1,9 @@
 // import { test, expect } from '@playwright/test';
-// import { ReservationGuestLoginPage } from './pages/ReservationGuestLogin/ReservationGuestLoginPage';
-// import { ReservedTicketPage } from './pages/ReservedTicket/ReservedTicketPage';
-// import { ReservationListPage } from './pages/ReservationList/ReservationListPage';
-// import { ScheduleSearchPage } from './pages/ScheduleSearch/ScheduleSearchPage';
-// import { SelectSeatPage } from './pages/SelectSeat/SelectSeatPage';
+// import { ReservationGuestLoginPage } from '@tests/pages/ReservationGuestLogin/ReservationGuestLoginPage';
+// import { ReservedTicketPage } from '@tests/pages/ReservedTicket/ReservedTicketPage';
+// import { ReservationListPage } from '@tests/pages/ReservationList/ReservationListPage';
+// import { ScheduleSearchPage } from '@tests/pages/ScheduleSearch/ScheduleSearchPage';
+// import { SelectSeatPage } from '@tests/pages/SelectSeat/SelectSeatPage';
 
 // test('visual-scheduleSearch', async ({ page }) => {
 //     const scheduleSearchPage = new ScheduleSearchPage(page);

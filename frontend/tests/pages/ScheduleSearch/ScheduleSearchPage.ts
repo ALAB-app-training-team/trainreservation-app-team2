@@ -1,5 +1,5 @@
-import { expect, type Locator, type Page } from '@playwright/test';
-import { Header } from '../shared/Header';
+import { type Locator, type Page } from '@playwright/test';
+import { Header } from '@tests/pages/shared/Header';
 
 export class ScheduleSearchPage {
     readonly page: Page;

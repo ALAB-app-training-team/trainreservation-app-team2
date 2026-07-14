@@ -1,5 +1,5 @@
 import { test, expect } from '@playwright/test';
-import { ScheduleSearchPage } from './ScheduleSearchPage';
+import { ScheduleSearchPage } from '@tests/pages/ScheduleSearch/ScheduleSearchPage';
 import dayjs from 'dayjs';
 
 test('駅の初期表示', async ({ page }) => {
