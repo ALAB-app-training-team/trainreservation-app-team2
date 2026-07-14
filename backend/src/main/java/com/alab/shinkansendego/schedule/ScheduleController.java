@@ -3,15 +3,12 @@ package com.alab.shinkansendego.schedule;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
 @RestController
-@RequestMapping
+@RequestMapping(path = "api/schedules")
 public class ScheduleController {
     private final ScheduleService scheduleService;
 
@@ -20,14 +17,14 @@ public class ScheduleController {
         this.scheduleService = scheduleService;
     }
 
-    @GetMapping(path = "api/shinkansen-schedule")
+    @GetMapping
     public ResponseEntity<List<ScheduleResponseDto>> getSchedule(@Valid ScheduleRequestDto request) {
         List<ScheduleResponseDto> response = scheduleService.getSearchedScheduleByStation(request);
         return ResponseEntity.ok(response);
     }
 
-    @GetMapping(path = "api/shinkansen-traincar")
-    public ResponseEntity<List<TrainCarFormationResponseDto>> getTrainCarList(@RequestParam(name = "scheduleCd") String scheduleCd) {
+    @GetMapping(path = "/{id}/traincars")
+    public ResponseEntity<List<TrainCarFormationResponseDto>> getTrainCarList(@PathVariable("id") String scheduleCd) {
         List<TrainCarFormationResponseDto> response = scheduleService.getTrainCarList(scheduleCd);
         return ResponseEntity.ok(response);
     }

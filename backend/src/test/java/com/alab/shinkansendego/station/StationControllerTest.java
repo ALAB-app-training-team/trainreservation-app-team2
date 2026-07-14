@@ -20,7 +20,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 @WebMvcTest(StationController.class)
 public class StationControllerTest {
 
-    private final String baseUrl = "/api/shinkansen-";
+    private final String baseUrl = "/api/stations";
     @Autowired
     private MockMvc mockMvc;
     @MockitoBean
@@ -39,12 +39,11 @@ public class StationControllerTest {
     void getAllStationList_returnGetStationListSuccess() throws Exception {
 
         List<StationEntity> expectList = getStationEntityList();
-        String url = baseUrl + "station";
 
         Mockito.when(service.getAllStationList()).thenReturn(expectList);
 
         mockMvc.perform(
-                        get(url).contentType(MediaType.APPLICATION_JSON))
+                        get(baseUrl).contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.length()").value(4))
                 .andExpect(jsonPath("$[0].stationCd").value("Test1"))
