@@ -25,7 +25,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 @WebMvcTest(TrainCarController.class)
 public class TrainCarControllerTest {
 
-    private final String baseUrl = "/api/shinkansen-";
+    private final String baseUrl = "/api/traincars/";
     private final SeatRequestDto request = new SeatRequestDto();
 
     // TODO:リクエストのLocalDateとの相性が悪くエラーが出たため以下処理としたが、@Autowiredが推奨されるためいつか変更したい
@@ -60,7 +60,7 @@ public class TrainCarControllerTest {
 
         List<SeatResponseDto> expectList = getSeatResponseDtosList();
         String url = baseUrl
-                + "seat?scheduleCd=Test01&date=2026-06-01&departureTime=12:00:00&arrivalTime=13:00:00&trainCarCd=Test001";
+                + "seats?trainCarCd=Test001&scheduleCd=Test01&date=2026-06-01&departureTime=12:00:00&arrivalTime=13:00:00";
 
         Mockito.when(service.getSeatListWithReserved(request)).thenReturn(expectList);
 
@@ -100,7 +100,7 @@ public class TrainCarControllerTest {
 
         request.setTrainCarCd(null);
         String url = baseUrl
-                + "seat?scheduleCd=THK055&date=2026-06-23&departureTime=17:20:00&arrivalTime=20:40:00";
+                + "seats?scheduleCd=Test01&date=2026-06-23&departureTime=17:20:00&arrivalTime=20:40:00";
 
         String json = objectMapper.writeValueAsString(request);
 
@@ -115,7 +115,7 @@ public class TrainCarControllerTest {
     @DisplayName("リクエストDTO自体がNullの場合、パラメーターエラー発生")
     void getSeatList_withSeatRequestDtoIsNull_returnRequestParamError() throws Exception {
 
-        String url = baseUrl + "seat?";
+        String url = baseUrl+ "seats";
 
         mockMvc.perform(get(url))
                 .andExpect(status().isBadRequest());
