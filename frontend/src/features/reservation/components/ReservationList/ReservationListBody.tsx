@@ -16,7 +16,6 @@ export function ReservationListBody() {
     const { data: reservationList = [] } = useSuspenseQuery({
         queryKey: ['reservationList'],
         queryFn: () => getReservation(getGuestLoginInfo()),
-        initialData: () => [],
         refetchOnMount: true,
     });
 
