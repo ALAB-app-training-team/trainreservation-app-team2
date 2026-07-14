@@ -9,7 +9,7 @@ import org.springframework.web.bind.annotation.RestController;
 import java.util.List;
 
 @RestController
-@RequestMapping
+@RequestMapping(path = "api/stations")
 public class StationController {
     private final StationService stationService;
 
@@ -18,7 +18,7 @@ public class StationController {
         this.stationService = stationService;
     }
 
-    @GetMapping(path = "api/shinkansen-station")
+    @GetMapping
     public ResponseEntity<List<StationEntity>> getAllStationList() {
         List<StationEntity> response = stationService.getAllStationList();
         return ResponseEntity.ok(response);
