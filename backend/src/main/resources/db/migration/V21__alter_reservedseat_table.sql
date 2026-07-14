@@ -7,5 +7,3 @@ WHERE seat_fare IS NULL;
 
 ALTER TABLE T_ReservedSeat
     ALTER COLUMN seat_fare SET NOT NULL;
-
-
