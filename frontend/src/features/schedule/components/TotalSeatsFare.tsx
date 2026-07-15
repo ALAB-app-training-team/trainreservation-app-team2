@@ -15,7 +15,9 @@ export function TotalSeatsFare({ selectedSeats }: TotalSeatsFareProps) {
                 <h1 className="!mt-0 !mb-0 !text-lg">お支払い合計：</h1>
                 <div className="text-primary ml-auto text-xl font-bold">{`￥${selectedSeats
                     .reduce((accumulator, currentValue) => {
-                        return accumulator + currentValue.seatFare;
+                        return currentValue.seatFare == null
+                            ? accumulator
+                            : accumulator + currentValue.seatFare;
                     }, 0)
                     .toLocaleString()}`}</div>
             </div>
