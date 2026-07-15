@@ -2,6 +2,8 @@ import { useState } from 'react';
 import type { Focused } from 'react-credit-cards-2';
 
 import type { ReserveUser } from '@/features/schedule/types/ReserveUser';
+import { checkMailRegex } from '@/shared/utils/CheckMailRegex';
+import { removeWhiteSpace } from '@/shared/utils/RemoveWhiteSpace';
 
 export function useReserveUser() {
     const [reserveUser, setReserveUser] = useState<ReserveUser>({
@@ -22,13 +24,13 @@ export function useReserveUser() {
     );
 
     const isNameEmpty = (value: string) => {
-        return value === '';
+        return removeWhiteSpace(value) === '';
     };
     const isNameMaxLength = (value: string) => {
         return value.length > 255;
     };
     const isMailInvalid = (value: string) => {
-        return value === '' || !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(value);
+        return value === '' || checkMailRegex(value);
     };
     const isMailMaxLength = (value: string) => {
         return value.length > 255;
@@ -36,8 +38,11 @@ export function useReserveUser() {
     const isCardNumberInvalid = (value: string) => {
         return value === '' || !/^\d{14,16}$/.test(value);
     };
+    const isCardNameEmpty = (value: string) => {
+        return removeWhiteSpace(value) === '';
+    };
     const isCardNameInvalid = (value: string) => {
-        return value === '' || !/^[A-Z\s]+$/.test(value);
+        return !/^[A-Z\s]+$/.test(value);
     };
     const isExpiryInvalid = (value: string) => {
         return value === '' || !/^\d{2}\/\d{2}$/.test(value);
@@ -53,6 +58,7 @@ export function useReserveUser() {
             isMailInvalid(reserveUser.reserverMail) ||
             isMailMaxLength(reserveUser.reserverMail) ||
             isCardNumberInvalid(reserveUser.cardNumber) ||
+            isCardNameEmpty(reserveUser.cardName) ||
             isCardNameInvalid(reserveUser.cardName) ||
             isExpiryInvalid(reserveUser.expiry) ||
             isCvcInvalid(reserveUser.cvc)
@@ -100,6 +106,12 @@ export function useReserveUser() {
                 });
             }
         } else if (field === 'cardName') {
+            if (isCardNameEmpty(value)) {
+                messages.push({
+                    field: 'cardName',
+                    message: 'カード名義人を入力してください',
+                });
+            }
             if (isCardNameInvalid(value)) {
                 messages.push({
                     field: 'cardName',

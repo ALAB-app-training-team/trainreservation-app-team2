@@ -1,6 +1,8 @@
 import { useState } from 'react';
 
 import type { ReservationListRequestDto } from '@/features/reservation/types/ReservationListRequestDto';
+import { checkMailRegex } from '@/shared/utils/CheckMailRegex';
+import { removeWhiteSpace } from '@/shared/utils/RemoveWhiteSpace';
 
 export function useReservationListRequestDto() {
     const [guestLoginForm, setGuestLoginForm] =
@@ -17,15 +19,13 @@ export function useReservationListRequestDto() {
     );
 
     const isNameEmpty = (value: string) => {
-        return value === '';
+        return removeWhiteSpace(value) === '';
     };
     const isMailEmpty = (value: string) => {
-        return value === '';
+        return removeWhiteSpace(value) === '';
     };
     const isMailInValid = (value: string) => {
-        return !/^[a-zA-Z0-9]+([._+-][a-zA-Z0-9]+)*@([a-zA-Z0-9][a-zA-Z0-9-]*[a-zA-Z0-9]*\.)+[a-zA-Z]{2,}$/.test(
-            value,
-        );
+        return checkMailRegex(value);
     };
 
     const editValidateMessage = (field: string, value: string) => {
@@ -48,7 +48,8 @@ export function useReservationListRequestDto() {
             } else if (isMailInValid(value)) {
                 messages.push({
                     field: 'reserverMail',
-                    message: '正しいメールアドレスの形式で入力してください',
+                    message:
+                        'メールアドレスの形式（~~@~~.~~）で入力してください',
                 });
             }
         }
