@@ -69,3 +69,24 @@ test('navigate-header', async ({ page }) => {
     await reservationGuestLoginPage.header.gotoScheduleSearch();
     await expect(page).toHaveURL('/scheduleSearch');
 });
+
+test('navigate-ゲスト認証がない場合に予約一覧・予約詳細にアクセスするとゲストログインに遷移する', async ({
+    page,
+}) => {
+    const scheduleSearchPage = new ScheduleSearchPage(page);
+    const reservationListPage = new ReservationListPage(page);
+    const reservedTicketPage = new ReservedTicketPage(page);
+
+    await scheduleSearchPage.goto();
+    await expect(page).toHaveURL('/scheduleSearch');
+    await page.evaluate(() => {
+        sessionStorage.clear();
+    });
+    await reservationListPage.goto();
+    await expect(page).toHaveURL('/reservationGuestLogin');
+
+    await scheduleSearchPage.goto();
+    await expect(page).toHaveURL('/scheduleSearch');
+    await reservedTicketPage.goto();
+    await expect(page).toHaveURL('/reservationGuestLogin');
+});
