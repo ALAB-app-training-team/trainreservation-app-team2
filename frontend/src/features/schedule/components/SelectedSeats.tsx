@@ -48,7 +48,7 @@ export function SelectedSeats({
                                         {selectedSeat.seatNumber +
                                             selectedSeat.seatColumn}
                                     </div>
-                                    <div className="ml-auto">{`￥${selectedSeat.seatFare != null ? selectedSeat.seatFare.toLocaleString() : '金額エラー'}`}</div>
+                                    <div className="ml-auto">{`￥${selectedSeat.seatFare != null ? selectedSeat.seatFare.toLocaleString() : '0'}`}</div>
                                 </div>
                             );
                         })
