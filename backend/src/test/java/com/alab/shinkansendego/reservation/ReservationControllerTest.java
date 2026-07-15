@@ -180,7 +180,10 @@ public class ReservationControllerTest {
             .andExpect(jsonPath("$.reservedSeats[2].seatColumn").value("A"))
             .andExpect(jsonPath("$.reservedSeats[0].codeToken").value("60a1ab63-a41f-430d-a2d1-10a76368d0f5"))
             .andExpect(jsonPath("$.reservedSeats[1].codeToken").value("3de8909e-32de-478e-bd9b-739f3fe6d6c3"))
-            .andExpect(jsonPath("$.reservedSeats[2].codeToken").value("e192e5f1-318e-4d10-b76d-2f2bf15e8b70"));
+            .andExpect(jsonPath("$.reservedSeats[2].codeToken").value("e192e5f1-318e-4d10-b76d-2f2bf15e8b70"))
+            .andExpect(jsonPath("$.reservedSeats[0].seatFare").value(5000))
+            .andExpect(jsonPath("$.reservedSeats[1].seatFare").value(10000))
+            .andExpect(jsonPath("$.reservedSeats[2].seatFare").value(15000));
     }
 
     @Test
