@@ -12,8 +12,6 @@ test('navigate-検索～予約確認', async ({ page }) => {
     const reservationListPage = new ReservationListPage(page);
     const reservedTicketPage = new ReservedTicketPage(page);
 
-    sessionStorage.clear();
-
     await scheduleSearchPage.goto();
     await expect(page).toHaveURL('/scheduleSearch');
     await scheduleSearchPage.clickDetailButton();
@@ -32,6 +30,9 @@ test('navigate-検索～予約確認', async ({ page }) => {
             'エラーが発生しました。しばらくしてから再度お試しください。',
         ),
     ).toBeHidden();
+    await page.evaluate(() => {
+        sessionStorage.clear();
+    });
 
     await reservationGuestLogin.goto();
     await expect(page).toHaveURL('/reservationGuestLogin');
@@ -47,13 +48,14 @@ test('navigate-検索～予約確認', async ({ page }) => {
             'エラーが発生しました。しばらくしてから再度お試しください。',
         ),
     ).toBeHidden();
+    await page.evaluate(() => {
+        sessionStorage.clear();
+    });
 });
 
 test('navigate-header', async ({ page }) => {
     const reservationGuestLoginPage = new ReservationGuestLoginPage(page);
     const scheduleSearchPage = new ScheduleSearchPage(page);
-
-    sessionStorage.clear();
 
     await reservationGuestLoginPage.goto();
     await expect(page).toHaveURL('/reservationGuestLogin');
