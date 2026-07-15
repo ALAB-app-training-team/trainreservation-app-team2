@@ -30,6 +30,9 @@ test('navigate-検索～予約確認', async ({ page }) => {
             'エラーが発生しました。しばらくしてから再度お試しください。',
         ),
     ).toBeHidden();
+
+    await reservationGuestLogin.goto();
+    await expect(page).toHaveURL('/reservationList');
     await page.evaluate(() => {
         sessionStorage.clear();
     });
