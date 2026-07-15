@@ -2,18 +2,19 @@ import { test, expect } from '@playwright/test';
 
 test('test', async ({ page }) => {
     await page.goto('http://localhost:5173/scheduleSearch');
-    await page.getByRole('button', { name: '詳細を見る' }).first().click();
-    await page.getByRole('button', { name: '2A', exact: true }).click();
-    await page.getByRole('button', { name: '2B', exact: true }).click();
+    await page.getByRole('button', { name: '詳細を見る' }).nth(1).click();
+    await page.getByRole('button', { name: '1A', exact: true }).click();
+    await page.getByRole('button', { name: '1B', exact: true }).click();
     await page.getByRole('button').filter({ hasText: /^$/ }).click();
-    await page.getByRole('button', { name: '2A', exact: true }).click();
-    await page.getByRole('button', { name: '2B', exact: true }).click();
+    await page.getByRole('button', { name: '1A', exact: true }).click();
+    await page.getByRole('button', { name: '1B', exact: true }).click();
+    await page.getByRole('button', { name: '2', exact: true }).click();
+    await page.getByRole('button', { name: '1A', exact: true }).click();
+    await page.getByRole('button', { name: '1B', exact: true }).click();
     await page.getByRole('button', { name: 'グリーン車' }).click();
-    await page.getByRole('button', { name: '2A', exact: true }).click();
-    await page.getByRole('button', { name: '2B', exact: true }).click();
+    await page.getByRole('button', { name: '1A', exact: true }).click();
     await page.getByRole('button', { name: 'グランクラス' }).click();
-    await page.getByRole('button', { name: '2A' }).click();
-    await page.getByRole('button', { name: '2B' }).click();
+    await page.getByRole('button', { name: '1A' }).click();
     await page.getByRole('textbox', { name: '購入者氏名' }).click();
     await page.getByRole('textbox', { name: '購入者氏名' }).fill('山田 太郎');
     await page.getByRole('textbox', { name: '購入者氏名' }).press('Tab');
