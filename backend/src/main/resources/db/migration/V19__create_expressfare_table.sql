@@ -3,7 +3,8 @@ CREATE TABLE M_ExpressFareKm
     express_fare_cd VARCHAR(5) NOT NULL PRIMARY KEY,
     min_km          INT        NOT NULL,
     max_km          INT        NOT NULL,
-    express_fare    INT        NOT NULL
+    express_fare    INT        NOT NULL,
+    UNIQUE (min_km, max_km)
 );
 
 INSERT INTO M_ExpressFareKm (express_fare_cd, min_km, max_km, express_fare)

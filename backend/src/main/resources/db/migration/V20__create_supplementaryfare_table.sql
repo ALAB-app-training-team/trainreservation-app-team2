@@ -5,7 +5,8 @@ CREATE TABLE M_SupplementaryFareKm
     max_km                INT        NOT NULL,
     reserved_fare         INT        NOT NULL,
     green_fare            INT        NOT NULL,
-    gc_fare               INT        NOT NULL
+    gc_fare               INT        NOT NULL,
+    UNIQUE (min_km, max_km)
 );
 
 INSERT INTO M_SupplementaryFareKm (supplementary_fare_cd, min_km, max_km, reserved_fare, green_fare, gc_fare)
