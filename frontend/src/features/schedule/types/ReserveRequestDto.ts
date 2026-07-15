@@ -1,6 +1,7 @@
 type SelectedSeat = {
     trainCarCd: string;
     seatCd: string;
+    seatFare: number;
 };
 
 export type ReserveRequestDto = {

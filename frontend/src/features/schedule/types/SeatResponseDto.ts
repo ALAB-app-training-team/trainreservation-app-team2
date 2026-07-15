@@ -4,5 +4,6 @@ export type SeatResponseDto = {
     seatCd: string;
     seatNumber: number;
     seatColumn: string;
+    seatFare: number;
     isReserved: boolean;
 };
