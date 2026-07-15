@@ -94,5 +94,6 @@ CREATE TABLE T_ReservedSeat
     train_car_cd VARCHAR(7) NOT NULL REFERENCES M_TrainCar (train_car_cd) ON DELETE RESTRICT,
     seat_cd      VARCHAR(9) NOT NULL REFERENCES M_Seat (seat_cd) ON DELETE RESTRICT,
     code_token   UUID       NOT NULL UNIQUE,
+    seat_fare INTEGER NOT NULL,
     UNIQUE (reservation_id, train_car_cd, seat_cd)
 );
