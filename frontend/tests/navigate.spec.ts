@@ -24,6 +24,8 @@ test('navigate-検索～予約確認', async ({ page }) => {
     await selectSeatPage.inputResererInfo();
     await selectSeatPage.inputCardInfo();
     await selectSeatPage.clickReseveButton();
+    await selectSeatPage.clickCancelButton();
+    await selectSeatPage.clickReseveButton();
     await selectSeatPage.clickConfirmButton();
     await expect(page).toHaveURL('/reservedTicket');
     await expect(

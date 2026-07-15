@@ -173,7 +173,7 @@ export function SelectSeats() {
                                 >
                                     <div className="flex items-center justify-center gap-4">
                                         <IoCardOutline />
-                                        予約を確定
+                                        予約する
                                     </div>
                                 </button>
                             </div>

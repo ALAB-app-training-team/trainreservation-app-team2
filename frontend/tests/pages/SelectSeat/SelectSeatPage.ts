@@ -13,6 +13,7 @@ export class SelectSeatPage {
     readonly cardExpiry: Locator;
     readonly secureCode: Locator;
     readonly reserveButton: Locator;
+    readonly cancelButton: Locator;
     readonly confirmButton: Locator;
 
     constructor(page: Page) {
@@ -34,8 +35,11 @@ export class SelectSeatPage {
         this.secureCode = page.getByRole('textbox', {
             name: 'セキュリティコード',
         });
-        this.reserveButton = page.getByRole('button', { name: '予約を確定' });
-        this.confirmButton = page.getByRole('button', { name: '予約を確定' });
+        this.reserveButton = page.getByRole('button', { name: '予約する' });
+        this.cancelButton = page.getByRole('button', { name: 'キャンセル' });
+        this.confirmButton = page.getByRole('button', {
+            name: '予約を確定する',
+        });
     }
 
     async clickBackButton() {
@@ -71,6 +75,10 @@ export class SelectSeatPage {
 
     async clickReseveButton() {
         await this.reserveButton.click();
+    }
+
+    async clickCancelButton() {
+        await this.cancelButton.click();
     }
 
     async clickConfirmButton() {
