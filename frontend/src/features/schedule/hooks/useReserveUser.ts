@@ -30,8 +30,11 @@ export function useReserveUser() {
     const isNameMaxLength = (value: string) => {
         return value.length > 255;
     };
+    const isMailEmpty = (value: string) => {
+        return removeWhiteSpace(value) === '';
+    };
     const isMailInvalid = (value: string) => {
-        return value === '' || checkMailRegex(value);
+        return checkMailRegex(value);
     };
     const isMailMaxLength = (value: string) => {
         return value.length > 255;
@@ -56,6 +59,7 @@ export function useReserveUser() {
         return (
             isNameEmpty(reserveUser.reserverName) ||
             isNameMaxLength(reserveUser.reserverName) ||
+            isMailEmpty(reserveUser.reserverMail) ||
             isMailInvalid(reserveUser.reserverMail) ||
             isMailMaxLength(reserveUser.reserverMail) ||
             isCardNumberInvalid(reserveUser.cardNumber) ||
@@ -86,6 +90,12 @@ export function useReserveUser() {
                 });
             }
         } else if (field === 'reserverMail') {
+            if (isMailEmpty(value)) {
+                messages.push({
+                    field: 'reserverMail',
+                    message: VALIDATE_MESSAGE.EMPTY_RESERVER_MAIL,
+                });
+            }
             if (isMailMaxLength(value)) {
                 messages.push({
                     field: 'reserverMail',

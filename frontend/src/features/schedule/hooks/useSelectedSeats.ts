@@ -47,7 +47,7 @@ export function useSelectedSeats() {
                 ),
             );
             alert(
-                ALERT_MESSAGE.RELEASE_SEAT +
+                `${ALERT_MESSAGE.RELEASE_SEAT}\n` +
                     reservedSeatsInSelectedSeats
                         .map(
                             (seat: SeatResponseDto) =>
