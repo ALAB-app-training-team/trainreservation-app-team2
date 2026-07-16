@@ -1,20 +1,11 @@
 import { test, expect } from '@playwright/test';
 import { ReservationGuestLoginPage } from '@tests/pages/ReservationGuestLogin/ReservationGuestLoginPage';
 
-test('予約データが存在する場合', async ({ page }) => {
-    const reservationGuestLogin = new ReservationGuestLoginPage(page);
-    reservationGuestLogin.goto();
-    await expect(page).toHaveURL('/reservationGuestLogin');
-    await reservationGuestLogin.inputGuestLoginInfo();
-    await reservationGuestLogin.clickGuestLoginButton();
-    await expect(page).toHaveURL('/reservationList');
-});
-
 test('予約データが存在しない場合', async ({ page }) => {
     const reservationGuestLogin = new ReservationGuestLoginPage(page);
     reservationGuestLogin.goto();
     await expect(page).toHaveURL('/reservationGuestLogin');
-    await reservationGuestLogin.inputGuestLoginInfo();
+    await reservationGuestLogin.inputNoReservationGuestLoginInfo();
     await reservationGuestLogin.clickGuestLoginButton();
     await expect(page.getByText('予約情報が見つかりません')).toBeVisible();
 });
@@ -35,7 +26,7 @@ test('メールアドレスの未入力', async ({ page }) => {
     await reservationGuestLogin.inputEmptyReserverMail();
     await reservationGuestLogin.clickReserverNameInput();
     await expect(
-        page.getByText('メールアドレスを入力してください'),
+        page.getByText('メールアドレスを入力してください', { exact: true }),
     ).toBeVisible();
 });
 

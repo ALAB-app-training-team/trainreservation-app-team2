@@ -46,6 +46,11 @@ export class ReservationGuestLoginPage {
         await this.fillMailAddress('tanaka@taro.jp');
     }
 
+    async inputNoReservationGuestLoginInfo() {
+        await this.fillName('NoReservationGuest');
+        await this.fillMailAddress('NoReservationGuest@test.jp');
+    }
+
     async inputEmptyReserverName() {
         await this.fillName('');
     }
