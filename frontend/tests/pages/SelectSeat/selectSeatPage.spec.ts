@@ -137,8 +137,6 @@ test('予約確定', async ({ page }) => {
     await selectSeatPage.inputResererInfo();
     await selectSeatPage.inputCardInfo();
     await selectSeatPage.clickReseveButton();
-    await selectSeatPage.clickCancelButton();
-    await selectSeatPage.clickReseveButton();
     await selectSeatPage.clickConfirmButton();
     await expect(page).toHaveURL('/reservedTicket');
     await expect(
