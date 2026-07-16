@@ -116,8 +116,21 @@ test('バリデーション？', async ({ page }) => {
 test('予約確定', async ({ page }) => {
     const scheduleSearchPage = new ScheduleSearchPage(page);
     const selectSeatPage = new SelectSeatPage(page);
-
     await scheduleSearchPage.goto();
     await expect(page).toHaveURL('/scheduleSearch');
     await scheduleSearchPage.clickDetailButton();
+    await expect(page).toHaveURL('/selectSeat');
+    await selectSeatPage.selectSeat();
+    await selectSeatPage.inputResererInfo();
+    await selectSeatPage.inputCardInfo();
+    await selectSeatPage.clickReseveButton();
+    await selectSeatPage.clickCancelButton();
+    await selectSeatPage.clickReseveButton();
+    await selectSeatPage.clickConfirmButton();
+    await expect(page).toHaveURL('/reservedTicket');
+    await expect(
+        page.getByText(
+            'エラーが発生しました。しばらくしてから再度お試しください。',
+        ),
+    ).toBeHidden();
 });
