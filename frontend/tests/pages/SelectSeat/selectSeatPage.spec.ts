@@ -32,18 +32,19 @@ test('ゴミ箱ボタンを押すと、選択した座席が解除される', as
 test('座席を6席選択すると、それ以上選択できない', async ({ page }) => {
     const scheduleSearchPage = new ScheduleSearchPage(page);
     const selectSeatPage = new SelectSeatPage(page);
-
+    //  ダイヤ検索画面からシートマップ画面に遷移する
     await scheduleSearchPage.goto();
     await expect(page).toHaveURL('/scheduleSearch');
     await scheduleSearchPage.clickDetailButton();
     await expect(page.getByText('座席が選択されていません')).toBeVisible();
+    // 1号車から座席を選択する
     const firstSeat = (await selectSeatPage.emptySeat.first()) ?? '';
     const firstSeatText = await firstSeat.textContent();
     await firstSeat.click();
     const secondSeat = (await selectSeatPage.emptySeat.nth(1)) ?? '';
     const secondSeatText = await secondSeat.textContent();
     await secondSeat.click();
-
+    // 2号車から座席を選択する
     await page
         .getByTestId('train-cars')
         .getByRole('button', { name: '2' })
@@ -59,21 +60,21 @@ test('座席を6席選択すると、それ以上選択できない', async ({ p
     const fourthSeat = (await selectSeatPage.emptySeat.nth(1)) ?? '';
     const fourthSeatText = await fourthSeat.textContent();
     await fourthSeat.click();
-
+    // グリーン車から座席を選択する
     await page.getByRole('button', { name: 'グリーン車' }).click();
     const trainCarInGreen =
         (await selectSeatPage.trainCars.first().textContent()) ?? '';
     const fifthSeat = (await selectSeatPage.emptySeat.first()) ?? '';
     const fifthSeatText = await fifthSeat.textContent();
     await fifthSeat.click();
-
+    // グランクラスから座席を選択する
     await page.getByRole('button', { name: 'グランクラス' }).click();
     const trainCarInGranClass =
         (await selectSeatPage.trainCars.first().textContent()) ?? '';
     const sixthSeat = (await selectSeatPage.emptySeat.first()) ?? '';
     const sixthSeatText = await sixthSeat.textContent();
     await sixthSeat.click();
-
+    // 選択した座席が正しいか確認する
     await expect(page.getByTestId('selected-seats')).toContainText(
         '1号車' + firstSeatText,
     );
@@ -94,7 +95,7 @@ test('座席を6席選択すると、それ以上選択できない', async ({ p
     await expect(page.getByTestId('selected-seats')).toContainText(
         trainCarInGranClass + '号車' + sixthSeatText,
     );
-
+    // ６席以上選択できないことを確認する
     await expect(
         page.getByText('一度に予約できる座席は6席までです'),
     ).toBeVisible();
