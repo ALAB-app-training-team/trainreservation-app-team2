@@ -19,7 +19,10 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.UUID;
 
-import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertAll;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertNull;
 
 @ActiveProfiles("test")
 @DataJpaTest
@@ -29,9 +32,9 @@ public class ReservationRepositoryTest {
     // テスト用DB作成
     @Container
     static PostgreSQLContainer<?> postgres = new PostgreSQLContainer<>("postgres:16")
-            .withDatabaseName("test")
-            .withUsername("user")
-            .withPassword("pass");
+        .withDatabaseName("test")
+        .withUsername("user")
+        .withPassword("pass");
     private final UUID purchaseId = UUID.fromString("4156b939-2e3e-46c1-92d3-7aa64b6ca575");
     @Autowired
     private ReservationRepository repo;
@@ -48,12 +51,12 @@ public class ReservationRepositoryTest {
     @DisplayName("購入情報IDから購入した座席の運行情報を取得できる")
     void findScheduleByPurchaseId_withPurchaseId_returnGetSuccess() {
         List<ReservedScheduleDto> expected = Arrays.asList(
-                new ReservedScheduleDto(
-                        LocalTime.of(6, 0, 0), "EKI01", "TestStation01", LocalTime.of(6, 55, 0), "EKI02", "TestStation02"),
-                new ReservedScheduleDto(
-                        LocalTime.of(7, 0, 0), "EKI02", "TestStation02", LocalTime.of(7, 55, 0), "EKI03", "TestStation03"),
-                new ReservedScheduleDto(
-                        LocalTime.of(8, 0, 0), "EKI03", "TestStation03", LocalTime.of(8, 55, 0), "EKI04", "TestStation04"));
+            new ReservedScheduleDto(
+                LocalTime.of(6, 0, 0), "EKI01", "TestStation01", LocalTime.of(6, 55, 0), "EKI02", "TestStation02"),
+            new ReservedScheduleDto(
+                LocalTime.of(7, 0, 0), "EKI02", "TestStation02", LocalTime.of(7, 55, 0), "EKI03", "TestStation03"),
+            new ReservedScheduleDto(
+                LocalTime.of(8, 0, 0), "EKI03", "TestStation03", LocalTime.of(8, 55, 0), "EKI04", "TestStation04"));
         List<ReservedScheduleDto> actual = repo.findReservationScheduleDtoByReservationId(purchaseId);
         assertEquals(expected, actual);
     }
@@ -73,10 +76,10 @@ public class ReservationRepositoryTest {
         ReservationDto expected = new ReservationDto("やまびこ1号", "EKI01", "EKI03", LocalDate.of(2026, 6, 1));
         ReservationDto actual = repo.findReservationDtoByReservationIdAndReserverNameAndReserverMail(purchaseId, "山田太郎", "email@sample.com");
         assertAll(
-                () -> assertEquals(expected.getTrainTypeName(), actual.getTrainTypeName()),
-                () -> assertEquals(expected.getDepartureStationCd(), actual.getDepartureStationCd()),
-                () -> assertEquals(expected.getArrivalStationCd(), actual.getArrivalStationCd()),
-                () -> assertEquals(expected.getRideDate(), actual.getRideDate())
+            () -> assertEquals(expected.getTrainTypeName(), actual.getTrainTypeName()),
+            () -> assertEquals(expected.getDepartureStationCd(), actual.getDepartureStationCd()),
+            () -> assertEquals(expected.getArrivalStationCd(), actual.getArrivalStationCd()),
+            () -> assertEquals(expected.getRideDate(), actual.getRideDate())
         );
     }
 

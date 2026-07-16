@@ -12,6 +12,23 @@ import { SelectSeats } from '@/features/schedule/pages/SelectSeats';
 import { Layout } from '@/Layout';
 import { Error } from '@/shared/pages/Error';
 
+const authLoader = (path: string) => {
+    const info = sessionStorage.getItem('guestLoginInfo');
+
+    if (path === '/reservationGuestLogin') {
+        if (info !== null) {
+            return redirect('/reservationList');
+        }
+        return null;
+    }
+
+    if (info === null) {
+        alert('セッションが切れました。再ログインしてください。');
+        return redirect('/reservationGuestLogin');
+    }
+    return null;
+};
+
 const router = createBrowserRouter([
     {
         path: '/',
@@ -34,16 +51,19 @@ const router = createBrowserRouter([
             },
             {
                 path: '/reservedTicket',
+                loader: () => authLoader('/reservedTicket'),
                 element: <ReservedTicket />,
                 errorElement: <Error />,
             },
             {
                 path: '/reservationList',
+                loader: () => authLoader('/reservationList'),
                 element: <ReservationList />,
                 errorElement: <Error />,
             },
             {
                 path: '/reservationGuestLogin',
+                loader: () => authLoader('/reservationGuestLogin'),
                 element: <ReservationGuestLogin />,
                 errorElement: <Error />,
             },

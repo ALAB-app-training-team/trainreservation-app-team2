@@ -31,9 +31,12 @@ public class TrainCarServiceTest {
     private final List<SeatResponseDto> emptySeatList = new ArrayList<>();
     private final List<String> emptySectionCdList = new ArrayList<>();
     private final SeatRequestDto request = new SeatRequestDto();
+<<<<<<< HEAD
     private final List<SectionKmEntity> sectionKmEntities = new ArrayList<>();
     private final TrainCarEntity trainCarEntity = new TrainCarEntity();
     private Map<String, Integer> fares = new HashMap<>();
+=======
+>>>>>>> 97bbf34a223a86a903671ad503e7459d045e3e58
     @Mock
     private TrainCarRepository trainCarRepo;
     @Mock
@@ -105,9 +108,12 @@ public class TrainCarServiceTest {
             "Test001",
             "Test2"))
             .thenReturn(List.of("TestSeat4"));
+<<<<<<< HEAD
         when(sectionKmRepository.findBySectionCdIn(List.of("Test1", "Test2"))).thenReturn(sectionKmEntities);
         when(trainCarRepo.findByTrainCarCd(request.getTrainCarCd())).thenReturn(trainCarEntity);
         when(fareKmService.getFareFromDistance(20.0)).thenReturn(fares);
+=======
+>>>>>>> 97bbf34a223a86a903671ad503e7459d045e3e58
 
         List<SeatResponseDto> expectList = getSeatResponseDtosList();
 

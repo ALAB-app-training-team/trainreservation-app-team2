@@ -12,10 +12,9 @@ import type { ReservationTabCd } from '@/features/reservation/types/ReservationT
 export function ReservationListBody() {
     const [selectedTab, setSelectedTab] = useState<ReservationTabCd>('ACTIVE');
     const { getReservation } = useReservationList();
-    const { getGuestLoginInfo } = useGuestLoginInfo();
     const { data: reservationList = [] } = useSuspenseQuery({
         queryKey: ['reservationList'],
-        queryFn: () => getReservation(getGuestLoginInfo()),
+        queryFn: () => getReservation(useGuestLoginInfo()),
         refetchOnMount: true,
     });
 

@@ -16,7 +16,9 @@ import org.testcontainers.junit.jupiter.Testcontainers;
 import java.util.Arrays;
 import java.util.List;
 
-import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertAll;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNull;
 
 @ActiveProfiles("test")
 @DataJpaTest
@@ -27,9 +29,9 @@ public class DepartureArrivalTimeRepositoryTest {
     // テスト用DB作成
     @Container
     static PostgreSQLContainer<?> postgres = new PostgreSQLContainer<>("postgres:16")
-            .withDatabaseName("test")
-            .withUsername("user")
-            .withPassword("pass");
+        .withDatabaseName("test")
+        .withUsername("user")
+        .withPassword("pass");
     @Autowired
     private DepartureArrivalTimeRepository repo;
 
@@ -55,9 +57,9 @@ public class DepartureArrivalTimeRepositoryTest {
         List<DepartureArrivalTimeEntity> expected = Arrays.asList(test4, test10, test17);
         List<DepartureArrivalTimeEntity> actual = repo.findBySectionCd("TEST2");
         assertAll(
-                () -> assertEquals(expected.getFirst().getTimeCd(), actual.getFirst().getTimeCd()),
-                () -> assertEquals(expected.get(1).getTimeCd(), actual.get(1).getTimeCd()),
-                () -> assertEquals(expected.get(2).getTimeCd(), actual.get(2).getTimeCd())
+            () -> assertEquals(expected.getFirst().getTimeCd(), actual.getFirst().getTimeCd()),
+            () -> assertEquals(expected.get(1).getTimeCd(), actual.get(1).getTimeCd()),
+            () -> assertEquals(expected.get(2).getTimeCd(), actual.get(2).getTimeCd())
         );
     }
 

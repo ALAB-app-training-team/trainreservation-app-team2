@@ -19,7 +19,6 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 
 @WebMvcTest(StationController.class)
 public class StationControllerTest {
-
     private final String baseUrl = "/api/stations";
     @Autowired
     private MockMvc mockMvc;
@@ -43,16 +42,16 @@ public class StationControllerTest {
         Mockito.when(service.getAllStationList()).thenReturn(expectList);
 
         mockMvc.perform(
-                        get(baseUrl).contentType(MediaType.APPLICATION_JSON))
-                .andExpect(status().isOk())
-                .andExpect(jsonPath("$.length()").value(4))
-                .andExpect(jsonPath("$[0].stationCd").value("Test1"))
-                .andExpect(jsonPath("$[1].stationCd").value("Test2"))
-                .andExpect(jsonPath("$[2].stationCd").value("Test3"))
-                .andExpect(jsonPath("$[3].stationCd").value("Test4"))
-                .andExpect(jsonPath("$[0].name").value("TestStation01"))
-                .andExpect(jsonPath("$[1].name").value("TestStation02"))
-                .andExpect(jsonPath("$[2].name").value("TestStation03"))
-                .andExpect(jsonPath("$[3].name").value("TestStation04"));
+                get(baseUrl).contentType(MediaType.APPLICATION_JSON))
+            .andExpect(status().isOk())
+            .andExpect(jsonPath("$.length()").value(4))
+            .andExpect(jsonPath("$[0].stationCd").value("Test1"))
+            .andExpect(jsonPath("$[1].stationCd").value("Test2"))
+            .andExpect(jsonPath("$[2].stationCd").value("Test3"))
+            .andExpect(jsonPath("$[3].stationCd").value("Test4"))
+            .andExpect(jsonPath("$[0].name").value("TestStation01"))
+            .andExpect(jsonPath("$[1].name").value("TestStation02"))
+            .andExpect(jsonPath("$[2].name").value("TestStation03"))
+            .andExpect(jsonPath("$[3].name").value("TestStation04"));
     }
 }
