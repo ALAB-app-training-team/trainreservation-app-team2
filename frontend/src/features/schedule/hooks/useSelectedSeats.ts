@@ -1,10 +1,11 @@
 import { useState } from 'react';
 
 import type { SeatResponseDto } from '@/features/schedule/types/SeatResponseDto';
+import { ALERT_MESSAGE } from '@/shared/constants/AlertMessages';
+import { LIMIT } from '@/shared/constants/Limit';
 
 export function useSelectedSeats() {
     const [selectedSeats, setSelectedSeats] = useState<SeatResponseDto[]>([]);
-    const limitSeats = 6;
 
     const handleSelectedSeats = (seat: SeatResponseDto) => {
         if (selectedSeats.includes(seat)) {
@@ -15,7 +16,7 @@ export function useSelectedSeats() {
                         seat.trainCarCd + seat.seatCd,
                 ),
             );
-        } else if (selectedSeats.length < limitSeats) {
+        } else if (selectedSeats.length < LIMIT.SEATS) {
             setSelectedSeats((prevSeats) => [...prevSeats, seat]);
         }
     };
@@ -46,7 +47,7 @@ export function useSelectedSeats() {
                 ),
             );
             alert(
-                '選択中の座席が予約されたため、以下の座席の選択を解除しました。' +
+                ALERT_MESSAGE.RELEASE_SEAT +
                     reservedSeatsInSelectedSeats
                         .map(
                             (seat: SeatResponseDto) =>
@@ -62,7 +63,6 @@ export function useSelectedSeats() {
 
     return {
         selectedSeats,
-        limitSeats,
         handleSelectedSeats,
         handleClear,
         checkReservedSeats,

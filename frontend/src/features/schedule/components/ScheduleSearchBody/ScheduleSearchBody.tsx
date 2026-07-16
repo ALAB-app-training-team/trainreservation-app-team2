@@ -7,6 +7,7 @@ import { ScheduleSearchForm } from '@/features/schedule/components/ScheduleSearc
 import { useSearchRequestDto } from '@/features/schedule/hooks/useSearchRequestDto';
 import { useStations } from '@/features/schedule/hooks/useStations';
 import { useStopStations } from '@/features/schedule/hooks/useStopStations';
+import { ERROR_MESSAGE } from '@/shared/constants/ErrorMessages';
 
 export function ScheduleSearchBody() {
     const location = useLocation();
@@ -57,7 +58,7 @@ export function ScheduleSearchBody() {
                                     (station) =>
                                         station.stationCd ===
                                         searchRequestDto.departureStationCd,
-                                )?.name || 'エラー'
+                                )?.name || ERROR_MESSAGE.ERROR
                             }
                             arrivalStationCd={searchRequestDto.arrivalStationCd}
                             arrivalStationName={
@@ -65,7 +66,7 @@ export function ScheduleSearchBody() {
                                     (station) =>
                                         station.stationCd ===
                                         searchRequestDto.arrivalStationCd,
-                                )?.name || 'エラー'
+                                )?.name || ERROR_MESSAGE.ERROR
                             }
                         />
                     </Suspense>

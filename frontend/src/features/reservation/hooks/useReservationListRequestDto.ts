@@ -1,6 +1,7 @@
 import { useState } from 'react';
 
 import type { ReservationListRequestDto } from '@/features/reservation/types/ReservationListRequestDto';
+import { VALIDATE_MESSAGE } from '@/shared/constants/ValidateMessages';
 import { checkMailRegex } from '@/shared/utils/CheckMailRegex';
 import { removeWhiteSpace } from '@/shared/utils/RemoveWhiteSpace';
 
@@ -36,20 +37,19 @@ export function useReservationListRequestDto() {
             if (isNameEmpty(value)) {
                 messages.push({
                     field: 'reserverName',
-                    message: '予約者氏名を入力してください',
+                    message: VALIDATE_MESSAGE.EMPTY_RESERVER_NAME,
                 });
             }
         } else if (field === 'reserverMail') {
             if (isMailEmpty(value)) {
                 messages.push({
                     field: 'reserverMail',
-                    message: 'メールアドレスを入力してください',
+                    message: VALIDATE_MESSAGE.EMPTY_RESERVER_MAIL,
                 });
             } else if (isMailInValid(value)) {
                 messages.push({
                     field: 'reserverMail',
-                    message:
-                        'メールアドレスの形式（~~@~~.~~）で入力してください',
+                    message: VALIDATE_MESSAGE.VALID_RESERVER_MAIL,
                 });
             }
         }

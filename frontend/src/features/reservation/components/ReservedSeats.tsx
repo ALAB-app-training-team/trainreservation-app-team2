@@ -3,6 +3,7 @@ import { MdAirlineSeatReclineExtra } from 'react-icons/md';
 import { tv, type VariantProps } from 'tailwind-variants';
 
 import type { ReservedSeatDto } from '@/features/reservation/types/ReservedSeatDto';
+import { ERROR_MESSAGE } from '@/shared/constants/ErrorMessages';
 
 const reservedSeatsStyle = tv({
     base: 'flex items-center gap-1 rounded-lg px-2',
@@ -84,7 +85,7 @@ export function ReservedSeats({
                                 );
                             })
                     ) : (
-                        <div>予約済座席が存在しません</div>
+                        <div>{ERROR_MESSAGE.NO_RESERVED_SEAT}</div>
                     )}
                 </div>
                 {getFieldError?.(id) && (

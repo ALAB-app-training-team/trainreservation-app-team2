@@ -7,6 +7,7 @@ import { useNavigate } from 'react-router-dom';
 import { GuestLoginInput } from '@/features/reservation/components/GuestLoginInput';
 import { useReservationList } from '@/features/reservation/hooks/useReservationList';
 import { useReservationListRequestDto } from '@/features/reservation/hooks/useReservationListRequestDto';
+import { ERROR_MESSAGE } from '@/shared/constants/ErrorMessages';
 import { removeWhiteSpace } from '@/shared/utils/RemoveWhiteSpace';
 
 export function ReservationGuestLoginBody() {
@@ -37,7 +38,7 @@ export function ReservationGuestLoginBody() {
             };
             const reservationList = await getReservation(request);
             if (reservationList.length === 0) {
-                setRequestError('予約情報が見つかりません');
+                setRequestError(ERROR_MESSAGE.NO_RESERVATION);
                 return;
             }
             queryClient.setQueryData(['reservationList'], reservationList);
@@ -45,7 +46,7 @@ export function ReservationGuestLoginBody() {
             navigate('/reservationList');
             window.scrollTo(0, 0);
         } catch {
-            setRequestError('予約取得時に何らかのエラーが発生しました');
+            setRequestError(ERROR_MESSAGE.ANY_RESERVATION_ERROR);
             return;
         } finally {
             setIsSubmitting(false);

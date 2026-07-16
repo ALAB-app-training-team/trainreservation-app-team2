@@ -2,6 +2,7 @@ import { useState } from 'react';
 import type { Focused } from 'react-credit-cards-2';
 
 import type { ReserveUser } from '@/features/schedule/types/ReserveUser';
+import { VALIDATE_MESSAGE } from '@/shared/constants/ValidateMessages';
 import { checkMailRegex } from '@/shared/utils/CheckMailRegex';
 import { removeWhiteSpace } from '@/shared/utils/RemoveWhiteSpace';
 
@@ -75,61 +76,60 @@ export function useReserveUser() {
             if (isNameEmpty(value)) {
                 messages.push({
                     field: 'reserverName',
-                    message: '予約者氏名を入力してください',
+                    message: VALIDATE_MESSAGE.EMPTY_RESERVER_NAME,
                 });
             }
             if (isNameMaxLength(value)) {
                 messages.push({
                     field: 'reserverName',
-                    message: '予約者氏名は255文字以内で入力してください',
+                    message: VALIDATE_MESSAGE.MAX_LENGTH_RESERVER_NAME,
                 });
             }
         } else if (field === 'reserverMail') {
             if (isMailMaxLength(value)) {
                 messages.push({
                     field: 'reserverMail',
-                    message: 'メールアドレスは255文字以内で入力してください',
+                    message: VALIDATE_MESSAGE.MAX_LENGTH_RESERVER_MAIL,
                 });
             }
             if (isMailInvalid(value)) {
                 messages.push({
                     field: 'reserverMail',
-                    message:
-                        'メールアドレスの形式（~~@~~.~~）で入力してください',
+                    message: VALIDATE_MESSAGE.VALID_RESERVER_MAIL,
                 });
             }
         } else if (field === 'cardNumber') {
             if (isCardNumberInvalid(value)) {
                 messages.push({
                     field: 'cardNumber',
-                    message: '14-16桁の有効なカード番号を入力してください',
+                    message: VALIDATE_MESSAGE.VALID_CARD_NUMBER,
                 });
             }
         } else if (field === 'cardName') {
             if (isCardNameEmpty(value)) {
                 messages.push({
                     field: 'cardName',
-                    message: 'カード名義人を入力してください',
+                    message: VALIDATE_MESSAGE.EMPTY_CARD_NAME,
                 });
             }
             if (isCardNameInvalid(value)) {
                 messages.push({
                     field: 'cardName',
-                    message: '半角英大文字・半角スペースで入力してください',
+                    message: VALIDATE_MESSAGE.VALID_CARD_NAME,
                 });
             }
         } else if (field === 'expiry') {
             if (isExpiryInvalid(value)) {
                 messages.push({
                     field: 'expiry',
-                    message: 'MM/YY（月/年）の形式で入力してください',
+                    message: VALIDATE_MESSAGE.VALID_EXPIRY,
                 });
             }
         } else if (field === 'cvc') {
             if (isCvcInvalid(value)) {
                 messages.push({
                     field: 'cvc',
-                    message: '半角数字3-4桁で入力してください',
+                    message: VALIDATE_MESSAGE.VALID_CVC,
                 });
             }
         }

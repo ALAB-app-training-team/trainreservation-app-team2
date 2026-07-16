@@ -3,6 +3,7 @@ import { useMemo, useState } from 'react';
 
 import type { SearchRequestDto } from '@/features/schedule/types/SearchRequestDto';
 import type { Station } from '@/features/schedule/types/Station';
+import { VALIDATE_MESSAGE } from '@/shared/constants/ValidateMessages';
 
 type useSearchRequestDtoProps = {
     stations: Station[];
@@ -67,18 +68,21 @@ export function useSearchRequestDto({
     const inValidMessages: InValidMessage[] = useMemo(() => {
         const messages: InValidMessage[] = [];
         if (isDateEmpty) {
-            messages.push({ field: 'date', message: '日付を入力してください' });
+            messages.push({
+                field: 'date',
+                message: VALIDATE_MESSAGE.EMPTY_DATE,
+            });
         }
         if (isDateOutsideOneMonth) {
             messages.push({
                 field: 'date',
-                message: '出発日は本日から1か月以内の日付を指定してください',
+                message: VALIDATE_MESSAGE.OUTSIDE_ONE_MONTH,
             });
         }
         if (isStationSame) {
             messages.push({
                 field: 'arrivalStation',
-                message: '乗車駅と異なる駅を選択してください。',
+                message: VALIDATE_MESSAGE.SAME_STATION,
             });
         }
 
