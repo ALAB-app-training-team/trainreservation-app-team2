@@ -14,11 +14,10 @@ export function ReservedTicket() {
     const location = useLocation();
     const navigate = useNavigate();
     const { getReservedTickets } = useReservedTickets();
-    const { getGuestLoginInfo } = useGuestLoginInfo();
     const { purchaseId, isBack } = location.state;
     const { data: reservedTickets } = useSuspenseQuery({
         queryKey: ['reservationTickets', purchaseId],
-        queryFn: () => getReservedTickets(purchaseId, getGuestLoginInfo()),
+        queryFn: () => getReservedTickets(purchaseId, useGuestLoginInfo()),
         refetchOnMount: true,
     });
 

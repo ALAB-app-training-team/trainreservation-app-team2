@@ -26,9 +26,9 @@ public class StationRepositoryTest {
     // テスト用DB作成
     @Container
     static PostgreSQLContainer<?> postgres = new PostgreSQLContainer<>("postgres:16")
-            .withDatabaseName("test")
-            .withUsername("user")
-            .withPassword("pass");
+        .withDatabaseName("test")
+        .withUsername("user")
+        .withPassword("pass");
     @Autowired
     private StationRepository repo;
 

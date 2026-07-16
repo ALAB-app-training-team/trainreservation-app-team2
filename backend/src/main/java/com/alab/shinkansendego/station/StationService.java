@@ -11,7 +11,7 @@ public class StationService {
 
     @Autowired
     public StationService(
-            StationRepository stationRepository) {
+        StationRepository stationRepository) {
         this.stationRepository = stationRepository;
     }
 

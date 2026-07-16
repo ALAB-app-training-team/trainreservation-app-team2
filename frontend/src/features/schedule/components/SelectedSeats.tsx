@@ -14,13 +14,14 @@ export function SelectedSeats({
     handleClear,
 }: SelectedSeatsProps) {
     return (
-        <div className="flex flex-col gap-4">
+        <div className="flex flex-col gap-4" data-testid="selected-seats">
             <div className="flex items-center gap-4">
                 <h1 className="!mt-0 !mb-0 !text-lg">選択した座席</h1>
                 <button
                     type="button"
                     onClick={handleClear}
                     className="border-primary text-primary rounded-lg border-2 p-1"
+                    data-testid="trash-button"
                 >
                     <FaTrashCan />
                 </button>
