@@ -41,15 +41,20 @@ import java.util.UUID;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
-import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertAll;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyList;
 import static org.mockito.Mockito.when;
-import static org.springframework.test.web.client.match.MockRestRequestMatchers.*;
+import static org.springframework.test.web.client.match.MockRestRequestMatchers.header;
+import static org.springframework.test.web.client.match.MockRestRequestMatchers.method;
+import static org.springframework.test.web.client.match.MockRestRequestMatchers.requestTo;
 import static org.springframework.test.web.client.response.MockRestResponseCreators.withStatus;
 
 public class ReservationServiceTest {
-
     private final ReservationDto purchase = new ReservationDto("やまびこ1号", "THK01", "THK09", LocalDate.of(2026, 6, 1));
     private final UUID purchaseId1 = UUID.fromString("4156b939-2e3e-46c1-92d3-7aa64b6ca575");
     private final UUID purchaseId2 = UUID.fromString("3136b939-2e3e-46c1-92d3-7aa64b6ca666");
@@ -59,7 +64,6 @@ public class ReservationServiceTest {
     private final ReservedSeatDto seat2 = new ReservedSeatDto("グリーン車", 9, 1, "A", UUID.fromString("3de8909e-32de-478e-bd9b-739f3fe6d6c3"));
     private final ReservedSeatDto seat3 = new ReservedSeatDto("グランクラス", 10, 1, "A", UUID.fromString("e192e5f1-318e-4d10-b76d-2f2bf15e8b70"));
     private final List<DepartureArrivalTimeEntity> scheduleEntityList = new ArrayList<>();
-
     @Mock
     private ReservationRepository reservationRepo;
     @Mock
@@ -78,14 +82,14 @@ public class ReservationServiceTest {
     private @NonNull ReservationResponseDto getExpectReservationResponseDto(UUID purchaseId) {
         List<ReservedSeatDto> reservedSeatList = Arrays.asList(seat1, seat2, seat3);
         return new ReservationResponseDto(
-                purchaseId,
-                "やまびこ1号",
-                "東京",
-                LocalTime.of(6, 4, 0),
-                "仙台",
-                LocalTime.of(7, 58, 0),
-                LocalDate.of(2026, 6, 1),
-                reservedSeatList);
+            purchaseId,
+            "やまびこ1号",
+            "東京",
+            LocalTime.of(6, 4, 0),
+            "仙台",
+            LocalTime.of(7, 58, 0),
+            LocalDate.of(2026, 6, 1),
+            reservedSeatList);
     }
 
     /**
@@ -163,7 +167,7 @@ public class ReservationServiceTest {
         restClientBuilder = RestClient.builder();
         this.mockRestServiceServer = MockRestServiceServer.bindTo(restClientBuilder).build();
         this.service = new ReservationService(
-                reservationRepo, reservedSeatRepo, sectionKmRepo, departureArrivalTimeRepo, reservedSeatSectionRepo, restClientBuilder
+            reservationRepo, reservedSeatRepo, sectionKmRepo, departureArrivalTimeRepo, reservedSeatSectionRepo, restClientBuilder
         );
         scheduleList.clear();
         ReservedScheduleDto schedule1 = new ReservedScheduleDto(LocalTime.of(6, 4, 0), "THK01", "東京", LocalTime.of(6, 9, 0), "THK02", "上野");
@@ -191,8 +195,8 @@ public class ReservationServiceTest {
         String email = "yamada@some.example.jp";
         List<ReservationEntity> reservationList = Arrays.asList(buildReservation(purchaseId1), buildReservation(purchaseId2));
         List<ReservedSeatEntity> seatList = Arrays.asList(
-                buildSeat(purchaseId1, "指定席", 1, 1, "A", UUID.fromString("60a1ab63-a41f-430d-a2d1-10a76368d0f5")),
-                buildSeat(purchaseId2, "グリーン車", 9, 1, "A", UUID.fromString("3de8909e-32de-478e-bd9b-739f3fe6d6c3"))
+            buildSeat(purchaseId1, "指定席", 1, 1, "A", UUID.fromString("60a1ab63-a41f-430d-a2d1-10a76368d0f5")),
+            buildSeat(purchaseId2, "グリーン車", 9, 1, "A", UUID.fromString("3de8909e-32de-478e-bd9b-739f3fe6d6c3"))
         );
 
         when(reservationRepo.findByReserverNameAndReserverMail(name, email)).thenReturn(reservationList);
@@ -201,16 +205,16 @@ public class ReservationServiceTest {
         List<ReservationResponseDto> result = service.getReservationList(name, email);
 
         assertAll(
-                () -> assertEquals(2, result.size()),
-                () -> assertEquals(purchaseId1, result.get(0).getPurchaseId()),
-                () -> assertEquals("やまびこ1号", result.get(0).getTrainTypeName()),
-                () -> assertEquals("東京", result.get(0).getDepartureStationName()),
-                () -> assertEquals(LocalTime.of(6, 4, 0), result.get(0).getDepartureTime()),
-                () -> assertEquals("仙台", result.get(0).getArrivalStationName()),
-                () -> assertEquals(LocalTime.of(7, 58, 0), result.get(0).getArrivalTime()),
-                () -> assertEquals(LocalDate.of(2026, 6, 1), result.get(0).getRideDate()),
-                () -> assertEquals(1, result.get(0).getReservedSeats().size()),
-                () -> assertEquals("指定席", result.get(0).getReservedSeats().get(0).getTrainCarTypeName())
+            () -> assertEquals(2, result.size()),
+            () -> assertEquals(purchaseId1, result.get(0).getPurchaseId()),
+            () -> assertEquals("やまびこ1号", result.get(0).getTrainTypeName()),
+            () -> assertEquals("東京", result.get(0).getDepartureStationName()),
+            () -> assertEquals(LocalTime.of(6, 4, 0), result.get(0).getDepartureTime()),
+            () -> assertEquals("仙台", result.get(0).getArrivalStationName()),
+            () -> assertEquals(LocalTime.of(7, 58, 0), result.get(0).getArrivalTime()),
+            () -> assertEquals(LocalDate.of(2026, 6, 1), result.get(0).getRideDate()),
+            () -> assertEquals(1, result.get(0).getReservedSeats().size()),
+            () -> assertEquals("指定席", result.get(0).getReservedSeats().get(0).getTrainCarTypeName())
         );
     }
 
@@ -245,8 +249,8 @@ public class ReservationServiceTest {
     void getReservation_withNotExistPurchaseRequest_returnIllegalArgumentException() {
         when(reservationRepo.findReservationDtoByReservationIdAndReserverNameAndReserverMail(purchaseId1, "山田太郎", "email@sample.com")).thenReturn(null);
         Exception ex = assertThrows(
-                IllegalArgumentException.class,
-                () -> service.getReservation(purchaseId1, "山田太郎", "email@sample.com")
+            IllegalArgumentException.class,
+            () -> service.getReservation(purchaseId1, "山田太郎", "email@sample.com")
         );
         assertEquals("PurchaseId is Not found", ex.getMessage());
     }
@@ -256,8 +260,8 @@ public class ReservationServiceTest {
     void getReservation_withNotExistReserverName_returnIllegalArgumentException() {
         when(reservationRepo.findReservationDtoByReservationIdAndReserverNameAndReserverMail(purchaseId1, "NotFound太郎", "email@sample.com")).thenReturn(null);
         Exception ex = assertThrows(
-                IllegalArgumentException.class,
-                () -> service.getReservation(purchaseId1, "NotFound太郎", "email@sample.com")
+            IllegalArgumentException.class,
+            () -> service.getReservation(purchaseId1, "NotFound太郎", "email@sample.com")
         );
         assertEquals("PurchaseId is Not found", ex.getMessage());
     }
@@ -269,8 +273,8 @@ public class ReservationServiceTest {
         when(reservationRepo.findReservationDtoByReservationIdAndReserverNameAndReserverMail(purchaseId1, "山田太郎", "email@sample.com")).thenReturn(purchase);
         when(reservationRepo.findReservationScheduleDtoByReservationId(purchaseId1)).thenReturn(scheduleList);
         Exception ex = assertThrows(
-                IllegalArgumentException.class,
-                () -> service.getReservation(purchaseId1, "山田太郎", "email@sample.com")
+            IllegalArgumentException.class,
+            () -> service.getReservation(purchaseId1, "山田太郎", "email@sample.com")
         );
         assertEquals("DepartureAndArrivalStation is Not Found", ex.getMessage());
     }
@@ -282,8 +286,8 @@ public class ReservationServiceTest {
         when(reservationRepo.findReservationDtoByReservationIdAndReserverNameAndReserverMail(purchaseId1, "山田太郎", "email@sample.com")).thenReturn(purchase);
         when(reservationRepo.findReservationScheduleDtoByReservationId(purchaseId1)).thenReturn(scheduleList);
         Exception ex = assertThrows(
-                IllegalArgumentException.class,
-                () -> service.getReservation(purchaseId1, "山田太郎", "email@sample.com")
+            IllegalArgumentException.class,
+            () -> service.getReservation(purchaseId1, "山田太郎", "email@sample.com")
         );
         assertEquals("DepartureAndArrivalStation is Not Found", ex.getMessage());
     }
@@ -291,7 +295,7 @@ public class ReservationServiceTest {
     @Test
     @DisplayName("購入情報・購入座席情報を挿入できる")
     void insertReservation_withValidReserveRequestDto_returnInsertReservationId() {
-        ReserveRequestDto request = new ReserveRequestDto("Test01", LocalDate.now(), "Test0", "Test1", "TestTaro", "test@main", "Test2", List.of(new ReserveRequestDto.SelectedSeatDto("E5SER01", "SEAT01001"), new ReserveRequestDto.SelectedSeatDto("E5SER01", "SEAT01002"), new ReserveRequestDto.SelectedSeatDto("E5SER01", "SEAT01003"), new ReserveRequestDto.SelectedSeatDto("E5SER01", "SEAT01004"), new ReserveRequestDto.SelectedSeatDto("E5SER01", "SEAT01005"), new ReserveRequestDto.SelectedSeatDto("E5SER01", "SEAT01006")));
+        ReserveRequestDto request = new ReserveRequestDto("Test01", LocalDate.now(), "Test0", "Test1", "TestTaro", "test@main", "Test2", List.of(new ReserveRequestDto.SelectedSeatDto("E5SER01", "SEAT01001", 0), new ReserveRequestDto.SelectedSeatDto("E5SER01", "SEAT01002", 0), new ReserveRequestDto.SelectedSeatDto("E5SER01", "SEAT01003", 0), new ReserveRequestDto.SelectedSeatDto("E5SER01", "SEAT01004", 0), new ReserveRequestDto.SelectedSeatDto("E5SER01", "SEAT01005", 0), new ReserveRequestDto.SelectedSeatDto("E5SER01", "SEAT01006", 0)));
         DepartureArrivalTimeEntity departureArrivalTime = new DepartureArrivalTimeEntity();
         departureArrivalTime.setTimeCd("Test1");
         departureArrivalTime.setScheduleCd(request.getScheduleCd());
@@ -307,9 +311,9 @@ public class ReservationServiceTest {
         }});
         when(reservedSeatRepo.saveAll(any())).thenReturn(Stream.generate(ReservedSeatEntity::new).limit(request.getSeats().size()).collect(Collectors.toList()));
         when(reservedSeatSectionRepo.saveAll(any())).
-                thenReturn(Stream.generate(ReservedSeatSectionEntity::new).
-                        limit((List.of(departureArrivalTime.getSectionCd())).size() * request.getSeats().size())
-                        .collect(Collectors.toList()));
+            thenReturn(Stream.generate(ReservedSeatSectionEntity::new).
+                limit((List.of(departureArrivalTime.getSectionCd())).size() * request.getSeats().size())
+                .collect(Collectors.toList()));
         MockHttpServletRequest mockRequest = new MockHttpServletRequest();
         mockRequest.setRequestURI("/api/reservations");
         mockRequest.setServerName("localhost");
@@ -319,11 +323,11 @@ public class ReservationServiceTest {
         RequestContextHolder.setRequestAttributes(new ServletRequestAttributes(mockRequest));
 
         this.mockRestServiceServer.expect(requestTo("http://localhost:8080/api/payments"))
-                .andExpect(method(HttpMethod.POST))
-                .andExpect(header("Content-Type", "application/json"))
-                .andRespond(withStatus(HttpStatus.CREATED)
-                        .contentType(MediaType.TEXT_PLAIN)
-                        .body("paymentTrackingId"));
+            .andExpect(method(HttpMethod.POST))
+            .andExpect(header("Content-Type", "application/json"))
+            .andRespond(withStatus(HttpStatus.CREATED)
+                .contentType(MediaType.TEXT_PLAIN)
+                .body("paymentTrackingId"));
         UUID result = service.insertReservation(request);
         assertNotNull(result);
         this.mockRestServiceServer.verify();
@@ -346,14 +350,29 @@ public class ReservationServiceTest {
     @Test
     @DisplayName("座席リストが6以上の場合、IllegalArgumentExceptionが発生する")
     void insertReservation_withMaxSelectedSeatDto_throwsIllegalArgumentException() {
-        ReserveRequestDto request = new ReserveRequestDto("Test01", LocalDate.now(), "Test0", "Test1", "TestTaro", "test@main", "Test2", List.of(new ReserveRequestDto.SelectedSeatDto("E5SER01", "SEAT01001"), new ReserveRequestDto.SelectedSeatDto("E5SER01", "SEAT01001"), new ReserveRequestDto.SelectedSeatDto("E5SER01", "SEAT01001"), new ReserveRequestDto.SelectedSeatDto("E5SER01", "SEAT01001"), new ReserveRequestDto.SelectedSeatDto("E5SER01", "SEAT01001"), new ReserveRequestDto.SelectedSeatDto("E5SER01", "SEAT01001"), new ReserveRequestDto.SelectedSeatDto("E5SER01", "SEAT01001")));
+        ReserveRequestDto request = new ReserveRequestDto("Test01", LocalDate.now(), "Test0", "Test1", "TestTaro", "test@main", "Test2",
+            List.of(
+                new ReserveRequestDto.SelectedSeatDto("E5SER01", "SEAT01001", 0),
+                new ReserveRequestDto.SelectedSeatDto("E5SER01", "SEAT01001", 0),
+                new ReserveRequestDto.SelectedSeatDto("E5SER01", "SEAT01001", 0),
+                new ReserveRequestDto.SelectedSeatDto("E5SER01", "SEAT01001", 0),
+                new ReserveRequestDto.SelectedSeatDto("E5SER01", "SEAT01001", 0),
+                new ReserveRequestDto.SelectedSeatDto("E5SER01", "SEAT01001", 0),
+                new ReserveRequestDto.SelectedSeatDto("E5SER01", "SEAT01001", 0)));
         assertThrows(IllegalArgumentException.class, () -> service.insertReservation(request));
     }
 
     @Test
     @DisplayName("該当区間の出発到着時刻が存在しない場合、IllegalArgumentExceptionが発生する")
     void insertReservation_withNotExistingSection_throwsIllegalArgumentException() {
-        ReserveRequestDto request = new ReserveRequestDto("Test01", LocalDate.now(), "Test0", "Test1", "TestTaro", "test@main", "Test2", List.of(new ReserveRequestDto.SelectedSeatDto("E5SER01", "SEAT01001"), new ReserveRequestDto.SelectedSeatDto("E5SER01", "SEAT01002"), new ReserveRequestDto.SelectedSeatDto("E5SER01", "SEAT01003"), new ReserveRequestDto.SelectedSeatDto("E5SER01", "SEAT01004"), new ReserveRequestDto.SelectedSeatDto("E5SER01", "SEAT01005"), new ReserveRequestDto.SelectedSeatDto("E5SER01", "SEAT01006")));
+        ReserveRequestDto request = new ReserveRequestDto("Test01", LocalDate.now(), "Test0", "Test1", "TestTaro", "test@main", "Test2",
+            List.of(
+                new ReserveRequestDto.SelectedSeatDto("E5SER01", "SEAT01001", 0),
+                new ReserveRequestDto.SelectedSeatDto("E5SER01", "SEAT01002", 0),
+                new ReserveRequestDto.SelectedSeatDto("E5SER01", "SEAT01003", 0),
+                new ReserveRequestDto.SelectedSeatDto("E5SER01", "SEAT01004", 0),
+                new ReserveRequestDto.SelectedSeatDto("E5SER01", "SEAT01005", 0),
+                new ReserveRequestDto.SelectedSeatDto("E5SER01", "SEAT01006", 0)));
         DepartureArrivalTimeEntity departureArrivalTime = new DepartureArrivalTimeEntity();
         departureArrivalTime.setTimeCd("Test1");
         departureArrivalTime.setScheduleCd(request.getScheduleCd());
@@ -371,7 +390,7 @@ public class ReservationServiceTest {
     @Test
     @DisplayName("同一購入情報IDで重複した座席を予約しようとした場合、DataAccessExceptionが発生する")
     void insertReservation_withSameSelectedSeatDto_throwsDataAccessException() {
-        ReserveRequestDto request = new ReserveRequestDto("Test01", LocalDate.now(), "Test0", "Test1", "TestTaro", "test@main", "Test2", List.of(new ReserveRequestDto.SelectedSeatDto("E5SER01", "SEAT01001"), new ReserveRequestDto.SelectedSeatDto("E5SER01", "SEAT01001")));
+        ReserveRequestDto request = new ReserveRequestDto("Test01", LocalDate.now(), "Test0", "Test1", "TestTaro", "test@main", "Test2", List.of(new ReserveRequestDto.SelectedSeatDto("E5SER01", "SEAT01001", 0), new ReserveRequestDto.SelectedSeatDto("E5SER01", "SEAT01001", 0)));
         DepartureArrivalTimeEntity departureArrivalTime = new DepartureArrivalTimeEntity();
         departureArrivalTime.setTimeCd("Test1");
         departureArrivalTime.setScheduleCd(request.getScheduleCd());
@@ -393,7 +412,7 @@ public class ReservationServiceTest {
     @Test
     @DisplayName("insertPurchaseが失敗した場合、RuntimeExceptionが発生する")
     void insertReservation_withInsertInsertReservationFails_throwsRuntimeException() {
-        ReserveRequestDto request = new ReserveRequestDto("Test01", LocalDate.now(), "Test0", "Test1", "TestTaro", "test@main", "Test2", List.of(new ReserveRequestDto.SelectedSeatDto("E5SER01", "SEAT01001"), new ReserveRequestDto.SelectedSeatDto("E5SER01", "SEAT01001")));
+        ReserveRequestDto request = new ReserveRequestDto("Test01", LocalDate.now(), "Test0", "Test1", "TestTaro", "test@main", "Test2", List.of(new ReserveRequestDto.SelectedSeatDto("E5SER01", "SEAT01001", 0), new ReserveRequestDto.SelectedSeatDto("E5SER01", "SEAT01001", 0)));
         DepartureArrivalTimeEntity departureArrivalTime = new DepartureArrivalTimeEntity();
         departureArrivalTime.setTimeCd("Test1");
         departureArrivalTime.setScheduleCd(request.getScheduleCd());
@@ -412,7 +431,7 @@ public class ReservationServiceTest {
     @Test
     @DisplayName("saveAllが失敗した場合、RuntimeExceptionが発生する")
     void insertReservation_withInsertPurchasedFails_throwsRuntimeException() {
-        ReserveRequestDto request = new ReserveRequestDto("Test01", LocalDate.now(), "Test0", "Test1", "TestTaro", "test@main", "Test2", List.of(new ReserveRequestDto.SelectedSeatDto("E5SER01", "SEAT01001"), new ReserveRequestDto.SelectedSeatDto("E5SER01", "SEAT01001")));
+        ReserveRequestDto request = new ReserveRequestDto("Test01", LocalDate.now(), "Test0", "Test1", "TestTaro", "test@main", "Test2", List.of(new ReserveRequestDto.SelectedSeatDto("E5SER01", "SEAT01001", 0), new ReserveRequestDto.SelectedSeatDto("E5SER01", "SEAT01001", 0)));
         DepartureArrivalTimeEntity departureArrivalTime = new DepartureArrivalTimeEntity();
         departureArrivalTime.setTimeCd("Test1");
         departureArrivalTime.setScheduleCd(request.getScheduleCd());
@@ -434,7 +453,7 @@ public class ReservationServiceTest {
     @Test
     @DisplayName("既に予約済みの座席を予約しようとした場合、DataAccessExceptionが発生する")
     void insertReservation_withAlreadyReservedSeat_throwsDataAccessException() {
-        ReserveRequestDto request = new ReserveRequestDto("Test01", LocalDate.now(), "Test0", "Test1", "TestTaro", "test@main", "Test2", List.of(new ReserveRequestDto.SelectedSeatDto("E5SER01", "SEAT01001"), new ReserveRequestDto.SelectedSeatDto("E5SER01", "SEAT01001")));
+        ReserveRequestDto request = new ReserveRequestDto("Test01", LocalDate.now(), "Test0", "Test1", "TestTaro", "test@main", "Test2", List.of(new ReserveRequestDto.SelectedSeatDto("E5SER01", "SEAT01001", 0), new ReserveRequestDto.SelectedSeatDto("E5SER01", "SEAT01001", 0)));
         DepartureArrivalTimeEntity departureArrivalTime = new DepartureArrivalTimeEntity();
         departureArrivalTime.setTimeCd("Test1");
         departureArrivalTime.setScheduleCd(request.getScheduleCd());
@@ -457,7 +476,7 @@ public class ReservationServiceTest {
     @Test
     @DisplayName("saveAllReservedSeatSectionsが失敗した場合、RuntimeExceptionが発生する")
     void insertReservation_withSaveAllReservedSeatSectionsFails_throwsRuntimeException() {
-        ReserveRequestDto request = new ReserveRequestDto("Test01", LocalDate.now(), "Test0", "Test1", "TestTaro", "test@main", "Test2", List.of(new ReserveRequestDto.SelectedSeatDto("E5SER01", "SEAT01001"), new ReserveRequestDto.SelectedSeatDto("E5SER01", "SEAT01001")));
+        ReserveRequestDto request = new ReserveRequestDto("Test01", LocalDate.now(), "Test0", "Test1", "TestTaro", "test@main", "Test2", List.of(new ReserveRequestDto.SelectedSeatDto("E5SER01", "SEAT01001", 0), new ReserveRequestDto.SelectedSeatDto("E5SER01", "SEAT01001", 0)));
         DepartureArrivalTimeEntity departureArrivalTime = new DepartureArrivalTimeEntity();
 
         departureArrivalTime.setTimeCd("Test1");
@@ -484,11 +503,11 @@ public class ReservationServiceTest {
         RequestContextHolder.setRequestAttributes(new ServletRequestAttributes(mockRequest));
 
         this.mockRestServiceServer.expect(requestTo("http://localhost:8080/api/payments"))
-                .andExpect(method(HttpMethod.POST))
-                .andExpect(header("Content-Type", "application/json"))
-                .andRespond(withStatus(HttpStatus.CREATED)
-                        .contentType(MediaType.TEXT_PLAIN)
-                        .body("paymentTrackingId"));
+            .andExpect(method(HttpMethod.POST))
+            .andExpect(header("Content-Type", "application/json"))
+            .andRespond(withStatus(HttpStatus.CREATED)
+                .contentType(MediaType.TEXT_PLAIN)
+                .body("paymentTrackingId"));
 
         assertThrows(RuntimeException.class, () -> service.insertReservation(request));
     }
@@ -496,7 +515,7 @@ public class ReservationServiceTest {
     @Test
     @DisplayName("決済会社に問い合わせて決済IDの発行に失敗した場合、RuntimeExcptionが発生する")
     void insertReservation_withGetPaymentTrackingIdFailed_throwsRuntimeException() {
-        ReserveRequestDto request = new ReserveRequestDto("Test01", LocalDate.now(), "Test0", "Test1", "TestTaro", "test@main", "Test2", List.of(new ReserveRequestDto.SelectedSeatDto("E5SER01", "SEAT01001"), new ReserveRequestDto.SelectedSeatDto("E5SER01", "SEAT01002"), new ReserveRequestDto.SelectedSeatDto("E5SER01", "SEAT01003"), new ReserveRequestDto.SelectedSeatDto("E5SER01", "SEAT01004"), new ReserveRequestDto.SelectedSeatDto("E5SER01", "SEAT01005"), new ReserveRequestDto.SelectedSeatDto("E5SER01", "SEAT01006")));
+        ReserveRequestDto request = new ReserveRequestDto("Test01", LocalDate.now(), "Test0", "Test1", "TestTaro", "test@main", "Test2", List.of(new ReserveRequestDto.SelectedSeatDto("E5SER01", "SEAT01001", 0), new ReserveRequestDto.SelectedSeatDto("E5SER01", "SEAT01002", 0), new ReserveRequestDto.SelectedSeatDto("E5SER01", "SEAT01003", 0), new ReserveRequestDto.SelectedSeatDto("E5SER01", "SEAT01004", 0), new ReserveRequestDto.SelectedSeatDto("E5SER01", "SEAT01005", 0), new ReserveRequestDto.SelectedSeatDto("E5SER01", "SEAT01006", 0)));
         DepartureArrivalTimeEntity departureArrivalTime = new DepartureArrivalTimeEntity();
         departureArrivalTime.setTimeCd("Test1");
         departureArrivalTime.setScheduleCd(request.getScheduleCd());
@@ -512,9 +531,9 @@ public class ReservationServiceTest {
         }});
         when(reservedSeatRepo.saveAll(any())).thenReturn(Stream.generate(ReservedSeatEntity::new).limit(request.getSeats().size()).collect(Collectors.toList()));
         when(reservedSeatSectionRepo.saveAll(any())).
-                thenReturn(Stream.generate(ReservedSeatSectionEntity::new).
-                        limit((List.of(departureArrivalTime.getSectionCd())).size() * request.getSeats().size())
-                        .collect(Collectors.toList()));
+            thenReturn(Stream.generate(ReservedSeatSectionEntity::new).
+                limit((List.of(departureArrivalTime.getSectionCd())).size() * request.getSeats().size())
+                .collect(Collectors.toList()));
         MockHttpServletRequest mockRequest = new MockHttpServletRequest();
         mockRequest.setRequestURI("/api/reservations");
         mockRequest.setServerName("localhost");
@@ -524,9 +543,9 @@ public class ReservationServiceTest {
         RequestContextHolder.setRequestAttributes(new ServletRequestAttributes(mockRequest));
 
         this.mockRestServiceServer.expect(requestTo("http://localhost:8080/api/payments"))
-                .andExpect(method(HttpMethod.POST))
-                .andExpect(header("Content-Type", "application/json"))
-                .andRespond(withStatus(HttpStatus.INTERNAL_SERVER_ERROR));
+            .andExpect(method(HttpMethod.POST))
+            .andExpect(header("Content-Type", "application/json"))
+            .andRespond(withStatus(HttpStatus.INTERNAL_SERVER_ERROR));
 
         assertThrows(RuntimeException.class, () -> service.insertReservation(request));
         this.mockRestServiceServer.verify();
