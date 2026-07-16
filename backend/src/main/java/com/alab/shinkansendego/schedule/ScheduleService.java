@@ -41,7 +41,7 @@ public class ScheduleService {
         for (String cd : departureSectionCdList) {
             List<DepartureArrivalTimeEntity> list = departureArrivalTimeRepository.findBySectionCd(cd);
             List<DepartureArrivalTimeEntity> filteredList = list.stream().filter(
-                    d -> !d.getDepartureTime().isBefore(request.getTime())).toList();
+                d -> !d.getDepartureTime().isBefore(request.getTime())).toList();
             departureScheduleList.addAll(filteredList);
         }
         for (String cd : arrivalSectionCdList) {
@@ -70,7 +70,6 @@ public class ScheduleService {
         responseList.sort(Comparator.comparing(ScheduleResponseDto::getDepartureTime));
 
         return responseList;
-
     }
 
     public List<TrainCarFormationResponseDto> getTrainCarList(String scheduledCd) {
@@ -81,5 +80,4 @@ public class ScheduleService {
         }
         return trainCarList;
     }
-
 }

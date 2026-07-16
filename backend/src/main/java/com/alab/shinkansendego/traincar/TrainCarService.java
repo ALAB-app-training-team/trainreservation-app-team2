@@ -17,9 +17,9 @@ public class TrainCarService {
 
     @Autowired
     public TrainCarService(
-            TrainCarRepository trainCarRepository,
-            DepartureArrivalTimeRepository departureArrivalTimeRepository,
-            ReservedSeatSectionRepository reservedSeatSectionRepository) {
+        TrainCarRepository trainCarRepository,
+        DepartureArrivalTimeRepository departureArrivalTimeRepository,
+        ReservedSeatSectionRepository reservedSeatSectionRepository) {
         this.trainCarRepository = trainCarRepository;
         this.departureArrivalTimeRepository = departureArrivalTimeRepository;
         this.reservedSeatSectionRepository = reservedSeatSectionRepository;
@@ -32,7 +32,7 @@ public class TrainCarService {
         }
 
         List<String> seatOfSectionCdList =
-                departureArrivalTimeRepository.findByScheduleCdAndDepartureTimeAndArrivalTime(request.getScheduleCd(), request.getDepartureTime(), request.getArrivalTime());
+            departureArrivalTimeRepository.findByScheduleCdAndDepartureTimeAndArrivalTime(request.getScheduleCd(), request.getDepartureTime(), request.getArrivalTime());
         if (seatOfSectionCdList.isEmpty()) {
             throw new IllegalArgumentException("SectionCdOfSeat is Not found");
         }
