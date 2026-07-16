@@ -1,11 +1,12 @@
-import { test, expect } from '@playwright/test';
+import { expect } from '@playwright/test';
 import { ScheduleSearchPage } from '@tests/pages/ScheduleSearch/ScheduleSearchPage';
 import { SelectSeatPage } from '@tests/pages/SelectSeat/SelectSeatPage';
 import { ReservationListPage } from '@tests/pages/ReservationList/ReservationListPage';
 import { ReservedTicketPage } from '@tests/pages/ReservedTicket/ReservedTicketPage';
 import { ReservationGuestLoginPage } from '@tests/pages/ReservationGuestLogin/ReservationGuestLoginPage';
+import { test } from '@tests/fixtures';
 
-test('navigate-検索～予約確認', async ({ page }) => {
+test('navigate-検索～予約確認', async ({ page, clearSession }) => {
     const scheduleSearchPage = new ScheduleSearchPage(page);
     const selectSeatPage = new SelectSeatPage(page);
     const reservationGuestLogin = new ReservationGuestLoginPage(page);
@@ -36,9 +37,7 @@ test('navigate-検索～予約確認', async ({ page }) => {
 
     await reservationGuestLogin.goto();
     await expect(page).toHaveURL('/reservationList');
-    await page.evaluate(() => {
-        sessionStorage.clear();
-    });
+    await clearSession();
 
     await reservationGuestLogin.goto();
     await expect(page).toHaveURL('/reservationGuestLogin');
@@ -54,9 +53,7 @@ test('navigate-検索～予約確認', async ({ page }) => {
             'エラーが発生しました。しばらくしてから再度お試しください。',
         ),
     ).toBeHidden();
-    await page.evaluate(() => {
-        sessionStorage.clear();
-    });
+    await clearSession();
 });
 
 test('navigate-header', async ({ page }) => {
@@ -75,6 +72,7 @@ test('navigate-header', async ({ page }) => {
 
 test('navigate-ゲスト認証がない場合に予約一覧・予約詳細にアクセスするとゲストログインに遷移する', async ({
     page,
+    clearSession,
 }) => {
     const scheduleSearchPage = new ScheduleSearchPage(page);
     const reservationListPage = new ReservationListPage(page);
@@ -82,9 +80,7 @@ test('navigate-ゲスト認証がない場合に予約一覧・予約詳細に�
 
     await scheduleSearchPage.goto();
     await expect(page).toHaveURL('/scheduleSearch');
-    await page.evaluate(() => {
-        sessionStorage.clear();
-    });
+    await clearSession();
     await reservationListPage.goto();
     await expect(page).toHaveURL('/reservationGuestLogin');
 
