@@ -102,28 +102,29 @@ test('座席を6席選択すると、それ以上選択できない', async ({ p
     ).toBeDisabled();
 });
 
-test('バリデーション？', async ({ page }) => {
-    const scheduleSearchPage = new ScheduleSearchPage(page);
-    const selectSeatPage = new SelectSeatPage(page);
-    await scheduleSearchPage.goto();
-    await expect(page).toHaveURL('/scheduleSearch');
-    await scheduleSearchPage.clickDetailButton();
-    await selectSeatPage.selectSeat();
-    await page.getByRole('textbox', { name: '購入者氏名' }).fill('山田 太郎');
-    await page
-        .getByRole('textbox', { name: 'メールアドレス' })
-        .fill('demo@example.com');
-    await page
-        .getByRole('textbox', { name: 'カード番号' })
-        .fill('4111222233334444');
-    await page
-        .getByRole('textbox', { name: 'カード名義人' })
-        .fill('TARO YAMADa');
-    await page
-        .getByRole('textbox', { name: '有効期限（月/年）' })
-        .fill('12/28');
-    await page.getByRole('textbox', { name: 'セキュリティコード' }).fill('123');
-});
+// TODO: バリデーションの画面テストを実装する
+// test('バリデーション？', async ({ page }) => {
+//     const scheduleSearchPage = new ScheduleSearchPage(page);
+//     const selectSeatPage = new SelectSeatPage(page);
+//     await scheduleSearchPage.goto();
+//     await expect(page).toHaveURL('/scheduleSearch');
+//     await scheduleSearchPage.clickDetailButton();
+//     await selectSeatPage.selectSeat();
+//     await page.getByRole('textbox', { name: '購入者氏名' }).fill('山田 太郎');
+//     await page
+//         .getByRole('textbox', { name: 'メールアドレス' })
+//         .fill('demo@example.com');
+//     await page
+//         .getByRole('textbox', { name: 'カード番号' })
+//         .fill('4111222233334444');
+//     await page
+//         .getByRole('textbox', { name: 'カード名義人' })
+//         .fill('TARO YAMADa');
+//     await page
+//         .getByRole('textbox', { name: '有効期限（月/年）' })
+//         .fill('12/28');
+//     await page.getByRole('textbox', { name: 'セキュリティコード' }).fill('123');
+// });
 
 test('予約確定', async ({ page }) => {
     const scheduleSearchPage = new ScheduleSearchPage(page);
