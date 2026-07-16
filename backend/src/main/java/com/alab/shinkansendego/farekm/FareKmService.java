@@ -3,6 +3,7 @@ package com.alab.shinkansendego.farekm;
 import org.springframework.stereotype.Service;
 
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 @Service
@@ -38,16 +39,29 @@ public class FareKmService {
             return fares;
         }
 
-        BasicFareKmEntity basicFareKmEntity = basicRepo.findByMinKmLessThanEqualAndMaxKmGreaterThan(distance, distance);
-        ExpressFareKmEntity expressFareKmEntity = expressRepo.findByMinKmLessThanEqualAndMaxKmGreaterThan(distance, distance);
-        SupplementaryFareKmEntity supplementaryFareKmEntity = supplementaryRepo.findByMinKmLessThanEqualAndMaxKmGreaterThan(distance, distance);
+        List<BasicFareKmEntity> basicFareKmEntities = basicRepo.findAll();
+        List<ExpressFareKmEntity> expressFareKmEntities = expressRepo.findAll();
+        List<SupplementaryFareKmEntity> supplementaryFareKmEntities = supplementaryRepo.findAll();
 
-        Integer basicFare = basicFareKmEntity.getBasicFare() + expressFareKmEntity.getExpressFare();
+        Integer basicFare = basicFareKmEntities.stream()
+            .filter(entity -> (entity.getMinKm() < distance) && (entity.getMaxKm() >= distance))
+            .map(BasicFareKmEntity::getBasicFare)
+            .findFirst()
+            .orElseThrow();
+        Integer expressFare = expressFareKmEntities.stream()
+            .filter(entity -> (entity.getMinKm() < distance) && (entity.getMaxKm() >= distance))
+            .map(ExpressFareKmEntity::getExpressFare)
+            .findFirst()
+            .orElseThrow();
+        SupplementaryFareKmEntity supplementaryFareKmEntity = supplementaryFareKmEntities.stream()
+            .filter(entity -> (entity.getMinKm() < distance) && (entity.getMaxKm() >= distance))
+            .findFirst()
+            .orElseThrow();
 
-        fares.put("non-reserved", basicFare);
-        fares.put("reserved", basicFare + supplementaryFareKmEntity.getReservedFare());
-        fares.put("green", basicFare + supplementaryFareKmEntity.getGreenFare());
-        fares.put("gran-class", basicFare + supplementaryFareKmEntity.getGcFare());
+        fares.put("non-reserved", basicFare + expressFare);
+        fares.put("reserved", basicFare + expressFare + supplementaryFareKmEntity.getReservedFare());
+        fares.put("green", basicFare + expressFare + supplementaryFareKmEntity.getGreenFare());
+        fares.put("gran-class", basicFare + expressFare + supplementaryFareKmEntity.getGcFare());
 
         return fares;
     }

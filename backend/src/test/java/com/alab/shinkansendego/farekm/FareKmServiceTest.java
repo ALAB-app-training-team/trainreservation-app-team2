@@ -7,6 +7,7 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 
+import java.util.List;
 import java.util.Map;
 
 import static org.junit.jupiter.api.Assertions.assertAll;
@@ -36,9 +37,9 @@ public class FareKmServiceTest {
     @DisplayName("営業キロ程を受け取って各席種の料金を返す")
     void getFare_returnFare() {
         Double moriokaKm = 535.3;
-        when(basicFareKmRepository.findByMinKmLessThanEqualAndMaxKmGreaterThan(moriokaKm, moriokaKm)).thenReturn(basicFareMock);
-        when(expressFareKmRepository.findByMinKmLessThanEqualAndMaxKmGreaterThan(moriokaKm, moriokaKm)).thenReturn(expressFareMock);
-        when(supplementaryFareKmRepository.findByMinKmLessThanEqualAndMaxKmGreaterThan(moriokaKm, moriokaKm)).thenReturn(supplementaryFareMock);
+        when(basicFareKmRepository.findAll()).thenReturn(List.of(basicFareMock));
+        when(expressFareKmRepository.findAll()).thenReturn(List.of(expressFareMock));
+        when(supplementaryFareKmRepository.findAll()).thenReturn(List.of(supplementaryFareMock));
 
         Map<String, Integer> fares = service.getFareFromDistance(moriokaKm);
 
@@ -53,18 +54,15 @@ public class FareKmServiceTest {
     @Test
     @DisplayName("営業キロ程が0の時は各席種の料金を0円で返す")
     void getFare_with0km_returnAllFare0() {
-        Double moriokaKm = 535.3;
-        when(basicFareKmRepository.findByMinKmLessThanEqualAndMaxKmGreaterThan(moriokaKm, moriokaKm)).thenReturn(basicFareMock);
-        when(expressFareKmRepository.findByMinKmLessThanEqualAndMaxKmGreaterThan(moriokaKm, moriokaKm)).thenReturn(expressFareMock);
-        when(supplementaryFareKmRepository.findByMinKmLessThanEqualAndMaxKmGreaterThan(moriokaKm, moriokaKm)).thenReturn(supplementaryFareMock);
+        Double moriokaKm = 0.0;
 
         Map<String, Integer> fares = service.getFareFromDistance(moriokaKm);
 
         assertAll(
-            () -> assertEquals(14190, fares.get("non-reserved")),
-            () -> assertEquals(14720, fares.get("reserved")),
-            () -> assertEquals(19590, fares.get("green")),
-            () -> assertEquals(26590, fares.get("gran-class"))
+            () -> assertEquals(0, fares.get("non-reserved")),
+            () -> assertEquals(0, fares.get("reserved")),
+            () -> assertEquals(0, fares.get("green")),
+            () -> assertEquals(0, fares.get("gran-class"))
         );
     }
 }
