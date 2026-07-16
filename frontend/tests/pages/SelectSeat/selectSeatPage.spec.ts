@@ -52,6 +52,7 @@ test('座席を6席選択すると、それ以上選択できない', async ({ p
     await expect(
         page.getByTestId('train-cars').getByRole('button', { name: '2' }),
     ).toHaveClass(/bg-primary-light/);
+    await page.getByText('2号車').waitFor({ state: 'visible' });
     const thirdSeat = (await selectSeatPage.emptySeat.first()) ?? '';
     const thirdSeatText = await thirdSeat.textContent();
     await thirdSeat.click();
