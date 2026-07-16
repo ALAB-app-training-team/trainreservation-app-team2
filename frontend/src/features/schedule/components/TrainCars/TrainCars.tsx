@@ -58,7 +58,10 @@ export function TrainCars({
             {filteredCars.length > 0 ? (
                 <>
                     <div className="text-left">号車を選択</div>
-                    <div className="flex scrollbar-thin gap-2 overflow-x-auto">
+                    <div
+                        className="flex scrollbar-thin gap-2 overflow-x-auto"
+                        data-testid="train-cars"
+                    >
                         {filteredCars.map((car) => (
                             <button
                                 key={car.trainCarNumber}

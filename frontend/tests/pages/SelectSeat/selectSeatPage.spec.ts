@@ -18,12 +18,12 @@ test('ゴミ箱ボタンを押すと、選択した座席が解除される', as
     await expect(
         page
             .getByTestId('selected-seats')
-            .getByText(firstSeat, { exact: true }),
+            .getByText('1号車' + firstSeat, { exact: true }),
     ).toBeVisible();
     await expect(
         page
             .getByTestId('selected-seats')
-            .getByText(secondSeat, { exact: true }),
+            .getByText('1号車' + secondSeat, { exact: true }),
     ).toBeVisible();
     await page.getByTestId('trash-button').click();
     await expect(page.getByText('座席が選択されていません')).toBeVisible();
@@ -50,42 +50,46 @@ test('座席を6席選択すると、それ以上選択できない', async ({ p
     await selectSeatPage.emptySeat.first().click();
     await selectSeatPage.emptySeat.nth(1).click();
     await page.getByRole('button', { name: 'グリーン車' }).click();
+    const trainCarInGreen = selectSeatPage.trainCars.first().textContent();
     const fifthSeat =
         (await selectSeatPage.emptySeat.first().textContent()) ?? '';
     await selectSeatPage.emptySeat.first().click();
     await page.getByRole('button', { name: 'グランクラス' }).click();
+    const trainCarInGranClass = selectSeatPage.trainCars.first().textContent();
     const sixthSeat =
         (await selectSeatPage.emptySeat.first().textContent()) ?? '';
     await selectSeatPage.emptySeat.first().click();
     await expect(
         page
             .getByTestId('selected-seats')
-            .getByText(firstSeat, { exact: true }),
+            .getByText('1号車' + firstSeat, { exact: true }),
     ).toBeVisible();
     await expect(
         page
             .getByTestId('selected-seats')
-            .getByText(secondSeat, { exact: true }),
+            .getByText('1号車' + secondSeat, { exact: true }),
     ).toBeVisible();
     await expect(
         page
             .getByTestId('selected-seats')
-            .getByText(thirdSeat, { exact: true }),
+            .getByText('2号車' + thirdSeat, { exact: true }),
     ).toBeVisible();
     await expect(
         page
             .getByTestId('selected-seats')
-            .getByText(fourthSeat, { exact: true }),
+            .getByText('2号車' + fourthSeat, { exact: true }),
     ).toBeVisible();
     await expect(
         page
             .getByTestId('selected-seats')
-            .getByText(fifthSeat, { exact: true }),
+            .getByText(trainCarInGreen + '号車' + fifthSeat, { exact: true }),
     ).toBeVisible();
     await expect(
         page
             .getByTestId('selected-seats')
-            .getByText(sixthSeat, { exact: true }),
+            .getByText(trainCarInGranClass + '号車' + sixthSeat, {
+                exact: true,
+            }),
     ).toBeVisible();
     await expect(
         page.getByText('一度に予約できる座席は6席までです'),
@@ -95,10 +99,11 @@ test('座席を6席選択すると、それ以上選択できない', async ({ p
 
 test('バリデーション？', async ({ page }) => {
     const scheduleSearchPage = new ScheduleSearchPage(page);
-
+    const selectSeatPage = new SelectSeatPage(page);
     await scheduleSearchPage.goto();
     await expect(page).toHaveURL('/scheduleSearch');
     await scheduleSearchPage.clickDetailButton();
+    await selectSeatPage.selectSeat();
     await page.getByRole('textbox', { name: '購入者氏名' }).fill('山田 太郎');
     await page
         .getByRole('textbox', { name: 'メールアドレス' })
