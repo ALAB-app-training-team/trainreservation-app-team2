@@ -33,7 +33,7 @@ public class GlobalExceptionHandler {
 
     @ExceptionHandler(DataAccessException.class)
     public ResponseEntity<String> handleDataAccessException(DataAccessException ex) {
-        return ResponseEntity.badRequest().body(ex.getMessage());
+        return ResponseEntity.badRequest().body("DataAccessException is occurred");
     }
 
     @ExceptionHandler(MissingServletRequestParameterException.class)
