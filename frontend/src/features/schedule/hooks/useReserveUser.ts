@@ -75,13 +75,13 @@ export function useReserveUser() {
             if (isNameEmpty(value)) {
                 messages.push({
                     field: 'reserverName',
-                    message: '購入者氏名を入力してください',
+                    message: '予約者氏名を入力してください',
                 });
             }
             if (isNameMaxLength(value)) {
                 messages.push({
                     field: 'reserverName',
-                    message: '購入者氏名は255文字以内で入力してください',
+                    message: '予約者氏名は255文字以内で入力してください',
                 });
             }
         } else if (field === 'reserverMail') {

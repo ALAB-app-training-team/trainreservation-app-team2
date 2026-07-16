@@ -84,7 +84,7 @@ export function ReservedSeats({
                                 );
                             })
                     ) : (
-                        <div>購入済座席が存在しません</div>
+                        <div>予約済座席が存在しません</div>
                     )}
                 </div>
                 {getFieldError?.(id) && (

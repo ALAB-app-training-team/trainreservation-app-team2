@@ -81,7 +81,7 @@ export function ReservedTicketQrCode({
                         );
                     })
                 ) : (
-                    <div>購入済座席が存在しません</div>
+                    <div>予約済座席が存在しません</div>
                 )}
             </Swiper>
         </div>
