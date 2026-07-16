@@ -63,36 +63,50 @@ test('座席を6席選択すると、それ以上選択できない', async ({ p
     await expect(
         page
             .getByTestId('selected-seats')
-            .getByText('1号車' + firstSeat.textContent(), { exact: true }),
-    ).toBeVisible();
-    await expect(
-        page
-            .getByTestId('selected-seats')
-            .getByText('1号車' + secondSeat.textContent(), { exact: true }),
-    ).toBeVisible();
-    await expect(
-        page
-            .getByTestId('selected-seats')
-            .getByText('2号車' + thirdSeat.textContent(), { exact: true }),
-    ).toBeVisible();
-    await expect(
-        page
-            .getByTestId('selected-seats')
-            .getByText('2号車' + fourthSeat.textContent(), { exact: true }),
-    ).toBeVisible();
-    await expect(
-        page
-            .getByTestId('selected-seats')
-            .getByText(trainCarInGreen + '号車' + fifthSeat.textContent(), {
+            .getByText('1号車' + (await firstSeat.textContent()), {
                 exact: true,
             }),
     ).toBeVisible();
     await expect(
         page
             .getByTestId('selected-seats')
-            .getByText(trainCarInGranClass + '号車' + sixthSeat.textContent(), {
+            .getByText('1号車' + (await secondSeat.textContent()), {
                 exact: true,
             }),
+    ).toBeVisible();
+    await expect(
+        page
+            .getByTestId('selected-seats')
+            .getByText('2号車' + (await thirdSeat.textContent()), {
+                exact: true,
+            }),
+    ).toBeVisible();
+    await expect(
+        page
+            .getByTestId('selected-seats')
+            .getByText('2号車' + (await fourthSeat.textContent()), {
+                exact: true,
+            }),
+    ).toBeVisible();
+    await expect(
+        page
+            .getByTestId('selected-seats')
+            .getByText(
+                trainCarInGreen + '号車' + (await fifthSeat.textContent()),
+                {
+                    exact: true,
+                },
+            ),
+    ).toBeVisible();
+    await expect(
+        page
+            .getByTestId('selected-seats')
+            .getByText(
+                trainCarInGranClass + '号車' + (await sixthSeat.textContent()),
+                {
+                    exact: true,
+                },
+            ),
     ).toBeVisible();
     await expect(
         page.getByText('一度に予約できる座席は6席までです'),
