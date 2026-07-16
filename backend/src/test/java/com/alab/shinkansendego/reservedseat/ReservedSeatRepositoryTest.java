@@ -19,7 +19,9 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.UUID;
 
-import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 @ActiveProfiles("test")
 @DataJpaTest
@@ -29,9 +31,9 @@ public class ReservedSeatRepositoryTest {
     // テスト用DB作成
     @Container
     static PostgreSQLContainer<?> postgres = new PostgreSQLContainer<>("postgres:16")
-            .withDatabaseName("test")
-            .withUsername("user")
-            .withPassword("pass");
+        .withDatabaseName("test")
+        .withUsername("user")
+        .withPassword("pass");
     private final UUID reservationId = UUID.fromString("4156b939-2e3e-46c1-92d3-7aa64b6ca575");
     @Autowired
     private ReservedSeatRepository repo;
@@ -48,9 +50,9 @@ public class ReservedSeatRepositoryTest {
     @DisplayName("購入情報IDから購入した座席リストを取得できる")
     void findReservedSeatDtoByReservationId_withReservationId_returnGetScheduleSuccess() {
         List<ReservedSeatDto> expected = Arrays.asList(
-                new ReservedSeatDto("指定席", 1, 1, "A", UUID.fromString("fe529692-fbac-4332-b70f-263ab1c1e216")),
-                new ReservedSeatDto("グリーン車", 2, 2, "B", UUID.fromString("510b8d7b-b954-4220-be15-5b1648e36db5")),
-                new ReservedSeatDto("グランクラス", 3, 3, "C", UUID.fromString("a1d64fbb-6f6e-4533-8e99-898ce9dea677")));
+            new ReservedSeatDto("指定席", 1, 1, "A", UUID.fromString("fe529692-fbac-4332-b70f-263ab1c1e216")),
+            new ReservedSeatDto("グリーン車", 2, 2, "B", UUID.fromString("510b8d7b-b954-4220-be15-5b1648e36db5")),
+            new ReservedSeatDto("グランクラス", 3, 3, "C", UUID.fromString("a1d64fbb-6f6e-4533-8e99-898ce9dea677")));
         List<ReservedSeatDto> actual = repo.findReservedSeatDtoByReservationId(reservationId);
         assertEquals(expected, actual);
     }
@@ -75,6 +77,7 @@ public class ReservedSeatRepositoryTest {
             purchasedSeat.setTrainCarCd("E5SER01");
             purchasedSeat.setSeatCd("SEAT0100" + i);
             purchasedSeat.setCodeToken(UUID.randomUUID());
+            purchasedSeat.setSeatFare(2610);
             purchasedSeats.add(purchasedSeat);
         }
         int result = repo.saveAll(purchasedSeats).size();
@@ -93,6 +96,7 @@ public class ReservedSeatRepositoryTest {
             purchasedSeat.setTrainCarCd("E5SER01");
             purchasedSeat.setSeatCd("SEAT01001");
             purchasedSeat.setCodeToken(UUID.randomUUID());
+            purchasedSeat.setSeatFare(2610);
             sameSeats.add(purchasedSeat);
         }
         assertThrows(org.springframework.dao.DataAccessException.class, () -> {
