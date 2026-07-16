@@ -15,8 +15,16 @@ test('ゴミ箱ボタンを押すと、選択した座席が解除される', as
         (await selectSeatPage.emptySeat.nth(1).textContent()) ?? '';
     await selectSeatPage.emptySeat.first().click();
     await selectSeatPage.emptySeat.nth(1).click();
-    await expect(page.getByText(firstSeat)).toBeVisible();
-    await expect(page.getByText(secondSeat)).toBeVisible();
+    await expect(
+        page
+            .getByTestId('selected-seats')
+            .getByText(firstSeat, { exact: true }),
+    ).toBeVisible();
+    await expect(
+        page
+            .getByTestId('selected-seats')
+            .getByText(secondSeat, { exact: true }),
+    ).toBeVisible();
     await page.getByTestId('trash-button').click();
     await expect(page.getByText('座席が選択されていません')).toBeVisible();
 });
@@ -49,12 +57,36 @@ test('座席を6席選択すると、それ以上選択できない', async ({ p
     const sixthSeat =
         (await selectSeatPage.emptySeat.first().textContent()) ?? '';
     await selectSeatPage.emptySeat.first().click();
-    await expect(page.getByText(firstSeat)).toBeVisible();
-    await expect(page.getByText(secondSeat)).toBeVisible();
-    await expect(page.getByText(thirdSeat)).toBeVisible();
-    await expect(page.getByText(fourthSeat)).toBeVisible();
-    await expect(page.getByText(fifthSeat)).toBeVisible();
-    await expect(page.getByText(sixthSeat)).toBeVisible();
+    await expect(
+        page
+            .getByTestId('selected-seats')
+            .getByText(firstSeat, { exact: true }),
+    ).toBeVisible();
+    await expect(
+        page
+            .getByTestId('selected-seats')
+            .getByText(secondSeat, { exact: true }),
+    ).toBeVisible();
+    await expect(
+        page
+            .getByTestId('selected-seats')
+            .getByText(thirdSeat, { exact: true }),
+    ).toBeVisible();
+    await expect(
+        page
+            .getByTestId('selected-seats')
+            .getByText(fourthSeat, { exact: true }),
+    ).toBeVisible();
+    await expect(
+        page
+            .getByTestId('selected-seats')
+            .getByText(fifthSeat, { exact: true }),
+    ).toBeVisible();
+    await expect(
+        page
+            .getByTestId('selected-seats')
+            .getByText(sixthSeat, { exact: true }),
+    ).toBeVisible();
     await expect(
         page.getByText('一度に予約できる座席は6席までです'),
     ).toBeVisible();
