@@ -5,6 +5,7 @@ import { LuArrowLeft } from 'react-icons/lu';
 import { useLocation, useNavigate } from 'react-router-dom';
 
 import { ENDPOINTS } from '@/api/routes';
+import { ReserveConfirmModal } from '@/features/schedule/components/ReserveConfirmModal';
 import { ReserveUserInfo } from '@/features/schedule/components/ReserveUserInfo';
 import { SelectedSeats } from '@/features/schedule/components/SelectedSeats';
 import { TrainCars } from '@/features/schedule/components/TrainCars/TrainCars';
@@ -13,6 +14,8 @@ import { useReserveUser } from '@/features/schedule/hooks/useReserveUser';
 import { useSelectedSeats } from '@/features/schedule/hooks/useSelectedSeats';
 import type { PaymentRequestDto } from '@/features/schedule/types/PaymentRequestDto';
 import type { ReserveRequestDto } from '@/features/schedule/types/ReserveRequestDto';
+import { CustomModal } from '@/shared/components/CustomModal';
+import { useModal } from '@/shared/hooks/useModal';
 import { removeWhiteSpace } from '@/shared/utils/RemoveWhiteSpace';
 
 export function SelectSeats() {
@@ -40,6 +43,7 @@ export function SelectSeats() {
         isInvalid,
         getFieldError,
     } = useReserveUser();
+    const { isOpen, handleModalOpen, onRequestClose } = useModal();
     const [isSubmitting, setIsSubmitting] = useState<boolean>(false);
 
     const getPaymentToken = async (): Promise<string> => {
@@ -80,8 +84,7 @@ export function SelectSeats() {
         return response.data;
     };
 
-    const handleReserve = async (e: React.SubmitEvent<HTMLFormElement>) => {
-        e.preventDefault();
+    const handleReserve = async () => {
         if (isSubmitting) return;
         setIsSubmitting(true);
         try {
@@ -104,6 +107,7 @@ export function SelectSeats() {
             );
         } finally {
             setIsSubmitting(false);
+            onRequestClose();
         }
     };
 
@@ -143,7 +147,12 @@ export function SelectSeats() {
                             limitSeats={limitSeats}
                             handleClear={handleClear}
                         />
-                        <form onSubmit={handleReserve}>
+                        <form
+                            onSubmit={(e) => {
+                                e.preventDefault();
+                                handleModalOpen();
+                            }}
+                        >
                             <div className="flex flex-col gap-8">
                                 <ReserveUserInfo
                                     reserveUser={reserveUser}
@@ -164,7 +173,7 @@ export function SelectSeats() {
                                 >
                                     <div className="flex items-center justify-center gap-4">
                                         <IoCardOutline />
-                                        予約を確定
+                                        予約する
                                     </div>
                                 </button>
                             </div>
@@ -172,6 +181,13 @@ export function SelectSeats() {
                     </div>
                 </div>
             </div>
+            <CustomModal isOpen={isOpen} onRequestClose={onRequestClose}>
+                <ReserveConfirmModal
+                    onClick={handleReserve}
+                    onRequestClose={onRequestClose}
+                    isSubmitting={isSubmitting}
+                />
+            </CustomModal>
         </>
     );
 }

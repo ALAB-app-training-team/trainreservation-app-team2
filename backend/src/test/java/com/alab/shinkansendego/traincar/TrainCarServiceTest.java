@@ -21,11 +21,9 @@ import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.Mockito.when;
 
 public class TrainCarServiceTest {
-
     private final List<SeatResponseDto> emptySeatList = new ArrayList<>();
     private final List<String> emptySectionCdList = new ArrayList<>();
     private final SeatRequestDto request = new SeatRequestDto();
-
     @Mock
     private TrainCarRepository trainCarRepo;
     @Mock
@@ -65,24 +63,24 @@ public class TrainCarServiceTest {
     @DisplayName("号車コードから号車内の座席リストが取得できる")
     void getSeatListWithReserved_returnGetSeatListSuccess() {
         when(trainCarRepo.findSeatByTrainCarCd("Test001"))
-                .thenReturn(getIsreservedIsNullList());
+            .thenReturn(getIsreservedIsNullList());
         when(departureArrivalTimeRepo.findByScheduleCdAndDepartureTimeAndArrivalTime(
-                "Test01",
-                LocalTime.of(12, 0, 0),
-                LocalTime.of(13, 0, 0)))
-                .thenReturn(List.of("Test1", "Test2"));
+            "Test01",
+            LocalTime.of(12, 0, 0),
+            LocalTime.of(13, 0, 0)))
+            .thenReturn(List.of("Test1", "Test2"));
         when(reservedSeatSectionRepo.findReservedSeatCdByRideDateAndScheduleCdAndTrainCarCdAndReservedSeatSectionCd(
-                LocalDate.of(2026, 6, 1),
-                "Test01",
-                "Test001",
-                "Test1"))
-                .thenReturn(List.of("TestSeat2", "TestSeat4"));
+            LocalDate.of(2026, 6, 1),
+            "Test01",
+            "Test001",
+            "Test1"))
+            .thenReturn(List.of("TestSeat2", "TestSeat4"));
         when(reservedSeatSectionRepo.findReservedSeatCdByRideDateAndScheduleCdAndTrainCarCdAndReservedSeatSectionCd(
-                LocalDate.of(2026, 6, 1),
-                "Test01",
-                "Test001",
-                "Test2"))
-                .thenReturn(List.of("TestSeat4"));
+            LocalDate.of(2026, 6, 1),
+            "Test01",
+            "Test001",
+            "Test2"))
+            .thenReturn(List.of("TestSeat4"));
 
         List<SeatResponseDto> expectList = getSeatResponseDtosList();
 
@@ -98,8 +96,8 @@ public class TrainCarServiceTest {
         when(trainCarRepo.findSeatByTrainCarCd("9999999")).thenReturn(emptySeatList);
         request.setTrainCarCd("9999999");
         Exception ex = assertThrows(
-                IllegalArgumentException.class,
-                () -> service.getSeatListWithReserved(request)
+            IllegalArgumentException.class,
+            () -> service.getSeatListWithReserved(request)
         );
         assertEquals("TrainCarCd is Not found", ex.getMessage());
     }
@@ -108,16 +106,16 @@ public class TrainCarServiceTest {
     @DisplayName("出発到着時刻情報を持たないダイヤコードがリクエストされた場合にエラーを発生させる")
     void getSeatListWithReserved_withNotExistScheduleCdRequest_returnIllegalArgumentException() {
         when(trainCarRepo.findSeatByTrainCarCd("Test001"))
-                .thenReturn(getIsreservedIsNullList());
+            .thenReturn(getIsreservedIsNullList());
         when(departureArrivalTimeRepo.findByScheduleCdAndDepartureTimeAndArrivalTime(
-                "9999999",
-                LocalTime.of(12, 0, 0),
-                LocalTime.of(13, 0, 0)))
-                .thenReturn(emptySectionCdList);
+            "9999999",
+            LocalTime.of(12, 0, 0),
+            LocalTime.of(13, 0, 0)))
+            .thenReturn(emptySectionCdList);
         request.setScheduleCd("9999999");
         Exception ex = assertThrows(
-                IllegalArgumentException.class,
-                () -> service.getSeatListWithReserved(request)
+            IllegalArgumentException.class,
+            () -> service.getSeatListWithReserved(request)
         );
         assertEquals("SectionCdOfSeat is Not found", ex.getMessage());
     }
