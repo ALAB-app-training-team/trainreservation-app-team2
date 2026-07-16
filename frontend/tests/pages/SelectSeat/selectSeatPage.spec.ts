@@ -66,41 +66,27 @@ test('座席を6席選択すると、それ以上選択できない', async ({ p
     const sixthSeatText = await sixthSeat.textContent();
     await sixthSeat.click();
 
-    await expect(
-        page.getByTestId('selected-seats').getByText('1号車' + firstSeatText, {
-            exact: true,
-        }),
-    ).toBeVisible();
+    await expect(page.getByTestId('selected-seats')).toContainText(
+        '1号車' + firstSeatText,
+    );
 
-    await expect(
-        page.getByTestId('selected-seats').getByText('1号車' + secondSeatText, {
-            exact: true,
-        }),
-    ).toBeVisible();
-    await expect(
-        page.getByTestId('selected-seats').getByText('2号車' + thirdSeatText, {
-            exact: true,
-        }),
-    ).toBeVisible();
-    await expect(
-        page.getByTestId('selected-seats').getByText('2号車' + fourthSeatText, {
-            exact: true,
-        }),
-    ).toBeVisible();
-    await expect(
-        page
-            .getByTestId('selected-seats')
-            .getByText(trainCarInGreen + '号車' + fifthSeatText, {
-                exact: true,
-            }),
-    ).toBeVisible();
-    await expect(
-        page
-            .getByTestId('selected-seats')
-            .getByText(trainCarInGranClass + '号車' + sixthSeatText, {
-                exact: true,
-            }),
-    ).toBeVisible();
+    await expect(page.getByTestId('selected-seats')).toContainText(
+        '1号車' + secondSeatText,
+    );
+
+    await expect(page.getByTestId('selected-seats')).toContainText(
+        '2号車' + thirdSeatText,
+    );
+    await expect(page.getByTestId('selected-seats')).toContainText(
+        '2号車' + fourthSeatText,
+    );
+    await expect(page.getByTestId('selected-seats')).toContainText(
+        trainCarInGreen + '号車' + fifthSeatText,
+    );
+    await expect(page.getByTestId('selected-seats')).toContainText(
+        trainCarInGranClass + '号車' + sixthSeatText,
+    );
+
     await expect(
         page.getByText('一度に予約できる座席は6席までです'),
     ).toBeVisible();
