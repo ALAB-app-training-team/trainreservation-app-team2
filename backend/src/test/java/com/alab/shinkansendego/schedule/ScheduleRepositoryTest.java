@@ -15,7 +15,9 @@ import org.testcontainers.junit.jupiter.Testcontainers;
 
 import java.util.List;
 
-import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNull;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 @ActiveProfiles("test")
 @DataJpaTest
@@ -26,9 +28,9 @@ public class ScheduleRepositoryTest {
     // テスト用DB作成
     @Container
     static PostgreSQLContainer<?> postgres = new PostgreSQLContainer<>("postgres:16")
-            .withDatabaseName("test")
-            .withUsername("user")
-            .withPassword("pass");
+        .withDatabaseName("test")
+        .withUsername("user")
+        .withPassword("pass");
     @Autowired
     private ScheduleRepository repo;
 

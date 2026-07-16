@@ -17,7 +17,6 @@ public class StationEntity {
     @Id
     @Column(name = "station_cd")
     private String stationCd;
-
     @Column(name = "name")
     private String name;
 }

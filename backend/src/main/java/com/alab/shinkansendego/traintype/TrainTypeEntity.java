@@ -17,10 +17,8 @@ public class TrainTypeEntity {
     @Id
     @Column(name = "train_type_cd")
     private String trainTypeCd;
-
     @Column(name = "name")
     private String name;
-
     @Column(name = "train_series_cd")
     private String trainSeriesCd;
 }
