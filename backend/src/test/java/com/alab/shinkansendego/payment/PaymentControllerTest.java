@@ -21,7 +21,6 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 public class PaymentControllerTest {
     private final ObjectMapper objectMapper = new ObjectMapper();
     private final String baseUrl = "/api/payments";
-
     @Autowired
     private MockMvc mockMvc;
 
@@ -37,14 +36,14 @@ public class PaymentControllerTest {
         String url = baseUrl + "/tokens";
         PaymentRequestDto request = new PaymentRequestDto("1111222233334444", "TARO YAMADA", "12/28", "123");
         mockMvc.perform(post(url)
-                        .contentType(MediaType.APPLICATION_JSON)
-                        .content(objectMapper.writeValueAsString(request)))
-                .andExpect(status().isCreated())
-                .andExpect(content().contentTypeCompatibleWith(MediaType.TEXT_PLAIN))
-                .andExpect(result -> {
-                    String responseBody = result.getResponse().getContentAsString();
-                    org.junit.jupiter.api.Assertions.assertDoesNotThrow(() -> java.util.UUID.fromString(responseBody));
-                });
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(objectMapper.writeValueAsString(request)))
+            .andExpect(status().isCreated())
+            .andExpect(content().contentTypeCompatibleWith(MediaType.TEXT_PLAIN))
+            .andExpect(result -> {
+                String responseBody = result.getResponse().getContentAsString();
+                org.junit.jupiter.api.Assertions.assertDoesNotThrow(() -> java.util.UUID.fromString(responseBody));
+            });
     }
 
     @Test
@@ -53,9 +52,9 @@ public class PaymentControllerTest {
         String url = baseUrl + "/tokens";
         PaymentRequestDto request = new PaymentRequestDto(null, "TARO YAMADA", "12/28", "123");
         mockMvc.perform(post(url)
-                        .contentType(MediaType.APPLICATION_JSON)
-                        .content(objectMapper.writeValueAsString(request)))
-                .andExpect(status().isBadRequest());
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(objectMapper.writeValueAsString(request)))
+            .andExpect(status().isBadRequest());
     }
 
     @Test
@@ -64,9 +63,9 @@ public class PaymentControllerTest {
         String url = baseUrl + "/tokens";
         PaymentRequestDto request = new PaymentRequestDto("", "TARO YAMADA", "12/28", "123");
         mockMvc.perform(post(url)
-                        .contentType(MediaType.APPLICATION_JSON)
-                        .content(objectMapper.writeValueAsString(request)))
-                .andExpect(status().isBadRequest());
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(objectMapper.writeValueAsString(request)))
+            .andExpect(status().isBadRequest());
     }
 
     @Test
@@ -75,9 +74,9 @@ public class PaymentControllerTest {
         String url = baseUrl + "/tokens";
         PaymentRequestDto request = new PaymentRequestDto(" ", "TARO YAMADA", "12/28", "123");
         mockMvc.perform(post(url)
-                        .contentType(MediaType.APPLICATION_JSON)
-                        .content(objectMapper.writeValueAsString(request)))
-                .andExpect(status().isBadRequest());
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(objectMapper.writeValueAsString(request)))
+            .andExpect(status().isBadRequest());
     }
 
     @Test
@@ -85,13 +84,13 @@ public class PaymentControllerTest {
     void payByPaymentToken_withPaymentToken_return201StatusCodeAndPaymentId() throws Exception {
         String request = UUID.randomUUID().toString();
         mockMvc.perform(post(baseUrl)
-                        .contentType(MediaType.APPLICATION_JSON)
-                        .content(objectMapper.writeValueAsString(request)))
-                .andExpect(status().isCreated())
-                .andExpect(content().contentTypeCompatibleWith(MediaType.TEXT_PLAIN))
-                .andExpect(result -> {
-                    String responseBody = result.getResponse().getContentAsString();
-                    org.junit.jupiter.api.Assertions.assertDoesNotThrow(() -> java.util.UUID.fromString(responseBody));
-                });
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(objectMapper.writeValueAsString(request)))
+            .andExpect(status().isCreated())
+            .andExpect(content().contentTypeCompatibleWith(MediaType.TEXT_PLAIN))
+            .andExpect(result -> {
+                String responseBody = result.getResponse().getContentAsString();
+                org.junit.jupiter.api.Assertions.assertDoesNotThrow(() -> java.util.UUID.fromString(responseBody));
+            });
     }
 }

@@ -13,7 +13,6 @@ public class TrainCarTypeEntity {
     @Id
     @Column(name = "train_car_type_cd")
     private String trainCarTypeCd;
-
     @Column(name = "name")
     private String name;
 }

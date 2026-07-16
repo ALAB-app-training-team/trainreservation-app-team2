@@ -49,6 +49,16 @@ public class ReservationService {
     }
 
     /**
+     * 文字列から全角半角の空白をすべて除く
+     *
+     * @param value 対象の文字列
+     * @return 空白がすべて除かれた対象文字列
+     */
+    private static String removeSpaces(String value) {
+        return value == null ? null : value.replaceAll("[\\s\u3000]", "");
+    }
+
+    /**
      * 予約時に登録した氏名とメールアドレスをもとに、紐づく予約情報一覧を取得するメソッド
      *
      * @param name  予約者氏名
@@ -238,15 +248,5 @@ public class ReservationService {
         reservationRepository.save(reservationResult);
 
         return reservationId;
-    }
-
-    /**
-     * 文字列から全角半角の空白をすべて除く
-     *
-     * @param value 対象の文字列
-     * @return 空白がすべて除かれた対象文字列
-     */
-    private static String removeSpaces(String value) {
-        return value == null ? null : value.replaceAll("[\\s\u3000]", "");
     }
 }

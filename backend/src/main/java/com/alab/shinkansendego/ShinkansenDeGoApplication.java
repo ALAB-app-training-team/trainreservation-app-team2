@@ -10,5 +10,4 @@ public class ShinkansenDeGoApplication {
     public static void main(String[] args) {
         SpringApplication.run(ShinkansenDeGoApplication.class, args);
     }
-
 }

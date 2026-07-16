@@ -22,7 +22,6 @@ import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.Mockito.when;
 
 public class ScheduleServiceTest {
-
     private final List<String> depatureSectionList = new ArrayList<>();
     private final List<String> arrivalSectionList = new ArrayList<>();
     private final List<DepartureArrivalTimeEntity> sec01ScheduleList = new ArrayList<>();
@@ -30,7 +29,6 @@ public class ScheduleServiceTest {
     private final List<DepartureArrivalTimeEntity> sec03ScheduleList = new ArrayList<>();
     private final ScheduleRequestDto request = new ScheduleRequestDto(LocalDate.of(2026, 6, 1), LocalTime.of(9, 0, 0), "東京", "上野");
     private final List<String> emptySectionCdList = new ArrayList<>();
-
     @Mock
     private SectionKmRepository sectionRepo;
     @Mock
@@ -144,8 +142,8 @@ public class ScheduleServiceTest {
     void getSearchedScheduleByStation_withNotExistStartSectionRequest_returnIllegalArgumentException() {
         when(sectionRepo.findSectionCdByStartStationCd("STATION01")).thenReturn(emptySectionCdList);
         Exception ex = assertThrows(
-                IllegalArgumentException.class,
-                () -> service.getSearchedScheduleByStation(request)
+            IllegalArgumentException.class,
+            () -> service.getSearchedScheduleByStation(request)
         );
         assertEquals("SectionCD is Not found", ex.getMessage());
     }
@@ -156,8 +154,8 @@ public class ScheduleServiceTest {
         when(sectionRepo.findSectionCdByStartStationCd("STATION01")).thenReturn(depatureSectionList);
         when(sectionRepo.findSectionCdByGoalStationCd("STATION02")).thenReturn(emptySectionCdList);
         Exception ex = assertThrows(
-                IllegalArgumentException.class,
-                () -> service.getSearchedScheduleByStation(request)
+            IllegalArgumentException.class,
+            () -> service.getSearchedScheduleByStation(request)
         );
         assertEquals("SectionCD is Not found", ex.getMessage());
     }
@@ -172,8 +170,8 @@ public class ScheduleServiceTest {
         when(timeRepo.findBySectionCd("SEC03")).thenReturn(sec03ScheduleList);
         when(scheduleRepo.findTrainTypeNameByScheduleCd("TIME02")).thenReturn(null);
         Exception ex = assertThrows(
-                IllegalArgumentException.class,
-                () -> service.getSearchedScheduleByStation(request)
+            IllegalArgumentException.class,
+            () -> service.getSearchedScheduleByStation(request)
         );
         assertEquals("TrainTypeName is Not found", ex.getMessage());
     }
@@ -191,5 +189,4 @@ public class ScheduleServiceTest {
         assertEquals(2, actualList.size());
         assertEquals(expectList, actualList);
     }
-
 }
