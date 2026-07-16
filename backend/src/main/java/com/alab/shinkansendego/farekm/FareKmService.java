@@ -32,6 +32,7 @@ public class FareKmService {
             fares.put("reserved", 0);
             fares.put("green", 0);
             fares.put("gran-class", 0);
+            return fares;
         }
 
         BasicFareKmEntity basicFareKmEntity = basicRepo.findByMinKmLessThanEqualAndMaxKmGreaterThan(distance, distance);
