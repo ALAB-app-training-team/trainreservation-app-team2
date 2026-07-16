@@ -14,6 +14,10 @@ export class ReservationListPage {
         });
     }
 
+    async goto() {
+        await this.page.goto('/reservationList');
+    }
+
     async clickTicketButton() {
         await this.ticketButton.first().click();
     }
