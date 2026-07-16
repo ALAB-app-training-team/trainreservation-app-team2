@@ -32,74 +32,72 @@ test('ゴミ箱ボタンを押すと、選択した座席が解除される', as
 test('座席を6席選択すると、それ以上選択できない', async ({ page }) => {
     const scheduleSearchPage = new ScheduleSearchPage(page);
     const selectSeatPage = new SelectSeatPage(page);
+
     await scheduleSearchPage.goto();
     await expect(page).toHaveURL('/scheduleSearch');
     await scheduleSearchPage.clickDetailButton();
     await expect(page.getByText('座席が選択されていません')).toBeVisible();
-    const firstSeat =
-        (await selectSeatPage.emptySeat.first().textContent()) ?? '';
-    const secondSeat =
-        (await selectSeatPage.emptySeat.nth(1).textContent()) ?? '';
-    await selectSeatPage.emptySeat.first().click();
-    await selectSeatPage.emptySeat.nth(1).click();
-    await page.getByRole('button', { name: '2', exact: true }).click();
+    const firstSeat = (await selectSeatPage.emptySeat.first()) ?? '';
+    await firstSeat.click();
+    const secondSeat = (await selectSeatPage.emptySeat.nth(1)) ?? '';
+    await secondSeat.click();
 
-    const thirdSeat =
-        (await selectSeatPage.emptySeat.first().textContent()) ?? '';
-    const fourthSeat =
-        (await selectSeatPage.emptySeat.nth(1).textContent()) ?? '';
-    await selectSeatPage.emptySeat.first().click();
-    await selectSeatPage.emptySeat.nth(1).click();
+    await page.getByRole('button', { name: '2', exact: true }).click();
+    const thirdSeat = (await selectSeatPage.emptySeat.first()) ?? '';
+    await thirdSeat.click();
+    const fourthSeat = (await selectSeatPage.emptySeat.nth(1)) ?? '';
+    await fourthSeat.click();
+
     await page.getByRole('button', { name: 'グリーン車' }).click();
     const trainCarInGreen =
         (await selectSeatPage.trainCars.first().textContent()) ?? '';
-    const fifthSeat =
-        (await selectSeatPage.emptySeat.first().textContent()) ?? '';
-    await selectSeatPage.emptySeat.first().click();
+    const fifthSeat = (await selectSeatPage.emptySeat.first()) ?? '';
+    await fifthSeat.click();
+
     await page.getByRole('button', { name: 'グランクラス' }).click();
     const trainCarInGranClass =
         (await selectSeatPage.trainCars.first().textContent()) ?? '';
-    const sixthSeat =
-        (await selectSeatPage.emptySeat.first().textContent()) ?? '';
-    await selectSeatPage.emptySeat.first().click();
+    const sixthSeat = (await selectSeatPage.emptySeat.first()) ?? '';
+    await sixthSeat.click();
+
     await expect(
         page
             .getByTestId('selected-seats')
-            .getByText('1号車' + firstSeat, { exact: true }),
+            .getByText('1号車' + firstSeat.textContent(), { exact: true }),
     ).toBeVisible();
     await expect(
         page
             .getByTestId('selected-seats')
-            .getByText('1号車' + secondSeat, { exact: true }),
+            .getByText('1号車' + secondSeat.textContent(), { exact: true }),
     ).toBeVisible();
     await expect(
         page
             .getByTestId('selected-seats')
-            .getByText('2号車' + thirdSeat, { exact: true }),
+            .getByText('2号車' + thirdSeat.textContent(), { exact: true }),
     ).toBeVisible();
     await expect(
         page
             .getByTestId('selected-seats')
-            .getByText('2号車' + fourthSeat, { exact: true }),
+            .getByText('2号車' + fourthSeat.textContent(), { exact: true }),
     ).toBeVisible();
     await expect(
         page
             .getByTestId('selected-seats')
-            .getByText(trainCarInGreen + '号車' + fifthSeat, { exact: true }),
+            .getByText(trainCarInGreen + '号車' + fifthSeat.textContent(), {
+                exact: true,
+            }),
     ).toBeVisible();
     await expect(
         page
             .getByTestId('selected-seats')
-            .getByText(trainCarInGranClass + '号車' + sixthSeat, {
+            .getByText(trainCarInGranClass + '号車' + sixthSeat.textContent(), {
                 exact: true,
             }),
     ).toBeVisible();
     await expect(
         page.getByText('一度に予約できる座席は6席までです'),
     ).toBeVisible();
-    await expect(
-        page.locator('button.bg-gray-200').first(),
-    ).toBeDisabled();
+    await expect(page.locator('button.bg-gray-200').first()).toBeDisabled();
 });
 
 // TODO: バリデーションの画面テストを実装する
