@@ -13,5 +13,6 @@ public class SeatResponseDto {
     private String seatCd;
     private Integer seatNumber;
     private String seatColumn;
+    private Integer fare;
     private Boolean isReserved;
 }
