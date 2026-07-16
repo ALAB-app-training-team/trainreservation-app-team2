@@ -43,6 +43,7 @@ test('座席を6席選択すると、それ以上選択できない', async ({ p
     await selectSeatPage.emptySeat.first().click();
     await selectSeatPage.emptySeat.nth(1).click();
     await page.getByRole('button', { name: '2', exact: true }).click();
+
     const thirdSeat =
         (await selectSeatPage.emptySeat.first().textContent()) ?? '';
     const fourthSeat =
@@ -50,12 +51,14 @@ test('座席を6席選択すると、それ以上選択できない', async ({ p
     await selectSeatPage.emptySeat.first().click();
     await selectSeatPage.emptySeat.nth(1).click();
     await page.getByRole('button', { name: 'グリーン車' }).click();
-    const trainCarInGreen = selectSeatPage.trainCars.first().textContent();
+    const trainCarInGreen =
+        (await selectSeatPage.trainCars.first().textContent()) ?? '';
     const fifthSeat =
         (await selectSeatPage.emptySeat.first().textContent()) ?? '';
     await selectSeatPage.emptySeat.first().click();
     await page.getByRole('button', { name: 'グランクラス' }).click();
-    const trainCarInGranClass = selectSeatPage.trainCars.first().textContent();
+    const trainCarInGranClass =
+        (await selectSeatPage.trainCars.first().textContent()) ?? '';
     const sixthSeat =
         (await selectSeatPage.emptySeat.first().textContent()) ?? '';
     await selectSeatPage.emptySeat.first().click();
