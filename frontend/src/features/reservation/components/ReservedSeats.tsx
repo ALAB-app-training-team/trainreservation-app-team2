@@ -80,6 +80,14 @@ export function ReservedSeats({
                                                     `${reservedSeats.seatColumn}席`}
                                             </div>
                                         </div>
+                                        {id === 'reservationDetail' && (
+                                            <div className="text-primary text-xl font-bold whitespace-nowrap">
+                                                ￥
+                                                {(
+                                                    reservedSeats.seatFare || 0
+                                                ).toLocaleString()}
+                                            </div>
+                                        )}
                                     </div>
                                 );
                             })
