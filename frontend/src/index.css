@@ -1,4 +1,5 @@
 @import 'tailwindcss';
+@import url('https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@100..900&display=swap');
 
 @theme {
     --color-primary: #008803;
@@ -44,15 +45,9 @@
     --shadow:
         rgba(0, 0, 0, 0.1) 0 10px 15px -3px, rgba(0, 0, 0, 0.05) 0 4px 6px -2px;
 
-    --sans:
-        'Yu Gothic UI', 'Yu Gothic', 'Noto Sans CJK JP', 'Noto Sans JP',
-        sans-serif;
-    --heading:
-        'Yu Gothic UI', 'Yu Gothic', 'Noto Sans CJK JP', 'Noto Sans JP',
-        sans-serif;
-    --mono:
-        'Yu Gothic UI', 'Yu Gothic', 'Noto Sans CJK JP', 'Noto Sans JP',
-        sans-serif;
+    --sans: 'Noto Sans Japanese', sans-serif;
+    --heading: 'Noto Sans Japanese', sans-serif;
+    --mono: 'Noto Sans Japanese', sans-serif;
 
     font: 18px/145% var(--sans);
     letter-spacing: 0.18px;
