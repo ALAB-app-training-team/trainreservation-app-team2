@@ -14,15 +14,15 @@ import java.util.Objects;
 public class GlobalExceptionHandler {
     @ExceptionHandler(IllegalArgumentException.class)
     public ResponseEntity<String> handleIllegalArgumentException(
-            IllegalArgumentException ex) {
+        IllegalArgumentException ex) {
         return ResponseEntity.badRequest().body(ex.getMessage());
     }
 
     @ExceptionHandler(MethodArgumentNotValidException.class)
     public ResponseEntity<String> handleMethodArgumentNotValidException(MethodArgumentNotValidException ex) {
         String message = Objects.requireNonNull(ex.getBindingResult()
-                        .getFieldError())
-                .getDefaultMessage();
+                .getFieldError())
+            .getDefaultMessage();
         return ResponseEntity.badRequest().body(message);
     }
 

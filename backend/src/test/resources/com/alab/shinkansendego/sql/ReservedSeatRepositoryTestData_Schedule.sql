@@ -76,23 +76,23 @@ VALUES ('SEAT01001', 'SEAT01', 1, 'A'),
 CREATE TABLE T_Reservation
 (
     id                   UUID PRIMARY KEY,
-    ride_date            DATE       NOT NULL,
-    schedule_cd          VARCHAR(6) NOT NULL REFERENCES M_Schedule (schedule_cd) ON DELETE RESTRICT,
-    departure_station_cd VARCHAR(5) NOT NULL REFERENCES M_Station (station_cd) ON DELETE RESTRICT,
-    arrival_station_cd   VARCHAR(5) NOT NULL REFERENCES M_Station (station_cd) ON DELETE RESTRICT,
-    payment_tracking_id VARCHAR(36) NOT NULL,
-    reserver_name VARCHAR(255),
-    reserver_mail VARCHAR(255)
+    ride_date            DATE        NOT NULL,
+    schedule_cd          VARCHAR(6)  NOT NULL REFERENCES M_Schedule (schedule_cd) ON DELETE RESTRICT,
+    departure_station_cd VARCHAR(5)  NOT NULL REFERENCES M_Station (station_cd) ON DELETE RESTRICT,
+    arrival_station_cd   VARCHAR(5)  NOT NULL REFERENCES M_Station (station_cd) ON DELETE RESTRICT,
+    payment_tracking_id  VARCHAR(36) NOT NULL,
+    reserver_name        VARCHAR(255),
+    reserver_mail        VARCHAR(255)
 );
 INSERT INTO T_Reservation (id, ride_date, schedule_cd, departure_station_cd, arrival_station_cd, payment_tracking_id)
 VALUES ('123e4567-e89b-12d3-a456-426614174000', '2026-06-30', 'TEST01', 'Test0', 'Test1', 'Test2');
 
 CREATE TABLE T_ReservedSeat
 (
-    id           UUID PRIMARY KEY,
-    reservation_id  UUID       NOT NULL REFERENCES T_Reservation (id) ON DELETE CASCADE,
-    train_car_cd VARCHAR(7) NOT NULL REFERENCES M_TrainCar (train_car_cd) ON DELETE RESTRICT,
-    seat_cd      VARCHAR(9) NOT NULL REFERENCES M_Seat (seat_cd) ON DELETE RESTRICT,
-    code_token   UUID       NOT NULL UNIQUE,
+    id             UUID PRIMARY KEY,
+    reservation_id UUID       NOT NULL REFERENCES T_Reservation (id) ON DELETE CASCADE,
+    train_car_cd   VARCHAR(7) NOT NULL REFERENCES M_TrainCar (train_car_cd) ON DELETE RESTRICT,
+    seat_cd        VARCHAR(9) NOT NULL REFERENCES M_Seat (seat_cd) ON DELETE RESTRICT,
+    code_token     UUID       NOT NULL UNIQUE,
     UNIQUE (reservation_id, train_car_cd, seat_cd)
 );

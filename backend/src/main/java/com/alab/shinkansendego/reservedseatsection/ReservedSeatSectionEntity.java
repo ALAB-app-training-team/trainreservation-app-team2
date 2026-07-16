@@ -20,22 +20,16 @@ public class ReservedSeatSectionEntity {
     @Id
     @Column(name = "id")
     private UUID id;
-
     @Column(name = "reservation_id")
     private UUID reservationId;
-
     @Column(name = "ride_date")
     private LocalDate rideDate;
-
     @Column(name = "schedule_cd")
     private String scheduleCd;
-
     @Column(name = "train_car_cd")
     private String trainCarCd;
-
     @Column(name = "seat_cd")
     private String seatCd;
-
     @Column(name = "reserved_section_cd")
     private String reservedSectionCd;
 }
