@@ -25,7 +25,6 @@ public class SectionKmEntity {
     @NonNull
     @Column(name = "section_cd")
     private String sectionCd;
-<<<<<<< HEAD
     @NonNull
     @Column(name = "start_station_cd")
     private String startStationCd;
@@ -35,14 +34,6 @@ public class SectionKmEntity {
     @NonNull
     @Column(name = "distance_km")
     private Double distanceKm;
-=======
-    @Column(name = "start_station_cd")
-    private String startStationCd;
-    @Column(name = "goal_station_cd")
-    private String goalStationCd;
-    @Column(name = "distance_km")
-    private double distanceKm;
->>>>>>> 97bbf34a223a86a903671ad503e7459d045e3e58
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "start_station_cd", referencedColumnName = "station_cd", insertable = false, updatable = false)
     private StationEntity startStation;

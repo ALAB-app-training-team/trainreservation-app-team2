@@ -24,14 +24,10 @@ public class TrainCarService {
     public TrainCarService(
         TrainCarRepository trainCarRepository,
         DepartureArrivalTimeRepository departureArrivalTimeRepository,
-<<<<<<< HEAD
         ReservedSeatSectionRepository reservedSeatSectionRepository,
         SectionKmRepository sectionKmRepository,
         FareKmService fareKmService
     ) {
-=======
-        ReservedSeatSectionRepository reservedSeatSectionRepository) {
->>>>>>> 97bbf34a223a86a903671ad503e7459d045e3e58
         this.trainCarRepository = trainCarRepository;
         this.departureArrivalTimeRepository = departureArrivalTimeRepository;
         this.reservedSeatSectionRepository = reservedSeatSectionRepository;

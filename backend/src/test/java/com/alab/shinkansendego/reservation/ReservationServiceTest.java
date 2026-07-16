@@ -196,13 +196,8 @@ public class ReservationServiceTest {
         String email = "yamada@some.example.jp";
         List<ReservationEntity> reservationList = Arrays.asList(buildReservation(purchaseId1), buildReservation(purchaseId2));
         List<ReservedSeatEntity> seatList = Arrays.asList(
-<<<<<<< HEAD
             buildSeat(purchaseId1, "指定席", 1, 1, "A", UUID.fromString("60a1ab63-a41f-430d-a2d1-10a76368d0f5"), 1000),
             buildSeat(purchaseId2, "グリーン車", 9, 1, "A", UUID.fromString("3de8909e-32de-478e-bd9b-739f3fe6d6c3"), 1000)
-=======
-            buildSeat(purchaseId1, "指定席", 1, 1, "A", UUID.fromString("60a1ab63-a41f-430d-a2d1-10a76368d0f5")),
-            buildSeat(purchaseId2, "グリーン車", 9, 1, "A", UUID.fromString("3de8909e-32de-478e-bd9b-739f3fe6d6c3"))
->>>>>>> 97bbf34a223a86a903671ad503e7459d045e3e58
         );
 
         when(reservationRepo.findByReserverNameAndReserverMail(name, email)).thenReturn(reservationList);
