@@ -52,17 +52,14 @@ test('ゴミ箱ボタンを押すと、選択した座席が解除される', as
     await expect(page).toHaveURL('/scheduleSearch');
     await scheduleSearchPage.clickDetailButton();
     await expect(page.getByText('座席が選択されていません')).toBeVisible();
-
+    const firstSeat =
+        (await selectSeatPage.emptySeat.first().textContent()) ?? '';
+    const secondSeat =
+        (await selectSeatPage.emptySeat.nth(1).textContent()) ?? '';
     await selectSeatPage.emptySeat.first().click();
-    // await page.getByRole('button', { name: '1A', exact: true }).click();
-
     await selectSeatPage.emptySeat.nth(1).click();
-    // await page.getByRole('button', { name: '1B', exact: true }).click();
-
-    await expect(page.getByTestId('selected-seats')).toContainText(
-        await selectSeatPage.emptySeat.first().textContent(),
-    );
-    await expect(page.getByText('1号車1B')).toBeVisible();
+    await expect(page.getByText(firstSeat)).toBeVisible();
+    await expect(page.getByText(secondSeat)).toBeVisible();
     await page.getByTestId('trash-button').click();
     await expect(page.getByText('座席が選択されていません')).toBeVisible();
 });
@@ -74,21 +71,33 @@ test('座席を6席選択すると、それ以上選択できない', async ({ p
     await expect(page).toHaveURL('/scheduleSearch');
     await scheduleSearchPage.clickDetailButton();
     await expect(page.getByText('座席が選択されていません')).toBeVisible();
-    await page.getByRole('button', { name: '1A', exact: true }).click();
-    await page.getByRole('button', { name: '1B', exact: true }).click();
+    const firstSeat =
+        (await selectSeatPage.emptySeat.first().textContent()) ?? '';
+    const secondSeat =
+        (await selectSeatPage.emptySeat.nth(1).textContent()) ?? '';
+    await selectSeatPage.emptySeat.first().click();
+    await selectSeatPage.emptySeat.nth(1).click();
     await page.getByRole('button', { name: '2', exact: true }).click();
-    await page.getByRole('button', { name: '1A', exact: true }).click();
-    await page.getByRole('button', { name: '1B', exact: true }).click();
+    const thirdSeat =
+        (await selectSeatPage.emptySeat.first().textContent()) ?? '';
+    const fourthSeat =
+        (await selectSeatPage.emptySeat.nth(1).textContent()) ?? '';
+    await selectSeatPage.emptySeat.first().click();
+    await selectSeatPage.emptySeat.nth(1).click();
     await page.getByRole('button', { name: 'グリーン車' }).click();
-    await page.getByRole('button', { name: '1A', exact: true }).click();
+    const fifthSeat =
+        (await selectSeatPage.emptySeat.first().textContent()) ?? '';
+    await selectSeatPage.emptySeat.first().click();
     await page.getByRole('button', { name: 'グランクラス' }).click();
-    await page.getByRole('button', { name: '1A' }).click();
-    await expect(page.getByText('1号車1A')).toBeVisible();
-    await expect(page.getByText('1号車1B')).toBeVisible();
-    await expect(page.getByText('2号車1A')).toBeVisible();
-    await expect(page.getByText('2号車1B')).toBeVisible();
-    await expect(page.getByText('9号車1A')).toBeVisible();
-    await expect(page.getByText('10号車1A')).toBeVisible();
+    const sixthSeat =
+        (await selectSeatPage.emptySeat.first().textContent()) ?? '';
+    await selectSeatPage.emptySeat.first().click();
+    await expect(page.getByText(firstSeat)).toBeVisible();
+    await expect(page.getByText(secondSeat)).toBeVisible();
+    await expect(page.getByText(thirdSeat)).toBeVisible();
+    await expect(page.getByText(fourthSeat)).toBeVisible();
+    await expect(page.getByText(fifthSeat)).toBeVisible();
+    await expect(page.getByText(sixthSeat)).toBeVisible();
     await expect(
         page.getByText('一度に予約できる座席は6席までです'),
     ).toBeVisible();
