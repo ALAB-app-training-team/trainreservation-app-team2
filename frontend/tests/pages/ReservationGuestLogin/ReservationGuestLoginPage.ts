@@ -31,6 +31,12 @@ export class ReservationGuestLoginPage {
     async fillMailAddress(mailAddress: string) {
         await this.mailAddress.fill(mailAddress);
     }
+    async clickReserverNameInput() {
+        await this.name.click();
+    }
+    async clickReserverMailInput() {
+        await this.mailAddress.click();
+    }
     async clickGuestLoginButton() {
         await this.guestLoginButton.click();
     }
@@ -38,5 +44,17 @@ export class ReservationGuestLoginPage {
     async inputGuestLoginInfo() {
         await this.fillName('田中太郎');
         await this.fillMailAddress('tanaka@taro.jp');
+    }
+
+    async inputEmptyReserverName() {
+        await this.fillName('');
+    }
+
+    async inputEmptyReserverMail() {
+        await this.fillMailAddress('');
+    }
+
+    async inputValidReserverMail() {
+        await this.fillMailAddress('aaa@あああ.co');
     }
 }
