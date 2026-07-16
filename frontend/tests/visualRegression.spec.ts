@@ -12,6 +12,7 @@ test('visual-scheduleSearch', async ({ page }) => {
     await scheduleSearchPage.goto();
     await expect(page).toHaveURL('/scheduleSearch');
     await scheduleSearchPage.arrivalStation.waitFor({ state: 'visible' });
+    await page.evaluate(() => document.fonts.ready);
 
     await expect(page).toHaveScreenshot({
         maxDiffPixelRatio: 0.1,
@@ -33,6 +34,7 @@ test('visual-selectSeat', async ({ page }) => {
     await scheduleSearchPage.clickDetailButton();
     await expect(page).toHaveURL('/selectSeat');
     await selectSeatPage.cardHolderName.waitFor({ state: 'visible' });
+    await page.evaluate(() => document.fonts.ready);
 
     await expect(page).toHaveScreenshot({
         maxDiffPixelRatio: 0.1,
@@ -52,6 +54,7 @@ test('visual-reservationGuestLogin', async ({ page }) => {
     await reservationGuestLoginPage.goto();
     await expect(page).toHaveURL('/reservationGuestLogin');
     await reservationGuestLoginPage.name.waitFor({ state: 'visible' });
+    await page.evaluate(() => document.fonts.ready);
 
     await expect(page).toHaveScreenshot({
         maxDiffPixelRatio: 0.1,
@@ -93,6 +96,7 @@ test('visual-reservationList', async ({ page, clearSession }) => {
             )
             .nth(0),
     );
+    await page.evaluate(() => document.fonts.ready);
 
     await expect(page).toHaveScreenshot({
         maxDiffPixelRatio: 0.1,
@@ -119,6 +123,7 @@ test('visual-reservedTicket', async ({ page, clearSession }) => {
     await reservationListPage.clickTicketButton();
     await expect(page).toHaveURL('/reservedTicket');
     await reservedTicketPage.backButton.waitFor({ state: 'visible' });
+    await page.evaluate(() => document.fonts.ready);
 
     await expect(page).toHaveScreenshot({
         maxDiffPixelRatio: 0.1,
