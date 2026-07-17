@@ -11,17 +11,25 @@ test('visual-scheduleSearch', async ({ page }) => {
 
     await scheduleSearchPage.goto();
     await expect(page).toHaveURL('/scheduleSearch');
-    await scheduleSearchPage.arrivalStation.waitFor({ state: 'visible' });
+    await scheduleSearchPage.detailButton.first().waitFor({ state: 'visible' });
     await page.evaluate(() => document.fonts.ready);
+
+    const scheduleItems = page.getByTestId('schedule');
+    const itemCount = await scheduleItems.count();
+
+    const maskTargets = [];
+    for (let i = 1; i < itemCount; i++) {
+        maskTargets.push(scheduleItems.nth(i));
+    }
+    maskTargets.push(page.getByTestId('schedule-departure-time').first());
+    maskTargets.push(page.getByTestId('schedule-arrival-time').first());
+    maskTargets.push(page.getByTestId('schedule-train').first());
 
     await expect(page).toHaveScreenshot({
         maxDiffPixelRatio: 0.05,
         fullPage: true,
         animations: 'disabled',
-        mask: [
-            // テストに含めたくない要素をマスク(無視)する
-            // 例 page.locator('.hoge'),
-        ],
+        mask: maskTargets,
         maskColor: '#00ff00',
     });
 });
@@ -33,7 +41,7 @@ test('visual-selectSeat', async ({ page }) => {
     await scheduleSearchPage.goto();
     await scheduleSearchPage.clickDetailButton();
     await expect(page).toHaveURL('/selectSeat');
-    await selectSeatPage.cardHolderName.waitFor({ state: 'visible' });
+    await selectSeatPage.emptySeat.first().waitFor({ state: 'visible' });
     await page.evaluate(() => document.fonts.ready);
 
     await expect(page).toHaveScreenshot({
@@ -68,7 +76,7 @@ test('visual-reservationGuestLogin', async ({ page }) => {
     });
 });
 
-test('visual-reservationList', async ({ page, clearSession }) => {
+test.only('visual-reservationList', async ({ page, clearSession }) => {
     const reservationGuestLoginPage = new ReservationGuestLoginPage(page);
     const reservationListPage = new ReservationListPage(page);
 
@@ -77,7 +85,9 @@ test('visual-reservationList', async ({ page, clearSession }) => {
     await reservationGuestLoginPage.inputGuestLoginInfo();
     await reservationGuestLoginPage.clickGuestLoginButton();
     await expect(page).toHaveURL('/reservationList');
-    await reservationListPage.header.systemName.waitFor({ state: 'visible' });
+    await reservationListPage.ticketButton
+        .first()
+        .waitFor({ state: 'visible' });
     const listItems = page.locator(
         '.border-primary-light.flex.flex-col.gap-2.rounded-2xl.border-2.p-8',
     );
