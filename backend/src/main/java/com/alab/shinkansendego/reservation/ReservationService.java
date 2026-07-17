@@ -140,7 +140,21 @@ public class ReservationService {
             throw new IllegalArgumentException("PurchaseId is Not found");
         }
 
-        List<ReservedScheduleDto> scheduleList = reservationRepository.findReservationScheduleDtoByReservationId(reservationId);
+//        List<ReservedScheduleDto> scheduleList = reservationRepository.findReservationScheduleDtoByReservationId(reservationId);
+        ReservationEntity reservationEntityList = reservationRepository.findScheduleById(reservationId);
+        List<ReservedScheduleDto> scheduleList = reservationEntityList.getDepartureArrivalTime().stream().map(
+                schedule ->
+                    new ReservedScheduleDto(
+                        schedule.getDepartureTime(),
+                        schedule.getSectionKm().getStartStation().getStationCd(),
+                        schedule.getSectionKm().getStartStation().getName(),
+                        schedule.getArrivalTime(),
+                        schedule.getSectionKm().getGoalStation().getStationCd(),
+                        schedule.getSectionKm().getGoalStation().getName()
+                    )
+            )
+            .collect(Collectors.toList());
+
         List<ReservedScheduleDto> departureSchedule = scheduleList.stream().filter(schedule -> Objects.equals(schedule.getDepartureStationCd(), purchase.getDepartureStationCd())).toList();
         List<ReservedScheduleDto> arrivalSchedule = scheduleList.stream().filter(schedule -> Objects.equals(schedule.getArrivalStationCd(), purchase.getArrivalStationCd())).toList();
         if (departureSchedule.size() != 1 || arrivalSchedule.size() != 1) {

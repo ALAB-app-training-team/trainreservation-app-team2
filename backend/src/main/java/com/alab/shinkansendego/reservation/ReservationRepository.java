@@ -20,6 +20,14 @@ public interface ReservationRepository extends JpaRepository<ReservationEntity, 
         "ORDER BY d.departureTime")
     List<ReservedScheduleDto> findReservationScheduleDtoByReservationId(UUID reservationId);
 
+    @EntityGraph(attributePaths = {
+        "departureArrivalTime",
+        "departureArrivalTime.sectionKm",
+        "departureArrivalTime.sectionKm.startStation",
+        "departureArrivalTime.sectionKm.goalStation",
+    })
+    ReservationEntity findScheduleById(UUID uuid);
+
     @Query("SELECT new com.alab.shinkansendego.reservation.ReservationDto(tt.name,r.departureStationCd,r.arrivalStationCd,r.rideDate) " +
         "FROM ReservationEntity r " +
         "JOIN ScheduleEntity s ON r.scheduleCd = s.scheduleCd " +
