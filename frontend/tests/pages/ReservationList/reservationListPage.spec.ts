@@ -8,7 +8,6 @@ test('お支払い合計が正しく表示されていること', async ({
     createReservation,
     guestLogin,
 }) => {
-    const reservationGuestLogin = new ReservationGuestLoginPage(page);
     const reservationListPage = new ReservationListPage(page);
 
     await createReservation();
