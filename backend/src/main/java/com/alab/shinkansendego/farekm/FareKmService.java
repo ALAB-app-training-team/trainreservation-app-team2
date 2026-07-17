@@ -32,7 +32,7 @@ public class FareKmService {
         Map<String, Integer> fares = new HashMap<>();
 
         if (distance <= 0 || distance > 800) {
-            throw new IllegalArgumentException("Out of the price range");
+            throw new IllegalArgumentException("Out of the fare range");
         }
 
         List<BasicFareKmEntity> basicFareKmEntities = basicRepo.findAll();
