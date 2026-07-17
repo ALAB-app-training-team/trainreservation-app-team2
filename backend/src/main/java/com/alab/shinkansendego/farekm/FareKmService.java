@@ -43,16 +43,16 @@ public class FareKmService {
             .filter(entity -> (entity.getMinKm() < distance) && (entity.getMaxKm() >= distance))
             .map(BasicFareKmEntity::getBasicFare)
             .findFirst()
-            .orElseThrow(() -> new IllegalArgumentException("Out of the price range"));
+            .orElseThrow(() -> new IllegalArgumentException("Out of the basic fare range"));
         Integer expressFare = expressFareKmEntities.stream()
             .filter(entity -> (entity.getMinKm() < distance) && (entity.getMaxKm() >= distance))
             .map(ExpressFareKmEntity::getExpressFare)
             .findFirst()
-            .orElseThrow(() -> new IllegalArgumentException("Out of the price range"));
+            .orElseThrow(() -> new IllegalArgumentException("Out of the express fare range"));
         SupplementaryFareKmEntity supplementaryFareKmEntity = supplementaryFareKmEntities.stream()
             .filter(entity -> (entity.getMinKm() < distance) && (entity.getMaxKm() >= distance))
             .findFirst()
-            .orElseThrow(() -> new IllegalArgumentException("Out of the price range"));
+            .orElseThrow(() -> new IllegalArgumentException("Out of the supplementary fare range"));
 
         fares.put("non-reserved", basicFare + expressFare);
         fares.put("reserved", basicFare + expressFare + supplementaryFareKmEntity.getReservedFare());
