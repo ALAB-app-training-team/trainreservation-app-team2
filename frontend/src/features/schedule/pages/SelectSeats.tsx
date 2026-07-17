@@ -16,6 +16,7 @@ import { useSelectedSeats } from '@/features/schedule/hooks/useSelectedSeats';
 import type { PaymentRequestDto } from '@/features/schedule/types/PaymentRequestDto';
 import type { ReserveRequestDto } from '@/features/schedule/types/ReserveRequestDto';
 import { CustomModal } from '@/shared/components/CustomModal';
+import { ERROR_MESSAGE } from '@/shared/constants/ErrorMessages';
 import { useModal } from '@/shared/hooks/useModal';
 import { removeWhiteSpace } from '@/shared/utils/RemoveWhiteSpace';
 
@@ -30,7 +31,6 @@ export function SelectSeats() {
     } = location.state;
     const {
         selectedSeats,
-        limitSeats,
         handleSelectedSeats,
         handleClear,
         checkReservedSeats,
@@ -104,9 +104,7 @@ export function SelectSeats() {
             });
         } catch {
             //TODO: エラー時にユーザーにわかりやすく表示する
-            alert(
-                '予約処理中にエラーが発生しました。お手数ですが再度お試しください。',
-            );
+            alert(ERROR_MESSAGE.RESERVE_RETRY);
         } finally {
             setIsSubmitting(false);
             onRequestClose();
@@ -136,7 +134,6 @@ export function SelectSeats() {
                         <TrainCars
                             scheduleInfoDto={scheduleInfoDto}
                             selectedSeats={selectedSeats}
-                            limitSeats={limitSeats}
                             handleSelectedSeats={handleSelectedSeats}
                             checkReservedSeats={checkReservedSeats}
                         />
@@ -146,7 +143,6 @@ export function SelectSeats() {
                     <div className="border-primary-light flex w-full flex-col gap-4 rounded-2xl border-2 p-8 text-left">
                         <SelectedSeats
                             selectedSeats={selectedSeats}
-                            limitSeats={limitSeats}
                             handleClear={handleClear}
                         />
                         <form
