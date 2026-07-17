@@ -20,6 +20,11 @@ export function ReservationSelectItem({ details }: ReservationSelectItemProps) {
     const now = new Date();
     now.setHours(0, 0, 0, 0);
 
+    const totalFare = details.reservedSeats.reduce(
+        (sum, seat) => sum + (seat.seatFare || 0),
+        0,
+    );
+
     const handleReservationDetail = () => {
         navigate('/reservedTicket', {
             state: { purchaseId: details.purchaseId, isBack: true },
@@ -60,7 +65,10 @@ export function ReservationSelectItem({ details }: ReservationSelectItemProps) {
                         <FaClock />
                         <label>出発</label>
                     </div>
-                    <label className="text-xl font-bold">
+                    <label
+                        data-testId="ride-date"
+                        className="text-xl font-bold"
+                    >
                         {dayjs(details.rideDate).format('YYYY年MM月DD日')}{' '}
                     </label>
                     <label className="text-xl font-bold">
@@ -77,7 +85,16 @@ export function ReservationSelectItem({ details }: ReservationSelectItemProps) {
                     seats={details.reservedSeats}
                 />
             </div>
-            <div>
+            <div className="flex items-center justify-between py-2">
+                <div className="flex items-baseline">
+                    <div>お支払い合計：</div>
+                    <div
+                        data-testId="total-fare"
+                        className="text-primary text-xl font-bold"
+                    >
+                        ￥{totalFare.toLocaleString()}
+                    </div>
+                </div>
                 <div className="flex justify-end">
                     {/*TODO：キャンセルと同じ区間で検索にOnClickを追加する*/}
                     {departureDate >= now ? (

@@ -15,4 +15,5 @@ public class ReservedSeatDto {
     private Integer seatNumber;
     private String seatColumn;
     private UUID codeToken;
+    private Integer seatFare;
 }

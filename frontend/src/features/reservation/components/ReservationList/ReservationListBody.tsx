@@ -55,6 +55,7 @@ export function ReservationListBody() {
                 <div className="bg-primary/8 flex gap-6 rounded-3xl p-2">
                     <div className="flex w-full items-center">
                         <button
+                            data-testId="active-button"
                             onClick={() => setSelectedTab('ACTIVE')}
                             className={`flex w-full cursor-pointer items-center justify-center gap-2 rounded-3xl px-6 py-2 transition ${
                                 selectedTab === 'ACTIVE'
@@ -66,6 +67,7 @@ export function ReservationListBody() {
                             {`${RESERVATION_TAB['ACTIVE']} （${activeReservations?.length}）`}
                         </button>
                         <button
+                            data-testId="past-button"
                             onClick={() => setSelectedTab('PAST')}
                             className={`flex w-full cursor-pointer items-center justify-center gap-2 rounded-3xl px-6 py-2 transition ${
                                 selectedTab === 'PAST'
