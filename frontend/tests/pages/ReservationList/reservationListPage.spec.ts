@@ -41,6 +41,6 @@ test('お支払い合計が正しく表示されていること', async ({ page 
     await page.waitForLoadState('networkidle');
     await expect(reservationListPage.totalFareElement.first()).toBeVisible();
     await expect(reservationListPage.totalFareElement.first()).toContainText(
-        '00',
+        '2,600',
     );
 });
