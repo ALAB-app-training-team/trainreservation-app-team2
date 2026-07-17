@@ -23,7 +23,7 @@ test('お支払い合計が正しく表示されていること', async ({ page 
                             seatNumber: 1,
                             seatColumn: 'C',
                             codeToken: 'df57b3de-68f3-4632-8111-4e0d5e4d80be',
-                            seatFare: 0,
+                            seatFare: 1500,
                         },
                     ],
                 },
@@ -32,6 +32,6 @@ test('お支払い合計が正しく表示されていること', async ({ page 
     });
 
     await page.goto('/reservationList');
-    const totalFareElement = page.getByText('お支払い合計：');
-    await expect(totalFareElement).toBeVisible();
+    await expect(reservationListPage.totalFareElement).toBeVisible();
+    await expect(reservationListPage.totalFareElement).toContainText('1,500');
 });
