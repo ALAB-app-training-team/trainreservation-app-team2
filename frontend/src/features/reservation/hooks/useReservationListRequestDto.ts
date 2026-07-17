@@ -1,6 +1,9 @@
 import { useState } from 'react';
 
 import type { ReservationListRequestDto } from '@/features/reservation/types/ReservationListRequestDto';
+import { VALIDATION_MESSAGE } from '@/shared/constants/ValidationMessages';
+import { checkMailRegex } from '@/shared/utils/CheckMailRegex';
+import { removeWhiteSpace } from '@/shared/utils/RemoveWhiteSpace';
 
 export function useReservationListRequestDto() {
     const [guestLoginForm, setGuestLoginForm] =
@@ -8,56 +11,54 @@ export function useReservationListRequestDto() {
             reserverName: '',
             reserverMail: '',
         });
-    type InValidMessage = {
+    type InvalidMessage = {
         field: keyof ReservationListRequestDto;
         message: string;
     };
-    const [inValidMessages, setInValidMessages] = useState<InValidMessage[]>(
+    const [invalidMessages, setInvalidMessages] = useState<InvalidMessage[]>(
         [],
     );
 
     const isNameEmpty = (value: string) => {
-        return value === '';
+        return removeWhiteSpace(value) === '';
     };
     const isMailEmpty = (value: string) => {
-        return value === '';
+        return removeWhiteSpace(value) === '';
     };
-    const isMailInValid = (value: string) => {
-        return !/^[a-zA-Z0-9]+([._+-][a-zA-Z0-9]+)*@([a-zA-Z0-9][a-zA-Z0-9-]*[a-zA-Z0-9]*\.)+[a-zA-Z]{2,}$/.test(
-            value,
-        );
+    const isMailInvalid = (value: string) => {
+        return checkMailRegex(value);
     };
 
     const editValidateMessage = (field: string, value: string) => {
-        const messages: InValidMessage[] = inValidMessages.filter(
+        const messages: InvalidMessage[] = invalidMessages.filter(
             (item) => item.field !== field,
         );
         if (field === 'reserverName') {
             if (isNameEmpty(value)) {
                 messages.push({
                     field: 'reserverName',
-                    message: '予約者氏名を入力してください',
+                    message: VALIDATION_MESSAGE.EMPTY_RESERVER_NAME,
                 });
             }
         } else if (field === 'reserverMail') {
             if (isMailEmpty(value)) {
                 messages.push({
                     field: 'reserverMail',
-                    message: 'メールアドレスを入力してください',
+                    message: VALIDATION_MESSAGE.EMPTY_RESERVER_MAIL,
                 });
-            } else if (isMailInValid(value)) {
+            } else if (isMailInvalid(value)) {
                 messages.push({
                     field: 'reserverMail',
-                    message: '正しいメールアドレスの形式で入力してください',
+                    message: VALIDATION_MESSAGE.INVALID_RESERVER_MAIL,
                 });
             }
         }
-        setInValidMessages(messages);
+        setInvalidMessages(messages);
     };
 
     const getFieldError = (field: string) => {
         return (
-            inValidMessages.find((item) => item.field === field)?.message ?? ''
+            invalidMessages.find((item) => item.field === field)?.message ?? ''
         );
     };
 
@@ -79,7 +80,7 @@ export function useReservationListRequestDto() {
         return (
             isNameEmpty(guestLoginForm.reserverName) ||
             isMailEmpty(guestLoginForm.reserverName) ||
-            isMailInValid(guestLoginForm.reserverMail)
+            isMailInvalid(guestLoginForm.reserverMail)
         );
     };
 

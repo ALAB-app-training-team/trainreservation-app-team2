@@ -23,7 +23,7 @@ export class SelectSeatPage {
         this.backButton = page.getByRole('button', { name: '検索画面に戻る' });
         this.trainCars = page.getByTestId('train-cars').getByRole('button');
         this.emptySeat = page.locator('button.w-12.h-12.cursor-pointer');
-        this.name = page.getByRole('textbox', { name: '購入者氏名' });
+        this.name = page.getByRole('textbox', { name: '予約者氏名' });
         this.mailAddress = page.getByRole('textbox', {
             name: 'メールアドレス',
         });

@@ -2,6 +2,9 @@ import { useState } from 'react';
 import type { Focused } from 'react-credit-cards-2';
 
 import type { ReserveUser } from '@/features/schedule/types/ReserveUser';
+import { VALIDATION_MESSAGE } from '@/shared/constants/ValidationMessages';
+import { checkMailRegex } from '@/shared/utils/CheckMailRegex';
+import { removeWhiteSpace } from '@/shared/utils/RemoveWhiteSpace';
 
 export function useReserveUser() {
     const [reserveUser, setReserveUser] = useState<ReserveUser>({
@@ -13,22 +16,25 @@ export function useReserveUser() {
         cvc: '',
     });
     const [focus, setFocus] = useState<Focused>('');
-    type InValidMessage = {
+    type InvalidMessage = {
         field: keyof ReserveUser;
         message: string;
     };
-    const [inValidMessages, setInValidMessages] = useState<InValidMessage[]>(
+    const [invalidMessages, setInvalidMessages] = useState<InvalidMessage[]>(
         [],
     );
 
     const isNameEmpty = (value: string) => {
-        return value === '';
+        return removeWhiteSpace(value) === '';
     };
     const isNameMaxLength = (value: string) => {
         return value.length > 255;
     };
+    const isMailEmpty = (value: string) => {
+        return removeWhiteSpace(value) === '';
+    };
     const isMailInvalid = (value: string) => {
-        return value === '' || !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(value);
+        return checkMailRegex(value);
     };
     const isMailMaxLength = (value: string) => {
         return value.length > 255;
@@ -36,8 +42,11 @@ export function useReserveUser() {
     const isCardNumberInvalid = (value: string) => {
         return value === '' || !/^\d{14,16}$/.test(value);
     };
+    const isCardNameEmpty = (value: string) => {
+        return removeWhiteSpace(value) === '';
+    };
     const isCardNameInvalid = (value: string) => {
-        return value === '' || !/^[A-Z\s]+$/.test(value);
+        return !/^[A-Z\s]+$/.test(value);
     };
     const isExpiryInvalid = (value: string) => {
         return value === '' || !/^\d{2}\/\d{2}$/.test(value);
@@ -50,9 +59,11 @@ export function useReserveUser() {
         return (
             isNameEmpty(reserveUser.reserverName) ||
             isNameMaxLength(reserveUser.reserverName) ||
+            isMailEmpty(reserveUser.reserverMail) ||
             isMailInvalid(reserveUser.reserverMail) ||
             isMailMaxLength(reserveUser.reserverMail) ||
             isCardNumberInvalid(reserveUser.cardNumber) ||
+            isCardNameEmpty(reserveUser.cardName) ||
             isCardNameInvalid(reserveUser.cardName) ||
             isExpiryInvalid(reserveUser.expiry) ||
             isCvcInvalid(reserveUser.cvc)
@@ -62,71 +73,82 @@ export function useReserveUser() {
     const isInvalid = checkInvalid(reserveUser);
 
     const editValidateMessage = (field: string, value: string) => {
-        const messages: InValidMessage[] = inValidMessages.filter(
+        const messages: InvalidMessage[] = invalidMessages.filter(
             (item) => item.field !== field,
         );
         if (field === 'reserverName') {
             if (isNameEmpty(value)) {
                 messages.push({
                     field: 'reserverName',
-                    message: '購入者氏名を入力してください',
+                    message: VALIDATION_MESSAGE.EMPTY_RESERVER_NAME,
                 });
             }
             if (isNameMaxLength(value)) {
                 messages.push({
                     field: 'reserverName',
-                    message: '購入者氏名は255文字以内で入力してください',
+                    message: VALIDATION_MESSAGE.MAX_LENGTH_RESERVER_NAME,
                 });
             }
         } else if (field === 'reserverMail') {
+            if (isMailEmpty(value)) {
+                messages.push({
+                    field: 'reserverMail',
+                    message: VALIDATION_MESSAGE.EMPTY_RESERVER_MAIL,
+                });
+            }
             if (isMailMaxLength(value)) {
                 messages.push({
                     field: 'reserverMail',
-                    message: 'メールアドレスは255文字以内で入力してください',
+                    message: VALIDATION_MESSAGE.MAX_LENGTH_RESERVER_MAIL,
                 });
             }
             if (isMailInvalid(value)) {
                 messages.push({
                     field: 'reserverMail',
-                    message:
-                        'メールアドレスの形式（~~@~~.~~）で入力してください',
+                    message: VALIDATION_MESSAGE.INVALID_RESERVER_MAIL,
                 });
             }
         } else if (field === 'cardNumber') {
             if (isCardNumberInvalid(value)) {
                 messages.push({
                     field: 'cardNumber',
-                    message: '14-16桁の有効なカード番号を入力してください',
+                    message: VALIDATION_MESSAGE.INVALID_CARD_NUMBER,
                 });
             }
         } else if (field === 'cardName') {
+            if (isCardNameEmpty(value)) {
+                messages.push({
+                    field: 'cardName',
+                    message: VALIDATION_MESSAGE.EMPTY_CARD_NAME,
+                });
+            }
             if (isCardNameInvalid(value)) {
                 messages.push({
                     field: 'cardName',
-                    message: '半角英大文字・半角スペースで入力してください',
+                    message: VALIDATION_MESSAGE.INVALID_CARD_NAME,
                 });
             }
         } else if (field === 'expiry') {
             if (isExpiryInvalid(value)) {
                 messages.push({
                     field: 'expiry',
-                    message: 'MM/YY（月/年）の形式で入力してください',
+                    message: VALIDATION_MESSAGE.INVALID_EXPIRY,
                 });
             }
         } else if (field === 'cvc') {
             if (isCvcInvalid(value)) {
                 messages.push({
                     field: 'cvc',
-                    message: '半角数字3-4桁で入力してください',
+                    message: VALIDATION_MESSAGE.INVALID_CVC,
                 });
             }
         }
-        setInValidMessages(messages);
+        setInvalidMessages(messages);
     };
 
     const getFieldError = (field: string) => {
         return (
-            inValidMessages.find((item) => item.field === field)?.message ?? ''
+            invalidMessages.find((item) => item.field === field)?.message ?? ''
         );
     };
 

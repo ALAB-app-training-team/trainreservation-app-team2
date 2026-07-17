@@ -8,6 +8,8 @@ import _ReactPaginate from 'react-paginate';
 import { ScheduleItem } from '@/features/schedule/components/ScheduleItem';
 import { useSchedules } from '@/features/schedule/hooks/useSchedules';
 import type { SearchRequestDto } from '@/features/schedule/types/SearchRequestDto';
+import { ERROR_MESSAGE } from '@/shared/constants/ErrorMessages';
+import { VALIDATION_MESSAGE } from '@/shared/constants/ValidationMessages';
 
 type PaginateType = React.ComponentType<ReactPaginateProps>;
 const ReactPaginate =
@@ -91,13 +93,13 @@ export function ScheduleList({
                             </div>
                             <div className="text-xl font-bold">
                                 {isInvalid
-                                    ? '検索条件が不正です'
-                                    : '指定日時の列車はありません'}
+                                    ? VALIDATION_MESSAGE.INVALID_SEARCH_FORM
+                                    : ERROR_MESSAGE.NO_SCHEDULE}
                             </div>
                             <div className="text-base">
                                 {isInvalid
-                                    ? '検索条件を修正してください。'
-                                    : 'お選びいただいた日時以降の列車が見つかりませんでした。条件を変更するか翌日の列車を検索してください。'}
+                                    ? VALIDATION_MESSAGE.FIX_SEARCH_FORM
+                                    : ERROR_MESSAGE.NO_SPECIFIED_DATETIME_SCHEDULE}
                             </div>
                         </div>
                     </div>
