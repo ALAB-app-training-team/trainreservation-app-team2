@@ -42,7 +42,10 @@ export function ReservedSeats({
                         <label>座席</label>
                     </div>
                 )}
-                <div className="flex flex-wrap gap-2">
+                <div
+                    className="flex flex-wrap gap-2"
+                    data-testId="reserved-seats"
+                >
                     {seats.length !== 0 ? (
                         seats
                             .sort(
