@@ -66,7 +66,7 @@ public class TrainCarService {
 
         for (SeatResponseDto seat : seatList) {
             seat.setIsReserved(reservedSeatCdList.contains(seat.getSeatCd()));
-            seat.setFare(fare);
+            seat.setSeatFare(fare);
         }
 
         seatList.sort(Comparator.comparing(SeatResponseDto::getSeatNumber).thenComparing(SeatResponseDto::getSeatColumn));

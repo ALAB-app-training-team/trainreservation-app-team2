@@ -31,12 +31,8 @@ public class FareKmService {
     public Map<String, Integer> getFareFromDistance(Double distance) {
         Map<String, Integer> fares = new HashMap<>();
 
-        if (distance == 0) {
-            fares.put("non-reserved", 0);
-            fares.put("reserved", 0);
-            fares.put("green", 0);
-            fares.put("gran-class", 0);
-            return fares;
+        if (distance <= 0 || distance > 800) {
+            throw new IllegalArgumentException("Out of the price range");
         }
 
         List<BasicFareKmEntity> basicFareKmEntities = basicRepo.findAll();
@@ -47,16 +43,16 @@ public class FareKmService {
             .filter(entity -> (entity.getMinKm() < distance) && (entity.getMaxKm() >= distance))
             .map(BasicFareKmEntity::getBasicFare)
             .findFirst()
-            .orElseThrow();
+            .orElseThrow(() -> new IllegalArgumentException("Out of the price range"));
         Integer expressFare = expressFareKmEntities.stream()
             .filter(entity -> (entity.getMinKm() < distance) && (entity.getMaxKm() >= distance))
             .map(ExpressFareKmEntity::getExpressFare)
             .findFirst()
-            .orElseThrow();
+            .orElseThrow(() -> new IllegalArgumentException("Out of the price range"));
         SupplementaryFareKmEntity supplementaryFareKmEntity = supplementaryFareKmEntities.stream()
             .filter(entity -> (entity.getMinKm() < distance) && (entity.getMaxKm() >= distance))
             .findFirst()
-            .orElseThrow();
+            .orElseThrow(() -> new IllegalArgumentException("Out of the price range"));
 
         fares.put("non-reserved", basicFare + expressFare);
         fares.put("reserved", basicFare + expressFare + supplementaryFareKmEntity.getReservedFare());

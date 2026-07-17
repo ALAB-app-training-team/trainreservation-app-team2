@@ -12,6 +12,7 @@ import java.util.Map;
 
 import static org.junit.jupiter.api.Assertions.assertAll;
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.Mockito.when;
 
 @ExtendWith(MockitoExtension.class)
@@ -52,17 +53,56 @@ public class FareKmServiceTest {
     }
 
     @Test
-    @DisplayName("営業キロ程が0の時は各席種の料金を0円で返す")
-    void getFare_with0km_returnAllFare0() {
-        Double moriokaKm = 0.0;
+    @DisplayName("営業キロ程が0のときIllegalArgumentExceptionを返す")
+    void getFare_with0km_throwIllegalArgumentException() {
+        Double zeroKm = 0.0;
 
-        Map<String, Integer> fares = service.getFareFromDistance(moriokaKm);
+        assertThrows(IllegalArgumentException.class, () -> service.getFareFromDistance(zeroKm));
+    }
 
-        assertAll(
-            () -> assertEquals(0, fares.get("non-reserved")),
-            () -> assertEquals(0, fares.get("reserved")),
-            () -> assertEquals(0, fares.get("green")),
-            () -> assertEquals(0, fares.get("gran-class"))
-        );
+    @Test
+    @DisplayName("営業キロ程が0kmより小さいときIllegalArgumentExceptionを返す")
+    void getFare_withUnder0km_throwIllegalArgumentException() {
+        Double underZeroKm = -1.0;
+
+        assertThrows(IllegalArgumentException.class, () -> service.getFareFromDistance(underZeroKm));
+    }
+
+    @Test
+    @DisplayName("営業キロ程が800kmより大きいときIllegalArgumentExceptionを返す")
+    void getFare_withOver800km_returnAllFare0() {
+        Double overKm = 800.1;
+
+        assertThrows(IllegalArgumentException.class, () -> service.getFareFromDistance(overKm));
+    }
+
+    @Test
+    @DisplayName("乗車券料金テーブルからデータを取得できなかったときIllegalArgumentExceptionを返す")
+    void getFare_withNoBasicFareTableData_throwIllegalArgumentException() {
+        Double morioka = 535.3;
+        when(basicFareKmRepository.findAll()).thenReturn(List.of());
+
+        assertThrows(IllegalArgumentException.class, () -> service.getFareFromDistance(morioka));
+    }
+
+    @Test
+    @DisplayName("特急券料金テーブルからデータを取得できなかったときIllegalArgumentExceptionを返す")
+    void getFare_withNoExpressFareTableData_throwIllegalArgumentException() {
+        Double morioka = 535.3;
+        when(basicFareKmRepository.findAll()).thenReturn(List.of(basicFareMock));
+        when(expressFareKmRepository.findAll()).thenReturn(List.of());
+
+        assertThrows(IllegalArgumentException.class, () -> service.getFareFromDistance(morioka));
+    }
+
+    @Test
+    @DisplayName("設備券料金テーブルからデータを取得できなかったときIllegalArgumentExceptionを返す")
+    void getFare_withNoSupplementaryFareTableData_throwIllegalArgumentException() {
+        Double morioka = 535.3;
+        when(basicFareKmRepository.findAll()).thenReturn(List.of(basicFareMock));
+        when(expressFareKmRepository.findAll()).thenReturn(List.of(expressFareMock));
+        when(supplementaryFareKmRepository.findAll()).thenReturn(List.of());
+
+        assertThrows(IllegalArgumentException.class, () -> service.getFareFromDistance(morioka));
     }
 }

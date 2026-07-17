@@ -5,5 +5,4 @@ import org.springframework.stereotype.Repository;
 
 @Repository
 public interface BasicFareKmRepository extends JpaRepository<BasicFareKmEntity, String> {
-    BasicFareKmEntity findByMinKmLessThanEqualAndMaxKmGreaterThan(Double km1, Double km2);
 }

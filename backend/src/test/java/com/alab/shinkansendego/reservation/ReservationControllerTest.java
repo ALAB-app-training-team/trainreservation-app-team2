@@ -198,8 +198,8 @@ public class ReservationControllerTest {
             "test@main",
             "Test2",
             List.of(
-                new ReserveRequestDto.SelectedSeatDto("E5SER01", "SEAT01001", 0),
-                new ReserveRequestDto.SelectedSeatDto("E5SER01", "SEAT01002", 0)
+                new ReserveRequestDto.SelectedSeatDto("E5SER01", "SEAT01001", 2800),
+                new ReserveRequestDto.SelectedSeatDto("E5SER01", "SEAT01002", 2800)
             ));
         UUID mockedPurchaseId = UUID.randomUUID();
         Mockito.when(service.insertReservation(request)).thenReturn(mockedPurchaseId);
@@ -216,8 +216,8 @@ public class ReservationControllerTest {
     void insertReservation_withNotValidReserveRequestDto_returnValidationError() throws Exception {
         ReserveRequestDto request = new ReserveRequestDto(
             null, LocalDate.now(), "Test0", "Test1", "TestTaro", "test@main", "Test2", List.of(
-            new ReserveRequestDto.SelectedSeatDto("E5SER01", "SEAT01001", 0),
-            new ReserveRequestDto.SelectedSeatDto("E5SER01", "SEAT01002", 0)
+            new ReserveRequestDto.SelectedSeatDto("E5SER01", "SEAT01001", 2800),
+            new ReserveRequestDto.SelectedSeatDto("E5SER01", "SEAT01002", 2800)
         ));
 
         mockMvc.perform(post(baseUrl)
