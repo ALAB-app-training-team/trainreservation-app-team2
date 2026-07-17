@@ -1,5 +1,4 @@
-import { expect } from '@playwright/test';
-import { test } from '@tests/fixtures';
+import { expect, test } from '@playwright/test';
 import { ReservationGuestLoginPage } from '@tests/pages/ReservationGuestLogin/ReservationGuestLoginPage';
 import { ReservedTicketPage } from '@tests/pages/ReservedTicket/ReservedTicketPage';
 import { ReservationListPage } from '@tests/pages/ReservationList/ReservationListPage';
@@ -76,7 +75,7 @@ test('visual-reservationGuestLogin', async ({ page }) => {
     });
 });
 
-test.only('visual-reservationList', async ({ page, clearSession }) => {
+test.only('visual-reservationList', async ({ page }) => {
     const reservationGuestLoginPage = new ReservationGuestLoginPage(page);
     const reservationListPage = new ReservationListPage(page);
 
@@ -115,10 +114,9 @@ test.only('visual-reservationList', async ({ page, clearSession }) => {
         mask: maskTargets,
         maskColor: '#00ff00',
     });
-    await clearSession();
 });
 
-test('visual-reservedTicket', async ({ page, clearSession }) => {
+test('visual-reservedTicket', async ({ page }) => {
     const reservationGuestLoginPage = new ReservationGuestLoginPage(page);
     const reservationListPage = new ReservationListPage(page);
     const reservedTicketPage = new ReservedTicketPage(page);
@@ -155,5 +153,4 @@ test('visual-reservedTicket', async ({ page, clearSession }) => {
         ],
         maskColor: '#00ff00',
     });
-    await clearSession();
 });
