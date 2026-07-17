@@ -1,16 +1,16 @@
 import { FaTrashCan } from 'react-icons/fa6';
 
 import type { SeatResponseDto } from '@/features/schedule/types/SeatResponseDto';
+import { ERROR_MESSAGE } from '@/shared/constants/ErrorMessages';
+import { LIMIT } from '@/shared/constants/Limit';
 
 type SelectedSeatsProps = {
     selectedSeats: SeatResponseDto[];
-    limitSeats: number;
     handleClear: () => void;
 };
 
 export function SelectedSeats({
     selectedSeats,
-    limitSeats,
     handleClear,
 }: SelectedSeatsProps) {
     return (
@@ -53,11 +53,11 @@ export function SelectedSeats({
                             );
                         })
                 ) : (
-                    <div>座席が選択されていません</div>
+                    <div>{ERROR_MESSAGE.NO_SELECTED_SEAT}</div>
                 )}
-                {selectedSeats.length >= limitSeats && (
+                {selectedSeats.length >= LIMIT.SEATS && (
                     <p className="text-left text-sm text-red-600">
-                        一度に予約できる座席は{limitSeats}席までです
+                        {ERROR_MESSAGE.LIMIT_SELECTED_SEAT}
                     </p>
                 )}
             </div>

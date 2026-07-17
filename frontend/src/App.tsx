@@ -10,13 +10,14 @@ import { ReservedTicket } from '@/features/reservation/pages/ReservedTicket';
 import { ScheduleSearch } from '@/features/schedule/pages/ScheduleSearch';
 import { SelectSeats } from '@/features/schedule/pages/SelectSeats';
 import { Layout } from '@/Layout';
+import { ERROR_MESSAGE } from '@/shared/constants/ErrorMessages';
 import { Error } from '@/shared/pages/Error';
 
 const authLoader = () => {
     const info = sessionStorage.getItem('guestLoginInfo');
 
     if (info === null) {
-        alert('セッションが切れました。再ログインしてください。');
+        alert(ERROR_MESSAGE.SESSION_ERROR);
         return redirect('/reservationGuestLogin');
     }
     return null;
