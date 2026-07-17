@@ -1,10 +1,19 @@
 package com.alab.shinkansendego.stopstation;
 
 import com.alab.shinkansendego.station.StationEntity;
-import jakarta.persistence.*;
-import jakarta.validation.constraints.*;
-import java.util.List;
-import lombok.*;
+import jakarta.persistence.Column;
+import jakarta.persistence.Entity;
+import jakarta.persistence.FetchType;
+import jakarta.persistence.Id;
+import jakarta.persistence.JoinColumn;
+import jakarta.persistence.ManyToOne;
+import jakarta.persistence.Table;
+import jakarta.validation.constraints.NotNull;
+import lombok.AllArgsConstructor;
+import lombok.Data;
+import lombok.NoArgsConstructor;
+import lombok.NonNull;
+import lombok.RequiredArgsConstructor;
 
 @Data
 @Entity
@@ -18,17 +27,14 @@ public class StopStationEntity {
     @NonNull
     @Column(name = "stop_station_cd")
     private String stopStationCd;
-
     @NotNull
     @NonNull
     @Column(name = "station_cd")
     private String stationCd;
-
     @NotNull
     @NonNull
     @Column(name = "stop_category")
     private String stopCategory;
-
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "station_cd", referencedColumnName = "station_cd", insertable = false, updatable = false)
     private StationEntity station;

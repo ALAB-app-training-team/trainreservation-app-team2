@@ -7,6 +7,7 @@ import { Navigation, Pagination } from 'swiper/modules';
 import { Swiper, SwiperSlide } from 'swiper/react';
 
 import type { ReservedSeatDto } from '@/features/reservation/types/ReservedSeatDto';
+import { ERROR_MESSAGE } from '@/shared/constants/ErrorMessages';
 import trainSvg from '@/shared/svgs/BsTrainFreightFrontFill.svg';
 
 type ReservedTicketQrCodeProps = {
@@ -81,7 +82,7 @@ export function ReservedTicketQrCode({
                         );
                     })
                 ) : (
-                    <div>購入済座席が存在しません</div>
+                    <div>{ERROR_MESSAGE.NO_RESERVED_SEAT}</div>
                 )}
             </Swiper>
         </div>

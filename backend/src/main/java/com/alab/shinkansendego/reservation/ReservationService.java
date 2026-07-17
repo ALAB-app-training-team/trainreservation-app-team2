@@ -8,9 +8,6 @@ import com.alab.shinkansendego.reservedseat.ReservedSeatRepository;
 import com.alab.shinkansendego.reservedseatsection.ReservedSeatSectionEntity;
 import com.alab.shinkansendego.reservedseatsection.ReservedSeatSectionRepository;
 import com.alab.shinkansendego.sectionkm.SectionKmRepository;
-import java.util.Comparator;
-import java.util.Map;
-import java.util.stream.Collectors;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
 import org.springframework.stereotype.Service;
@@ -18,13 +15,15 @@ import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.client.RestClient;
 
 import java.util.ArrayList;
+import java.util.Comparator;
 import java.util.List;
+import java.util.Map;
 import java.util.Objects;
 import java.util.UUID;
+import java.util.stream.Collectors;
 
 @Service
 public class ReservationService {
-
     private final RestClient restClient;
     private final ReservationRepository reservationRepository;
     private final ReservedSeatRepository reservedSeatRepository;
@@ -34,12 +33,12 @@ public class ReservationService {
 
     @Autowired
     public ReservationService(
-            ReservationRepository reservationRepository,
-            ReservedSeatRepository reservedSeatRepository,
-            SectionKmRepository sectionKmRepository,
-            DepartureArrivalTimeRepository departureArrivalTimeRepository,
-            ReservedSeatSectionRepository reservedSeatSectionRepository,
-            RestClient.Builder restClientBuilder
+        ReservationRepository reservationRepository,
+        ReservedSeatRepository reservedSeatRepository,
+        SectionKmRepository sectionKmRepository,
+        DepartureArrivalTimeRepository departureArrivalTimeRepository,
+        ReservedSeatSectionRepository reservedSeatSectionRepository,
+        RestClient.Builder restClientBuilder
     ) {
         this.reservationRepository = reservationRepository;
         this.reservedSeatRepository = reservedSeatRepository;
@@ -47,6 +46,16 @@ public class ReservationService {
         this.departureArrivalTimeRepository = departureArrivalTimeRepository;
         this.reservedSeatSectionRepository = reservedSeatSectionRepository;
         this.restClient = restClientBuilder.build();
+    }
+
+    /**
+     * 文字列から全角半角の空白をすべて除く
+     *
+     * @param value 対象の文字列
+     * @return 空白がすべて除かれた対象文字列
+     */
+    private static String removeSpaces(String value) {
+        return value == null ? null : value.replaceAll("[\\s\u3000]", "");
     }
 
     /**
@@ -58,16 +67,16 @@ public class ReservationService {
      */
     public List<ReservationResponseDto> getReservationList(String name, String email) {
         List<ReservationResponseDto> reservationList = new ArrayList<>();
-        List<ReservationEntity> reservationEntityList = reservationRepository.findByReserverNameAndReserverMail(this.removeSpaces(name), this.removeSpaces(email));
+        List<ReservationEntity> reservationEntityList = reservationRepository.findByReserverNameAndReserverMail(removeSpaces(name), removeSpaces(email));
         if (reservationEntityList.isEmpty()) {
             return reservationList;
         }
 
         List<UUID> reservationIdList = reservationEntityList.stream()
-                .map(ReservationEntity::getId)
-                .toList();
+            .map(ReservationEntity::getId)
+            .toList();
         Map<UUID, List<ReservedSeatEntity>> reservedSeatEntityMap = reservedSeatRepository.findByReservationIdIn(reservationIdList)
-                .stream().collect(Collectors.groupingBy(ReservedSeatEntity::getReservationId));
+            .stream().collect(Collectors.groupingBy(ReservedSeatEntity::getReservationId));
 
         for (ReservationEntity reservation : reservationEntityList) {
             ReservationResponseDto dto = new ReservationResponseDto();
@@ -75,31 +84,30 @@ public class ReservationService {
             List<DepartureArrivalTimeEntity> scheduleList = reservation.getDepartureArrivalTime();
 
             DepartureArrivalTimeEntity departureSchedule = scheduleList.stream().filter(
-                            schedule -> Objects.equals(
-                                    schedule.getSectionKm().getStartStationCd(),
-                                    reservation.getDepartureStationCd())
-                    )
-                    .min(Comparator.comparing(DepartureArrivalTimeEntity::getDepartureTime))
-                    .orElseThrow(() -> new IllegalStateException("DepartureSchedule is NOT found"));
+                    schedule -> Objects.equals(
+                        schedule.getSectionKm().getStartStationCd(),
+                        reservation.getDepartureStationCd())
+                )
+                .min(Comparator.comparing(DepartureArrivalTimeEntity::getDepartureTime))
+                .orElseThrow(() -> new IllegalStateException("DepartureSchedule is NOT found"));
 
             DepartureArrivalTimeEntity arrivalSchedule = scheduleList.stream().filter(
-                            schedule -> Objects.equals(
-                                    schedule.getSectionKm().getGoalStationCd(),
-                                    reservation.getArrivalStationCd())
-                    )
-                    .min(Comparator.comparing(DepartureArrivalTimeEntity::getDepartureTime))
-                    .orElseThrow(() -> new IllegalStateException("ArrivalSchedule is NOT found"));
-
+                    schedule -> Objects.equals(
+                        schedule.getSectionKm().getGoalStationCd(),
+                        reservation.getArrivalStationCd())
+                )
+                .min(Comparator.comparing(DepartureArrivalTimeEntity::getDepartureTime))
+                .orElseThrow(() -> new IllegalStateException("ArrivalSchedule is NOT found"));
 
             List<ReservedSeatDto> reservedSeatDtos = reservedSeatEntityMap
-                    .getOrDefault(reservation.getId(), new ArrayList<>()).stream()
-                    .map(seat -> new ReservedSeatDto(
-                            seat.getTrainCar().getSeatType().getTrainCarType().getName(),
-                            seat.getTrainCar().getTrainCarNumber(),
-                            seat.getSeat().getSeatNumber(),
-                            seat.getSeat().getSeatColumn(),
-                            seat.getCodeToken()))
-                    .toList();
+                .getOrDefault(reservation.getId(), new ArrayList<>()).stream()
+                .map(seat -> new ReservedSeatDto(
+                    seat.getTrainCar().getSeatType().getTrainCarType().getName(),
+                    seat.getTrainCar().getTrainCarNumber(),
+                    seat.getSeat().getSeatNumber(),
+                    seat.getSeat().getSeatColumn(),
+                    seat.getCodeToken()))
+                .toList();
 
             dto.setPurchaseId(reservation.getId());
             dto.setTrainTypeName(reservation.getSchedule().getTrainType().getName());
@@ -126,7 +134,7 @@ public class ReservationService {
 
         ReservationResponseDto response = new ReservationResponseDto();
 
-        ReservationDto purchase = reservationRepository.findReservationDtoByReservationIdAndReserverNameAndReserverMail(reservationId, this.removeSpaces(name), this.removeSpaces(email));
+        ReservationDto purchase = reservationRepository.findReservationDtoByReservationIdAndReserverNameAndReserverMail(reservationId, removeSpaces(name), removeSpaces(email));
         if (purchase == null) {
             throw new IllegalArgumentException("PurchaseId is Not found");
         }
@@ -171,7 +179,7 @@ public class ReservationService {
         }
 
         List<String> sectionCdList =
-                departureArrivalTimeRepository.findByScheduleCdAndDepartureTimeAndArrivalTime(reserveRequestDto.getScheduleCd(), departureArrivalTimeOfStart.getDepartureTime(), departureArrivalTimeOfGoal.getArrivalTime());
+            departureArrivalTimeRepository.findByScheduleCdAndDepartureTimeAndArrivalTime(reserveRequestDto.getScheduleCd(), departureArrivalTimeOfStart.getDepartureTime(), departureArrivalTimeOfGoal.getArrivalTime());
         if (sectionCdList.isEmpty()) {
             throw new IllegalArgumentException("SectionCd is Not found");
         }
@@ -184,8 +192,8 @@ public class ReservationService {
         reservationToPost.setScheduleCd(reserveRequestDto.getScheduleCd());
         reservationToPost.setDepartureStationCd(reserveRequestDto.getDepartureStationCd());
         reservationToPost.setArrivalStationCd(reserveRequestDto.getArrivalStationCd());
-        reservationToPost.setReserverName(this.removeSpaces(reserveRequestDto.getReserverName()));
-        reservationToPost.setReserverMail(this.removeSpaces(reserveRequestDto.getReserverMail()));
+        reservationToPost.setReserverName(removeSpaces(reserveRequestDto.getReserverName()));
+        reservationToPost.setReserverMail(removeSpaces(reserveRequestDto.getReserverMail()));
         reservationToPost.setPaymentTrackingId(paymentTrackingId);
 
         ReservationEntity reservationResult = reservationRepository.save(reservationToPost);
@@ -201,6 +209,7 @@ public class ReservationService {
             reservedSeat.setTrainCarCd(seatDto.getTrainCarCd());
             reservedSeat.setSeatCd(seatDto.getSeatCd());
             reservedSeat.setCodeToken(UUID.randomUUID());
+            reservedSeat.setSeatFare(seatDto.getSeatFare());
             reservedSeatsToPost.add(reservedSeat);
         }
         int reservedSeatResult = reservedSeatRepository.saveAll(reservedSeatsToPost).size();
@@ -212,9 +221,9 @@ public class ReservationService {
         for (ReserveRequestDto.SelectedSeatDto seatDto : reserveRequestDto.getSeats()) {
             for (String sectionCd : sectionCdList) {
                 ReservedSeatSectionEntity reservedSeatSection = new ReservedSeatSectionEntity(
-                        UUID.randomUUID(), reservationId, reserveRequestDto.getRideDate(), reserveRequestDto.getScheduleCd(),
-                        seatDto.getTrainCarCd(),
-                        seatDto.getSeatCd(), sectionCd
+                    UUID.randomUUID(), reservationId, reserveRequestDto.getRideDate(), reserveRequestDto.getScheduleCd(),
+                    seatDto.getTrainCarCd(),
+                    seatDto.getSeatCd(), sectionCd
                 );
                 reservedSeatSectionsToPost.add(reservedSeatSection);
             }
@@ -226,11 +235,11 @@ public class ReservationService {
 
         String paymentUrl = "http://localhost:8080/api/payments";
         paymentTrackingId = restClient.post()
-                .uri(paymentUrl)
-                .contentType(MediaType.APPLICATION_JSON)
-                .body(reserveRequestDto.getPaymentToken())
-                .retrieve()
-                .body(String.class);
+            .uri(paymentUrl)
+            .contentType(MediaType.APPLICATION_JSON)
+            .body(reserveRequestDto.getPaymentToken())
+            .retrieve()
+            .body(String.class);
         if (StringUtil.isNullOrEmpty(paymentTrackingId)) {
             throw new RuntimeException("Get PaymentTrackingId is failed");
         }
@@ -239,15 +248,5 @@ public class ReservationService {
         reservationRepository.save(reservationResult);
 
         return reservationId;
-    }
-
-    /**
-     * 文字列から全角半角の空白をすべて除く
-     *
-     * @param value 対象の文字列
-     * @return 空白がすべて除かれた対象文字列
-     */
-    private static String removeSpaces(String value) {
-        return value == null ? null : value.replaceAll("[\\s\u3000]", "");
     }
 }

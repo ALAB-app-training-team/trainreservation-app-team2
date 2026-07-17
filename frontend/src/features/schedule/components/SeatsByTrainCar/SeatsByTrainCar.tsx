@@ -4,11 +4,11 @@ import { Seat } from '@/features/schedule/components/Seat';
 import { useSeatsByTrainCar } from '@/features/schedule/hooks/useSeatsByTrainCar';
 import type { SeatResponseDto } from '@/features/schedule/types/SeatResponseDto';
 import type { SeatsRequestDto } from '@/features/schedule/types/SeatsRequestDto';
+import { LIMIT } from '@/shared/constants/Limit';
 
 type SeatsByTrainCarProps = {
     seatsRequestDto: SeatsRequestDto;
     selectedSeats: SeatResponseDto[];
-    limitSeats: number;
     handleSelectedSeats: (seat: SeatResponseDto) => void;
     checkReservedSeats: (seats: SeatResponseDto[]) => void;
 };
@@ -16,7 +16,6 @@ type SeatsByTrainCarProps = {
 export function SeatsByTrainCar({
     seatsRequestDto,
     selectedSeats,
-    limitSeats,
     handleSelectedSeats,
     checkReservedSeats,
 }: SeatsByTrainCarProps) {
@@ -67,7 +66,7 @@ export function SeatsByTrainCar({
                                             seatsRequestDto.trainCarCd,
                                 );
                                 const isMaxSelected =
-                                    selectedSeats.length >= limitSeats;
+                                    selectedSeats.length >= LIMIT.SEATS;
                                 return (
                                     <Seat
                                         key={seat.seatCd}

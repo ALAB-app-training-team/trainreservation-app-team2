@@ -1,26 +1,27 @@
 import { FaTrashCan } from 'react-icons/fa6';
 
 import type { SeatResponseDto } from '@/features/schedule/types/SeatResponseDto';
+import { ERROR_MESSAGE } from '@/shared/constants/ErrorMessages';
+import { LIMIT } from '@/shared/constants/Limit';
 
 type SelectedSeatsProps = {
     selectedSeats: SeatResponseDto[];
-    limitSeats: number;
     handleClear: () => void;
 };
 
 export function SelectedSeats({
     selectedSeats,
-    limitSeats,
     handleClear,
 }: SelectedSeatsProps) {
     return (
-        <div className="flex flex-col gap-4">
+        <div className="flex flex-col gap-4" data-testid="selected-seats">
             <div className="flex items-center gap-4">
                 <h1 className="!mt-0 !mb-0 !text-lg">選択した座席</h1>
                 <button
                     type="button"
                     onClick={handleClear}
                     className="border-primary text-primary rounded-lg border-2 p-1"
+                    data-testid="trash-button"
                 >
                     <FaTrashCan />
                 </button>
@@ -48,15 +49,16 @@ export function SelectedSeats({
                                         {selectedSeat.seatNumber +
                                             selectedSeat.seatColumn}
                                     </div>
+                                    <div className="ml-auto">{`￥${selectedSeat.seatFare === null || selectedSeat.seatFare === undefined ? '0' : selectedSeat.seatFare.toLocaleString()}`}</div>
                                 </div>
                             );
                         })
                 ) : (
-                    <div>座席が選択されていません</div>
+                    <div>{ERROR_MESSAGE.NO_SELECTED_SEAT}</div>
                 )}
-                {selectedSeats.length >= limitSeats && (
+                {selectedSeats.length >= LIMIT.SEATS && (
                     <p className="text-left text-sm text-red-600">
-                        一度に予約できる座席は{limitSeats}席までです
+                        {ERROR_MESSAGE.LIMIT_SELECTED_SEAT}
                     </p>
                 )}
             </div>

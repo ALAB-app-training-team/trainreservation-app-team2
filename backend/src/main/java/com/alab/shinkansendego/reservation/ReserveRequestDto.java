@@ -1,7 +1,11 @@
 package com.alab.shinkansendego.reservation;
 
 import jakarta.validation.constraints.NotNull;
-import lombok.*;
+import lombok.AllArgsConstructor;
+import lombok.Data;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
 
 import java.time.LocalDate;
 import java.util.List;
@@ -37,5 +41,7 @@ public class ReserveRequestDto {
         private String trainCarCd;
         @NotNull(message = "seatCd is Null")
         private String seatCd;
+        @NotNull(message = "seatFare is Null")
+        private Integer seatFare;
     }
 }

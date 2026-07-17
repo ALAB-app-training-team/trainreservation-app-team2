@@ -25,12 +25,12 @@ export function ReserveUserInfo({
 }: ReserveUserInfoProps) {
     return (
         <>
-            <div className="flex flex-col items-start gap-8">
+            <div className="border-primary/20 flex flex-col items-start gap-8 border-b-2 py-4">
                 <div className="flex w-full flex-col gap-4">
-                    <h1 className="!mt-0 !mb-0 !text-lg">購入者情報</h1>
+                    <h1 className="!mt-0 !mb-0 !text-lg">予約者情報</h1>
                     <ReserveUserInfoInput
                         reserveUser={reserveUser}
-                        label="購入者氏名"
+                        label="予約者氏名"
                         id="reserverName"
                         type="text"
                         placeholder="山田 太郎"
@@ -45,7 +45,7 @@ export function ReserveUserInfo({
                         reserveUser={reserveUser}
                         label="メールアドレス"
                         id="reserverMail"
-                        type="email"
+                        type="text"
                         placeholder="demo@example.com"
                         onChange={handleInputChange}
                         onFocus={handleInputFocus}

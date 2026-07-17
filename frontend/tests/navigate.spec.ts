@@ -1,9 +1,10 @@
-import { test, expect } from '@playwright/test';
+import { expect, test } from '@playwright/test';
 import { ScheduleSearchPage } from '@tests/pages/ScheduleSearch/ScheduleSearchPage';
 import { SelectSeatPage } from '@tests/pages/SelectSeat/SelectSeatPage';
 import { ReservationListPage } from '@tests/pages/ReservationList/ReservationListPage';
 import { ReservedTicketPage } from '@tests/pages/ReservedTicket/ReservedTicketPage';
 import { ReservationGuestLoginPage } from '@tests/pages/ReservationGuestLogin/ReservationGuestLoginPage';
+import { App } from '@tests/pages/shared/App';
 
 test('navigate-検索～予約確認', async ({ page }) => {
     const scheduleSearchPage = new ScheduleSearchPage(page);
@@ -24,6 +25,9 @@ test('navigate-検索～予約確認', async ({ page }) => {
     await selectSeatPage.inputResererInfo();
     await selectSeatPage.inputCardInfo();
     await selectSeatPage.clickReseveButton();
+    await selectSeatPage.clickCancelButton();
+    await selectSeatPage.clickReseveButton();
+    await selectSeatPage.clickConfirmButton();
     await expect(page).toHaveURL('/reservedTicket');
     await expect(
         page.getByText(
@@ -59,4 +63,25 @@ test('navigate-header', async ({ page }) => {
     await expect(page).toHaveURL('/reservationGuestLogin');
     await reservationGuestLoginPage.header.gotoScheduleSearch();
     await expect(page).toHaveURL('/scheduleSearch');
+});
+
+test('navigate-ゲスト認証がない場合に予約一覧・予約詳細にアクセスするとゲストログインに遷移する', async ({
+    page,
+}) => {
+    const scheduleSearchPage = new ScheduleSearchPage(page);
+    const reservationListPage = new ReservationListPage(page);
+    const reservedTicketPage = new ReservedTicketPage(page);
+    const apps = new App(page);
+
+    await scheduleSearchPage.goto();
+    await expect(page).toHaveURL('/scheduleSearch');
+    apps.expectSessionAlert();
+    await reservationListPage.goto();
+    await expect(page).toHaveURL('/reservationGuestLogin');
+
+    await scheduleSearchPage.goto();
+    await expect(page).toHaveURL('/scheduleSearch');
+    apps.expectSessionAlert();
+    await reservedTicketPage.goto();
+    await expect(page).toHaveURL('/reservationGuestLogin');
 });

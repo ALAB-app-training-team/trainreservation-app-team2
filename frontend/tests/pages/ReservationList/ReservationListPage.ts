@@ -16,6 +16,10 @@ export class ReservationListPage {
         this.totalFareElement = page.getByText('お支払い合計：1,500');
     }
 
+    async goto() {
+        await this.page.goto('/reservationList');
+    }
+
     async clickTicketButton() {
         await this.ticketButton.first().click();
     }

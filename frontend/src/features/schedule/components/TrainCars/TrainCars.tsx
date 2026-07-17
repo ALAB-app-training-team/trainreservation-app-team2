@@ -7,11 +7,11 @@ import { useTrainCar } from '@/features/schedule/hooks/useTrainCar';
 import type { ScheduleInfoDto } from '@/features/schedule/types/ScheduleInfoDto';
 import type { SeatResponseDto } from '@/features/schedule/types/SeatResponseDto';
 import type { SeatTypeCd } from '@/features/schedule/types/SeatTypeCd';
+import { ERROR_MESSAGE } from '@/shared/constants/ErrorMessages';
 
 type TrainCarsProps = {
     scheduleInfoDto: ScheduleInfoDto;
     selectedSeats: SeatResponseDto[];
-    limitSeats: number;
     handleSelectedSeats: (seat: SeatResponseDto) => void;
     checkReservedSeats: (seats: SeatResponseDto[]) => void;
 };
@@ -19,7 +19,6 @@ type TrainCarsProps = {
 export function TrainCars({
     scheduleInfoDto,
     selectedSeats,
-    limitSeats,
     handleSelectedSeats,
     checkReservedSeats,
 }: TrainCarsProps) {
@@ -58,7 +57,10 @@ export function TrainCars({
             {filteredCars.length > 0 ? (
                 <>
                     <div className="text-left">号車を選択</div>
-                    <div className="flex scrollbar-thin gap-2 overflow-x-auto">
+                    <div
+                        className="flex scrollbar-thin gap-2 overflow-x-auto"
+                        data-testid="train-cars"
+                    >
                         {filteredCars.map((car) => (
                             <button
                                 key={car.trainCarNumber}
@@ -82,7 +84,6 @@ export function TrainCars({
                         <SeatsByTrainCar
                             seatsRequestDto={seatsRequestDto}
                             selectedSeats={selectedSeats}
-                            limitSeats={limitSeats}
                             handleSelectedSeats={handleSelectedSeats}
                             checkReservedSeats={checkReservedSeats}
                         />
@@ -91,7 +92,7 @@ export function TrainCars({
             ) : (
                 <>
                     <p className="py-4 pl-2 text-sm text-gray-400">
-                        該当する列車がありません
+                        {ERROR_MESSAGE.NO_TRAIN}
                     </p>
                 </>
             )}
