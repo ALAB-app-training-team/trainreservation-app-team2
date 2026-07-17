@@ -65,7 +65,10 @@ export function ReservationSelectItem({ details }: ReservationSelectItemProps) {
                         <FaClock />
                         <label>出発</label>
                     </div>
-                    <label className="text-xl font-bold">
+                    <label
+                        data-testId="ride-date"
+                        className="text-xl font-bold"
+                    >
                         {dayjs(details.rideDate).format('YYYY年MM月DD日')}{' '}
                     </label>
                     <label className="text-xl font-bold">
