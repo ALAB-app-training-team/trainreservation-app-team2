@@ -75,7 +75,7 @@ test('visual-reservationGuestLogin', async ({ page }) => {
     });
 });
 
-test.only('visual-reservationList', async ({ page }) => {
+test('visual-reservationList', async ({ page }) => {
     const reservationGuestLoginPage = new ReservationGuestLoginPage(page);
     const reservationListPage = new ReservationListPage(page);
 
