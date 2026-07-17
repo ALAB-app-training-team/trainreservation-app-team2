@@ -11,11 +11,11 @@ export function useReservationListRequestDto() {
             reserverName: '',
             reserverMail: '',
         });
-    type InValidMessage = {
+    type InvalidMessage = {
         field: keyof ReservationListRequestDto;
         message: string;
     };
-    const [inValidMessages, setInValidMessages] = useState<InValidMessage[]>(
+    const [invalidMessages, setInvalidMessages] = useState<InvalidMessage[]>(
         [],
     );
 
@@ -25,12 +25,12 @@ export function useReservationListRequestDto() {
     const isMailEmpty = (value: string) => {
         return removeWhiteSpace(value) === '';
     };
-    const isMailInValid = (value: string) => {
+    const isMailInvalid = (value: string) => {
         return checkMailRegex(value);
     };
 
     const editValidateMessage = (field: string, value: string) => {
-        const messages: InValidMessage[] = inValidMessages.filter(
+        const messages: InvalidMessage[] = invalidMessages.filter(
             (item) => item.field !== field,
         );
         if (field === 'reserverName') {
@@ -46,19 +46,19 @@ export function useReservationListRequestDto() {
                     field: 'reserverMail',
                     message: VALIDATE_MESSAGE.EMPTY_RESERVER_MAIL,
                 });
-            } else if (isMailInValid(value)) {
+            } else if (isMailInvalid(value)) {
                 messages.push({
                     field: 'reserverMail',
                     message: VALIDATE_MESSAGE.VALID_RESERVER_MAIL,
                 });
             }
         }
-        setInValidMessages(messages);
+        setInvalidMessages(messages);
     };
 
     const getFieldError = (field: string) => {
         return (
-            inValidMessages.find((item) => item.field === field)?.message ?? ''
+            invalidMessages.find((item) => item.field === field)?.message ?? ''
         );
     };
 
@@ -80,7 +80,7 @@ export function useReservationListRequestDto() {
         return (
             isNameEmpty(guestLoginForm.reserverName) ||
             isMailEmpty(guestLoginForm.reserverName) ||
-            isMailInValid(guestLoginForm.reserverMail)
+            isMailInvalid(guestLoginForm.reserverMail)
         );
     };
 

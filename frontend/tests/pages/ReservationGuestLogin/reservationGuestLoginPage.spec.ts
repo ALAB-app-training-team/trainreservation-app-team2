@@ -34,7 +34,7 @@ test('メールアドレスのバリデーションエラー', async ({ page }) 
     const reservationGuestLogin = new ReservationGuestLoginPage(page);
     reservationGuestLogin.goto();
     await expect(page).toHaveURL('/reservationGuestLogin');
-    await reservationGuestLogin.inputValidReserverMail();
+    await reservationGuestLogin.inputInvalidReserverMail();
     await reservationGuestLogin.clickReserverNameInput();
     await expect(
         page.getByText('メールアドレスの形式（~~@~~.~~）で入力してください'),

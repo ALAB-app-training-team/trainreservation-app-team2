@@ -59,7 +59,7 @@ export class ReservationGuestLoginPage {
         await this.fillMailAddress('');
     }
 
-    async inputValidReserverMail() {
+    async inputInvalidReserverMail() {
         await this.fillMailAddress('aaa@あああ.co');
     }
 }
