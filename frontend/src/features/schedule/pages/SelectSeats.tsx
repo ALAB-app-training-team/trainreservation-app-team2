@@ -8,6 +8,7 @@ import { ENDPOINTS } from '@/api/routes';
 import { ReserveConfirmModal } from '@/features/schedule/components/ReserveConfirmModal';
 import { ReserveUserInfo } from '@/features/schedule/components/ReserveUserInfo';
 import { SelectedSeats } from '@/features/schedule/components/SelectedSeats';
+import { TotalSeatsFare } from '@/features/schedule/components/TotalSeatsFare';
 import { TrainCars } from '@/features/schedule/components/TrainCars/TrainCars';
 import { TrainCarsSkeleton } from '@/features/schedule/components/TrainCars/TrainCarsSkeleton';
 import { useReserveUser } from '@/features/schedule/hooks/useReserveUser';
@@ -72,6 +73,7 @@ export function SelectSeats() {
             seats: selectedSeats.map((seat) => ({
                 trainCarCd: seat.trainCarCd,
                 seatCd: seat.seatCd,
+                seatFare: seat.seatFare,
             })),
             reserverName: reserveUser.reserverName,
             reserverMail: reserveUser.reserverMail,
@@ -141,7 +143,7 @@ export function SelectSeats() {
                     </Suspense>
                 </div>
                 <div className="w-full flex-1">
-                    <div className="border-primary-light flex w-full flex-col gap-8 rounded-2xl border-2 p-8 text-left">
+                    <div className="border-primary-light flex w-full flex-col gap-4 rounded-2xl border-2 p-8 text-left">
                         <SelectedSeats
                             selectedSeats={selectedSeats}
                             limitSeats={limitSeats}
@@ -153,7 +155,7 @@ export function SelectSeats() {
                                 handleModalOpen();
                             }}
                         >
-                            <div className="flex flex-col gap-8">
+                            <div className="flex flex-col gap-4">
                                 <ReserveUserInfo
                                     reserveUser={reserveUser}
                                     focus={focus}
@@ -162,6 +164,7 @@ export function SelectSeats() {
                                     getFieldError={getFieldError}
                                     handleInputBlur={handleInputBlur}
                                 />
+                                <TotalSeatsFare selectedSeats={selectedSeats} />
                                 <button
                                     type="submit"
                                     className="bg-primary w-full rounded-lg p-2 text-white"
