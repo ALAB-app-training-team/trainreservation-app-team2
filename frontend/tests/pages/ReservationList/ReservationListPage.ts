@@ -5,6 +5,7 @@ export class ReservationListPage {
     readonly page: Page;
     readonly header: Header;
     readonly ticketButton: Locator;
+    readonly totalFareText: Locator;
 
     constructor(page: Page) {
         this.page = page;
@@ -12,6 +13,7 @@ export class ReservationListPage {
         this.ticketButton = page.getByRole('button', {
             name: 'チケットを表示',
         });
+        this.totalFareText = page.getByText('text=お支払い合計：');
     }
 
     async clickTicketButton() {
