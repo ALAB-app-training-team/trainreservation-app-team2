@@ -85,7 +85,10 @@ export function ReservationSelectItem({ details }: ReservationSelectItemProps) {
             <div className="flex items-center justify-between py-2">
                 <div className="flex items-baseline">
                     <div>お支払い合計：</div>
-                    <div className="text-primary text-xl font-bold">
+                    <div
+                        data-testId="total-fare"
+                        className="text-primary text-xl font-bold"
+                    >
                         ￥{totalFare.toLocaleString()}
                     </div>
                 </div>

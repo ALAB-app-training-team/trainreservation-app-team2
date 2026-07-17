@@ -13,7 +13,7 @@ export class ReservationListPage {
         this.ticketButton = page.getByRole('button', {
             name: 'チケットを表示',
         });
-        this.totalFareElement = page.getByText('お支払い合計：￥1,500');
+        this.totalFareElement = page.getByTestId('total-fare');
     }
 
     async goto() {
