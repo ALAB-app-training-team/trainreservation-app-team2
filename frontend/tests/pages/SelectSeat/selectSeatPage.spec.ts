@@ -18,12 +18,12 @@ test('ゴミ箱ボタンを押すと、選択した座席が解除される', as
     await expect(
         page
             .getByTestId('selected-seats')
-            .getByText('1号車' + firstSeat, { exact: true }),
+            .getByText('1号車' + firstSeat + '￥2,600', { exact: true }),
     ).toBeVisible();
     await expect(
         page
             .getByTestId('selected-seats')
-            .getByText('1号車' + secondSeat, { exact: true }),
+            .getByText('1号車' + secondSeat + '￥2,600', { exact: true }),
     ).toBeVisible();
     await page.getByTestId('trash-button').click();
     await expect(page.getByText('座席が選択されていません')).toBeVisible();
@@ -136,6 +136,8 @@ test('予約確定', async ({ page }) => {
     await selectSeatPage.selectSeat();
     await selectSeatPage.inputResererInfo();
     await selectSeatPage.inputCardInfo();
+    await expect(page.getByText('座席数合計：1席')).toBeVisible();
+    await expect(page.getByText('お支払い合計：￥2,600')).toBeVisible();
     await selectSeatPage.clickReseveButton();
     await selectSeatPage.clickConfirmButton();
     await expect(page).toHaveURL('/reservedTicket');

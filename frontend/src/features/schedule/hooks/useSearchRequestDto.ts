@@ -3,6 +3,7 @@ import { useMemo, useState } from 'react';
 
 import type { SearchRequestDto } from '@/features/schedule/types/SearchRequestDto';
 import type { Station } from '@/features/schedule/types/Station';
+import { VALIDATION_MESSAGE } from '@/shared/constants/ValidationMessages';
 
 type useSearchRequestDtoProps = {
     stations: Station[];
@@ -43,7 +44,7 @@ export function useSearchRequestDto({
         }
     };
 
-    type InValidMessage = {
+    type InvalidMessage = {
         field: 'date' | 'arrivalStation';
         message: string;
     };
@@ -64,21 +65,24 @@ export function useSearchRequestDto({
     const isInvalid: boolean =
         isDateEmpty || isDateOutsideOneMonth || isStationSame;
 
-    const inValidMessages: InValidMessage[] = useMemo(() => {
-        const messages: InValidMessage[] = [];
+    const invalidMessages: InvalidMessage[] = useMemo(() => {
+        const messages: InvalidMessage[] = [];
         if (isDateEmpty) {
-            messages.push({ field: 'date', message: '日付を入力してください' });
+            messages.push({
+                field: 'date',
+                message: VALIDATION_MESSAGE.EMPTY_DATE,
+            });
         }
         if (isDateOutsideOneMonth) {
             messages.push({
                 field: 'date',
-                message: '出発日は本日から1か月以内の日付を指定してください',
+                message: VALIDATION_MESSAGE.OUTSIDE_ONE_MONTH,
             });
         }
         if (isStationSame) {
             messages.push({
                 field: 'arrivalStation',
-                message: '乗車駅と異なる駅を選択してください。',
+                message: VALIDATION_MESSAGE.SAME_STATION,
             });
         }
 
@@ -87,7 +91,7 @@ export function useSearchRequestDto({
 
     const getFieldError = (field: string) => {
         return (
-            inValidMessages.find((item) => item.field === field)?.message ?? ''
+            invalidMessages.find((item) => item.field === field)?.message ?? ''
         );
     };
 

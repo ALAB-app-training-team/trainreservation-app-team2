@@ -77,6 +77,7 @@ public class ReservedSeatRepositoryTest {
             purchasedSeat.setTrainCarCd("E5SER01");
             purchasedSeat.setSeatCd("SEAT0100" + i);
             purchasedSeat.setCodeToken(UUID.randomUUID());
+            purchasedSeat.setSeatFare(2610);
             purchasedSeats.add(purchasedSeat);
         }
         int result = repo.saveAll(purchasedSeats).size();
@@ -95,6 +96,7 @@ public class ReservedSeatRepositoryTest {
             purchasedSeat.setTrainCarCd("E5SER01");
             purchasedSeat.setSeatCd("SEAT01001");
             purchasedSeat.setCodeToken(UUID.randomUUID());
+            purchasedSeat.setSeatFare(2610);
             sameSeats.add(purchasedSeat);
         }
         assertThrows(org.springframework.dao.DataAccessException.class, () -> {

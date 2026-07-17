@@ -37,11 +37,11 @@ VALUES ('Test0', 'TestStation00'),
 CREATE TABLE T_Reservation
 (
     id                   UUID PRIMARY KEY,
-    ride_date            DATE       NOT NULL,
-    schedule_cd          VARCHAR(6) NOT NULL REFERENCES M_Schedule (schedule_cd) ON DELETE RESTRICT,
-    departure_station_cd VARCHAR(5) NOT NULL REFERENCES M_Station (station_cd) ON DELETE RESTRICT,
-    arrival_station_cd   VARCHAR(5) NOT NULL REFERENCES M_Station (station_cd) ON DELETE RESTRICT,
-    payment_tracking_id VARCHAR(36) NOT NULL,
-    reserver_name VARCHAR(255),
-    reserver_mail VARCHAR(255)
+    ride_date            DATE        NOT NULL,
+    schedule_cd          VARCHAR(6)  NOT NULL REFERENCES M_Schedule (schedule_cd) ON DELETE RESTRICT,
+    departure_station_cd VARCHAR(5)  NOT NULL REFERENCES M_Station (station_cd) ON DELETE RESTRICT,
+    arrival_station_cd   VARCHAR(5)  NOT NULL REFERENCES M_Station (station_cd) ON DELETE RESTRICT,
+    payment_tracking_id  VARCHAR(36) NOT NULL,
+    reserver_name        VARCHAR(255),
+    reserver_mail        VARCHAR(255)
 );
