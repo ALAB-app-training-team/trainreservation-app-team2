@@ -9,7 +9,7 @@ import { ScheduleItem } from '@/features/schedule/components/ScheduleItem';
 import { useSchedules } from '@/features/schedule/hooks/useSchedules';
 import type { SearchRequestDto } from '@/features/schedule/types/SearchRequestDto';
 import { ERROR_MESSAGE } from '@/shared/constants/ErrorMessages';
-import { VALIDATE_MESSAGE } from '@/shared/constants/ValidateMessages';
+import { VALIDATION_MESSAGE } from '@/shared/constants/ValidationMessages';
 
 type PaginateType = React.ComponentType<ReactPaginateProps>;
 const ReactPaginate =
@@ -93,12 +93,12 @@ export function ScheduleList({
                             </div>
                             <div className="text-xl font-bold">
                                 {isInvalid
-                                    ? VALIDATE_MESSAGE.INVALID_SEARCH_FORM
+                                    ? VALIDATION_MESSAGE.INVALID_SEARCH_FORM
                                     : ERROR_MESSAGE.NO_SCHEDULE}
                             </div>
                             <div className="text-base">
                                 {isInvalid
-                                    ? VALIDATE_MESSAGE.FIX_SEARCH_FORM
+                                    ? VALIDATION_MESSAGE.FIX_SEARCH_FORM
                                     : ERROR_MESSAGE.NO_SPECIFIED_DATETIME_SCHEDULE}
                             </div>
                         </div>

@@ -1,7 +1,7 @@
 import { useState } from 'react';
 
 import type { SeatResponseDto } from '@/features/schedule/types/SeatResponseDto';
-import { ALERT_MESSAGE } from '@/shared/constants/AlertMessages';
+import { ERROR_MESSAGE } from '@/shared/constants/ErrorMessages';
 import { LIMIT } from '@/shared/constants/Limit';
 
 export function useSelectedSeats() {
@@ -47,7 +47,7 @@ export function useSelectedSeats() {
                 ),
             );
             alert(
-                `${ALERT_MESSAGE.RELEASE_SEAT}\n` +
+                `${ERROR_MESSAGE.RELEASE_SEAT}\n` +
                     reservedSeatsInSelectedSeats
                         .map(
                             (seat: SeatResponseDto) =>

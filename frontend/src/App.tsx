@@ -10,7 +10,7 @@ import { ReservedTicket } from '@/features/reservation/pages/ReservedTicket';
 import { ScheduleSearch } from '@/features/schedule/pages/ScheduleSearch';
 import { SelectSeats } from '@/features/schedule/pages/SelectSeats';
 import { Layout } from '@/Layout';
-import { ALERT_MESSAGE } from '@/shared/constants/AlertMessages';
+import { ERROR_MESSAGE } from '@/shared/constants/ErrorMessages';
 import { Error } from '@/shared/pages/Error';
 
 const authLoader = (path: string) => {
@@ -24,7 +24,7 @@ const authLoader = (path: string) => {
     }
 
     if (info === null) {
-        alert(ALERT_MESSAGE.SESSION_ERROR);
+        alert(ERROR_MESSAGE.SESSION_ERROR);
         return redirect('/reservationGuestLogin');
     }
     return null;

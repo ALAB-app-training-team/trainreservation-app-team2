@@ -15,7 +15,7 @@ import { useSelectedSeats } from '@/features/schedule/hooks/useSelectedSeats';
 import type { PaymentRequestDto } from '@/features/schedule/types/PaymentRequestDto';
 import type { ReserveRequestDto } from '@/features/schedule/types/ReserveRequestDto';
 import { CustomModal } from '@/shared/components/CustomModal';
-import { ALERT_MESSAGE } from '@/shared/constants/AlertMessages';
+import { ERROR_MESSAGE } from '@/shared/constants/ErrorMessages';
 import { useModal } from '@/shared/hooks/useModal';
 import { removeWhiteSpace } from '@/shared/utils/RemoveWhiteSpace';
 
@@ -102,7 +102,7 @@ export function SelectSeats() {
             });
         } catch {
             //TODO: エラー時にユーザーにわかりやすく表示する
-            alert(ALERT_MESSAGE.RESERVE_RETRY);
+            alert(ERROR_MESSAGE.RESERVE_RETRY);
         } finally {
             setIsSubmitting(false);
             onRequestClose();

@@ -3,7 +3,7 @@ import { useMemo, useState } from 'react';
 
 import type { SearchRequestDto } from '@/features/schedule/types/SearchRequestDto';
 import type { Station } from '@/features/schedule/types/Station';
-import { VALIDATE_MESSAGE } from '@/shared/constants/ValidateMessages';
+import { VALIDATION_MESSAGE } from '@/shared/constants/ValidationMessages';
 
 type useSearchRequestDtoProps = {
     stations: Station[];
@@ -44,7 +44,7 @@ export function useSearchRequestDto({
         }
     };
 
-    type InValidMessage = {
+    type InvalidMessage = {
         field: 'date' | 'arrivalStation';
         message: string;
     };
@@ -65,24 +65,24 @@ export function useSearchRequestDto({
     const isInvalid: boolean =
         isDateEmpty || isDateOutsideOneMonth || isStationSame;
 
-    const inValidMessages: InValidMessage[] = useMemo(() => {
-        const messages: InValidMessage[] = [];
+    const invalidMessages: InvalidMessage[] = useMemo(() => {
+        const messages: InvalidMessage[] = [];
         if (isDateEmpty) {
             messages.push({
                 field: 'date',
-                message: VALIDATE_MESSAGE.EMPTY_DATE,
+                message: VALIDATION_MESSAGE.EMPTY_DATE,
             });
         }
         if (isDateOutsideOneMonth) {
             messages.push({
                 field: 'date',
-                message: VALIDATE_MESSAGE.OUTSIDE_ONE_MONTH,
+                message: VALIDATION_MESSAGE.OUTSIDE_ONE_MONTH,
             });
         }
         if (isStationSame) {
             messages.push({
                 field: 'arrivalStation',
-                message: VALIDATE_MESSAGE.SAME_STATION,
+                message: VALIDATION_MESSAGE.SAME_STATION,
             });
         }
 
@@ -91,7 +91,7 @@ export function useSearchRequestDto({
 
     const getFieldError = (field: string) => {
         return (
-            inValidMessages.find((item) => item.field === field)?.message ?? ''
+            invalidMessages.find((item) => item.field === field)?.message ?? ''
         );
     };
 

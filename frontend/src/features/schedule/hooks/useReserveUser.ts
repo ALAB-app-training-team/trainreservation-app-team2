@@ -2,7 +2,7 @@ import { useState } from 'react';
 import type { Focused } from 'react-credit-cards-2';
 
 import type { ReserveUser } from '@/features/schedule/types/ReserveUser';
-import { VALIDATE_MESSAGE } from '@/shared/constants/ValidateMessages';
+import { VALIDATION_MESSAGE } from '@/shared/constants/ValidationMessages';
 import { checkMailRegex } from '@/shared/utils/CheckMailRegex';
 import { removeWhiteSpace } from '@/shared/utils/RemoveWhiteSpace';
 
@@ -16,11 +16,11 @@ export function useReserveUser() {
         cvc: '',
     });
     const [focus, setFocus] = useState<Focused>('');
-    type InValidMessage = {
+    type InvalidMessage = {
         field: keyof ReserveUser;
         message: string;
     };
-    const [inValidMessages, setInValidMessages] = useState<InValidMessage[]>(
+    const [invalidMessages, setInvalidMessages] = useState<InvalidMessage[]>(
         [],
     );
 
@@ -73,82 +73,82 @@ export function useReserveUser() {
     const isInvalid = checkInvalid(reserveUser);
 
     const editValidateMessage = (field: string, value: string) => {
-        const messages: InValidMessage[] = inValidMessages.filter(
+        const messages: InvalidMessage[] = invalidMessages.filter(
             (item) => item.field !== field,
         );
         if (field === 'reserverName') {
             if (isNameEmpty(value)) {
                 messages.push({
                     field: 'reserverName',
-                    message: VALIDATE_MESSAGE.EMPTY_RESERVER_NAME,
+                    message: VALIDATION_MESSAGE.EMPTY_RESERVER_NAME,
                 });
             }
             if (isNameMaxLength(value)) {
                 messages.push({
                     field: 'reserverName',
-                    message: VALIDATE_MESSAGE.MAX_LENGTH_RESERVER_NAME,
+                    message: VALIDATION_MESSAGE.MAX_LENGTH_RESERVER_NAME,
                 });
             }
         } else if (field === 'reserverMail') {
             if (isMailEmpty(value)) {
                 messages.push({
                     field: 'reserverMail',
-                    message: VALIDATE_MESSAGE.EMPTY_RESERVER_MAIL,
+                    message: VALIDATION_MESSAGE.EMPTY_RESERVER_MAIL,
                 });
             }
             if (isMailMaxLength(value)) {
                 messages.push({
                     field: 'reserverMail',
-                    message: VALIDATE_MESSAGE.MAX_LENGTH_RESERVER_MAIL,
+                    message: VALIDATION_MESSAGE.MAX_LENGTH_RESERVER_MAIL,
                 });
             }
             if (isMailInvalid(value)) {
                 messages.push({
                     field: 'reserverMail',
-                    message: VALIDATE_MESSAGE.VALID_RESERVER_MAIL,
+                    message: VALIDATION_MESSAGE.INVALID_RESERVER_MAIL,
                 });
             }
         } else if (field === 'cardNumber') {
             if (isCardNumberInvalid(value)) {
                 messages.push({
                     field: 'cardNumber',
-                    message: VALIDATE_MESSAGE.VALID_CARD_NUMBER,
+                    message: VALIDATION_MESSAGE.INVALID_CARD_NUMBER,
                 });
             }
         } else if (field === 'cardName') {
             if (isCardNameEmpty(value)) {
                 messages.push({
                     field: 'cardName',
-                    message: VALIDATE_MESSAGE.EMPTY_CARD_NAME,
+                    message: VALIDATION_MESSAGE.EMPTY_CARD_NAME,
                 });
             }
             if (isCardNameInvalid(value)) {
                 messages.push({
                     field: 'cardName',
-                    message: VALIDATE_MESSAGE.VALID_CARD_NAME,
+                    message: VALIDATION_MESSAGE.INVALID_CARD_NAME,
                 });
             }
         } else if (field === 'expiry') {
             if (isExpiryInvalid(value)) {
                 messages.push({
                     field: 'expiry',
-                    message: VALIDATE_MESSAGE.VALID_EXPIRY,
+                    message: VALIDATION_MESSAGE.INVALID_EXPIRY,
                 });
             }
         } else if (field === 'cvc') {
             if (isCvcInvalid(value)) {
                 messages.push({
                     field: 'cvc',
-                    message: VALIDATE_MESSAGE.VALID_CVC,
+                    message: VALIDATION_MESSAGE.INVALID_CVC,
                 });
             }
         }
-        setInValidMessages(messages);
+        setInvalidMessages(messages);
     };
 
     const getFieldError = (field: string) => {
         return (
-            inValidMessages.find((item) => item.field === field)?.message ?? ''
+            invalidMessages.find((item) => item.field === field)?.message ?? ''
         );
     };
 

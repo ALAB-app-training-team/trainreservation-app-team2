@@ -1,4 +1,4 @@
-export const VALIDATE_MESSAGE = {
+export const VALIDATION_MESSAGE = {
     EMPTY_DATE: '日付を入力してください',
     OUTSIDE_ONE_MONTH: '出発日は本日から1か月以内の日付を指定してください',
     SAME_STATION: '乗車駅と異なる駅を選択してください',
@@ -7,11 +7,11 @@ export const VALIDATE_MESSAGE = {
     EMPTY_RESERVER_NAME: '予約者氏名を入力してください',
     MAX_LENGTH_RESERVER_NAME: '予約者氏名は255文字以内で入力してください',
     EMPTY_RESERVER_MAIL: 'メールアドレスを入力してください',
-    VALID_RESERVER_MAIL: 'メールアドレスの形式（~~@~~.~~）で入力してください',
+    INVALID_RESERVER_MAIL: 'メールアドレスの形式（~~@~~.~~）で入力してください',
     MAX_LENGTH_RESERVER_MAIL: 'メールアドレスは255文字以内で入力してください',
-    VALID_CARD_NUMBER: '14-16桁の有効なカード番号を入力してください',
+    INVALID_CARD_NUMBER: '14-16桁の有効なカード番号を入力してください',
     EMPTY_CARD_NAME: 'カード名義人を入力してください',
-    VALID_CARD_NAME: '半角英大文字・半角スペースで入力してください',
-    VALID_EXPIRY: 'MM/YY（月/年）の形式で入力してください',
-    VALID_CVC: '半角数字3-4桁で入力してください',
+    INVALID_CARD_NAME: '半角英大文字・半角スペースで入力してください',
+    INVALID_EXPIRY: 'MM/YY（月/年）の形式で入力してください',
+    INVALID_CVC: '半角数字3-4桁で入力してください',
 } as const;
