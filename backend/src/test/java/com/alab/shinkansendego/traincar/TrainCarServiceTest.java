@@ -1,7 +1,12 @@
 package com.alab.shinkansendego.traincar;
 
 import com.alab.shinkansendego.departurearrivaltime.DepartureArrivalTimeRepository;
+import com.alab.shinkansendego.farekm.FareKmService;
 import com.alab.shinkansendego.reservedseatsection.ReservedSeatSectionRepository;
+import com.alab.shinkansendego.seattype.SeatTypeEntity;
+import com.alab.shinkansendego.sectionkm.SectionKmEntity;
+import com.alab.shinkansendego.sectionkm.SectionKmRepository;
+import com.alab.shinkansendego.traincartype.TrainCarTypeEntity;
 import org.jspecify.annotations.NonNull;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
@@ -14,7 +19,9 @@ import java.time.LocalDate;
 import java.time.LocalTime;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
@@ -24,28 +31,35 @@ public class TrainCarServiceTest {
     private final List<SeatResponseDto> emptySeatList = new ArrayList<>();
     private final List<String> emptySectionCdList = new ArrayList<>();
     private final SeatRequestDto request = new SeatRequestDto();
+    private final List<SectionKmEntity> sectionKmEntities = new ArrayList<>();
+    private final TrainCarEntity trainCarEntity = new TrainCarEntity();
+    private final Map<String, Integer> fares = new HashMap<>();
     @Mock
     private TrainCarRepository trainCarRepo;
     @Mock
     private DepartureArrivalTimeRepository departureArrivalTimeRepo;
     @Mock
     private ReservedSeatSectionRepository reservedSeatSectionRepo;
+    @Mock
+    private SectionKmRepository sectionKmRepository;
+    @Mock
+    private FareKmService fareKmService;
     @InjectMocks
     private TrainCarService service;
 
     private static @NonNull List<SeatResponseDto> getSeatResponseDtosList() {
-        SeatResponseDto expect01 = new SeatResponseDto("Test001", 1, "TestSeat1", 1, "T", false);
-        SeatResponseDto expect02 = new SeatResponseDto("Test001", 1, "TestSeat2", 2, "E", true);
-        SeatResponseDto expect03 = new SeatResponseDto("Test001", 1, "TestSeat3", 3, "S", false);
-        SeatResponseDto expect04 = new SeatResponseDto("Test001", 1, "TestSeat4", 4, "T", true);
+        SeatResponseDto expect01 = new SeatResponseDto("Test001", 1, "TestSeat1", 1, "T", 2610, false);
+        SeatResponseDto expect02 = new SeatResponseDto("Test001", 1, "TestSeat2", 2, "E", 2610, true);
+        SeatResponseDto expect03 = new SeatResponseDto("Test001", 1, "TestSeat3", 3, "S", 2610, false);
+        SeatResponseDto expect04 = new SeatResponseDto("Test001", 1, "TestSeat4", 4, "T", 2610, true);
         return Arrays.asList(expect01, expect02, expect03, expect04);
     }
 
     private static @NonNull List<SeatResponseDto> getIsreservedIsNullList() {
-        SeatResponseDto expect01 = new SeatResponseDto("Test001", 1, "TestSeat1", 1, "T", null);
-        SeatResponseDto expect02 = new SeatResponseDto("Test001", 1, "TestSeat2", 2, "E", null);
-        SeatResponseDto expect03 = new SeatResponseDto("Test001", 1, "TestSeat3", 3, "S", null);
-        SeatResponseDto expect04 = new SeatResponseDto("Test001", 1, "TestSeat4", 4, "T", null);
+        SeatResponseDto expect01 = new SeatResponseDto("Test001", 1, "TestSeat1", 1, "T", 0, null);
+        SeatResponseDto expect02 = new SeatResponseDto("Test001", 1, "TestSeat2", 2, "E", 0, null);
+        SeatResponseDto expect03 = new SeatResponseDto("Test001", 1, "TestSeat3", 3, "S", 0, null);
+        SeatResponseDto expect04 = new SeatResponseDto("Test001", 1, "TestSeat4", 4, "T", 0, null);
         return Arrays.asList(expect01, expect02, expect03, expect04);
     }
 
@@ -57,6 +71,16 @@ public class TrainCarServiceTest {
         request.setDepartureTime(LocalTime.of(12, 0, 0));
         request.setArrivalTime(LocalTime.of(13, 0, 0));
         request.setTrainCarCd("Test001");
+        sectionKmEntities.add(new SectionKmEntity("Test1", "Teststart01", "Testend01", 10.0));
+        sectionKmEntities.add(new SectionKmEntity("Test2", "Teststart02", "Testend02", 10.0));
+        TrainCarTypeEntity trainCarTypeEntity = new TrainCarTypeEntity();
+        trainCarTypeEntity.setName("指定席");
+        SeatTypeEntity seatTypeEntity = new SeatTypeEntity();
+        seatTypeEntity.setTrainCarType(trainCarTypeEntity);
+        trainCarEntity.setSeatType(seatTypeEntity);
+        fares.put("reserved", 2610);
+        fares.put("green", 2850);
+        fares.put("gran-class", 9850);
     }
 
     @Test
@@ -81,6 +105,9 @@ public class TrainCarServiceTest {
             "Test001",
             "Test2"))
             .thenReturn(List.of("TestSeat4"));
+        when(sectionKmRepository.findBySectionCdIn(List.of("Test1", "Test2"))).thenReturn(sectionKmEntities);
+        when(trainCarRepo.findByTrainCarCd(request.getTrainCarCd())).thenReturn(trainCarEntity);
+        when(fareKmService.getFareFromDistance(20.0)).thenReturn(fares);
 
         List<SeatResponseDto> expectList = getSeatResponseDtosList();
 

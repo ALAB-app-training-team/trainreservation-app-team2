@@ -16,10 +16,6 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.mockito.Mockito.when;
 
 public class StopStationServiceTest {
-    @Mock
-    private StopStationRepository stopStationRepository;
-    @InjectMocks
-    private StopStationService service;
     private final StationEntity tokyo = new StationEntity("THK01", "東京");
     private final StationEntity ueno = new StationEntity("THK02", "上野");
     private final StationEntity omiya = new StationEntity("CMN01", "大宮");
@@ -36,6 +32,10 @@ public class StopStationServiceTest {
         new StopStationEntity("0062", "CMN03", "YM", morioka),
         new StopStationEntity("0063", "CMN03", "NS", morioka)
     );
+    @Mock
+    private StopStationRepository stopStationRepository;
+    @InjectMocks
+    private StopStationService service;
 
     @BeforeEach
     void setUp() {

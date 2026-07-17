@@ -28,6 +28,8 @@ public class ReservedSeatEntity {
     private String seatCd;
     @Column(name = "code_token")
     private UUID codeToken;
+    @Column(name = "seat_fare")
+    private Integer seatFare;
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "train_car_cd", referencedColumnName = "train_car_cd", insertable = false, updatable = false)
     private TrainCarEntity trainCar;
