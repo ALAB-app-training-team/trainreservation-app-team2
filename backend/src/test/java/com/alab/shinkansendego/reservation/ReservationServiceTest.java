@@ -240,9 +240,7 @@ public class ReservationServiceTest {
     @DisplayName("購入情報IDと購入者氏名とメールアドレスから予約チケット情報が取得できる")
     void getReservation_withReservationIdAndReserverNameAndReserverMail_returnGetReservationSuccess() {
         when(reservationRepo.findByIdAndReserverNameAndReserverMail(reservationId1, "山田太郎", "email@sample.com")).thenReturn(purchase);
-//        when(reservationRepo.findReservationDtoByReservationIdAndReserverNameAndReserverMail(reservationId1, "山田太郎", "email@sample.com")).thenReturn(purchase);
         when(reservationRepo.findScheduleById(reservationId1)).thenReturn(reservationEntity);
-//        when(reservationRepo.findReservationScheduleDtoByReservationId(purchaseId1)).thenReturn(scheduleList);
         when(reservedSeatRepo.findReservedSeatDtoByReservationId(reservationId1)).thenReturn(seatList);
 
         ReservationResponseDto expect = getExpectReservationResponseDto(null);
