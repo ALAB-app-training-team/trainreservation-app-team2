@@ -1,0 +1,64 @@
+package com.alab.shinkansendego.farekm;
+
+import org.springframework.stereotype.Service;
+
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+
+@Service
+public class FareKmService {
+    private final BasicFareKmRepository basicRepo;
+    private final ExpressFareKmRepository expressRepo;
+    private final SupplementaryFareKmRepository supplementaryRepo;
+
+    public FareKmService(
+        BasicFareKmRepository basicFareKmRepository,
+        ExpressFareKmRepository expressFareKmRepository,
+        SupplementaryFareKmRepository supplementaryFareKmRepository
+    ) {
+        this.basicRepo = basicFareKmRepository;
+        this.expressRepo = expressFareKmRepository;
+        this.supplementaryRepo = supplementaryFareKmRepository;
+    }
+
+    /**
+     * 営業キロ程を受け取って各席種の料金を返す
+     *
+     * @param distance 営業キロ程
+     * @return 席種ごとの料金を持つHashMap
+     */
+    public Map<String, Integer> getFareFromDistance(Double distance) {
+        Map<String, Integer> fares = new HashMap<>();
+
+        if (distance <= 0 || distance > 800) {
+            throw new IllegalArgumentException("Out of the price range");
+        }
+
+        List<BasicFareKmEntity> basicFareKmEntities = basicRepo.findAll();
+        List<ExpressFareKmEntity> expressFareKmEntities = expressRepo.findAll();
+        List<SupplementaryFareKmEntity> supplementaryFareKmEntities = supplementaryRepo.findAll();
+
+        Integer basicFare = basicFareKmEntities.stream()
+            .filter(entity -> (entity.getMinKm() < distance) && (entity.getMaxKm() >= distance))
+            .map(BasicFareKmEntity::getBasicFare)
+            .findFirst()
+            .orElseThrow(() -> new IllegalArgumentException("Out of the price range"));
+        Integer expressFare = expressFareKmEntities.stream()
+            .filter(entity -> (entity.getMinKm() < distance) && (entity.getMaxKm() >= distance))
+            .map(ExpressFareKmEntity::getExpressFare)
+            .findFirst()
+            .orElseThrow(() -> new IllegalArgumentException("Out of the price range"));
+        SupplementaryFareKmEntity supplementaryFareKmEntity = supplementaryFareKmEntities.stream()
+            .filter(entity -> (entity.getMinKm() < distance) && (entity.getMaxKm() >= distance))
+            .findFirst()
+            .orElseThrow(() -> new IllegalArgumentException("Out of the price range"));
+
+        fares.put("non-reserved", basicFare + expressFare);
+        fares.put("reserved", basicFare + expressFare + supplementaryFareKmEntity.getReservedFare());
+        fares.put("green", basicFare + expressFare + supplementaryFareKmEntity.getGreenFare());
+        fares.put("gran-class", basicFare + expressFare + supplementaryFareKmEntity.getGcFare());
+
+        return fares;
+    }
+}

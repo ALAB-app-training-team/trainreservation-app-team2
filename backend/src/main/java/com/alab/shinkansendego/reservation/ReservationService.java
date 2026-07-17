@@ -199,6 +199,7 @@ public class ReservationService {
             reservedSeat.setTrainCarCd(seatDto.getTrainCarCd());
             reservedSeat.setSeatCd(seatDto.getSeatCd());
             reservedSeat.setCodeToken(UUID.randomUUID());
+            reservedSeat.setSeatFare(seatDto.getSeatFare());
             reservedSeatsToPost.add(reservedSeat);
         }
         int reservedSeatResult = reservedSeatRepository.saveAll(reservedSeatsToPost).size();
