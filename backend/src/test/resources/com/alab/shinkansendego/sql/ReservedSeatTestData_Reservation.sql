@@ -1,11 +1,11 @@
 CREATE TABLE T_ReservedSeat
 (
-    id           UUID PRIMARY KEY,
-    reservation_id  UUID       NOT NULL,
-    train_car_cd VARCHAR(7) NOT NULL,
-    seat_cd      VARCHAR(9) NOT NULL,
-    code_token   UUID       NOT NULL,
-    seat_fare    INT        NOT NULL
+    id             UUID PRIMARY KEY,
+    reservation_id UUID       NOT NULL,
+    train_car_cd   VARCHAR(7) NOT NULL,
+    seat_cd        VARCHAR(9) NOT NULL,
+    code_token     UUID       NOT NULL,
+    seat_fare      INT        NOT NULL
 );
 
 INSERT INTO T_ReservedSeat (id, reservation_id, train_car_cd, seat_cd, code_token, seat_fare)

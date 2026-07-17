@@ -33,7 +33,7 @@ public class TrainCarServiceTest {
     private final SeatRequestDto request = new SeatRequestDto();
     private final List<SectionKmEntity> sectionKmEntities = new ArrayList<>();
     private final TrainCarEntity trainCarEntity = new TrainCarEntity();
-    private Map<String, Integer> fares = new HashMap<>();
+    private final Map<String, Integer> fares = new HashMap<>();
     @Mock
     private TrainCarRepository trainCarRepo;
     @Mock

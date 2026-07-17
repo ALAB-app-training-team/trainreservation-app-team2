@@ -17,9 +17,6 @@ import static org.mockito.Mockito.when;
 
 @ExtendWith(MockitoExtension.class)
 public class FareKmServiceTest {
-    private BasicFareKmEntity basicFareMock = new BasicFareKmEntity("BF038", 520, 540, 9020);
-    private ExpressFareKmEntity expressFareMock = new ExpressFareKmEntity("EF007", 500, 600, 5170);
-    private SupplementaryFareKmEntity supplementaryFareMock = new SupplementaryFareKmEntity("SF004", 400, 600, 530, 5400, 12400);
     @Mock
     BasicFareKmRepository basicFareKmRepository;
     @Mock
@@ -28,6 +25,9 @@ public class FareKmServiceTest {
     SupplementaryFareKmRepository supplementaryFareKmRepository;
     @InjectMocks
     FareKmService service;
+    private final BasicFareKmEntity basicFareMock = new BasicFareKmEntity("BF038", 520, 540, 9020);
+    private final ExpressFareKmEntity expressFareMock = new ExpressFareKmEntity("EF007", 500, 600, 5170);
+    private final SupplementaryFareKmEntity supplementaryFareMock = new SupplementaryFareKmEntity("SF004", 400, 600, 530, 5400, 12400);
 
     @Test
     void getFare_HelloTest() {
