@@ -37,9 +37,9 @@ public class ReservationControllerTest {
     private ReservationService service;
 
     private static @NonNull ReservationResponseDto getExpectReservationResponseDto(UUID purchaseId) {
-        ReservedSeatDto seat1 = new ReservedSeatDto("指定席", 1, 1, "A", UUID.fromString("60a1ab63-a41f-430d-a2d1-10a76368d0f5"));
-        ReservedSeatDto seat2 = new ReservedSeatDto("グリーン車", 9, 1, "A", UUID.fromString("3de8909e-32de-478e-bd9b-739f3fe6d6c3"));
-        ReservedSeatDto seat3 = new ReservedSeatDto("グランクラス", 10, 1, "A", UUID.fromString("e192e5f1-318e-4d10-b76d-2f2bf15e8b70"));
+        ReservedSeatDto seat1 = new ReservedSeatDto("指定席", 1, 1, "A", UUID.fromString("60a1ab63-a41f-430d-a2d1-10a76368d0f5"), 5000);
+        ReservedSeatDto seat2 = new ReservedSeatDto("グリーン車", 9, 1, "A", UUID.fromString("3de8909e-32de-478e-bd9b-739f3fe6d6c3"), 10000);
+        ReservedSeatDto seat3 = new ReservedSeatDto("グランクラス", 10, 1, "A", UUID.fromString("e192e5f1-318e-4d10-b76d-2f2bf15e8b70"), 15000);
         List<ReservedSeatDto> reservedSeatList = Arrays.asList(seat1, seat2, seat3);
         return new ReservationResponseDto(
             purchaseId,
@@ -96,6 +96,9 @@ public class ReservationControllerTest {
             .andExpect(jsonPath("$[0].reservedSeats[0].codeToken").value("60a1ab63-a41f-430d-a2d1-10a76368d0f5"))
             .andExpect(jsonPath("$[0].reservedSeats[1].codeToken").value("3de8909e-32de-478e-bd9b-739f3fe6d6c3"))
             .andExpect(jsonPath("$[0].reservedSeats[2].codeToken").value("e192e5f1-318e-4d10-b76d-2f2bf15e8b70"))
+            .andExpect(jsonPath("$[0].reservedSeats[0].seatFare").value(5000))
+            .andExpect(jsonPath("$[0].reservedSeats[1].seatFare").value(10000))
+            .andExpect(jsonPath("$[0].reservedSeats[2].seatFare").value(15000))
             .andExpect(jsonPath("$[1].purchaseId").value("3136b939-2e3e-46c1-92d3-7aa64b6ca666"))
             .andExpect(jsonPath("$[1].trainTypeName").value("やまびこ1号"))
             .andExpect(jsonPath("$[1].departureStationName").value("東京"))
@@ -118,7 +121,10 @@ public class ReservationControllerTest {
             .andExpect(jsonPath("$[1].reservedSeats[2].seatColumn").value("A"))
             .andExpect(jsonPath("$[1].reservedSeats[0].codeToken").value("60a1ab63-a41f-430d-a2d1-10a76368d0f5"))
             .andExpect(jsonPath("$[1].reservedSeats[1].codeToken").value("3de8909e-32de-478e-bd9b-739f3fe6d6c3"))
-            .andExpect(jsonPath("$[1].reservedSeats[2].codeToken").value("e192e5f1-318e-4d10-b76d-2f2bf15e8b70"));
+            .andExpect(jsonPath("$[1].reservedSeats[2].codeToken").value("e192e5f1-318e-4d10-b76d-2f2bf15e8b70"))
+            .andExpect(jsonPath("$[1].reservedSeats[0].seatFare").value(5000))
+            .andExpect(jsonPath("$[1].reservedSeats[1].seatFare").value(10000))
+            .andExpect(jsonPath("$[1].reservedSeats[2].seatFare").value(15000));
     }
 
     @Test
@@ -174,7 +180,10 @@ public class ReservationControllerTest {
             .andExpect(jsonPath("$.reservedSeats[2].seatColumn").value("A"))
             .andExpect(jsonPath("$.reservedSeats[0].codeToken").value("60a1ab63-a41f-430d-a2d1-10a76368d0f5"))
             .andExpect(jsonPath("$.reservedSeats[1].codeToken").value("3de8909e-32de-478e-bd9b-739f3fe6d6c3"))
-            .andExpect(jsonPath("$.reservedSeats[2].codeToken").value("e192e5f1-318e-4d10-b76d-2f2bf15e8b70"));
+            .andExpect(jsonPath("$.reservedSeats[2].codeToken").value("e192e5f1-318e-4d10-b76d-2f2bf15e8b70"))
+            .andExpect(jsonPath("$.reservedSeats[0].seatFare").value(5000))
+            .andExpect(jsonPath("$.reservedSeats[1].seatFare").value(10000))
+            .andExpect(jsonPath("$.reservedSeats[2].seatFare").value(15000));
     }
 
     @Test
