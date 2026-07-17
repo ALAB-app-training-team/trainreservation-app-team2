@@ -57,4 +57,3 @@ export function ReserveUserInfoInput({
         </>
     );
 }
-// focus:border-primary cursor-pointer outline-none focus:border-2

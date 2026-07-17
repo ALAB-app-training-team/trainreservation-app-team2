@@ -94,6 +94,15 @@ CREATE TABLE T_ReservedSeat
     train_car_cd   VARCHAR(7) NOT NULL REFERENCES M_TrainCar (train_car_cd) ON DELETE RESTRICT,
     seat_cd        VARCHAR(9) NOT NULL REFERENCES M_Seat (seat_cd) ON DELETE RESTRICT,
     code_token     UUID       NOT NULL UNIQUE,
-    seat_fare      INTEGER    NOT NULL,
     UNIQUE (reservation_id, train_car_cd, seat_cd)
 );
+
+ALTER TABLE T_ReservedSeat
+    ADD COLUMN seat_fare INT;
+
+UPDATE T_ReservedSeat
+SET seat_fare = 10000
+WHERE seat_fare IS NULL;
+
+ALTER TABLE T_ReservedSeat
+    ALTER COLUMN seat_fare SET NOT NULL;

@@ -67,7 +67,7 @@ public class ReservationService {
      */
     public List<ReservationResponseDto> getReservationList(String name, String email) {
         List<ReservationResponseDto> reservationList = new ArrayList<>();
-        List<ReservationEntity> reservationEntityList = reservationRepository.findByReserverNameAndReserverMail(this.removeSpaces(name), this.removeSpaces(email));
+        List<ReservationEntity> reservationEntityList = reservationRepository.findByReserverNameAndReserverMail(removeSpaces(name), removeSpaces(email));
         if (reservationEntityList.isEmpty()) {
             return reservationList;
         }
@@ -135,7 +135,7 @@ public class ReservationService {
 
         ReservationResponseDto response = new ReservationResponseDto();
 
-        ReservationDto purchase = reservationRepository.findReservationDtoByReservationIdAndReserverNameAndReserverMail(reservationId, this.removeSpaces(name), this.removeSpaces(email));
+        ReservationDto purchase = reservationRepository.findReservationDtoByReservationIdAndReserverNameAndReserverMail(reservationId, removeSpaces(name), removeSpaces(email));
         if (purchase == null) {
             throw new IllegalArgumentException("PurchaseId is Not found");
         }
@@ -193,8 +193,8 @@ public class ReservationService {
         reservationToPost.setScheduleCd(reserveRequestDto.getScheduleCd());
         reservationToPost.setDepartureStationCd(reserveRequestDto.getDepartureStationCd());
         reservationToPost.setArrivalStationCd(reserveRequestDto.getArrivalStationCd());
-        reservationToPost.setReserverName(this.removeSpaces(reserveRequestDto.getReserverName()));
-        reservationToPost.setReserverMail(this.removeSpaces(reserveRequestDto.getReserverMail()));
+        reservationToPost.setReserverName(removeSpaces(reserveRequestDto.getReserverName()));
+        reservationToPost.setReserverMail(removeSpaces(reserveRequestDto.getReserverMail()));
         reservationToPost.setPaymentTrackingId(paymentTrackingId);
 
         ReservationEntity reservationResult = reservationRepository.save(reservationToPost);
@@ -210,6 +210,7 @@ public class ReservationService {
             reservedSeat.setTrainCarCd(seatDto.getTrainCarCd());
             reservedSeat.setSeatCd(seatDto.getSeatCd());
             reservedSeat.setCodeToken(UUID.randomUUID());
+            reservedSeat.setSeatFare(seatDto.getSeatFare());
             reservedSeatsToPost.add(reservedSeat);
         }
         int reservedSeatResult = reservedSeatRepository.saveAll(reservedSeatsToPost).size();
