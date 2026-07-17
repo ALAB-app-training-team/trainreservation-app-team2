@@ -5,6 +5,7 @@ import { ReservationListPage } from '@tests/pages/ReservationList/ReservationLis
 import { ReservedTicketPage } from '@tests/pages/ReservedTicket/ReservedTicketPage';
 import { ReservationGuestLoginPage } from '@tests/pages/ReservationGuestLogin/ReservationGuestLoginPage';
 import { test } from '@tests/fixtures';
+import { Apps } from '@tests/pages/shared/Apps';
 
 test('navigate-検索～予約確認', async ({ page, clearSession }) => {
     const scheduleSearchPage = new ScheduleSearchPage(page);
@@ -34,10 +35,6 @@ test('navigate-検索～予約確認', async ({ page, clearSession }) => {
             'エラーが発生しました。しばらくしてから再度お試しください。',
         ),
     ).toBeHidden();
-
-    await reservationGuestLogin.goto();
-    await expect(page).toHaveURL('/reservationList');
-    await clearSession();
 
     await reservationGuestLogin.goto();
     await expect(page).toHaveURL('/reservationGuestLogin');
@@ -77,15 +74,19 @@ test('navigate-ゲスト認証がない場合に予約一覧・予約詳細に�
     const scheduleSearchPage = new ScheduleSearchPage(page);
     const reservationListPage = new ReservationListPage(page);
     const reservedTicketPage = new ReservedTicketPage(page);
+    const apps = new Apps(page);
 
     await scheduleSearchPage.goto();
     await expect(page).toHaveURL('/scheduleSearch');
     await clearSession();
+    apps.expectSessionAlert();
     await reservationListPage.goto();
     await expect(page).toHaveURL('/reservationGuestLogin');
 
     await scheduleSearchPage.goto();
     await expect(page).toHaveURL('/scheduleSearch');
+    await clearSession();
+    apps.expectSessionAlert();
     await reservedTicketPage.goto();
     await expect(page).toHaveURL('/reservationGuestLogin');
 });

@@ -56,7 +56,6 @@ const router = createBrowserRouter([
             },
             {
                 path: '/reservationGuestLogin',
-                loader: () => authLoader(),
                 element: <ReservationGuestLogin />,
                 errorElement: <Error />,
             },
