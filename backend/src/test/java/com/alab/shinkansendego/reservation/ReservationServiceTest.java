@@ -37,6 +37,7 @@ import java.time.LocalTime;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+import java.util.Optional;
 import java.util.UUID;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
@@ -55,10 +56,9 @@ import static org.springframework.test.web.client.match.MockRestRequestMatchers.
 import static org.springframework.test.web.client.response.MockRestResponseCreators.withStatus;
 
 public class ReservationServiceTest {
-    private final ReservationDto purchase = new ReservationDto("やまびこ1号", "THK01", "THK09", LocalDate.of(2026, 6, 1));
+    private final Optional<ReservationEntity> purchase = Optional.of(new ReservationEntity());
     private final UUID reservationId1 = UUID.fromString("4156b939-2e3e-46c1-92d3-7aa64b6ca575");
     private final UUID reservationId2 = UUID.fromString("3136b939-2e3e-46c1-92d3-7aa64b6ca666");
-    //    private final List<ReservedScheduleDto> scheduleList = new ArrayList<>();
     private final ReservationEntity reservationEntity = new ReservationEntity();
     private final List<ReservedSeatDto> seatList = new ArrayList<>();
     private final ReservedSeatDto seat1 = new ReservedSeatDto("指定席", 1, 1, "A", UUID.fromString("60a1ab63-a41f-430d-a2d1-10a76368d0f5"), 5000);
@@ -172,78 +172,23 @@ public class ReservationServiceTest {
         this.service = new ReservationService(
             reservationRepo, reservedSeatRepo, sectionKmRepo, departureArrivalTimeRepo, reservedSeatSectionRepo, restClientBuilder
         );
-//        scheduleList.clear();
-//        ReservedScheduleDto schedule1 = new ReservedScheduleDto(LocalTime.of(6, 4, 0), "THK01", "東京", LocalTime.of(6, 9, 0), "THK02", "上野");
-//        ReservedScheduleDto schedule2 = new ReservedScheduleDto(LocalTime.of(6, 10, 0), "THK02", "上野", LocalTime.of(6, 28, 0), "CMN01", "大宮");
-//        ReservedScheduleDto schedule3 = new ReservedScheduleDto(LocalTime.of(6, 29, 0), "CMN01", "大宮", LocalTime.of(6, 52, 0), "THK04", "宇都宮");
-//        ReservedScheduleDto schedule4 = new ReservedScheduleDto(LocalTime.of(6, 53, 0), "THK04", "宇都宮", LocalTime.of(7, 23, 0), "THK07", "郡山");
-//        ReservedScheduleDto schedule5 = new ReservedScheduleDto(LocalTime.of(7, 24, 0), "THK07", "郡山", LocalTime.of(7, 37, 0), "CMN02", "福島");
-//        ReservedScheduleDto schedule6 = new ReservedScheduleDto(LocalTime.of(7, 38, 0), "CMN02", "福島", LocalTime.of(7, 58, 0), "THK09", "仙台");
-//
-//        scheduleList.addAll(Arrays.asList(schedule1, schedule2, schedule3, schedule4, schedule5, schedule6));
 
-        StationEntity startStation1 = new StationEntity("THK01", "東京");
-        StationEntity goalStation1 = new StationEntity("THK02", "上野");
-        SectionKmEntity sectionKm1 = new SectionKmEntity();
-        sectionKm1.setStartStation(startStation1);
-        sectionKm1.setGoalStation(goalStation1);
-        DepartureArrivalTimeEntity departureArrivalTime1 = new DepartureArrivalTimeEntity();
-        departureArrivalTime1.setDepartureTime(LocalTime.of(6, 4, 0));
-        departureArrivalTime1.setArrivalTime(LocalTime.of(6, 9, 0));
-        departureArrivalTime1.setSectionKm(sectionKm1);
-
-        StationEntity startStation2 = new StationEntity("THK02", "上野");
-        StationEntity goalStation2 = new StationEntity("CMN01", "大宮");
-        SectionKmEntity sectionKm2 = new SectionKmEntity();
-        sectionKm2.setStartStation(startStation2);
-        sectionKm2.setGoalStation(goalStation2);
-        DepartureArrivalTimeEntity departureArrivalTime2 = new DepartureArrivalTimeEntity();
-        departureArrivalTime2.setDepartureTime(LocalTime.of(6, 10, 0));
-        departureArrivalTime2.setArrivalTime(LocalTime.of(6, 28, 0));
-        departureArrivalTime2.setSectionKm(sectionKm2);
-
-        StationEntity startStation3 = new StationEntity("CMN01", "大宮");
-        StationEntity goalStation3 = new StationEntity("THK04", "宇都宮");
-        SectionKmEntity sectionKm3 = new SectionKmEntity();
-        sectionKm3.setStartStation(startStation3);
-        sectionKm3.setGoalStation(goalStation3);
-        DepartureArrivalTimeEntity departureArrivalTime3 = new DepartureArrivalTimeEntity();
-        departureArrivalTime3.setDepartureTime(LocalTime.of(6, 29, 0));
-        departureArrivalTime3.setArrivalTime(LocalTime.of(6, 52, 0));
-        departureArrivalTime3.setSectionKm(sectionKm3);
-
-        StationEntity startStation4 = new StationEntity("THK04", "宇都宮");
-        StationEntity goalStation4 = new StationEntity("THK07", "郡山");
-        SectionKmEntity sectionKm4 = new SectionKmEntity();
-        sectionKm4.setStartStation(startStation4);
-        sectionKm4.setGoalStation(goalStation4);
-        DepartureArrivalTimeEntity departureArrivalTime4 = new DepartureArrivalTimeEntity();
-        departureArrivalTime4.setDepartureTime(LocalTime.of(6, 53, 0));
-        departureArrivalTime4.setArrivalTime(LocalTime.of(7, 23, 0));
-        departureArrivalTime4.setSectionKm(sectionKm4);
-
-        StationEntity startStation5 = new StationEntity("THK07", "郡山");
-        StationEntity goalStation5 = new StationEntity("CMN02", "福島");
-        SectionKmEntity sectionKm5 = new SectionKmEntity();
-        sectionKm5.setStartStation(startStation5);
-        sectionKm5.setGoalStation(goalStation5);
-        DepartureArrivalTimeEntity departureArrivalTime5 = new DepartureArrivalTimeEntity();
-        departureArrivalTime5.setDepartureTime(LocalTime.of(7, 24, 0));
-        departureArrivalTime5.setArrivalTime(LocalTime.of(7, 37, 0));
-        departureArrivalTime5.setSectionKm(sectionKm5);
-
-        StationEntity startStation6 = new StationEntity("CMN02", "福島");
-        StationEntity goalStation6 = new StationEntity("THK09", "仙台");
-        SectionKmEntity sectionKm6 = new SectionKmEntity();
-        sectionKm6.setStartStation(startStation6);
-        sectionKm6.setGoalStation(goalStation6);
-        DepartureArrivalTimeEntity departureArrivalTime6 = new DepartureArrivalTimeEntity();
-        departureArrivalTime6.setDepartureTime(LocalTime.of(7, 38, 0));
-        departureArrivalTime6.setArrivalTime(LocalTime.of(7, 58, 0));
-        departureArrivalTime6.setSectionKm(sectionKm6);
+        DepartureArrivalTimeEntity departureArrivalTime1 = buildSchedule(LocalTime.of(6, 4, 0), "THK01", "東京", LocalTime.of(6, 9, 0), "THK02", "上野");
+        DepartureArrivalTimeEntity departureArrivalTime2 = buildSchedule(LocalTime.of(6, 10, 0), "THK02", "上野", LocalTime.of(6, 28, 0), "CMN01", "大宮");
+        DepartureArrivalTimeEntity departureArrivalTime3 = buildSchedule(LocalTime.of(6, 29, 0), "CMN01", "大宮", LocalTime.of(6, 52, 0), "THK04", "宇都宮");
+        DepartureArrivalTimeEntity departureArrivalTime4 = buildSchedule(LocalTime.of(6, 53, 0), "THK04", "宇都宮", LocalTime.of(7, 23, 0), "THK07", "郡山");
+        DepartureArrivalTimeEntity departureArrivalTime5 = buildSchedule(LocalTime.of(7, 24, 0), "THK07", "郡山", LocalTime.of(7, 37, 0), "CMN02", "福島");
+        DepartureArrivalTimeEntity departureArrivalTime6 = buildSchedule(LocalTime.of(7, 38, 0), "CMN02", "福島", LocalTime.of(7, 58, 0), "THK09", "仙台");
 
         reservationEntity.setId(reservationId1);
         reservationEntity.setDepartureArrivalTime(Arrays.asList(departureArrivalTime1, departureArrivalTime2, departureArrivalTime3, departureArrivalTime4, departureArrivalTime5, departureArrivalTime6));
+
+        TrainTypeEntity trainType = new TrainTypeEntity("YM001", "やまびこ1号", "E5SER");
+        ScheduleEntity schedule = new ScheduleEntity("TEST01", "YM001", trainType);
+        purchase.get().setDepartureStationCd("THK01");
+        purchase.get().setArrivalStationCd("THK09");
+        purchase.get().setRideDate(LocalDate.of(2026, 6, 1));
+        purchase.get().setSchedule(schedule);
         seatList.clear();
         seatList.addAll(Arrays.asList(seat1, seat2, seat3));
     }
@@ -294,7 +239,8 @@ public class ReservationServiceTest {
     @Test
     @DisplayName("購入情報IDと購入者氏名とメールアドレスから予約チケット情報が取得できる")
     void getReservation_withReservationIdAndReserverNameAndReserverMail_returnGetReservationSuccess() {
-        when(reservationRepo.findReservationDtoByReservationIdAndReserverNameAndReserverMail(reservationId1, "山田太郎", "email@sample.com")).thenReturn(purchase);
+        when(reservationRepo.findByIdAndReserverNameAndReserverMail(reservationId1, "山田太郎", "email@sample.com")).thenReturn(purchase);
+//        when(reservationRepo.findReservationDtoByReservationIdAndReserverNameAndReserverMail(reservationId1, "山田太郎", "email@sample.com")).thenReturn(purchase);
         when(reservationRepo.findScheduleById(reservationId1)).thenReturn(reservationEntity);
 //        when(reservationRepo.findReservationScheduleDtoByReservationId(purchaseId1)).thenReturn(scheduleList);
         when(reservedSeatRepo.findReservedSeatDtoByReservationId(reservationId1)).thenReturn(seatList);
@@ -309,7 +255,7 @@ public class ReservationServiceTest {
     @Test
     @DisplayName("購入情報データに存在しない購入情報IDがリクエストされた場合にエラーを発生させる")
     void getReservation_withNotExistPurchaseRequest_returnIllegalArgumentException() {
-        when(reservationRepo.findReservationDtoByReservationIdAndReserverNameAndReserverMail(reservationId1, "山田太郎", "email@sample.com")).thenReturn(null);
+        when(reservationRepo.findByIdAndReserverNameAndReserverMail(reservationId1, "山田太郎", "email@sample.com")).thenReturn(Optional.empty());
         Exception ex = assertThrows(
             IllegalArgumentException.class,
             () -> service.getReservation(reservationId1, "山田太郎", "email@sample.com")
@@ -320,7 +266,7 @@ public class ReservationServiceTest {
     @Test
     @DisplayName("購入情報データに存在しない購入者氏名がリクエストされた場合にエラーを発生させる")
     void getReservation_withNotExistReserverName_returnIllegalArgumentException() {
-        when(reservationRepo.findReservationDtoByReservationIdAndReserverNameAndReserverMail(reservationId1, "NotFound太郎", "email@sample.com")).thenReturn(null);
+        when(reservationRepo.findByIdAndReserverNameAndReserverMail(reservationId1, "NotFound太郎", "email@sample.com")).thenReturn(Optional.empty());
         Exception ex = assertThrows(
             IllegalArgumentException.class,
             () -> service.getReservation(reservationId1, "NotFound太郎", "email@sample.com")
@@ -331,8 +277,8 @@ public class ReservationServiceTest {
     @Test
     @DisplayName("出発到着時刻データに存在しない出発駅CDを持つ購入情報IDがリクエストされた場合にエラーを発生させる")
     void getReservation_withNotExistScheduleOfDepartureStationRequest_returnIllegalArgumentException() {
-        purchase.setDepartureStationCd("None");
-        when(reservationRepo.findReservationDtoByReservationIdAndReserverNameAndReserverMail(reservationId1, "山田太郎", "email@sample.com")).thenReturn(purchase);
+        purchase.get().setDepartureStationCd("None");
+        when(reservationRepo.findByIdAndReserverNameAndReserverMail(reservationId1, "山田太郎", "email@sample.com")).thenReturn(purchase);
         when(reservationRepo.findScheduleById(reservationId1)).thenReturn(reservationEntity);
         Exception ex = assertThrows(
             IllegalArgumentException.class,
@@ -344,8 +290,8 @@ public class ReservationServiceTest {
     @Test
     @DisplayName("出発到着時刻データに存在しない到着駅CDを持つ購入情報IDがリクエストされた場合にエラーを発生させる")
     void getReservation_withNotExistScheduleOfArrivalStationRequest_returnIllegalArgumentException() {
-        purchase.setArrivalStationCd("None");
-        when(reservationRepo.findReservationDtoByReservationIdAndReserverNameAndReserverMail(reservationId1, "山田太郎", "email@sample.com")).thenReturn(purchase);
+        purchase.get().setArrivalStationCd("None");
+        when(reservationRepo.findByIdAndReserverNameAndReserverMail(reservationId1, "山田太郎", "email@sample.com")).thenReturn(purchase);
         when(reservationRepo.findScheduleById(reservationId1)).thenReturn(reservationEntity);
         Exception ex = assertThrows(
             IllegalArgumentException.class,

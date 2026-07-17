@@ -19,6 +19,7 @@ import java.util.Comparator;
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
+import java.util.Optional;
 import java.util.UUID;
 import java.util.stream.Collectors;
 
@@ -135,12 +136,18 @@ public class ReservationService {
 
         ReservationResponseDto response = new ReservationResponseDto();
 
-        ReservationDto purchase = reservationRepository.findReservationDtoByReservationIdAndReserverNameAndReserverMail(reservationId, removeSpaces(name), removeSpaces(email));
-        if (purchase == null) {
-            throw new IllegalArgumentException("PurchaseId is Not found");
-        }
+        Optional<ReservationEntity> reservationEntity = reservationRepository
+            .findByIdAndReserverNameAndReserverMail(reservationId, removeSpaces(name), removeSpaces(email));
 
-//        List<ReservedScheduleDto> scheduleList = reservationRepository.findReservationScheduleDtoByReservationId(reservationId);
+        if (reservationEntity.isEmpty()) throw new IllegalArgumentException("PurchaseId is Not found");
+
+        ReservationDto purchase = new ReservationDto(
+            reservationEntity.get().getSchedule().getTrainType().getName(),
+            reservationEntity.get().getDepartureStationCd(),
+            reservationEntity.get().getArrivalStationCd(),
+            reservationEntity.get().getRideDate()
+        );
+
         ReservationEntity reservationEntityList = reservationRepository.findScheduleById(reservationId);
         List<ReservedScheduleDto> scheduleList = reservationEntityList.getDepartureArrivalTime().stream().map(
                 schedule ->
@@ -153,7 +160,7 @@ public class ReservationService {
                         schedule.getSectionKm().getGoalStation().getName()
                     )
             )
-            .collect(Collectors.toList());
+            .toList();
 
         List<ReservedScheduleDto> departureSchedule = scheduleList.stream().filter(schedule -> Objects.equals(schedule.getDepartureStationCd(), purchase.getDepartureStationCd())).toList();
         List<ReservedScheduleDto> arrivalSchedule = scheduleList.stream().filter(schedule -> Objects.equals(schedule.getArrivalStationCd(), purchase.getArrivalStationCd())).toList();
