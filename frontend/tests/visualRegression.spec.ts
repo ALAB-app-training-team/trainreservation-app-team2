@@ -15,7 +15,7 @@ test('visual-scheduleSearch', async ({ page }) => {
     await page.evaluate(() => document.fonts.ready);
 
     await expect(page).toHaveScreenshot({
-        maxDiffPixelRatio: 0.9,
+        maxDiffPixelRatio: 0.05,
         fullPage: true,
         animations: 'disabled',
         mask: [
@@ -37,7 +37,7 @@ test('visual-selectSeat', async ({ page }) => {
     await page.evaluate(() => document.fonts.ready);
 
     await expect(page).toHaveScreenshot({
-        maxDiffPixelRatio: 0.8,
+        maxDiffPixelRatio: 0.05,
         fullPage: true,
         animations: 'disabled',
         mask: [
@@ -57,7 +57,7 @@ test('visual-reservationGuestLogin', async ({ page }) => {
     await page.evaluate(() => document.fonts.ready);
 
     await expect(page).toHaveScreenshot({
-        maxDiffPixelRatio: 0.7,
+        maxDiffPixelRatio: 0.05,
         fullPage: true,
         animations: 'disabled',
         mask: [
@@ -99,7 +99,7 @@ test('visual-reservationList', async ({ page, clearSession }) => {
     await page.evaluate(() => document.fonts.ready);
 
     await expect(page).toHaveScreenshot({
-        maxDiffPixelRatio: 0.6,
+        maxDiffPixelRatio: 0.05,
         fullPage: true,
         animations: 'disabled',
         mask: maskTargets,
@@ -126,7 +126,7 @@ test('visual-reservedTicket', async ({ page, clearSession }) => {
     await page.evaluate(() => document.fonts.ready);
 
     await expect(page).toHaveScreenshot({
-        maxDiffPixelRatio: 0.5,
+        maxDiffPixelRatio: 0.05,
         fullPage: true,
         animations: 'disabled',
         mask: [
