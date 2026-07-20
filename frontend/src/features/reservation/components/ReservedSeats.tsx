@@ -1,5 +1,6 @@
 import { BsTrainFreightFrontFill } from 'react-icons/bs';
 import { MdAirlineSeatReclineExtra } from 'react-icons/md';
+import { RiMoneyCnyBoxLine } from 'react-icons/ri';
 import { tv, type VariantProps } from 'tailwind-variants';
 
 import type { ReservedSeatDto } from '@/features/reservation/types/ReservedSeatDto';
@@ -41,7 +42,10 @@ export function ReservedSeats({
                         <label>座席</label>
                     </div>
                 )}
-                <div className="flex flex-wrap gap-2">
+                <div
+                    className="flex flex-wrap gap-2"
+                    data-testId="reserved-seats"
+                >
                     {seats.length !== 0 ? (
                         seats
                             .sort(
@@ -58,15 +62,11 @@ export function ReservedSeats({
                                             reservedSeats.seatNumber +
                                             reservedSeats.seatColumn
                                         }
-                                        className="flex items-center gap-2"
+                                        className={`${reservedSeatsStyle({ id })} flex shrink-0 items-center gap-2`}
                                     >
-                                        <div
-                                            className={reservedSeatsStyle({
-                                                id,
-                                            })}
-                                        >
+                                        <div className="flex items-center gap-2 text-gray-700">
                                             {id === 'reservationDetail' && (
-                                                <BsTrainFreightFrontFill />
+                                                <BsTrainFreightFrontFill className="text-primary" />
                                             )}
                                             <div>{`${reservedSeats.trainCarNumber}号車`}</div>
                                             {id === 'reservationDetail' && (
@@ -81,6 +81,18 @@ export function ReservedSeats({
                                                     `${reservedSeats.seatColumn}席`}
                                             </div>
                                         </div>
+                                        {id === 'reservationDetail' && (
+                                            <>
+                                                <div className="bg-primary h-3.5 w-[1px] self-center" />
+                                                <div className="text-primary flex items-center text-xl font-bold whitespace-nowrap">
+                                                    <RiMoneyCnyBoxLine />
+                                                    {(
+                                                        reservedSeats.seatFare ||
+                                                        0
+                                                    ).toLocaleString()}
+                                                </div>
+                                            </>
+                                        )}
                                     </div>
                                 );
                             })

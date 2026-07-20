@@ -49,7 +49,10 @@ export function ReservedTicket() {
                                 </div>
                             </button>
                         ) : (
-                            <h1 className="!m-0 text-left !text-3xl">
+                            <h1
+                                data-testId="reserve-complete"
+                                className="!m-0 text-left !text-3xl"
+                            >
                                 予約完了
                             </h1>
                         )}

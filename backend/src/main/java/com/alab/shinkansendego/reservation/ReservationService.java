@@ -106,7 +106,8 @@ public class ReservationService {
                     seat.getTrainCar().getTrainCarNumber(),
                     seat.getSeat().getSeatNumber(),
                     seat.getSeat().getSeatColumn(),
-                    seat.getCodeToken()))
+                    seat.getCodeToken(),
+                    seat.getSeatFare()))
                 .toList();
 
             dto.setPurchaseId(reservation.getId());

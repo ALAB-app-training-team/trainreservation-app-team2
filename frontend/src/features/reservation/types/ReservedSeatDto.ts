@@ -4,4 +4,5 @@ export type ReservedSeatDto = {
     seatNumber: number;
     seatColumn: string;
     codeToken: string;
+    seatFare: number;
 };
