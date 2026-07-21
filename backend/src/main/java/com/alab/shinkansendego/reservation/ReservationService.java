@@ -215,6 +215,7 @@ public class ReservationService {
         reservationToPost.setReserverName(removeSpaces(reserveRequestDto.getReserverName()));
         reservationToPost.setReserverMail(removeSpaces(reserveRequestDto.getReserverMail()));
         reservationToPost.setPaymentTrackingId(paymentTrackingId);
+        reservationToPost.setIsDeleted(false);
 
         ReservationEntity reservationResult = reservationRepository.save(reservationToPost);
         if (reservationResult.getId() == null) {
@@ -230,6 +231,7 @@ public class ReservationService {
             reservedSeat.setSeatCd(seatDto.getSeatCd());
             reservedSeat.setCodeToken(UUID.randomUUID());
             reservedSeat.setSeatFare(seatDto.getSeatFare());
+            reservedSeat.setIsDeleted(false);
             reservedSeatsToPost.add(reservedSeat);
         }
         int reservedSeatResult = reservedSeatRepository.saveAll(reservedSeatsToPost).size();
