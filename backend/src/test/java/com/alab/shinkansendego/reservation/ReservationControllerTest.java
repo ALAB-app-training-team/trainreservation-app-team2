@@ -49,6 +49,7 @@ public class ReservationControllerTest {
             "仙台",
             LocalTime.of(13, 0, 0),
             LocalDate.of(2026, 6, 1),
+            false,
             reservedSeatList);
     }
 

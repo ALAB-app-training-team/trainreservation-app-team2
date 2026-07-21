@@ -102,8 +102,14 @@ export function ScheduleItem({
 
     return (
         <>
-            <div className="border-primary-light flex w-full flex-row flex-wrap items-center justify-start gap-4 rounded-2xl border-2 p-8 md:items-center">
-                <div className="order-1 flex flex-1 gap-4 md:flex-none">
+            <div
+                data-testId="schedule"
+                className="border-primary-light flex w-full flex-row flex-wrap items-center justify-start gap-4 rounded-2xl border-2 p-8 md:items-center"
+            >
+                <div
+                    data-testId="schedule-train"
+                    className="order-1 flex flex-1 gap-4 md:flex-none"
+                >
                     <div className="flex items-center">
                         <div className={trainIconStyle({ color: colorCd })}>
                             <PiTrainBold />
@@ -127,7 +133,10 @@ export function ScheduleItem({
                 </div>
                 <div className="order-3 flex w-full items-center justify-between gap-4 md:order-2 md:flex-1">
                     <div className="text-left">
-                        <div className="text-2xl font-black">
+                        <div
+                            data-testId="schedule-departure-time"
+                            className="text-2xl font-black"
+                        >
                             {dayjs(schedule.departureTime, 'HH:mm:ss').format(
                                 'HH:mm',
                             )}
@@ -148,7 +157,10 @@ export function ScheduleItem({
                         </div>
                     </div>
                     <div className="text-left">
-                        <div className="text-2xl font-black">
+                        <div
+                            data-testId="schedule-arrival-time"
+                            className="text-2xl font-black"
+                        >
                             {dayjs(schedule.arrivalTime, 'HH:mm:ss').format(
                                 'HH:mm',
                             )}
