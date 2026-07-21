@@ -118,6 +118,7 @@ public class ReservationService {
             dto.setArrivalStationName(arrivalSchedule.getSectionKm().getGoalStation().getName());
             dto.setArrivalTime(arrivalSchedule.getArrivalTime());
             dto.setRideDate(reservation.getRideDate());
+            dto.setIsCanceled(reservation.getIsCanceled());
             dto.setReservedSeats(reservedSeatDtos);
 
             reservationList.add(dto);

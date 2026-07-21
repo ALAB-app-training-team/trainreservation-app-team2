@@ -41,6 +41,8 @@ public class ReservationEntity {
     private String reserverName;
     @Column(name = "reserver_mail")
     private String reserverMail;
+    @Column(name = "is_canceled")
+    private Boolean IsCanceled;
     @OneToMany(fetch = FetchType.LAZY)
     @JoinColumn(name = "schedule_cd", referencedColumnName = "schedule_cd", insertable = false, updatable = false)
     private List<DepartureArrivalTimeEntity> departureArrivalTime;
