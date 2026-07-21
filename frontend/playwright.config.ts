@@ -13,8 +13,6 @@ import { defineConfig, devices } from '@playwright/test';
  */
 export default defineConfig({
     testDir: './tests',
-    snapshotPathTemplate:
-        '{testDir}/{testFileDir}/visualRegression.spec.ts-snapshots/{arg}{ext}',
     fullyParallel: true,
     forbidOnly: !!process.env.CI,
     /* Retry on CI only */
