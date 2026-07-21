@@ -87,4 +87,4 @@ ALTER TABLE T_Reservation
             REFERENCES M_Station (station_cd)
             ON DELETE RESTRICT;
 ALTER TABLE T_ReservedSeat
-    ADD COLUMN is_canceled BOOLEAN NOT NULL DEFAULT FALSE;
+    ADD COLUMN is_deleted BOOLEAN NOT NULL DEFAULT FALSE;
