@@ -106,3 +106,6 @@ WHERE seat_fare IS NULL;
 
 ALTER TABLE T_ReservedSeat
     ALTER COLUMN seat_fare SET NOT NULL;
+
+ALTER TABLE T_ReservedSeat
+    ADD COLUMN is_canceled BOOLEAN NOT NULL DEFAULT FALSE;

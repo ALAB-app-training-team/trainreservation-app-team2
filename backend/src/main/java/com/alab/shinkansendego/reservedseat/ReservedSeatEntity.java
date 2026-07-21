@@ -30,8 +30,8 @@ public class ReservedSeatEntity {
     private UUID codeToken;
     @Column(name = "seat_fare")
     private Integer seatFare;
-    @Column(name = "is_canceled")
-    private Boolean IsCanceled;
+    @Column(name = "is_deleted")
+    private Boolean isDeleted;
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "train_car_cd", referencedColumnName = "train_car_cd", insertable = false, updatable = false)
     private TrainCarEntity trainCar;

@@ -68,36 +68,37 @@ public class ReservedSeatRepositoryTest {
     @Test
     @Sql(scripts = {"classpath:com/alab/shinkansendego/sql/ReservedSeatRepositoryTestData_Schedule.sql"})
     @DisplayName("新規購入座席情報が挿入できる")
-    void saveAll_withPurchasedSeatList_returnRecordCount() {
-        List<ReservedSeatEntity> purchasedSeats = new ArrayList<>();
+    void saveAll_withReservedSeatList_returnRecordCount() {
+        List<ReservedSeatEntity> reservedSeats = new ArrayList<>();
         for (int i = 1; i < 3; i++) {
-            ReservedSeatEntity purchasedSeat = new ReservedSeatEntity();
-            purchasedSeat.setId(UUID.randomUUID());
-            purchasedSeat.setReservationId(UUID.fromString("123e4567-e89b-12d3-a456-426614174000"));
-            purchasedSeat.setTrainCarCd("E5SER01");
-            purchasedSeat.setSeatCd("SEAT0100" + i);
-            purchasedSeat.setCodeToken(UUID.randomUUID());
-            purchasedSeat.setSeatFare(5000);
-            purchasedSeats.add(purchasedSeat);
+            ReservedSeatEntity reservedSeat = new ReservedSeatEntity();
+            reservedSeat.setId(UUID.randomUUID());
+            reservedSeat.setReservationId(UUID.fromString("123e4567-e89b-12d3-a456-426614174000"));
+            reservedSeat.setTrainCarCd("E5SER01");
+            reservedSeat.setSeatCd("SEAT0100" + i);
+            reservedSeat.setCodeToken(UUID.randomUUID());
+            reservedSeat.setSeatFare(5000);
+            reservedSeat.setIsCanceled(false);
+            reservedSeats.add(reservedSeat);
         }
-        int result = repo.saveAll(purchasedSeats).size();
+        int result = repo.saveAll(reservedSeats).size();
         assertEquals(result, 2);
     }
 
     @Test
     @Sql(scripts = {"classpath:com/alab/shinkansendego/sql/ReservedSeatRepositoryTestData_Schedule.sql"})
     @DisplayName("同一購入情報IDで重複した座席を予約しようとした場合、DataAccessExceptionが発生する")
-    void saveAll_withSamePurchasedSeatList_throwsDataAccessException() {
+    void saveAll_withSameReservedSeatList_throwsDataAccessException() {
         List<ReservedSeatEntity> sameSeats = new ArrayList<>();
         for (int i = 1; i < 3; i++) {
-            ReservedSeatEntity purchasedSeat = new ReservedSeatEntity();
-            purchasedSeat.setId(UUID.randomUUID());
-            purchasedSeat.setReservationId(UUID.fromString("123e4567-e89b-12d3-a456-426614174000"));
-            purchasedSeat.setTrainCarCd("E5SER01");
-            purchasedSeat.setSeatCd("SEAT01001");
-            purchasedSeat.setCodeToken(UUID.randomUUID());
-            purchasedSeat.setSeatFare(5000);
-            sameSeats.add(purchasedSeat);
+            ReservedSeatEntity reservedSeat = new ReservedSeatEntity();
+            reservedSeat.setId(UUID.randomUUID());
+            reservedSeat.setReservationId(UUID.fromString("123e4567-e89b-12d3-a456-426614174000"));
+            reservedSeat.setTrainCarCd("E5SER01");
+            reservedSeat.setSeatCd("SEAT01001");
+            reservedSeat.setCodeToken(UUID.randomUUID());
+            reservedSeat.setSeatFare(5000);
+            sameSeats.add(reservedSeat);
         }
         assertThrows(org.springframework.dao.DataAccessException.class, () -> {
             repo.saveAllAndFlush(sameSeats);

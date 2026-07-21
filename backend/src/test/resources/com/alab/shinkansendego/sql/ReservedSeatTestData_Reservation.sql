@@ -5,16 +5,17 @@ CREATE TABLE T_ReservedSeat
     train_car_cd   VARCHAR(7) NOT NULL,
     seat_cd        VARCHAR(9) NOT NULL,
     code_token     UUID       NOT NULL,
-    seat_fare      INT        NOT NULL
+    seat_fare      INT        NOT NULL,
+    is_deleted     BOOLEAN    NOT NULL,
 );
 
-INSERT INTO T_ReservedSeat (id, reservation_id, train_car_cd, seat_cd, code_token, seat_fare)
+INSERT INTO T_ReservedSeat (id, reservation_id, train_car_cd, seat_cd, code_token, seat_fare, is_deleted)
 VALUES ('e192e5f1-318e-4d10-b76d-2f2bf15e8b70', '4156b939-2e3e-46c1-92d3-7aa64b6ca575', 'E5SER01', 'SEAT01001',
-        'fe529692-fbac-4332-b70f-263ab1c1e216', 1000),
+        'fe529692-fbac-4332-b70f-263ab1c1e216', 1000, false),
        ('5372aad0-6dfd-41d9-a7dc-39e8af644253', '4156b939-2e3e-46c1-92d3-7aa64b6ca575', 'E5SER02', 'SEAT02001',
-        '510b8d7b-b954-4220-be15-5b1648e36db5', 1000),
+        '510b8d7b-b954-4220-be15-5b1648e36db5', 1000, false),
        ('e6734d0b-a178-4b6c-b52c-f48942e8e74f', '4156b939-2e3e-46c1-92d3-7aa64b6ca575', 'E5SER03', 'SEAT03001',
-        'a1d64fbb-6f6e-4533-8e99-898ce9dea677', 1000);
+        'a1d64fbb-6f6e-4533-8e99-898ce9dea677', 1000, false);
 
 CREATE TABLE M_TrainCar
 (
