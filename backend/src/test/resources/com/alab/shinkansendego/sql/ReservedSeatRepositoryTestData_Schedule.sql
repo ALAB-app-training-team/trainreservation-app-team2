@@ -84,7 +84,6 @@ CREATE TABLE T_Reservation
     reserver_name        VARCHAR(255),
     reserver_mail        VARCHAR(255),
     is_deleted           BOOLEAN     NOT NULL
-
 );
 INSERT INTO T_Reservation (id, ride_date, schedule_cd, departure_station_cd, arrival_station_cd, payment_tracking_id,
                            is_deleted)
