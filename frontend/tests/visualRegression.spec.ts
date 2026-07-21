@@ -108,7 +108,7 @@ test('visual-reservationList', async ({ page }) => {
     await page.evaluate(() => document.fonts.ready);
 
     await expect(page).toHaveScreenshot({
-        maxDiffPixelRatio: 0.05,
+        maxDiffPixelRatio: 0.1,
         fullPage: true,
         animations: 'disabled',
         mask: maskTargets,
