@@ -19,4 +19,6 @@ public interface ReservedSeatSectionRepository extends JpaRepository<ReservedSea
          String scheduleCd,
          String trainCarCd,
          String sectionCd);
+
+    void deleteByReservationId(UUID reservationId);
 }

@@ -270,4 +270,25 @@ public class ReservationService {
 
         return reservationId;
     }
+
+    /**
+     * 予約時に登録した氏名とメールアドレスをもとに、紐づく予約情報一覧を取得するメソッド
+     *
+     * @param reservationId 予約者氏名
+     */
+    @Transactional
+    public void deleteReservation(UUID reservationId) {
+        ReservationEntity reservation = reservationRepository.findById(reservationId).orElseThrow(() -> new IllegalArgumentException("Reservation is not found"));
+        reservation.setIsDeleted(true);
+
+        List<ReservedSeatEntity> seats = reservedSeatRepository.findByReservationId(reservationId);
+        if (seats.isEmpty()) {
+            throw new IllegalArgumentException("Reserved Seats is Not found");
+        }
+        for (ReservedSeatEntity seat : seats) {
+            seat.setIsDeleted(true);
+        }
+
+        reservedSeatSectionRepository.deleteByReservationId(reservationId);
+    }
 }
