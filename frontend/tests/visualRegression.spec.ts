@@ -29,7 +29,7 @@ test('visual-scheduleSearch', async ({ page }) => {
         fullPage: true,
         animations: 'disabled',
         mask: maskTargets,
-        maskColor: '#00ff00',
+        maskColor: '#ffffff',
     });
 });
 
@@ -51,7 +51,7 @@ test('visual-selectSeat', async ({ page }) => {
             // テストに含めたくない要素をマスク(無視)する
             // 例 page.locator('.hoge'),
         ],
-        maskColor: '#00ff00',
+        maskColor: '#ffffff',
     });
 });
 
@@ -71,7 +71,7 @@ test('visual-reservationGuestLogin', async ({ page }) => {
             // テストに含めたくない要素をマスク(無視)する
             // 例 page.locator('.hoge'),
         ],
-        maskColor: '#00ff00',
+        maskColor: '#ffffff',
     });
 });
 
@@ -112,7 +112,7 @@ test('visual-reservationList', async ({ page }) => {
         fullPage: true,
         animations: 'disabled',
         mask: maskTargets,
-        maskColor: '#00ff00',
+        maskColor: '#ffffff',
     });
 });
 
@@ -151,6 +151,6 @@ test('visual-reservedTicket', async ({ page }) => {
                 )
                 .nth(0),
         ],
-        maskColor: '#00ff00',
+        maskColor: '#ffffff',
     });
 });
