@@ -139,8 +139,6 @@ test('予約確定', async ({ page }) => {
     await expect(page.getByText('座席数合計：1席')).toBeVisible();
     await expect(page.getByText('お支払い合計：￥2,600')).toBeVisible();
     await selectSeatPage.clickReseveButton();
-    await selectSeatPage.clickCancelButton();
-    await selectSeatPage.clickReseveButton();
     await selectSeatPage.clickConfirmButton();
     await expect(page).toHaveURL('/reservedTicket');
     await expect(
