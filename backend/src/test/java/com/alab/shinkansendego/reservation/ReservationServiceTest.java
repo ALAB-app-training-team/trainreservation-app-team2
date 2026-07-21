@@ -56,15 +56,13 @@ import static org.springframework.test.web.client.match.MockRestRequestMatchers.
 import static org.springframework.test.web.client.response.MockRestResponseCreators.withStatus;
 
 public class ReservationServiceTest {
-    private final Optional<ReservationEntity> purchase = Optional.of(new ReservationEntity());
+    private final Optional<ReservationEntity> reservation = Optional.of(new ReservationEntity());
     private final UUID reservationId1 = UUID.fromString("4156b939-2e3e-46c1-92d3-7aa64b6ca575");
     private final UUID reservationId2 = UUID.fromString("3136b939-2e3e-46c1-92d3-7aa64b6ca666");
-    private final ReservationEntity reservationEntity = new ReservationEntity();
     private final List<ReservedSeatDto> seatList = new ArrayList<>();
     private final ReservedSeatDto seat1 = new ReservedSeatDto("指定席", 1, 1, "A", UUID.fromString("60a1ab63-a41f-430d-a2d1-10a76368d0f5"), 5000);
     private final ReservedSeatDto seat2 = new ReservedSeatDto("グリーン車", 9, 1, "A", UUID.fromString("3de8909e-32de-478e-bd9b-739f3fe6d6c3"), 15000);
     private final ReservedSeatDto seat3 = new ReservedSeatDto("グランクラス", 10, 1, "A", UUID.fromString("e192e5f1-318e-4d10-b76d-2f2bf15e8b70"), 15000);
-    private final List<DepartureArrivalTimeEntity> scheduleEntityList = new ArrayList<>();
     @Mock
     private ReservationRepository reservationRepo;
     @Mock
@@ -80,10 +78,10 @@ public class ReservationServiceTest {
     @Autowired
     private RestClient.Builder restClientBuilder;
 
-    private @NonNull ReservationResponseDto getExpectReservationResponseDto(UUID purchaseId) {
+    private @NonNull ReservationResponseDto getExpectReservationResponseDto(UUID reservationId) {
         List<ReservedSeatDto> reservedSeatList = Arrays.asList(seat1, seat2, seat3);
         return new ReservationResponseDto(
-            purchaseId,
+            reservationId,
             "やまびこ1号",
             "東京",
             LocalTime.of(6, 4, 0),
@@ -179,16 +177,17 @@ public class ReservationServiceTest {
         DepartureArrivalTimeEntity departureArrivalTime4 = buildSchedule(LocalTime.of(6, 53, 0), "THK04", "宇都宮", LocalTime.of(7, 23, 0), "THK07", "郡山");
         DepartureArrivalTimeEntity departureArrivalTime5 = buildSchedule(LocalTime.of(7, 24, 0), "THK07", "郡山", LocalTime.of(7, 37, 0), "CMN02", "福島");
         DepartureArrivalTimeEntity departureArrivalTime6 = buildSchedule(LocalTime.of(7, 38, 0), "CMN02", "福島", LocalTime.of(7, 58, 0), "THK09", "仙台");
+        DepartureArrivalTimeEntity departureArrivalTime7 = buildSchedule(LocalTime.of(8, 0, 0), "THK09", "仙台", LocalTime.of(8, 12, 0), "THK10", "古川");
 
-        reservationEntity.setId(reservationId1);
-        reservationEntity.setDepartureArrivalTime(Arrays.asList(departureArrivalTime1, departureArrivalTime2, departureArrivalTime3, departureArrivalTime4, departureArrivalTime5, departureArrivalTime6));
+        reservation.get().setId(reservationId1);
+        reservation.get().setDepartureArrivalTime(Arrays.asList(departureArrivalTime1, departureArrivalTime2, departureArrivalTime3, departureArrivalTime4, departureArrivalTime5, departureArrivalTime6, departureArrivalTime7));
 
         TrainTypeEntity trainType = new TrainTypeEntity("YM001", "やまびこ1号", "E5SER");
         ScheduleEntity schedule = new ScheduleEntity("TEST01", "YM001", trainType);
-        purchase.get().setDepartureStationCd("THK01");
-        purchase.get().setArrivalStationCd("THK09");
-        purchase.get().setRideDate(LocalDate.of(2026, 6, 1));
-        purchase.get().setSchedule(schedule);
+        reservation.get().setDepartureStationCd("THK01");
+        reservation.get().setArrivalStationCd("THK09");
+        reservation.get().setRideDate(LocalDate.of(2026, 6, 1));
+        reservation.get().setSchedule(schedule);
         seatList.clear();
         seatList.addAll(Arrays.asList(seat1, seat2, seat3));
     }
@@ -239,8 +238,7 @@ public class ReservationServiceTest {
     @Test
     @DisplayName("購入情報IDと購入者氏名とメールアドレスから予約チケット情報が取得できる")
     void getReservation_withReservationIdAndReserverNameAndReserverMail_returnGetReservationSuccess() {
-        when(reservationRepo.findByIdAndReserverNameAndReserverMail(reservationId1, "山田太郎", "email@sample.com")).thenReturn(purchase);
-        when(reservationRepo.findScheduleById(reservationId1)).thenReturn(reservationEntity);
+        when(reservationRepo.findByIdAndReserverNameAndReserverMail(reservationId1, "山田太郎", "email@sample.com")).thenReturn(reservation);
         when(reservedSeatRepo.findReservedSeatDtoByReservationId(reservationId1)).thenReturn(seatList);
 
         ReservationResponseDto expect = getExpectReservationResponseDto(null);
@@ -275,9 +273,8 @@ public class ReservationServiceTest {
     @Test
     @DisplayName("出発到着時刻データに存在しない出発駅CDを持つ購入情報IDがリクエストされた場合にエラーを発生させる")
     void getReservation_withNotExistScheduleOfDepartureStationRequest_returnIllegalArgumentException() {
-        purchase.get().setDepartureStationCd("None");
-        when(reservationRepo.findByIdAndReserverNameAndReserverMail(reservationId1, "山田太郎", "email@sample.com")).thenReturn(purchase);
-        when(reservationRepo.findScheduleById(reservationId1)).thenReturn(reservationEntity);
+        reservation.get().setDepartureStationCd("None");
+        when(reservationRepo.findByIdAndReserverNameAndReserverMail(reservationId1, "山田太郎", "email@sample.com")).thenReturn(reservation);
         Exception ex = assertThrows(
             IllegalArgumentException.class,
             () -> service.getReservation(reservationId1, "山田太郎", "email@sample.com")
@@ -288,9 +285,8 @@ public class ReservationServiceTest {
     @Test
     @DisplayName("出発到着時刻データに存在しない到着駅CDを持つ購入情報IDがリクエストされた場合にエラーを発生させる")
     void getReservation_withNotExistScheduleOfArrivalStationRequest_returnIllegalArgumentException() {
-        purchase.get().setArrivalStationCd("None");
-        when(reservationRepo.findByIdAndReserverNameAndReserverMail(reservationId1, "山田太郎", "email@sample.com")).thenReturn(purchase);
-        when(reservationRepo.findScheduleById(reservationId1)).thenReturn(reservationEntity);
+        reservation.get().setArrivalStationCd("None");
+        when(reservationRepo.findByIdAndReserverNameAndReserverMail(reservationId1, "山田太郎", "email@sample.com")).thenReturn(reservation);
         Exception ex = assertThrows(
             IllegalArgumentException.class,
             () -> service.getReservation(reservationId1, "山田太郎", "email@sample.com")

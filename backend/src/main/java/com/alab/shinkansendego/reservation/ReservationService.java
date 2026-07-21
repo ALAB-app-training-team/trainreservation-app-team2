@@ -141,15 +141,14 @@ public class ReservationService {
 
         if (reservationEntity.isEmpty()) throw new IllegalArgumentException("PurchaseId is Not found");
 
-        ReservationDto purchase = new ReservationDto(
+        ReservationDto reservation = new ReservationDto(
             reservationEntity.get().getSchedule().getTrainType().getName(),
             reservationEntity.get().getDepartureStationCd(),
             reservationEntity.get().getArrivalStationCd(),
             reservationEntity.get().getRideDate()
         );
 
-        ReservationEntity reservationEntityList = reservationRepository.findScheduleById(reservationId);
-        List<ReservedScheduleDto> scheduleList = reservationEntityList.getDepartureArrivalTime().stream().map(
+        List<ReservedScheduleDto> scheduleList = reservationEntity.get().getDepartureArrivalTime().stream().map(
                 schedule ->
                     new ReservedScheduleDto(
                         schedule.getDepartureTime(),
@@ -162,20 +161,20 @@ public class ReservationService {
             )
             .toList();
 
-        List<ReservedScheduleDto> departureSchedule = scheduleList.stream().filter(schedule -> Objects.equals(schedule.getDepartureStationCd(), purchase.getDepartureStationCd())).toList();
-        List<ReservedScheduleDto> arrivalSchedule = scheduleList.stream().filter(schedule -> Objects.equals(schedule.getArrivalStationCd(), purchase.getArrivalStationCd())).toList();
+        List<ReservedScheduleDto> departureSchedule = scheduleList.stream().filter(schedule -> Objects.equals(schedule.getDepartureStationCd(), reservation.getDepartureStationCd())).toList();
+        List<ReservedScheduleDto> arrivalSchedule = scheduleList.stream().filter(schedule -> Objects.equals(schedule.getArrivalStationCd(), reservation.getArrivalStationCd())).toList();
         if (departureSchedule.size() != 1 || arrivalSchedule.size() != 1) {
             throw new IllegalArgumentException("DepartureAndArrivalStation is Not Found");
         }
 
         List<ReservedSeatDto> reservedSeatList = reservedSeatRepository.findReservedSeatDtoByReservationId(reservationId);
 
-        response.setTrainTypeName(purchase.getTrainTypeName());
+        response.setTrainTypeName(reservation.getTrainTypeName());
         response.setDepartureStationName(departureSchedule.getFirst().getDepartureStationName());
         response.setDepartureTime(departureSchedule.getFirst().getDepartureTime());
         response.setArrivalStationName(arrivalSchedule.getFirst().getArrivalStationName());
         response.setArrivalTime(arrivalSchedule.getFirst().getArrivalTime());
-        response.setRideDate(purchase.getRideDate());
+        response.setRideDate(reservation.getRideDate());
         response.setReservedSeats(reservedSeatList);
 
         return response;

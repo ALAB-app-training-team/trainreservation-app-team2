@@ -15,10 +15,6 @@ public interface ReservationRepository extends JpaRepository<ReservationEntity, 
         "departureArrivalTime.sectionKm",
         "departureArrivalTime.sectionKm.startStation",
         "departureArrivalTime.sectionKm.goalStation",
-    })
-    ReservationEntity findScheduleById(UUID uuid);
-
-    @EntityGraph(attributePaths = {
         "schedule",
         "schedule.trainType"
     })
