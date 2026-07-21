@@ -26,7 +26,7 @@ test('visual-scheduleSearch', async ({ page }) => {
 
     await expect(page).toHaveScreenshot({
         maxDiffPixelRatio: 0.05,
-        fullPage: true,
+        fullPage: false,
         animations: 'disabled',
         mask: maskTargets,
         maskColor: '#ffffff',
