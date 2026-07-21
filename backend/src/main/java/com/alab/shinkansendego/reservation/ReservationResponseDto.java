@@ -24,5 +24,6 @@ public class ReservationResponseDto {
     private String arrivalStationName;
     private LocalTime arrivalTime;
     private LocalDate rideDate;
+    private Boolean isDeleted;
     private List<ReservedSeatDto> reservedSeats;
 }

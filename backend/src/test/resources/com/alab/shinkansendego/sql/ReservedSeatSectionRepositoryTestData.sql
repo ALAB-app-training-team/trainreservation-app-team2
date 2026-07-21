@@ -89,10 +89,12 @@ CREATE TABLE T_Reservation
     arrival_station_cd   VARCHAR(5)  NOT NULL REFERENCES M_Station (station_cd) ON DELETE RESTRICT,
     payment_tracking_id  VARCHAR(36) NOT NULL,
     reserver_name        VARCHAR(255),
-    reserver_mail        VARCHAR(255)
+    reserver_mail        VARCHAR(255),
+    is_deleted           BOOLEAN     NOT NULL
 );
-INSERT INTO T_Reservation (id, ride_date, schedule_cd, departure_station_cd, arrival_station_cd, payment_tracking_id)
-VALUES ('123e4567-e89b-12d3-a456-426614174000', '2026-06-30', 'Test01', 'Test0', 'Test1', 'Test2');
+INSERT INTO T_Reservation (id, ride_date, schedule_cd, departure_station_cd, arrival_station_cd, payment_tracking_id,
+                           is_deleted)
+VALUES ('123e4567-e89b-12d3-a456-426614174000', '2026-06-30', 'Test01', 'Test0', 'Test1', 'Test2', false);
 
 CREATE TABLE M_SectionKm
 (

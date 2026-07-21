@@ -88,6 +88,7 @@ public class ReservationServiceTest {
             "仙台",
             LocalTime.of(7, 58, 0),
             LocalDate.of(2026, 6, 1),
+            false,
             reservedSeatList);
     }
 
@@ -157,6 +158,7 @@ public class ReservationServiceTest {
         reservation.setScheduleCd("THK01");
         reservation.setDepartureStationCd("THK01");
         reservation.setArrivalStationCd("THK09");
+        reservation.setIsDeleted(false);
         reservation.setSchedule(schedule);
         reservation.setDepartureArrivalTime(Arrays.asList(departure, dummy, arrival));
         return reservation;
@@ -187,6 +189,7 @@ public class ReservationServiceTest {
         reservation.get().setDepartureStationCd("THK01");
         reservation.get().setArrivalStationCd("THK09");
         reservation.get().setRideDate(LocalDate.of(2026, 6, 1));
+        reservation.get().setIsDeleted(false);
         reservation.get().setSchedule(schedule);
         seatList.clear();
         seatList.addAll(Arrays.asList(seat1, seat2, seat3));
