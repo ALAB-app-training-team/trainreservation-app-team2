@@ -43,5 +43,5 @@ CREATE TABLE T_Reservation
     arrival_station_cd   VARCHAR(5)  NOT NULL REFERENCES M_Station (station_cd) ON DELETE RESTRICT,
     payment_tracking_id  VARCHAR(36) NOT NULL,
     reserver_name        VARCHAR(255),
-    reserver_mail        VARCHAR(255)
+    reserver_mail        VARCHAR(255) is_deleted  BOOLEAN NOT NULL
 );

@@ -6,7 +6,7 @@ CREATE TABLE T_ReservedSeat
     seat_cd        VARCHAR(9) NOT NULL,
     code_token     UUID       NOT NULL,
     seat_fare      INT        NOT NULL,
-    is_deleted     BOOLEAN    NOT NULL,
+    is_deleted     BOOLEAN    NOT NULL
 );
 
 INSERT INTO T_ReservedSeat (id, reservation_id, train_car_cd, seat_cd, code_token, seat_fare, is_deleted)

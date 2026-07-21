@@ -78,7 +78,7 @@ public class ReservedSeatRepositoryTest {
             reservedSeat.setSeatCd("SEAT0100" + i);
             reservedSeat.setCodeToken(UUID.randomUUID());
             reservedSeat.setSeatFare(5000);
-            reservedSeat.setIsCanceled(false);
+            reservedSeat.setIsDeleted(false);
             reservedSeats.add(reservedSeat);
         }
         int result = repo.saveAll(reservedSeats).size();

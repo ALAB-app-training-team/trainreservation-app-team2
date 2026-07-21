@@ -86,3 +86,5 @@ ALTER TABLE T_Reservation
         FOREIGN KEY (arrival_station_cd)
             REFERENCES M_Station (station_cd)
             ON DELETE RESTRICT;
+ALTER TABLE T_ReservedSeat
+    ADD COLUMN is_canceled BOOLEAN NOT NULL DEFAULT FALSE;
