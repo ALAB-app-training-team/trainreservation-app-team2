@@ -9,10 +9,12 @@ import com.alab.shinkansendego.reservedseatsection.ReservedSeatSectionEntity;
 import com.alab.shinkansendego.reservedseatsection.ReservedSeatSectionRepository;
 import com.alab.shinkansendego.sectionkm.SectionKmRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.client.RestClient;
+import org.springframework.web.server.ResponseStatusException;
 
 import java.util.ArrayList;
 import java.util.Comparator;
@@ -234,7 +236,8 @@ public class ReservationService {
             reservedSeat.setIsDeleted(false);
             reservedSeatsToPost.add(reservedSeat);
         }
-        int reservedSeatResult = reservedSeatRepository.saveAll(reservedSeatsToPost).size();
+        List<ReservedSeatEntity> savedReservedSeats = reservedSeatRepository.saveAll(reservedSeatsToPost);
+        int reservedSeatResult = savedReservedSeats.size();
         if (reservedSeatResult != reserveRequestDto.getSeats().size()) {
             throw new RuntimeException("Insert PurchasedSeats is failed");
         }
@@ -250,9 +253,20 @@ public class ReservationService {
                 reservedSeatSectionsToPost.add(reservedSeatSection);
             }
         }
-        int reservedSeatSectionResult = reservedSeatSectionRepository.saveAll(reservedSeatSectionsToPost).size();
+        List<ReservedSeatSectionEntity> savedReservedSeatSections = reservedSeatSectionRepository.saveAll(reservedSeatSectionsToPost);
+        int reservedSeatSectionResult = savedReservedSeatSections.size();
         if (reservedSeatSectionResult != sectionCdList.size() * reserveRequestDto.getSeats().size()) {
-            throw new RuntimeException("Insert ReservedSeatSections is failed");
+            List<ReservedSeatSectionEntity> failedSections = reservedSeatSectionsToPost.stream().filter(targetToPost -> savedReservedSeatSections.stream().noneMatch(saved ->
+                Objects.equals(targetToPost.getRideDate(), saved.getRideDate())
+                    && Objects.equals(targetToPost.getScheduleCd(), saved.getScheduleCd())
+                    && Objects.equals(targetToPost.getTrainCarCd(), saved.getTrainCarCd())
+                    && Objects.equals(targetToPost.getSeatCd(), saved.getSeatCd())
+                    && Objects.equals(targetToPost.getReservedSectionCd(), saved.getReservedSectionCd())
+            )).collect(Collectors.toList());
+
+            List<ReservedSeatEntity> failedReservedSeats =
+            // これも係ある
+            throw new ResponseStatusException(HttpStatus.CONFLICT, "Insert ReservedSeatSections is failed");
         }
 
         String paymentUrl = "http://localhost:8080/api/payments";
