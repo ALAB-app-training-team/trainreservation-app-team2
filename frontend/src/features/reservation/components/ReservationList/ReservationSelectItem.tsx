@@ -42,7 +42,11 @@ export function ReservationSelectItem({ details }: ReservationSelectItemProps) {
                         <LuTicket />
                         <label>{details.trainTypeName}</label>
                     </div>
-                    {departureDate >= now ? (
+                    {details.isDeleted ? (
+                        <div className="text-primary border-primary right-0 flex items-center justify-center rounded-xl border-1 bg-white px-3 text-sm">
+                            キャンセル
+                        </div>
+                    ) : departureDate >= now ? (
                         <div className="bg-primary right-0 flex items-center justify-center rounded-xl px-3 text-sm text-white">
                             有効
                         </div>

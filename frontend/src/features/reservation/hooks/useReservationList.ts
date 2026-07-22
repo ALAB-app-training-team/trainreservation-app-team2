@@ -31,8 +31,17 @@ export function useReservationList() {
     const activeReservations = reservationList
         ?.filter((reservation) => {
             const departureDate = new Date(reservation.rideDate);
-            return departureDate >= now;
+            return departureDate >= now && !reservation.isDeleted;
         })
+        .sort(
+            (a, b) =>
+                new Date(a.rideDate).getDate() -
+                    new Date(b.rideDate).getDate() ||
+                a.departureTime.localeCompare(b.departureTime),
+        );
+
+    const canceledReservations = reservationList
+        ?.filter((reservation) => reservation.isDeleted)
         .sort(
             (a, b) =>
                 new Date(a.rideDate).getDate() -
@@ -43,7 +52,7 @@ export function useReservationList() {
     const pastReservations = reservationList
         ?.filter((reservation) => {
             const departureDate = new Date(reservation.rideDate);
-            return departureDate < now;
+            return departureDate < now && !reservation.isDeleted;
         })
         .sort(
             (a, b) =>
@@ -54,6 +63,7 @@ export function useReservationList() {
 
     return {
         activeReservations,
+        canceledReservations,
         pastReservations,
         getReservation,
     };

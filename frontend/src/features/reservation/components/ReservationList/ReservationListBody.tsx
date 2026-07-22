@@ -9,15 +9,21 @@ import {
     TABS,
 } from '@/features/reservation/constants/ReservationTab';
 import { useReservationList } from '@/features/reservation/hooks/useReservationList';
+import type { ReservationResponseDto } from '@/features/reservation/types/ReservationResponseDto';
 
 export function ReservationListBody() {
     const [selectedTab, setSelectedTab] = useState<ReservationTabKey>(
         DEFAULT_RESERVATION_TAB,
     );
-    const { activeReservations, pastReservations } = useReservationList();
+    const { activeReservations, canceledReservations, pastReservations } =
+        useReservationList();
 
     const filteredReservations =
-        selectedTab === 'ACTIVE' ? activeReservations : pastReservations;
+        selectedTab === 'ACTIVE'
+            ? activeReservations
+            : selectedTab === 'CANCELED'
+              ? canceledReservations
+              : pastReservations;
 
     return (
         <>
@@ -42,20 +48,22 @@ export function ReservationListBody() {
                                     <RiGroupLine />
                                 )}
                                 {tab.label}
-                                {`(${tab.key === 'ACTIVE' ? activeReservations?.length : pastReservations?.length})`}
+                                {`(${tab.key === 'ACTIVE' ? activeReservations?.length : tab.key === 'CANCELED' ? canceledReservations?.length : pastReservations?.length})`}
                             </button>
                         ))}
                     </div>
                 </div>
                 {filteredReservations && filteredReservations.length > 0 ? (
-                    filteredReservations.map((reservation) => {
-                        return (
-                            <ReservationSelectItem
-                                key={reservation.purchaseId}
-                                details={reservation}
-                            />
-                        );
-                    })
+                    filteredReservations.map(
+                        (reservation: ReservationResponseDto) => {
+                            return (
+                                <ReservationSelectItem
+                                    key={reservation.purchaseId}
+                                    details={reservation}
+                                />
+                            );
+                        },
+                    )
                 ) : (
                     <></>
                 )}
