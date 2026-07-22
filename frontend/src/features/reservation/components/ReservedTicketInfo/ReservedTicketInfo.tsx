@@ -21,7 +21,7 @@ export function ReservedTicketInfo({ ticketInfo }: ReservedTicketInfoProps) {
                 <div className="flex w-full max-w-5xl flex-col gap-4">
                     <div className="border-primary-light flex flex-col justify-between gap-4 rounded-2xl border-2 p-4">
                         <div
-                            data-testId="departure-arrival"
+                            date-testid="departure-arrival"
                             className="flex flex-col justify-between gap-4 md:flex-row md:items-center"
                         >
                             <DepartureAndArrivalInfo

@@ -103,11 +103,11 @@ export function ScheduleItem({
     return (
         <>
             <div
-                data-testId="schedule"
+                date-testid="schedule"
                 className="border-primary-light flex w-full flex-row flex-wrap items-center justify-start gap-4 rounded-2xl border-2 p-8 md:items-center"
             >
                 <div
-                    data-testId="schedule-train"
+                    date-testid="schedule-train"
                     className="order-1 flex flex-1 gap-4 md:flex-none"
                 >
                     <div className="flex items-center">
@@ -134,7 +134,7 @@ export function ScheduleItem({
                 <div className="order-3 flex w-full items-center justify-between gap-4 md:order-2 md:flex-1">
                     <div className="text-left">
                         <div
-                            data-testId="schedule-departure-time"
+                            date-testid="schedule-departure-time"
                             className="text-2xl font-black"
                         >
                             {dayjs(schedule.departureTime, 'HH:mm:ss').format(
@@ -158,7 +158,7 @@ export function ScheduleItem({
                     </div>
                     <div className="text-left">
                         <div
-                            data-testId="schedule-arrival-time"
+                            date-testid="schedule-arrival-time"
                             className="text-2xl font-black"
                         >
                             {dayjs(schedule.arrivalTime, 'HH:mm:ss').format(

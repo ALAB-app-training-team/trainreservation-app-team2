@@ -70,7 +70,7 @@ export function ReservationSelectItem({ details }: ReservationSelectItemProps) {
                         <label>出発</label>
                     </div>
                     <label
-                        data-testId="ride-date"
+                        date-testid="ride-date"
                         className="text-xl font-bold"
                     >
                         {dayjs(details.rideDate).format('YYYY年MM月DD日')}{' '}
@@ -93,7 +93,7 @@ export function ReservationSelectItem({ details }: ReservationSelectItemProps) {
                 <div className="flex items-baseline">
                     <div>お支払い合計：</div>
                     <div
-                        data-testId="total-fare"
+                        date-testid="total-fare"
                         className="text-primary text-xl font-bold"
                     >
                         ￥{totalFare.toLocaleString()}
