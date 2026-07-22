@@ -49,6 +49,7 @@ import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyList;
+import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 import static org.springframework.test.web.client.match.MockRestRequestMatchers.header;
 import static org.springframework.test.web.client.match.MockRestRequestMatchers.method;
@@ -164,6 +165,63 @@ public class ReservationServiceTest {
         return reservation;
     }
 
+    /**
+     * 予約削除に関するテストケースのインスタンスを作成するためのメソッド（予約情報）
+     *
+     * @return ReservationEntity
+     */
+    private @NonNull ReservationEntity getReservation(UUID reservationId) {
+        ReservationEntity reservation = new ReservationEntity();
+        reservation.setId(reservationId);
+        reservation.setRideDate(LocalDate.now());
+        reservation.setScheduleCd("THK01");
+        reservation.setDepartureStationCd("THK01");
+        reservation.setArrivalStationCd("THK02");
+        reservation.setPaymentTrackingId(UUID.randomUUID().toString());
+        reservation.setReserverName("User");
+        reservation.setReserverMail("test@test.co.jp");
+        reservation.setIsDeleted(false);
+        return reservation;
+    }
+
+    /**
+     * 予約削除に関するテストケースのインスタンスを作成するためのメソッド（予約座席除法）
+     *
+     * @return List<ReservedSeatEntity>
+     */
+    private @NonNull List<ReservedSeatEntity> getReservedSeats(UUID reservationId) {
+        ReservedSeatEntity seat1 = new ReservedSeatEntity();
+        seat1.setId(UUID.randomUUID());
+        seat1.setReservationId(reservationId);
+        seat1.setTrainCarCd("E5SER01");
+        seat1.setSeatCd("SEAT01001");
+        seat1.setCodeToken(UUID.randomUUID());
+        seat1.setSeatFare(2600);
+        seat1.setIsDeleted(false);
+        ReservedSeatEntity seat2 = new ReservedSeatEntity();
+        seat1.setId(UUID.randomUUID());
+        seat1.setReservationId(reservationId);
+        seat1.setTrainCarCd("E5SER01");
+        seat1.setSeatCd("SEAT01005");
+        seat1.setCodeToken(UUID.randomUUID());
+        seat1.setSeatFare(2600);
+        seat1.setIsDeleted(false);
+        return Arrays.asList(seat1, seat2);
+    }
+
+    /**
+     * 予約削除に関するテストケースのインスタンスを作成するためのメソッド（予約済座席区間）
+     *
+     * @return List<ReservedSeatSectionEntity>
+     */
+    private @NonNull List<ReservedSeatSectionEntity> getReservedSeatSections(UUID reservationId) {
+        ReservedSeatSectionEntity section1
+            = new ReservedSeatSectionEntity(UUID.randomUUID(), reservationId, LocalDate.now(), "THK01", "E5SER01", "SEAT01001", "THK01");
+        ReservedSeatSectionEntity section2
+            = new ReservedSeatSectionEntity(UUID.randomUUID(), reservationId, LocalDate.now(), "THK01", "E5SER01", "SEAT01005", "THK01");
+        return Arrays.asList(section1, section2);
+    }
+
     @BeforeEach
     void setUp() {
         MockitoAnnotations.openMocks(this);
@@ -213,16 +271,16 @@ public class ReservationServiceTest {
 
         assertAll(
             () -> assertEquals(2, result.size()),
-            () -> assertEquals(reservationId1, result.get(0).getPurchaseId()),
-            () -> assertEquals("やまびこ1号", result.get(0).getTrainTypeName()),
-            () -> assertEquals("東京", result.get(0).getDepartureStationName()),
-            () -> assertEquals(LocalTime.of(6, 4, 0), result.get(0).getDepartureTime()),
-            () -> assertEquals("仙台", result.get(0).getArrivalStationName()),
-            () -> assertEquals(LocalTime.of(7, 58, 0), result.get(0).getArrivalTime()),
-            () -> assertEquals(LocalDate.of(2026, 6, 1), result.get(0).getRideDate()),
-            () -> assertEquals(1, result.get(0).getReservedSeats().size()),
-            () -> assertEquals("指定席", result.get(0).getReservedSeats().get(0).getTrainCarTypeName()),
-            () -> assertEquals(5000, result.get(0).getReservedSeats().get(0).getSeatFare())
+            () -> assertEquals(reservationId1, result.getFirst().getPurchaseId()),
+            () -> assertEquals("やまびこ1号", result.getFirst().getTrainTypeName()),
+            () -> assertEquals("東京", result.getFirst().getDepartureStationName()),
+            () -> assertEquals(LocalTime.of(6, 4, 0), result.getFirst().getDepartureTime()),
+            () -> assertEquals("仙台", result.getFirst().getArrivalStationName()),
+            () -> assertEquals(LocalTime.of(7, 58, 0), result.getFirst().getArrivalTime()),
+            () -> assertEquals(LocalDate.of(2026, 6, 1), result.getFirst().getRideDate()),
+            () -> assertEquals(1, result.getFirst().getReservedSeats().size()),
+            () -> assertEquals("指定席", result.getFirst().getReservedSeats().getFirst().getTrainCarTypeName()),
+            () -> assertEquals(5000, result.getFirst().getReservedSeats().getFirst().getSeatFare())
         );
     }
 
@@ -503,7 +561,7 @@ public class ReservationServiceTest {
     }
 
     @Test
-    @DisplayName("決済会社に問い合わせて決済IDの発行に失敗した場合、RuntimeExcptionが発生する")
+    @DisplayName("決済会社に問い合わせて決済IDの発行に失敗した場合、RuntimeExceptionが発生する")
     void insertReservation_withGetPaymentTrackingIdFailed_throwsRuntimeException() {
         ReserveRequestDto request = new ReserveRequestDto("Test01", LocalDate.now(), "Test0", "Test1", "TestTaro", "test@main", "Test2", List.of(new ReserveRequestDto.SelectedSeatDto("E5SER01", "SEAT01001", 2800), new ReserveRequestDto.SelectedSeatDto("E5SER01", "SEAT01002", 2800), new ReserveRequestDto.SelectedSeatDto("E5SER01", "SEAT01003", 2800), new ReserveRequestDto.SelectedSeatDto("E5SER01", "SEAT01004", 2800), new ReserveRequestDto.SelectedSeatDto("E5SER01", "SEAT01005", 2800), new ReserveRequestDto.SelectedSeatDto("E5SER01", "SEAT01006", 2800)));
         DepartureArrivalTimeEntity departureArrivalTime = new DepartureArrivalTimeEntity();
@@ -539,5 +597,62 @@ public class ReservationServiceTest {
 
         assertThrows(RuntimeException.class, () -> service.insertReservation(request));
         this.mockRestServiceServer.verify();
+    }
+
+    @Test
+    @DisplayName("予約情報・予約座席情報の論理削除、予約済座席区間の物理削除ができる")
+    void deleteReservation_withReservationId() {
+        UUID reservationId = UUID.randomUUID();
+        ReservationEntity deletedReservation = getReservation(reservationId);
+        List<ReservedSeatEntity> deletedSeats = getReservedSeats(reservationId);
+        List<ReservedSeatSectionEntity> deletedSections = getReservedSeatSections(reservationId);
+
+        when(reservationRepo.findById(reservationId)).thenReturn(Optional.of(deletedReservation));
+        when(reservedSeatRepo.findByReservationId(reservationId)).thenReturn(deletedSeats);
+        when(reservedSeatSectionRepo.findByReservationId(reservationId)).thenReturn(deletedSections);
+
+        service.deleteReservation(reservationId);
+        assertTrue(deletedReservation.getIsDeleted());
+        verify(reservationRepo).save(deletedReservation);
+        assertTrue(deletedSeats.get(0).getIsDeleted());
+        assertTrue(deletedSeats.get(1).getIsDeleted());
+        verify(reservedSeatRepo).saveAll(deletedSeats);
+        verify(reservedSeatSectionRepo).deleteAll(deletedSections);
+    }
+
+    @Test
+    @DisplayName("該当予約情報が存在しない場合、IllegalArgumentExceptionが発生する")
+    void deleteReservation_withNotExistingReservationId_throwsIllegalArgumentException() {
+        UUID reservationId = UUID.randomUUID();
+        Exception ex = assertThrows(IllegalArgumentException.class, () -> service.deleteReservation(reservationId));
+        assertEquals("Reservation is not found", ex.getMessage());
+    }
+
+    @Test
+    @DisplayName("該当予約座席情報が存在しない場合、IllegalArgumentExceptionが発生する")
+    void deleteReservation_withNotExistingReservationIdOfReservedSeat_throwsIllegalArgumentException() {
+        UUID reservationId = UUID.randomUUID();
+        ReservationEntity deletedReservation = getReservation(reservationId);
+
+        when(reservationRepo.findById(reservationId)).thenReturn(Optional.of(deletedReservation));
+        when(reservedSeatRepo.findByReservationId(reservationId)).thenReturn(List.of());
+
+        Exception ex = assertThrows(IllegalArgumentException.class, () -> service.deleteReservation(reservationId));
+        assertEquals("Reserved Seats is Not found", ex.getMessage());
+    }
+
+    @Test
+    @DisplayName("該当予約済座席区間が存在しない場合、IllegalArgumentExceptionが発生する")
+    void deleteReservation_withNotExistingReservationIdOfReservedSeatSection_throwsIllegalArgumentException() {
+        UUID reservationId = UUID.randomUUID();
+        ReservationEntity deletedReservation = getReservation(reservationId);
+        List<ReservedSeatEntity> deletedSeats = getReservedSeats(reservationId);
+
+        when(reservationRepo.findById(reservationId)).thenReturn(Optional.of(deletedReservation));
+        when(reservedSeatRepo.findByReservationId(reservationId)).thenReturn(deletedSeats);
+        when(reservedSeatSectionRepo.findByReservationId(reservationId)).thenReturn(List.of());
+
+        Exception ex = assertThrows(IllegalArgumentException.class, () -> service.deleteReservation(reservationId));
+        assertEquals("Reserved Seat Sections is Not found", ex.getMessage());
     }
 }

@@ -23,4 +23,6 @@ public interface ReservedSeatRepository extends JpaRepository<ReservedSeatEntity
     @EntityGraph(attributePaths = {
         "trainCar", "trainCar.seatType", "trainCar.seatType.trainCarType", "seat"})
     List<ReservedSeatEntity> findByReservationIdIn(List<UUID> reservationIds);
+
+    List<ReservedSeatEntity> findByReservationId(UUID reservationId);
 }
