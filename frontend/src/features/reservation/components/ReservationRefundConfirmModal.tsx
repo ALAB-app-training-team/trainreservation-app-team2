@@ -1,3 +1,6 @@
+import dayjs from 'dayjs';
+
+import { ReservedSeats } from '@/features/reservation/components/ReservedSeats';
 import { FARE_CONSTANTS } from '@/features/reservation/constants/FareConstant';
 import type { ReservationResponseDto } from '@/features/reservation/types/ReservationResponseDto';
 
@@ -25,17 +28,34 @@ export function ReservationRefundConfirmModal({
         <>
             <div className="justify-er flex flex-col items-start gap-4">
                 <h1 className="!m-0 text-left !text-xl">予約キャンセル確認</h1>
-                <div>予約を取り消しますか？</div>
+                <div>以下の予約を取り消しますか？</div>
+                <div className="text-2xl font-bold">
+                    {details.departureStationName} →{' '}
+                    {details.arrivalStationName}
+                </div>
+                <div>
+                    <span className="text-xl font-bold">
+                        {dayjs(details.rideDate).format('YYYY年MM月DD日')}{' '}
+                        {dayjs(details.departureTime, 'HH:mm:ss').format(
+                            'HH:mm',
+                        )}{' '}
+                    </span>
+                </div>
+                <ReservedSeats
+                    id="reservationList"
+                    title=""
+                    seats={details.reservedSeats}
+                />
                 <div className="flex w-full flex-col gap-2 rounded-lg bg-slate-50 p-3">
                     <div className="flex justify-between">
                         <span>チケット料金</span>
-                        <span>{seatFare}</span>
+                        <span>{seatFare}円</span>
                     </div>
                     <div className="flex justify-between">
                         <span>払い戻し手数料</span>
-                        <span>{countSeat * FARE_CONSTANTS.REFUND}</span>
+                        <span>-{countSeat * FARE_CONSTANTS.REFUND}円</span>
                     </div>
-                    <div className="flex justify-between font-bold">
+                    <div className="flex justify-between text-xl font-bold">
                         <span>払い戻し金額</span>{' '}
                         <span>
                             {seatFare - countSeat * FARE_CONSTANTS.REFUND}円

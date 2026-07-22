@@ -53,7 +53,7 @@ export function ReservationListBody() {
                 (old) =>
                     old?.map((reservation) =>
                         reservation.reservationId == reservationId
-                            ? { ...reservation, isDaleted: true }
+                            ? { ...reservation, isDeleted: true }
                             : reservation,
                     ),
             );
