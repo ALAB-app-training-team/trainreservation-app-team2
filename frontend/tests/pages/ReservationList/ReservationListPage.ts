@@ -7,6 +7,7 @@ export class ReservationListPage {
     readonly ticketButton: Locator;
     readonly totalFareElement: Locator;
     readonly activeButton: Locator;
+    readonly canceledButton: Locator;
     readonly pastButton: Locator;
 
     constructor(page: Page) {
@@ -17,6 +18,7 @@ export class ReservationListPage {
         });
         this.totalFareElement = page.getByTestId('total-fare');
         this.activeButton = page.getByTestId('active-button');
+        this.canceledButton = page.getByTestId('canceled-button');
         this.pastButton = page.getByTestId('past-button');
     }
 

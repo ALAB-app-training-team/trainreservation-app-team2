@@ -42,7 +42,11 @@ export function ReservationSelectItem({ details }: ReservationSelectItemProps) {
                         <LuTicket />
                         <label>{details.trainTypeName}</label>
                     </div>
-                    {departureDate >= now ? (
+                    {details.isDeleted ? (
+                        <div className="text-primary border-primary right-0 flex items-center justify-center rounded-xl border-1 bg-white px-3 text-sm">
+                            キャンセル
+                        </div>
+                    ) : departureDate >= now ? (
                         <div className="bg-primary right-0 flex items-center justify-center rounded-xl px-3 text-sm text-white">
                             有効
                         </div>
@@ -66,7 +70,7 @@ export function ReservationSelectItem({ details }: ReservationSelectItemProps) {
                         <label>出発</label>
                     </div>
                     <label
-                        data-testId="ride-date"
+                        data-testid="ride-date"
                         className="text-xl font-bold"
                     >
                         {dayjs(details.rideDate).format('YYYY年MM月DD日')}{' '}
@@ -89,13 +93,13 @@ export function ReservationSelectItem({ details }: ReservationSelectItemProps) {
                 <div className="flex items-baseline">
                     <div>お支払い合計：</div>
                     <div
-                        data-testId="total-fare"
+                        data-testid="total-fare"
                         className="text-primary text-xl font-bold"
                     >
                         ￥{totalFare.toLocaleString()}
                     </div>
                 </div>
-                {departureDate >= now && (
+                {!details.isDeleted && departureDate >= now && (
                     <div className="flex justify-end">
                         <button className="text-primary flex items-center justify-center gap-2 rounded-xl px-3 text-sm">
                             <IoTrashOutline />
