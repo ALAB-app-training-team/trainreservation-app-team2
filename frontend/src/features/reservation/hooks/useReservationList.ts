@@ -25,41 +25,35 @@ export function useReservationList() {
         refetchOnMount: true,
     });
 
+    const sortReservationList = (reservationList: ReservationResponseDto[]) => {
+        return reservationList.sort(
+            (a, b) =>
+                new Date(a.rideDate).getDate() -
+                    new Date(b.rideDate).getDate() ||
+                a.departureTime.localeCompare(b.departureTime),
+        );
+    };
+
     const now = new Date();
     now.setHours(0, 0, 0, 0);
 
-    const activeReservations = reservationList
-        ?.filter((reservation) => {
+    const activeReservations = sortReservationList(
+        reservationList?.filter((reservation) => {
             const departureDate = new Date(reservation.rideDate);
             return departureDate >= now && !reservation.isDeleted;
-        })
-        .sort(
-            (a, b) =>
-                new Date(a.rideDate).getDate() -
-                    new Date(b.rideDate).getDate() ||
-                a.departureTime.localeCompare(b.departureTime),
-        );
+        }),
+    );
 
-    const canceledReservations = reservationList
-        ?.filter((reservation) => reservation.isDeleted)
-        .sort(
-            (a, b) =>
-                new Date(a.rideDate).getDate() -
-                    new Date(b.rideDate).getDate() ||
-                a.departureTime.localeCompare(b.departureTime),
-        );
+    const canceledReservations = sortReservationList(
+        reservationList?.filter((reservation) => reservation.isDeleted),
+    );
 
-    const pastReservations = reservationList
-        ?.filter((reservation) => {
+    const pastReservations = sortReservationList(
+        reservationList?.filter((reservation) => {
             const departureDate = new Date(reservation.rideDate);
             return departureDate < now && !reservation.isDeleted;
-        })
-        .sort(
-            (a, b) =>
-                new Date(a.rideDate).getDate() -
-                    new Date(b.rideDate).getDate() ||
-                a.departureTime.localeCompare(b.departureTime),
-        );
+        }),
+    );
 
     return {
         activeReservations,
