@@ -1,5 +1,6 @@
 import { useState } from 'react';
 import { CiCalendar } from 'react-icons/ci';
+import { LuTicket } from 'react-icons/lu';
 import { RiGroupLine } from 'react-icons/ri';
 
 import { ReservationSelectItem } from '@/features/reservation/components/ReservationList/ReservationSelectItem';
@@ -22,8 +23,8 @@ export function ReservationListBody() {
         selectedTab === RESERVATION_TAB[0].key
             ? activeReservations
             : selectedTab === RESERVATION_TAB[1].key
-              ? canceledReservations
-              : pastReservations;
+              ? pastReservations
+              : canceledReservations;
 
     return (
         <>
@@ -44,11 +45,13 @@ export function ReservationListBody() {
                             >
                                 {tab.key === RESERVATION_TAB[0].key ? (
                                     <CiCalendar />
-                                ) : (
+                                ) : tab.key === RESERVATION_TAB[1].key ? (
                                     <RiGroupLine />
+                                ) : (
+                                    <LuTicket />
                                 )}
                                 {tab.label}
-                                {`(${tab.key === RESERVATION_TAB[0].key ? activeReservations?.length : tab.key === RESERVATION_TAB[1].key ? canceledReservations?.length : pastReservations?.length})`}
+                                {`(${tab.key === RESERVATION_TAB[0].key ? activeReservations?.length : tab.key === RESERVATION_TAB[1].key ? pastReservations?.length : canceledReservations?.length})`}
                             </button>
                         ))}
                     </div>
