@@ -6,7 +6,7 @@ import { ReservationSelectItem } from '@/features/reservation/components/Reserva
 import type { ReservationTabKey } from '@/features/reservation/constants/ReservationTab';
 import {
     DEFAULT_RESERVATION_TAB,
-    TABS,
+    RESERVATION_TAB,
 } from '@/features/reservation/constants/ReservationTab';
 import { useReservationList } from '@/features/reservation/hooks/useReservationList';
 import type { ReservationResponseDto } from '@/features/reservation/types/ReservationResponseDto';
@@ -19,9 +19,9 @@ export function ReservationListBody() {
         useReservationList();
 
     const filteredReservations =
-        selectedTab === 'ACTIVE'
+        selectedTab === RESERVATION_TAB[0].key
             ? activeReservations
-            : selectedTab === 'CANCELED'
+            : selectedTab === RESERVATION_TAB[1].key
               ? canceledReservations
               : pastReservations;
 
@@ -31,7 +31,7 @@ export function ReservationListBody() {
                 <h1 className="!m-0 text-left !text-3xl">予約確認</h1>
                 <div className="bg-primary/8 flex gap-6 rounded-3xl p-2">
                     <div className="flex w-full items-center">
-                        {TABS.map((tab) => (
+                        {RESERVATION_TAB.map((tab) => (
                             <button
                                 key={tab.key}
                                 data-testid={tab.testId}
@@ -42,13 +42,13 @@ export function ReservationListBody() {
                                         : ''
                                 } `}
                             >
-                                {tab.key === 'ACTIVE' ? (
+                                {tab.key === RESERVATION_TAB[0].key ? (
                                     <CiCalendar />
                                 ) : (
                                     <RiGroupLine />
                                 )}
                                 {tab.label}
-                                {`(${tab.key === 'ACTIVE' ? activeReservations?.length : tab.key === 'CANCELED' ? canceledReservations?.length : pastReservations?.length})`}
+                                {`(${tab.key === RESERVATION_TAB[0].key ? activeReservations?.length : tab.key === RESERVATION_TAB[1].key ? canceledReservations?.length : pastReservations?.length})`}
                             </button>
                         ))}
                     </div>
@@ -65,7 +65,7 @@ export function ReservationListBody() {
                         },
                     )
                 ) : (
-                    <></>
+                    <>該当する予約が存在しません</>
                 )}
             </div>
         </>
