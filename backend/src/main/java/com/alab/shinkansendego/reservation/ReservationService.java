@@ -111,7 +111,7 @@ public class ReservationService {
                     seat.getSeatFare()))
                 .toList();
 
-            dto.setPurchaseId(reservation.getId());
+            dto.setReservationId(reservation.getId());
             dto.setTrainTypeName(reservation.getSchedule().getTrainType().getName());
             dto.setDepartureStationName(departureSchedule.getSectionKm().getStartStation().getName());
             dto.setDepartureTime(departureSchedule.getDepartureTime());
@@ -298,7 +298,7 @@ public class ReservationService {
         if (sections.isEmpty()) {
             throw new IllegalArgumentException("Reserved Seat Sections is Not found");
         }
-        
+
         reservationRepository.save(reservation);
         reservedSeatRepository.saveAll(seats);
         reservedSeatSectionRepository.deleteAll(sections);

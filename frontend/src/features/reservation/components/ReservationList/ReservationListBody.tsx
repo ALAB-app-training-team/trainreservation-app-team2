@@ -1,4 +1,4 @@
-import { useSuspenseQuery } from '@tanstack/react-query';
+import { useQueryClient, useSuspenseQuery } from '@tanstack/react-query';
 import axios from 'axios';
 import { useState } from 'react';
 import { CiCalendar } from 'react-icons/ci';
@@ -28,6 +28,7 @@ export function ReservationListBody() {
     const [isSubmitting, setIsSubmitting] = useState<boolean>(false);
     const [selectedReservation, setSelectedReservation] =
         useState<ReservationResponseDto>();
+    const queryClient = useQueryClient();
 
     const now = new Date();
     now.setHours(0, 0, 0, 0);
@@ -68,6 +69,15 @@ export function ReservationListBody() {
         setIsSubmitting(true);
         try {
             await axios.delete(ENDPOINTS.RESERVATION(reservationId));
+            // TODO: 予約削除タブ用リストに移動するように変更する。
+            queryClient.setQueryData(
+                ['reservationList'],
+                (old: ReservationResponseDto[] | undefined) =>
+                    old?.filter(
+                        (reservation) =>
+                            reservation.reservationId !== reservationId,
+                    ),
+            );
             alert('予約をキャンセルしました。');
         } catch {
             alert(ERROR_MESSAGE.REFUND_RETRY);
@@ -113,7 +123,7 @@ export function ReservationListBody() {
                     filteredReservations.map((reservation) => {
                         return (
                             <ReservationSelectItem
-                                key={reservation.purchaseId}
+                                key={reservation.reservationId}
                                 details={reservation}
                                 onRefundClicked={handleRefundModalOpen}
                             />
@@ -124,12 +134,13 @@ export function ReservationListBody() {
                 )}
             </div>
             <CustomModal isOpen={isOpen} onRequestClose={onRequestClose}>
-                {selectedReservation && selectedReservation.purchaseId && (
+                {selectedReservation && selectedReservation.reservationId && (
                     <ReservationRefundConfirmModal
                         onClick={handleReservationRefund}
                         onRequestClose={onRequestClose}
                         isSubmitting={isSubmitting}
-                        reservationId={selectedReservation.purchaseId}
+                        details={selectedReservation}
+                        reservationId={selectedReservation.reservationId}
                     />
                 )}
             </CustomModal>

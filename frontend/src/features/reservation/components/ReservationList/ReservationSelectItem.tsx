@@ -31,7 +31,7 @@ export function ReservationSelectItem({
 
     const handleReservationDetail = () => {
         navigate('/reservedTicket', {
-            state: { purchaseId: details.purchaseId, isBack: true },
+            state: { purchaseId: details.reservationId, isBack: true },
         });
         window.scrollTo(0, 0);
     };

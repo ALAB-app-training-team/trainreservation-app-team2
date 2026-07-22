@@ -1,7 +1,11 @@
+import { FARE_CONSTANTS } from '@/features/reservation/constants/FareConstant';
+import type { ReservationResponseDto } from '@/features/reservation/types/ReservationResponseDto';
+
 type ReservationRefundConfirmModalProps = {
     onClick: (reeservationId: string) => void;
     onRequestClose: () => void;
     isSubmitting: boolean;
+    details: ReservationResponseDto;
     reservationId: string;
 };
 
@@ -9,14 +13,20 @@ export function ReservationRefundConfirmModal({
     onClick,
     onRequestClose,
     isSubmitting,
+    details,
     reservationId,
 }: ReservationRefundConfirmModalProps) {
+    const countSeat: number = details.reservedSeats.length;
     return (
         <>
             <div className="justify-er flex flex-col items-start gap-4">
                 <h1 className="!m-0 text-left !text-xl">予約キャンセル確認</h1>
                 <div>予約をキャンセルしますか？</div>
-                
+
+                <div>
+                    {' '}
+                    キャンセル手数料 {countSeat * FARE_CONSTANTS.REFUND} 円
+                </div>
                 <div className="flex w-full items-center justify-end gap-4">
                     <button
                         onClick={onRequestClose}
@@ -33,7 +43,7 @@ export function ReservationRefundConfirmModal({
                         予約をキャンセル
                     </button>
                 </div>
-            </>
+            </div>
         </>
     );
 }
