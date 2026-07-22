@@ -21,6 +21,7 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.UUID;
 
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.delete;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
@@ -245,5 +246,24 @@ public class ReservationControllerTest {
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(objectMapper.writeValueAsString(new ReserveRequestDto())))
             .andExpect(status().isBadRequest());
+    }
+
+    @Test
+    @DisplayName("特定の予約情報IDに紐づく予約情報を削除できる")
+    void deleteReservation_withReservationId_return204() throws Exception {
+        UUID requestReservationId = UUID.randomUUID();
+        String url = baseUrl + "/" + requestReservationId;
+
+        mockMvc.perform(delete(url))
+            .andExpect(status().isNoContent());
+    }
+
+    @Test
+    @DisplayName("idがNullの場合、NOTFOUNDを返す")
+    void deleteReservation_withReservationIdIsNull_returnRequestParamError() throws Exception {
+        String url = baseUrl + "/";
+
+        mockMvc.perform(delete(url))
+            .andExpect(status().isNotFound());
     }
 }
