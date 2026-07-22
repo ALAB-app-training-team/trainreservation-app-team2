@@ -9,12 +9,10 @@ import com.alab.shinkansendego.reservedseatsection.ReservedSeatSectionEntity;
 import com.alab.shinkansendego.reservedseatsection.ReservedSeatSectionRepository;
 import com.alab.shinkansendego.sectionkm.SectionKmRepository;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.client.RestClient;
-import org.springframework.web.server.ResponseStatusException;
 
 import java.util.ArrayList;
 import java.util.Comparator;
@@ -253,32 +251,11 @@ public class ReservationService {
                 reservedSeatSectionsToPost.add(reservedSeatSection);
             }
         }
-        List<ReservedSeatSectionEntity> savedReservedSeatSections = reservedSeatSectionRepository.saveAll(reservedSeatSectionsToPost);
-        int reservedSeatSectionResult = savedReservedSeatSections.size();
+        int reservedSeatSectionResult = reservedSeatSectionRepository.saveAll(reservedSeatSectionsToPost).size();
         if (reservedSeatSectionResult != sectionCdList.size() * reserveRequestDto.getSeats().size()) {
-            List<ReservedSeatSectionEntity> failedSections = reservedSeatSectionsToPost.stream().filter(targetToPost -> savedReservedSeatSections.stream().noneMatch(saved ->
-                Objects.equals(targetToPost.getRideDate(), saved.getRideDate())
-                    && Objects.equals(targetToPost.getScheduleCd(), saved.getScheduleCd())
-                    && Objects.equals(targetToPost.getTrainCarCd(), saved.getTrainCarCd())
-                    && Objects.equals(targetToPost.getSeatCd(), saved.getSeatCd())
-                    && Objects.equals(targetToPost.getReservedSectionCd(), saved.getReservedSectionCd())
-            )).collect(Collectors.toList());
-
-            List<ReservedSeatEntity> failedReservedSeats = savedReservedSeats.stream().filter(seat ->
-                failedSections.stream().anyMatch(sec ->
-                    Objects.equals(seat.getTrainCarCd(), sec.getTrainCarCd())
-                        && Objects.equals(seat.getSeatCd(), sec.getSeatCd())
-                )).collect(Collectors.toList());
-            String failedSeatDetailMessage = failedReservedSeats.stream()
-                .map(seat ->
-                    String.format("%s号車%s%s",
-                        seat.getTrainCar(),
-                        seat.getSeat().getSeatNumber(),
-                        seat.getSeat().getSeatColumn()))
-                .collect(Collectors.joining(","));
-            throw new ResponseStatusException(HttpStatus.CONFLICT, failedSeatDetailMessage);
+            throw new RuntimeException("Insert ReservedSeatSections is failed");
         }
-
+        
         String paymentUrl = "http://localhost:8080/api/payments";
         paymentTrackingId = restClient.post()
             .uri(paymentUrl)
