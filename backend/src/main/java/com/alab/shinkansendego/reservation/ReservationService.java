@@ -179,6 +179,12 @@ public class ReservationService {
         return response;
     }
 
+    /**
+     * 画面上で選択した予約内容を登録するメソッド
+     *
+     * @param reserveRequestDto 画面で選択した登録するべき予約情報
+     * @return 登録した予約情報ID
+     */
     @Transactional
     public UUID insertReservation(ReserveRequestDto reserveRequestDto) {
         if (reserveRequestDto.getSeats() == null || reserveRequestDto.getSeats().isEmpty()) {
@@ -273,9 +279,9 @@ public class ReservationService {
     }
 
     /**
-     * 予約時に登録した氏名とメールアドレスをもとに、紐づく予約情報一覧を取得するメソッド
+     * 特定の予約情報IDに紐づく予約情報・予約座席情報を論理削除、予約済座席区間を物理削除するメソッド
      *
-     * @param reservationId 予約者氏名
+     * @param reservationId 予約情報ID
      */
     @Transactional
     public void deleteReservation(UUID reservationId) {
@@ -286,10 +292,10 @@ public class ReservationService {
         if (seats.isEmpty()) {
             throw new IllegalArgumentException("Reserved Seats is Not found");
         }
-        for (ReservedSeatEntity seat : seats) {
-            seat.setIsDeleted(true);
-        }
+        seats.forEach(seat -> seat.setIsDeleted(true));
 
+        reservationRepository.save(reservation);
+        reservedSeatRepository.saveAll(seats);
         reservedSeatSectionRepository.deleteByReservationId(reservationId);
     }
 }
