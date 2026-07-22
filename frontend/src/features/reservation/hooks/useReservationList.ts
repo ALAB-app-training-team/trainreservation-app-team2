@@ -25,5 +25,36 @@ export function useReservationList() {
         refetchOnMount: true,
     });
 
-    return { reservationList, getReservation };
+    const now = new Date();
+    now.setHours(0, 0, 0, 0);
+
+    const activeReservations = reservationList
+        ?.filter((reservation) => {
+            const departureDate = new Date(reservation.rideDate);
+            return departureDate >= now;
+        })
+        .sort(
+            (a, b) =>
+                new Date(a.rideDate).getDate() -
+                    new Date(b.rideDate).getDate() ||
+                a.departureTime.localeCompare(b.departureTime),
+        );
+
+    const pastReservations = reservationList
+        ?.filter((reservation) => {
+            const departureDate = new Date(reservation.rideDate);
+            return departureDate < now;
+        })
+        .sort(
+            (a, b) =>
+                new Date(a.rideDate).getDate() -
+                    new Date(b.rideDate).getDate() ||
+                a.departureTime.localeCompare(b.departureTime),
+        );
+
+    return {
+        activeReservations,
+        pastReservations,
+        getReservation,
+    };
 }

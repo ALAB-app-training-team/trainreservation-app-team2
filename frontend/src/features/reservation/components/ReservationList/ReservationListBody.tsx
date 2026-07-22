@@ -14,34 +14,7 @@ export function ReservationListBody() {
     const [selectedTab, setSelectedTab] = useState<ReservationTabKey>(
         DEFAULT_RESERVATION_TAB,
     );
-    const { reservationList } = useReservationList();
-
-    const now = new Date();
-    now.setHours(0, 0, 0, 0);
-
-    const activeReservations = reservationList
-        ?.filter((reservation) => {
-            const departureDate = new Date(reservation.rideDate);
-            return departureDate >= now;
-        })
-        .sort(
-            (a, b) =>
-                new Date(a.rideDate).getDate() -
-                    new Date(b.rideDate).getDate() ||
-                a.departureTime.localeCompare(b.departureTime),
-        );
-
-    const pastReservations = reservationList
-        ?.filter((reservation) => {
-            const departureDate = new Date(reservation.rideDate);
-            return departureDate < now;
-        })
-        .sort(
-            (a, b) =>
-                new Date(a.rideDate).getDate() -
-                    new Date(b.rideDate).getDate() ||
-                a.departureTime.localeCompare(b.departureTime),
-        );
+    const { activeReservations, pastReservations } = useReservationList();
 
     const filteredReservations =
         selectedTab === 'ACTIVE' ? activeReservations : pastReservations;
