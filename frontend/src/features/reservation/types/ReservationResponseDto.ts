@@ -8,5 +8,6 @@ export type ReservationResponseDto = {
     arrivalTime: string;
     arrivalStationName: string;
     rideDate: string;
+    isDeleted: boolean;
     reservedSeats: ReservedSeatDto[];
 };
