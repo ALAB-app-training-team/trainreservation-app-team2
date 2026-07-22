@@ -10,7 +10,6 @@ import {
     RESERVATION_TAB,
 } from '@/features/reservation/constants/ReservationTab';
 import { useReservationList } from '@/features/reservation/hooks/useReservationList';
-import type { ReservationResponseDto } from '@/features/reservation/types/ReservationResponseDto';
 
 export function ReservationListBody() {
     const [selectedTab, setSelectedTab] = useState<ReservationTabKey>(
@@ -57,16 +56,14 @@ export function ReservationListBody() {
                     </div>
                 </div>
                 {filteredReservations && filteredReservations.length > 0 ? (
-                    filteredReservations.map(
-                        (reservation: ReservationResponseDto) => {
-                            return (
-                                <ReservationSelectItem
-                                    key={reservation.purchaseId}
-                                    details={reservation}
-                                />
-                            );
-                        },
-                    )
+                    filteredReservations.map((reservation) => {
+                        return (
+                            <ReservationSelectItem
+                                key={reservation.purchaseId}
+                                details={reservation}
+                            />
+                        );
+                    })
                 ) : (
                     <>該当する予約が存在しません</>
                 )}
