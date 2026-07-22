@@ -9,10 +9,13 @@ import com.alab.shinkansendego.reservedseatsection.ReservedSeatSectionEntity;
 import com.alab.shinkansendego.reservedseatsection.ReservedSeatSectionRepository;
 import com.alab.shinkansendego.sectionkm.SectionKmRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.dao.DataIntegrityViolationException;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.client.RestClient;
+import org.springframework.web.server.ResponseStatusException;
 
 import java.util.ArrayList;
 import java.util.Comparator;
@@ -251,11 +254,15 @@ public class ReservationService {
                 reservedSeatSectionsToPost.add(reservedSeatSection);
             }
         }
-        int reservedSeatSectionResult = reservedSeatSectionRepository.saveAll(reservedSeatSectionsToPost).size();
-        if (reservedSeatSectionResult != sectionCdList.size() * reserveRequestDto.getSeats().size()) {
-            throw new RuntimeException("Insert ReservedSeatSections is failed");
+        try {
+            int reservedSeatSectionResult = reservedSeatSectionRepository.saveAllAndFlush(reservedSeatSectionsToPost).size();
+            if (reservedSeatSectionResult != sectionCdList.size() * reserveRequestDto.getSeats().size()) {
+                throw new RuntimeException("Insert ReservedSeatSections is failed");
+            }
+        } catch (DataIntegrityViolationException ex) {
+            throw new ResponseStatusException(HttpStatus.CONFLICT, "kore");
         }
-        
+
         String paymentUrl = "http://localhost:8080/api/payments";
         paymentTrackingId = restClient.post()
             .uri(paymentUrl)

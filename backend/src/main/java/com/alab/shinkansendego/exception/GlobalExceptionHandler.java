@@ -7,6 +7,7 @@ import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.MissingServletRequestParameterException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
+import org.springframework.web.server.ResponseStatusException;
 
 import java.util.Objects;
 
@@ -33,7 +34,7 @@ public class GlobalExceptionHandler {
 
     @ExceptionHandler(DataAccessException.class)
     public ResponseEntity<String> handleDataAccessException(DataAccessException ex) {
-        return ResponseEntity.badRequest().body("DataAccessException is occurred");
+        return ResponseEntity.badRequest().body(ex.getMessage());
     }
 
     @ExceptionHandler(MissingServletRequestParameterException.class)
@@ -46,5 +47,9 @@ public class GlobalExceptionHandler {
         return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(ex.getMessage());
     }
 
+    @ExceptionHandler(ResponseStatusException.class)
+    public ResponseEntity<String> handleResponseStatusException(ResponseStatusException ex) {
+        return ResponseEntity.status(ex.getStatusCode()).body(ex.getReason());
+    }
     //TODO:NoResourceFoundExceptionの追加
 }
