@@ -260,6 +260,21 @@ public class ReservationService {
                 throw new RuntimeException("Insert ReservedSeatSections is failed");
             }
         } catch (DataIntegrityViolationException ex) {
+            String existingReservedSeats = "";
+            List<String> sectionCds = reservedSeatSectionsToPost.stream().map(sec -> sec.getReservedSectionCd()).distinct().toList();
+            List<String> trainCarCds = reservedSeatSectionsToPost.stream().map(sec -> sec.getTrainCarCd()).distinct().toList();
+            for (String sectionCd : sectionCds) {
+                for (String trainCarCd : trainCarCds) {
+                    List<String> existingSeatCds = reservedSeatSectionRepository.findReservedSeatCdByRideDateAndScheduleCdAndTrainCarCdAndReservedSeatSectionCd(reservedSeatSectionsToPost.getFirst().getRideDate(), reservedSeatSectionsToPost.getFirst().getScheduleCd(), trainCarCd, sectionCd);
+                    if (!trainCarCd.isEmpty()) {
+                        reservedSeatsToPost.stream().filter(seat -> existingSeatCds.contains(seat.getSeatCd()));
+                        ReservedSeatEntity reservedSeat = reservedSeatsToPost.stream().filter(seat ->
+                            Objects.equals(trainCarCd, seat.getTrainCarCd()) &&
+                                existingSeatCds.contains(seat.getSeatCd())).toList().getFirst();
+//                        existingSeatCds += reservedSeat.getTrainCar().getTrainCarNumber().toString() + "号車" + reservedSeat.getSeat().getSeatNumber().toString() + reservedSeat.getSeat().getSeatColumn().toString();
+                    }
+                }
+            }
             throw new ResponseStatusException(HttpStatus.CONFLICT, "kore");
         }
 
