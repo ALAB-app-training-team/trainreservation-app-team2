@@ -9,7 +9,6 @@ import com.alab.shinkansendego.reservedseatsection.ReservedSeatSectionEntity;
 import com.alab.shinkansendego.reservedseatsection.ReservedSeatSectionRepository;
 import com.alab.shinkansendego.sectionkm.SectionKmRepository;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.stereotype.Service;
@@ -256,39 +255,39 @@ public class ReservationService {
                 reservedSeatSectionsToPost.add(reservedSeatSection);
             }
         }
-        try {
-            int reservedSeatSectionResult = reservedSeatSectionRepository.saveAllAndFlush(reservedSeatSectionsToPost).size();
-            if (reservedSeatSectionResult != sectionCdList.size() * reserveRequestDto.getSeats().size()) {
-                throw new RuntimeException("Insert ReservedSeatSections is failed");
-            }
-        } catch (DataIntegrityViolationException ex) {
-            Set<String> conflictedSeats = new HashSet<>();
-            List<String> sectionCds = reservedSeatSectionsToPost.stream().map(sec -> sec.getReservedSectionCd()).distinct().toList();
-            List<String> trainCarCds = reservedSeatSectionsToPost.stream().map(sec -> sec.getTrainCarCd()).distinct().toList();
-            for (String sectionCd : sectionCds) {
-                for (String trainCarCd : trainCarCds) {
-                    List<String> existingSeatCds = reservedSeatSectionRepository.findReservedSeatCdByRideDateAndScheduleCdAndTrainCarCdAndReservedSeatSectionCd(
-                        reservedSeatSectionsToPost.getFirst().getRideDate(),
-                        reservedSeatSectionsToPost.getFirst().getScheduleCd(),
-                        trainCarCd,
-                        sectionCd);
 
-                    if (!existingSeatCds.isEmpty()) {
-//                        reservedSeatsToPost.stream().filter(seat -> existingSeatCds.contains(seat.getSeatCd()));
-                        reservedSeatsToPost.stream()
-                            .filter(seat ->
-                                Objects.equals(trainCarCd, seat.getTrainCarCd()) &&
-                                    existingSeatCds.contains(seat.getSeatCd()))
-                            .forEach(seat -> {
-                                String seatInfo = seat.getTrainCar().getTrainCarNumber() + "号車" + seat.getSeat().getSeatNumber() + seat.getSeat().getSeatColumn();
-                                conflictedSeats.add(seatInfo);
-                            });
-//                        existingSeatCds += reservedSeat.getTrainCar().getTrainCarNumber().toString() + "号車" + reservedSeat.getSeat().getSeatNumber().toString() + reservedSeat.getSeat().getSeatColumn().toString();
-                    }
+        List<String> sectionCds = reservedSeatSectionsToPost.stream().map(sec -> sec.getReservedSectionCd()).distinct().toList();
+        List<String> trainCarCds = reservedSeatsToPost.stream().map(sec -> sec.getTrainCarCd()).distinct().toList();
+        List<ReservedSeatSectionEntity> existingReservedSeatSections = reservedSeatSectionRepository.findByRideDateAndScheduleCdAndTrainCarCdInAndReservedSectionCdIn(
+            reservedSeatSectionsToPost.getFirst().getRideDate(),
+            reservedSeatSectionsToPost.getFirst().getScheduleCd(),
+            trainCarCds,
+            sectionCds);
+
+        if (!existingReservedSeatSections.isEmpty()) {
+            Set<String> existingKeys = existingReservedSeatSections.stream()
+                .map(sec -> sec.getTrainCarCd() + "_" + sec.getSeatCd())
+                .collect(Collectors.toSet());
+            Set<String> conflictedSeats = new HashSet<>();
+
+            for (ReservedSeatEntity reservedSeat : savedReservedSeats) {
+                String key = reservedSeat.getTrainCarCd() + "_" + reservedSeat.getSeatCd();
+                if (existingKeys.contains(key)) {
+                    ReservedSeatEntity conflictedSeatEntity = reservedSeatRepository.findById(reservedSeat.getId()).orElseThrow(() -> new IllegalArgumentException("Seat is Not found"));
+                    System.out.println(conflictedSeatEntity);
+                    String conflictedSeat = conflictedSeatEntity.getTrainCar().getTrainCarNumber() + "号車" + conflictedSeatEntity.getSeat().getSeatNumber() + conflictedSeatEntity.getSeat().getSeatColumn();
+                    conflictedSeats.add(conflictedSeat);
                 }
             }
-            String conflictedSeatMessage = String.join(",", conflictedSeats);
-            throw new ResponseStatusException(HttpStatus.CONFLICT, conflictedSeatMessage);
+            if (!conflictedSeats.isEmpty()) {
+                String conflictedSeatMessage = String.join(",", conflictedSeats);
+                throw new ResponseStatusException(HttpStatus.CONFLICT, conflictedSeatMessage);
+            }
+        }
+
+        int reservedSeatSectionResult = reservedSeatSectionRepository.saveAllAndFlush(reservedSeatSectionsToPost).size();
+        if (reservedSeatSectionResult != sectionCdList.size() * reserveRequestDto.getSeats().size()) {
+            throw new RuntimeException("Insert ReservedSeatSections is failed");
         }
 
         String paymentUrl = "http://localhost:8080/api/payments";

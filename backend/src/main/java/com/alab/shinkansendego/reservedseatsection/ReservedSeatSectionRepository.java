@@ -19,4 +19,11 @@ public interface ReservedSeatSectionRepository extends JpaRepository<ReservedSea
          String scheduleCd,
          String trainCarCd,
          String sectionCd);
+
+    List<ReservedSeatSectionEntity> findByRideDateAndScheduleCdAndTrainCarCdInAndReservedSectionCdIn(
+        LocalDate rideDate,
+        String scheduleCd,
+        List<String> trainCarCds,
+        List<String> reservedSectionCds
+    );
 }
