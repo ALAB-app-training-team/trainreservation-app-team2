@@ -45,7 +45,7 @@ public class ReservationController {
     }
 
     @DeleteMapping(value = "{id}")
-    public ResponseEntity<UUID> deleteReservation(@PathVariable("id") UUID reservationId) {
+    public ResponseEntity<Void> deleteReservation(@PathVariable("id") UUID reservationId) {
         reservationService.deleteReservation(reservationId);
         return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
     }
