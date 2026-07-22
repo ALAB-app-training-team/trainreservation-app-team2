@@ -60,10 +60,13 @@ export function ScheduleItem({
         };
         navigate('/selectSeat', {
             state: {
+                schedule,
                 scheduleInfoDto,
                 departureStationCd,
                 arrivalStationCd,
                 searchRequestDto,
+                departureStationName,
+                arrivalStationName,
             },
         });
         window.scrollTo(0, 0);

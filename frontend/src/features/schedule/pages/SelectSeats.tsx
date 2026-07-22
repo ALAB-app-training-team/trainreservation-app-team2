@@ -11,6 +11,7 @@ import { SelectedSeats } from '@/features/schedule/components/SelectedSeats';
 import { TotalSeatsFare } from '@/features/schedule/components/TotalSeatsFare';
 import { TrainCars } from '@/features/schedule/components/TrainCars/TrainCars';
 import { TrainCarsSkeleton } from '@/features/schedule/components/TrainCars/TrainCarsSkeleton';
+import { TrainInfo } from '@/features/schedule/components/TrainInfo';
 import { useReserveUser } from '@/features/schedule/hooks/useReserveUser';
 import { useSelectedSeats } from '@/features/schedule/hooks/useSelectedSeats';
 import type { PaymentRequestDto } from '@/features/schedule/types/PaymentRequestDto';
@@ -24,10 +25,13 @@ export function SelectSeats() {
     const navigate = useNavigate();
     const location = useLocation();
     const {
+        schedule,
         scheduleInfoDto,
         departureStationCd,
         arrivalStationCd,
         searchRequestDto,
+        departureStationName,
+        arrivalStationName,
     } = location.state;
     const {
         selectedSeats,
@@ -130,6 +134,14 @@ export function SelectSeats() {
             </div>
             <div className="flex w-full flex-col items-start justify-between gap-4 p-4 md:flex-row">
                 <div className="w-full md:w-7/10">
+                    {scheduleInfoDto && (
+                        <TrainInfo
+                            schedule={schedule}
+                            scheduleInfoDto={scheduleInfoDto}
+                            departureStationName={departureStationName}
+                            arrivalStationName={arrivalStationName}
+                        />
+                    )}
                     <Suspense fallback={<TrainCarsSkeleton />}>
                         <TrainCars
                             scheduleInfoDto={scheduleInfoDto}
