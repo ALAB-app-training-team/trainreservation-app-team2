@@ -48,7 +48,7 @@ export function ReservationListBody() {
     const pastReservations = reservationList
         ?.filter((reservation) => {
             const departureDate = new Date(reservation.rideDate);
-            return departureDate < now;
+            return departureDate < now && reservation.isDeleted != true;
         })
         .sort(
             (a, b) =>
