@@ -1,13 +1,20 @@
 import { useSuspenseQuery } from '@tanstack/react-query';
+import axios from 'axios';
 import { useState } from 'react';
 import { CiCalendar } from 'react-icons/ci';
 import { RiGroupLine } from 'react-icons/ri';
 
+import { ENDPOINTS } from '@/api/routes';
 import { ReservationSelectItem } from '@/features/reservation/components/ReservationList/ReservationSelectItem';
+import { ReservationRefundConfirmModal } from '@/features/reservation/components/ReservationRefundConfirmModal';
 import { RESERVATION_TAB } from '@/features/reservation/constants/ReservationTab';
 import { useGuestLoginInfo } from '@/features/reservation/hooks/useGuestLoginInfo';
 import { useReservationList } from '@/features/reservation/hooks/useReservationList';
+import type { ReservationResponseDto } from '@/features/reservation/types/ReservationResponseDto';
 import type { ReservationTabCd } from '@/features/reservation/types/ReservationTabCd';
+import { CustomModal } from '@/shared/components/CustomModal';
+import { ERROR_MESSAGE } from '@/shared/constants/ErrorMessages';
+import { useModal } from '@/shared/hooks/useModal';
 
 export function ReservationListBody() {
     const [selectedTab, setSelectedTab] = useState<ReservationTabCd>('ACTIVE');
@@ -17,6 +24,10 @@ export function ReservationListBody() {
         queryFn: () => getReservation(useGuestLoginInfo()),
         refetchOnMount: true,
     });
+    const { isOpen, handleModalOpen, onRequestClose } = useModal();
+    const [isSubmitting, setIsSubmitting] = useState<boolean>(false);
+    const [selectedReservation, setSelectedReservation] =
+        useState<ReservationResponseDto>();
 
     const now = new Date();
     now.setHours(0, 0, 0, 0);
@@ -47,6 +58,24 @@ export function ReservationListBody() {
 
     const filteredReservations =
         selectedTab === 'ACTIVE' ? activeReservations : pastReservations;
+
+    const handleRefundModalOpen = (details: ReservationResponseDto) => {
+        setSelectedReservation(details);
+        handleModalOpen();
+    };
+    const handleReservationRefund = async (reservationId: string) => {
+        if (isSubmitting) return;
+        setIsSubmitting(true);
+        try {
+            await axios.delete(ENDPOINTS.RESERVATION(reservationId));
+            alert('予約をキャンセルしました。');
+        } catch {
+            alert(ERROR_MESSAGE.REFUND_RETRY);
+        } finally {
+            setIsSubmitting(false);
+            onRequestClose();
+        }
+    };
 
     return (
         <>
@@ -86,6 +115,7 @@ export function ReservationListBody() {
                             <ReservationSelectItem
                                 key={reservation.purchaseId}
                                 details={reservation}
+                                onRefundClicked={handleRefundModalOpen}
                             />
                         );
                     })
@@ -93,6 +123,16 @@ export function ReservationListBody() {
                     <></>
                 )}
             </div>
+            <CustomModal isOpen={isOpen} onRequestClose={onRequestClose}>
+                {selectedReservation && selectedReservation.purchaseId && (
+                    <ReservationRefundConfirmModal
+                        onClick={handleReservationRefund}
+                        onRequestClose={onRequestClose}
+                        isSubmitting={isSubmitting}
+                        reservationId={selectedReservation.purchaseId}
+                    />
+                )}
+            </CustomModal>
         </>
     );
 }
