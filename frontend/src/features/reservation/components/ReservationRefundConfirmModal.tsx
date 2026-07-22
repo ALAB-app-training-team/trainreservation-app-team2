@@ -17,15 +17,30 @@ export function ReservationRefundConfirmModal({
     reservationId,
 }: ReservationRefundConfirmModalProps) {
     const countSeat: number = details.reservedSeats.length;
+    const seatFare: number = details.reservedSeats.reduce(
+        (sum, seat) => sum + seat.seatFare,
+        0,
+    );
     return (
         <>
             <div className="justify-er flex flex-col items-start gap-4">
                 <h1 className="!m-0 text-left !text-xl">予約キャンセル確認</h1>
-                <div>予約をキャンセルしますか？</div>
-
-                <div>
-                    {' '}
-                    キャンセル手数料 {countSeat * FARE_CONSTANTS.REFUND} 円
+                <div>予約を取り消しますか？</div>
+                <div className="flex w-full flex-col gap-2 rounded-lg bg-slate-50 p-3">
+                    <div className="flex justify-between">
+                        <span>チケット料金</span>
+                        <span>{seatFare}</span>
+                    </div>
+                    <div className="flex justify-between">
+                        <span>払い戻し手数料</span>
+                        <span>{countSeat * FARE_CONSTANTS.REFUND}</span>
+                    </div>
+                    <div className="flex justify-between font-bold">
+                        <span>払い戻し金額</span>{' '}
+                        <span>
+                            {seatFare - countSeat * FARE_CONSTANTS.REFUND}円
+                        </span>
+                    </div>
                 </div>
                 <div className="flex w-full items-center justify-end gap-4">
                     <button
@@ -33,14 +48,14 @@ export function ReservationRefundConfirmModal({
                         disabled={isSubmitting}
                         className="border-primary text-primary rounded-lg border-2 p-2 disabled:border-gray-300 disabled:bg-gray-300 disabled:text-white"
                     >
-                        閉じる
+                        予約を取消さない
                     </button>
                     <button
                         onClick={() => onClick(reservationId)}
                         disabled={isSubmitting}
                         className="bg-primary rounded-lg p-2 text-white"
                     >
-                        予約をキャンセル
+                        予約を取り消す
                     </button>
                 </div>
             </div>

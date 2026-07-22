@@ -1,3 +1,4 @@
+import { useQueryClient } from '@tanstack/react-query';
 import axios from 'axios';
 import { useState } from 'react';
 import { CiCalendar } from 'react-icons/ci';
@@ -28,6 +29,8 @@ export function ReservationListBody() {
     const [isSubmitting, setIsSubmitting] = useState<boolean>(false);
     const [selectedReservation, setSelectedReservation] =
         useState<ReservationResponseDto>();
+    const queryClient = useQueryClient();
+
     const filteredReservations =
         selectedTab === RESERVATION_TAB[0].key
             ? activeReservations
@@ -44,6 +47,16 @@ export function ReservationListBody() {
         setIsSubmitting(true);
         try {
             await axios.delete(ENDPOINTS.RESERVATION(reservationId));
+
+            queryClient.setQueryData<ReservationResponseDto[]>(
+                ['reservationList'],
+                (old) =>
+                    old?.map((reservation) =>
+                        reservation.reservationId == reservationId
+                            ? { ...reservation, isDaleted: true }
+                            : reservation,
+                    ),
+            );
             alert('予約をキャンセルしました。');
         } catch {
             alert(ERROR_MESSAGE.REFUND_RETRY);
