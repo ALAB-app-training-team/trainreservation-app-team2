@@ -294,8 +294,13 @@ public class ReservationService {
         }
         seats.forEach(seat -> seat.setIsDeleted(true));
 
+        List<ReservedSeatSectionEntity> sections = reservedSeatSectionRepository.findByReservationId(reservationId);
+        if (sections.isEmpty()) {
+            throw new IllegalArgumentException("Reserved Seat Sections is Not found");
+        }
+        
         reservationRepository.save(reservation);
         reservedSeatRepository.saveAll(seats);
-        reservedSeatSectionRepository.deleteByReservationId(reservationId);
+        reservedSeatSectionRepository.deleteAll(sections);
     }
 }
