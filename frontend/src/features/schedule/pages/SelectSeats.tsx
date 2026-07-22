@@ -15,7 +15,6 @@ import { useReserveUser } from '@/features/schedule/hooks/useReserveUser';
 import { useSelectedSeats } from '@/features/schedule/hooks/useSelectedSeats';
 import type { PaymentRequestDto } from '@/features/schedule/types/PaymentRequestDto';
 import type { ReserveRequestDto } from '@/features/schedule/types/ReserveRequestDto';
-import type { SeatResponseDto } from '@/features/schedule/types/SeatResponseDto';
 import { CustomModal } from '@/shared/components/CustomModal';
 import { ERROR_MESSAGE } from '@/shared/constants/ErrorMessages';
 import { useModal } from '@/shared/hooks/useModal';
@@ -105,18 +104,7 @@ export function SelectSeats() {
             });
         } catch (error) {
             if (axios.isAxiosError(error) && error.response?.status === 409) {
-                alert(
-                    `${ERROR_MESSAGE.RELEASE_SEAT}\n` +
-                        error.response?.data
-                            .map(
-                                (seat: SeatResponseDto) =>
-                                    seat.trainCarNumber +
-                                    '号車' +
-                                    seat.seatNumber +
-                                    seat.seatColumn,
-                            )
-                            .join(','),
-                );
+                alert(`${ERROR_MESSAGE.RELEASE_SEAT}\n` + error.response?.data);
                 return;
             }
             alert(ERROR_MESSAGE.RESERVE_RETRY);

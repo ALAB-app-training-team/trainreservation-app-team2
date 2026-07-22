@@ -264,9 +264,19 @@ public class ReservationService {
                     && Objects.equals(targetToPost.getReservedSectionCd(), saved.getReservedSectionCd())
             )).collect(Collectors.toList());
 
-            List<ReservedSeatEntity> failedReservedSeats =
-            // これも係ある
-            throw new ResponseStatusException(HttpStatus.CONFLICT, "Insert ReservedSeatSections is failed");
+            List<ReservedSeatEntity> failedReservedSeats = savedReservedSeats.stream().filter(seat ->
+                failedSections.stream().anyMatch(sec ->
+                    Objects.equals(seat.getTrainCarCd(), sec.getTrainCarCd())
+                        && Objects.equals(seat.getSeatCd(), sec.getSeatCd())
+                )).collect(Collectors.toList());
+            String failedSeatDetailMessage = failedReservedSeats.stream()
+                .map(seat ->
+                    String.format("%s号車%s%s",
+                        seat.getTrainCar(),
+                        seat.getSeat().getSeatNumber(),
+                        seat.getSeat().getSeatColumn()))
+                .collect(Collectors.joining(","));
+            throw new ResponseStatusException(HttpStatus.CONFLICT, failedSeatDetailMessage);
         }
 
         String paymentUrl = "http://localhost:8080/api/payments";

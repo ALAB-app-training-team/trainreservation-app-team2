@@ -39,11 +39,7 @@ public class ReservationController {
 
     @PostMapping
     public ResponseEntity<UUID> insertReservation(@Valid @RequestBody ReserveRequestDto request) {
-        try {
-            UUID response = reservationService.insertReservation(request);
-            return ResponseEntity.status(HttpStatus.CREATED).body(response);
-        } catch (Exception ex) {
-            return ResponseEntity.status(HttpStatus.CONFLICT).body(ex.getMessage());
-        }
+        UUID response = reservationService.insertReservation(request);
+        return ResponseEntity.status(HttpStatus.CREATED).body(response);
     }
 }
