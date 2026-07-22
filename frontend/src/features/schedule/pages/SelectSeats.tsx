@@ -134,14 +134,12 @@ export function SelectSeats() {
             </div>
             <div className="flex w-full flex-col items-start justify-between gap-4 p-4 md:flex-row">
                 <div className="w-full md:w-7/10">
-                    {scheduleInfoDto && (
-                        <TrainInfo
-                            schedule={schedule}
-                            scheduleInfoDto={scheduleInfoDto}
-                            departureStationName={departureStationName}
-                            arrivalStationName={arrivalStationName}
-                        />
-                    )}
+                    <TrainInfo
+                        schedule={schedule}
+                        scheduleInfoDto={scheduleInfoDto}
+                        departureStationName={departureStationName}
+                        arrivalStationName={arrivalStationName}
+                    />
                     <Suspense fallback={<TrainCarsSkeleton />}>
                         <TrainCars
                             scheduleInfoDto={scheduleInfoDto}
