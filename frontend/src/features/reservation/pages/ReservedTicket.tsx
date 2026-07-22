@@ -1,4 +1,4 @@
-import { useQueryClient, useSuspenseQuery } from '@tanstack/react-query';
+import { useQueryClient } from '@tanstack/react-query';
 import { Suspense, useEffect } from 'react';
 import { LuArrowLeft } from 'react-icons/lu';
 import { useLocation, useNavigate } from 'react-router-dom';
@@ -7,20 +7,15 @@ import { ReservedTicketInfo } from '@/features/reservation/components/ReservedTi
 import { ReservedTicketInfoSkeleton } from '@/features/reservation/components/ReservedTicketInfo/ReservedTicketInfoSkeleton';
 import { ReservedTicketQrCode } from '@/features/reservation/components/ReservedTicketQrCode/ReservedTicketQrCode';
 import { ReservedTicketQrCodeSkeleton } from '@/features/reservation/components/ReservedTicketQrCode/ReservedTicketQrCodeSkeleton';
-import { useGuestLoginInfo } from '@/features/reservation/hooks/useGuestLoginInfo';
 import { useReservedTickets } from '@/features/reservation/hooks/useReservedTickets';
 import { removeGuestReservation } from '@/shared/utils/RemoveGuestReservation';
 
 export function ReservedTicket() {
     const location = useLocation();
     const navigate = useNavigate();
-    const { getReservedTickets } = useReservedTickets();
     const { purchaseId, isBack } = location.state;
-    const { data: reservedTickets } = useSuspenseQuery({
-        queryKey: ['reservationTickets', purchaseId],
-        queryFn: () => getReservedTickets(purchaseId, useGuestLoginInfo()),
-        refetchOnMount: true,
-    });
+    const { reservedTickets } = useReservedTickets(purchaseId);
+
     const queryClient = useQueryClient();
     useEffect(() => {
         const nv = performance.getEntriesByType(
