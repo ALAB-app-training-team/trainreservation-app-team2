@@ -280,7 +280,6 @@ public class ReservationService {
                 String key = reservedSeat.getTrainCarCd() + "_" + reservedSeat.getSeatCd();
                 if (existingKeys.contains(key)) {
                     ReservedSeatEntity conflictedSeatEntity = reservedSeatRepository.findById(reservedSeat.getId()).orElseThrow(() -> new IllegalArgumentException("Seat is Not found"));
-                    System.out.println(conflictedSeatEntity);
                     String conflictedSeat = conflictedSeatEntity.getTrainCar().getTrainCarNumber() + "号車" + conflictedSeatEntity.getSeat().getSeatNumber() + conflictedSeatEntity.getSeat().getSeatColumn();
                     conflictedSeats.add(conflictedSeat);
                 }
@@ -333,7 +332,7 @@ public class ReservationService {
         if (sections.isEmpty()) {
             throw new IllegalArgumentException("Reserved Seat Sections is Not found");
         }
-        
+
         reservationRepository.save(reservation);
         reservedSeatRepository.saveAll(seats);
         reservedSeatSectionRepository.deleteAll(sections);
