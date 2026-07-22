@@ -44,7 +44,7 @@ export function ReservedSeats({
                 )}
                 <div
                     className="flex flex-wrap gap-2"
-                    date-testid="reserved-seats"
+                    data-testid="reserved-seats"
                 >
                     {seats.length !== 0 ? (
                         seats
