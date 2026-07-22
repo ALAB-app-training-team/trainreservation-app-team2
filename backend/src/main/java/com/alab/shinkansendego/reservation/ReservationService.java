@@ -19,10 +19,12 @@ import org.springframework.web.server.ResponseStatusException;
 
 import java.util.ArrayList;
 import java.util.Comparator;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
 import java.util.Optional;
+import java.util.Set;
 import java.util.UUID;
 import java.util.stream.Collectors;
 
@@ -260,22 +262,33 @@ public class ReservationService {
                 throw new RuntimeException("Insert ReservedSeatSections is failed");
             }
         } catch (DataIntegrityViolationException ex) {
-            String existingReservedSeats = "";
+            Set<String> conflictedSeats = new HashSet<>();
             List<String> sectionCds = reservedSeatSectionsToPost.stream().map(sec -> sec.getReservedSectionCd()).distinct().toList();
             List<String> trainCarCds = reservedSeatSectionsToPost.stream().map(sec -> sec.getTrainCarCd()).distinct().toList();
             for (String sectionCd : sectionCds) {
                 for (String trainCarCd : trainCarCds) {
-                    List<String> existingSeatCds = reservedSeatSectionRepository.findReservedSeatCdByRideDateAndScheduleCdAndTrainCarCdAndReservedSeatSectionCd(reservedSeatSectionsToPost.getFirst().getRideDate(), reservedSeatSectionsToPost.getFirst().getScheduleCd(), trainCarCd, sectionCd);
-                    if (!trainCarCd.isEmpty()) {
-                        reservedSeatsToPost.stream().filter(seat -> existingSeatCds.contains(seat.getSeatCd()));
-                        ReservedSeatEntity reservedSeat = reservedSeatsToPost.stream().filter(seat ->
-                            Objects.equals(trainCarCd, seat.getTrainCarCd()) &&
-                                existingSeatCds.contains(seat.getSeatCd())).toList().getFirst();
+                    List<String> existingSeatCds = reservedSeatSectionRepository.findReservedSeatCdByRideDateAndScheduleCdAndTrainCarCdAndReservedSeatSectionCd(
+                        reservedSeatSectionsToPost.getFirst().getRideDate(),
+                        reservedSeatSectionsToPost.getFirst().getScheduleCd(),
+                        trainCarCd,
+                        sectionCd);
+
+                    if (!existingSeatCds.isEmpty()) {
+//                        reservedSeatsToPost.stream().filter(seat -> existingSeatCds.contains(seat.getSeatCd()));
+                        reservedSeatsToPost.stream()
+                            .filter(seat ->
+                                Objects.equals(trainCarCd, seat.getTrainCarCd()) &&
+                                    existingSeatCds.contains(seat.getSeatCd()))
+                            .forEach(seat -> {
+                                String seatInfo = seat.getTrainCar().getTrainCarNumber() + "号車" + seat.getSeat().getSeatNumber() + seat.getSeat().getSeatColumn();
+                                conflictedSeats.add(seatInfo);
+                            });
 //                        existingSeatCds += reservedSeat.getTrainCar().getTrainCarNumber().toString() + "号車" + reservedSeat.getSeat().getSeatNumber().toString() + reservedSeat.getSeat().getSeatColumn().toString();
                     }
                 }
             }
-            throw new ResponseStatusException(HttpStatus.CONFLICT, "kore");
+            String conflictedSeatMessage = String.join(",", conflictedSeats);
+            throw new ResponseStatusException(HttpStatus.CONFLICT, conflictedSeatMessage);
         }
 
         String paymentUrl = "http://localhost:8080/api/payments";
