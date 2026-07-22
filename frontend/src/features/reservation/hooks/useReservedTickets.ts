@@ -1,10 +1,12 @@
+import { useSuspenseQuery } from '@tanstack/react-query';
 import axios from 'axios';
 
 import { ENDPOINTS } from '@/api/routes';
+import { getGuestLoginInfo } from '@/features/reservation/helpers/getGuestLoginInfo';
 import type { ReservationListRequestDto } from '@/features/reservation/types/ReservationListRequestDto';
 import type { ReservationResponseDto } from '@/features/reservation/types/ReservationResponseDto';
 
-export function useReservedTickets() {
+export function useReservedTickets(purchaseId: string) {
     const getReservedTickets = async (
         purchaseId: string,
         guestLoginInfo: ReservationListRequestDto,
@@ -21,5 +23,11 @@ export function useReservedTickets() {
         return response.data;
     };
 
-    return { getReservedTickets };
+    const { data: reservedTickets } = useSuspenseQuery({
+        queryKey: ['reservationTickets', purchaseId],
+        queryFn: () => getReservedTickets(purchaseId, getGuestLoginInfo()),
+        refetchOnMount: true,
+    });
+
+    return { reservedTickets };
 }

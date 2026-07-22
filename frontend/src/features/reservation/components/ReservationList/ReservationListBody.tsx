@@ -1,52 +1,29 @@
-import { useSuspenseQuery } from '@tanstack/react-query';
 import { useState } from 'react';
 import { CiCalendar } from 'react-icons/ci';
+import { LuTicket } from 'react-icons/lu';
 import { RiGroupLine } from 'react-icons/ri';
 
 import { ReservationSelectItem } from '@/features/reservation/components/ReservationList/ReservationSelectItem';
-import { RESERVATION_TAB } from '@/features/reservation/constants/ReservationTab';
-import { useGuestLoginInfo } from '@/features/reservation/hooks/useGuestLoginInfo';
+import type { ReservationTabKey } from '@/features/reservation/constants/ReservationTab';
+import {
+    DEFAULT_RESERVATION_TAB,
+    RESERVATION_TAB,
+} from '@/features/reservation/constants/ReservationTab';
 import { useReservationList } from '@/features/reservation/hooks/useReservationList';
-import type { ReservationTabCd } from '@/features/reservation/types/ReservationTabCd';
 
 export function ReservationListBody() {
-    const [selectedTab, setSelectedTab] = useState<ReservationTabCd>('ACTIVE');
-    const { getReservation } = useReservationList();
-    const { data: reservationList = [] } = useSuspenseQuery({
-        queryKey: ['reservationList'],
-        queryFn: () => getReservation(useGuestLoginInfo()),
-        refetchOnMount: true,
-    });
-
-    const now = new Date();
-    now.setHours(0, 0, 0, 0);
-
-    const activeReservations = reservationList
-        ?.filter((reservation) => {
-            const departureDate = new Date(reservation.rideDate);
-            return departureDate >= now;
-        })
-        .sort(
-            (a, b) =>
-                new Date(a.rideDate).getDate() -
-                    new Date(b.rideDate).getDate() ||
-                a.departureTime.localeCompare(b.departureTime),
-        );
-
-    const pastReservations = reservationList
-        ?.filter((reservation) => {
-            const departureDate = new Date(reservation.rideDate);
-            return departureDate < now;
-        })
-        .sort(
-            (a, b) =>
-                new Date(a.rideDate).getDate() -
-                    new Date(b.rideDate).getDate() ||
-                a.departureTime.localeCompare(b.departureTime),
-        );
+    const [selectedTab, setSelectedTab] = useState<ReservationTabKey>(
+        DEFAULT_RESERVATION_TAB,
+    );
+    const { activeReservations, canceledReservations, pastReservations } =
+        useReservationList();
 
     const filteredReservations =
-        selectedTab === 'ACTIVE' ? activeReservations : pastReservations;
+        selectedTab === RESERVATION_TAB[0].key
+            ? activeReservations
+            : selectedTab === RESERVATION_TAB[1].key
+              ? pastReservations
+              : canceledReservations;
 
     return (
         <>
@@ -54,30 +31,28 @@ export function ReservationListBody() {
                 <h1 className="!m-0 text-left !text-3xl">予約確認</h1>
                 <div className="bg-primary/8 flex gap-6 rounded-3xl p-2">
                     <div className="flex w-full items-center">
-                        <button
-                            data-testId="active-button"
-                            onClick={() => setSelectedTab('ACTIVE')}
-                            className={`flex w-full cursor-pointer items-center justify-center gap-2 rounded-3xl px-6 py-2 transition ${
-                                selectedTab === 'ACTIVE'
-                                    ? 'bg-white font-bold shadow'
-                                    : ''
-                            } `}
-                        >
-                            <CiCalendar />
-                            {`${RESERVATION_TAB['ACTIVE']} （${activeReservations?.length}）`}
-                        </button>
-                        <button
-                            data-testId="past-button"
-                            onClick={() => setSelectedTab('PAST')}
-                            className={`flex w-full cursor-pointer items-center justify-center gap-2 rounded-3xl px-6 py-2 transition ${
-                                selectedTab === 'PAST'
-                                    ? 'bg-white font-bold shadow'
-                                    : ''
-                            } `}
-                        >
-                            <RiGroupLine />
-                            {`${RESERVATION_TAB['PAST']} （${pastReservations?.length}）`}
-                        </button>
+                        {RESERVATION_TAB.map((tab) => (
+                            <button
+                                key={tab.key}
+                                data-testid={tab.testId}
+                                onClick={() => setSelectedTab(tab.key)}
+                                className={`flex w-full cursor-pointer items-center justify-center gap-2 rounded-3xl px-6 py-2 transition ${
+                                    selectedTab === tab.key
+                                        ? 'bg-white font-bold shadow'
+                                        : ''
+                                } `}
+                            >
+                                {tab.key === RESERVATION_TAB[0].key ? (
+                                    <CiCalendar />
+                                ) : tab.key === RESERVATION_TAB[1].key ? (
+                                    <RiGroupLine />
+                                ) : (
+                                    <LuTicket />
+                                )}
+                                {tab.label}
+                                {`(${tab.key === RESERVATION_TAB[0].key ? activeReservations?.length : tab.key === RESERVATION_TAB[1].key ? pastReservations?.length : canceledReservations?.length})`}
+                            </button>
+                        ))}
                     </div>
                 </div>
                 {filteredReservations && filteredReservations.length > 0 ? (
@@ -90,7 +65,7 @@ export function ReservationListBody() {
                         );
                     })
                 ) : (
-                    <></>
+                    <>該当する予約が存在しません</>
                 )}
             </div>
         </>

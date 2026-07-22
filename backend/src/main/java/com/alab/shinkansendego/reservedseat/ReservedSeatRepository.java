@@ -28,4 +28,6 @@ public interface ReservedSeatRepository extends JpaRepository<ReservedSeatEntity
     @EntityGraph(attributePaths = {
         "trainCar", "seat"})
     Optional<ReservedSeatEntity> findById(UUID id);
+    
+    List<ReservedSeatEntity> findByReservationId(UUID reservationId);
 }

@@ -26,4 +26,6 @@ public interface ReservedSeatSectionRepository extends JpaRepository<ReservedSea
         List<String> trainCarCds,
         List<String> reservedSectionCds
     );
+
+    List<ReservedSeatSectionEntity> findByReservationId(UUID reservationId);
 }
