@@ -99,7 +99,7 @@ export function ReservationSelectItem({ details }: ReservationSelectItemProps) {
                         ￥{totalFare.toLocaleString()}
                     </div>
                 </div>
-                {departureDate >= now && (
+                {!details.isDeleted && departureDate >= now && (
                     <div className="flex justify-end">
                         <button className="text-primary flex items-center justify-center gap-2 rounded-xl px-3 text-sm">
                             <IoTrashOutline />
