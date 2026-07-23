@@ -49,8 +49,8 @@ public class TrainCarService {
         }
 
         List<String> reservedSeatCdList = new ArrayList<>();
-        for (String cd : seatOfSectionCdList) {
-            List<ReservedSeatSectionEntity> reservedSeatSecList = reservedSeatSectionRepository.findByRideDateAndScheduleCdAndTrainCarCdAndReservedSectionCdOrderBySeatCd(request.getDate(), request.getScheduleCd(), request.getTrainCarCd(), cd);
+        for (String sectionCd : seatOfSectionCdList) {
+            List<ReservedSeatSectionEntity> reservedSeatSecList = reservedSeatSectionRepository.findByRideDateAndScheduleCdAndTrainCarCdAndReservedSectionCdOrderBySeatCd(request.getDate(), request.getScheduleCd(), request.getTrainCarCd(), sectionCd);
             reservedSeatCdList.addAll(reservedSeatSecList.stream().map(ReservedSeatSectionEntity::getSeatCd).toList());
         }
 
