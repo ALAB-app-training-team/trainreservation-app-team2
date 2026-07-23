@@ -126,7 +126,7 @@ public class ReservationService {
                     seat.getSeatFare()))
                 .toList();
 
-            dto.setPurchaseId(reservation.getId());
+            dto.setReservationId(reservation.getId());
             dto.setTrainTypeName(reservation.getSchedule().getTrainType().getName());
             dto.setDepartureStationName(departureSchedule.getSectionKm().getStartStation().getName());
             dto.setDepartureTime(departureSchedule.getDepartureTime());

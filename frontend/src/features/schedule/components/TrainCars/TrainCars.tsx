@@ -68,7 +68,7 @@ export function TrainCars({
                                 onClick={() =>
                                     setSelectedTrainCarCd(car.trainCarCd)
                                 }
-                                className={`flex h-20 min-w-[80px] flex-col items-center justify-center rounded-2xl border-2 p-3 transition-all duration-200 ${
+                                className={`flex h-20 min-w-20 flex-col items-center justify-center rounded-2xl border-2 p-3 transition-all duration-200 ${
                                     activeTrainCarCd === car.trainCarCd
                                         ? 'border-primary bg-primary-light text-primary font-bold shadow-sm'
                                         : 'border-primary-light hover:bg-primary-light'

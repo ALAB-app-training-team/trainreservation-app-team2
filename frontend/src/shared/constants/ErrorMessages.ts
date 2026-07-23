@@ -16,4 +16,6 @@ export const ERROR_MESSAGE = {
     ANY_RESERVATION_ERROR: '予約取得時に何らかのエラーが発生しました',
     NO_RESERVATION: '予約情報が見つかりません',
     NO_RESERVED_SEAT: '予約済座席が存在しません',
+    REFUND_RETRY:
+        '予約キャンセル処理中にエラーが発生しました。お手数ですが、再度お試しください。',
 } as const;

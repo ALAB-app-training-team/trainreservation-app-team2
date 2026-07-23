@@ -7,8 +7,9 @@ export class ReservationListPage {
     readonly ticketButton: Locator;
     readonly totalFareElement: Locator;
     readonly activeButton: Locator;
-    readonly canceledButton: Locator;
+    readonly refundButton: Locator;
     readonly pastButton: Locator;
+    readonly refundConfirmButton: Locator;
 
     constructor(page: Page) {
         this.page = page;
@@ -18,8 +19,9 @@ export class ReservationListPage {
         });
         this.totalFareElement = page.getByTestId('total-fare');
         this.activeButton = page.getByTestId('active-button');
-        this.canceledButton = page.getByTestId('canceled-button');
+        this.refundButton = page.getByTestId('refund-button');
         this.pastButton = page.getByTestId('past-button');
+        this.refundConfirmButton = page.getByTestId('refund-confirm-button');
     }
 
     async goto() {
@@ -35,5 +37,13 @@ export class ReservationListPage {
     }
     async clickPastButton() {
         await this.pastButton.first().click();
+    }
+
+    async clickRefundButton() {
+        await this.refundButton.first().click();
+    }
+
+    async clickrefundConfirmButton() {
+        await this.refundConfirmButton.first().click();
     }
 }
