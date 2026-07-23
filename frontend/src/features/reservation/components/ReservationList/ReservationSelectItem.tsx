@@ -11,9 +11,13 @@ import type { ReservationResponseDto } from '@/features/reservation/types/Reserv
 
 type ReservationSelectItemProps = {
     details: ReservationResponseDto;
+    onRefundClicked: (details: ReservationResponseDto) => void;
 };
 
-export function ReservationSelectItem({ details }: ReservationSelectItemProps) {
+export function ReservationSelectItem({
+    details,
+    onRefundClicked,
+}: ReservationSelectItemProps) {
     const navigate = useNavigate();
 
     const departureDate = new Date(details.rideDate);
@@ -27,7 +31,7 @@ export function ReservationSelectItem({ details }: ReservationSelectItemProps) {
 
     const handleReservationDetail = () => {
         navigate('/reservedTicket', {
-            state: { purchaseId: details.purchaseId, isBack: true },
+            state: { purchaseId: details.reservationId, isBack: true },
         });
         window.scrollTo(0, 0);
     };
@@ -101,7 +105,11 @@ export function ReservationSelectItem({ details }: ReservationSelectItemProps) {
                 </div>
                 {!details.isDeleted && departureDate >= now && (
                     <div className="flex justify-end">
-                        <button className="text-primary flex items-center justify-center gap-2 rounded-xl px-3 text-sm">
+                        <button
+                            onClick={() => onRefundClicked(details)}
+                            className="text-primary flex items-center justify-center gap-2 rounded-xl px-3 text-sm"
+                            data-testid={'refund-button'}
+                        >
                             <IoTrashOutline />
                             キャンセル
                         </button>
