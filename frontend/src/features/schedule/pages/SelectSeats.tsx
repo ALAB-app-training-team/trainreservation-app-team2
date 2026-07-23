@@ -1,5 +1,5 @@
 import { useQueryClient } from '@tanstack/react-query';
-import axios from 'axios';
+import axios, { HttpStatusCode } from 'axios';
 import { Suspense, useState } from 'react';
 import { IoCardOutline } from 'react-icons/io5';
 import { LuArrowLeft } from 'react-icons/lu';
@@ -104,7 +104,7 @@ export function SelectSeats() {
         } catch (error) {
             if (
                 axios.isAxiosError(error) &&
-                error.response?.status === 409 &&
+                error.response?.status === HttpStatusCode.Conflict &&
                 error.response?.data
             ) {
                 const errorData = error.response.data;
