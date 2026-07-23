@@ -1,14 +1,12 @@
 import dayjs from 'dayjs';
 import customParseFormat from 'dayjs/plugin/customParseFormat';
 import { FiArrowRight } from 'react-icons/fi';
-import { PiTrainBold } from 'react-icons/pi';
 import { useNavigate } from 'react-router-dom';
-import { tv } from 'tailwind-variants';
 
 import type { ScheduleInfoDto } from '@/features/schedule/types/ScheduleInfoDto';
 import type { SearchRequestDto } from '@/features/schedule/types/SearchRequestDto';
 import type { SearchResponseDto } from '@/features/schedule/types/SearchResponseDto';
-import { TRAIN_TYPE_COLOR } from '@/shared/constants/TrainTypeColor';
+import { TrainIcon } from '@/shared/components/TrainIcon';
 
 type ScheduleItemProps = {
     schedule: SearchResponseDto;
@@ -57,49 +55,20 @@ export function ScheduleItem({
             date: date,
             departureTime: schedule.departureTime,
             arrivalTime: schedule.arrivalTime,
+            trainTypeName: schedule.trainTypeName,
+            departureStationCd,
+            arrivalStationCd,
+            departureStationName,
+            arrivalStationName,
         };
         navigate('/selectSeat', {
             state: {
-                schedule,
                 scheduleInfoDto,
-                departureStationCd,
-                arrivalStationCd,
                 searchRequestDto,
-                departureStationName,
-                arrivalStationName,
             },
         });
         window.scrollTo(0, 0);
     };
-
-    const trainIconStyle = tv({
-        base: 'flex justify-center items-center w-8 h-8 p-0.5 text-2xl rounded-md text-white',
-        variants: {
-            color: {
-                primary: 'bg-primary',
-                YM: 'bg-YM',
-                HB: 'bg-HB',
-                NS: 'bg-NS',
-                HT: 'bg-HT',
-                KM: 'bg-KM',
-                TB: 'bg-TB',
-                TK: 'bg-TK',
-                TN: 'bg-TN',
-                KK: 'bg-KK',
-                AS: 'bg-AS',
-            },
-        },
-        defaultVariants: {
-            color: 'primary',
-        },
-    });
-
-    const foundColor = TRAIN_TYPE_COLOR.find(
-        (item) =>
-            item.trainTypeName === schedule.trainTypeName.split(/(\d+)/)[0],
-    );
-
-    const colorCd = foundColor ? foundColor.colorCd : 'primary';
 
     dayjs.extend(customParseFormat);
 
@@ -114,9 +83,7 @@ export function ScheduleItem({
                     className="order-1 flex flex-1 gap-4 md:flex-none"
                 >
                     <div className="flex items-center">
-                        <div className={trainIconStyle({ color: colorCd })}>
-                            <PiTrainBold />
-                        </div>
+                        <TrainIcon trainTypeName={schedule.trainTypeName} />
                     </div>
                     {(() => {
                         const trainTypeName =

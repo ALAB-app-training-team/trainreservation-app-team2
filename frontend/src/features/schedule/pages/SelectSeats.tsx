@@ -24,15 +24,7 @@ import { removeWhiteSpace } from '@/shared/utils/RemoveWhiteSpace';
 export function SelectSeats() {
     const navigate = useNavigate();
     const location = useLocation();
-    const {
-        schedule,
-        scheduleInfoDto,
-        departureStationCd,
-        arrivalStationCd,
-        searchRequestDto,
-        departureStationName,
-        arrivalStationName,
-    } = location.state;
+    const { scheduleInfoDto, searchRequestDto } = location.state;
     const {
         selectedSeats,
         handleSelectedSeats,
@@ -72,8 +64,8 @@ export function SelectSeats() {
         const reserveRequestDto: ReserveRequestDto = {
             scheduleCd: scheduleInfoDto.scheduleCd,
             rideDate: scheduleInfoDto.date,
-            departureStationCd: departureStationCd,
-            arrivalStationCd: arrivalStationCd,
+            departureStationCd: scheduleInfoDto.departureStationCd,
+            arrivalStationCd: scheduleInfoDto.arrivalStationCd,
             seats: selectedSeats.map((seat) => ({
                 trainCarCd: seat.trainCarCd,
                 seatCd: seat.seatCd,
@@ -134,12 +126,7 @@ export function SelectSeats() {
             </div>
             <div className="flex w-full flex-col items-start justify-between gap-4 p-4 md:flex-row">
                 <div className="w-full md:w-7/10">
-                    <TrainInfo
-                        schedule={schedule}
-                        scheduleInfoDto={scheduleInfoDto}
-                        departureStationName={departureStationName}
-                        arrivalStationName={arrivalStationName}
-                    />
+                    <TrainInfo scheduleInfoDto={scheduleInfoDto} />
                     <Suspense fallback={<TrainCarsSkeleton />}>
                         <TrainCars
                             scheduleInfoDto={scheduleInfoDto}
