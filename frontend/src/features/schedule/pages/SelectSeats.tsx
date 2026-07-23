@@ -11,6 +11,7 @@ import { SelectedSeats } from '@/features/schedule/components/SelectedSeats';
 import { TotalSeatsFare } from '@/features/schedule/components/TotalSeatsFare';
 import { TrainCars } from '@/features/schedule/components/TrainCars/TrainCars';
 import { TrainCarsSkeleton } from '@/features/schedule/components/TrainCars/TrainCarsSkeleton';
+import { TrainInfo } from '@/features/schedule/components/TrainInfo';
 import { useReserveUser } from '@/features/schedule/hooks/useReserveUser';
 import { useSelectedSeats } from '@/features/schedule/hooks/useSelectedSeats';
 import type { PaymentRequestDto } from '@/features/schedule/types/PaymentRequestDto';
@@ -23,12 +24,7 @@ import { removeWhiteSpace } from '@/shared/utils/RemoveWhiteSpace';
 export function SelectSeats() {
     const navigate = useNavigate();
     const location = useLocation();
-    const {
-        scheduleInfoDto,
-        departureStationCd,
-        arrivalStationCd,
-        searchRequestDto,
-    } = location.state;
+    const { scheduleInfoDto, searchRequestDto } = location.state;
     const {
         selectedSeats,
         handleSelectedSeats,
@@ -68,8 +64,8 @@ export function SelectSeats() {
         const reserveRequestDto: ReserveRequestDto = {
             scheduleCd: scheduleInfoDto.scheduleCd,
             rideDate: scheduleInfoDto.date,
-            departureStationCd: departureStationCd,
-            arrivalStationCd: arrivalStationCd,
+            departureStationCd: scheduleInfoDto.departureStationCd,
+            arrivalStationCd: scheduleInfoDto.arrivalStationCd,
             seats: selectedSeats.map((seat) => ({
                 trainCarCd: seat.trainCarCd,
                 seatCd: seat.seatCd,
@@ -130,6 +126,7 @@ export function SelectSeats() {
             </div>
             <div className="flex w-full flex-col items-start justify-between gap-4 p-4 md:flex-row">
                 <div className="w-full md:w-7/10">
+                    <TrainInfo scheduleInfoDto={scheduleInfoDto} />
                     <Suspense fallback={<TrainCarsSkeleton />}>
                         <TrainCars
                             scheduleInfoDto={scheduleInfoDto}
