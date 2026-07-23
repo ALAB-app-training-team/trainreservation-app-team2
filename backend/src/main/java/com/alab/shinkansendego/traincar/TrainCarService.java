@@ -2,6 +2,7 @@ package com.alab.shinkansendego.traincar;
 
 import com.alab.shinkansendego.departurearrivaltime.DepartureArrivalTimeRepository;
 import com.alab.shinkansendego.farekm.FareKmService;
+import com.alab.shinkansendego.reservedseatsection.ReservedSeatSectionEntity;
 import com.alab.shinkansendego.reservedseatsection.ReservedSeatSectionRepository;
 import com.alab.shinkansendego.sectionkm.SectionKmEntity;
 import com.alab.shinkansendego.sectionkm.SectionKmRepository;
@@ -49,8 +50,8 @@ public class TrainCarService {
 
         List<String> reservedSeatCdList = new ArrayList<>();
         for (String cd : seatOfSectionCdList) {
-            List<String> resultList = reservedSeatSectionRepository.findReservedSeatCdByRideDateAndScheduleCdAndTrainCarCdAndReservedSeatSectionCd(request.getDate(), request.getScheduleCd(), request.getTrainCarCd(), cd);
-            reservedSeatCdList.addAll(resultList);
+            List<ReservedSeatSectionEntity> reservedSeatSecList = reservedSeatSectionRepository.findByRideDateAndScheduleCdAndTrainCarCdAndReservedSeatSectionCdOrderBySeatCd(request.getDate(), request.getScheduleCd(), request.getTrainCarCd(), cd);
+            reservedSeatCdList.addAll(reservedSeatSecList.stream().map(ReservedSeatSectionEntity::getSeatCd).toList());
         }
 
         List<SectionKmEntity> sectionKmList = sectionKmRepository.findBySectionCdIn(seatOfSectionCdList);

@@ -2,6 +2,7 @@ package com.alab.shinkansendego.traincar;
 
 import com.alab.shinkansendego.departurearrivaltime.DepartureArrivalTimeRepository;
 import com.alab.shinkansendego.farekm.FareKmService;
+import com.alab.shinkansendego.reservedseatsection.ReservedSeatSectionEntity;
 import com.alab.shinkansendego.reservedseatsection.ReservedSeatSectionRepository;
 import com.alab.shinkansendego.seattype.SeatTypeEntity;
 import com.alab.shinkansendego.sectionkm.SectionKmEntity;
@@ -22,6 +23,7 @@ import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.UUID;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
@@ -32,6 +34,7 @@ public class TrainCarServiceTest {
     private final List<String> emptySectionCdList = new ArrayList<>();
     private final SeatRequestDto request = new SeatRequestDto();
     private final List<SectionKmEntity> sectionKmEntities = new ArrayList<>();
+    private final List<ReservedSeatSectionEntity> reservedSeatSectionEntities = new ArrayList<>();
     private final TrainCarEntity trainCarEntity = new TrainCarEntity();
     private final Map<String, Integer> fares = new HashMap<>();
     @Mock
@@ -73,6 +76,12 @@ public class TrainCarServiceTest {
         request.setTrainCarCd("Test001");
         sectionKmEntities.add(new SectionKmEntity("Test1", "Teststart01", "Testend01", 10.0));
         sectionKmEntities.add(new SectionKmEntity("Test2", "Teststart02", "Testend02", 10.0));
+        reservedSeatSectionEntities.add(new ReservedSeatSectionEntity(UUID.randomUUID(), UUID.randomUUID(), LocalDate.of(2026, 6, 1), "Test01",
+            "Test001", "TestSeat2", "Test1"));
+        reservedSeatSectionEntities.add(new ReservedSeatSectionEntity(UUID.randomUUID(), UUID.randomUUID(), LocalDate.of(2026, 6, 1), "Test01",
+            "Test001", "TestSeat4", "Test1"));
+        reservedSeatSectionEntities.add(new ReservedSeatSectionEntity(UUID.randomUUID(), UUID.randomUUID(), LocalDate.of(2026, 6, 1), "Test01",
+            "Test001", "TestSeat4", "Test2"));
         TrainCarTypeEntity trainCarTypeEntity = new TrainCarTypeEntity();
         trainCarTypeEntity.setName("指定席");
         SeatTypeEntity seatTypeEntity = new SeatTypeEntity();
@@ -93,18 +102,18 @@ public class TrainCarServiceTest {
             LocalTime.of(12, 0, 0),
             LocalTime.of(13, 0, 0)))
             .thenReturn(List.of("Test1", "Test2"));
-        when(reservedSeatSectionRepo.findReservedSeatCdByRideDateAndScheduleCdAndTrainCarCdAndReservedSeatSectionCd(
+        when(reservedSeatSectionRepo.findByRideDateAndScheduleCdAndTrainCarCdAndReservedSeatSectionCdOrderBySeatCd(
             LocalDate.of(2026, 6, 1),
             "Test01",
             "Test001",
             "Test1"))
-            .thenReturn(List.of("TestSeat2", "TestSeat4"));
-        when(reservedSeatSectionRepo.findReservedSeatCdByRideDateAndScheduleCdAndTrainCarCdAndReservedSeatSectionCd(
+            .thenReturn(List.of(reservedSeatSectionEntities.get(0), reservedSeatSectionEntities.get(1)));
+        when(reservedSeatSectionRepo.findByRideDateAndScheduleCdAndTrainCarCdAndReservedSeatSectionCdOrderBySeatCd(
             LocalDate.of(2026, 6, 1),
             "Test01",
             "Test001",
             "Test2"))
-            .thenReturn(List.of("TestSeat4"));
+            .thenReturn(List.of(reservedSeatSectionEntities.get(2)));
         when(sectionKmRepository.findBySectionCdIn(List.of("Test1", "Test2"))).thenReturn(sectionKmEntities);
         when(trainCarRepo.findByTrainCarCd(request.getTrainCarCd())).thenReturn(trainCarEntity);
         when(fareKmService.getFareFromDistance(20.0)).thenReturn(fares);
