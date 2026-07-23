@@ -7,7 +7,11 @@ import com.alab.shinkansendego.reservedseat.ReservedSeatEntity;
 import com.alab.shinkansendego.reservedseat.ReservedSeatRepository;
 import com.alab.shinkansendego.reservedseatsection.ReservedSeatSectionEntity;
 import com.alab.shinkansendego.reservedseatsection.ReservedSeatSectionRepository;
+import com.alab.shinkansendego.seat.SeatEntity;
+import com.alab.shinkansendego.seat.SeatRepository;
 import com.alab.shinkansendego.sectionkm.SectionKmRepository;
+import com.alab.shinkansendego.traincar.TrainCarEntity;
+import com.alab.shinkansendego.traincar.TrainCarRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
@@ -35,6 +39,8 @@ public class ReservationService {
     private final SectionKmRepository sectionKmRepository;
     private final DepartureArrivalTimeRepository departureArrivalTimeRepository;
     private final ReservedSeatSectionRepository reservedSeatSectionRepository;
+    private final TrainCarRepository trainCarRepository;
+    private final SeatRepository seatRepository;
 
     @Autowired
     public ReservationService(
@@ -43,6 +49,8 @@ public class ReservationService {
         SectionKmRepository sectionKmRepository,
         DepartureArrivalTimeRepository departureArrivalTimeRepository,
         ReservedSeatSectionRepository reservedSeatSectionRepository,
+        TrainCarRepository trainCarRepository,
+        SeatRepository seatRepository,
         RestClient.Builder restClientBuilder
     ) {
         this.reservationRepository = reservationRepository;
@@ -50,6 +58,8 @@ public class ReservationService {
         this.sectionKmRepository = sectionKmRepository;
         this.departureArrivalTimeRepository = departureArrivalTimeRepository;
         this.reservedSeatSectionRepository = reservedSeatSectionRepository;
+        this.trainCarRepository = trainCarRepository;
+        this.seatRepository = seatRepository;
         this.restClient = restClientBuilder.build();
     }
 
@@ -242,6 +252,10 @@ public class ReservationService {
             reservedSeat.setCodeToken(UUID.randomUUID());
             reservedSeat.setSeatFare(seatDto.getSeatFare());
             reservedSeat.setIsDeleted(false);
+            TrainCarEntity trainCar = trainCarRepository.findById(seatDto.getTrainCarCd()).orElseThrow(() -> new IllegalArgumentException("TrainCar is not found"));
+            reservedSeat.setTrainCar(trainCar);
+            SeatEntity seat = seatRepository.findById(seatDto.getSeatCd()).orElseThrow(() -> new IllegalArgumentException("Seat is not found"));
+            reservedSeat.setSeat(seat);
             reservedSeatsToPost.add(reservedSeat);
         }
         List<ReservedSeatEntity> savedReservedSeats = reservedSeatRepository.saveAll(reservedSeatsToPost);
@@ -279,8 +293,7 @@ public class ReservationService {
             for (ReservedSeatEntity reservedSeat : savedReservedSeats) {
                 String key = reservedSeat.getTrainCarCd() + "_" + reservedSeat.getSeatCd();
                 if (existingKeys.contains(key)) {
-                    ReservedSeatEntity conflictedSeatEntity = reservedSeatRepository.findById(reservedSeat.getId()).orElseThrow(() -> new IllegalArgumentException("Seat is Not found"));
-                    String conflictedSeat = conflictedSeatEntity.getTrainCar().getTrainCarNumber() + "号車" + conflictedSeatEntity.getSeat().getSeatNumber() + conflictedSeatEntity.getSeat().getSeatColumn();
+                    String conflictedSeat = reservedSeat.getTrainCar().getTrainCarNumber() + "号車" + reservedSeat.getSeat().getSeatNumber() + reservedSeat.getSeat().getSeatColumn();
                     conflictedSeats.add(conflictedSeat);
                 }
             }
@@ -290,7 +303,7 @@ public class ReservationService {
             }
         }
 
-        int reservedSeatSectionResult = reservedSeatSectionRepository.saveAllAndFlush(reservedSeatSectionsToPost).size();
+        int reservedSeatSectionResult = reservedSeatSectionRepository.saveAll(reservedSeatSectionsToPost).size();
         if (reservedSeatSectionResult != sectionCdList.size() * reserveRequestDto.getSeats().size()) {
             throw new RuntimeException("Insert ReservedSeatSections is failed");
         }

@@ -7,7 +7,6 @@ import org.springframework.data.jpa.repository.Query;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
-import java.util.Optional;
 import java.util.UUID;
 
 @Repository
@@ -25,9 +24,5 @@ public interface ReservedSeatRepository extends JpaRepository<ReservedSeatEntity
         "trainCar", "trainCar.seatType", "trainCar.seatType.trainCarType", "seat"})
     List<ReservedSeatEntity> findByReservationIdIn(List<UUID> reservationIds);
 
-    @EntityGraph(attributePaths = {
-        "trainCar", "seat"})
-    Optional<ReservedSeatEntity> findById(UUID id);
-    
     List<ReservedSeatEntity> findByReservationId(UUID reservationId);
 }
