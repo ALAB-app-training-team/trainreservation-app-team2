@@ -1,3 +1,5 @@
+import { FARE_CONSTANTS } from '@/features/reservation/constants/FareConstant';
+
 type ReserveConfirmModalProps = {
     onClick: () => void;
     onRequestClose: () => void;
@@ -14,6 +16,11 @@ export function ReserveConfirmModal({
             <div className="flex flex-col items-start justify-center gap-4">
                 <h1 className="!m-0 text-left !text-xl">予約確認</h1>
                 <div>予約を確定しますか？</div>
+                <div>
+                    ※予約の取り消しには手数料が発生します
+                    <br />
+                    (1座席につき {FARE_CONSTANTS.REFUND}円)
+                </div>
                 <div className="flex w-full items-center justify-end gap-4">
                     <button
                         onClick={onRequestClose}
