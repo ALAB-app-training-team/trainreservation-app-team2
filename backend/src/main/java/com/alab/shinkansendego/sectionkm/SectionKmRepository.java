@@ -11,8 +11,12 @@ public interface SectionKmRepository extends JpaRepository<SectionKmEntity, Stri
     @Query("SELECT sk.sectionCd FROM SectionKmEntity sk WHERE sk.startStationCd = :startStationCd")
     List<String> findSectionCdByStartStationCd(String startStationCd);
 
+    List<SectionKmEntity> findByStartStationCd(String startStationCd);
+
     @Query("SELECT sk.sectionCd FROM SectionKmEntity sk WHERE sk.goalStationCd = :goalStationCd")
     List<String> findSectionCdByGoalStationCd(String goalStationCd);
+
+    List<SectionKmEntity> findByGoalStationCd(String goalStationCd);
 
     List<SectionKmEntity> findBySectionCdIn(List<String> sectionKmCds);
 }

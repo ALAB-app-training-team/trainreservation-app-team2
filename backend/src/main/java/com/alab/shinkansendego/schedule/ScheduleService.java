@@ -28,8 +28,8 @@ public class ScheduleService {
 
         List<ScheduleResponseDto> responseList = new ArrayList<>();
 
-        List<String> departureSectionCdList = sectionKmRepository.findSectionCdByStartStationCd(request.getDepartureStationCd());
-        List<String> arrivalSectionCdList = sectionKmRepository.findSectionCdByGoalStationCd(request.getArrivalStationCd());
+        List<String> departureSectionCdList = sectionKmRepository.findByStartStationCd(request.getDepartureStationCd()).stream().map(entity -> entity.getSectionCd()).toList();
+        List<String> arrivalSectionCdList = sectionKmRepository.findByGoalStationCd(request.getArrivalStationCd()).stream().map(entity -> entity.getSectionCd()).toList();
 
         if (departureSectionCdList.isEmpty() || arrivalSectionCdList.isEmpty()) {
             throw new IllegalArgumentException("SectionCD is Not found");
