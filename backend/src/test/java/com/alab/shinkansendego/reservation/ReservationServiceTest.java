@@ -33,6 +33,7 @@ import org.springframework.test.web.client.MockRestServiceServer;
 import org.springframework.web.client.RestClient;
 import org.springframework.web.context.request.RequestContextHolder;
 import org.springframework.web.context.request.ServletRequestAttributes;
+import org.springframework.web.server.ResponseStatusException;
 
 import java.time.LocalDate;
 import java.time.LocalTime;
@@ -514,8 +515,22 @@ public class ReservationServiceTest {
     }
 
     @Test
-    @DisplayName("既に予約済みの座席を予約しようとした場合、DataAccessExceptionが発生する")
+    @DisplayName("既に予約済みの座席を予約しようとした場合、ResponseStatusException(CONFLICT)が発生する")
     void insertReservation_withAlreadyReservedSeat_throwsDataAccessException() {
+        TrainCarEntity trainCar = new TrainCarEntity();
+        trainCar.setTrainCarNumber(1);
+        SeatEntity seat = new SeatEntity();
+        seat.setSeatColumn("A");
+        seat.setSeatNumber(2);
+        ReservedSeatEntity existingSeat = new ReservedSeatEntity();
+        existingSeat.setSeatCd("existingSeatCd");
+        existingSeat.setTrainCarCd("existingTrainCd");
+        existingSeat.setSeat(seat);
+        existingSeat.setTrainCar(trainCar);
+        ReservedSeatSectionEntity existingSec = new ReservedSeatSectionEntity();
+        existingSec.setSeatCd("existingSeatCd");
+        existingSec.setTrainCarCd("existingTrainCd");
+
         ReserveRequestDto request = new ReserveRequestDto("Test01", LocalDate.now(), "Test0", "Test1", "TestTaro", "test@main", "Test2", List.of(new ReserveRequestDto.SelectedSeatDto("E5SER01", "SEAT01001", 2800), new ReserveRequestDto.SelectedSeatDto("E5SER01", "SEAT01001", 2800)));
         DepartureArrivalTimeEntity departureArrivalTime = new DepartureArrivalTimeEntity();
         departureArrivalTime.setTimeCd("Test1");
@@ -530,16 +545,18 @@ public class ReservationServiceTest {
         when(reservationRepo.save(any())).thenReturn(new ReservationEntity() {{
             setId(UUID.randomUUID());
         }});
-
-        when(reservedSeatRepo.saveAll(any())).thenReturn(List.of(new ReservedSeatEntity(), new ReservedSeatEntity()));
         when(trainCarRepo.findById(any())).thenReturn(Optional.of(new TrainCarEntity()));
         when(seatRepo.findById(any())).thenReturn(Optional.of(new SeatEntity()));
 
-        when(reservedSeatSectionRepo.findByRideDateAndScheduleCdAndTrainCarCdInAndReservedSectionCdIn(any(), any(), any(), any()))
-            .thenReturn(Collections.emptyList());
+        when(reservedSeatRepo.saveAll(any())).thenReturn(List.of(existingSeat, new ReservedSeatEntity()));
 
-        // ここを修正する
-        assertThrows(org.springframework.dao.DataAccessException.class, () -> service.insertReservation(request));
+        when(reservedSeatSectionRepo.findByRideDateAndScheduleCdAndTrainCarCdInAndReservedSectionCdIn(any(), any(), any(), any()))
+            .thenReturn(List.of(existingSec));
+
+        ResponseStatusException exception = assertThrows(ResponseStatusException.class, () -> service.insertReservation(request));
+        assertEquals(HttpStatus.CONFLICT, exception.getStatusCode());
+        assertTrue(exception.getReason().contains(existingSeat.getSeatCd()));
+        assertTrue(exception.getReason().contains(existingSeat.getTrainCarCd()));
     }
 
     @Test
