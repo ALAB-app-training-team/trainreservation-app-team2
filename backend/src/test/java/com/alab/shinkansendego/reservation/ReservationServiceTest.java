@@ -38,6 +38,7 @@ import java.time.LocalDate;
 import java.time.LocalTime;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
@@ -379,6 +380,10 @@ public class ReservationServiceTest {
             setId(UUID.randomUUID());
         }});
         when(reservedSeatRepo.saveAll(any())).thenReturn(Stream.generate(ReservedSeatEntity::new).limit(request.getSeats().size()).collect(Collectors.toList()));
+        when(trainCarRepo.findById(any())).thenReturn(Optional.of(new TrainCarEntity()));
+        when(seatRepo.findById(any())).thenReturn(Optional.of(new SeatEntity()));
+        when(reservedSeatSectionRepo.findByRideDateAndScheduleCdAndTrainCarCdInAndReservedSectionCdIn(any(), any(), any(), any()))
+            .thenReturn(Collections.emptyList());
         when(reservedSeatSectionRepo.saveAll(any())).
             thenReturn(Stream.generate(ReservedSeatSectionEntity::new).
                 limit((List.of(departureArrivalTime.getSectionCd())).size() * request.getSeats().size())
@@ -458,6 +463,10 @@ public class ReservationServiceTest {
         when(reservationRepo.save(any())).thenReturn(new ReservationEntity() {{
             setId(UUID.randomUUID());
         }});
+        when(trainCarRepo.findById(any())).thenReturn(Optional.of(new TrainCarEntity()));
+        when(seatRepo.findById(any())).thenReturn(Optional.of(new SeatEntity()));
+        when(reservedSeatSectionRepo.findByRideDateAndScheduleCdAndTrainCarCdInAndReservedSectionCdIn(any(), any(), any(), any()))
+            .thenReturn(Collections.emptyList());
         when(reservedSeatRepo.saveAll(any()).size()).thenThrow(new DuplicateKeyException("UNIQUE制約エラー"));
 
         assertThrows(org.springframework.dao.DataAccessException.class, () -> service.insertReservation(request));
@@ -522,6 +531,10 @@ public class ReservationServiceTest {
             setId(UUID.randomUUID());
         }});
         when(reservedSeatRepo.saveAll(any())).thenReturn(List.of(new ReservedSeatEntity(), new ReservedSeatEntity()));
+        when(trainCarRepo.findById(any())).thenReturn(Optional.of(new TrainCarEntity()));
+        when(seatRepo.findById(any())).thenReturn(Optional.of(new SeatEntity()));
+        when(reservedSeatSectionRepo.findByRideDateAndScheduleCdAndTrainCarCdInAndReservedSectionCdIn(any(), any(), any(), any()))
+            .thenReturn(Collections.emptyList());
         when(reservedSeatSectionRepo.saveAll(any())).thenThrow(new DuplicateKeyException("UNIQUE制約エラー"));
 
         assertThrows(org.springframework.dao.DataAccessException.class, () -> service.insertReservation(request));
@@ -584,6 +597,10 @@ public class ReservationServiceTest {
             setId(UUID.randomUUID());
         }});
         when(reservedSeatRepo.saveAll(any())).thenReturn(Stream.generate(ReservedSeatEntity::new).limit(request.getSeats().size()).collect(Collectors.toList()));
+        when(trainCarRepo.findById(any())).thenReturn(Optional.of(new TrainCarEntity()));
+        when(seatRepo.findById(any())).thenReturn(Optional.of(new SeatEntity()));
+        when(reservedSeatSectionRepo.findByRideDateAndScheduleCdAndTrainCarCdInAndReservedSectionCdIn(any(), any(), any(), any()))
+            .thenReturn(Collections.emptyList());
         when(reservedSeatSectionRepo.saveAll(any())).
             thenReturn(Stream.generate(ReservedSeatSectionEntity::new).
                 limit((List.of(departureArrivalTime.getSectionCd())).size() * request.getSeats().size())
