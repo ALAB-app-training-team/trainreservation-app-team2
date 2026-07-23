@@ -7,8 +7,14 @@ import type { SeatsRequestDto } from '@/features/schedule/types/SeatsRequestDto'
 
 export function useSeatsByTrainCar(seatsRequestDto: SeatsRequestDto) {
     const { data: seats } = useSuspenseQuery({
-        queryKey: ['seat', seatsRequestDto],
+        queryKey: [
+            'seat',
+            seatsRequestDto.date,
+            seatsRequestDto.scheduleCd,
+            seatsRequestDto.trainCarCd,
+        ],
         queryFn: async () => {
+            console.log('動いてはいる！');
             const response = await axios.get<SeatResponseDto[]>(
                 ENDPOINTS.SEATS_SELECT(),
                 {

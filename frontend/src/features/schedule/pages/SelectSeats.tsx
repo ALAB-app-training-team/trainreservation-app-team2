@@ -1,4 +1,4 @@
-import { QueryClient } from '@tanstack/react-query';
+import { useQueryClient } from '@tanstack/react-query';
 import axios from 'axios';
 import { Suspense, useState } from 'react';
 import { IoCardOutline } from 'react-icons/io5';
@@ -22,8 +22,8 @@ import { ERROR_MESSAGE } from '@/shared/constants/ErrorMessages';
 import { useModal } from '@/shared/hooks/useModal';
 import { removeWhiteSpace } from '@/shared/utils/RemoveWhiteSpace';
 
-const queryClient = new QueryClient();
 export function SelectSeats() {
+    const queryClient = useQueryClient();
     const navigate = useNavigate();
     const location = useLocation();
     const {
@@ -118,10 +118,8 @@ export function SelectSeats() {
                         : errorData;
                 checkReservedSeats(conflictSeats);
 
-                await queryClient.invalidateQueries({
-                    queryKey: ['seat'],
-                    exact: false,
-                    refetchType: 'all',
+                await queryClient.refetchQueries({
+                    predicate: (query) => query.queryKey[0] === 'seat',
                 });
                 return;
             }
