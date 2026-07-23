@@ -8,11 +8,13 @@ import com.alab.shinkansendego.reservedseatsection.ReservedSeatSectionEntity;
 import com.alab.shinkansendego.reservedseatsection.ReservedSeatSectionRepository;
 import com.alab.shinkansendego.schedule.ScheduleEntity;
 import com.alab.shinkansendego.seat.SeatEntity;
+import com.alab.shinkansendego.seat.SeatRepository;
 import com.alab.shinkansendego.seattype.SeatTypeEntity;
 import com.alab.shinkansendego.sectionkm.SectionKmEntity;
 import com.alab.shinkansendego.sectionkm.SectionKmRepository;
 import com.alab.shinkansendego.station.StationEntity;
 import com.alab.shinkansendego.traincar.TrainCarEntity;
+import com.alab.shinkansendego.traincar.TrainCarRepository;
 import com.alab.shinkansendego.traincartype.TrainCarTypeEntity;
 import com.alab.shinkansendego.traintype.TrainTypeEntity;
 import org.jspecify.annotations.NonNull;
@@ -74,6 +76,10 @@ public class ReservationServiceTest {
     private DepartureArrivalTimeRepository departureArrivalTimeRepo;
     @Mock
     private ReservedSeatSectionRepository reservedSeatSectionRepo;
+    @Mock
+    private TrainCarRepository trainCarRepo;
+    @Mock
+    private SeatRepository seatRepo;
     private ReservationService service;
     private MockRestServiceServer mockRestServiceServer;
     @Autowired
@@ -228,7 +234,7 @@ public class ReservationServiceTest {
         restClientBuilder = RestClient.builder();
         this.mockRestServiceServer = MockRestServiceServer.bindTo(restClientBuilder).build();
         this.service = new ReservationService(
-            reservationRepo, reservedSeatRepo, sectionKmRepo, departureArrivalTimeRepo, reservedSeatSectionRepo, restClientBuilder
+            reservationRepo, reservedSeatRepo, sectionKmRepo, departureArrivalTimeRepo, reservedSeatSectionRepo, trainCarRepo, seatRepo, restClientBuilder
         );
 
         DepartureArrivalTimeEntity departureArrivalTime1 = buildSchedule(LocalTime.of(6, 4, 0), "THK01", "東京", LocalTime.of(6, 9, 0), "THK02", "上野");
