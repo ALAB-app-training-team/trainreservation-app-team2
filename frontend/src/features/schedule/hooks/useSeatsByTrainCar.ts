@@ -14,7 +14,6 @@ export function useSeatsByTrainCar(seatsRequestDto: SeatsRequestDto) {
             seatsRequestDto.trainCarCd,
         ],
         queryFn: async () => {
-            console.log('動いてはいる！');
             const response = await axios.get<SeatResponseDto[]>(
                 ENDPOINTS.SEATS_SELECT(),
                 {
