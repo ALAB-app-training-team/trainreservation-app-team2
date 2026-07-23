@@ -102,13 +102,13 @@ public class TrainCarServiceTest {
             LocalTime.of(12, 0, 0),
             LocalTime.of(13, 0, 0)))
             .thenReturn(List.of("Test1", "Test2"));
-        when(reservedSeatSectionRepo.findByRideDateAndScheduleCdAndTrainCarCdAndReservedSeatSectionCdOrderBySeatCd(
+        when(reservedSeatSectionRepo.findByRideDateAndScheduleCdAndTrainCarCdAndReservedSectionCdOrderBySeatCd(
             LocalDate.of(2026, 6, 1),
             "Test01",
             "Test001",
             "Test1"))
             .thenReturn(List.of(reservedSeatSectionEntities.get(0), reservedSeatSectionEntities.get(1)));
-        when(reservedSeatSectionRepo.findByRideDateAndScheduleCdAndTrainCarCdAndReservedSeatSectionCdOrderBySeatCd(
+        when(reservedSeatSectionRepo.findByRideDateAndScheduleCdAndTrainCarCdAndReservedSectionCdOrderBySeatCd(
             LocalDate.of(2026, 6, 1),
             "Test01",
             "Test001",

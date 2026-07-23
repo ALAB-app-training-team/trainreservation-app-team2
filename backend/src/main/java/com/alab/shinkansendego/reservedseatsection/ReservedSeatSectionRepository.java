@@ -9,7 +9,7 @@ import java.util.UUID;
 
 @Repository
 public interface ReservedSeatSectionRepository extends JpaRepository<ReservedSeatSectionEntity, UUID> {
-    List<ReservedSeatSectionEntity> findByRideDateAndScheduleCdAndTrainCarCdAndReservedSeatSectionCdOrderBySeatCd
+    List<ReservedSeatSectionEntity> findByRideDateAndScheduleCdAndTrainCarCdAndReservedSectionCdOrderBySeatCd
         (LocalDate rideDate,
          String scheduleCd,
          String trainCarCd,
