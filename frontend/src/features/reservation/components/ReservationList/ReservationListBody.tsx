@@ -4,6 +4,7 @@ import { useState } from 'react';
 import { CiCalendar } from 'react-icons/ci';
 import { LuTicket } from 'react-icons/lu';
 import { RiGroupLine } from 'react-icons/ri';
+import { toast } from 'sonner';
 
 import { ENDPOINTS } from '@/api/routes';
 import { ReservationSelectItem } from '@/features/reservation/components/ReservationList/ReservationSelectItem';
@@ -57,7 +58,7 @@ export function ReservationListBody() {
                             : reservation,
                     ),
             );
-            alert('予約をキャンセルしました。');
+            toast.success('予約を取消しました');
         } catch {
             alert(ERROR_MESSAGE.REFUND_RETRY);
         } finally {

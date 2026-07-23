@@ -29,17 +29,20 @@ export function ReservationRefundConfirmModal({
             <div className="justify-er flex flex-col items-start gap-4">
                 <h1 className="!m-0 text-left !text-xl">予約キャンセル確認</h1>
                 <div>以下の予約を取り消しますか？</div>
+
+                <div>
+                    <span className="text-xl font-bold">
+                        {dayjs(details.rideDate).format('YYYY年MM月DD日')}
+                        <br />
+                        {dayjs(details.departureTime, 'HH:mm:ss').format(
+                            'HH:mm',
+                        )}
+                        発
+                    </span>
+                </div>
                 <div className="text-2xl font-bold">
                     {details.departureStationName} →{' '}
                     {details.arrivalStationName}
-                </div>
-                <div>
-                    <span className="text-xl font-bold">
-                        {dayjs(details.rideDate).format('YYYY年MM月DD日')}{' '}
-                        {dayjs(details.departureTime, 'HH:mm:ss').format(
-                            'HH:mm',
-                        )}{' '}
-                    </span>
                 </div>
                 <ReservedSeats
                     id="reservationList"
@@ -71,6 +74,7 @@ export function ReservationRefundConfirmModal({
                         予約を取消さない
                     </button>
                     <button
+                        data-testid={'refund-confirm-button'}
                         onClick={() => onClick(reservationId)}
                         disabled={isSubmitting}
                         className="bg-primary rounded-lg p-2 text-white"

@@ -1,7 +1,7 @@
 import dayjs from 'dayjs';
 import customParseFormat from 'dayjs/plugin/customParseFormat';
 import { BsQrCode } from 'react-icons/bs';
-import { FaClock, FaSearch } from 'react-icons/fa';
+import { FaClock } from 'react-icons/fa';
 import { IoTrashOutline } from 'react-icons/io5';
 import { LuTicket } from 'react-icons/lu';
 import { useNavigate } from 'react-router-dom';
@@ -105,12 +105,13 @@ export function ReservationSelectItem({
                 </div>
                 {!details.isDeleted && departureDate >= now && (
                     <div className="flex justify-end">
-                        {/*TODO：キャンセルと同じ区間で検索にOnClickを追加する*/}
-                        {departureDate >= now ? (
+                        {/*TODO：同じ区間で検索にOnClickを追加する*/}
+                        {departureDate >= now && (
                             <>
                                 <button
                                     onClick={() => onRefundClicked(details)}
                                     className="text-primary flex items-center justify-center gap-2 rounded-xl px-3 text-sm"
+                                    data-testid={'refund-button'}
                                 >
                                     <IoTrashOutline />
                                     キャンセル
@@ -123,11 +124,6 @@ export function ReservationSelectItem({
                                     チケットを表示
                                 </button>
                             </>
-                        ) : (
-                            <button className="bg-primary flex items-center justify-center gap-4 rounded-md px-4 py-2 text-sm text-white">
-                                <FaSearch />
-                                同じ区間で検索
-                            </button>
                         )}
                     </div>
                 )}
