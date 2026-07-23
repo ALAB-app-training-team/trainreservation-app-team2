@@ -278,7 +278,7 @@ public class ReservationService {
         }
 
         List<String> sectionCds = reservedSeatSectionsToPost.stream().map(sec -> sec.getReservedSectionCd()).distinct().toList();
-        List<String> trainCarCds = reservedSeatsToPost.stream().map(sec -> sec.getTrainCarCd()).distinct().toList();
+        List<String> trainCarCds = reservedSeatsToPost.stream().map(seat -> seat.getTrainCarCd()).distinct().toList();
         List<ReservedSeatSectionEntity> existingReservedSeatSections = reservedSeatSectionRepository.findByRideDateAndScheduleCdAndTrainCarCdInAndReservedSectionCdIn(
             reservedSeatSectionsToPost.getFirst().getRideDate(),
             reservedSeatSectionsToPost.getFirst().getScheduleCd(),
