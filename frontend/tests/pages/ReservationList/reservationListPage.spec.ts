@@ -67,3 +67,26 @@ test('過去タブは過去の日付であること', async ({
         await expect(date.getTime()).toBeLessThan(today.getTime());
     }
 });
+
+test('削除すると予約が1件削除されること', async ({
+    page,
+    createReservation,
+    guestLogin,
+}) => {
+    await createReservation();
+    await guestLogin();
+    await expect(page).toHaveURL('/reservationList');
+    const reservationListPage = new ReservationListPage(page);
+    await reservationListPage.refundButton
+        .first()
+        .waitFor({ state: 'visible' });
+    const beforeReservationCount: number =
+        await reservationListPage.refundButton.count();
+
+    await reservationListPage.clickRefundButton();
+    await reservationListPage.clickrefundConfirmButton();
+
+    await expect(reservationListPage.refundButton).toHaveCount(
+        beforeReservationCount - 1,
+    );
+});

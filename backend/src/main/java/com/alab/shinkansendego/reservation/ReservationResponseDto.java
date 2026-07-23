@@ -17,7 +17,7 @@ import java.util.UUID;
 @Getter
 @Setter
 public class ReservationResponseDto {
-    private UUID purchaseId;
+    private UUID reservationId;
     private String trainTypeName;
     private String departureStationName;
     private LocalTime departureTime;

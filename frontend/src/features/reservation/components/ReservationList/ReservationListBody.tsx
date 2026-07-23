@@ -1,15 +1,24 @@
+import { useQueryClient } from '@tanstack/react-query';
+import axios from 'axios';
 import { useState } from 'react';
 import { CiCalendar } from 'react-icons/ci';
 import { LuTicket } from 'react-icons/lu';
 import { RiGroupLine } from 'react-icons/ri';
+import { toast } from 'sonner';
 
+import { ENDPOINTS } from '@/api/routes';
 import { ReservationSelectItem } from '@/features/reservation/components/ReservationList/ReservationSelectItem';
+import { ReservationRefundConfirmModal } from '@/features/reservation/components/ReservationRefundConfirmModal';
 import type { ReservationTabKey } from '@/features/reservation/constants/ReservationTab';
 import {
     DEFAULT_RESERVATION_TAB,
     RESERVATION_TAB,
 } from '@/features/reservation/constants/ReservationTab';
 import { useReservationList } from '@/features/reservation/hooks/useReservationList';
+import type { ReservationResponseDto } from '@/features/reservation/types/ReservationResponseDto';
+import { CustomModal } from '@/shared/components/CustomModal';
+import { ERROR_MESSAGE } from '@/shared/constants/ErrorMessages';
+import { useModal } from '@/shared/hooks/useModal';
 
 export function ReservationListBody() {
     const [selectedTab, setSelectedTab] = useState<ReservationTabKey>(
@@ -17,6 +26,11 @@ export function ReservationListBody() {
     );
     const { activeReservations, canceledReservations, pastReservations } =
         useReservationList();
+    const { isOpen, handleModalOpen, onRequestClose } = useModal();
+    const [isSubmitting, setIsSubmitting] = useState<boolean>(false);
+    const [selectedReservation, setSelectedReservation] =
+        useState<ReservationResponseDto>();
+    const queryClient = useQueryClient();
 
     const filteredReservations =
         selectedTab === RESERVATION_TAB[0].key
@@ -24,6 +38,34 @@ export function ReservationListBody() {
             : selectedTab === RESERVATION_TAB[1].key
               ? pastReservations
               : canceledReservations;
+
+    const handleRefundModalOpen = (details: ReservationResponseDto) => {
+        setSelectedReservation(details);
+        handleModalOpen();
+    };
+    const handleReservationRefund = async (reservationId: string) => {
+        if (isSubmitting) return;
+        setIsSubmitting(true);
+        try {
+            await axios.delete(ENDPOINTS.RESERVATION(reservationId));
+
+            queryClient.setQueryData<ReservationResponseDto[]>(
+                ['reservationList'],
+                (old) =>
+                    old?.map((reservation) =>
+                        reservation.reservationId == reservationId
+                            ? { ...reservation, isDeleted: true }
+                            : reservation,
+                    ),
+            );
+            toast.success('予約を取消しました');
+        } catch {
+            alert(ERROR_MESSAGE.REFUND_RETRY);
+        } finally {
+            setIsSubmitting(false);
+            onRequestClose();
+        }
+    };
 
     return (
         <>
@@ -59,8 +101,9 @@ export function ReservationListBody() {
                     filteredReservations.map((reservation) => {
                         return (
                             <ReservationSelectItem
-                                key={reservation.purchaseId}
+                                key={reservation.reservationId}
                                 details={reservation}
+                                onRefundClicked={handleRefundModalOpen}
                             />
                         );
                     })
@@ -68,6 +111,16 @@ export function ReservationListBody() {
                     <>該当する予約が存在しません</>
                 )}
             </div>
+            <CustomModal isOpen={isOpen} onRequestClose={onRequestClose}>
+                {selectedReservation?.reservationId && (
+                    <ReservationRefundConfirmModal
+                        onClick={handleReservationRefund}
+                        onRequestClose={onRequestClose}
+                        isSubmitting={isSubmitting}
+                        details={selectedReservation}
+                    />
+                )}
+            </CustomModal>
         </>
     );
 }

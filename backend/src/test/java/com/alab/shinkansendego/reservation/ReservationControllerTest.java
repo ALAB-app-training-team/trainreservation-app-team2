@@ -37,13 +37,13 @@ public class ReservationControllerTest {
     @MockitoBean
     private ReservationService service;
 
-    private static @NonNull ReservationResponseDto getExpectReservationResponseDto(UUID purchaseId) {
+    private static @NonNull ReservationResponseDto getExpectReservationResponseDto(UUID reservationId) {
         ReservedSeatDto seat1 = new ReservedSeatDto("指定席", 1, 1, "A", UUID.fromString("60a1ab63-a41f-430d-a2d1-10a76368d0f5"), 5000);
         ReservedSeatDto seat2 = new ReservedSeatDto("グリーン車", 9, 1, "A", UUID.fromString("3de8909e-32de-478e-bd9b-739f3fe6d6c3"), 10000);
         ReservedSeatDto seat3 = new ReservedSeatDto("グランクラス", 10, 1, "A", UUID.fromString("e192e5f1-318e-4d10-b76d-2f2bf15e8b70"), 15000);
         List<ReservedSeatDto> reservedSeatList = Arrays.asList(seat1, seat2, seat3);
         return new ReservationResponseDto(
-            purchaseId,
+            reservationId,
             "やまびこ1号",
             "東京",
             LocalTime.of(12, 0, 0),
@@ -75,7 +75,7 @@ public class ReservationControllerTest {
                 get(baseUrl + "?reserverName=" + name + "&reserverMail=" + email)
                     .contentType(MediaType.APPLICATION_JSON))
             .andExpect(status().isOk())
-            .andExpect(jsonPath("$[0].purchaseId").value("4156b939-2e3e-46c1-92d3-7aa64b6ca575"))
+            .andExpect(jsonPath("$[0].reservationId").value("4156b939-2e3e-46c1-92d3-7aa64b6ca575"))
             .andExpect(jsonPath("$[0].trainTypeName").value("やまびこ1号"))
             .andExpect(jsonPath("$[0].departureStationName").value("東京"))
             .andExpect(jsonPath("$[0].departureTime").value("12:00:00"))
@@ -101,7 +101,7 @@ public class ReservationControllerTest {
             .andExpect(jsonPath("$[0].reservedSeats[0].seatFare").value(5000))
             .andExpect(jsonPath("$[0].reservedSeats[1].seatFare").value(10000))
             .andExpect(jsonPath("$[0].reservedSeats[2].seatFare").value(15000))
-            .andExpect(jsonPath("$[1].purchaseId").value("3136b939-2e3e-46c1-92d3-7aa64b6ca666"))
+            .andExpect(jsonPath("$[1].reservationId").value("3136b939-2e3e-46c1-92d3-7aa64b6ca666"))
             .andExpect(jsonPath("$[1].trainTypeName").value("やまびこ1号"))
             .andExpect(jsonPath("$[1].departureStationName").value("東京"))
             .andExpect(jsonPath("$[1].departureTime").value("12:00:00"))
@@ -160,7 +160,7 @@ public class ReservationControllerTest {
                 get(url + "?reserverName=山田太郎&reserverMail=email@sample.com")
                     .contentType(MediaType.APPLICATION_JSON))
             .andExpect(status().isOk())
-            .andExpect(jsonPath("$.purchaseId").value("4156b939-2e3e-46c1-92d3-7aa64b6ca575"))
+            .andExpect(jsonPath("$.reservationId").value("4156b939-2e3e-46c1-92d3-7aa64b6ca575"))
             .andExpect(jsonPath("$.trainTypeName").value("やまびこ1号"))
             .andExpect(jsonPath("$.departureStationName").value("東京"))
             .andExpect(jsonPath("$.departureTime").value("12:00:00"))
@@ -190,7 +190,7 @@ public class ReservationControllerTest {
 
     @Test
     @DisplayName("idがNullの場合、NOTFOUNDを返す")
-    void getReservation_withPurchaseIdIsNull_returnRequestParamError() throws Exception {
+    void getReservation_withReservationIdIsNull_returnRequestParamError() throws Exception {
         String url = baseUrl + "/";
 
         mockMvc.perform(get(url))
@@ -212,14 +212,14 @@ public class ReservationControllerTest {
                 new ReserveRequestDto.SelectedSeatDto("E5SER01", "SEAT01001", 2800),
                 new ReserveRequestDto.SelectedSeatDto("E5SER01", "SEAT01002", 2800)
             ));
-        UUID mockedPurchaseId = UUID.randomUUID();
-        Mockito.when(service.insertReservation(request)).thenReturn(mockedPurchaseId);
+        UUID mockedReservationId = UUID.randomUUID();
+        Mockito.when(service.insertReservation(request)).thenReturn(mockedReservationId);
 
         mockMvc.perform(post(baseUrl)
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(objectMapper.writeValueAsString(request)))
             .andExpect(status().isCreated())
-            .andExpect(content().string("\"" + mockedPurchaseId + "\""));
+            .andExpect(content().string("\"" + mockedReservationId + "\""));
     }
 
     @Test

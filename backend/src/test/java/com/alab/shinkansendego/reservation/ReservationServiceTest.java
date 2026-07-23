@@ -279,7 +279,7 @@ public class ReservationServiceTest {
 
         assertAll(
             () -> assertEquals(2, result.size()),
-            () -> assertEquals(reservationId1, result.getFirst().getPurchaseId()),
+            () -> assertEquals(reservationId1, result.getFirst().getReservationId()),
             () -> assertEquals("やまびこ1号", result.getFirst().getTrainTypeName()),
             () -> assertEquals("東京", result.getFirst().getDepartureStationName()),
             () -> assertEquals(LocalTime.of(6, 4, 0), result.getFirst().getDepartureTime()),
