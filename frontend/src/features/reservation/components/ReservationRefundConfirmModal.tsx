@@ -9,7 +9,6 @@ type ReservationRefundConfirmModalProps = {
     onRequestClose: () => void;
     isSubmitting: boolean;
     details: ReservationResponseDto;
-    reservationId: string;
 };
 
 export function ReservationRefundConfirmModal({
@@ -17,7 +16,6 @@ export function ReservationRefundConfirmModal({
     onRequestClose,
     isSubmitting,
     details,
-    reservationId,
 }: ReservationRefundConfirmModalProps) {
     const countSeat: number = details.reservedSeats.length;
     const seatFare: number = details.reservedSeats.reduce(
@@ -75,7 +73,7 @@ export function ReservationRefundConfirmModal({
                     </button>
                     <button
                         data-testid={'refund-confirm-button'}
-                        onClick={() => onClick(reservationId)}
+                        onClick={() => onClick(details.reservationId!)}
                         disabled={isSubmitting}
                         className="bg-primary rounded-lg p-2 text-white"
                     >

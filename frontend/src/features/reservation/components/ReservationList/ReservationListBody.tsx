@@ -112,13 +112,12 @@ export function ReservationListBody() {
                 )}
             </div>
             <CustomModal isOpen={isOpen} onRequestClose={onRequestClose}>
-                {selectedReservation && selectedReservation.reservationId && (
+                {selectedReservation?.reservationId && (
                     <ReservationRefundConfirmModal
                         onClick={handleReservationRefund}
                         onRequestClose={onRequestClose}
                         isSubmitting={isSubmitting}
                         details={selectedReservation}
-                        reservationId={selectedReservation.reservationId}
                     />
                 )}
             </CustomModal>
