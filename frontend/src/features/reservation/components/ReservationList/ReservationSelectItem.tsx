@@ -105,23 +105,21 @@ export function ReservationSelectItem({
                 </div>
                 {!details.isDeleted && departureDate >= now && (
                     <div className="flex justify-end">
-                        <>
-                            <button
-                                onClick={() => onRefundClicked(details)}
-                                className="text-primary flex items-center justify-center gap-2 rounded-xl px-3 text-sm"
-                                data-testid={'refund-button'}
-                            >
-                                <IoTrashOutline />
-                                キャンセル
-                            </button>
-                            <button
-                                onClick={handleReservationDetail}
-                                className="bg-primary flex items-center justify-center gap-4 rounded-md px-4 py-2 text-sm text-white"
-                            >
-                                <BsQrCode />
-                                チケットを表示
-                            </button>
-                        </>
+                        <button
+                            onClick={() => onRefundClicked(details)}
+                            className="text-primary flex items-center justify-center gap-2 rounded-xl px-3 text-sm"
+                            data-testid={'refund-button'}
+                        >
+                            <IoTrashOutline />
+                            キャンセル
+                        </button>
+                        <button
+                            onClick={handleReservationDetail}
+                            className="bg-primary flex items-center justify-center gap-4 rounded-md px-4 py-2 text-sm text-white"
+                        >
+                            <BsQrCode />
+                            チケットを表示
+                        </button>
                     </div>
                 )}
             </div>
