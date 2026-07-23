@@ -3,4 +3,9 @@ export type ScheduleInfoDto = {
     date: string;
     departureTime: string;
     arrivalTime: string;
+    trainTypeName: string;
+    departureStationCd: string;
+    arrivalStationCd: string;
+    departureStationName: string;
+    arrivalStationName: string;
 };
