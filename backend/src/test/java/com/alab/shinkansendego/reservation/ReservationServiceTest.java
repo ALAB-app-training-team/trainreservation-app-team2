@@ -530,13 +530,15 @@ public class ReservationServiceTest {
         when(reservationRepo.save(any())).thenReturn(new ReservationEntity() {{
             setId(UUID.randomUUID());
         }});
+
         when(reservedSeatRepo.saveAll(any())).thenReturn(List.of(new ReservedSeatEntity(), new ReservedSeatEntity()));
         when(trainCarRepo.findById(any())).thenReturn(Optional.of(new TrainCarEntity()));
         when(seatRepo.findById(any())).thenReturn(Optional.of(new SeatEntity()));
+
         when(reservedSeatSectionRepo.findByRideDateAndScheduleCdAndTrainCarCdInAndReservedSectionCdIn(any(), any(), any(), any()))
             .thenReturn(Collections.emptyList());
-        when(reservedSeatSectionRepo.saveAll(any())).thenThrow(new DuplicateKeyException("UNIQUE制約エラー"));
 
+        // ここを修正する
         assertThrows(org.springframework.dao.DataAccessException.class, () -> service.insertReservation(request));
     }
 

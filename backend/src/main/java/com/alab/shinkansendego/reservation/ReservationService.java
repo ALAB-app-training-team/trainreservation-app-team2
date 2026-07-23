@@ -24,7 +24,6 @@ import tools.jackson.databind.ObjectMapper;
 
 import java.util.ArrayList;
 import java.util.Comparator;
-import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
@@ -291,19 +290,15 @@ public class ReservationService {
                 .map(sec -> sec.getTrainCarCd() + "_" + sec.getSeatCd())
                 .collect(Collectors.toSet());
             List<SeatResponseDto> seatResponseDtos = new ArrayList<>();
-            Set<String> conflictedSeats = new HashSet<>();
 
             for (ReservedSeatEntity reservedSeat : savedReservedSeats) {
                 String key = reservedSeat.getTrainCarCd() + "_" + reservedSeat.getSeatCd();
                 if (existingKeys.contains(key)) {
-                    String conflictedSeat = reservedSeat.getTrainCar().getTrainCarNumber() + "号車" + reservedSeat.getSeat().getSeatNumber() + reservedSeat.getSeat().getSeatColumn();
-                    conflictedSeats.add(conflictedSeat);
                     seatResponseDtos.add(new SeatResponseDto(reservedSeat.getTrainCarCd(), reservedSeat.getTrainCar().getTrainCarNumber(), reservedSeat.getSeatCd(), reservedSeat.getSeat().getSeatNumber(), reservedSeat.getSeat().getSeatColumn(), 0, true));
                 }
             }
-            if (!conflictedSeats.isEmpty()) {
+            if (!seatResponseDtos.isEmpty()) {
                 String conflictSeatJson = new ObjectMapper().writeValueAsString(seatResponseDtos);
-                String conflictedSeatMessage = String.join(",", conflictedSeats);
                 throw new ResponseStatusException(HttpStatus.CONFLICT, conflictSeatJson);
             }
         }
