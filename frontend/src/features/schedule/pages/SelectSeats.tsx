@@ -20,6 +20,8 @@ import { ERROR_MESSAGE } from '@/shared/constants/ErrorMessages';
 import { useModal } from '@/shared/hooks/useModal';
 import { removeWhiteSpace } from '@/shared/utils/RemoveWhiteSpace';
 
+import type { SeatResponseDto } from '../types/SeatResponseDto';
+
 export function SelectSeats() {
     const navigate = useNavigate();
     const location = useLocation();
@@ -103,8 +105,17 @@ export function SelectSeats() {
                 state: { purchaseId: purchaseId, isBack: false },
             });
         } catch (error) {
-            if (axios.isAxiosError(error) && error.response?.status === 409) {
-                alert(`${ERROR_MESSAGE.RELEASE_SEAT}\n` + error.response?.data);
+            if (
+                axios.isAxiosError(error) &&
+                error.response?.status === 409 &&
+                error.response?.data
+            ) {
+                const errorData = error.response.data;
+                const conflictSeats: SeatResponseDto[] =
+                    typeof errorData === 'string'
+                        ? JSON.parse(errorData)
+                        : errorData;
+                checkReservedSeats(conflictSeats);
                 return;
             }
             alert(ERROR_MESSAGE.RESERVE_RETRY);

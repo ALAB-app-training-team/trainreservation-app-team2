@@ -10,6 +10,7 @@ import com.alab.shinkansendego.reservedseatsection.ReservedSeatSectionRepository
 import com.alab.shinkansendego.seat.SeatEntity;
 import com.alab.shinkansendego.seat.SeatRepository;
 import com.alab.shinkansendego.sectionkm.SectionKmRepository;
+import com.alab.shinkansendego.traincar.SeatResponseDto;
 import com.alab.shinkansendego.traincar.TrainCarEntity;
 import com.alab.shinkansendego.traincar.TrainCarRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -19,6 +20,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.client.RestClient;
 import org.springframework.web.server.ResponseStatusException;
+import tools.jackson.databind.ObjectMapper;
 
 import java.util.ArrayList;
 import java.util.Comparator;
@@ -288,6 +290,7 @@ public class ReservationService {
             Set<String> existingKeys = existingReservedSeatSections.stream()
                 .map(sec -> sec.getTrainCarCd() + "_" + sec.getSeatCd())
                 .collect(Collectors.toSet());
+            List<SeatResponseDto> seatResponseDtos = new ArrayList<>();
             Set<String> conflictedSeats = new HashSet<>();
 
             for (ReservedSeatEntity reservedSeat : savedReservedSeats) {
@@ -295,11 +298,13 @@ public class ReservationService {
                 if (existingKeys.contains(key)) {
                     String conflictedSeat = reservedSeat.getTrainCar().getTrainCarNumber() + "号車" + reservedSeat.getSeat().getSeatNumber() + reservedSeat.getSeat().getSeatColumn();
                     conflictedSeats.add(conflictedSeat);
+                    seatResponseDtos.add(new SeatResponseDto(reservedSeat.getTrainCarCd(), reservedSeat.getTrainCar().getTrainCarNumber(), reservedSeat.getSeatCd(), reservedSeat.getSeat().getSeatNumber(), reservedSeat.getSeat().getSeatColumn(), 0, true));
                 }
             }
             if (!conflictedSeats.isEmpty()) {
+                String conflictSeatJson = new ObjectMapper().writeValueAsString(seatResponseDtos);
                 String conflictedSeatMessage = String.join(",", conflictedSeats);
-                throw new ResponseStatusException(HttpStatus.CONFLICT, conflictedSeatMessage);
+                throw new ResponseStatusException(HttpStatus.CONFLICT, conflictSeatJson);
             }
         }
 
