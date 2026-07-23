@@ -1,3 +1,4 @@
+import { QueryClient } from '@tanstack/react-query';
 import axios from 'axios';
 import { Suspense, useState } from 'react';
 import { IoCardOutline } from 'react-icons/io5';
@@ -15,13 +16,13 @@ import { useReserveUser } from '@/features/schedule/hooks/useReserveUser';
 import { useSelectedSeats } from '@/features/schedule/hooks/useSelectedSeats';
 import type { PaymentRequestDto } from '@/features/schedule/types/PaymentRequestDto';
 import type { ReserveRequestDto } from '@/features/schedule/types/ReserveRequestDto';
+import type { SeatResponseDto } from '@/features/schedule/types/SeatResponseDto';
 import { CustomModal } from '@/shared/components/CustomModal';
 import { ERROR_MESSAGE } from '@/shared/constants/ErrorMessages';
 import { useModal } from '@/shared/hooks/useModal';
 import { removeWhiteSpace } from '@/shared/utils/RemoveWhiteSpace';
 
-import type { SeatResponseDto } from '../types/SeatResponseDto';
-
+const queryClient = new QueryClient();
 export function SelectSeats() {
     const navigate = useNavigate();
     const location = useLocation();
@@ -116,6 +117,12 @@ export function SelectSeats() {
                         ? JSON.parse(errorData)
                         : errorData;
                 checkReservedSeats(conflictSeats);
+
+                await queryClient.invalidateQueries({
+                    queryKey: ['seat'],
+                    exact: false,
+                    refetchType: 'all',
+                });
                 return;
             }
             alert(ERROR_MESSAGE.RESERVE_RETRY);
