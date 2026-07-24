@@ -511,7 +511,8 @@ public class ReservationServiceTest {
         }});
         when(trainCarRepo.findById(any())).thenReturn(Optional.empty());
 
-        assertThrows(IllegalArgumentException.class, () -> service.insertReservation(request));
+        IllegalArgumentException exception = assertThrows(IllegalArgumentException.class, () -> service.insertReservation(request));
+        assertEquals("TrainCar is not found", exception.getMessage());
     }
 
     @Test
@@ -534,7 +535,8 @@ public class ReservationServiceTest {
         when(trainCarRepo.findById(any())).thenReturn(Optional.of(new TrainCarEntity()));
         when(seatRepo.findById(any())).thenReturn(Optional.empty());
 
-        assertThrows(IllegalArgumentException.class, () -> service.insertReservation(request));
+        IllegalArgumentException exception = assertThrows(IllegalArgumentException.class, () -> service.insertReservation(request));
+        assertEquals("Seat is not found", exception.getMessage());
     }
 
     @Test
