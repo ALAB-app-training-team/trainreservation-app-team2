@@ -4,6 +4,7 @@ import {
     RouterProvider,
 } from 'react-router-dom';
 
+import { AuthProvider } from '@/context/AuthContext';
 import { Login } from '@/features/account/pages/Login';
 import { ReservationGuestLogin } from '@/features/reservation/pages/ReservationGuestLogin';
 import { ReservationList } from '@/features/reservation/pages/ReservationList';
@@ -72,7 +73,11 @@ const router = createBrowserRouter([
 ]);
 
 function App() {
-    return <RouterProvider router={router} />;
+    return (
+        <AuthProvider>
+            <RouterProvider router={router} />;
+        </AuthProvider>
+    );
 }
 
 export default App;
