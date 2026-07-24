@@ -43,15 +43,19 @@ public class AccountControllerTest {
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(objectMapper.writeValueAsString(loginRequestDto)))
             .andExpect(status().isOk())
-            .andExpect(jsonPath("$.name").value(account.getName()))
-            .andExpect(jsonPath("$.password").value(account.getPassword()))
+            .andExpect(jsonPath("$").value(account.getName()))
             .andReturn();
 
         HttpSession session = result.getRequest().getSession(false);
         assertNotNull(session, "セッションが作成されていること");
-        AccountEntity accountInSession = (AccountEntity) session.getAttribute("LOGIN_ADMIN");
-        assertNotNull(accountInSession, "LOGIN_ADMINという名前でセッションが保存されていること");
-        assertEquals(accountInSession.getName(), account.getName());
-        assertEquals(accountInSession.getPassword(), account.getPassword());
+        UUID idInSession = (UUID) session.getAttribute("LOGIN_ID");
+        assertNotNull(idInSession, "LOGIN_IDという名前でセッションが保存されていること");
+        assertEquals(idInSession, account.getId());
+        String nameInSession = (String) session.getAttribute("LOGIN_NAME");
+        assertNotNull(nameInSession, "LOGIN_NAMEという名前でセッションが保存されていること");
+        assertEquals(nameInSession, account.getName());
+        String mailInSession = (String) session.getAttribute("LOGIN_MAIL");
+        assertNotNull(mailInSession, "LOGIN_MAILという名前でセッションが保存されていること");
+        assertEquals(mailInSession, account.getMail());
     }
 }

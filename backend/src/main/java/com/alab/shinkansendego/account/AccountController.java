@@ -21,11 +21,13 @@ public class AccountController {
     }
 
     @PostMapping("login")
-    public ResponseEntity<AccountEntity> login(@Valid @RequestBody LoginRequestDto request, HttpServletRequest httpServletRequest) {
+    public ResponseEntity<String> login(@Valid @RequestBody LoginRequestDto request, HttpServletRequest httpServletRequest) {
         AccountEntity account = accountService.login(request.getMail(), request.getPassword());
         // セッション作成
         HttpSession session = httpServletRequest.getSession(true);
-        session.setAttribute("LOGIN_ADMIN", account);
-        return ResponseEntity.ok(account);
+        session.setAttribute("LOGIN_ID", account.getId());
+        session.setAttribute("LOGIN_MAIL", account.getMail());
+        session.setAttribute("LOGIN_NAME", account.getName());
+        return ResponseEntity.ok(account.getName());
     }
 }
