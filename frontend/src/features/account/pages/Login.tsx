@@ -8,7 +8,7 @@ export function Login() {
 
     return (
         <div className="flex justify-center">
-            <div className="flex w-7/10 flex-col items-center justify-center gap-4 p-8">
+            <div className="flex w-full flex-col items-center justify-center gap-4 p-8 md:w-6/10">
                 <div className="flex flex-col items-center justify-center gap-1">
                     <div>
                         <img src="/logo.svg" className="h-auto w-16" />
@@ -33,11 +33,12 @@ export function Login() {
                             <label htmlFor="mail">メールアドレス</label>
                             <input
                                 id="mail"
-                                type="mail"
+                                type="email"
                                 name="mail"
                                 value={loginRequestDto.mail}
                                 onChange={handleChange}
                                 placeholder="example@email.com"
+                                autoComplete="email"
                                 required
                                 className="focus:border-primary bg-primary-light w-full rounded-xl p-2 outline-none focus:border-2"
                             />
@@ -50,6 +51,7 @@ export function Login() {
                                 name="password"
                                 value={loginRequestDto.password}
                                 onChange={handleChange}
+                                autoComplete="password"
                                 required
                                 className="focus:border-primary bg-primary-light w-full rounded-xl p-2 outline-none focus:border-2"
                             />
