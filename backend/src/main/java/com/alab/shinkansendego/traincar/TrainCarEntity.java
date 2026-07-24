@@ -10,6 +10,7 @@ import jakarta.persistence.ManyToOne;
 import jakarta.persistence.Table;
 import jakarta.validation.constraints.NotNull;
 import lombok.Data;
+import lombok.ToString;
 
 @Data
 @Entity
@@ -28,6 +29,7 @@ public class TrainCarEntity {
     @Column(name = "seat_type_cd")
     private String seatTypeCd;
     @ManyToOne(fetch = FetchType.LAZY)
+    @ToString.Exclude
     @JoinColumn(name = "seat_type_cd", referencedColumnName = "seat_type_cd", insertable = false, updatable = false)
     private SeatTypeEntity seatType;
 }

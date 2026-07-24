@@ -10,6 +10,7 @@ import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.Table;
 import lombok.Data;
+import lombok.ToString;
 
 import java.util.UUID;
 
@@ -33,9 +34,11 @@ public class ReservedSeatEntity {
     @Column(name = "is_deleted")
     private Boolean isDeleted;
     @ManyToOne(fetch = FetchType.LAZY)
+    @ToString.Exclude
     @JoinColumn(name = "train_car_cd", referencedColumnName = "train_car_cd", insertable = false, updatable = false)
     private TrainCarEntity trainCar;
     @ManyToOne(fetch = FetchType.LAZY)
+    @ToString.Exclude
     @JoinColumn(name = "seat_cd", referencedColumnName = "seat_cd", insertable = false, updatable = false)
     private SeatEntity seat;
 }
