@@ -2,6 +2,7 @@ package com.alab.shinkansendego.schedule;
 
 import com.alab.shinkansendego.departurearrivaltime.DepartureArrivalTimeEntity;
 import com.alab.shinkansendego.departurearrivaltime.DepartureArrivalTimeRepository;
+import com.alab.shinkansendego.sectionkm.SectionKmEntity;
 import com.alab.shinkansendego.sectionkm.SectionKmRepository;
 import org.jspecify.annotations.NonNull;
 import org.junit.jupiter.api.BeforeEach;
@@ -22,13 +23,13 @@ import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.Mockito.when;
 
 public class ScheduleServiceTest {
-    private final List<String> depatureSectionList = new ArrayList<>();
-    private final List<String> arrivalSectionList = new ArrayList<>();
+    private final List<SectionKmEntity> depatureSectionList = new ArrayList<>();
+    private final List<SectionKmEntity> arrivalSectionList = new ArrayList<>();
     private final List<DepartureArrivalTimeEntity> sec01ScheduleList = new ArrayList<>();
     private final List<DepartureArrivalTimeEntity> sec02ScheduleList = new ArrayList<>();
     private final List<DepartureArrivalTimeEntity> sec03ScheduleList = new ArrayList<>();
     private final ScheduleRequestDto request = new ScheduleRequestDto(LocalDate.of(2026, 6, 1), LocalTime.of(9, 0, 0), "東京", "上野");
-    private final List<String> emptySectionCdList = new ArrayList<>();
+    private final List<SectionKmEntity> emptySectionCdList = new ArrayList<>();
     @Mock
     private SectionKmRepository sectionRepo;
     @Mock
@@ -61,8 +62,14 @@ public class ScheduleServiceTest {
         sec01ScheduleList.clear();
         sec02ScheduleList.clear();
         sec03ScheduleList.clear();
-        depatureSectionList.addAll(Arrays.asList("SEC01", "SEC02"));
-        arrivalSectionList.addAll(Arrays.asList("SEC02", "SEC03"));
+        SectionKmEntity sec01 = new SectionKmEntity();
+        sec01.setSectionCd("SEC01");
+        SectionKmEntity sec02 = new SectionKmEntity();
+        sec02.setSectionCd("SEC02");
+        SectionKmEntity sec03 = new SectionKmEntity();
+        sec03.setSectionCd("SEC03");
+        depatureSectionList.addAll(Arrays.asList(sec01, sec02));
+        arrivalSectionList.addAll(Arrays.asList(sec02, sec03));
         DepartureArrivalTimeEntity data01 = new DepartureArrivalTimeEntity();
         data01.setTimeCd("TIME01");
         data01.setScheduleCd("TIME01");
@@ -118,8 +125,8 @@ public class ScheduleServiceTest {
     @Test
     @DisplayName("出発・到着駅名と出発時刻のリクエストDTOからダイヤリストが取得できる")
     void getSearchedScheduleByStation_withValidScheduleRequestDto_returnGetScheduleListSuccess() {
-        when(sectionRepo.findSectionCdByStartStationCd("STATION01")).thenReturn(depatureSectionList);
-        when(sectionRepo.findSectionCdByGoalStationCd("STATION02")).thenReturn(arrivalSectionList);
+        when(sectionRepo.findByStartStationCd("STATION01")).thenReturn(depatureSectionList);
+        when(sectionRepo.findByGoalStationCd("STATION02")).thenReturn(arrivalSectionList);
         when(timeRepo.findBySectionCd("SEC01")).thenReturn(sec01ScheduleList);
         when(timeRepo.findBySectionCd("SEC02")).thenReturn(sec02ScheduleList);
         when(timeRepo.findBySectionCd("SEC03")).thenReturn(sec03ScheduleList);
@@ -140,7 +147,7 @@ public class ScheduleServiceTest {
     @Test
     @DisplayName("区間キロデータに存在しない出発駅がリクエストされた場合にエラーを発生させる")
     void getSearchedScheduleByStation_withNotExistStartSectionRequest_returnIllegalArgumentException() {
-        when(sectionRepo.findSectionCdByStartStationCd("STATION01")).thenReturn(emptySectionCdList);
+        when(sectionRepo.findByStartStationCd("STATION01")).thenReturn(emptySectionCdList);
         Exception ex = assertThrows(
             IllegalArgumentException.class,
             () -> service.getSearchedScheduleByStation(request)
@@ -151,8 +158,8 @@ public class ScheduleServiceTest {
     @Test
     @DisplayName("区間キロデータに存在しない到着駅がリクエストされた場合にエラーを発生させる")
     void getSearchedScheduleByStation_withNotExistGoalSectionRequest_returnIllegalArgumentException() {
-        when(sectionRepo.findSectionCdByStartStationCd("STATION01")).thenReturn(depatureSectionList);
-        when(sectionRepo.findSectionCdByGoalStationCd("STATION02")).thenReturn(emptySectionCdList);
+        when(sectionRepo.findByStartStationCd("STATION01")).thenReturn(depatureSectionList);
+        when(sectionRepo.findByGoalStationCd("STATION02")).thenReturn(emptySectionCdList);
         Exception ex = assertThrows(
             IllegalArgumentException.class,
             () -> service.getSearchedScheduleByStation(request)
@@ -163,8 +170,8 @@ public class ScheduleServiceTest {
     @Test
     @DisplayName("車種データに存在しないダイヤコードがリクエストされた場合にエラーを発生させる")
     void getSearchedScheduleByStation_withNotExistTrainTypeRequest_returnIllegalArgumentException() {
-        when(sectionRepo.findSectionCdByStartStationCd("STATION01")).thenReturn(depatureSectionList);
-        when(sectionRepo.findSectionCdByGoalStationCd("STATION02")).thenReturn(arrivalSectionList);
+        when(sectionRepo.findByStartStationCd("STATION01")).thenReturn(depatureSectionList);
+        when(sectionRepo.findByGoalStationCd("STATION02")).thenReturn(arrivalSectionList);
         when(timeRepo.findBySectionCd("SEC01")).thenReturn(sec01ScheduleList);
         when(timeRepo.findBySectionCd("SEC02")).thenReturn(sec02ScheduleList);
         when(timeRepo.findBySectionCd("SEC03")).thenReturn(sec03ScheduleList);

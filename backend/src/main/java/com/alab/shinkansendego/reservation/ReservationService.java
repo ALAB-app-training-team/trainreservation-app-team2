@@ -210,8 +210,8 @@ public class ReservationService {
             throw new IllegalArgumentException("Seat limit exceeded");
         }
 
-        List<String> SectionKmCdsByDepartureStation = sectionKmRepository.findSectionCdByStartStationCd(reserveRequestDto.getDepartureStationCd());
-        List<String> SectionKmCdsByArrivalStation = sectionKmRepository.findSectionCdByGoalStationCd(reserveRequestDto.getArrivalStationCd());
+        List<String> SectionKmCdsByDepartureStation = sectionKmRepository.findByStartStationCd(reserveRequestDto.getDepartureStationCd()).stream().map(entity -> entity.getSectionCd()).toList();
+        List<String> SectionKmCdsByArrivalStation = sectionKmRepository.findByGoalStationCd(reserveRequestDto.getArrivalStationCd()).stream().map(entity -> entity.getSectionCd()).toList();
 
         DepartureArrivalTimeEntity departureArrivalTimeOfStart = departureArrivalTimeRepository.findByScheduleCdAndSectionCdIn(reserveRequestDto.getScheduleCd(), SectionKmCdsByDepartureStation);
         DepartureArrivalTimeEntity departureArrivalTimeOfGoal = departureArrivalTimeRepository.findByScheduleCdAndSectionCdIn(reserveRequestDto.getScheduleCd(), SectionKmCdsByArrivalStation);
