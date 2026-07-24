@@ -90,7 +90,7 @@ export function SelectSeats() {
         setIsSubmitting(true);
         try {
             const paymentToken = await getPaymentToken();
-            const purchaseId = await submitOrderWithToken(paymentToken);
+            const reservationId = await submitOrderWithToken(paymentToken);
             sessionStorage.setItem(
                 'guestLoginInfo',
                 JSON.stringify({
@@ -99,7 +99,7 @@ export function SelectSeats() {
                 }),
             );
             navigate('/reservedTicket', {
-                state: { purchaseId: purchaseId, isBack: false },
+                state: { reservationId: reservationId, isBack: false },
             });
         } catch (error) {
             if (

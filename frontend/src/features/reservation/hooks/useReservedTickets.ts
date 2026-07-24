@@ -6,13 +6,13 @@ import { getGuestLoginInfo } from '@/features/reservation/helpers/getGuestLoginI
 import type { ReservationListRequestDto } from '@/features/reservation/types/ReservationListRequestDto';
 import type { ReservationResponseDto } from '@/features/reservation/types/ReservationResponseDto';
 
-export function useReservedTickets(purchaseId: string) {
+export function useReservedTickets(reservationId: string) {
     const getReservedTickets = async (
-        purchaseId: string,
+        reservationId: string,
         guestLoginInfo: ReservationListRequestDto,
     ): Promise<ReservationResponseDto> => {
         const response = await axios.get<ReservationResponseDto>(
-            ENDPOINTS.RESERVATION(purchaseId),
+            ENDPOINTS.RESERVATION(reservationId),
             {
                 params: {
                     reserverName: guestLoginInfo.reserverName,
@@ -24,8 +24,8 @@ export function useReservedTickets(purchaseId: string) {
     };
 
     const { data: reservedTickets } = useSuspenseQuery({
-        queryKey: ['reservationTickets', purchaseId],
-        queryFn: () => getReservedTickets(purchaseId, getGuestLoginInfo()),
+        queryKey: ['reservationTickets', reservationId],
+        queryFn: () => getReservedTickets(reservationId, getGuestLoginInfo()),
         refetchOnMount: true,
     });
 

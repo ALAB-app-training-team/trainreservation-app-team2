@@ -198,8 +198,8 @@ public class ReservationControllerTest {
     }
 
     @Test
-    @DisplayName("購入情報・購入座席情報を挿入できる")
-    void insertPurchase_withValidReserveRequestDto_return201AndInsertReservationId() throws Exception {
+    @DisplayName("予約情報・予約座席情報を挿入できる")
+    void insertReservation_withValidReserveRequestDto_return201AndInsertReservationId() throws Exception {
         ReserveRequestDto request = new ReserveRequestDto(
             "Test01",
             LocalDate.now(),

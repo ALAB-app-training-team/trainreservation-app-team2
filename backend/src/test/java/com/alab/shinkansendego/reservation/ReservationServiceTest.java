@@ -299,7 +299,7 @@ public class ReservationServiceTest {
     }
 
     @Test
-    @DisplayName("購入者情報に一致する予約がなかった場合に空のリストを返す")
+    @DisplayName("予約者情報に一致する予約がなかった場合に空のリストを返す")
     void getReservationList_withNoMatchReserver_returnEmptyList() {
         String name = "該当無し雄";
         String email = "none@some.example.jp";
@@ -311,7 +311,7 @@ public class ReservationServiceTest {
     }
 
     @Test
-    @DisplayName("購入情報IDと購入者氏名とメールアドレスから予約チケット情報が取得できる")
+    @DisplayName("予約情報IDと予約者氏名とメールアドレスから予約チケット情報が取得できる")
     void getReservation_withReservationIdAndReserverNameAndReserverMail_returnGetReservationSuccess() {
         when(reservationRepo.findByIdAndReserverNameAndReserverMail(reservationId1, "山田太郎", "email@sample.com")).thenReturn(reservation);
 
@@ -323,29 +323,29 @@ public class ReservationServiceTest {
     }
 
     @Test
-    @DisplayName("購入情報データに存在しない購入情報IDがリクエストされた場合にエラーを発生させる")
-    void getReservation_withNotExistPurchaseRequest_returnIllegalArgumentException() {
+    @DisplayName("予約情報データに存在しない予約情報IDがリクエストされた場合にエラーを発生させる")
+    void getReservation_withNotExistReservationRequest_returnIllegalArgumentException() {
         when(reservationRepo.findByIdAndReserverNameAndReserverMail(reservationId1, "山田太郎", "email@sample.com")).thenReturn(Optional.empty());
         Exception ex = assertThrows(
             IllegalArgumentException.class,
             () -> service.getReservation(reservationId1, "山田太郎", "email@sample.com")
         );
-        assertEquals("PurchaseId is Not found", ex.getMessage());
+        assertEquals("ReservationId is Not found", ex.getMessage());
     }
 
     @Test
-    @DisplayName("購入情報データに存在しない購入者氏名がリクエストされた場合にエラーを発生させる")
+    @DisplayName("予約情報データに存在しない予約者氏名がリクエストされた場合にエラーを発生させる")
     void getReservation_withNotExistReserverName_returnIllegalArgumentException() {
         when(reservationRepo.findByIdAndReserverNameAndReserverMail(reservationId1, "NotFound太郎", "email@sample.com")).thenReturn(Optional.empty());
         Exception ex = assertThrows(
             IllegalArgumentException.class,
             () -> service.getReservation(reservationId1, "NotFound太郎", "email@sample.com")
         );
-        assertEquals("PurchaseId is Not found", ex.getMessage());
+        assertEquals("ReservationId is Not found", ex.getMessage());
     }
 
     @Test
-    @DisplayName("出発到着時刻データに存在しない出発駅CDを持つ購入情報IDがリクエストされた場合にエラーを発生させる")
+    @DisplayName("出発到着時刻データに存在しない出発駅CDを持つ予約情報IDがリクエストされた場合にエラーを発生させる")
     void getReservation_withNotExistScheduleOfDepartureStationRequest_returnIllegalArgumentException() {
         reservation.get().setDepartureStationCd("None");
         when(reservationRepo.findByIdAndReserverNameAndReserverMail(reservationId1, "山田太郎", "email@sample.com")).thenReturn(reservation);
@@ -357,7 +357,7 @@ public class ReservationServiceTest {
     }
 
     @Test
-    @DisplayName("出発到着時刻データに存在しない到着駅CDを持つ購入情報IDがリクエストされた場合にエラーを発生させる")
+    @DisplayName("出発到着時刻データに存在しない到着駅CDを持つ予約情報IDがリクエストされた場合にエラーを発生させる")
     void getReservation_withNotExistScheduleOfArrivalStationRequest_returnIllegalArgumentException() {
         reservation.get().setArrivalStationCd("None");
         when(reservationRepo.findByIdAndReserverNameAndReserverMail(reservationId1, "山田太郎", "email@sample.com")).thenReturn(reservation);
@@ -369,7 +369,7 @@ public class ReservationServiceTest {
     }
 
     @Test
-    @DisplayName("購入情報・購入座席情報を挿入できる")
+    @DisplayName("予約情報・予約座席情報を挿入できる")
     void insertReservation_withValidReserveRequestDto_returnInsertReservationId() {
         ReserveRequestDto request = new ReserveRequestDto("Test01", LocalDate.now(), "Test0", "Test1", "TestTaro", "test@main", "Test2", List.of(new ReserveRequestDto.SelectedSeatDto("E5SER01", "SEAT01001", 2800), new ReserveRequestDto.SelectedSeatDto("E5SER01", "SEAT01002", 2800), new ReserveRequestDto.SelectedSeatDto("E5SER01", "SEAT01003", 2800), new ReserveRequestDto.SelectedSeatDto("E5SER01", "SEAT01004", 2800), new ReserveRequestDto.SelectedSeatDto("E5SER01", "SEAT01005", 2800), new ReserveRequestDto.SelectedSeatDto("E5SER01", "SEAT01006", 2800)));
         DepartureArrivalTimeEntity departureArrivalTime = new DepartureArrivalTimeEntity();
@@ -455,7 +455,7 @@ public class ReservationServiceTest {
     }
 
     @Test
-    @DisplayName("同一購入情報IDで重複した座席を予約しようとした場合、DataAccessExceptionが発生する")
+    @DisplayName("同一予約情報IDで重複した座席を予約しようとした場合、DataAccessExceptionが発生する")
     void insertReservation_withSameSelectedSeatDto_throwsDataAccessException() {
         ReserveRequestDto request = new ReserveRequestDto("Test01", LocalDate.now(), "Test0", "Test1", "TestTaro", "test@main", "Test2", List.of(new ReserveRequestDto.SelectedSeatDto("E5SER01", "SEAT01001", 2800), new ReserveRequestDto.SelectedSeatDto("E5SER01", "SEAT01001", 2800)));
         DepartureArrivalTimeEntity departureArrivalTime = new DepartureArrivalTimeEntity();
@@ -483,7 +483,7 @@ public class ReservationServiceTest {
     }
 
     @Test
-    @DisplayName("insertPurchaseが失敗した場合、RuntimeExceptionが発生する")
+    @DisplayName("insertReservationが失敗した場合、RuntimeExceptionが発生する")
     void insertReservation_withInsertInsertReservationFails_throwsRuntimeException() {
         ReserveRequestDto request = new ReserveRequestDto("Test01", LocalDate.now(), "Test0", "Test1", "TestTaro", "test@main", "Test2", List.of(new ReserveRequestDto.SelectedSeatDto("E5SER01", "SEAT01001", 2800), new ReserveRequestDto.SelectedSeatDto("E5SER01", "SEAT01001", 2800)));
         DepartureArrivalTimeEntity departureArrivalTime = new DepartureArrivalTimeEntity();
@@ -556,7 +556,7 @@ public class ReservationServiceTest {
 
     @Test
     @DisplayName("saveAllが失敗した場合、RuntimeExceptionが発生する")
-    void insertReservation_withInsertPurchasedFails_throwsRuntimeException() {
+    void insertReservation_withInsertReservedFails_throwsRuntimeException() {
         ReserveRequestDto request = new ReserveRequestDto("Test01", LocalDate.now(), "Test0", "Test1", "TestTaro", "test@main", "Test2", List.of(new ReserveRequestDto.SelectedSeatDto("E5SER01", "SEAT01001", 2800), new ReserveRequestDto.SelectedSeatDto("E5SER01", "SEAT01001", 2800)));
         DepartureArrivalTimeEntity departureArrivalTime = new DepartureArrivalTimeEntity();
         departureArrivalTime.setTimeCd("Test1");

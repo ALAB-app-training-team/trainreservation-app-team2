@@ -156,7 +156,7 @@ public class ReservationService {
         Optional<ReservationEntity> reservationEntity = reservationRepository
             .findByIdAndReserverNameAndReserverMail(reservationId, removeSpaces(name), removeSpaces(email));
 
-        if (reservationEntity.isEmpty()) throw new IllegalArgumentException("PurchaseId is Not found");
+        if (reservationEntity.isEmpty()) throw new IllegalArgumentException("ReservationId is Not found");
 
         List<ReservedScheduleDto> scheduleList = reservationEntity.get().getDepartureArrivalTime().stream().map(
                 schedule ->
@@ -252,7 +252,7 @@ public class ReservationService {
 
         ReservationEntity reservationResult = reservationRepository.save(reservationToPost);
         if (reservationResult.getId() == null) {
-            throw new RuntimeException("Insert Purchase is failed");
+            throw new RuntimeException("Insert Reservation is failed");
         }
 
         List<ReservedSeatEntity> reservedSeatsToPost = new ArrayList<>();
@@ -274,7 +274,7 @@ public class ReservationService {
         List<ReservedSeatEntity> savedReservedSeats = reservedSeatRepository.saveAll(reservedSeatsToPost);
         int reservedSeatResult = savedReservedSeats.size();
         if (reservedSeatResult != reserveRequestDto.getSeats().size()) {
-            throw new RuntimeException("Insert PurchasedSeats is failed");
+            throw new RuntimeException("Insert ReservedSeats is failed");
         }
 
         List<ReservedSeatSectionEntity> reservedSeatSectionsToPost = new ArrayList<>();
