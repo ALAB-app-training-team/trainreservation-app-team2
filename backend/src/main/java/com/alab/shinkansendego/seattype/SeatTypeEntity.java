@@ -25,7 +25,7 @@ public class SeatTypeEntity {
     private String name;
     @Column(name = "train_car_type_cd")
     private String trainCarTypeCd;
-    @OneToMany
+    @OneToMany(fetch = FetchType.LAZY)
     @JoinColumn(name = "seat_type_cd", referencedColumnName = "seat_type_cd", insertable = false, updatable = false)
     private List<SeatEntity> seats;
     @OneToOne(fetch = FetchType.LAZY)
