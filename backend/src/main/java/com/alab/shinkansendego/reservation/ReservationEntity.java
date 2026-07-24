@@ -17,7 +17,6 @@ import lombok.NoArgsConstructor;
 import lombok.ToString;
 
 import java.time.LocalDate;
-import java.util.List;
 import java.util.Set;
 import java.util.UUID;
 
@@ -48,7 +47,7 @@ public class ReservationEntity {
     private Boolean isDeleted;
     @OneToMany(fetch = FetchType.LAZY)
     @JoinColumn(name = "schedule_cd", referencedColumnName = "schedule_cd", insertable = false, updatable = false)
-    private List<DepartureArrivalTimeEntity> departureArrivalTime;
+    private Set<DepartureArrivalTimeEntity> departureArrivalTime;
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "schedule_cd", referencedColumnName = "schedule_cd", insertable = false, updatable = false)
     private ScheduleEntity schedule;

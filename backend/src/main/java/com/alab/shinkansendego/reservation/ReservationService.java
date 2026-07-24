@@ -95,7 +95,7 @@ public class ReservationService {
         for (ReservationEntity reservation : reservationEntityList) {
             ReservationResponseDto dto = new ReservationResponseDto();
 
-            List<DepartureArrivalTimeEntity> scheduleList = reservation.getDepartureArrivalTime();
+            Set<DepartureArrivalTimeEntity> scheduleList = reservation.getDepartureArrivalTime();
 
             DepartureArrivalTimeEntity departureSchedule = scheduleList.stream().filter(
                     schedule -> Objects.equals(

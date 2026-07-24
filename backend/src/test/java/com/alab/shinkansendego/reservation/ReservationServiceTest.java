@@ -174,7 +174,7 @@ public class ReservationServiceTest {
         reservation.setArrivalStationCd("THK09");
         reservation.setIsDeleted(false);
         reservation.setSchedule(schedule);
-        reservation.setDepartureArrivalTime(Arrays.asList(departure, dummy, arrival));
+        reservation.setDepartureArrivalTime(Set.of(departure, dummy, arrival));
         reservation.setReservedSeat(seats);
         return reservation;
     }
@@ -260,7 +260,7 @@ public class ReservationServiceTest {
         );
 
         reservation.get().setId(reservationId1);
-        reservation.get().setDepartureArrivalTime(Arrays.asList(departureArrivalTime1, departureArrivalTime2, departureArrivalTime3, departureArrivalTime4, departureArrivalTime5, departureArrivalTime6, departureArrivalTime7));
+        reservation.get().setDepartureArrivalTime(Set.of(departureArrivalTime1, departureArrivalTime2, departureArrivalTime3, departureArrivalTime4, departureArrivalTime5, departureArrivalTime6, departureArrivalTime7));
 
         TrainTypeEntity trainType = new TrainTypeEntity("YM001", "やまびこ1号", "E5SER");
         ScheduleEntity schedule = new ScheduleEntity("TEST01", "YM001", trainType);
