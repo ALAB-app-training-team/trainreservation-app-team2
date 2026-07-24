@@ -1,6 +1,7 @@
 package com.alab.shinkansendego.reservation;
 
 import com.alab.shinkansendego.departurearrivaltime.DepartureArrivalTimeEntity;
+import com.alab.shinkansendego.reservedseat.ReservedSeatEntity;
 import com.alab.shinkansendego.schedule.ScheduleEntity;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
@@ -13,9 +14,11 @@ import jakarta.persistence.Table;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import lombok.ToString;
 
 import java.time.LocalDate;
 import java.util.List;
+import java.util.Set;
 import java.util.UUID;
 
 @Data
@@ -49,4 +52,8 @@ public class ReservationEntity {
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "schedule_cd", referencedColumnName = "schedule_cd", insertable = false, updatable = false)
     private ScheduleEntity schedule;
+    @OneToMany(fetch = FetchType.LAZY)
+    @ToString.Exclude
+    @JoinColumn(name = "reservation_id", referencedColumnName = "id", insertable = false, updatable = false)
+    private Set<ReservedSeatEntity> reservedSeat;
 }
