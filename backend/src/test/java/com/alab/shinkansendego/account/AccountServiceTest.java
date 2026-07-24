@@ -6,6 +6,7 @@ import org.junit.jupiter.api.Test;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
 import org.springframework.security.authentication.BadCredentialsException;
+import org.springframework.security.crypto.password.PasswordEncoder;
 
 import java.util.Optional;
 import java.util.UUID;
@@ -18,11 +19,13 @@ public class AccountServiceTest {
     private AccountService service;
     @Mock
     private AccountRepository accountRepository;
+    @Mock
+    private PasswordEncoder passwordEncoder;
 
     @BeforeEach
     void setUp() {
         MockitoAnnotations.openMocks(this);
-        this.service = new AccountService(accountRepository);
+        this.service = new AccountService(accountRepository, passwordEncoder);
     }
 
     @Test
@@ -34,8 +37,11 @@ public class AccountServiceTest {
         AccountEntity account = new AccountEntity(UUID.randomUUID(), "Tarou", "a@a.com", hashedPassword);
 
         when(accountRepository.findByMail(mail)).thenReturn(Optional.of(account));
+        when(passwordEncoder.matches(rawPassword, hashedPassword)).thenReturn(true);
 
-        assertThrows(BadCredentialsException.class, () -> service.login(mail, rawPassword));
+        AccountEntity result = service.login(mail, rawPassword);
+        assertEquals(result.getMail(), account.getMail());
+        assertEquals(result.getPassword(), account.getPassword());
     }
 
     @Test
@@ -44,7 +50,7 @@ public class AccountServiceTest {
         String mail = "a@a.com";
         String rawPassword = "Taro";
         BadCredentialsException exception = assertThrows(BadCredentialsException.class, () -> service.login(mail, rawPassword));
-        assertEquals("login is failed1", exception.getMessage());
+        assertEquals("login is failed", exception.getMessage());
     }
 
     @Test
@@ -56,8 +62,9 @@ public class AccountServiceTest {
         AccountEntity account = new AccountEntity(UUID.randomUUID(), "Tarou", mail, notMatchHashedPassword);
 
         when(accountRepository.findByMail(mail)).thenReturn(Optional.of(account));
+        when(passwordEncoder.matches(rawPassword, notMatchHashedPassword)).thenReturn(false);
 
         BadCredentialsException exception = assertThrows(BadCredentialsException.class, () -> service.login(mail, rawPassword));
-        assertEquals("login is failed2", exception.getMessage());
+        assertEquals("login is failed", exception.getMessage());
     }
 }

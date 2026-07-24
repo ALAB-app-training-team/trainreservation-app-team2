@@ -8,19 +8,19 @@ import org.springframework.stereotype.Service;
 @Service
 public class AccountService {
     private final AccountRepository accountRepository;
-    @Autowired
-    PasswordEncoder passwordEncoder;
+    private final PasswordEncoder passwordEncoder;
 
     @Autowired
-    public AccountService(AccountRepository accountRepository) {
+    public AccountService(AccountRepository accountRepository, PasswordEncoder passwordEncoder) {
         this.accountRepository = accountRepository;
+        this.passwordEncoder = passwordEncoder;
     }
 
     public AccountEntity login(String mail, String password) {
-        AccountEntity account = accountRepository.findByMail(mail).orElseThrow(() -> new BadCredentialsException("login is failed1"));
+        AccountEntity account = accountRepository.findByMail(mail).orElseThrow(() -> new BadCredentialsException("login is failed"));
         boolean matches = passwordEncoder.matches(password, account.getPassword());
         if (!matches) {
-            throw new BadCredentialsException("login is failed2");
+            throw new BadCredentialsException("login is failed");
         }
         return account;
     }
