@@ -31,6 +31,7 @@ export function useLoginRequestDto() {
                 loginRequestDto,
             );
             localStorage.setItem('name', response.data);
+            // TODO: useContextに入れる
             navigate('/scheduleSearch');
         } catch {
             alert(ERROR_MESSAGE.LOGIN_RETRY);
