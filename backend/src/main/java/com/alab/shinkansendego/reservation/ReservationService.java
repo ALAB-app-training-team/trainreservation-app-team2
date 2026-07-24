@@ -88,8 +88,8 @@ public class ReservationService {
             return reservationList;
         }
 
-        List<ReservedSeatEntity> reservedSeatList = reservationEntityList.stream().map(ReservationEntity::getReservedSeat).flatMap(Set::stream).toList();
-        Map<UUID, List<ReservedSeatEntity>> reservedSeatEntityMap = reservedSeatList
+        Map<UUID, List<ReservedSeatEntity>> reservedSeatEntityMap = reservationEntityList
+            .stream().map(ReservationEntity::getReservedSeat).flatMap(Set::stream).toList()
             .stream().collect(Collectors.groupingBy(ReservedSeatEntity::getReservationId));
 
         for (ReservationEntity reservation : reservationEntityList) {
