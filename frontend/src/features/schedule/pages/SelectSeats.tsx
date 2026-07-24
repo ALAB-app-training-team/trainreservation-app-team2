@@ -1,4 +1,5 @@
-import axios from 'axios';
+import { useQueryClient } from '@tanstack/react-query';
+import axios, { HttpStatusCode } from 'axios';
 import { Suspense, useState } from 'react';
 import { IoCardOutline } from 'react-icons/io5';
 import { LuArrowLeft } from 'react-icons/lu';
@@ -16,12 +17,14 @@ import { useReserveUser } from '@/features/schedule/hooks/useReserveUser';
 import { useSelectedSeats } from '@/features/schedule/hooks/useSelectedSeats';
 import type { PaymentRequestDto } from '@/features/schedule/types/PaymentRequestDto';
 import type { ReserveRequestDto } from '@/features/schedule/types/ReserveRequestDto';
+import type { SeatResponseDto } from '@/features/schedule/types/SeatResponseDto';
 import { CustomModal } from '@/shared/components/CustomModal';
 import { ERROR_MESSAGE } from '@/shared/constants/ErrorMessages';
 import { useModal } from '@/shared/hooks/useModal';
 import { removeWhiteSpace } from '@/shared/utils/RemoveWhiteSpace';
 
 export function SelectSeats() {
+    const queryClient = useQueryClient();
     const navigate = useNavigate();
     const location = useLocation();
     const { scheduleInfoDto, searchRequestDto } = location.state;
@@ -98,8 +101,24 @@ export function SelectSeats() {
             navigate('/reservedTicket', {
                 state: { purchaseId: purchaseId, isBack: false },
             });
-        } catch {
-            //TODO: エラー時にユーザーにわかりやすく表示する
+        } catch (error) {
+            if (
+                axios.isAxiosError(error) &&
+                error.response?.status === HttpStatusCode.Conflict &&
+                error.response?.data
+            ) {
+                const errorData = error.response.data;
+                const conflictSeats: SeatResponseDto[] =
+                    typeof errorData === 'string'
+                        ? JSON.parse(errorData)
+                        : errorData;
+                checkReservedSeats(conflictSeats);
+
+                await queryClient.refetchQueries({
+                    predicate: (query) => query.queryKey[0] === 'seat',
+                });
+                return;
+            }
             alert(ERROR_MESSAGE.RESERVE_RETRY);
         } finally {
             setIsSubmitting(false);

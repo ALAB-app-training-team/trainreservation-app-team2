@@ -7,12 +7,20 @@ import com.alab.shinkansendego.reservedseat.ReservedSeatEntity;
 import com.alab.shinkansendego.reservedseat.ReservedSeatRepository;
 import com.alab.shinkansendego.reservedseatsection.ReservedSeatSectionEntity;
 import com.alab.shinkansendego.reservedseatsection.ReservedSeatSectionRepository;
+import com.alab.shinkansendego.seat.SeatEntity;
+import com.alab.shinkansendego.seat.SeatRepository;
 import com.alab.shinkansendego.sectionkm.SectionKmRepository;
+import com.alab.shinkansendego.traincar.SeatResponseDto;
+import com.alab.shinkansendego.traincar.TrainCarEntity;
+import com.alab.shinkansendego.traincar.TrainCarRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.client.RestClient;
+import org.springframework.web.server.ResponseStatusException;
+import tools.jackson.databind.ObjectMapper;
 
 import java.util.ArrayList;
 import java.util.Comparator;
@@ -20,6 +28,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Objects;
 import java.util.Optional;
+import java.util.Set;
 import java.util.UUID;
 import java.util.stream.Collectors;
 
@@ -31,6 +40,8 @@ public class ReservationService {
     private final SectionKmRepository sectionKmRepository;
     private final DepartureArrivalTimeRepository departureArrivalTimeRepository;
     private final ReservedSeatSectionRepository reservedSeatSectionRepository;
+    private final TrainCarRepository trainCarRepository;
+    private final SeatRepository seatRepository;
 
     @Autowired
     public ReservationService(
@@ -39,6 +50,8 @@ public class ReservationService {
         SectionKmRepository sectionKmRepository,
         DepartureArrivalTimeRepository departureArrivalTimeRepository,
         ReservedSeatSectionRepository reservedSeatSectionRepository,
+        TrainCarRepository trainCarRepository,
+        SeatRepository seatRepository,
         RestClient.Builder restClientBuilder
     ) {
         this.reservationRepository = reservationRepository;
@@ -46,6 +59,8 @@ public class ReservationService {
         this.sectionKmRepository = sectionKmRepository;
         this.departureArrivalTimeRepository = departureArrivalTimeRepository;
         this.reservedSeatSectionRepository = reservedSeatSectionRepository;
+        this.trainCarRepository = trainCarRepository;
+        this.seatRepository = seatRepository;
         this.restClient = restClientBuilder.build();
     }
 
@@ -238,9 +253,14 @@ public class ReservationService {
             reservedSeat.setCodeToken(UUID.randomUUID());
             reservedSeat.setSeatFare(seatDto.getSeatFare());
             reservedSeat.setIsDeleted(false);
+            TrainCarEntity trainCar = trainCarRepository.findById(seatDto.getTrainCarCd()).orElseThrow(() -> new IllegalArgumentException("TrainCar is not found"));
+            reservedSeat.setTrainCar(trainCar);
+            SeatEntity seat = seatRepository.findById(seatDto.getSeatCd()).orElseThrow(() -> new IllegalArgumentException("Seat is not found"));
+            reservedSeat.setSeat(seat);
             reservedSeatsToPost.add(reservedSeat);
         }
-        int reservedSeatResult = reservedSeatRepository.saveAll(reservedSeatsToPost).size();
+        List<ReservedSeatEntity> savedReservedSeats = reservedSeatRepository.saveAll(reservedSeatsToPost);
+        int reservedSeatResult = savedReservedSeats.size();
         if (reservedSeatResult != reserveRequestDto.getSeats().size()) {
             throw new RuntimeException("Insert PurchasedSeats is failed");
         }
@@ -256,6 +276,33 @@ public class ReservationService {
                 reservedSeatSectionsToPost.add(reservedSeatSection);
             }
         }
+
+        List<String> sectionCds = reservedSeatSectionsToPost.stream().map(sec -> sec.getReservedSectionCd()).distinct().toList();
+        List<String> trainCarCds = reservedSeatsToPost.stream().map(seat -> seat.getTrainCarCd()).distinct().toList();
+        List<ReservedSeatSectionEntity> existingReservedSeatSections = reservedSeatSectionRepository.findByRideDateAndScheduleCdAndTrainCarCdInAndReservedSectionCdIn(
+            reservedSeatSectionsToPost.getFirst().getRideDate(),
+            reservedSeatSectionsToPost.getFirst().getScheduleCd(),
+            trainCarCds,
+            sectionCds);
+
+        if (!existingReservedSeatSections.isEmpty()) {
+            Set<String> existingKeys = existingReservedSeatSections.stream()
+                .map(sec -> sec.getTrainCarCd() + "_" + sec.getSeatCd())
+                .collect(Collectors.toSet());
+            List<SeatResponseDto> seatResponseDtos = new ArrayList<>();
+
+            for (ReservedSeatEntity reservedSeat : savedReservedSeats) {
+                String key = reservedSeat.getTrainCarCd() + "_" + reservedSeat.getSeatCd();
+                if (existingKeys.contains(key)) {
+                    seatResponseDtos.add(new SeatResponseDto(reservedSeat.getTrainCarCd(), reservedSeat.getTrainCar().getTrainCarNumber(), reservedSeat.getSeatCd(), reservedSeat.getSeat().getSeatNumber(), reservedSeat.getSeat().getSeatColumn(), 0, true));
+                }
+            }
+            if (!seatResponseDtos.isEmpty()) {
+                String conflictSeatJson = new ObjectMapper().writeValueAsString(seatResponseDtos);
+                throw new ResponseStatusException(HttpStatus.CONFLICT, conflictSeatJson);
+            }
+        }
+
         int reservedSeatSectionResult = reservedSeatSectionRepository.saveAll(reservedSeatSectionsToPost).size();
         if (reservedSeatSectionResult != sectionCdList.size() * reserveRequestDto.getSeats().size()) {
             throw new RuntimeException("Insert ReservedSeatSections is failed");
