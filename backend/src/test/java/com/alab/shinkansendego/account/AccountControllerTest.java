@@ -2,7 +2,6 @@ package com.alab.shinkansendego.account;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import jakarta.servlet.http.HttpSession;
-import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -30,10 +29,6 @@ public class AccountControllerTest {
     private final ObjectMapper objectMapper = new ObjectMapper();
     private final String baseUrl = "/api/";
 
-    @BeforeEach
-    void setUp() {
-    }
-
     @Test
     @DisplayName("ログインできること")
     void login_return200AndAccount() throws Exception {
@@ -43,6 +38,7 @@ public class AccountControllerTest {
         when(service.login(account.getMail(), rawPassword)).thenReturn(account);
 
         LoginRequestDto loginRequestDto = new LoginRequestDto(account.getMail(), rawPassword);
+
         MvcResult result = mockMvc.perform(MockMvcRequestBuilders.post(baseUrl + "login")
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(objectMapper.writeValueAsString(loginRequestDto)))
@@ -57,7 +53,5 @@ public class AccountControllerTest {
         assertNotNull(accountInSession, "LOGIN_ADMINという名前でセッションが保存されていること");
         assertEquals(accountInSession.getName(), account.getName());
         assertEquals(accountInSession.getPassword(), account.getPassword());
-        // セッションが取得？できていること
-        // AccountEntityが取得できていること
     }
 }

@@ -17,12 +17,11 @@ public class AccountService {
     }
 
     public AccountEntity login(String mail, String password) {
-        AccountEntity account = accountRepository.findByMail(mail).orElseThrow(() -> new BadCredentialsException("login is failed"));
+        AccountEntity account = accountRepository.findByMail(mail).orElseThrow(() -> new BadCredentialsException("login is failed1"));
         boolean matches = passwordEncoder.matches(password, account.getPassword());
         if (!matches) {
-            throw new BadCredentialsException("login is failed");
+            throw new BadCredentialsException("login is failed2");
         }
-
         return account;
     }
 }
