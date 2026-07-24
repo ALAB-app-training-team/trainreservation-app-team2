@@ -1,8 +1,12 @@
+import { useContext } from 'react';
 import { BsTrainFreightFrontFill } from 'react-icons/bs';
 import { NavLink, useLocation } from 'react-router-dom';
 
+import { authContext } from '@/context/AuthContext';
+
 export function Header() {
     const location = useLocation();
+    const { name } = useContext(authContext);
     const buttons = [
         {
             label: '新幹線を探す',
@@ -12,6 +16,14 @@ export function Header() {
             label: '予約確認',
             to: '/reservationGuestLogin',
         },
+        ...(!name
+            ? [
+                  {
+                      label: 'ログイン',
+                      to: '/login',
+                  },
+              ]
+            : []),
     ];
 
     return (
@@ -29,7 +41,7 @@ export function Header() {
                 <BsTrainFreightFrontFill />
                 新幹線でGO！
             </NavLink>
-            <div className="flex flex-1 justify-end gap-4 px-4">
+            <div className="flex flex-1 items-center justify-end gap-4 px-4">
                 {buttons.map((button, index) => (
                     <NavLink
                         key={index}
@@ -45,6 +57,7 @@ export function Header() {
                         {button.label}
                     </NavLink>
                 ))}
+                {name && <div className="text-sm font-bold">{name}さん</div>}
             </div>
         </div>
     );
