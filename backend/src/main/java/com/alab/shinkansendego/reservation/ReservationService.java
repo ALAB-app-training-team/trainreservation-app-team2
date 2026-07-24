@@ -178,7 +178,15 @@ public class ReservationService {
             throw new IllegalArgumentException("DepartureAndArrivalStation is Not Found");
         }
 
-        List<ReservedSeatDto> reservedSeatList = reservedSeatRepository.findReservedSeatDtoByReservationId(reservationId);
+        List<ReservedSeatEntity> reservedSeatEntityList = reservationEntity.stream().map(ReservationEntity::getReservedSeat).flatMap(Set::stream).toList();
+        List<ReservedSeatDto> reservedSeatList = reservedSeatEntityList.stream()
+            .map(seat -> new ReservedSeatDto(
+                seat.getSeat().getSeatType().getTrainCarType().getName(),
+                seat.getTrainCar().getTrainCarNumber(),
+                seat.getSeat().getSeatNumber(),
+                seat.getSeat().getSeatColumn(),
+                seat.getCodeToken(),
+                seat.getSeatFare())).toList();
 
         response.setTrainTypeName(reservationEntity.get().getSchedule().getTrainType().getName());
         response.setDepartureStationName(departureSchedule.getFirst().getDepartureStationName());

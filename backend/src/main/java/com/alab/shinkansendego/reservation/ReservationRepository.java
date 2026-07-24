@@ -16,7 +16,12 @@ public interface ReservationRepository extends JpaRepository<ReservationEntity, 
         "departureArrivalTime.sectionKm.startStation",
         "departureArrivalTime.sectionKm.goalStation",
         "schedule",
-        "schedule.trainType"
+        "schedule.trainType",
+        "reservedSeat",
+        "reservedSeat.trainCar",
+        "reservedSeat.seat",
+        "reservedSeat.seat.seatType",
+        "reservedSeat.seat.seatType.trainCarType"
     })
     Optional<ReservationEntity> findByIdAndReserverNameAndReserverMail(UUID reservationId, String reserverName, String reserverMail);
 
