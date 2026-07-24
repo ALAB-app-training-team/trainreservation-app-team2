@@ -42,6 +42,7 @@ import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
+import java.util.Set;
 import java.util.UUID;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
@@ -52,7 +53,6 @@ import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.ArgumentMatchers.anyList;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 import static org.springframework.test.web.client.match.MockRestRequestMatchers.header;
@@ -64,9 +64,8 @@ public class ReservationServiceTest {
     private final Optional<ReservationEntity> reservation = Optional.of(new ReservationEntity());
     private final UUID reservationId1 = UUID.fromString("4156b939-2e3e-46c1-92d3-7aa64b6ca575");
     private final UUID reservationId2 = UUID.fromString("3136b939-2e3e-46c1-92d3-7aa64b6ca666");
-    private final List<ReservedSeatDto> seatList = new ArrayList<>();
     private final ReservedSeatDto seat1 = new ReservedSeatDto("指定席", 1, 1, "A", UUID.fromString("60a1ab63-a41f-430d-a2d1-10a76368d0f5"), 5000);
-    private final ReservedSeatDto seat2 = new ReservedSeatDto("グリーン車", 9, 1, "A", UUID.fromString("3de8909e-32de-478e-bd9b-739f3fe6d6c3"), 15000);
+    private final ReservedSeatDto seat2 = new ReservedSeatDto("グリーン車", 9, 1, "A", UUID.fromString("3de8909e-32de-478e-bd9b-739f3fe6d6c3"), 10000);
     private final ReservedSeatDto seat3 = new ReservedSeatDto("グランクラス", 10, 1, "A", UUID.fromString("e192e5f1-318e-4d10-b76d-2f2bf15e8b70"), 15000);
     @Mock
     private ReservationRepository reservationRepo;
@@ -161,6 +160,12 @@ public class ReservationServiceTest {
         DepartureArrivalTimeEntity departure = buildSchedule(LocalTime.of(6, 4, 0), "THK01", "東京", LocalTime.of(6, 9, 0), "THK02", "上野");
         DepartureArrivalTimeEntity dummy = buildSchedule(LocalTime.of(7, 0, 0), "THK05", "郡山", LocalTime.of(7, 30, 0), "THK06", "福島");
         DepartureArrivalTimeEntity arrival = buildSchedule(LocalTime.of(7, 50, 0), "THK08", "白石", LocalTime.of(7, 58, 0), "THK09", "仙台");
+
+        Set<ReservedSeatEntity> seats = Set.of(
+            buildSeat(id, "指定席", 1, 1, "A", UUID.fromString("60a1ab63-a41f-430d-a2d1-10a76368d0f5"), 5000),
+            buildSeat(id, "グリーン車", 9, 1, "A", UUID.fromString("3de8909e-32de-478e-bd9b-739f3fe6d6c3"), 10000)
+        );
+
         ReservationEntity reservation = new ReservationEntity();
         reservation.setId(id);
         reservation.setRideDate(LocalDate.of(2026, 6, 1));
@@ -170,6 +175,7 @@ public class ReservationServiceTest {
         reservation.setIsDeleted(false);
         reservation.setSchedule(schedule);
         reservation.setDepartureArrivalTime(Arrays.asList(departure, dummy, arrival));
+        reservation.setReservedSeat(seats);
         return reservation;
     }
 
@@ -207,13 +213,13 @@ public class ReservationServiceTest {
         seat1.setSeatFare(2600);
         seat1.setIsDeleted(false);
         ReservedSeatEntity seat2 = new ReservedSeatEntity();
-        seat1.setId(UUID.randomUUID());
-        seat1.setReservationId(reservationId);
-        seat1.setTrainCarCd("E5SER01");
-        seat1.setSeatCd("SEAT01005");
-        seat1.setCodeToken(UUID.randomUUID());
-        seat1.setSeatFare(2600);
-        seat1.setIsDeleted(false);
+        seat2.setId(UUID.randomUUID());
+        seat2.setReservationId(reservationId);
+        seat2.setTrainCarCd("E5SER01");
+        seat2.setSeatCd("SEAT01005");
+        seat2.setCodeToken(UUID.randomUUID());
+        seat2.setSeatFare(2600);
+        seat2.setIsDeleted(false);
         return Arrays.asList(seat1, seat2);
     }
 
@@ -247,6 +253,12 @@ public class ReservationServiceTest {
         DepartureArrivalTimeEntity departureArrivalTime6 = buildSchedule(LocalTime.of(7, 38, 0), "CMN02", "福島", LocalTime.of(7, 58, 0), "THK09", "仙台");
         DepartureArrivalTimeEntity departureArrivalTime7 = buildSchedule(LocalTime.of(8, 0, 0), "THK09", "仙台", LocalTime.of(8, 12, 0), "THK10", "古川");
 
+        Set<ReservedSeatEntity> seats = Set.of(
+            buildSeat(reservationId1, "指定席", 1, 1, "A", UUID.fromString("60a1ab63-a41f-430d-a2d1-10a76368d0f5"), 5000),
+            buildSeat(reservationId1, "グリーン車", 9, 1, "A", UUID.fromString("3de8909e-32de-478e-bd9b-739f3fe6d6c3"), 10000),
+            buildSeat(reservationId1, "グランクラス", 10, 1, "A", UUID.fromString("e192e5f1-318e-4d10-b76d-2f2bf15e8b70"), 15000)
+        );
+
         reservation.get().setId(reservationId1);
         reservation.get().setDepartureArrivalTime(Arrays.asList(departureArrivalTime1, departureArrivalTime2, departureArrivalTime3, departureArrivalTime4, departureArrivalTime5, departureArrivalTime6, departureArrivalTime7));
 
@@ -257,8 +269,7 @@ public class ReservationServiceTest {
         reservation.get().setRideDate(LocalDate.of(2026, 6, 1));
         reservation.get().setIsDeleted(false);
         reservation.get().setSchedule(schedule);
-        seatList.clear();
-        seatList.addAll(Arrays.asList(seat1, seat2, seat3));
+        reservation.get().setReservedSeat(seats);
     }
 
     @Test
@@ -267,13 +278,8 @@ public class ReservationServiceTest {
         String name = "山田太郎";
         String email = "yamada@some.example.jp";
         List<ReservationEntity> reservationList = Arrays.asList(buildReservation(reservationId1), buildReservation(reservationId2));
-        List<ReservedSeatEntity> seatList = Arrays.asList(
-            buildSeat(reservationId1, "指定席", 1, 1, "A", UUID.fromString("60a1ab63-a41f-430d-a2d1-10a76368d0f5"), 5000),
-            buildSeat(reservationId2, "グリーン車", 9, 1, "A", UUID.fromString("3de8909e-32de-478e-bd9b-739f3fe6d6c3"), 10000)
-        );
 
         when(reservationRepo.findByReserverNameAndReserverMail(name, email)).thenReturn(reservationList);
-        when(reservedSeatRepo.findByReservationIdIn(anyList())).thenReturn(seatList);
 
         List<ReservationResponseDto> result = service.getReservationList(name, email);
 
@@ -286,7 +292,7 @@ public class ReservationServiceTest {
             () -> assertEquals("仙台", result.getFirst().getArrivalStationName()),
             () -> assertEquals(LocalTime.of(7, 58, 0), result.getFirst().getArrivalTime()),
             () -> assertEquals(LocalDate.of(2026, 6, 1), result.getFirst().getRideDate()),
-            () -> assertEquals(1, result.getFirst().getReservedSeats().size()),
+            () -> assertEquals(2, result.getFirst().getReservedSeats().size()),
             () -> assertEquals("指定席", result.getFirst().getReservedSeats().getFirst().getTrainCarTypeName()),
             () -> assertEquals(5000, result.getFirst().getReservedSeats().getFirst().getSeatFare())
         );
@@ -308,7 +314,6 @@ public class ReservationServiceTest {
     @DisplayName("購入情報IDと購入者氏名とメールアドレスから予約チケット情報が取得できる")
     void getReservation_withReservationIdAndReserverNameAndReserverMail_returnGetReservationSuccess() {
         when(reservationRepo.findByIdAndReserverNameAndReserverMail(reservationId1, "山田太郎", "email@sample.com")).thenReturn(reservation);
-        when(reservedSeatRepo.findReservedSeatDtoByReservationId(reservationId1)).thenReturn(seatList);
 
         ReservationResponseDto expect = getExpectReservationResponseDto(null);
 

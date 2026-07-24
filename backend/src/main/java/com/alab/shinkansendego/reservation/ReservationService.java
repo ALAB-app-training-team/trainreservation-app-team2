@@ -122,6 +122,9 @@ public class ReservationService {
                     seat.getSeat().getSeatColumn(),
                     seat.getCodeToken(),
                     seat.getSeatFare()))
+                .sorted(Comparator.comparing(ReservedSeatDto::getTrainCarNumber)
+                    .thenComparing(ReservedSeatDto::getSeatNumber)
+                    .thenComparing(ReservedSeatDto::getSeatColumn))
                 .toList();
 
             dto.setReservationId(reservation.getId());
@@ -181,12 +184,15 @@ public class ReservationService {
         List<ReservedSeatEntity> reservedSeatEntityList = reservationEntity.stream().map(ReservationEntity::getReservedSeat).flatMap(Set::stream).toList();
         List<ReservedSeatDto> reservedSeatList = reservedSeatEntityList.stream()
             .map(seat -> new ReservedSeatDto(
-                seat.getSeat().getSeatType().getTrainCarType().getName(),
+                seat.getTrainCar().getSeatType().getTrainCarType().getName(),
                 seat.getTrainCar().getTrainCarNumber(),
                 seat.getSeat().getSeatNumber(),
                 seat.getSeat().getSeatColumn(),
                 seat.getCodeToken(),
-                seat.getSeatFare())).toList();
+                seat.getSeatFare()))
+            .sorted(Comparator.comparing(ReservedSeatDto::getTrainCarNumber)
+                .thenComparing(ReservedSeatDto::getSeatNumber)
+                .thenComparing(ReservedSeatDto::getSeatColumn)).toList();
 
         response.setTrainTypeName(reservationEntity.get().getSchedule().getTrainType().getName());
         response.setDepartureStationName(departureSchedule.getFirst().getDepartureStationName());
