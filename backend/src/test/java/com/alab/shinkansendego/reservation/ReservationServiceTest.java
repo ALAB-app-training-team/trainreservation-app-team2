@@ -508,8 +508,10 @@ public class ReservationServiceTest {
         departureArrivalTime.setDepartureTime(LocalTime.of(6, 4));
         departureArrivalTime.setArrivalTime(LocalTime.of(6, 9));
         departureArrivalTime.setSectionCd("Test1");
-        when(sectionKmRepo.findSectionCdByStartStationCd(request.getDepartureStationCd())).thenReturn(List.of(departureArrivalTime.getSectionCd()));
-        when(sectionKmRepo.findSectionCdByGoalStationCd(request.getArrivalStationCd())).thenReturn(List.of(departureArrivalTime.getSectionCd()));
+        SectionKmEntity sectionKm = new SectionKmEntity();
+        sectionKm.setSectionCd("Test1");
+        when(sectionKmRepo.findByStartStationCd(request.getDepartureStationCd())).thenReturn(List.of(sectionKm));
+        when(sectionKmRepo.findByGoalStationCd(request.getArrivalStationCd())).thenReturn(List.of(sectionKm));
         when(departureArrivalTimeRepo.findByScheduleCdAndSectionCdIn(request.getScheduleCd(), List.of(departureArrivalTime.getSectionCd()))).thenReturn(departureArrivalTime);
         when(departureArrivalTimeRepo.findByScheduleCdAndDepartureTimeAndArrivalTime(request.getScheduleCd(), departureArrivalTime.getDepartureTime(), departureArrivalTime.getArrivalTime())).thenReturn(List.of(departureArrivalTime.getSectionCd()));
         when(reservationRepo.save(any())).thenReturn(new ReservationEntity() {{
@@ -531,8 +533,10 @@ public class ReservationServiceTest {
         departureArrivalTime.setDepartureTime(LocalTime.of(6, 4));
         departureArrivalTime.setArrivalTime(LocalTime.of(6, 9));
         departureArrivalTime.setSectionCd("Test1");
-        when(sectionKmRepo.findSectionCdByStartStationCd(request.getDepartureStationCd())).thenReturn(List.of(departureArrivalTime.getSectionCd()));
-        when(sectionKmRepo.findSectionCdByGoalStationCd(request.getArrivalStationCd())).thenReturn(List.of(departureArrivalTime.getSectionCd()));
+        SectionKmEntity sectionKm = new SectionKmEntity();
+        sectionKm.setSectionCd("Test1");
+        when(sectionKmRepo.findByStartStationCd(request.getDepartureStationCd())).thenReturn(List.of(sectionKm));
+        when(sectionKmRepo.findByGoalStationCd(request.getArrivalStationCd())).thenReturn(List.of(sectionKm));
         when(departureArrivalTimeRepo.findByScheduleCdAndSectionCdIn(request.getScheduleCd(), List.of(departureArrivalTime.getSectionCd()))).thenReturn(departureArrivalTime);
         when(departureArrivalTimeRepo.findByScheduleCdAndDepartureTimeAndArrivalTime(request.getScheduleCd(), departureArrivalTime.getDepartureTime(), departureArrivalTime.getArrivalTime())).thenReturn(List.of(departureArrivalTime.getSectionCd()));
         when(reservationRepo.save(any())).thenReturn(new ReservationEntity() {{
