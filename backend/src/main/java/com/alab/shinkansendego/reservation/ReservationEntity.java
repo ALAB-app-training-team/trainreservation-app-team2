@@ -14,7 +14,6 @@ import jakarta.persistence.Table;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-import lombok.ToString;
 
 import java.time.LocalDate;
 import java.util.Set;
@@ -52,7 +51,6 @@ public class ReservationEntity {
     @JoinColumn(name = "schedule_cd", referencedColumnName = "schedule_cd", insertable = false, updatable = false)
     private ScheduleEntity schedule;
     @OneToMany(fetch = FetchType.LAZY)
-    @ToString.Exclude
     @JoinColumn(name = "reservation_id", referencedColumnName = "id", insertable = false, updatable = false)
     private Set<ReservedSeatEntity> reservedSeat;
 }
