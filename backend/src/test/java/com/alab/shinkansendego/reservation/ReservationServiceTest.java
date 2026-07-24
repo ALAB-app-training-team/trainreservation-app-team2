@@ -460,7 +460,7 @@ public class ReservationServiceTest {
         departureArrivalTime.setArrivalTime(LocalTime.of(6, 9));
         departureArrivalTime.setSectionCd("Test1");
         SectionKmEntity sectionKm = new SectionKmEntity();
-        sectionKm.setSectionCd("Test1");
+        sectionKm.setSectionCd(departureArrivalTime.getSectionCd());
         when(sectionKmRepo.findByStartStationCd(request.getDepartureStationCd())).thenReturn(List.of(sectionKm));
         when(sectionKmRepo.findByGoalStationCd(request.getArrivalStationCd())).thenReturn(List.of(sectionKm));
         when(departureArrivalTimeRepo.findByScheduleCdAndSectionCdIn(request.getScheduleCd(), List.of(departureArrivalTime.getSectionCd()))).thenReturn(departureArrivalTime);
@@ -488,7 +488,7 @@ public class ReservationServiceTest {
         departureArrivalTime.setArrivalTime(LocalTime.of(6, 9));
         departureArrivalTime.setSectionCd("Test1");
         SectionKmEntity sectionKm = new SectionKmEntity();
-        sectionKm.setSectionCd("Test1");
+        sectionKm.setSectionCd(departureArrivalTime.getSectionCd());
         when(sectionKmRepo.findByStartStationCd(request.getDepartureStationCd())).thenReturn(List.of(sectionKm));
         when(sectionKmRepo.findByGoalStationCd(request.getArrivalStationCd())).thenReturn(List.of(sectionKm));
         when(departureArrivalTimeRepo.findByScheduleCdAndSectionCdIn(request.getScheduleCd(), List.of(departureArrivalTime.getSectionCd()))).thenReturn(departureArrivalTime);
@@ -509,7 +509,7 @@ public class ReservationServiceTest {
         departureArrivalTime.setArrivalTime(LocalTime.of(6, 9));
         departureArrivalTime.setSectionCd("Test1");
         SectionKmEntity sectionKm = new SectionKmEntity();
-        sectionKm.setSectionCd("Test1");
+        sectionKm.setSectionCd(departureArrivalTime.getSectionCd());
         when(sectionKmRepo.findByStartStationCd(request.getDepartureStationCd())).thenReturn(List.of(sectionKm));
         when(sectionKmRepo.findByGoalStationCd(request.getArrivalStationCd())).thenReturn(List.of(sectionKm));
         when(departureArrivalTimeRepo.findByScheduleCdAndSectionCdIn(request.getScheduleCd(), List.of(departureArrivalTime.getSectionCd()))).thenReturn(departureArrivalTime);
@@ -534,7 +534,7 @@ public class ReservationServiceTest {
         departureArrivalTime.setArrivalTime(LocalTime.of(6, 9));
         departureArrivalTime.setSectionCd("Test1");
         SectionKmEntity sectionKm = new SectionKmEntity();
-        sectionKm.setSectionCd("Test1");
+        sectionKm.setSectionCd(departureArrivalTime.getSectionCd());
         when(sectionKmRepo.findByStartStationCd(request.getDepartureStationCd())).thenReturn(List.of(sectionKm));
         when(sectionKmRepo.findByGoalStationCd(request.getArrivalStationCd())).thenReturn(List.of(sectionKm));
         when(departureArrivalTimeRepo.findByScheduleCdAndSectionCdIn(request.getScheduleCd(), List.of(departureArrivalTime.getSectionCd()))).thenReturn(departureArrivalTime);
@@ -560,7 +560,7 @@ public class ReservationServiceTest {
         departureArrivalTime.setArrivalTime(LocalTime.of(6, 9));
         departureArrivalTime.setSectionCd("Test1");
         SectionKmEntity sectionKm = new SectionKmEntity();
-        sectionKm.setSectionCd("Test1");
+        sectionKm.setSectionCd(departureArrivalTime.getSectionCd());
         when(sectionKmRepo.findByStartStationCd(request.getDepartureStationCd())).thenReturn(List.of(sectionKm));
         when(sectionKmRepo.findByGoalStationCd(request.getArrivalStationCd())).thenReturn(List.of(sectionKm));
         when(departureArrivalTimeRepo.findByScheduleCdAndSectionCdIn(request.getScheduleCd(), List.of(departureArrivalTime.getSectionCd()))).thenReturn(departureArrivalTime);
@@ -598,7 +598,7 @@ public class ReservationServiceTest {
         departureArrivalTime.setArrivalTime(LocalTime.of(6, 9));
         departureArrivalTime.setSectionCd("Test1");
         SectionKmEntity sectionKm = new SectionKmEntity();
-        sectionKm.setSectionCd("Test1");
+        sectionKm.setSectionCd(departureArrivalTime.getSectionCd());
         when(sectionKmRepo.findByStartStationCd(request.getDepartureStationCd())).thenReturn(List.of(sectionKm));
         when(sectionKmRepo.findByGoalStationCd(request.getArrivalStationCd())).thenReturn(List.of(sectionKm));
         when(departureArrivalTimeRepo.findByScheduleCdAndSectionCdIn(request.getScheduleCd(), List.of(departureArrivalTime.getSectionCd()))).thenReturn(departureArrivalTime);
@@ -632,7 +632,7 @@ public class ReservationServiceTest {
         departureArrivalTime.setArrivalTime(LocalTime.of(6, 9));
         departureArrivalTime.setSectionCd("Test1");
         SectionKmEntity sectionKm = new SectionKmEntity();
-        sectionKm.setSectionCd("Test1");
+        sectionKm.setSectionCd(departureArrivalTime.getSectionCd());
         when(sectionKmRepo.findByStartStationCd(request.getDepartureStationCd())).thenReturn(List.of(sectionKm));
         when(sectionKmRepo.findByGoalStationCd(request.getArrivalStationCd())).thenReturn(List.of(sectionKm));
         when(departureArrivalTimeRepo.findByScheduleCdAndSectionCdIn(request.getScheduleCd(), List.of(departureArrivalTime.getSectionCd()))).thenReturn(departureArrivalTime);
@@ -671,7 +671,7 @@ public class ReservationServiceTest {
         departureArrivalTime.setArrivalTime(LocalTime.of(6, 9));
         departureArrivalTime.setSectionCd("Test1");
         SectionKmEntity sectionKm = new SectionKmEntity();
-        sectionKm.setSectionCd("Test1");
+        sectionKm.setSectionCd(departureArrivalTime.getSectionCd());
         when(sectionKmRepo.findByStartStationCd(request.getDepartureStationCd())).thenReturn(List.of(sectionKm));
         when(sectionKmRepo.findByGoalStationCd(request.getArrivalStationCd())).thenReturn(List.of(sectionKm));
         when(departureArrivalTimeRepo.findByScheduleCdAndSectionCdIn(request.getScheduleCd(), List.of(departureArrivalTime.getSectionCd()))).thenReturn(departureArrivalTime);
