@@ -5,6 +5,7 @@ import { ReservationListPage } from '@tests/pages/ReservationList/ReservationLis
 import { ReservedTicketPage } from '@tests/pages/ReservedTicket/ReservedTicketPage';
 import { ReservationGuestLoginPage } from '@tests/pages/ReservationGuestLogin/ReservationGuestLoginPage';
 import { App } from '@tests/pages/shared/App';
+import { LoginPage } from './pages/Login/LoginPage';
 
 test('navigate-検索～予約確認', async ({ page }) => {
     const scheduleSearchPage = new ScheduleSearchPage(page);
@@ -49,6 +50,15 @@ test('navigate-検索～予約確認', async ({ page }) => {
             'エラーが発生しました。しばらくしてから再度お試しください。',
         ),
     ).toBeHidden();
+});
+
+test('navigate-ログイン～検索', async ({ page }) => {
+    const loginPage = new LoginPage(page);
+
+    await loginPage.goto();
+    await loginPage.inputLoginInfo();
+    await loginPage.clickLoginButton();
+    await expect(page).toHaveURL('/scheduleSearch');
 });
 
 test('navigate-header', async ({ page }) => {
