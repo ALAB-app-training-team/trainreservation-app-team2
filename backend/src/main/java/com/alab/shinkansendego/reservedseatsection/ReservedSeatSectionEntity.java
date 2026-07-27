@@ -32,4 +32,6 @@ public class ReservedSeatSectionEntity {
     private String seatCd;
     @Column(name = "reserved_section_cd")
     private String reservedSectionCd;
+    @Column(name = "train_car_type_cd")
+    private String trainCarTypeCd;
 }

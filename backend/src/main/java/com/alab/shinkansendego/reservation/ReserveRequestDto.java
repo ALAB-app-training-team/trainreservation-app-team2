@@ -39,6 +39,8 @@ public class ReserveRequestDto {
     public static class SelectedSeatDto {
         @NotNull(message = "trainCarCd is Null")
         private String trainCarCd;
+        @NotNull(message = "trainCarTypeCd is Null")
+        private String trainCarTypeCd;
         @NotNull(message = "seatCd is Null")
         private String seatCd;
         @NotNull(message = "seatFare is Null")
