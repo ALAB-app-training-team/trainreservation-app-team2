@@ -42,7 +42,7 @@ export function Header() {
         localStorage.clear();
         setName(null);
         handleMenuOpen();
-        navigate('/Login');
+        navigate('/login');
     };
 
     return (

@@ -52,27 +52,27 @@ test('navigate-検索～予約確認', async ({ page }) => {
     ).toBeHidden();
 });
 
-test('navigate-ログイン～検索', async ({ page }) => {
-    const loginPage = new LoginPage(page);
-
-    await loginPage.goto();
-    await loginPage.inputLoginInfo();
-    await loginPage.clickLoginButton();
-    await expect(page).toHaveURL('/scheduleSearch');
-});
-
 test('navigate-header', async ({ page }) => {
     const reservationGuestLoginPage = new ReservationGuestLoginPage(page);
     const scheduleSearchPage = new ScheduleSearchPage(page);
+    const loginPage = new LoginPage(page);
 
     await reservationGuestLoginPage.goto();
     await expect(page).toHaveURL('/reservationGuestLogin');
     await reservationGuestLoginPage.header.goToSchduleSearchBySystemName();
     await expect(page).toHaveURL('/scheduleSearch');
-    await scheduleSearchPage.header.gotoReservationGuestLogin();
+    await scheduleSearchPage.header.goToReservationGuestLogin();
     await expect(page).toHaveURL('/reservationGuestLogin');
-    await reservationGuestLoginPage.header.gotoScheduleSearch();
+    await reservationGuestLoginPage.header.goToScheduleSearch();
     await expect(page).toHaveURL('/scheduleSearch');
+    await scheduleSearchPage.header.goToLogin();
+    await expect(page).toHaveURL('/login');
+    await loginPage.inputLoginInfo();
+    await loginPage.clickLoginButton();
+    await expect(page).toHaveURL('/scheduleSearch');
+    await page.getByRole('button', { name: 'Tarouさん' }).first().click();
+    await scheduleSearchPage.header.goToLogout();
+    await expect(page).toHaveURL('/login');
 });
 
 test('navigate-ゲスト認証がない場合に予約一覧・予約詳細にアクセスするとゲストログインに遷移する', async ({
