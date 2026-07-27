@@ -97,10 +97,10 @@ public class ScheduleService {
                     data.setReservedSeats(totalSeats.getReservedTotal() - (reservedSeatSectionEntities
                         .stream().filter(entity -> (Objects.equals(entity.getTrainCarTypeCd(), "CAR01")))
                         .collect(Collectors.groupingBy(ReservedSeatSectionEntity::getSeatCd)).size()));
-                    data.setGreenSeats(totalSeats.getReservedTotal() - (reservedSeatSectionEntities
+                    data.setGreenSeats(totalSeats.getGreenTotal() - (reservedSeatSectionEntities
                         .stream().filter(entity -> (Objects.equals(entity.getTrainCarTypeCd(), "CAR02")))
                         .collect(Collectors.groupingBy(ReservedSeatSectionEntity::getSeatCd)).size()));
-                    data.setGcSeats(totalSeats.getReservedTotal() - (reservedSeatSectionEntities
+                    data.setGcSeats(totalSeats.getGcTotal() - (reservedSeatSectionEntities
                         .stream().filter(entity -> (Objects.equals(entity.getTrainCarTypeCd(), "CAR03")))
                         .collect(Collectors.groupingBy(ReservedSeatSectionEntity::getSeatCd)).size()));
                     responseList.add(data);
