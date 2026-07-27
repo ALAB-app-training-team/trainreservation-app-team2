@@ -89,8 +89,8 @@ public class ReservationService {
         }
 
         Map<UUID, List<ReservedSeatEntity>> reservedSeatEntityMap = reservationEntityList
-            .stream().map(ReservationEntity::getReservedSeat).flatMap(Set::stream).toList()
-            .stream().collect(Collectors.groupingBy(ReservedSeatEntity::getReservationId));
+            .stream().map(ReservationEntity::getReservedSeat).flatMap(Set::stream)
+            .collect(Collectors.groupingBy(ReservedSeatEntity::getReservationId));
 
         for (ReservationEntity reservation : reservationEntityList) {
             ReservationResponseDto dto = new ReservationResponseDto();
