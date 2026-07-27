@@ -16,7 +16,12 @@ public interface ReservationRepository extends JpaRepository<ReservationEntity, 
         "departureArrivalTime.sectionKm.startStation",
         "departureArrivalTime.sectionKm.goalStation",
         "schedule",
-        "schedule.trainType"
+        "schedule.trainType",
+        "reservedSeat",
+        "reservedSeat.trainCar",
+        "reservedSeat.trainCar.seatType",
+        "reservedSeat.trainCar.seatType.trainCarType",
+        "reservedSeat.seat"
     })
     Optional<ReservationEntity> findByIdAndReserverNameAndReserverMail(UUID reservationId, String reserverName, String reserverMail);
 
@@ -25,6 +30,11 @@ public interface ReservationRepository extends JpaRepository<ReservationEntity, 
         "departureArrivalTime",
         "departureArrivalTime.sectionKm",
         "departureArrivalTime.sectionKm.startStation",
-        "departureArrivalTime.sectionKm.goalStation"})
+        "departureArrivalTime.sectionKm.goalStation",
+        "reservedSeat",
+        "reservedSeat.trainCar",
+        "reservedSeat.trainCar.seatType",
+        "reservedSeat.trainCar.seatType.trainCarType",
+        "reservedSeat.seat"})
     List<ReservationEntity> findByReserverNameAndReserverMail(String name, String email);
 }

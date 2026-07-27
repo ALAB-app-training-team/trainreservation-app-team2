@@ -13,8 +13,8 @@ import { removeGuestReservation } from '@/shared/utils/RemoveGuestReservation';
 export function ReservedTicket() {
     const location = useLocation();
     const navigate = useNavigate();
-    const { purchaseId, isBack } = location.state;
-    const { reservedTickets } = useReservedTickets(purchaseId);
+    const { reservationId, isBack } = location.state;
+    const { reservedTickets } = useReservedTickets(reservationId);
 
     const queryClient = useQueryClient();
     useEffect(() => {
