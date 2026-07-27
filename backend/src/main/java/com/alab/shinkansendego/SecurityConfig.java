@@ -10,24 +10,23 @@ import org.springframework.security.web.SecurityFilterChain;
 
 @Configuration
 public class SecurityConfig {
-    @Bean // ←これが必須
+    @Bean
     public PasswordEncoder passwordEncoder() {
         return new BCryptPasswordEncoder();
     }
 
     @Bean
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
-        http
-            .csrf(csrf -> csrf.disable()) // ここをラムダ形式に変更
-            .cors(cors -> cors.configure(http))//.cors(cors ->{}) 追加
+        HttpSecurity httpSecurity = http
+            .csrf(csrf -> csrf.disable())
+            .cors(cors -> cors.configure(http))
             .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.IF_REQUIRED))//追加
             .authorizeHttpRequests(auth -> auth
-                .requestMatchers("/api/**").permitAll() // /api/** は誰でもアクセス可能
-                .anyRequest().authenticated()           // 他は認証必須
+                .requestMatchers("/api/**").permitAll()
+                .anyRequest().authenticated()
             )
-            .formLogin(form -> form.disable())//追加
-            .httpBasic(basic -> basic.disable())//追加
-        ;
+            .formLogin(form -> form.disable())
+            .httpBasic(basic -> basic.disable());
         return http.build();
     }
 }
