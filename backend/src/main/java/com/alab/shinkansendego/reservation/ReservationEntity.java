@@ -1,6 +1,7 @@
 package com.alab.shinkansendego.reservation;
 
 import com.alab.shinkansendego.departurearrivaltime.DepartureArrivalTimeEntity;
+import com.alab.shinkansendego.reservedseat.ReservedSeatEntity;
 import com.alab.shinkansendego.schedule.ScheduleEntity;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
@@ -15,7 +16,7 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import java.time.LocalDate;
-import java.util.List;
+import java.util.Set;
 import java.util.UUID;
 
 @Data
@@ -45,8 +46,11 @@ public class ReservationEntity {
     private Boolean isDeleted;
     @OneToMany(fetch = FetchType.LAZY)
     @JoinColumn(name = "schedule_cd", referencedColumnName = "schedule_cd", insertable = false, updatable = false)
-    private List<DepartureArrivalTimeEntity> departureArrivalTime;
+    private Set<DepartureArrivalTimeEntity> departureArrivalTime;
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "schedule_cd", referencedColumnName = "schedule_cd", insertable = false, updatable = false)
     private ScheduleEntity schedule;
+    @OneToMany(fetch = FetchType.LAZY)
+    @JoinColumn(name = "reservation_id", referencedColumnName = "id", insertable = false, updatable = false)
+    private Set<ReservedSeatEntity> reservedSeat;
 }
