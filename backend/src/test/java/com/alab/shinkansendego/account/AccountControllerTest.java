@@ -7,6 +7,7 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.webmvc.test.autoconfigure.WebMvcTest;
 import org.springframework.http.MediaType;
+import org.springframework.mock.web.MockHttpSession;
 import org.springframework.test.context.bean.override.mockito.MockitoBean;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.MvcResult;
@@ -16,6 +17,7 @@ import java.util.UUID;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.mockito.Mockito.when;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
@@ -57,5 +59,18 @@ public class AccountControllerTest {
         String mailInSession = (String) session.getAttribute("LOGIN_MAIL");
         assertNotNull(mailInSession, "LOGIN_MAILという名前でセッションが保存されていること");
         assertEquals(mailInSession, account.getMail());
+    }
+
+    @Test
+    @DisplayName("ログアウトできること")
+    void logout_return204() throws Exception {
+        MockHttpSession session = new MockHttpSession();
+        session.setAttribute("LOGIN_ID", "login_id");
+
+        mockMvc.perform(MockMvcRequestBuilders.post(baseUrl + "logout")
+                .contentType(MediaType.APPLICATION_JSON)
+                .session(session))
+            .andExpect(status().isNoContent());
+        assertTrue(session.isInvalid(), "セッションが破棄されていること");
     }
 }

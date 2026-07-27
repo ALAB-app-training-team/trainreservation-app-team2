@@ -30,4 +30,10 @@ public class AccountController {
         session.setAttribute("LOGIN_NAME", account.getName());
         return ResponseEntity.ok(account.getName());
     }
+
+    @PostMapping("logout")
+    public ResponseEntity logout(HttpSession session) {
+        session.invalidate(); // セッションの無効化
+        return ResponseEntity.noContent().build();
+    }
 }
