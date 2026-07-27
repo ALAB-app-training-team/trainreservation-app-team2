@@ -83,8 +83,8 @@ export function Header() {
                                 onClick={handleMenuOpen}
                                 className="flex items-center gap-2 text-sm font-bold"
                             >
-                                <FiMenu />
                                 {name}さん
+                                <FiMenu />
                             </button>
                         </div>
                     )}

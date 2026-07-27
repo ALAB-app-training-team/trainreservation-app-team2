@@ -51,6 +51,7 @@ export function Login() {
                                 name="password"
                                 value={loginRequestDto.password}
                                 onChange={handleChange}
+                                placeholder="パスワードを入力"
                                 autoComplete="current-password"
                                 required
                                 className="focus:border-primary bg-primary-light w-full rounded-xl p-2 outline-none focus:border-2"
