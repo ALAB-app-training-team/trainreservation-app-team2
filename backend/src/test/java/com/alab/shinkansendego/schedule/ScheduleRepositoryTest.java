@@ -16,7 +16,6 @@ import org.testcontainers.junit.jupiter.Testcontainers;
 import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertNull;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 @ActiveProfiles("test")
@@ -39,21 +38,6 @@ public class ScheduleRepositoryTest {
         registry.add("spring.datasource.url", postgres::getJdbcUrl);
         registry.add("spring.datasource.username", postgres::getUsername);
         registry.add("spring.datasource.password", postgres::getPassword);
-    }
-
-    @Test
-    @DisplayName("ダイヤコードから車種名を取得できる")
-    void findTrainTypeNameByScheduleCd_withScheduleCd_returnGetTrainTypeSuccess() {
-        String expected = "やまびこ11号";
-        String actual = repo.findTrainTypeNameByScheduleCd("TEST06");
-        assertEquals(expected, actual);
-    }
-
-    @Test
-    @DisplayName("テーブルに存在しないダイヤコードを検索した場合、Nullが返却されるか")
-    void findTrainTypeNameByScheduleCd_withNotExistScheduleCd_returnNull() {
-        String actual = repo.findTrainTypeNameByScheduleCd("99999");
-        assertNull(actual);
     }
 
     @Test

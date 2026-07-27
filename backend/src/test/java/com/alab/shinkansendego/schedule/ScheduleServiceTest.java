@@ -4,6 +4,7 @@ import com.alab.shinkansendego.departurearrivaltime.DepartureArrivalTimeEntity;
 import com.alab.shinkansendego.departurearrivaltime.DepartureArrivalTimeRepository;
 import com.alab.shinkansendego.sectionkm.SectionKmEntity;
 import com.alab.shinkansendego.sectionkm.SectionKmRepository;
+import com.alab.shinkansendego.traintype.TrainTypeEntity;
 import org.jspecify.annotations.NonNull;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
@@ -17,6 +18,7 @@ import java.time.LocalTime;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+import java.util.Optional;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
@@ -40,10 +42,10 @@ public class ScheduleServiceTest {
     private ScheduleService service;
 
     private static @NonNull List<ScheduleResponseDto> getExpectScheduleResponseDtosList() {
-        ScheduleResponseDto expect01 = new ScheduleResponseDto("TIME02", "やまびこ2号", LocalTime.of(11, 0, 0), LocalTime.of(16, 10, 0));
-        ScheduleResponseDto expect02 = new ScheduleResponseDto("TIME03", "やまびこ3号", LocalTime.of(12, 0, 0), LocalTime.of(12, 30, 0));
-        ScheduleResponseDto expect03 = new ScheduleResponseDto("TIME04", "やまびこ4号", LocalTime.of(13, 0, 0), LocalTime.of(13, 40, 0));
-        ScheduleResponseDto expect04 = new ScheduleResponseDto("TIME06", "やまびこ6号", LocalTime.of(15, 0, 0), LocalTime.of(16, 0, 0));
+        ScheduleResponseDto expect01 = new ScheduleResponseDto("TIME02", "やまびこ2号", LocalTime.of(11, 0, 0), LocalTime.of(16, 10, 0), 30, 20, 10);
+        ScheduleResponseDto expect02 = new ScheduleResponseDto("TIME03", "やまびこ3号", LocalTime.of(12, 0, 0), LocalTime.of(12, 30, 0), 30, 20, 10);
+        ScheduleResponseDto expect03 = new ScheduleResponseDto("TIME04", "やまびこ4号", LocalTime.of(13, 0, 0), LocalTime.of(13, 40, 0), 30, 20, 10);
+        ScheduleResponseDto expect04 = new ScheduleResponseDto("TIME06", "やまびこ6号", LocalTime.of(15, 0, 0), LocalTime.of(16, 0, 0), 30, 20, 10);
         return Arrays.asList(expect01, expect02, expect03, expect04);
     }
 
@@ -52,6 +54,13 @@ public class ScheduleServiceTest {
         TrainCarFormationResponseDto expect02 = new TrainCarFormationResponseDto("E5SER02", 2, "SEAT01", "指定席");
 
         return Arrays.asList(expect01, expect02);
+    }
+
+    private static @NonNull Optional<ScheduleEntity> getScheduleEntity(TrainTypeEntity trainType) {
+        ScheduleEntity schedule = new ScheduleEntity();
+        schedule.setTrainType(trainType);
+
+        return Optional.of(schedule);
     }
 
     @BeforeEach
@@ -125,17 +134,24 @@ public class ScheduleServiceTest {
     @Test
     @DisplayName("出発・到着駅名と出発時刻のリクエストDTOからダイヤリストが取得できる")
     void getSearchedScheduleByStation_withValidScheduleRequestDto_returnGetScheduleListSuccess() {
+        ScheduleEntity schedule = new ScheduleEntity();
+        TrainTypeEntity trainType1 = new TrainTypeEntity("YM001", "やまびこ1号", "E5SER");
+        TrainTypeEntity trainType2 = new TrainTypeEntity("YM002", "やまびこ2号", "E5SER");
+        TrainTypeEntity trainType3 = new TrainTypeEntity("YM003", "やまびこ3号", "E5SER");
+        TrainTypeEntity trainType4 = new TrainTypeEntity("YM004", "やまびこ4号", "E5SER");
+        TrainTypeEntity trainType5 = new TrainTypeEntity("YM005", "やまびこ5号", "E5SER");
+        TrainTypeEntity trainType6 = new TrainTypeEntity("YM006", "やまびこ6号", "E5SER");
         when(sectionRepo.findByStartStationCd("STATION01")).thenReturn(depatureSectionList);
         when(sectionRepo.findByGoalStationCd("STATION02")).thenReturn(arrivalSectionList);
         when(timeRepo.findBySectionCd("SEC01")).thenReturn(sec01ScheduleList);
         when(timeRepo.findBySectionCd("SEC02")).thenReturn(sec02ScheduleList);
         when(timeRepo.findBySectionCd("SEC03")).thenReturn(sec03ScheduleList);
-        when(scheduleRepo.findTrainTypeNameByScheduleCd("TIME01")).thenReturn("やまびこ1号");
-        when(scheduleRepo.findTrainTypeNameByScheduleCd("TIME02")).thenReturn("やまびこ2号");
-        when(scheduleRepo.findTrainTypeNameByScheduleCd("TIME03")).thenReturn("やまびこ3号");
-        when(scheduleRepo.findTrainTypeNameByScheduleCd("TIME04")).thenReturn("やまびこ4号");
-        when(scheduleRepo.findTrainTypeNameByScheduleCd("TIME05")).thenReturn("やまびこ5号");
-        when(scheduleRepo.findTrainTypeNameByScheduleCd("TIME06")).thenReturn("やまびこ6号");
+        when(scheduleRepo.findById("TIME01")).thenReturn(getScheduleEntity(trainType1));
+        when(scheduleRepo.findById("TIME02")).thenReturn(getScheduleEntity(trainType2));
+        when(scheduleRepo.findById("TIME03")).thenReturn(getScheduleEntity(trainType3));
+        when(scheduleRepo.findById("TIME04")).thenReturn(getScheduleEntity(trainType4));
+        when(scheduleRepo.findById("TIME05")).thenReturn(getScheduleEntity(trainType5));
+        when(scheduleRepo.findById("TIME06")).thenReturn(getScheduleEntity(trainType6));
 
         List<ScheduleResponseDto> expectList = getExpectScheduleResponseDtosList();
 
@@ -175,7 +191,7 @@ public class ScheduleServiceTest {
         when(timeRepo.findBySectionCd("SEC01")).thenReturn(sec01ScheduleList);
         when(timeRepo.findBySectionCd("SEC02")).thenReturn(sec02ScheduleList);
         when(timeRepo.findBySectionCd("SEC03")).thenReturn(sec03ScheduleList);
-        when(scheduleRepo.findTrainTypeNameByScheduleCd("TIME02")).thenReturn(null);
+        when(scheduleRepo.findById("TIME02")).thenReturn(null);
         Exception ex = assertThrows(
             IllegalArgumentException.class,
             () -> service.getSearchedScheduleByStation(request)
