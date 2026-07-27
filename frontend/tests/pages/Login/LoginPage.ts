@@ -37,7 +37,7 @@ export class LoginPage {
     }
 
     async inputLoginInfo() {
-        await this.fillMailAddress('a@c.com');
-        await this.fillPassword('Tarou');
+        await this.fillMailAddress('test-common@test.com');
+        await this.fillPassword('password');
     }
 }

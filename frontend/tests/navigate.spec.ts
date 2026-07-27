@@ -70,7 +70,7 @@ test('navigate-header', async ({ page }) => {
     await loginPage.inputLoginInfo();
     await loginPage.clickLoginButton();
     await expect(page).toHaveURL('/scheduleSearch');
-    await page.getByRole('button', { name: 'Tarouさん' }).first().click();
+    await scheduleSearchPage.header.clickCommonUser();
     await scheduleSearchPage.header.goToLogout();
     await expect(page).toHaveURL('/login');
 });
