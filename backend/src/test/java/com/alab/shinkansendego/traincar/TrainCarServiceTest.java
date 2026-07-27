@@ -51,18 +51,18 @@ public class TrainCarServiceTest {
     private TrainCarService service;
 
     private static @NonNull List<SeatResponseDto> getSeatResponseDtosList() {
-        SeatResponseDto expect01 = new SeatResponseDto("Test001", 1, "TestSeat1", 1, "T", 2610, false);
-        SeatResponseDto expect02 = new SeatResponseDto("Test001", 1, "TestSeat2", 2, "E", 2610, true);
-        SeatResponseDto expect03 = new SeatResponseDto("Test001", 1, "TestSeat3", 3, "S", 2610, false);
-        SeatResponseDto expect04 = new SeatResponseDto("Test001", 1, "TestSeat4", 4, "T", 2610, true);
+        SeatResponseDto expect01 = new SeatResponseDto("Test001", 1, "CAR01", "TestSeat1", 1, "T", 2610, false);
+        SeatResponseDto expect02 = new SeatResponseDto("Test001", 1, "CAR01", "TestSeat2", 2, "E", 2610, true);
+        SeatResponseDto expect03 = new SeatResponseDto("Test001", 1, "CAR01", "TestSeat3", 3, "S", 2610, false);
+        SeatResponseDto expect04 = new SeatResponseDto("Test001", 1, "CAR01", "TestSeat4", 4, "T", 2610, true);
         return Arrays.asList(expect01, expect02, expect03, expect04);
     }
 
     private static @NonNull List<SeatResponseDto> getIsreservedIsNullList() {
-        SeatResponseDto expect01 = new SeatResponseDto("Test001", 1, "TestSeat1", 1, "T", 0, null);
-        SeatResponseDto expect02 = new SeatResponseDto("Test001", 1, "TestSeat2", 2, "E", 0, null);
-        SeatResponseDto expect03 = new SeatResponseDto("Test001", 1, "TestSeat3", 3, "S", 0, null);
-        SeatResponseDto expect04 = new SeatResponseDto("Test001", 1, "TestSeat4", 4, "T", 0, null);
+        SeatResponseDto expect01 = new SeatResponseDto("Test001", 1, "CAR01", "TestSeat1", 1, "T", 0, null);
+        SeatResponseDto expect02 = new SeatResponseDto("Test001", 1, "CAR01", "TestSeat2", 2, "E", 0, null);
+        SeatResponseDto expect03 = new SeatResponseDto("Test001", 1, "CAR01", "TestSeat3", 3, "S", 0, null);
+        SeatResponseDto expect04 = new SeatResponseDto("Test001", 1, "CAR01", "TestSeat4", 4, "T", 0, null);
         return Arrays.asList(expect01, expect02, expect03, expect04);
     }
 
@@ -77,11 +77,11 @@ public class TrainCarServiceTest {
         sectionKmEntities.add(new SectionKmEntity("Test1", "Teststart01", "Testend01", 10.0));
         sectionKmEntities.add(new SectionKmEntity("Test2", "Teststart02", "Testend02", 10.0));
         reservedSeatSectionEntities.add(new ReservedSeatSectionEntity(UUID.randomUUID(), UUID.randomUUID(), LocalDate.of(2026, 6, 1), "Test01",
-            "Test001", "TestSeat2", "Test1"));
+            "Test001", "TestSeat2", "Test1", "CAR01"));
         reservedSeatSectionEntities.add(new ReservedSeatSectionEntity(UUID.randomUUID(), UUID.randomUUID(), LocalDate.of(2026, 6, 1), "Test01",
-            "Test001", "TestSeat4", "Test1"));
+            "Test001", "TestSeat4", "Test1", "CAR01"));
         reservedSeatSectionEntities.add(new ReservedSeatSectionEntity(UUID.randomUUID(), UUID.randomUUID(), LocalDate.of(2026, 6, 1), "Test01",
-            "Test001", "TestSeat4", "Test2"));
+            "Test001", "TestSeat4", "Test2", "CAR01"));
         TrainCarTypeEntity trainCarTypeEntity = new TrainCarTypeEntity();
         trainCarTypeEntity.setName("指定席");
         SeatTypeEntity seatTypeEntity = new SeatTypeEntity();
