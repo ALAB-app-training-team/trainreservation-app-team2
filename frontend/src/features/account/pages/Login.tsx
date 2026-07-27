@@ -60,7 +60,7 @@ export function Login() {
                                     placeholder="パスワードを入力"
                                     autoComplete="current-password"
                                     required
-                                    className="w-full outline-none"
+                                    className="w-full outline-none [&::-ms-reveal]:hidden"
                                 />
                                 {passwordType === 'password' && (
                                     <MdVisibilityOff
