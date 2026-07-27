@@ -110,7 +110,7 @@ test('座席を6席選択すると、それ以上選択できない', async ({ p
 //     await expect(page).toHaveURL('/scheduleSearch');
 //     await scheduleSearchPage.clickDetailButton();
 //     await selectSeatPage.selectSeat();
-//     await page.getByRole('textbox', { name: '購入者氏名' }).fill('山田 太郎');
+//     await page.getByRole('textbox', { name: '予約者氏名' }).fill('山田 太郎');
 //     await page
 //         .getByRole('textbox', { name: 'メールアドレス' })
 //         .fill('demo@example.com');
