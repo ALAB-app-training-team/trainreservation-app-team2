@@ -1,0 +1,43 @@
+import { type Locator, type Page } from '@playwright/test';
+import { Header } from '@tests/pages/shared/Header';
+
+export class LoginPage {
+    readonly page: Page;
+    readonly header: Header;
+    readonly mailAddress: Locator;
+    readonly password: Locator;
+    readonly loginButton: Locator;
+
+    constructor(page: Page) {
+        this.page = page;
+        this.header = new Header(page);
+        this.mailAddress = page.getByRole('textbox', {
+            name: 'メールアドレス',
+        });
+        this.password = page.getByRole('textbox', { name: 'パスワード' });
+        this.loginButton = page.getByRole('button', {
+            name: 'ログイン',
+        });
+    }
+
+    async goto() {
+        await this.page.goto('/login');
+    }
+
+    async fillMailAddress(mailAddress: string) {
+        await this.mailAddress.fill(mailAddress);
+    }
+
+    async fillPassword(password: string) {
+        await this.password.fill(password);
+    }
+
+    async clickLoginButton() {
+        await this.loginButton.click();
+    }
+
+    async inputLoginInfo() {
+        await this.fillMailAddress('test-common@test.com');
+        await this.fillPassword('password');
+    }
+}
