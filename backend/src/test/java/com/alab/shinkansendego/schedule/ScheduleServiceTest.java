@@ -230,7 +230,7 @@ public class ScheduleServiceTest {
             IllegalArgumentException.class,
             () -> service.getSearchedScheduleByStation(request)
         );
-        assertEquals("TrainType is Not found", ex.getMessage());
+        assertEquals("OptionalSchedule is Not found", ex.getMessage());
     }
 
     @Test

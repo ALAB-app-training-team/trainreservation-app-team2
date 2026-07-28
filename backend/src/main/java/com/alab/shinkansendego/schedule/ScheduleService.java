@@ -77,7 +77,7 @@ public class ScheduleService {
                             throw new IllegalArgumentException("TrainType is Not found");
                         }
                     } else {
-                        throw new IllegalArgumentException("TrainType is Not found");
+                        throw new IllegalArgumentException("OptionalSchedule is Not found");
                     }
 
                     List<String> sectionCdList = departureArrivalTimeRepository.findByScheduleCdAndDepartureTimeAndArrivalTime(departure.getScheduleCd(), departure.getArrivalTime(), arrival.getArrivalTime());
