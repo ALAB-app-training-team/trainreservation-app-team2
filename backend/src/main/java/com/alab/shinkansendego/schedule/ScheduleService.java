@@ -4,6 +4,7 @@ import com.alab.shinkansendego.departurearrivaltime.DepartureArrivalTimeEntity;
 import com.alab.shinkansendego.departurearrivaltime.DepartureArrivalTimeRepository;
 import com.alab.shinkansendego.reservedseatsection.ReservedSeatSectionEntity;
 import com.alab.shinkansendego.reservedseatsection.ReservedSeatSectionRepository;
+import com.alab.shinkansendego.sectionkm.SectionKmEntity;
 import com.alab.shinkansendego.sectionkm.SectionKmRepository;
 import com.alab.shinkansendego.totalseat.TotalSeatEntity;
 import com.alab.shinkansendego.totalseat.TotalSeatRepository;
@@ -42,8 +43,8 @@ public class ScheduleService {
 
         List<ScheduleResponseDto> responseList = new ArrayList<>();
 
-        List<String> departureSectionCdList = sectionKmRepository.findByStartStationCd(request.getDepartureStationCd()).stream().map(entity -> entity.getSectionCd()).toList();
-        List<String> arrivalSectionCdList = sectionKmRepository.findByGoalStationCd(request.getArrivalStationCd()).stream().map(entity -> entity.getSectionCd()).toList();
+        List<String> departureSectionCdList = sectionKmRepository.findByStartStationCd(request.getDepartureStationCd()).stream().map(SectionKmEntity::getSectionCd).toList();
+        List<String> arrivalSectionCdList = sectionKmRepository.findByGoalStationCd(request.getArrivalStationCd()).stream().map(SectionKmEntity::getSectionCd).toList();
 
         if (departureSectionCdList.isEmpty() || arrivalSectionCdList.isEmpty()) {
             throw new IllegalArgumentException("SectionCD is Not found");
@@ -70,7 +71,12 @@ public class ScheduleService {
                 if (Objects.equals(departure.getScheduleCd(), arrival.getScheduleCd()) && departure.getDepartureTime().isBefore(arrival.getArrivalTime())) {
 
                     Optional<ScheduleEntity> scheduleEntity = scheduleRepository.findById(departure.getScheduleCd());
-                    if (scheduleEntity.get().getTrainType().getName() == null || scheduleEntity.get().getTrainType().getTrainSeriesCd() == null) {
+
+                    if (scheduleEntity.isPresent()) {
+                        if (scheduleEntity.get().getTrainType().getName() == null || scheduleEntity.get().getTrainType().getTrainSeriesCd() == null) {
+                            throw new IllegalArgumentException("TrainType is Not found");
+                        }
+                    } else {
                         throw new IllegalArgumentException("TrainType is Not found");
                     }
 

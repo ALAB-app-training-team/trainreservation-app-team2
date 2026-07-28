@@ -165,7 +165,6 @@ public class ScheduleServiceTest {
     @Test
     @DisplayName("出発・到着駅名と出発時刻のリクエストDTOからダイヤリストが取得できる")
     void getSearchedScheduleByStation_withValidScheduleRequestDto_returnGetScheduleListSuccess() {
-        ScheduleEntity schedule = new ScheduleEntity();
         TrainTypeEntity trainType1 = new TrainTypeEntity("YM001", "やまびこ1号", "E5SER");
         TrainTypeEntity trainType2 = new TrainTypeEntity("YM002", "やまびこ2号", "E5SER");
         TrainTypeEntity trainType3 = new TrainTypeEntity("YM003", "やまびこ3号", "E5SER");
@@ -215,6 +214,23 @@ public class ScheduleServiceTest {
             () -> service.getSearchedScheduleByStation(request)
         );
         assertEquals("SectionCD is Not found", ex.getMessage());
+    }
+
+    @Test
+    @DisplayName("ダイヤCDに該当するScheduleEntityがNullの場合にエラーを発生させる")
+    void getSearchedScheduleByStation_withNullOptionalSchedule_returnIllegalArgumentException() {
+        when(sectionRepo.findByStartStationCd("STATION01")).thenReturn(depatureSectionList);
+        when(sectionRepo.findByGoalStationCd("STATION02")).thenReturn(arrivalSectionList);
+        when(timeRepo.findBySectionCd("SEC01")).thenReturn(sec01ScheduleList);
+        when(timeRepo.findBySectionCd("SEC02")).thenReturn(sec02ScheduleList);
+        when(timeRepo.findBySectionCd("SEC03")).thenReturn(sec03ScheduleList);
+        when(totalSeatRepo.findAll()).thenReturn(totalSeatList);
+        when(scheduleRepo.findById("TIME02")).thenReturn(Optional.empty());
+        Exception ex = assertThrows(
+            IllegalArgumentException.class,
+            () -> service.getSearchedScheduleByStation(request)
+        );
+        assertEquals("TrainType is Not found", ex.getMessage());
     }
 
     @Test
