@@ -24,7 +24,7 @@ public class SecurityConfig {
             .cors(cors -> cors.configure(http))
             .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.IF_REQUIRED))//追加
             .authorizeHttpRequests(auth -> auth
-                .requestMatchers("/api/login", "api/schdule").permitAll()
+                .requestMatchers("/api/login","/api/logout", "api/schdule").permitAll()
                 .anyRequest().authenticated()
             )
             .formLogin(form -> form.disable())
