@@ -94,21 +94,28 @@ public class ScheduleService {
                         .filter(entity -> (Objects.equals(entity.getTrainSeriesCd(), scheduleEntity.get().getTrainType().getTrainSeriesCd())))
                         .findFirst()
                         .orElseThrow(() -> new IllegalArgumentException("TotalSeat Of TrainSeriesCd is Not Found"));
+                    int calcReservedSeats = totalSeats.getReservedTotal() - (reservedSeatSectionEntities
+                        .stream().filter(entity -> (Objects.equals(entity.getTrainCarTypeCd(), "CAR01")))
+                        .collect(Collectors.groupingBy(ReservedSeatSectionEntity::getSeatCd)).size());
+                    int calcGreenSeats = totalSeats.getGreenTotal() - (reservedSeatSectionEntities
+                        .stream().filter(entity -> (Objects.equals(entity.getTrainCarTypeCd(), "CAR02")))
+                        .collect(Collectors.groupingBy(ReservedSeatSectionEntity::getSeatCd)).size());
+                    int calcGcSeats = totalSeats.getGcTotal() - (reservedSeatSectionEntities
+                        .stream().filter(entity -> (Objects.equals(entity.getTrainCarTypeCd(), "CAR03")))
+                        .collect(Collectors.groupingBy(ReservedSeatSectionEntity::getSeatCd)).size());
+
+                    if (calcReservedSeats < 0 || calcGreenSeats < 0 || calcGcSeats < 0) {
+                        throw new IllegalArgumentException("AvailableSeats is Not found");
+                    }
 
                     ScheduleResponseDto data = new ScheduleResponseDto();
                     data.setScheduleCd(departure.getScheduleCd());
                     data.setTrainTypeName(scheduleEntity.get().getTrainType().getName());
                     data.setDepartureTime(departure.getDepartureTime());
                     data.setArrivalTime(arrival.getArrivalTime());
-                    data.setReservedSeats(totalSeats.getReservedTotal() - (reservedSeatSectionEntities
-                        .stream().filter(entity -> (Objects.equals(entity.getTrainCarTypeCd(), "CAR01")))
-                        .collect(Collectors.groupingBy(ReservedSeatSectionEntity::getSeatCd)).size()));
-                    data.setGreenSeats(totalSeats.getGreenTotal() - (reservedSeatSectionEntities
-                        .stream().filter(entity -> (Objects.equals(entity.getTrainCarTypeCd(), "CAR02")))
-                        .collect(Collectors.groupingBy(ReservedSeatSectionEntity::getSeatCd)).size()));
-                    data.setGcSeats(totalSeats.getGcTotal() - (reservedSeatSectionEntities
-                        .stream().filter(entity -> (Objects.equals(entity.getTrainCarTypeCd(), "CAR03")))
-                        .collect(Collectors.groupingBy(ReservedSeatSectionEntity::getSeatCd)).size()));
+                    data.setReservedSeats(calcReservedSeats);
+                    data.setGreenSeats(calcGreenSeats);
+                    data.setGcSeats(calcGcSeats);
                     responseList.add(data);
                 }
             }
