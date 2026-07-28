@@ -1,5 +1,6 @@
 package com.alab.shinkansendego;
 
+import jakarta.servlet.http.HttpServletResponse;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.config.annotation.method.configuration.EnableMethodSecurity;
@@ -22,32 +23,20 @@ public class SecurityConfig {
         HttpSecurity httpSecurity = http
             .csrf(csrf -> csrf.disable())
             .cors(cors -> cors.configure(http))
-            .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.IF_REQUIRED))//追加
+            .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.IF_REQUIRED))
+            .exceptionHandling(exception -> exception
+                .authenticationEntryPoint((request, response, authException) -> {
+                    response.setStatus(HttpServletResponse.SC_UNAUTHORIZED); // 401をセット
+                    response.setContentType("application/json;charset=UTF-8");
+                    response.getWriter().write("Unauthorized");
+                })
+            )
             .authorizeHttpRequests(auth -> auth
-                .requestMatchers("/api/login","/api/logout", "api/schdule").permitAll()
+                .requestMatchers("/api/login", "/api/logout", "/api/schedules").permitAll()
                 .anyRequest().authenticated()
             )
             .formLogin(form -> form.disable())
             .httpBasic(basic -> basic.disable());
-        return http.build();
-    }
-
-    @Bean
-    public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
-        http
-            .authorizeHttpRequests(authz -> authz
-                .requestMatchers("/login", "/public/**").permitAll()
-                .anyRequest().authenticated()
-            )
-            .formLogin(form -> form
-                .loginPage("/login")
-                .defaultSuccessUrl("/home", true)
-                .permitAll()
-            )
-            .logout(logout -> logout
-                .logoutUrl("/logout")
-                .logoutSuccessUrl("/login?logout")
-            );
         return http.build();
     }
 }
