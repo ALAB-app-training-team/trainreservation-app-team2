@@ -3,10 +3,9 @@ import { BsTrainFreightFrontFill } from 'react-icons/bs';
 import { FiMenu } from 'react-icons/fi';
 import { NavLink, useLocation, useNavigate } from 'react-router-dom';
 
+import apiClient from '@/api/apiClient';
 import { ENDPOINTS } from '@/api/routes';
 import { authContext } from '@/context/AuthContext';
-
-import apiClient from '../apis/apiClient';
 
 export function Header() {
     const location = useLocation();

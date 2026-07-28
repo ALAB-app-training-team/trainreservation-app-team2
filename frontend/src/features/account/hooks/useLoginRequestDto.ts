@@ -1,10 +1,10 @@
 import { type ChangeEvent, useContext, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 
+import apiClient from '@/api/apiClient';
 import { ENDPOINTS } from '@/api/routes';
 import { authContext } from '@/context/AuthContext';
 import type { LoginRequestDto } from '@/features/account/types/LoginRequestDto';
-import apiClient from '@/shared/apis/apiClient';
 import { ERROR_MESSAGE } from '@/shared/constants/ErrorMessages';
 
 export function useLoginRequestDto() {

@@ -1,13 +1,13 @@
 import { useSuspenseQuery } from '@tanstack/react-query';
 import { useMemo, useState } from 'react';
 
+import apiClient from '@/api/apiClient';
 import { ENDPOINTS } from '@/api/routes';
 import { DEFAULT_SEAT_TYPE } from '@/features/schedule/constants/SeatTypeLabel';
 import type { ScheduleInfoDto } from '@/features/schedule/types/ScheduleInfoDto';
 import type { SeatsRequestDto } from '@/features/schedule/types/SeatsRequestDto';
 import type { SeatTypeCd } from '@/features/schedule/types/SeatTypeCd';
 import type { TrainCarFormationResponseDto } from '@/features/schedule/types/TrainCarFormationResponseDto';
-import apiClient from '@/shared/apis/apiClient';
 
 export function useTrainCar(scheduleInfoDto: ScheduleInfoDto) {
     const { data: trainCars } = useSuspenseQuery({

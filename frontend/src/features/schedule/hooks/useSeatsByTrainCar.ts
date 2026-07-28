@@ -1,9 +1,9 @@
 import { useSuspenseQuery } from '@tanstack/react-query';
 
+import apiClient from '@/api/apiClient';
 import { ENDPOINTS } from '@/api/routes';
 import type { SeatResponseDto } from '@/features/schedule/types/SeatResponseDto';
 import type { SeatsRequestDto } from '@/features/schedule/types/SeatsRequestDto';
-import apiClient from '@/shared/apis/apiClient';
 
 export function useSeatsByTrainCar(seatsRequestDto: SeatsRequestDto) {
     const { data: seats } = useSuspenseQuery({

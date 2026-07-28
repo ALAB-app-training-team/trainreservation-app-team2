@@ -5,6 +5,7 @@ import { IoCardOutline } from 'react-icons/io5';
 import { LuArrowLeft } from 'react-icons/lu';
 import { useLocation, useNavigate } from 'react-router-dom';
 
+import apiClient from '@/api/apiClient';
 import { ENDPOINTS } from '@/api/routes';
 import { ReserveConfirmModal } from '@/features/schedule/components/ReserveConfirmModal';
 import { ReserveUserInfo } from '@/features/schedule/components/ReserveUserInfo';
@@ -18,7 +19,6 @@ import { useSelectedSeats } from '@/features/schedule/hooks/useSelectedSeats';
 import type { PaymentRequestDto } from '@/features/schedule/types/PaymentRequestDto';
 import type { ReserveRequestDto } from '@/features/schedule/types/ReserveRequestDto';
 import type { SeatResponseDto } from '@/features/schedule/types/SeatResponseDto';
-import apiClient from '@/shared/apis/apiClient';
 import { CustomModal } from '@/shared/components/CustomModal';
 import { ERROR_MESSAGE } from '@/shared/constants/ErrorMessages';
 import { useModal } from '@/shared/hooks/useModal';
