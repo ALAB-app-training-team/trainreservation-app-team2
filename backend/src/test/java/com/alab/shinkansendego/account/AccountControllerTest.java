@@ -1,13 +1,14 @@
 package com.alab.shinkansendego.account;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import jakarta.servlet.http.HttpSession;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.webmvc.test.autoconfigure.WebMvcTest;
 import org.springframework.http.MediaType;
 import org.springframework.mock.web.MockHttpSession;
+import org.springframework.security.core.context.SecurityContext;
+import org.springframework.security.web.context.HttpSessionSecurityContextRepository;
 import org.springframework.test.context.bean.override.mockito.MockitoBean;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.MvcResult;
@@ -48,17 +49,13 @@ public class AccountControllerTest {
             .andExpect(jsonPath("$").value(account.getName()))
             .andReturn();
 
-        HttpSession session = result.getRequest().getSession(false);
-        assertNotNull(session, "セッションが作成されていること");
-        UUID idInSession = (UUID) session.getAttribute("LOGIN_ID");
-        assertNotNull(idInSession, "LOGIN_IDという名前でセッションが保存されていること");
-        assertEquals(idInSession, account.getId());
-        String nameInSession = (String) session.getAttribute("LOGIN_NAME");
-        assertNotNull(nameInSession, "LOGIN_NAMEという名前でセッションが保存されていること");
-        assertEquals(nameInSession, account.getName());
-        String mailInSession = (String) session.getAttribute("LOGIN_MAIL");
-        assertNotNull(mailInSession, "LOGIN_MAILという名前でセッションが保存されていること");
-        assertEquals(mailInSession, account.getMail());
+        MockHttpSession session = (MockHttpSession) result.getRequest().getSession(false);
+        SecurityContext securityContext = (SecurityContext) session.getAttribute(HttpSessionSecurityContextRepository.SPRING_SECURITY_CONTEXT_KEY);
+        AccountSessionDto sessionAccount = (AccountSessionDto) securityContext.getAuthentication().getPrincipal();
+        assertNotNull(sessionAccount, "セッションが作成されていること");
+        assertEquals(sessionAccount.getId(), account.getId());
+        assertEquals(sessionAccount.getName(), account.getName());
+        assertEquals(sessionAccount.getMail(), account.getMail());
     }
 
     @Test
