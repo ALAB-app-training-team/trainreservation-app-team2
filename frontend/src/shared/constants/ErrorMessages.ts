@@ -18,4 +18,5 @@ export const ERROR_MESSAGE = {
     NO_RESERVED_SEAT: '予約済座席が存在しません',
     REFUND_RETRY:
         '予約キャンセル処理中にエラーが発生しました。お手数ですが、再度お試しください。',
+    LOGIN_RETRY: 'ログインに失敗しました。',
 } as const;

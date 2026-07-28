@@ -50,7 +50,7 @@ export function ReserveUserInfo({
                         onChange={handleInputChange}
                         onFocus={handleInputFocus}
                         onBlur={handleInputBlur}
-                        autoComplete="mail"
+                        autoComplete="email"
                         icon={IoMailOutline}
                         getFieldError={getFieldError}
                     />

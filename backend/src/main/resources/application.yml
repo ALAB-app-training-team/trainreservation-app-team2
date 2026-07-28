@@ -19,3 +19,10 @@ springdoc:
     enabled: false
   swagger-ui:
     enabled: false
+server:
+  servlet:
+    session:
+      cookie:
+        same-site: "none"
+        secure: true
+        http-only: true
