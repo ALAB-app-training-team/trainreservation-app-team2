@@ -32,7 +32,7 @@ public class SecurityConfig {
                 })
             )
             .authorizeHttpRequests(auth -> auth
-                .requestMatchers("/api/login", "/api/logout", "/api/schedules").permitAll()
+                .requestMatchers("/api/login", "/api/logout", "/api/stations", "/api/stopstations", "/api/schedules", "/api/reservations", "/api/traincars", "/api/payments").permitAll()
                 .anyRequest().authenticated()
             )
             .formLogin(form -> form.disable())
