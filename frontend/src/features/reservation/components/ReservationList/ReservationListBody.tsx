@@ -1,5 +1,4 @@
 import { useQueryClient } from '@tanstack/react-query';
-import axios from 'axios';
 import { useState } from 'react';
 import { CiCalendar } from 'react-icons/ci';
 import { LuTicket } from 'react-icons/lu';
@@ -16,6 +15,7 @@ import {
 } from '@/features/reservation/constants/ReservationTab';
 import { useReservationList } from '@/features/reservation/hooks/useReservationList';
 import type { ReservationResponseDto } from '@/features/reservation/types/ReservationResponseDto';
+import apiClient from '@/shared/apis/apiClient';
 import { CustomModal } from '@/shared/components/CustomModal';
 import { ERROR_MESSAGE } from '@/shared/constants/ErrorMessages';
 import { useModal } from '@/shared/hooks/useModal';
@@ -47,7 +47,7 @@ export function ReservationListBody() {
         if (isSubmitting) return;
         setIsSubmitting(true);
         try {
-            await axios.delete(ENDPOINTS.RESERVATION(reservationId));
+            await apiClient.delete(ENDPOINTS.RESERVATION(reservationId));
 
             queryClient.setQueryData<ReservationResponseDto[]>(
                 ['reservationList'],

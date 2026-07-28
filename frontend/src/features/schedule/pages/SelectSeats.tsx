@@ -18,6 +18,7 @@ import { useSelectedSeats } from '@/features/schedule/hooks/useSelectedSeats';
 import type { PaymentRequestDto } from '@/features/schedule/types/PaymentRequestDto';
 import type { ReserveRequestDto } from '@/features/schedule/types/ReserveRequestDto';
 import type { SeatResponseDto } from '@/features/schedule/types/SeatResponseDto';
+import apiClient from '@/shared/apis/apiClient';
 import { CustomModal } from '@/shared/components/CustomModal';
 import { ERROR_MESSAGE } from '@/shared/constants/ErrorMessages';
 import { useModal } from '@/shared/hooks/useModal';
@@ -53,7 +54,7 @@ export function SelectSeats() {
             expiry: reserveUser.expiry,
             cvc: reserveUser.cvc,
         };
-        const response = await axios.post(
+        const response = await apiClient.post(
             ENDPOINTS.PAYMENT_TOKEN(),
             paymentRequestDto,
         );
@@ -78,7 +79,7 @@ export function SelectSeats() {
             reserverMail: reserveUser.reserverMail,
             paymentToken: paymentToken,
         };
-        const response = await axios.post(
+        const response = await apiClient.post(
             ENDPOINTS.RESERVATION(),
             reserveRequestDto,
         );

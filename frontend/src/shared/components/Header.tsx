@@ -1,4 +1,3 @@
-import axios from 'axios';
 import { useContext, useState } from 'react';
 import { BsTrainFreightFrontFill } from 'react-icons/bs';
 import { FiMenu } from 'react-icons/fi';
@@ -6,6 +5,8 @@ import { NavLink, useLocation, useNavigate } from 'react-router-dom';
 
 import { ENDPOINTS } from '@/api/routes';
 import { authContext } from '@/context/AuthContext';
+
+import apiClient from '../apis/apiClient';
 
 export function Header() {
     const location = useLocation();
@@ -36,9 +37,7 @@ export function Header() {
     };
 
     const handleLogout = async () => {
-        await axios.post<string>(ENDPOINTS.LOGOUT(), {
-            withCredentials: true,
-        });
+        await apiClient.post<string>(ENDPOINTS.LOGOUT());
         localStorage.clear();
         setName(null);
         handleMenuOpen();

@@ -1,9 +1,9 @@
 import { useSuspenseQuery } from '@tanstack/react-query';
-import axios from 'axios';
 
 import { ENDPOINTS } from '@/api/routes';
 import type { SearchRequestDto } from '@/features/schedule/types/SearchRequestDto';
 import type { SearchResponseDto } from '@/features/schedule/types/SearchResponseDto';
+import apiClient from '@/shared/apis/apiClient';
 
 export function useSchedules(
     searchRequestDto: SearchRequestDto,
@@ -15,7 +15,7 @@ export function useSchedules(
             if (isInvalid) {
                 return [];
             }
-            const response = await axios.get<SearchResponseDto[]>(
+            const response = await apiClient.get<SearchResponseDto[]>(
                 ENDPOINTS.SCHEDULES_SEARCH(),
                 {
                     params: searchRequestDto,
