@@ -1,14 +1,14 @@
 package com.alab.shinkansendego.account;
 
+import jakarta.servlet.http.HttpSession;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
-import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContext;
 import org.springframework.security.core.context.SecurityContextHolder;
-import org.springframework.security.web.authentication.logout.CookieClearingLogoutHandler;
+import org.springframework.security.web.context.HttpSessionSecurityContextRepository;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -27,7 +27,7 @@ public class AccountController {
     }
 
     @PostMapping("login")
-    public ResponseEntity<String> login(@Valid @RequestBody LoginRequestDto request) {
+    public ResponseEntity<String> login(@Valid @RequestBody LoginRequestDto request, HttpSession session) {
         AccountEntity account = accountService.login(request.getMail(), request.getPassword());
         // セッション作成
         AccountSessionDto res = new AccountSessionDto(account.getId(), account.getMail(), account.getName());
@@ -35,15 +35,14 @@ public class AccountController {
         SecurityContext context = SecurityContextHolder.createEmptyContext();
         context.setAuthentication(authentication);
         SecurityContextHolder.setContext(context);
+        session.setAttribute(HttpSessionSecurityContextRepository.SPRING_SECURITY_CONTEXT_KEY, context);
 
         return ResponseEntity.ok(account.getName());
     }
 
     @PostMapping("logout")
-    public ResponseEntity logout(HttpSecurity http) {
-        CookieClearingLogoutHandler cookies = new CookieClearingLogoutHandler("our-custom-cookie");
-        http.logout((logout) -> logout.addLogoutHandler(cookies));
-//        SecurityContextHolder.clearContext(); // セッションの無効化
+    public ResponseEntity logout(HttpSession session) {
+        session.invalidate();
         return ResponseEntity.noContent().build();
     }
 }
