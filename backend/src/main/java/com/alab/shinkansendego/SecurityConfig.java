@@ -3,6 +3,7 @@ package com.alab.shinkansendego;
 import jakarta.servlet.http.HttpServletResponse;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.http.HttpMethod;
 import org.springframework.security.config.annotation.method.configuration.EnableMethodSecurity;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.http.SessionCreationPolicy;
@@ -32,8 +33,9 @@ public class SecurityConfig {
                 })
             )
             .authorizeHttpRequests(auth -> auth
-                .requestMatchers("/api/login", "/api/logout", "/api/stations", "/api/stopstations", "/api/schedules", "/api/reservations", "/api/traincars",
-                    "/api/payments", "/api/payments/tokens", "/api/schedules/**", "/api/traincars/**", "/api/reservations/**").permitAll()
+                .requestMatchers("/api/login", "/api/logout", "/api/stations", "/api/stopstations", "/api/schedules", "/api/traincars",
+                    "/api/payments", "/api/payments/tokens", "/api/schedules/**", "/api/traincars/**", "/api/reservations/*").permitAll()
+                .requestMatchers(HttpMethod.POST, "/api/reservations").permitAll()
                 .anyRequest().authenticated()
             )
             .formLogin(form -> form.disable())

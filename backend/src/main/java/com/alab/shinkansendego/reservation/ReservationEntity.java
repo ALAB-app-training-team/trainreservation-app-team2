@@ -44,6 +44,8 @@ public class ReservationEntity {
     private String reserverMail;
     @Column(name = "is_deleted")
     private Boolean isDeleted;
+    @Column(name = "account_id")
+    private UUID accountId;
     @OneToMany(fetch = FetchType.LAZY)
     @JoinColumn(name = "schedule_cd", referencedColumnName = "schedule_cd", insertable = false, updatable = false)
     private Set<DepartureArrivalTimeEntity> departureArrivalTime;
