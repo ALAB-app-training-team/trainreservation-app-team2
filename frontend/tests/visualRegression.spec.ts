@@ -2,7 +2,7 @@ import { expect } from '@playwright/test';
 import { test } from '@tests/fixtures';
 import { ReservationGuestLoginPage } from '@tests/pages/ReservationGuestLogin/ReservationGuestLoginPage';
 // import { ReservedTicketPage } from '@tests/pages/ReservedTicket/ReservedTicketPage';
-import { ReservationListPage } from '@tests/pages/ReservationList/ReservationListPage';
+// import { ReservationListPage } from '@tests/pages/ReservationList/ReservationListPage';
 import { ScheduleSearchPage } from '@tests/pages/ScheduleSearch/ScheduleSearchPage';
 import { SelectSeatPage } from '@tests/pages/SelectSeat/SelectSeatPage';
 // import { LoginPage } from './pages/Login/LoginPage';
