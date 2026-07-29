@@ -10,6 +10,7 @@ import lombok.NoArgsConstructor;
 public class SeatResponseDto {
     private String trainCarCd;
     private Integer trainCarNumber;
+    private String trainCarTypeCd;
     private String seatCd;
     private Integer seatNumber;
     private String seatColumn;

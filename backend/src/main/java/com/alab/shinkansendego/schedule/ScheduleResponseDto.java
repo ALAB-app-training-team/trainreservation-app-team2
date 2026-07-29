@@ -14,4 +14,7 @@ public class ScheduleResponseDto {
     private String trainTypeName;
     private LocalTime departureTime;
     private LocalTime arrivalTime;
+    private Integer reservedSeats;
+    private Integer greenSeats;
+    private Integer gcSeats;
 }

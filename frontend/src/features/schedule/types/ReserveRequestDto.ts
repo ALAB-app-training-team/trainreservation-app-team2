@@ -1,5 +1,6 @@
 type SelectedSeat = {
     trainCarCd: string;
+    trainCarTypeCd: string;
     seatCd: string;
     seatFare: number;
 };
