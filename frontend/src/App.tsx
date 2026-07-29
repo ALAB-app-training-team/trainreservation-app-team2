@@ -58,7 +58,6 @@ const router = createBrowserRouter([
             },
             {
                 path: '/reservationList',
-                loader: () => authLoader(),
                 element: <ReservationList />,
                 errorElement: <Error />,
             },
