@@ -16,6 +16,7 @@ export function ReservedTicket() {
     const navigate = useNavigate();
     const { reservationId, isBack } = location.state;
     const { reservedTickets } = useReservedTickets(reservationId);
+    const shareUrl = `${window.location.origin}${window.location.pathname}?reservationId=${reservationId}`;
 
     const queryClient = useQueryClient();
     useEffect(() => {
@@ -62,7 +63,7 @@ export function ReservedTicket() {
                     <Suspense fallback={<ReservedTicketInfoSkeleton />}>
                         <ReservedTicketInfo ticketInfo={reservedTickets} />
                     </Suspense>
-                    <TicketShare shareUrl={`http://example.com/share`} />
+                    <TicketShare shareUrl={shareUrl} />
                 </div>
             </div>
         </>

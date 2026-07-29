@@ -6,7 +6,7 @@ import { toast } from 'sonner';
 import { CustomModal } from '@/shared/components/CustomModal';
 
 interface TicketShareProps {
-    shareUrl?: string;
+    shareUrl: string;
 }
 
 export function TicketShare({
@@ -54,11 +54,7 @@ export function TicketShare({
                         />
                         <button
                             onClick={handleCopy}
-                            className={`flex shrink-0 items-center gap-1.5 rounded-md px-3 py-1.5 text-sm ${
-                                copied
-                                    ? 'bg-primary text-white'
-                                    : 'bg-primary text-white'
-                            }`}
+                            className="bg-primary flex shrink-0 items-center gap-1.5 rounded-xl px-3 py-1.5 text-sm text-white"
                         >
                             {copied ? (
                                 <>
