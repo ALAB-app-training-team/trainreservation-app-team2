@@ -36,6 +36,12 @@ public class ScheduleServiceTest {
     private final List<DepartureArrivalTimeEntity> sec01ScheduleList = new ArrayList<>();
     private final List<DepartureArrivalTimeEntity> sec02ScheduleList = new ArrayList<>();
     private final List<DepartureArrivalTimeEntity> sec03ScheduleList = new ArrayList<>();
+    private final TrainTypeEntity trainType1 = new TrainTypeEntity("YM001", "やまびこ1号", "E5SER");
+    private final TrainTypeEntity trainType2 = new TrainTypeEntity("YM002", "やまびこ2号", "E5SER");
+    private final TrainTypeEntity trainType3 = new TrainTypeEntity("YM003", "やまびこ3号", "E5SER");
+    private final TrainTypeEntity trainType4 = new TrainTypeEntity("YM004", "やまびこ4号", "E5SER");
+    private final TrainTypeEntity trainType5 = new TrainTypeEntity("YM005", "やまびこ5号", "E5SER");
+    private final TrainTypeEntity trainType6 = new TrainTypeEntity("YM006", "やまびこ6号", "E5SER");
     private final List<TotalSeatEntity> totalSeatList = new ArrayList<>();
     private final List<String> secList = new ArrayList<>();
     private final List<ReservedSeatSectionEntity> reservedSeatSecList = new ArrayList<>();
@@ -165,12 +171,6 @@ public class ScheduleServiceTest {
     @Test
     @DisplayName("出発・到着駅名と出発時刻のリクエストDTOからダイヤリストが取得できる")
     void getSearchedScheduleByStation_withValidScheduleRequestDto_returnGetScheduleListSuccess() {
-        TrainTypeEntity trainType1 = new TrainTypeEntity("YM001", "やまびこ1号", "E5SER");
-        TrainTypeEntity trainType2 = new TrainTypeEntity("YM002", "やまびこ2号", "E5SER");
-        TrainTypeEntity trainType3 = new TrainTypeEntity("YM003", "やまびこ3号", "E5SER");
-        TrainTypeEntity trainType4 = new TrainTypeEntity("YM004", "やまびこ4号", "E5SER");
-        TrainTypeEntity trainType5 = new TrainTypeEntity("YM005", "やまびこ5号", "E5SER");
-        TrainTypeEntity trainType6 = new TrainTypeEntity("YM006", "やまびこ6号", "E5SER");
         when(sectionRepo.findByStartStationCd("STATION01")).thenReturn(depatureSectionList);
         when(sectionRepo.findByGoalStationCd("STATION02")).thenReturn(arrivalSectionList);
         when(timeRepo.findBySectionCd("SEC01")).thenReturn(sec01ScheduleList);
@@ -282,6 +282,31 @@ public class ScheduleServiceTest {
             () -> service.getSearchedScheduleByStation(request)
         );
         assertEquals("TotalSeat Of TrainSeriesCd is Not Found", ex.getMessage());
+    }
+
+    @Test
+    @DisplayName("計算した残席数がマイナス値の場合にエラーを発生させる")
+    void getSearchedScheduleByStation_withMinusCalcSeats_returnIllegalArgumentException() {
+        when(sectionRepo.findByStartStationCd("STATION01")).thenReturn(depatureSectionList);
+        when(sectionRepo.findByGoalStationCd("STATION02")).thenReturn(arrivalSectionList);
+        when(timeRepo.findBySectionCd("SEC01")).thenReturn(sec01ScheduleList);
+        when(timeRepo.findBySectionCd("SEC02")).thenReturn(sec02ScheduleList);
+        when(timeRepo.findBySectionCd("SEC03")).thenReturn(sec03ScheduleList);
+        totalSeatList.get(1).setReservedTotal(2);
+        when(totalSeatRepo.findAll()).thenReturn(totalSeatList);
+        when(scheduleRepo.findById("TIME01")).thenReturn(getScheduleEntity(trainType1));
+        when(scheduleRepo.findById("TIME02")).thenReturn(getScheduleEntity(trainType2));
+        when(scheduleRepo.findById("TIME03")).thenReturn(getScheduleEntity(trainType3));
+        when(scheduleRepo.findById("TIME04")).thenReturn(getScheduleEntity(trainType4));
+        when(scheduleRepo.findById("TIME05")).thenReturn(getScheduleEntity(trainType5));
+        when(scheduleRepo.findById("TIME06")).thenReturn(getScheduleEntity(trainType6));
+        when(timeRepo.findByScheduleCdAndDepartureTimeAndArrivalTime(any(), any(), any())).thenReturn(secList);
+        when(reservedSeatSectionRepo.findByRideDateAndScheduleCdAndReservedSectionCdIn(any(), any(), any())).thenReturn(reservedSeatSecList);
+        Exception ex = assertThrows(
+            IllegalArgumentException.class,
+            () -> service.getSearchedScheduleByStation(request)
+        );
+        assertEquals("AvailableSeats is Not found", ex.getMessage());
     }
 
     @Test
