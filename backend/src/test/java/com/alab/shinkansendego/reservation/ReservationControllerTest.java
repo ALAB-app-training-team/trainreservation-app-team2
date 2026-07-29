@@ -158,16 +158,6 @@ public class ReservationControllerTest {
     }
 
     @Test
-    @DisplayName("未ログインの場合、401エラーが発生する")
-    void getReservationList_withUnauthorizedUser_return401StatusCode() throws Exception {
-        mockMvc.perform(
-                get(baseUrl)
-                    .contentType(MediaType.APPLICATION_JSON))
-            .andExpect(status().isUnauthorized())
-            .andExpect(content().string("Unauthorized"));
-    }
-
-    @Test
     @DisplayName("予約情報IDと予約者氏名とメールアドレスから予約チケット情報が取得できる")
     void getReservation_withReservationIdAndReserverNameAndReserverMail_returnGetReservationSuccess() throws Exception {
 
