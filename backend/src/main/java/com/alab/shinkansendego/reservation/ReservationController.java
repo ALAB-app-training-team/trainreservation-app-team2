@@ -1,9 +1,13 @@
 package com.alab.shinkansendego.reservation;
 
+import com.alab.shinkansendego.account.AccountService;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
+import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -20,10 +24,12 @@ import java.util.UUID;
 @RequestMapping(path = "api/reservations")
 public class ReservationController {
     private final ReservationService reservationService;
+    private final AccountService accountService;
 
     @Autowired
-    public ReservationController(ReservationService reservationService) {
+    public ReservationController(ReservationService reservationService, AccountService accountService) {
         this.reservationService = reservationService;
+        this.accountService = accountService;
     }
 
     @GetMapping
@@ -45,7 +51,8 @@ public class ReservationController {
     }
 
     @DeleteMapping(value = "{id}")
-    public ResponseEntity<Void> deleteReservation(@PathVariable("id") UUID reservationId) {
+    @PreAuthorize("isAuthenticated()")
+    public ResponseEntity<Void> deleteReservation(@PathVariable("id") UUID reservationId, @AuthenticationPrincipal UserDetails user) {
         reservationService.deleteReservation(reservationId);
         return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
     }
