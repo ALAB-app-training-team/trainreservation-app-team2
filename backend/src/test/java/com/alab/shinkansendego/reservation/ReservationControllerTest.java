@@ -1,5 +1,6 @@
 package com.alab.shinkansendego.reservation;
 
+import com.alab.shinkansendego.SecurityConfig;
 import com.alab.shinkansendego.account.AccountSessionDto;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.SerializationFeature;
@@ -11,6 +12,7 @@ import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.webmvc.test.autoconfigure.WebMvcTest;
+import org.springframework.context.annotation.Import;
 import org.springframework.http.MediaType;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
@@ -34,6 +36,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 @WebMvcTest(ReservationController.class)
+@Import(SecurityConfig.class)
 public class ReservationControllerTest {
     private final ObjectMapper objectMapper = new ObjectMapper();
     private final String baseUrl = "/api/reservations";
@@ -155,6 +158,16 @@ public class ReservationControllerTest {
             .andExpect(status().isOk())
             .andExpect(jsonPath("$").isArray())
             .andExpect(jsonPath("$").isEmpty());
+    }
+
+    @Test
+    @DisplayName("未ログインの場合、401エラーが発生する")
+    void getReservationList_withSession_return401StatusCode() throws Exception {
+        mockMvc.perform(
+                get(baseUrl)
+                    .contentType(MediaType.APPLICATION_JSON))
+            .andExpect(status().isUnauthorized())
+            .andExpect(content().string("Unauthorized"));
     }
 
     @Test
