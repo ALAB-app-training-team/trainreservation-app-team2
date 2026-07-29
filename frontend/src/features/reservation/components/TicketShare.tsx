@@ -9,9 +9,7 @@ interface TicketShareProps {
     shareUrl: string;
 }
 
-export function TicketShare({
-    shareUrl = window.location.href,
-}: TicketShareProps) {
+export function TicketShare({ shareUrl = '' }: TicketShareProps) {
     const [isOpen, setIsOpen] = useState(false);
     const [copied, setCopied] = useState(false);
 
@@ -22,7 +20,8 @@ export function TicketShare({
             await navigator.clipboard.writeText(shareUrl);
             setCopied(true);
             setTimeout(() => setCopied(false), 2000);
-        } catch {
+        } catch (error) {
+            console.log('Failed to copy the link', error);
             toast.error('リンクのコピーに失敗しました');
         }
     };
