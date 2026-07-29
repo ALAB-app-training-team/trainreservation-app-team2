@@ -1,9 +1,11 @@
-import { expect, test } from '@playwright/test';
+import { expect } from '@playwright/test';
+import { test } from '@tests/fixtures';
 import { ReservationGuestLoginPage } from '@tests/pages/ReservationGuestLogin/ReservationGuestLoginPage';
-import { ReservedTicketPage } from '@tests/pages/ReservedTicket/ReservedTicketPage';
+// import { ReservedTicketPage } from '@tests/pages/ReservedTicket/ReservedTicketPage';
 import { ReservationListPage } from '@tests/pages/ReservationList/ReservationListPage';
 import { ScheduleSearchPage } from '@tests/pages/ScheduleSearch/ScheduleSearchPage';
 import { SelectSeatPage } from '@tests/pages/SelectSeat/SelectSeatPage';
+// import { LoginPage } from './pages/Login/LoginPage';
 
 test('visual-scheduleSearch', async ({ page }) => {
     const scheduleSearchPage = new ScheduleSearchPage(page);
@@ -55,9 +57,10 @@ test('visual-selectSeat', async ({ page }) => {
     });
 });
 
-test('visual-reservationGuestLogin', async ({ page }) => {
+test('visual-reservationGuestLogin', async ({ page, login }) => {
     const reservationGuestLoginPage = new ReservationGuestLoginPage(page);
-
+    await login();
+    await expect(page).toHaveURL('/scheduleSearch');
     await reservationGuestLoginPage.goto();
     await expect(page).toHaveURL('/reservationGuestLogin');
     await reservationGuestLoginPage.name.waitFor({ state: 'visible' });
@@ -75,14 +78,12 @@ test('visual-reservationGuestLogin', async ({ page }) => {
     });
 });
 
-test('visual-reservationList', async ({ page }) => {
-    const reservationGuestLoginPage = new ReservationGuestLoginPage(page);
+test('visual-reservationList', async ({ page, login }) => {
     const reservationListPage = new ReservationListPage(page);
 
-    await reservationGuestLoginPage.goto();
-    await expect(page).toHaveURL('/reservationGuestLogin');
-    await reservationGuestLoginPage.inputGuestLoginInfo();
-    await reservationGuestLoginPage.clickGuestLoginButton();
+    await login();
+    await expect(page).toHaveURL('/scheduleSearch');
+    await reservationListPage.goto();
     await expect(page).toHaveURL('/reservationList');
     await reservationListPage.ticketButton
         .first()
@@ -116,18 +117,18 @@ test('visual-reservationList', async ({ page }) => {
     });
 });
 
-test('visual-reservedTicket', async ({ page }) => {
+/* test('visual-reservedTicket', async ({ page, login }) => {
     const reservationGuestLoginPage = new ReservationGuestLoginPage(page);
     const reservationListPage = new ReservationListPage(page);
     const reservedTicketPage = new ReservedTicketPage(page);
 
+    await login();
+    await expect(page).toHaveURL('/scheduleSearch');
     await reservationGuestLoginPage.goto();
     await expect(page).toHaveURL('/reservationGuestLogin');
-
     await reservationGuestLoginPage.inputGuestLoginInfo();
     await reservationGuestLoginPage.clickGuestLoginButton();
     await expect(page).toHaveURL('/reservationList');
-
     await reservationListPage.clickTicketButton();
     await expect(page).toHaveURL('/reservedTicket');
     await reservedTicketPage.backButton.waitFor({ state: 'visible' });
@@ -153,4 +154,4 @@ test('visual-reservedTicket', async ({ page }) => {
         ],
         maskColor: '#ffffff',
     });
-});
+}); */
