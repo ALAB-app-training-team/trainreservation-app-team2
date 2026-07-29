@@ -2,7 +2,7 @@ import { useQueryClient } from '@tanstack/react-query';
 import { useState } from 'react';
 import { CiMail } from 'react-icons/ci';
 import { FiUser } from 'react-icons/fi';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, useSearchParams } from 'react-router-dom';
 
 import { GuestLoginInput } from '@/features/reservation/components/GuestLoginInput';
 import { useReservationList } from '@/features/reservation/hooks/useReservationList';
@@ -23,6 +23,8 @@ export function ReservationGuestLoginBody() {
     const [requestError, setRequestError] = useState<string>('');
     const navigate = useNavigate();
     const queryClient = useQueryClient();
+    const [searchParams] = useSearchParams();
+    const targetReservationId = searchParams.get('reservationId');
     const handleGuestLogin = async (e: React.SubmitEvent<HTMLFormElement>) => {
         e.preventDefault();
         if (isSubmitting) return;
@@ -43,6 +45,26 @@ export function ReservationGuestLoginBody() {
             }
             queryClient.setQueryData(['reservationList'], reservationList);
             sessionStorage.setItem('guestLoginInfo', JSON.stringify(request));
+
+            if (targetReservationId) {
+                const targetReservation = reservationList.find(
+                    (item) =>
+                        String(item.reservationId) ===
+                        String(targetReservationId),
+                );
+
+                if (targetReservation) {
+                    navigate('/reservedTicket', {
+                        state: {
+                            reservationId: targetReservationId,
+                            isBack: true,
+                        },
+                    });
+                    window.scrollTo(0, 0);
+                    return;
+                }
+            }
+
             navigate('/reservationList');
             window.scrollTo(0, 0);
         } catch {
