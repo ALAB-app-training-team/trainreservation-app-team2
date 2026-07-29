@@ -49,7 +49,7 @@ export function ReservedTicket() {
     return (
         <>
             <div className="flex w-full flex-col items-center gap-4 p-4">
-                <div className="w-full max-w-5xl min-w-[360px] md:w-7/10">
+                <div className="w-full max-w-5xl min-w-90 md:w-7/10">
                     <div className="flex items-center justify-start">
                         {isBack ? (
                             <button
@@ -66,7 +66,7 @@ export function ReservedTicket() {
                         ) : (
                             <h1
                                 data-testid="reserve-complete"
-                                className="!m-0 text-left !text-3xl"
+                                className="m-0! text-left text-3xl!"
                             >
                                 予約完了
                             </h1>
