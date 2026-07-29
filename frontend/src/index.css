@@ -3,6 +3,8 @@
 @theme {
     --color-primary: #008803;
     --color-primary-light: #f0f5f0;
+    --color-primary-mid-light: #cce7cc;
+
     /* やまびこ */
     --color-YM: #27ae60;
     /* はやぶさ */

@@ -1,6 +1,7 @@
-import { useState } from 'react';
+import { useContext, useState } from 'react';
 import type { Focused } from 'react-credit-cards-2';
 
+import { authContext } from '@/context/AuthContext';
 import type { ReserveUser } from '@/features/schedule/types/ReserveUser';
 import { VALIDATION_MESSAGE } from '@/shared/constants/ValidationMessages';
 import { checkMailRegex } from '@/shared/utils/CheckMailRegex';
@@ -23,6 +24,7 @@ export function useReserveUser() {
     const [invalidMessages, setInvalidMessages] = useState<InvalidMessage[]>(
         [],
     );
+    const isLoggedIn = useContext(authContext);
 
     const isNameEmpty = (value: string) => {
         return removeWhiteSpace(value) === '';
@@ -57,11 +59,12 @@ export function useReserveUser() {
 
     const checkInvalid = (reserveUser: ReserveUser) => {
         return (
-            isNameEmpty(reserveUser.reserverName) ||
-            isNameMaxLength(reserveUser.reserverName) ||
-            isMailEmpty(reserveUser.reserverMail) ||
-            isMailInvalid(reserveUser.reserverMail) ||
-            isMailMaxLength(reserveUser.reserverMail) ||
+            (!isLoggedIn &&
+                (isNameEmpty(reserveUser.reserverName) ||
+                    isNameMaxLength(reserveUser.reserverName) ||
+                    isMailEmpty(reserveUser.reserverMail) ||
+                    isMailInvalid(reserveUser.reserverMail) ||
+                    isMailMaxLength(reserveUser.reserverMail))) ||
             isCardNumberInvalid(reserveUser.cardNumber) ||
             isCardNameEmpty(reserveUser.cardName) ||
             isCardNameInvalid(reserveUser.cardName) ||
