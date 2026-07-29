@@ -67,7 +67,7 @@ public class ReservationControllerTest {
 
     @Test
     @DisplayName("ログイン情報から予約情報の一覧が取得できる")
-    void getReservationList_withReserverNameAndEmail_returnGetReservationListSuccess() throws Exception {
+    void getReservationList_withSession_returnGetReservationListSuccess() throws Exception {
         AccountSessionDto session = new AccountSessionDto(
             UUID.fromString("f79d8bbc-fcba-b538-b132-2f726ce0120c"), "test-common@test.com", "一般太郎"
         );
@@ -139,7 +139,7 @@ public class ReservationControllerTest {
 
     @Test
     @DisplayName("ログイン情報に該当する予約がない場合、空のリストを返す")
-    void getReservationList_withNoMatchNameAndEmail_returnEmptyList() throws Exception {
+    void getReservationList_withSession_returnEmptyList() throws Exception {
         AccountSessionDto session = new AccountSessionDto(
             UUID.fromString("f79d8bbc-fcba-b538-b132-2f726ce0120c"), "test-common@test.com", "一般太郎"
         );

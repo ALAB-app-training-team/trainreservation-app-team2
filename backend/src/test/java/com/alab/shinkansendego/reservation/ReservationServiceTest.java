@@ -275,7 +275,7 @@ public class ReservationServiceTest {
 
     @Test
     @DisplayName("予約者氏名とメールアドレスで予約した予約情報の一覧取得ができる")
-    void getReservationList_withReserverNameAndReserverMail_returnGetReservationSuccess() {
+    void getReservationList_withSession_returnGetReservationSuccess() {
         UUID accountId = UUID.fromString("f79d8bbc-fcba-b538-b132-2f726ce0120c");
         List<ReservationEntity> reservationList = Arrays.asList(buildReservation(reservationId1), buildReservation(reservationId2));
         when(reservationRepo.findByAccountId(ArgumentMatchers.any(UUID.class))).thenReturn(reservationList);
@@ -299,7 +299,7 @@ public class ReservationServiceTest {
 
     @Test
     @DisplayName("予約者情報に一致する予約がなかった場合に空のリストを返す")
-    void getReservationList_withNoMatchReserver_returnEmptyList() {
+    void getReservationList_withSession_returnEmptyList() {
         UUID accountId = UUID.fromString("f79d8bbc-fcba-b538-b132-2f726ce0120c");
         List<ReservationEntity> reservationList = Arrays.asList(buildReservation(reservationId1), buildReservation(reservationId2));
         when(reservationRepo.findByAccountId(ArgumentMatchers.any(UUID.class))).thenReturn(new ArrayList<>());
