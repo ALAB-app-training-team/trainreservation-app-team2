@@ -1,6 +1,7 @@
 package com.alab.shinkansendego.reservation;
 
 import com.alab.shinkansendego.SecurityConfig;
+import com.alab.shinkansendego.account.AccountSessionDto;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.SerializationFeature;
 import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
@@ -14,8 +15,11 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.webmvc.test.autoconfigure.WebMvcTest;
 import org.springframework.context.annotation.Import;
 import org.springframework.http.MediaType;
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.core.Authentication;
 import org.springframework.security.test.context.support.WithAnonymousUser;
 import org.springframework.security.test.context.support.WithMockUser;
+import org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.bean.override.mockito.MockitoBean;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
@@ -26,6 +30,7 @@ import java.time.LocalDate;
 import java.time.LocalTime;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.List;
 import java.util.UUID;
 
@@ -261,14 +266,17 @@ public class ReservationControllerTest {
     }
 
     @Test
-    @WithMockUser
     @DisplayName("特定の予約情報IDに紐づく予約情報を削除できる")
     void deleteReservation_withReservationId_return204() throws Exception {
+        AccountSessionDto session = new AccountSessionDto(
+            UUID.fromString("f79d8bbc-fcba-b538-b132-2f726ce0120c"), "test-common@test.com", "一般太郎"
+        );
+        Authentication auth = new UsernamePasswordAuthenticationToken(session, null, Collections.emptyList());
         UUID requestReservationId = UUID.randomUUID();
         String url = baseUrl + "/" + requestReservationId;
 
         mockMvc.perform(delete(url)
-                .with(csrf()))
+                .with(SecurityMockMvcRequestPostProcessors.authentication(auth)))
             .andExpect(status().isNoContent());
     }
 
