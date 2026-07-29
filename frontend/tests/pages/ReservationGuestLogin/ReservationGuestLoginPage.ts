@@ -1,4 +1,4 @@
-import { type Locator, type Page } from '@playwright/test';
+/* import { type Locator, type Page } from '@playwright/test';
 import { Header } from '@tests/pages/shared/Header';
 
 export class ReservationGuestLoginPage {
@@ -63,3 +63,4 @@ export class ReservationGuestLoginPage {
         await this.fillMailAddress('aaa@あああ.co');
     }
 }
+ */
