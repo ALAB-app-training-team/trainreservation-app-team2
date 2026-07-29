@@ -1,11 +1,11 @@
 import { useQueryClient } from '@tanstack/react-query';
-import axios from 'axios';
 import { useState } from 'react';
 import { CiCalendar } from 'react-icons/ci';
 import { LuTicket } from 'react-icons/lu';
 import { RiGroupLine } from 'react-icons/ri';
 import { toast } from 'sonner';
 
+import apiClient from '@/api/apiClient';
 import { ENDPOINTS } from '@/api/routes';
 import { ReservationSelectItem } from '@/features/reservation/components/ReservationList/ReservationSelectItem';
 import { ReservationRefundConfirmModal } from '@/features/reservation/components/ReservationRefundConfirmModal';
@@ -47,7 +47,7 @@ export function ReservationListBody() {
         if (isSubmitting) return;
         setIsSubmitting(true);
         try {
-            await axios.delete(ENDPOINTS.RESERVATION(reservationId));
+            await apiClient.delete(ENDPOINTS.RESERVATION(reservationId));
 
             queryClient.setQueryData<ReservationResponseDto[]>(
                 ['reservationList'],

@@ -1,7 +1,7 @@
-import axios from 'axios';
 import { type ChangeEvent, useContext, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 
+import apiClient from '@/api/apiClient';
 import { ENDPOINTS } from '@/api/routes';
 import { authContext } from '@/context/AuthContext';
 import type { LoginRequestDto } from '@/features/account/types/LoginRequestDto';
@@ -28,10 +28,9 @@ export function useLoginRequestDto() {
         if (isSubmitting) return;
         setIsSubmitting(true);
         try {
-            const response = await axios.post<string>(
+            const response = await apiClient.post<string>(
                 ENDPOINTS.LOGIN(),
                 loginRequestDto,
-                { withCredentials: true },
             );
             localStorage.setItem('name', response.data);
             if (setName) {

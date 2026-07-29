@@ -5,6 +5,7 @@ import { IoCardOutline } from 'react-icons/io5';
 import { LuArrowLeft } from 'react-icons/lu';
 import { useLocation, useNavigate } from 'react-router-dom';
 
+import apiClient from '@/api/apiClient';
 import { ENDPOINTS } from '@/api/routes';
 import { ReserveConfirmModal } from '@/features/schedule/components/ReserveConfirmModal';
 import { ReserveUserInfo } from '@/features/schedule/components/ReserveUserInfo';
@@ -53,7 +54,7 @@ export function SelectSeats() {
             expiry: reserveUser.expiry,
             cvc: reserveUser.cvc,
         };
-        const response = await axios.post(
+        const response = await apiClient.post(
             ENDPOINTS.PAYMENT_TOKEN(),
             paymentRequestDto,
         );
@@ -78,7 +79,7 @@ export function SelectSeats() {
             reserverMail: reserveUser.reserverMail,
             paymentToken: paymentToken,
         };
-        const response = await axios.post(
+        const response = await apiClient.post(
             ENDPOINTS.RESERVATION(),
             reserveRequestDto,
         );

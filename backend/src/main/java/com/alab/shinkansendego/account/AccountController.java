@@ -1,14 +1,20 @@
 package com.alab.shinkansendego.account;
 
-import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpSession;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContext;
+import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.web.context.HttpSessionSecurityContextRepository;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
+
+import java.util.Collections;
 
 @RestController
 @RequestMapping(path = "api")
@@ -21,19 +27,22 @@ public class AccountController {
     }
 
     @PostMapping("login")
-    public ResponseEntity<String> login(@Valid @RequestBody LoginRequestDto request, HttpServletRequest httpServletRequest) {
+    public ResponseEntity<String> login(@Valid @RequestBody LoginRequestDto request, HttpSession session) {
         AccountEntity account = accountService.login(request.getMail(), request.getPassword());
         // セッション作成
-        HttpSession session = httpServletRequest.getSession(true);
-        session.setAttribute("LOGIN_ID", account.getId());
-        session.setAttribute("LOGIN_MAIL", account.getMail());
-        session.setAttribute("LOGIN_NAME", account.getName());
+        AccountSessionDto res = new AccountSessionDto(account.getId(), account.getMail(), account.getName());
+        Authentication authentication = new UsernamePasswordAuthenticationToken(res, null, Collections.emptyList());
+        SecurityContext context = SecurityContextHolder.createEmptyContext();
+        context.setAuthentication(authentication);
+        SecurityContextHolder.setContext(context);
+        session.setAttribute(HttpSessionSecurityContextRepository.SPRING_SECURITY_CONTEXT_KEY, context);
+
         return ResponseEntity.ok(account.getName());
     }
 
     @PostMapping("logout")
     public ResponseEntity logout(HttpSession session) {
-        session.invalidate(); // セッションの無効化
+        session.invalidate();
         return ResponseEntity.noContent().build();
     }
 }

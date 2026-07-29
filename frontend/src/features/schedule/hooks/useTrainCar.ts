@@ -1,7 +1,7 @@
 import { useSuspenseQuery } from '@tanstack/react-query';
-import axios from 'axios';
 import { useMemo, useState } from 'react';
 
+import apiClient from '@/api/apiClient';
 import { ENDPOINTS } from '@/api/routes';
 import { DEFAULT_SEAT_TYPE } from '@/features/schedule/constants/SeatTypeLabel';
 import type { ScheduleInfoDto } from '@/features/schedule/types/ScheduleInfoDto';
@@ -13,9 +13,9 @@ export function useTrainCar(scheduleInfoDto: ScheduleInfoDto) {
     const { data: trainCars } = useSuspenseQuery({
         queryKey: ['ScheduleCd', scheduleInfoDto.scheduleCd],
         queryFn: async () => {
-            const response = await axios.get<TrainCarFormationResponseDto[]>(
-                ENDPOINTS.TRAINCAR(scheduleInfoDto.scheduleCd),
-            );
+            const response = await apiClient.get<
+                TrainCarFormationResponseDto[]
+            >(ENDPOINTS.TRAINCAR(scheduleInfoDto.scheduleCd));
             return response.data;
         },
     });
