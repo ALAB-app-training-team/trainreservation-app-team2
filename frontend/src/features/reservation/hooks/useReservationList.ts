@@ -1,6 +1,6 @@
 import { useSuspenseQuery } from '@tanstack/react-query';
-import axios from 'axios';
 
+import apiClient from '@/api/apiClient';
 import { ENDPOINTS } from '@/api/routes';
 import { getGuestLoginInfo } from '@/features/reservation/helpers/getGuestLoginInfo';
 import type { ReservationListRequestDto } from '@/features/reservation/types/ReservationListRequestDto';
@@ -10,7 +10,7 @@ export function useReservationList() {
     const getReservation = async (
         request: ReservationListRequestDto,
     ): Promise<ReservationResponseDto[]> => {
-        const response = await axios.get<ReservationResponseDto[]>(
+        const response = await apiClient.get<ReservationResponseDto[]>(
             ENDPOINTS.RESERVATION(),
             {
                 params: request,
