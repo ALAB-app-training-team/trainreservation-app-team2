@@ -7,6 +7,7 @@ import { ReservedTicketInfo } from '@/features/reservation/components/ReservedTi
 import { ReservedTicketInfoSkeleton } from '@/features/reservation/components/ReservedTicketInfo/ReservedTicketInfoSkeleton';
 import { ReservedTicketQrCode } from '@/features/reservation/components/ReservedTicketQrCode/ReservedTicketQrCode';
 import { ReservedTicketQrCodeSkeleton } from '@/features/reservation/components/ReservedTicketQrCode/ReservedTicketQrCodeSkeleton';
+import { TicketShare } from '@/features/reservation/components/TicketShare';
 import { useReservedTickets } from '@/features/reservation/hooks/useReservedTickets';
 import { removeGuestReservation } from '@/shared/utils/RemoveGuestReservation';
 
@@ -61,6 +62,7 @@ export function ReservedTicket() {
                     <Suspense fallback={<ReservedTicketInfoSkeleton />}>
                         <ReservedTicketInfo ticketInfo={reservedTickets} />
                     </Suspense>
+                    <TicketShare shareUrl={`http://example.com/share`} />
                 </div>
             </div>
         </>
