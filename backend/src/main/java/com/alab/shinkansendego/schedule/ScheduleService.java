@@ -43,8 +43,12 @@ public class ScheduleService {
 
         List<ScheduleResponseDto> responseList = new ArrayList<>();
 
-        List<String> departureSectionCdList = sectionKmRepository.findByStartStationCd(request.getDepartureStationCd()).stream().map(SectionKmEntity::getSectionCd).toList();
-        List<String> arrivalSectionCdList = sectionKmRepository.findByGoalStationCd(request.getArrivalStationCd()).stream().map(SectionKmEntity::getSectionCd).toList();
+        List<String> departureSectionCdList = sectionKmRepository.findByStartStationCd(request.getDepartureStationCd())
+            .stream().map(SectionKmEntity::getSectionCd)
+            .toList();
+        List<String> arrivalSectionCdList = sectionKmRepository.findByGoalStationCd(request.getArrivalStationCd())
+            .stream().map(SectionKmEntity::getSectionCd)
+            .toList();
 
         if (departureSectionCdList.isEmpty() || arrivalSectionCdList.isEmpty()) {
             throw new IllegalArgumentException("SectionCD is Not found");
@@ -68,19 +72,25 @@ public class ScheduleService {
 
         for (DepartureArrivalTimeEntity departure : departureScheduleList) {
             for (DepartureArrivalTimeEntity arrival : arrivalScheduleList) {
-                if (Objects.equals(departure.getScheduleCd(), arrival.getScheduleCd()) && departure.getDepartureTime().isBefore(arrival.getArrivalTime())) {
+                if (Objects.equals(departure.getScheduleCd(), arrival.getScheduleCd()) &&
+                    departure.getDepartureTime().isBefore(arrival.getArrivalTime())) {
 
                     Optional<ScheduleEntity> scheduleEntity = scheduleRepository.findById(departure.getScheduleCd());
 
                     if (scheduleEntity.isPresent()) {
-                        if (scheduleEntity.get().getTrainType().getName() == null || scheduleEntity.get().getTrainType().getTrainSeriesCd() == null) {
+                        if (scheduleEntity.get().getTrainType().getName() == null ||
+                            scheduleEntity.get().getTrainType().getTrainSeriesCd() == null) {
                             throw new IllegalArgumentException("TrainType is Not found");
                         }
                     } else {
                         throw new IllegalArgumentException("OptionalSchedule is Not found");
                     }
 
-                    List<String> sectionCdList = departureArrivalTimeRepository.findByScheduleCdAndDepartureTimeAndArrivalTime(departure.getScheduleCd(), departure.getDepartureTime(), arrival.getArrivalTime());
+                    List<String> sectionCdList = departureArrivalTimeRepository.findByScheduleCdAndDepartureTimeAndArrivalTime(
+                        departure.getScheduleCd(),
+                        departure.getDepartureTime(),
+                        arrival.getArrivalTime()
+                    );
 
                     List<ReservedSeatSectionEntity> reservedSeatSectionEntities
                         = reservedSeatSectionRepository
