@@ -347,7 +347,7 @@ public class ReservationService {
      */
     @Transactional
     public void deleteReservation(UUID reservationId) {
-        UUID accountId = securityUtil.GetAccountId();
+//        UUID accountId = securityUtil.GetAccountId();
         ReservationEntity reservation = reservationRepository.findById(reservationId).orElseThrow(() -> new IllegalArgumentException("Reservation is not found"));
         // ここらへんでアカウントIDと比較してなかったらExceptionを返す
         reservation.setIsDeleted(true);
