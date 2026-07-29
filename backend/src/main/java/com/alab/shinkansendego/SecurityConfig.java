@@ -32,6 +32,11 @@ public class SecurityConfig {
                     response.setContentType("application/json;charset=UTF-8");
                     response.getWriter().write("Unauthorized");
                 })
+                .accessDeniedHandler((request, response, authException) -> {
+                    response.setStatus(HttpServletResponse.SC_FORBIDDEN); // 403をセット
+                    response.setContentType("application/json;charset=UTF-8");
+                    response.getWriter().write("Forbidden");
+                })
             )
             .authorizeHttpRequests(auth -> auth
                 .requestMatchers("/api/login", "/api/logout", "/api/stations", "/api/stopstations", "/api/schedules", "/api/reservations", "/api/traincars",
