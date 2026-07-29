@@ -1,7 +1,6 @@
 package com.alab.shinkansendego.reservation;
 
 import ch.qos.logback.core.util.StringUtil;
-import com.alab.shinkansendego.SecurityUtil;
 import com.alab.shinkansendego.departurearrivaltime.DepartureArrivalTimeEntity;
 import com.alab.shinkansendego.departurearrivaltime.DepartureArrivalTimeRepository;
 import com.alab.shinkansendego.reservedseat.ReservedSeatEntity;
@@ -43,8 +42,6 @@ public class ReservationService {
     private final ReservedSeatSectionRepository reservedSeatSectionRepository;
     private final TrainCarRepository trainCarRepository;
     private final SeatRepository seatRepository;
-    @Autowired
-    private SecurityUtil securityUtil;
 
     @Autowired
     public ReservationService(

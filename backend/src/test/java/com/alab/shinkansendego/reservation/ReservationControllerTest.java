@@ -1,6 +1,5 @@
 package com.alab.shinkansendego.reservation;
 
-import com.alab.shinkansendego.SecurityUtil;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.SerializationFeature;
 import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
@@ -12,6 +11,7 @@ import org.mockito.Mockito;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.webmvc.test.autoconfigure.WebMvcTest;
 import org.springframework.http.MediaType;
+import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.test.context.bean.override.mockito.MockitoBean;
 import org.springframework.test.web.servlet.MockMvc;
 
@@ -22,6 +22,7 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.UUID;
 
+import static org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors.csrf;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.delete;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
@@ -37,8 +38,6 @@ public class ReservationControllerTest {
     private MockMvc mockMvc;
     @MockitoBean
     private ReservationService service;
-    @MockitoBean
-    private SecurityUtil securityUtil;
 
     private static @NonNull ReservationResponseDto getExpectReservationResponseDto(UUID reservationId) {
         ReservedSeatDto seat1 = new ReservedSeatDto("指定席", 1, 1, "A", UUID.fromString("60a1ab63-a41f-430d-a2d1-10a76368d0f5"), 5000);
@@ -226,6 +225,7 @@ public class ReservationControllerTest {
     }
 
     @Test
+    @WithMockUser
     @DisplayName("リクエストのカラムがNullの場合、バリデーションエラー発生")
     void insertReservation_withNotValidReserveRequestDto_returnValidationError() throws Exception {
         ReserveRequestDto request = new ReserveRequestDto(
@@ -242,6 +242,7 @@ public class ReservationControllerTest {
     }
 
     @Test
+    @WithMockUser
     @DisplayName("リクエストDTO自体がNullの場合、バインドエラー発生")
     void insertReservation_withReserveRequestDtoIsNull_returnBindError() throws Exception {
         //バインド順が毎回異なるためエラーメッセージの比較は行わない
@@ -252,6 +253,7 @@ public class ReservationControllerTest {
     }
 
     @Test
+    @WithMockUser
     @DisplayName("特定の予約情報IDに紐づく予約情報を削除できる")
     void deleteReservation_withReservationId_return204() throws Exception {
         UUID requestReservationId = UUID.randomUUID();
@@ -262,11 +264,13 @@ public class ReservationControllerTest {
     }
 
     @Test
+    @WithMockUser
     @DisplayName("idがNullの場合、NOTFOUNDを返す")
     void deleteReservation_withReservationIdIsNull_returnRequestParamError() throws Exception {
         String url = baseUrl + "/";
 
-        mockMvc.perform(delete(url))
+        mockMvc.perform(delete(url)
+                .with(csrf()))
             .andExpect(status().isNotFound());
     }
 }
