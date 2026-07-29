@@ -281,7 +281,7 @@ public class ReservationService {
                 ReservedSeatSectionEntity reservedSeatSection = new ReservedSeatSectionEntity(
                     UUID.randomUUID(), reservationId, reserveRequestDto.getRideDate(), reserveRequestDto.getScheduleCd(),
                     seatDto.getTrainCarCd(),
-                    seatDto.getSeatCd(), sectionCd
+                    seatDto.getSeatCd(), sectionCd, seatDto.getTrainCarTypeCd()
                 );
                 reservedSeatSectionsToPost.add(reservedSeatSection);
             }
@@ -304,7 +304,7 @@ public class ReservationService {
             for (ReservedSeatEntity reservedSeat : savedReservedSeats) {
                 String key = reservedSeat.getTrainCarCd() + "_" + reservedSeat.getSeatCd();
                 if (existingKeys.contains(key)) {
-                    seatResponseDtos.add(new SeatResponseDto(reservedSeat.getTrainCarCd(), reservedSeat.getTrainCar().getTrainCarNumber(), reservedSeat.getSeatCd(), reservedSeat.getSeat().getSeatNumber(), reservedSeat.getSeat().getSeatColumn(), 0, true));
+                    seatResponseDtos.add(new SeatResponseDto(reservedSeat.getTrainCarCd(), reservedSeat.getTrainCar().getTrainCarNumber(), reservedSeat.getTrainCar().getSeatType().getTrainCarTypeCd(), reservedSeat.getSeatCd(), reservedSeat.getSeat().getSeatNumber(), reservedSeat.getSeat().getSeatColumn(), 0, true));
                 }
             }
             if (!seatResponseDtos.isEmpty()) {

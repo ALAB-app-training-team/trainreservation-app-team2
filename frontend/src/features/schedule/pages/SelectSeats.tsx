@@ -72,6 +72,7 @@ export function SelectSeats() {
             arrivalStationCd: scheduleInfoDto.arrivalStationCd,
             seats: selectedSeats.map((seat) => ({
                 trainCarCd: seat.trainCarCd,
+                trainCarTypeCd: seat.trainCarTypeCd,
                 seatCd: seat.seatCd,
                 seatFare: seat.seatFare,
             })),
