@@ -32,7 +32,8 @@ public class SecurityConfig {
                 })
             )
             .authorizeHttpRequests(auth -> auth
-                .requestMatchers("/api/login", "/api/logout", "/api/stations", "/api/stopstations", "/api/schedules", "/api/reservations", "/api/traincars", "/api/payments").permitAll()
+                .requestMatchers("/api/login", "/api/logout", "/api/stations", "/api/stopstations", "/api/schedules", "/api/reservations", "/api/traincars",
+                    "/api/payments", "/api/payments/tokens", "/api/schedules/**", "/api/traincars/**", "/api/reservations/**").permitAll()
                 .anyRequest().authenticated()
             )
             .formLogin(form -> form.disable())
