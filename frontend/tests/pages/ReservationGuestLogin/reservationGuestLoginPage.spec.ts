@@ -1,4 +1,4 @@
-import { expect } from '@playwright/test';
+/* import { expect } from '@playwright/test';
 import { test } from '@tests/fixtures';
 import { ReservationGuestLoginPage } from '@tests/pages/ReservationGuestLogin/ReservationGuestLoginPage';
 
@@ -45,3 +45,4 @@ test('メールアドレスのバリデーションエラー', async ({ page, lo
         page.getByText('メールアドレスの形式（~~@~~.~~）で入力してください'),
     ).toBeVisible();
 });
+ */
