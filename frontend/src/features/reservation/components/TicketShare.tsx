@@ -1,6 +1,7 @@
 import { useState } from 'react';
 import { BsShare } from 'react-icons/bs';
 import { IoCheckmarkOutline, IoCopyOutline } from 'react-icons/io5';
+import { toast } from 'sonner';
 
 import { CustomModal } from '@/shared/components/CustomModal';
 
@@ -21,8 +22,8 @@ export function TicketShare({
             await navigator.clipboard.writeText(shareUrl);
             setCopied(true);
             setTimeout(() => setCopied(false), 2000);
-        } catch (error) {
-            console.error('コピーに失敗しました：', error);
+        } catch {
+            toast.error('リンクのコピーに失敗しました');
         }
     };
 
@@ -30,7 +31,7 @@ export function TicketShare({
         <div className="mx-auto mt-4 w-full max-w-xl">
             <button
                 onClick={() => setIsOpen(true)}
-                className="hover:bg-primary flex w-full items-center justify-center gap-2 rounded-xl border border-gray-300 bg-white px-4 py-2.5 text-sm font-bold text-gray-800 shadow-sm transition-colors active:bg-gray-100"
+                className="bg-primary flex w-full items-center justify-center gap-2 rounded-xl px-4 py-2.5 text-sm text-white"
             >
                 <BsShare className="h-4 w-4" />
                 <div>チケットを共有</div>
@@ -53,10 +54,10 @@ export function TicketShare({
                         />
                         <button
                             onClick={handleCopy}
-                            className={`flex shrink-0 items-center gap-1.5 rounded-md px-3 py-1.5 text-xs font-bold transition-all ${
+                            className={`flex shrink-0 items-center gap-1.5 rounded-md px-3 py-1.5 text-sm ${
                                 copied
                                     ? 'bg-primary text-white'
-                                    : 'bg-primary hover:bg-primary-light text-white'
+                                    : 'bg-primary text-white'
                             }`}
                         >
                             {copied ? (
