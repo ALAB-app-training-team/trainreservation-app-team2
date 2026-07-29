@@ -1,7 +1,12 @@
 import { useQueryClient } from '@tanstack/react-query';
 import { Suspense, useEffect } from 'react';
 import { LuArrowLeft } from 'react-icons/lu';
-import { useLocation, useNavigate } from 'react-router-dom';
+import {
+    Navigate,
+    useLocation,
+    useNavigate,
+    useSearchParams,
+} from 'react-router-dom';
 
 import { ReservedTicketInfo } from '@/features/reservation/components/ReservedTicketInfo/ReservedTicketInfo';
 import { ReservedTicketInfoSkeleton } from '@/features/reservation/components/ReservedTicketInfo/ReservedTicketInfoSkeleton';
@@ -14,9 +19,22 @@ import { removeGuestReservation } from '@/shared/utils/RemoveGuestReservation';
 export function ReservedTicket() {
     const location = useLocation();
     const navigate = useNavigate();
-    const { reservationId, isBack } = location.state;
+    const [searchParams] = useSearchParams();
+    const paramReservationId = searchParams.get('reservationId');
+    const reservationId = location.state?.reservationId || paramReservationId;
+    const isBack = location.state?.isBack ?? false;
+    const guestInfo = sessionStorage.getItem('guestLoginInfo');
+    if (!guestInfo && paramReservationId) {
+        return (
+            <Navigate
+                to={`/guestLogin?reservationId=${paramReservationId}`}
+                replace
+            />
+        );
+    }
+
     const { reservedTickets } = useReservedTickets(reservationId);
-    const shareUrl = `${window.location.origin}${window.location.pathname}?reservationId=${reservationId}`;
+    const shareUrl = `${window.location.origin}/reservationGuestLogin?reservationId=${reservationId}`;
 
     const queryClient = useQueryClient();
     useEffect(() => {

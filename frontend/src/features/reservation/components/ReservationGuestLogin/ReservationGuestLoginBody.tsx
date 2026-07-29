@@ -57,7 +57,7 @@ export function ReservationGuestLoginBody() {
                     navigate('/reservedTicket', {
                         state: {
                             reservationId: targetReservationId,
-                            isBack: true,
+                            isBack: false,
                         },
                     });
                     window.scrollTo(0, 0);
