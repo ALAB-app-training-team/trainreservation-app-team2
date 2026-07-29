@@ -1,5 +1,6 @@
 package com.alab.shinkansendego.reservation;
 
+import com.alab.shinkansendego.SecurityConfig;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.SerializationFeature;
 import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
@@ -7,13 +8,19 @@ import org.jspecify.annotations.NonNull;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.Mockito;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.webmvc.test.autoconfigure.WebMvcTest;
+import org.springframework.context.annotation.Import;
 import org.springframework.http.MediaType;
+import org.springframework.security.test.context.support.WithAnonymousUser;
 import org.springframework.security.test.context.support.WithMockUser;
+import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.bean.override.mockito.MockitoBean;
+import org.springframework.test.context.junit.jupiter.SpringExtension;
 import org.springframework.test.web.servlet.MockMvc;
+import org.springframework.web.context.WebApplicationContext;
 
 import java.time.LocalDate;
 import java.time.LocalTime;
@@ -31,6 +38,9 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 @WebMvcTest(ReservationController.class)
+@ExtendWith(SpringExtension.class)
+@ContextConfiguration
+@Import(SecurityConfig.class)
 public class ReservationControllerTest {
     private final ObjectMapper objectMapper = new ObjectMapper();
     private final String baseUrl = "/api/reservations";
@@ -57,7 +67,7 @@ public class ReservationControllerTest {
     }
 
     @BeforeEach
-    void setUp() {
+    void setUp(WebApplicationContext context) {
         objectMapper.registerModule(new JavaTimeModule());
         objectMapper.disable(SerializationFeature.WRITE_DATES_AS_TIMESTAMPS);
     }
@@ -225,7 +235,6 @@ public class ReservationControllerTest {
     }
 
     @Test
-    @WithMockUser
     @DisplayName("リクエストのカラムがNullの場合、バリデーションエラー発生")
     void insertReservation_withNotValidReserveRequestDto_returnValidationError() throws Exception {
         ReserveRequestDto request = new ReserveRequestDto(
@@ -242,7 +251,6 @@ public class ReservationControllerTest {
     }
 
     @Test
-    @WithMockUser
     @DisplayName("リクエストDTO自体がNullの場合、バインドエラー発生")
     void insertReservation_withReserveRequestDtoIsNull_returnBindError() throws Exception {
         //バインド順が毎回異なるためエラーメッセージの比較は行わない
@@ -259,8 +267,20 @@ public class ReservationControllerTest {
         UUID requestReservationId = UUID.randomUUID();
         String url = baseUrl + "/" + requestReservationId;
 
-        mockMvc.perform(delete(url))
+        mockMvc.perform(delete(url)
+                .with(csrf()))
             .andExpect(status().isNoContent());
+    }
+
+    @Test
+    @WithAnonymousUser
+    @DisplayName("認証なしのアクセスの場合、401を返す")
+    void deleteReservation_withNotAuthorized_return401() throws Exception {
+        UUID requestReservationId = UUID.randomUUID();
+        String url = baseUrl + "/" + requestReservationId;
+
+        mockMvc.perform(delete(url))
+            .andExpect(status().isUnauthorized());
     }
 
     @Test
