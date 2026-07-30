@@ -3,6 +3,7 @@ import {
     redirect,
     RouterProvider,
 } from 'react-router-dom';
+import { toast } from 'sonner';
 
 import { AuthProvider } from '@/context/AuthContext';
 import { Login } from '@/features/account/pages/Login';
@@ -14,6 +15,15 @@ import { SelectSeats } from '@/features/schedule/pages/SelectSeats';
 import { Layout } from '@/Layout';
 import { ERROR_MESSAGE } from '@/shared/constants/ErrorMessages';
 import { Error } from '@/shared/pages/Error';
+
+const sessionLoader = () => {
+    const info = localStorage.getItem('name');
+    if (info === null) {
+        toast.warning(ERROR_MESSAGE.SESSION_ERROR);
+        return redirect('/login');
+    }
+    return null;
+};
 
 const authLoader = () => {
     const info = sessionStorage.getItem('guestLoginInfo');
@@ -58,7 +68,7 @@ const router = createBrowserRouter([
             },
             {
                 path: '/reservationList',
-                loader: () => authLoader(),
+                loader: () => sessionLoader(),
                 element: <ReservationList />,
                 errorElement: <Error />,
             },
