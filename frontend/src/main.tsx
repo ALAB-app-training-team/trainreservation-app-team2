@@ -20,6 +20,8 @@ createRoot(document.getElementById('root')!).render(
                         title: '!text-base',
                         success:
                             '!bg-primary-light !border-l-4 !border-l-primary',
+                        warning:
+                            '!bg-orange-100 !border-l-4 !border-l-orange-400',
                     },
                 }}
             />
