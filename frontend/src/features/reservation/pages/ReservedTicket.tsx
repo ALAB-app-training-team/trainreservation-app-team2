@@ -1,20 +1,40 @@
 import { useQueryClient } from '@tanstack/react-query';
 import { Suspense, useEffect } from 'react';
 import { LuArrowLeft } from 'react-icons/lu';
-import { useLocation, useNavigate } from 'react-router-dom';
+import {
+    Navigate,
+    useLocation,
+    useNavigate,
+    useSearchParams,
+} from 'react-router-dom';
 
 import { ReservedTicketInfo } from '@/features/reservation/components/ReservedTicketInfo/ReservedTicketInfo';
 import { ReservedTicketInfoSkeleton } from '@/features/reservation/components/ReservedTicketInfo/ReservedTicketInfoSkeleton';
 import { ReservedTicketQrCode } from '@/features/reservation/components/ReservedTicketQrCode/ReservedTicketQrCode';
 import { ReservedTicketQrCodeSkeleton } from '@/features/reservation/components/ReservedTicketQrCode/ReservedTicketQrCodeSkeleton';
+import { TicketShare } from '@/features/reservation/components/TicketShare';
 import { useReservedTickets } from '@/features/reservation/hooks/useReservedTickets';
 import { removeGuestReservation } from '@/shared/utils/RemoveGuestReservation';
 
 export function ReservedTicket() {
     const location = useLocation();
     const navigate = useNavigate();
-    const { reservationId, isBack } = location.state;
+    const [searchParams] = useSearchParams();
+    const paramReservationId = searchParams.get('reservationId');
+    const reservationId = location.state?.reservationId || paramReservationId;
+    const isBack = location.state?.isBack ?? false;
+    const guestInfo = sessionStorage.getItem('guestLoginInfo');
+    if (!guestInfo && paramReservationId) {
+        return (
+            <Navigate
+                to={`/guestLogin?reservationId=${paramReservationId}`}
+                replace
+            />
+        );
+    }
+
     const { reservedTickets } = useReservedTickets(reservationId);
+    const shareUrl = `${window.location.origin}/reservationGuestLogin?reservationId=${reservationId}`;
 
     const queryClient = useQueryClient();
     useEffect(() => {
@@ -29,7 +49,7 @@ export function ReservedTicket() {
     return (
         <>
             <div className="flex w-full flex-col items-center gap-4 p-4">
-                <div className="w-full max-w-5xl min-w-[360px] md:w-7/10">
+                <div className="w-full max-w-5xl min-w-90 md:w-7/10">
                     <div className="flex items-center justify-start">
                         {isBack ? (
                             <button
@@ -46,7 +66,7 @@ export function ReservedTicket() {
                         ) : (
                             <h1
                                 data-testid="reserve-complete"
-                                className="!m-0 text-left !text-3xl"
+                                className="m-0! text-left text-3xl!"
                             >
                                 予約完了
                             </h1>
@@ -61,6 +81,7 @@ export function ReservedTicket() {
                     <Suspense fallback={<ReservedTicketInfoSkeleton />}>
                         <ReservedTicketInfo ticketInfo={reservedTickets} />
                     </Suspense>
+                    <TicketShare shareUrl={shareUrl} />
                 </div>
             </div>
         </>
