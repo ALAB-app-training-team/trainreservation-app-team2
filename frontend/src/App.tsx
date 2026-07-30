@@ -3,6 +3,7 @@ import {
     redirect,
     RouterProvider,
 } from 'react-router-dom';
+import { toast } from 'sonner';
 
 import { AuthProvider } from '@/context/AuthContext';
 import { Login } from '@/features/account/pages/Login';
@@ -18,7 +19,7 @@ import { Error } from '@/shared/pages/Error';
 const sessionLoader = () => {
     const info = localStorage.getItem('name');
     if (info === null) {
-        alert(ERROR_MESSAGE.SESSION_ERROR);
+        toast.warning('ログインしてください。');
         return redirect('/login');
     }
     return null;
