@@ -17,14 +17,11 @@ import org.springframework.context.annotation.Import;
 import org.springframework.http.MediaType;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
-import org.springframework.security.test.context.support.WithAnonymousUser;
-import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.bean.override.mockito.MockitoBean;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 import org.springframework.test.web.servlet.MockMvc;
-import org.springframework.web.context.WebApplicationContext;
 
 import java.time.LocalDate;
 import java.time.LocalTime;
@@ -72,7 +69,7 @@ public class ReservationControllerTest {
     }
 
     @BeforeEach
-    void setUp(WebApplicationContext context) {
+    void setUp() {
         objectMapper.registerModule(new JavaTimeModule());
         objectMapper.disable(SerializationFeature.WRITE_DATES_AS_TIMESTAMPS);
     }
@@ -281,7 +278,6 @@ public class ReservationControllerTest {
     }
 
     @Test
-    @WithAnonymousUser
     @DisplayName("認証なしのアクセスの場合、401を返す")
     void deleteReservation_withNotAuthorized_return401() throws Exception {
         UUID requestReservationId = UUID.randomUUID();
@@ -292,7 +288,6 @@ public class ReservationControllerTest {
     }
 
     @Test
-    @WithMockUser
     @DisplayName("idがNullの場合、NOTFOUNDを返す")
     void deleteReservation_withReservationIdIsNull_returnRequestParamError() throws Exception {
         String url = baseUrl + "/";
