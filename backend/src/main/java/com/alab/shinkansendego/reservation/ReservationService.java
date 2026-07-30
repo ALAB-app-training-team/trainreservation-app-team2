@@ -75,15 +75,13 @@ public class ReservationService {
     }
 
     /**
-     * 予約時に登録した氏名とメールアドレスをもとに、紐づく予約情報一覧を取得するメソッド
+     * ログイン中のアカウント情報をもとに、紐づく予約情報一覧を取得するメソッド
      *
-     * @param name  予約者氏名
-     * @param email 予約者メールアドレス
-     * @return 氏名とメールアドレスに紐づくReservationResponseDto(複数件)
+     * @return ログイン中のアカウント情報に紐づくReservationResponseDto(複数件)
      */
-    public List<ReservationResponseDto> getReservationList(String name, String email) {
+    public List<ReservationResponseDto> getReservationList(UUID accountId) {
         List<ReservationResponseDto> reservationList = new ArrayList<>();
-        List<ReservationEntity> reservationEntityList = reservationRepository.findByReserverNameAndReserverMail(removeSpaces(name), removeSpaces(email));
+        List<ReservationEntity> reservationEntityList = reservationRepository.findByAccountId(accountId);
         if (reservationEntityList.isEmpty()) {
             return reservationList;
         }
@@ -283,7 +281,7 @@ public class ReservationService {
                 ReservedSeatSectionEntity reservedSeatSection = new ReservedSeatSectionEntity(
                     UUID.randomUUID(), reservationId, reserveRequestDto.getRideDate(), reserveRequestDto.getScheduleCd(),
                     seatDto.getTrainCarCd(),
-                    seatDto.getSeatCd(), sectionCd
+                    seatDto.getSeatCd(), sectionCd, seatDto.getTrainCarTypeCd()
                 );
                 reservedSeatSectionsToPost.add(reservedSeatSection);
             }
@@ -306,7 +304,7 @@ public class ReservationService {
             for (ReservedSeatEntity reservedSeat : savedReservedSeats) {
                 String key = reservedSeat.getTrainCarCd() + "_" + reservedSeat.getSeatCd();
                 if (existingKeys.contains(key)) {
-                    seatResponseDtos.add(new SeatResponseDto(reservedSeat.getTrainCarCd(), reservedSeat.getTrainCar().getTrainCarNumber(), reservedSeat.getSeatCd(), reservedSeat.getSeat().getSeatNumber(), reservedSeat.getSeat().getSeatColumn(), 0, true));
+                    seatResponseDtos.add(new SeatResponseDto(reservedSeat.getTrainCarCd(), reservedSeat.getTrainCar().getTrainCarNumber(), reservedSeat.getTrainCar().getSeatType().getTrainCarTypeCd(), reservedSeat.getSeatCd(), reservedSeat.getSeat().getSeatNumber(), reservedSeat.getSeat().getSeatColumn(), 0, true));
                 }
             }
             if (!seatResponseDtos.isEmpty()) {

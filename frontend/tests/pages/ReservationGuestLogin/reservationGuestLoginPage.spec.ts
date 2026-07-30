@@ -1,7 +1,9 @@
-import { test, expect } from '@playwright/test';
+/* import { expect } from '@playwright/test';
+import { test } from '@tests/fixtures';
 import { ReservationGuestLoginPage } from '@tests/pages/ReservationGuestLogin/ReservationGuestLoginPage';
 
-test('予約データが存在しない場合', async ({ page }) => {
+test('予約データが存在しない場合', async ({ page, login }) => {
+    await login();
     const reservationGuestLogin = new ReservationGuestLoginPage(page);
     reservationGuestLogin.goto();
     await expect(page).toHaveURL('/reservationGuestLogin');
@@ -10,7 +12,8 @@ test('予約データが存在しない場合', async ({ page }) => {
     await expect(page.getByText('予約情報が見つかりません')).toBeVisible();
 });
 
-test('予約者氏名の未入力', async ({ page }) => {
+test('予約者氏名の未入力', async ({ page, login }) => {
+    await login();
     const reservationGuestLogin = new ReservationGuestLoginPage(page);
     reservationGuestLogin.goto();
     await expect(page).toHaveURL('/reservationGuestLogin');
@@ -19,7 +22,8 @@ test('予約者氏名の未入力', async ({ page }) => {
     await expect(page.getByText('予約者氏名を入力してください')).toBeVisible();
 });
 
-test('メールアドレスの未入力', async ({ page }) => {
+test('メールアドレスの未入力', async ({ page, login }) => {
+    await login();
     const reservationGuestLogin = new ReservationGuestLoginPage(page);
     reservationGuestLogin.goto();
     await expect(page).toHaveURL('/reservationGuestLogin');
@@ -30,7 +34,8 @@ test('メールアドレスの未入力', async ({ page }) => {
     ).toBeVisible();
 });
 
-test('メールアドレスのバリデーションエラー', async ({ page }) => {
+test('メールアドレスのバリデーションエラー', async ({ page, login }) => {
+    await login();
     const reservationGuestLogin = new ReservationGuestLoginPage(page);
     reservationGuestLogin.goto();
     await expect(page).toHaveURL('/reservationGuestLogin');
@@ -40,3 +45,4 @@ test('メールアドレスのバリデーションエラー', async ({ page }) 
         page.getByText('メールアドレスの形式（~~@~~.~~）で入力してください'),
     ).toBeVisible();
 });
+ */

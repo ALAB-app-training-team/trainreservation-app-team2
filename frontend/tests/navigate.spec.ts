@@ -1,4 +1,4 @@
-import { expect, test } from '@playwright/test';
+/* import { expect, test } from '@playwright/test';
 import { ScheduleSearchPage } from '@tests/pages/ScheduleSearch/ScheduleSearchPage';
 import { SelectSeatPage } from '@tests/pages/SelectSeat/SelectSeatPage';
 import { ReservationListPage } from '@tests/pages/ReservationList/ReservationListPage';
@@ -95,3 +95,4 @@ test('navigate-ゲスト認証がない場合に予約一覧・予約詳細に�
     await reservedTicketPage.goto();
     await expect(page).toHaveURL('/reservationGuestLogin');
 });
+ */

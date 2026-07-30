@@ -30,8 +30,9 @@ public class ReservationController {
     }
 
     @GetMapping
-    public ResponseEntity<List<ReservationResponseDto>> getReservationList(@RequestParam("reserverName") String name, @RequestParam("reserverMail") String email) {
-        List<ReservationResponseDto> response = reservationService.getReservationList(name, email);
+    @PreAuthorize("isAuthenticated()")
+    public ResponseEntity<List<ReservationResponseDto>> getReservationList(@AuthenticationPrincipal AccountSessionDto session) {
+        List<ReservationResponseDto> response = reservationService.getReservationList(session.getId());
         return ResponseEntity.ok(response);
     }
 
