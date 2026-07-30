@@ -50,8 +50,8 @@ public class ReservationController {
 
     @DeleteMapping(value = "{id}")
     @PreAuthorize("isAuthenticated()")
-    public ResponseEntity<Void> deleteReservation(@PathVariable("id") UUID reservationId, @AuthenticationPrincipal AccountSessionDto user) {
-        reservationService.deleteReservation(reservationId);
+    public ResponseEntity<Void> deleteReservation(@PathVariable("id") UUID reservationId, @AuthenticationPrincipal AccountSessionDto session) {
+        reservationService.deleteReservation(reservationId, session.getId());
         return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
     }
 }
