@@ -15,6 +15,15 @@ import { Layout } from '@/Layout';
 import { ERROR_MESSAGE } from '@/shared/constants/ErrorMessages';
 import { Error } from '@/shared/pages/Error';
 
+const sessionLoader = () => {
+    const info = localStorage.getItem('name');
+    if (info === null) {
+        alert(ERROR_MESSAGE.SESSION_ERROR);
+        return redirect('/login');
+    }
+    return null;
+};
+
 const authLoader = () => {
     const info = sessionStorage.getItem('guestLoginInfo');
 
@@ -58,6 +67,7 @@ const router = createBrowserRouter([
             },
             {
                 path: '/reservationList',
+                loader: () => sessionLoader(),
                 element: <ReservationList />,
                 errorElement: <Error />,
             },
