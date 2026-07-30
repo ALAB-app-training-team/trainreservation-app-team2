@@ -3,12 +3,15 @@ import type { Page } from '@playwright/test';
 import { ScheduleSearchPage } from '@tests/pages/ScheduleSearch/ScheduleSearchPage';
 import { SelectSeatPage } from '@tests/pages/SelectSeat/SelectSeatPage';
 import { ReservationGuestLoginPage } from '@tests/pages/ReservationGuestLogin/ReservationGuestLoginPage';
+import { LoginPage } from './pages/Login/LoginPage';
 
 type CreateReservation = () => Promise<void>;
 type GuestLogin = () => Promise<void>;
+type Login = () => Promise<void>;
 type Fixture = {
     createReservation: CreateReservation;
     guestLogin: GuestLogin;
+    login: Login;
 };
 
 export const test = base.extend<Fixture>({
@@ -44,6 +47,19 @@ export const test = base.extend<Fixture>({
             await reservationGuestLogin.goto();
             await reservationGuestLogin.inputGuestLoginInfo();
             await reservationGuestLogin.clickGuestLoginButton();
+        };
+        await use(login);
+    },
+    login: async (
+        { page }: { page: Page },
+        use: (fn: CreateReservation) => Promise<void>,
+    ) => {
+        const login = async () => {
+            const login = new LoginPage(page);
+
+            await login.goto();
+            await login.inputLoginInfo();
+            await login.clickLoginButton();
         };
         await use(login);
     },

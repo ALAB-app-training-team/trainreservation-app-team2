@@ -1,5 +1,7 @@
 package com.alab.shinkansendego.reservation;
 
+import com.alab.shinkansendego.SecurityConfig;
+import com.alab.shinkansendego.account.AccountSessionDto;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.SerializationFeature;
 import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
@@ -7,17 +9,25 @@ import org.jspecify.annotations.NonNull;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.Mockito;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.webmvc.test.autoconfigure.WebMvcTest;
+import org.springframework.context.annotation.Import;
 import org.springframework.http.MediaType;
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors;
+import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.bean.override.mockito.MockitoBean;
+import org.springframework.test.context.junit.jupiter.SpringExtension;
 import org.springframework.test.web.servlet.MockMvc;
 
 import java.time.LocalDate;
 import java.time.LocalTime;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.List;
 import java.util.UUID;
 
@@ -29,6 +39,9 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 @WebMvcTest(ReservationController.class)
+@ExtendWith(SpringExtension.class)
+@ContextConfiguration
+@Import(SecurityConfig.class)
 public class ReservationControllerTest {
     private final ObjectMapper objectMapper = new ObjectMapper();
     private final String baseUrl = "/api/reservations";
@@ -61,18 +74,21 @@ public class ReservationControllerTest {
     }
 
     @Test
-    @DisplayName("予約者氏名と予約者メールアドレスから予約情報の取得ができる")
-    void getReservationList_withReserverNameAndEmail_returnGetReservationListSuccess() throws Exception {
-        String email = "email@some.example.jp";
-        String name = "山田太郎";
+    @DisplayName("ログイン情報から予約情報の一覧が取得できる")
+    void getReservationList_withSession_returnGetReservationListSuccess() throws Exception {
+        AccountSessionDto session = new AccountSessionDto(
+            UUID.fromString("f79d8bbc-fcba-b538-b132-2f726ce0120c"), "test-common@test.com", "一般太郎"
+        );
+        Authentication auth = new UsernamePasswordAuthenticationToken(session, null, Collections.emptyList());
+
         List<ReservationResponseDto> expectList = Arrays.asList(
             getExpectReservationResponseDto(UUID.fromString("4156b939-2e3e-46c1-92d3-7aa64b6ca575")),
             getExpectReservationResponseDto(UUID.fromString("3136b939-2e3e-46c1-92d3-7aa64b6ca666")));
-
-        Mockito.when(service.getReservationList(name, email)).thenReturn(expectList);
+        Mockito.when(service.getReservationList(Mockito.any())).thenReturn(expectList);
 
         mockMvc.perform(
-                get(baseUrl + "?reserverName=" + name + "&reserverMail=" + email)
+                get(baseUrl)
+                    .with(SecurityMockMvcRequestPostProcessors.authentication(auth))
                     .contentType(MediaType.APPLICATION_JSON))
             .andExpect(status().isOk())
             .andExpect(jsonPath("$[0].reservationId").value("4156b939-2e3e-46c1-92d3-7aa64b6ca575"))
@@ -130,20 +146,33 @@ public class ReservationControllerTest {
     }
 
     @Test
-    @DisplayName("予約者氏名と予約者メールアドレスに該当する予約がない場合、空のリストを返す")
-    void getReservationList_withNoMatchNameAndEmail_returnEmptyList() throws Exception {
-        String email = "email@some.example.jp";
-        String name = "山田太郎";
-        List<ReservationResponseDto> expectList = new ArrayList<>();
+    @DisplayName("ログイン情報に該当する予約がない場合、空のリストを返す")
+    void getReservationList_withSession_returnEmptyList() throws Exception {
+        AccountSessionDto session = new AccountSessionDto(
+            UUID.fromString("f79d8bbc-fcba-b538-b132-2f726ce0120c"), "test-common@test.com", "一般太郎"
+        );
+        Authentication auth = new UsernamePasswordAuthenticationToken(session, null, Collections.emptyList());
 
-        Mockito.when(service.getReservationList(name, email)).thenReturn(expectList);
+        List<ReservationResponseDto> expectList = new ArrayList<>();
+        Mockito.when(service.getReservationList(Mockito.any())).thenReturn(expectList);
 
         mockMvc.perform(
-                get(baseUrl + "?reserverName=" + name + "&reserverMail=" + email)
+                get(baseUrl)
+                    .with(SecurityMockMvcRequestPostProcessors.authentication(auth))
                     .contentType(MediaType.APPLICATION_JSON))
             .andExpect(status().isOk())
             .andExpect(jsonPath("$").isArray())
             .andExpect(jsonPath("$").isEmpty());
+    }
+
+    @Test
+    @DisplayName("未ログインの場合、401エラーが発生する")
+    void getReservationList_withNoSession_return401StatusCode() throws Exception {
+        mockMvc.perform(
+                get(baseUrl)
+                    .contentType(MediaType.APPLICATION_JSON))
+            .andExpect(status().isUnauthorized())
+            .andExpect(content().string("Unauthorized"));
     }
 
     @Test
