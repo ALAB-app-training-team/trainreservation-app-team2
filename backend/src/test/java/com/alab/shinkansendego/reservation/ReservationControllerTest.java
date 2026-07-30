@@ -278,8 +278,8 @@ public class ReservationControllerTest {
     }
 
     @Test
-    @DisplayName("特定の予約情報IDに紐づく予約情報を削除できる")
-    void deleteReservation_withReservationId_return204() throws Exception {
+    @DisplayName("認証ありのアクセスの場合、特定の予約情報IDに紐づく予約情報を削除できる")
+    void deleteReservation_withAuthorized_return204() throws Exception {
         AccountSessionDto session = new AccountSessionDto(
             UUID.fromString("f79d8bbc-fcba-b538-b132-2f726ce0120c"), "test-common@test.com", "一般太郎"
         );
