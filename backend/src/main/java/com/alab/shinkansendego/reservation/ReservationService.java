@@ -147,9 +147,7 @@ public class ReservationService {
      * @param reservationId 情報を取ってきたい予約ID(1件)
      * @return 予約情報の入ったReservationResponseDto(1件)
      */
-    public ReservationResponseDto getReservation(UUID reservationId, String name, String email) {
-
-        ReservationResponseDto response = new ReservationResponseDto();
+    public ReservationResponseDto getGuestReservation(UUID reservationId, String name, String email) {
 
         Optional<ReservationEntity> reservationEntity = reservationRepository
             .findByIdAndReserverNameAndReserverMail(reservationId, removeSpaces(name), removeSpaces(email));

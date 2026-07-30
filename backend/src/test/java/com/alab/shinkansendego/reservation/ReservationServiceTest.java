@@ -69,6 +69,8 @@ public class ReservationServiceTest {
     private final ReservedSeatDto seat1 = new ReservedSeatDto("指定席", 1, 1, "A", UUID.fromString("60a1ab63-a41f-430d-a2d1-10a76368d0f5"), 5000);
     private final ReservedSeatDto seat2 = new ReservedSeatDto("グリーン車", 9, 1, "A", UUID.fromString("3de8909e-32de-478e-bd9b-739f3fe6d6c3"), 10000);
     private final ReservedSeatDto seat3 = new ReservedSeatDto("グランクラス", 10, 1, "A", UUID.fromString("e192e5f1-318e-4d10-b76d-2f2bf15e8b70"), 15000);
+    private final UUID accountId = UUID.fromString("f79d8bbc-fcba-b538-b132-2f726ce0120c");
+    private final UUID noReservationAccountId = UUID.fromString("f79d8bbc-fcba-b538-b132-2f726ce0120c");
     @Mock
     private ReservationRepository reservationRepo;
     @Mock
@@ -277,7 +279,6 @@ public class ReservationServiceTest {
     @Test
     @DisplayName("予約者氏名とメールアドレスで予約した予約情報の一覧取得ができる")
     void getReservationList_withSession_returnGetReservationSuccess() {
-        UUID accountId = UUID.fromString("f79d8bbc-fcba-b538-b132-2f726ce0120c");
         List<ReservationEntity> reservationList = Arrays.asList(buildReservation(reservationId1), buildReservation(reservationId2));
         when(reservationRepo.findByAccountId(ArgumentMatchers.any(UUID.class))).thenReturn(reservationList);
 
@@ -301,63 +302,97 @@ public class ReservationServiceTest {
     @Test
     @DisplayName("予約者情報に一致する予約がなかった場合に空のリストを返す")
     void getReservationList_withSession_returnEmptyList() {
-        UUID accountId = UUID.fromString("f79d8bbc-fcba-b538-b132-2f726ce0120c");
         List<ReservationEntity> reservationList = Arrays.asList(buildReservation(reservationId1), buildReservation(reservationId2));
         when(reservationRepo.findByAccountId(ArgumentMatchers.any(UUID.class))).thenReturn(new ArrayList<>());
 
-        List<ReservationResponseDto> result = service.getReservationList(accountId);
+        List<ReservationResponseDto> result = service.getReservationList(noReservationAccountId);
 
         assertTrue(result.isEmpty());
     }
 
     @Test
-    @DisplayName("予約情報IDと予約者氏名とメールアドレスから予約チケット情報が取得できる")
-    void getReservation_withReservationIdAndReserverNameAndReserverMail_returnGetReservationSuccess() {
+    @DisplayName("ゲストログインとして予約情報IDと予約者氏名とメールアドレスから予約チケット情報が取得できる")
+    void getGuestReservation_withReservationIdAndReserverNameAndReserverMail_returnGetGuestReservationSuccess() {
         when(reservationRepo.findByIdAndReserverNameAndReserverMail(reservationId1, "山田太郎", "email@sample.com")).thenReturn(reservation);
 
         ReservationResponseDto expect = getExpectReservationResponseDto(null);
 
-        ReservationResponseDto actual = service.getReservation(reservationId1, "山田太郎", "email@sample.com");
+        ReservationResponseDto actual = service.getGuestReservation(reservationId1, "山田太郎", "email@sample.com");
 
         assertEquals(expect, actual);
     }
 
     @Test
-    @DisplayName("予約情報データに存在しない予約情報IDがリクエストされた場合にNullを返す")
-    void getReservation_withNotExistReservationRequest_returnIllegalArgumentException() {
+    @DisplayName("ゲストログインとして予約情報データに存在しない予約情報IDがリクエストされた場合にNullを返す")
+    void getGuestReservation_withNotExistGuestReservationRequest_returnIllegalArgumentException() {
         when(reservationRepo.findByIdAndReserverNameAndReserverMail(reservationId1, "山田太郎", "email@sample.com")).thenReturn(Optional.empty());
-        ReservationResponseDto actual = service.getReservation(reservationId1, "山田太郎", "email@sample.com");
+        ReservationResponseDto actual = service.getGuestReservation(reservationId1, "山田太郎", "email@sample.com");
         assertNull(actual);
     }
 
     @Test
-    @DisplayName("予約情報データに存在しない予約者氏名がリクエストされた場合にエラーを発生させる")
-    void getReservation_withNotExistReserverName_returnIllegalArgumentException() {
+    @DisplayName("予約情報データに存在しないゲスト予約者氏名がリクエストされた場合にエラーを発生させる")
+    void getGuestReservation_withNotExistReserverName_returnIllegalArgumentException() {
         when(reservationRepo.findByIdAndReserverNameAndReserverMail(reservationId1, "NotFound太郎", "email@sample.com")).thenReturn(Optional.empty());
-        ReservationResponseDto actual = service.getReservation(reservationId1, "NotFound太郎", "email@sample.com");
+        ReservationResponseDto actual = service.getGuestReservation(reservationId1, "NotFound太郎", "email@sample.com");
         assertNull(actual);
+    }
+
+    @Test
+    @DisplayName("予約情報IDとアカウントログイン情報から予約チケット情報が取得できる")
+    void getAccountReservation_withReservationIdAndSession_returnGetAccountReservationSuccess() {
+
+        when(reservationRepo.findByIdAndAccountId(reservationId1, accountId)).thenReturn(reservation);
+
+        ReservationResponseDto expect = getExpectReservationResponseDto(null);
+
+        ReservationResponseDto actual = service.getAccountReservation(reservationId1, accountId);
+
+        assertEquals(actual, expect);
+    }
+
+    @Test
+    @DisplayName("予約情報データに存在しない予約情報IDがリクエストされた場合にエラーを発生させる")
+    void getAccountReservation_withNotExistReservationId_returnIllegalArgumentException() {
+        when(reservationRepo.findByIdAndAccountId(reservationId1, noReservationAccountId)).thenReturn(Optional.empty());
+        Exception ex = assertThrows(
+            IllegalArgumentException.class,
+            () -> service.getAccountReservation(reservationId1, noReservationAccountId)
+        );
+        assertEquals("ReservationId is Not found", ex.getMessage());
+    }
+
+    @Test
+    @DisplayName("予約情報データに存在しないアカウントログイン情報がリクエストされた場合にエラーを発生させる")
+    void getAccountReservation_withNotExistSession_returnIllegalArgumentException() {
+        when(reservationRepo.findByIdAndAccountId(reservationId1, accountId)).thenReturn(Optional.empty());
+        Exception ex = assertThrows(
+            IllegalArgumentException.class,
+            () -> service.getAccountReservation(reservationId1, accountId)
+        );
+        assertEquals("ReservationId is Not found", ex.getMessage());
     }
 
     @Test
     @DisplayName("出発到着時刻データに存在しない出発駅CDを持つ予約情報IDがリクエストされた場合にエラーを発生させる")
-    void getReservation_withNotExistScheduleOfDepartureStationRequest_returnIllegalArgumentException() {
+    void getGuestReservation_withNotExistScheduleOfDepartureStationRequest_returnIllegalArgumentException() {
         reservation.get().setDepartureStationCd("None");
         when(reservationRepo.findByIdAndReserverNameAndReserverMail(reservationId1, "山田太郎", "email@sample.com")).thenReturn(reservation);
         Exception ex = assertThrows(
             IllegalArgumentException.class,
-            () -> service.getReservation(reservationId1, "山田太郎", "email@sample.com")
+            () -> service.getGuestReservation(reservationId1, "山田太郎", "email@sample.com")
         );
         assertEquals("DepartureAndArrivalStation is Not Found", ex.getMessage());
     }
 
     @Test
     @DisplayName("出発到着時刻データに存在しない到着駅CDを持つ予約情報IDがリクエストされた場合にエラーを発生させる")
-    void getReservation_withNotExistScheduleOfArrivalStationRequest_returnIllegalArgumentException() {
+    void getGuestReservation_withNotExistScheduleOfArrivalStationRequest_returnIllegalArgumentException() {
         reservation.get().setArrivalStationCd("None");
         when(reservationRepo.findByIdAndReserverNameAndReserverMail(reservationId1, "山田太郎", "email@sample.com")).thenReturn(reservation);
         Exception ex = assertThrows(
             IllegalArgumentException.class,
-            () -> service.getReservation(reservationId1, "山田太郎", "email@sample.com")
+            () -> service.getGuestReservation(reservationId1, "山田太郎", "email@sample.com")
         );
         assertEquals("DepartureAndArrivalStation is Not Found", ex.getMessage());
     }

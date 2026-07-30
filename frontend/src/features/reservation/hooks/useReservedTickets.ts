@@ -43,5 +43,20 @@ export function useReservedTickets(reservationId: string) {
         refetchOnMount: true,
     });
 
-    return { reservedTickets };
+    const getReservationTicket = async (
+        reservationId: string,
+        guestLoginInfo: ReservationListRequestDto,
+    ): Promise<ReservationResponseDto> => {
+        const response = await apiClient.get<ReservationResponseDto>(
+            ENDPOINTS.GUESTRESERVATION(reservationId),
+            {
+                params: {
+                    reserverName: guestLoginInfo.reserverName,
+                    reserverMail: guestLoginInfo.reserverMail,
+                },
+            },
+        );
+        return response.data;
+    };
+    return { reservedTickets, getReservationTicket };
 }
