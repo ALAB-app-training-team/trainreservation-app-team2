@@ -55,6 +55,7 @@ export function TicketShare({ shareUrl = '' }: TicketShareProps) {
                         <button
                             onClick={handleCopy}
                             className="bg-primary flex shrink-0 items-center gap-1.5 rounded-xl px-3 py-1.5 text-sm text-white"
+                            data-testid="link-copy"
                         >
                             {copied ? (
                                 <>
