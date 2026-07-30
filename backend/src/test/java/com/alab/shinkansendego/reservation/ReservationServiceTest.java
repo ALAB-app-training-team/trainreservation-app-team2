@@ -21,6 +21,7 @@ import org.jspecify.annotations.NonNull;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
+import org.mockito.ArgumentMatchers;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -274,14 +275,12 @@ public class ReservationServiceTest {
 
     @Test
     @DisplayName("予約者氏名とメールアドレスで予約した予約情報の一覧取得ができる")
-    void getReservationList_withReserverNameAndReserverMail_returnGetReservationSuccess() {
-        String name = "山田太郎";
-        String email = "yamada@some.example.jp";
+    void getReservationList_withSession_returnGetReservationSuccess() {
+        UUID accountId = UUID.fromString("f79d8bbc-fcba-b538-b132-2f726ce0120c");
         List<ReservationEntity> reservationList = Arrays.asList(buildReservation(reservationId1), buildReservation(reservationId2));
+        when(reservationRepo.findByAccountId(ArgumentMatchers.any(UUID.class))).thenReturn(reservationList);
 
-        when(reservationRepo.findByReserverNameAndReserverMail(name, email)).thenReturn(reservationList);
-
-        List<ReservationResponseDto> result = service.getReservationList(name, email);
+        List<ReservationResponseDto> result = service.getReservationList(accountId);
 
         assertAll(
             () -> assertEquals(2, result.size()),
@@ -300,12 +299,12 @@ public class ReservationServiceTest {
 
     @Test
     @DisplayName("予約者情報に一致する予約がなかった場合に空のリストを返す")
-    void getReservationList_withNoMatchReserver_returnEmptyList() {
-        String name = "該当無し雄";
-        String email = "none@some.example.jp";
-        when(reservationRepo.findByReserverNameAndReserverMail(name, email)).thenReturn(new ArrayList<>());
+    void getReservationList_withSession_returnEmptyList() {
+        UUID accountId = UUID.fromString("f79d8bbc-fcba-b538-b132-2f726ce0120c");
+        List<ReservationEntity> reservationList = Arrays.asList(buildReservation(reservationId1), buildReservation(reservationId2));
+        when(reservationRepo.findByAccountId(ArgumentMatchers.any(UUID.class))).thenReturn(new ArrayList<>());
 
-        List<ReservationResponseDto> result = service.getReservationList(name, email);
+        List<ReservationResponseDto> result = service.getReservationList(accountId);
 
         assertTrue(result.isEmpty());
     }

@@ -1,9 +1,12 @@
 package com.alab.shinkansendego.reservation;
 
+import com.alab.shinkansendego.account.AccountSessionDto;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -27,8 +30,9 @@ public class ReservationController {
     }
 
     @GetMapping
-    public ResponseEntity<List<ReservationResponseDto>> getReservationList(@RequestParam("reserverName") String name, @RequestParam("reserverMail") String email) {
-        List<ReservationResponseDto> response = reservationService.getReservationList(name, email);
+    @PreAuthorize("isAuthenticated()")
+    public ResponseEntity<List<ReservationResponseDto>> getReservationList(@AuthenticationPrincipal AccountSessionDto session) {
+        List<ReservationResponseDto> response = reservationService.getReservationList(session.getId());
         return ResponseEntity.ok(response);
     }
 

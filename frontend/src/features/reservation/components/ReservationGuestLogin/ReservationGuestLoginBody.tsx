@@ -38,7 +38,7 @@ export function ReservationGuestLoginBody() {
                 reserverName: removeWhiteSpace(guestLoginForm.reserverName),
                 reserverMail: removeWhiteSpace(guestLoginForm.reserverMail),
             };
-            const reservationList = await getReservation(request);
+            const reservationList = await getReservation();
             if (reservationList.length === 0) {
                 setRequestError(ERROR_MESSAGE.NO_RESERVATION);
                 return;

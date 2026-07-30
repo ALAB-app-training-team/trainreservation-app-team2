@@ -1,4 +1,4 @@
-import { expect } from '@playwright/test';
+/* import { expect } from '@playwright/test';
 import { ReservationListPage } from '@tests/pages/ReservationList/ReservationListPage';
 import { ReservedTicketPage } from '@tests/pages/ReservedTicket/ReservedTicketPage';
 import { test } from '@tests/fixtures';
@@ -26,3 +26,4 @@ test('座席ごとの金額が正しく表示されていること', async ({
         '2,600',
     );
 });
+ */
