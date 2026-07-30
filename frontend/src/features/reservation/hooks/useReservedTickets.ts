@@ -12,7 +12,7 @@ export function useReservedTickets(reservationId: string) {
         guestLoginInfo: ReservationListRequestDto,
     ): Promise<ReservationResponseDto> => {
         const response = await apiClient.get<ReservationResponseDto>(
-            ENDPOINTS.RESERVATION(reservationId),
+            ENDPOINTS.GUESTRESERVATION(reservationId),
             {
                 params: {
                     reserverName: guestLoginInfo.reserverName,
