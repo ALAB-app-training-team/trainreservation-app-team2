@@ -51,6 +51,7 @@ import java.util.stream.Stream;
 import static org.junit.jupiter.api.Assertions.assertAll;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertNull;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.mockito.ArgumentMatchers.any;
@@ -322,25 +323,19 @@ public class ReservationServiceTest {
     }
 
     @Test
-    @DisplayName("予約情報データに存在しない予約情報IDがリクエストされた場合にエラーを発生させる")
+    @DisplayName("予約情報データに存在しない予約情報IDがリクエストされた場合にNullを返す")
     void getReservation_withNotExistReservationRequest_returnIllegalArgumentException() {
         when(reservationRepo.findByIdAndReserverNameAndReserverMail(reservationId1, "山田太郎", "email@sample.com")).thenReturn(Optional.empty());
-        Exception ex = assertThrows(
-            IllegalArgumentException.class,
-            () -> service.getReservation(reservationId1, "山田太郎", "email@sample.com")
-        );
-        assertEquals("ReservationId is Not found", ex.getMessage());
+        ReservationResponseDto actual = service.getReservation(reservationId1, "山田太郎", "email@sample.com");
+        assertNull(actual);
     }
 
     @Test
     @DisplayName("予約情報データに存在しない予約者氏名がリクエストされた場合にエラーを発生させる")
     void getReservation_withNotExistReserverName_returnIllegalArgumentException() {
         when(reservationRepo.findByIdAndReserverNameAndReserverMail(reservationId1, "NotFound太郎", "email@sample.com")).thenReturn(Optional.empty());
-        Exception ex = assertThrows(
-            IllegalArgumentException.class,
-            () -> service.getReservation(reservationId1, "NotFound太郎", "email@sample.com")
-        );
-        assertEquals("ReservationId is Not found", ex.getMessage());
+        ReservationResponseDto actual = service.getReservation(reservationId1, "NotFound太郎", "email@sample.com");
+        assertNull(actual);
     }
 
     @Test

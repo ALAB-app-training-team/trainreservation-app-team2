@@ -181,7 +181,7 @@ public class ReservationControllerTest {
 
         UUID request = UUID.fromString("4156b939-2e3e-46c1-92d3-7aa64b6ca575");
         ReservationResponseDto expect = getExpectReservationResponseDto(request);
-        String url = baseUrl + "/4156b939-2e3e-46c1-92d3-7aa64b6ca575";
+        String url = baseUrl + "/guest/4156b939-2e3e-46c1-92d3-7aa64b6ca575";
 
         Mockito.when(service.getReservation(request, "山田太郎", "email@sample.com")).thenReturn(expect);
 
@@ -220,7 +220,7 @@ public class ReservationControllerTest {
     @Test
     @DisplayName("idがNullの場合、NOTFOUNDを返す")
     void getReservation_withReservationIdIsNull_returnRequestParamError() throws Exception {
-        String url = baseUrl + "/";
+        String url = baseUrl + "/guest/";
 
         mockMvc.perform(get(url))
             .andExpect(status().isNotFound());
