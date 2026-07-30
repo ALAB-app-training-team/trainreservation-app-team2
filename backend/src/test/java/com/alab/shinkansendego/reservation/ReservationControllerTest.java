@@ -31,7 +31,6 @@ import java.util.Collections;
 import java.util.List;
 import java.util.UUID;
 
-import static org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors.csrf;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.delete;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
@@ -292,8 +291,7 @@ public class ReservationControllerTest {
     void deleteReservation_withReservationIdIsNull_returnRequestParamError() throws Exception {
         String url = baseUrl + "/";
 
-        mockMvc.perform(delete(url)
-                .with(csrf()))
+        mockMvc.perform(delete(url))
             .andExpect(status().isNotFound());
     }
 }
