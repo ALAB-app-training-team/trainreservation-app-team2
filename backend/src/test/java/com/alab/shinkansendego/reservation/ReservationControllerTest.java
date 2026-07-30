@@ -167,7 +167,7 @@ public class ReservationControllerTest {
 
     @Test
     @DisplayName("未ログインの場合、401エラーが発生する")
-    void getReservationList_withSession_return401StatusCode() throws Exception {
+    void getReservationList_withNoSession_return401StatusCode() throws Exception {
         mockMvc.perform(
                 get(baseUrl)
                     .contentType(MediaType.APPLICATION_JSON))
