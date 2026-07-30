@@ -7,7 +7,7 @@ import type { ReservationListRequestDto } from '@/features/reservation/types/Res
 import type { ReservationResponseDto } from '@/features/reservation/types/ReservationResponseDto';
 
 export function useReservedTickets(reservationId: string) {
-    const getReservedTickets = async (
+    const getGuestReservedTickets = async (
         reservationId: string,
         guestLoginInfo: ReservationListRequestDto,
     ): Promise<ReservationResponseDto> => {
@@ -23,9 +23,23 @@ export function useReservedTickets(reservationId: string) {
         return response.data;
     };
 
+    const getAccountReservedTickets = async (
+        reservationId: string,
+    ): Promise<ReservationResponseDto> => {
+        const response = await apiClient.get<ReservationResponseDto>(
+            ENDPOINTS.RESERVATION(reservationId),
+        );
+        return response.data;
+    };
+
+    const accountInfo = localStorage.getItem('name');
+
     const { data: reservedTickets } = useSuspenseQuery({
         queryKey: ['reservationTickets', reservationId],
-        queryFn: () => getReservedTickets(reservationId, getGuestLoginInfo()),
+        queryFn: () =>
+            accountInfo !== null
+                ? getAccountReservedTickets(reservationId)
+                : getGuestReservedTickets(reservationId, getGuestLoginInfo()),
         refetchOnMount: true,
     });
 

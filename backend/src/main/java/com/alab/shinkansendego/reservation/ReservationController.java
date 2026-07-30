@@ -42,6 +42,13 @@ public class ReservationController {
         return ResponseEntity.ok(response);
     }
 
+    @GetMapping(value = "/login/{id}")
+    @PreAuthorize("isAuthenticated()")
+    public ResponseEntity<ReservationResponseDto> getReservation(@PathVariable("id") UUID reservationId, @AuthenticationPrincipal AccountSessionDto session) {
+        ReservationResponseDto response = reservationService.getAccountReservation(reservationId, session.getId());
+        return ResponseEntity.ok(response);
+    }
+
     @PostMapping
     public ResponseEntity<UUID> insertReservation(@Valid @RequestBody ReserveRequestDto request) {
         UUID response = reservationService.insertReservation(request);

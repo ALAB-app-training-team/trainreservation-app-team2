@@ -19,7 +19,7 @@ import { Error } from '@/shared/pages/Error';
 const sessionLoader = () => {
     const info = localStorage.getItem('name');
     if (info === null) {
-        toast.warning(ERROR_MESSAGE.SESSION_ERROR);
+        toast.warning(ERROR_MESSAGE.LOGIN_ERROR);
         return redirect('/login');
     }
     return null;

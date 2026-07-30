@@ -25,5 +25,20 @@ public interface ReservationRepository extends JpaRepository<ReservationEntity, 
     })
     Optional<ReservationEntity> findByIdAndReserverNameAndReserverMail(UUID reservationId, String reserverName, String reserverMail);
 
+    @EntityGraph(attributePaths = {
+        "departureArrivalTime",
+        "departureArrivalTime.sectionKm",
+        "departureArrivalTime.sectionKm.startStation",
+        "departureArrivalTime.sectionKm.goalStation",
+        "schedule",
+        "schedule.trainType",
+        "reservedSeat",
+        "reservedSeat.trainCar",
+        "reservedSeat.trainCar.seatType",
+        "reservedSeat.trainCar.seatType.trainCarType",
+        "reservedSeat.seat"
+    })
+    Optional<ReservationEntity> findByIdAndAccountId(UUID reservationId, UUID accountId);
+
     List<ReservationEntity> findByAccountId(UUID accountId);
 }

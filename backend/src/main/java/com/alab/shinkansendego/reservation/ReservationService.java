@@ -154,8 +154,35 @@ public class ReservationService {
         Optional<ReservationEntity> reservationEntity = reservationRepository
             .findByIdAndReserverNameAndReserverMail(reservationId, removeSpaces(name), removeSpaces(email));
 
-        if (reservationEntity.isEmpty()) throw new IllegalArgumentException("ReservationId is Not found");
+        if (reservationEntity.isEmpty()) return null;
+        return createReservationResponseDto(reservationEntity);
+    }
 
+    /**
+     * 特定の予約IDとアカウントIDを入力としてIDに紐づく予約情報を1件取得するメソッド
+     *
+     * @param reservationId 情報を取ってきたい予約ID(1件)
+     * @param accountId     アカウントID
+     * @return 予約情報の入ったReservationResponseDto(1件)
+     */
+    public ReservationResponseDto getAccountReservation(UUID reservationId, UUID accountId) {
+
+        Optional<ReservationEntity> reservationEntity = reservationRepository
+            .findByIdAndAccountId(reservationId, accountId);
+
+        if (reservationEntity.isEmpty()) throw new IllegalArgumentException("ReservationId is Not found");
+        return createReservationResponseDto(reservationEntity);
+    }
+
+    /**
+     * 予約情報EntityからReservationResponseDtoを作成するメソッド
+     *
+     * @param reservationEntity 予約情報Entity
+     * @return 登録した予約情報ID
+     */
+    @Transactional
+    public ReservationResponseDto createReservationResponseDto(Optional<ReservationEntity> reservationEntity) {
+        ReservationResponseDto dto = new ReservationResponseDto();
         List<ReservedScheduleDto> scheduleList = reservationEntity.get().getDepartureArrivalTime().stream().map(
                 schedule ->
                     new ReservedScheduleDto(
@@ -192,16 +219,16 @@ public class ReservationService {
                 .thenComparing(ReservedSeatDto::getSeatNumber)
                 .thenComparing(ReservedSeatDto::getSeatColumn)).toList();
 
-        response.setTrainTypeName(reservationEntity.get().getSchedule().getTrainType().getName());
-        response.setDepartureStationName(departureSchedule.getFirst().getDepartureStationName());
-        response.setDepartureTime(departureSchedule.getFirst().getDepartureTime());
-        response.setArrivalStationName(arrivalSchedule.getFirst().getArrivalStationName());
-        response.setArrivalTime(arrivalSchedule.getFirst().getArrivalTime());
-        response.setRideDate(reservationEntity.get().getRideDate());
-        response.setIsDeleted(reservationEntity.get().getIsDeleted());
-        response.setReservedSeats(reservedSeatList);
+        dto.setTrainTypeName(reservationEntity.get().getSchedule().getTrainType().getName());
+        dto.setDepartureStationName(departureSchedule.getFirst().getDepartureStationName());
+        dto.setDepartureTime(departureSchedule.getFirst().getDepartureTime());
+        dto.setArrivalStationName(arrivalSchedule.getFirst().getArrivalStationName());
+        dto.setArrivalTime(arrivalSchedule.getFirst().getArrivalTime());
+        dto.setRideDate(reservationEntity.get().getRideDate());
+        dto.setIsDeleted(reservationEntity.get().getIsDeleted());
+        dto.setReservedSeats(reservedSeatList);
 
-        return response;
+        return dto;
     }
 
     /**
