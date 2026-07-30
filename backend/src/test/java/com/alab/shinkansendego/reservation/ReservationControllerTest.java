@@ -240,14 +240,16 @@ public class ReservationControllerTest {
                 new ReserveRequestDto.SelectedSeatDto("E5SER01", "CAR01", "SEAT01002", 2800)
             ));
         UUID mockedReservationId = UUID.randomUUID();
+        Authentication auth = new UsernamePasswordAuthenticationToken(session, null, Collections.emptyList());
+
         Mockito.when(service.insertReservation(request, session)).thenReturn(mockedReservationId);
 
         mockMvc.perform(post(baseUrl)
+                .with(SecurityMockMvcRequestPostProcessors.authentication(auth))
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(objectMapper.writeValueAsString(request)))
-            .andExpect(status().isCreated());
-        // 座席予約後の詳細表示は別PBIと併せて行うためコメントアウト
-//            .andExpect(content().string("\"" + mockedReservationId + "\""));
+            .andExpect(status().isCreated())
+            .andExpect(content().string("\"" + mockedReservationId + "\""));
     }
 
     @Test
@@ -266,9 +268,11 @@ public class ReservationControllerTest {
                 new ReserveRequestDto.SelectedSeatDto("E5SER01", "CAR01", "SEAT01002", 2800)
             ));
         UUID mockedReservationId = UUID.randomUUID();
+        Authentication auth = new UsernamePasswordAuthenticationToken(null, null, Collections.emptyList());
         Mockito.when(service.insertReservation(request, null)).thenReturn(mockedReservationId);
 
         mockMvc.perform(post(baseUrl)
+                .with(SecurityMockMvcRequestPostProcessors.authentication(auth))
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(objectMapper.writeValueAsString(request)))
             .andExpect(status().isCreated())
