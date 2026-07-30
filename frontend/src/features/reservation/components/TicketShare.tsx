@@ -31,6 +31,7 @@ export function TicketShare({ shareUrl = '' }: TicketShareProps) {
             <button
                 onClick={() => setIsOpen(true)}
                 className="bg-primary flex w-full items-center justify-center gap-2 rounded-xl px-4 py-2.5 text-sm text-white"
+                data-testid="ticket-share"
             >
                 <BsShare className="h-4 w-4" />
                 <div>チケットを共有</div>
