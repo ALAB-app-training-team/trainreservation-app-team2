@@ -43,9 +43,6 @@ export class SelectSeatPage {
         this.confirmButton = page.getByRole('button', {
             name: '予約を確定する',
         });
-        // this.loginButton = page
-        //     .getByTestId('seatmap-login-button')
-        //     .getByRole('button');
         this.loginButton = page.getByRole('button', {
             name: 'ログインして氏名・メールアドレスを省略',
         });
