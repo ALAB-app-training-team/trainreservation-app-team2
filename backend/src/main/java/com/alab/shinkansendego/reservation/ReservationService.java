@@ -166,7 +166,7 @@ public class ReservationService {
     public ReservationResponseDto getAccountReservation(UUID reservationId, UUID accountId) {
 
         Optional<ReservationEntity> reservationEntity = reservationRepository
-            .findByIdAndAccountId(reservationId, accountId);
+            .findWithEntityGraphByIdAndAccountId(reservationId, accountId);
 
         if (reservationEntity.isEmpty()) throw new IllegalArgumentException("ReservationId is Not found");
         return createReservationResponseDto(reservationEntity);

@@ -38,7 +38,9 @@ public interface ReservationRepository extends JpaRepository<ReservationEntity, 
         "reservedSeat.trainCar.seatType.trainCarType",
         "reservedSeat.seat"
     })
-    Optional<ReservationEntity> findByIdAndAccountId(UUID reservationId, UUID accountId);
+    Optional<ReservationEntity> findWithEntityGraphByIdAndAccountId(UUID reservationId, UUID accountId);
 
     List<ReservationEntity> findByAccountId(UUID accountId);
+
+    Optional<ReservationEntity> findByIdAndAccountId(UUID reservationId, UUID accountId);
 }

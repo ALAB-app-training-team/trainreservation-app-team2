@@ -342,7 +342,7 @@ public class ReservationServiceTest {
     @DisplayName("予約情報IDとアカウントログイン情報から予約チケット情報が取得できる")
     void getAccountReservation_withReservationIdAndSession_returnGetAccountReservationSuccess() {
 
-        when(reservationRepo.findByIdAndAccountId(reservationId1, accountId)).thenReturn(reservation);
+        when(reservationRepo.findWithEntityGraphByIdAndAccountId(reservationId1, accountId)).thenReturn(reservation);
 
         ReservationResponseDto expect = getExpectReservationResponseDto(null);
 
@@ -354,7 +354,7 @@ public class ReservationServiceTest {
     @Test
     @DisplayName("予約情報データに存在しない予約情報IDがリクエストされた場合にエラーを発生させる")
     void getAccountReservation_withNotExistReservationId_returnIllegalArgumentException() {
-        when(reservationRepo.findByIdAndAccountId(reservationId1, noReservationAccountId)).thenReturn(Optional.empty());
+        when(reservationRepo.findWithEntityGraphByIdAndAccountId(reservationId1, noReservationAccountId)).thenReturn(Optional.empty());
         Exception ex = assertThrows(
             IllegalArgumentException.class,
             () -> service.getAccountReservation(reservationId1, noReservationAccountId)
@@ -365,7 +365,7 @@ public class ReservationServiceTest {
     @Test
     @DisplayName("予約情報データに存在しないアカウントログイン情報がリクエストされた場合にエラーを発生させる")
     void getAccountReservation_withNotExistSession_returnIllegalArgumentException() {
-        when(reservationRepo.findByIdAndAccountId(reservationId1, accountId)).thenReturn(Optional.empty());
+        when(reservationRepo.findWithEntityGraphByIdAndAccountId(reservationId1, accountId)).thenReturn(Optional.empty());
         Exception ex = assertThrows(
             IllegalArgumentException.class,
             () -> service.getAccountReservation(reservationId1, accountId)
