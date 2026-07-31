@@ -182,6 +182,7 @@ export function SelectSeats() {
                                     アカウントをお持ちですか？
                                 </span>
                                 <button
+                                    data-testid={'seatmap-login-button'}
                                     onClick={() =>
                                         navigate('/login', {
                                             state: {

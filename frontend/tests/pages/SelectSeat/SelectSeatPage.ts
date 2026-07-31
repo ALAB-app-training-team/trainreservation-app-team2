@@ -16,6 +16,7 @@ export class SelectSeatPage {
     readonly reserveButton: Locator;
     readonly cancelButton: Locator;
     readonly confirmButton: Locator;
+    readonly loginButton: Locator;
 
     constructor(page: Page) {
         this.page = page;
@@ -41,6 +42,12 @@ export class SelectSeatPage {
         this.cancelButton = page.getByRole('button', { name: 'キャンセル' });
         this.confirmButton = page.getByRole('button', {
             name: '予約を確定する',
+        });
+        // this.loginButton = page
+        //     .getByTestId('seatmap-login-button')
+        //     .getByRole('button');
+        this.loginButton = page.getByRole('button', {
+            name: 'ログインして氏名・メールアドレスを省略',
         });
     }
 
@@ -97,5 +104,9 @@ export class SelectSeatPage {
         await this.fillCardHolderName('TARO TANAKA');
         await this.fillCardExpiry('12/27');
         await this.fillSecureCode('123');
+    }
+
+    async clickLoginButton() {
+        await this.loginButton.click();
     }
 }
