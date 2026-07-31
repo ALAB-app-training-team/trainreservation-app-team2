@@ -1,10 +1,8 @@
 import {
     createBrowserRouter,
-    type LoaderFunctionArgs,
     redirect,
     RouterProvider,
 } from 'react-router-dom';
-import { toast } from 'sonner';
 
 import { AuthProvider } from '@/context/AuthContext';
 import { Login } from '@/features/account/pages/Login';
@@ -20,7 +18,9 @@ import { Error } from '@/shared/pages/Error';
 const sessionLoader = () => {
     const info = localStorage.getItem('name');
     if (info === null) {
-        toast.warning(ERROR_MESSAGE.LOGIN_ERROR);
+        // toast.warning(ERROR_MESSAGE.LOGIN_ERROR);
+        sessionStorage.setItem('message', ERROR_MESSAGE.EXIST_ACCOUNT);
+
         return redirect('/login');
     }
     return null;
@@ -36,17 +36,20 @@ const authLoader = () => {
     return null;
 };
 
-const guestLoginLoader = (request: LoaderFunctionArgs) => {
-    const url = new URL(request.url);
-    const targetReservationId = url.searchParams.get('reservationId');
+const guestLoginLoader = () => {
     const account = localStorage.getItem('name');
-    if (targetReservationId === null) {
-        toast.warning(ERROR_MESSAGE.GUESTLOGIN_ERROR); // TODO:ここの「Toastがでない。リダイレクトはされる」を修正する
-        return redirect('/scheduleSearch');
-    } else if (account !== null) {
-        toast.warning(ERROR_MESSAGE.EXIST_ACCOUNT); // TODO:ここの「Toastがでない。リダイレクトはされる」を修正する
-        return redirect('/reservationList');
+    if (account !== null) {
+        sessionStorage.setItem('message', ERROR_MESSAGE.EXIST_ACCOUNT);
+        // toast.warning(ERROR_MESSAGE.EXIST_ACCOUNT);
+        return redirect('/login');
     }
+    // const url = new URL(request.url);
+    // const targetReservationId = url.searchParams.get('reservationId');
+    // // const account = localStorage.getItem('name');
+    // if (targetReservationId === null) {
+    //     toast.warning(ERROR_MESSAGE.GUESTLOGIN_ERROR); // TODO:ここの「Toastがでない。リダイレクトはされる」を修正する
+    //     return redirect('/scheduleSearch');
+    // }
     return null;
 };
 
@@ -89,7 +92,8 @@ const router = createBrowserRouter([
             },
             {
                 path: '/reservationGuestLogin',
-                loader: (args) => guestLoginLoader(args),
+                // loader: (args) => guestLoginLoader(args),
+                loader: () => guestLoginLoader(),
                 element: <ReservationGuestLogin />,
                 errorElement: <Error />,
             },
