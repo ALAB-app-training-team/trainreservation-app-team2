@@ -181,7 +181,7 @@ export function ScheduleItem({
                         return (
                             <div
                                 key={seat.label}
-                                className={`flex w-full items-end justify-between px-16 py-4 ${seatColorClass}`}
+                                className={`flex w-full items-end justify-between px-24git py-4 ${seatColorClass}`}
                             >
                                 <div>{seat.label}</div>
                                 <div className="text-sm">
