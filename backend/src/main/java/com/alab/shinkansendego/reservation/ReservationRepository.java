@@ -26,4 +26,6 @@ public interface ReservationRepository extends JpaRepository<ReservationEntity, 
     Optional<ReservationEntity> findByIdAndReserverNameAndReserverMail(UUID reservationId, String reserverName, String reserverMail);
 
     List<ReservationEntity> findByAccountId(UUID accountId);
+
+    Optional<ReservationEntity> findByIdAndAccountId(UUID reservationId, UUID accounId);
 }

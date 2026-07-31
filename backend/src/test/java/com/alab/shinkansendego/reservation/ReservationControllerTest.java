@@ -278,13 +278,28 @@ public class ReservationControllerTest {
     }
 
     @Test
-    @DisplayName("特定の予約情報IDに紐づく予約情報を削除できる")
-    void deleteReservation_withReservationId_return204() throws Exception {
+    @DisplayName("認証ありのアクセスの場合、特定の予約情報IDに紐づく予約情報を削除できる")
+    void deleteReservation_withAuthorized_return204() throws Exception {
+        AccountSessionDto session = new AccountSessionDto(
+            UUID.fromString("f79d8bbc-fcba-b538-b132-2f726ce0120c"), "test-common@test.com", "一般太郎"
+        );
+        Authentication auth = new UsernamePasswordAuthenticationToken(session, null, Collections.emptyList());
+        UUID requestReservationId = UUID.randomUUID();
+        String url = baseUrl + "/" + requestReservationId;
+
+        mockMvc.perform(delete(url)
+                .with(SecurityMockMvcRequestPostProcessors.authentication(auth)))
+            .andExpect(status().isNoContent());
+    }
+
+    @Test
+    @DisplayName("認証なしのアクセスの場合、401を返す")
+    void deleteReservation_withNotAuthorized_return401() throws Exception {
         UUID requestReservationId = UUID.randomUUID();
         String url = baseUrl + "/" + requestReservationId;
 
         mockMvc.perform(delete(url))
-            .andExpect(status().isNoContent());
+            .andExpect(status().isUnauthorized());
     }
 
     @Test
