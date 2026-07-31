@@ -3,6 +3,8 @@ import { LIMIT } from '@/shared/constants/Limit';
 export const ERROR_MESSAGE = {
     ERROR: 'エラーが発生しました。しばらくしてから再度お試しください。',
     SESSION_ERROR: 'セッションが切れました。再ログインしてください。',
+    GUESTLOGIN_ERROR: '無効なゲスト認証リンクです',
+    EXIST_ACCOUNT: 'アカウント登録済です。予約確認からご確認ください。',
     NO_SCHEDULE: '指定日時の列車はありません',
     NO_SPECIFIED_DATETIME_SCHEDULE:
         'お選びいただいた日時以降の列車が見つかりませんでした。条件を変更するか翌日の列車を検索してください。',

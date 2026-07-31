@@ -151,3 +151,12 @@ button:disabled {
     cursor: not-allowed;
     background-color: var(--color-gray-300);
 }
+
+input:read-only {
+    cursor: not-allowed;
+    background-color: var(--color-gray-200);
+}
+input:read-only:focus {
+    border: 0px;
+    outline: none;
+}

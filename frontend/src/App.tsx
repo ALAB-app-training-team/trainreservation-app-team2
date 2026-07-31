@@ -1,5 +1,6 @@
 import {
     createBrowserRouter,
+    type LoaderFunctionArgs,
     redirect,
     RouterProvider,
 } from 'react-router-dom';
@@ -27,10 +28,24 @@ const sessionLoader = () => {
 
 const authLoader = () => {
     const info = sessionStorage.getItem('guestLoginInfo');
-
-    if (info === null) {
+    const account = localStorage.getItem('name');
+    if (account === null && info === null) {
         alert(ERROR_MESSAGE.SESSION_ERROR);
         return redirect('/reservationGuestLogin');
+    }
+    return null;
+};
+
+const guestLoginLoader = (request: LoaderFunctionArgs) => {
+    const url = new URL(request.url);
+    const targetReservationId = url.searchParams.get('reservationId');
+    const account = localStorage.getItem('name');
+    if (targetReservationId === null) {
+        toast.warning(ERROR_MESSAGE.GUESTLOGIN_ERROR);
+        return redirect('/scheduleSearch');
+    } else if (account !== null) {
+        toast.warning(ERROR_MESSAGE.EXIST_ACCOUNT);
+        return redirect('/reservationList');
     }
     return null;
 };
@@ -74,6 +89,7 @@ const router = createBrowserRouter([
             },
             {
                 path: '/reservationGuestLogin',
+                loader: (args) => guestLoginLoader(args),
                 element: <ReservationGuestLogin />,
                 errorElement: <Error />,
             },
