@@ -17,7 +17,7 @@ export function ReservedTicket() {
     const { reservationId, isBack } = location.state;
     const { reservedTickets } = useReservedTickets(reservationId);
     const shareUrl = `${window.location.origin}/reservationGuestLogin?reservationId=${reservationId}`;
-
+    console.log(reservedTickets);
     const queryClient = useQueryClient();
     useEffect(() => {
         const nv = performance.getEntriesByType(

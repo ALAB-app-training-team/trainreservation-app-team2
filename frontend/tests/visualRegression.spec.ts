@@ -57,12 +57,12 @@ test('visual-selectSeat', async ({ page }) => {
     });
 });
 
-test('visual-reservationGuestLogin', async ({ page, login }) => {
+test('visual-reservationGuestLogin', async ({ page }) => {
     const reservationGuestLoginPage = new ReservationGuestLoginPage(page);
-    await login();
-    await expect(page).toHaveURL('/scheduleSearch');
     await reservationGuestLoginPage.goto();
-    await expect(page).toHaveURL('/reservationGuestLogin');
+    await expect(page).toHaveURL(
+        '/reservationGuestLogin?reservationId=1c5289e8-72a7-4cb0-a0cb-fe6da57005eb',
+    );
     await reservationGuestLoginPage.name.waitFor({ state: 'visible' });
     await page.evaluate(() => document.fonts.ready);
 
