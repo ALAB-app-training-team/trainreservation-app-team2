@@ -1,5 +1,8 @@
 package com.alab.shinkansendego.reservation;
 
+import com.alab.shinkansendego.account.AccountEntity;
+import com.alab.shinkansendego.account.AccountRepository;
+import com.alab.shinkansendego.account.AccountSessionDto;
 import com.alab.shinkansendego.departurearrivaltime.DepartureArrivalTimeEntity;
 import com.alab.shinkansendego.departurearrivaltime.DepartureArrivalTimeRepository;
 import com.alab.shinkansendego.reservedseat.ReservedSeatEntity;
@@ -68,6 +71,9 @@ public class ReservationServiceTest {
     private final ReservedSeatDto seat1 = new ReservedSeatDto("指定席", 1, 1, "A", UUID.fromString("60a1ab63-a41f-430d-a2d1-10a76368d0f5"), 5000);
     private final ReservedSeatDto seat2 = new ReservedSeatDto("グリーン車", 9, 1, "A", UUID.fromString("3de8909e-32de-478e-bd9b-739f3fe6d6c3"), 10000);
     private final ReservedSeatDto seat3 = new ReservedSeatDto("グランクラス", 10, 1, "A", UUID.fromString("e192e5f1-318e-4d10-b76d-2f2bf15e8b70"), 15000);
+    private final UUID accountId = UUID.fromString("f79d8bbc-fcba-b538-b132-2f726ce0120c");
+    private final AccountSessionDto session = new AccountSessionDto(accountId, "test-common@test.com", "一般太郎");
+    private final AccountEntity account = new AccountEntity();
     @Mock
     private ReservationRepository reservationRepo;
     @Mock
@@ -82,6 +88,8 @@ public class ReservationServiceTest {
     private TrainCarRepository trainCarRepo;
     @Mock
     private SeatRepository seatRepo;
+    @Mock
+    private AccountRepository accountRepo;
     private ReservationService service;
     private MockRestServiceServer mockRestServiceServer;
     @Autowired
@@ -243,7 +251,7 @@ public class ReservationServiceTest {
         restClientBuilder = RestClient.builder();
         this.mockRestServiceServer = MockRestServiceServer.bindTo(restClientBuilder).build();
         this.service = new ReservationService(
-            reservationRepo, reservedSeatRepo, sectionKmRepo, departureArrivalTimeRepo, reservedSeatSectionRepo, trainCarRepo, seatRepo, restClientBuilder
+            reservationRepo, reservedSeatRepo, sectionKmRepo, departureArrivalTimeRepo, reservedSeatSectionRepo, trainCarRepo, seatRepo, accountRepo, restClientBuilder
         );
 
         DepartureArrivalTimeEntity departureArrivalTime1 = buildSchedule(LocalTime.of(6, 4, 0), "THK01", "東京", LocalTime.of(6, 9, 0), "THK02", "上野");
@@ -271,6 +279,9 @@ public class ReservationServiceTest {
         reservation.get().setIsDeleted(false);
         reservation.get().setSchedule(schedule);
         reservation.get().setReservedSeat(seats);
+        account.setId(UUID.fromString("f79d8bbc-fcba-b538-b132-2f726ce0120c"));
+        account.setName("一般太郎");
+        account.setMail("test-common@test.com");
     }
 
     @Test
@@ -368,8 +379,56 @@ public class ReservationServiceTest {
     }
 
     @Test
-    @DisplayName("予約情報・予約座席情報を挿入できる")
-    void insertReservation_withValidReserveRequestDto_returnInsertReservationId() {
+    @DisplayName("ログイン状態で予約情報・予約座席情報を挿入できる")
+    void insertReservation_withLoginAndValidReserveRequestDto_returnInsertReservationId() {
+        ReserveRequestDto request = new ReserveRequestDto("Test01", LocalDate.now(), "Test0", "Test1", "", "", "Test2", List.of(new ReserveRequestDto.SelectedSeatDto("E5SER01", "CAR01", "SEAT01001", 2800), new ReserveRequestDto.SelectedSeatDto("E5SER01", "CAR01", "SEAT01002", 2800), new ReserveRequestDto.SelectedSeatDto("E5SER01", "CAR01", "SEAT01003", 2800), new ReserveRequestDto.SelectedSeatDto("E5SER01", "CAR01", "SEAT01004", 2800), new ReserveRequestDto.SelectedSeatDto("E5SER01", "CAR01", "SEAT01005", 2800), new ReserveRequestDto.SelectedSeatDto("E5SER01", "CAR01", "SEAT01006", 2800)));
+        DepartureArrivalTimeEntity departureArrivalTime = new DepartureArrivalTimeEntity();
+        departureArrivalTime.setTimeCd("Test1");
+        departureArrivalTime.setScheduleCd(request.getScheduleCd());
+        departureArrivalTime.setDepartureTime(LocalTime.of(6, 4));
+        departureArrivalTime.setArrivalTime(LocalTime.of(6, 9));
+        departureArrivalTime.setSectionCd("Test1");
+        SectionKmEntity sectionKm = new SectionKmEntity();
+        sectionKm.setSectionCd(departureArrivalTime.getSectionCd());
+        when(sectionKmRepo.findByStartStationCd(request.getDepartureStationCd())).thenReturn(List.of(sectionKm));
+        when(sectionKmRepo.findByGoalStationCd(request.getArrivalStationCd())).thenReturn(List.of(sectionKm));
+        when(departureArrivalTimeRepo.findByScheduleCdAndSectionCdIn(request.getScheduleCd(), List.of(departureArrivalTime.getSectionCd()))).thenReturn(departureArrivalTime);
+        when(departureArrivalTimeRepo.findByScheduleCdAndDepartureTimeAndArrivalTime(request.getScheduleCd(), departureArrivalTime.getDepartureTime(), departureArrivalTime.getArrivalTime())).thenReturn(List.of(departureArrivalTime.getSectionCd()));
+        when(reservationRepo.save(any())).thenReturn(new ReservationEntity() {{
+            setId(UUID.randomUUID());
+        }});
+        when(reservedSeatRepo.saveAll(any())).thenReturn(Stream.generate(ReservedSeatEntity::new).limit(request.getSeats().size()).collect(Collectors.toList()));
+        when(trainCarRepo.findById(any())).thenReturn(Optional.of(new TrainCarEntity()));
+        when(seatRepo.findById(any())).thenReturn(Optional.of(new SeatEntity()));
+        when(reservedSeatSectionRepo.findByRideDateAndScheduleCdAndTrainCarCdInAndReservedSectionCdIn(any(), any(), any(), any()))
+            .thenReturn(Collections.emptyList());
+        when(reservedSeatSectionRepo.saveAll(any())).
+            thenReturn(Stream.generate(ReservedSeatSectionEntity::new).
+                limit((List.of(departureArrivalTime.getSectionCd())).size() * request.getSeats().size())
+                .collect(Collectors.toList()));
+        when(accountRepo.findById(any())).thenReturn(Optional.of(account));
+        MockHttpServletRequest mockRequest = new MockHttpServletRequest();
+        mockRequest.setRequestURI("/api/reservations");
+        mockRequest.setServerName("localhost");
+        mockRequest.setServerPort(8080);
+        mockRequest.setScheme("http");
+
+        RequestContextHolder.setRequestAttributes(new ServletRequestAttributes(mockRequest));
+
+        this.mockRestServiceServer.expect(requestTo("http://localhost:8080/api/payments"))
+            .andExpect(method(HttpMethod.POST))
+            .andExpect(header("Content-Type", "application/json"))
+            .andRespond(withStatus(HttpStatus.CREATED)
+                .contentType(MediaType.TEXT_PLAIN)
+                .body("paymentTrackingId"));
+        UUID result = service.insertReservation(request, session);
+        assertNotNull(result);
+        this.mockRestServiceServer.verify();
+    }
+
+    @Test
+    @DisplayName("ゲストで予約情報・予約座席情報を挿入できる")
+    void insertReservation_withGuestAndValidReserveRequestDto_returnInsertReservationId() {
         ReserveRequestDto request = new ReserveRequestDto("Test01", LocalDate.now(), "Test0", "Test1", "TestTaro", "test@main", "Test2", List.of(new ReserveRequestDto.SelectedSeatDto("E5SER01", "CAR01", "SEAT01001", 2800), new ReserveRequestDto.SelectedSeatDto("E5SER01", "CAR01", "SEAT01002", 2800), new ReserveRequestDto.SelectedSeatDto("E5SER01", "CAR01", "SEAT01003", 2800), new ReserveRequestDto.SelectedSeatDto("E5SER01", "CAR01", "SEAT01004", 2800), new ReserveRequestDto.SelectedSeatDto("E5SER01", "CAR01", "SEAT01005", 2800), new ReserveRequestDto.SelectedSeatDto("E5SER01", "CAR01", "SEAT01006", 2800)));
         DepartureArrivalTimeEntity departureArrivalTime = new DepartureArrivalTimeEntity();
         departureArrivalTime.setTimeCd("Test1");
@@ -395,6 +454,7 @@ public class ReservationServiceTest {
             thenReturn(Stream.generate(ReservedSeatSectionEntity::new).
                 limit((List.of(departureArrivalTime.getSectionCd())).size() * request.getSeats().size())
                 .collect(Collectors.toList()));
+        when(accountRepo.findById(any())).thenReturn(Optional.of(account));
         MockHttpServletRequest mockRequest = new MockHttpServletRequest();
         mockRequest.setRequestURI("/api/reservations");
         mockRequest.setServerName("localhost");
@@ -409,30 +469,37 @@ public class ReservationServiceTest {
             .andRespond(withStatus(HttpStatus.CREATED)
                 .contentType(MediaType.TEXT_PLAIN)
                 .body("paymentTrackingId"));
-        UUID result = service.insertReservation(request);
+        UUID result = service.insertReservation(request, null);
         assertNotNull(result);
         this.mockRestServiceServer.verify();
+    }
+
+    @Test
+    @DisplayName("未ログインかつ氏名・メールアドレスがないリクエストの場合IllegalArgumentExceptionが発生する")
+    void insertReservation_withGuestAndNoMailNoName_throwsIllegalArgumentException() {
+        ReserveRequestDto request = new ReserveRequestDto("Test01", LocalDate.now(), "Test0", "Test1", "", "", "Test2", List.of(new ReserveRequestDto.SelectedSeatDto("E5SER01", "CAR01", "SEAT01001", 2800), new ReserveRequestDto.SelectedSeatDto("E5SER01", "CAR01", "SEAT01002", 2800), new ReserveRequestDto.SelectedSeatDto("E5SER01", "CAR01", "SEAT01003", 2800), new ReserveRequestDto.SelectedSeatDto("E5SER01", "CAR01", "SEAT01004", 2800), new ReserveRequestDto.SelectedSeatDto("E5SER01", "CAR01", "SEAT01005", 2800), new ReserveRequestDto.SelectedSeatDto("E5SER01", "CAR01", "SEAT01006", 2800)));
+        assertThrows(IllegalArgumentException.class, () -> service.insertReservation(request, null));
     }
 
     @Test
     @DisplayName("座席リストが空の場合、IllegalArgumentExceptionが発生する")
     void insertReservation_withEmptySelectedSeatDto_throwsIllegalArgumentException() {
         ReserveRequestDto request = new ReserveRequestDto("Test01", LocalDate.now(), "Test0", "Test1", "TestTaro", "test@main", "Test2", List.of());
-        assertThrows(IllegalArgumentException.class, () -> service.insertReservation(request));
+        assertThrows(IllegalArgumentException.class, () -> service.insertReservation(request, null));
     }
 
     @Test
     @DisplayName("座席リストがnullの場合、IllegalArgumentExceptionが発生する")
     void insertReservation_withNullSelectedSeatDto_throwsIllegalArgumentException() {
         ReserveRequestDto request = new ReserveRequestDto("Test01", LocalDate.now(), "Test0", "Test1", "TestTaro", "test@main", "Test2", null);
-        assertThrows(IllegalArgumentException.class, () -> service.insertReservation(request));
+        assertThrows(IllegalArgumentException.class, () -> service.insertReservation(request, null));
     }
 
     @Test
     @DisplayName("座席リストが6以上の場合、IllegalArgumentExceptionが発生する")
     void insertReservation_withMaxSelectedSeatDto_throwsIllegalArgumentException() {
         ReserveRequestDto request = new ReserveRequestDto("Test01", LocalDate.now(), "Test0", "Test1", "TestTaro", "test@main", "Test2", List.of(new ReserveRequestDto.SelectedSeatDto("E5SER01", "CAR01", "SEAT01001", 1000), new ReserveRequestDto.SelectedSeatDto("E5SER01", "CAR01", "SEAT01001", 1000), new ReserveRequestDto.SelectedSeatDto("E5SER01", "CAR01", "SEAT01001", 1000), new ReserveRequestDto.SelectedSeatDto("E5SER01", "CAR01", "SEAT01001", 1000), new ReserveRequestDto.SelectedSeatDto("E5SER01", "CAR01", "SEAT01001", 1000), new ReserveRequestDto.SelectedSeatDto("E5SER01", "CAR01", "SEAT01001", 1000), new ReserveRequestDto.SelectedSeatDto("E5SER01", "CAR01", "SEAT01001", 1000)));
-        assertThrows(IllegalArgumentException.class, () -> service.insertReservation(request));
+        assertThrows(IllegalArgumentException.class, () -> service.insertReservation(request, null));
     }
 
     @Test
@@ -450,7 +517,7 @@ public class ReservationServiceTest {
         when(departureArrivalTimeRepo.findByScheduleCdAndSectionCdIn(request.getScheduleCd(), List.of(departureArrivalTime.getSectionCd()))).thenReturn(null);
         when(departureArrivalTimeRepo.findByScheduleCdAndDepartureTimeAndArrivalTime(request.getScheduleCd(), departureArrivalTime.getDepartureTime(), departureArrivalTime.getArrivalTime())).thenReturn(List.of());
 
-        assertThrows(IllegalArgumentException.class, () -> service.insertReservation(request));
+        assertThrows(IllegalArgumentException.class, () -> service.insertReservation(request, null));
     }
 
     @Test
@@ -478,7 +545,7 @@ public class ReservationServiceTest {
             .thenReturn(Collections.emptyList());
         when(reservedSeatRepo.saveAll(any()).size()).thenThrow(new DuplicateKeyException("UNIQUE制約エラー"));
 
-        assertThrows(org.springframework.dao.DataAccessException.class, () -> service.insertReservation(request));
+        assertThrows(org.springframework.dao.DataAccessException.class, () -> service.insertReservation(request, null));
     }
 
     @Test
@@ -499,7 +566,7 @@ public class ReservationServiceTest {
         when(departureArrivalTimeRepo.findByScheduleCdAndDepartureTimeAndArrivalTime(request.getScheduleCd(), departureArrivalTime.getDepartureTime(), departureArrivalTime.getArrivalTime())).thenReturn(List.of(departureArrivalTime.getSectionCd()));
         when(reservationRepo.save(any())).thenReturn(null);
 
-        assertThrows(RuntimeException.class, () -> service.insertReservation(request));
+        assertThrows(RuntimeException.class, () -> service.insertReservation(request, null));
     }
 
     @Test
@@ -523,7 +590,7 @@ public class ReservationServiceTest {
         }});
         when(trainCarRepo.findById(any())).thenReturn(Optional.empty());
 
-        IllegalArgumentException exception = assertThrows(IllegalArgumentException.class, () -> service.insertReservation(request));
+        IllegalArgumentException exception = assertThrows(IllegalArgumentException.class, () -> service.insertReservation(request, null));
         assertEquals("TrainCar is not found", exception.getMessage());
     }
 
@@ -549,7 +616,7 @@ public class ReservationServiceTest {
         when(trainCarRepo.findById(any())).thenReturn(Optional.of(new TrainCarEntity()));
         when(seatRepo.findById(any())).thenReturn(Optional.empty());
 
-        IllegalArgumentException exception = assertThrows(IllegalArgumentException.class, () -> service.insertReservation(request));
+        IllegalArgumentException exception = assertThrows(IllegalArgumentException.class, () -> service.insertReservation(request, null));
         assertEquals("Seat is not found", exception.getMessage());
     }
 
@@ -574,7 +641,7 @@ public class ReservationServiceTest {
         }});
         when(reservedSeatRepo.saveAll(any())).thenReturn(null);
 
-        assertThrows(RuntimeException.class, () -> service.insertReservation(request));
+        assertThrows(RuntimeException.class, () -> service.insertReservation(request, null));
     }
 
     @Test
@@ -621,7 +688,7 @@ public class ReservationServiceTest {
         when(reservedSeatSectionRepo.findByRideDateAndScheduleCdAndTrainCarCdInAndReservedSectionCdIn(any(), any(), any(), any()))
             .thenReturn(List.of(existingSec));
 
-        ResponseStatusException exception = assertThrows(ResponseStatusException.class, () -> service.insertReservation(request));
+        ResponseStatusException exception = assertThrows(ResponseStatusException.class, () -> service.insertReservation(request, null));
         assertEquals(HttpStatus.CONFLICT, exception.getStatusCode());
         assertTrue(exception.getReason().contains(existingSeat.getSeatCd()));
         assertTrue(exception.getReason().contains(existingSeat.getTrainCarCd()));
@@ -664,7 +731,7 @@ public class ReservationServiceTest {
                 .contentType(MediaType.TEXT_PLAIN)
                 .body("paymentTrackingId"));
 
-        assertThrows(RuntimeException.class, () -> service.insertReservation(request));
+        assertThrows(RuntimeException.class, () -> service.insertReservation(request, null));
     }
 
     @Test
@@ -708,7 +775,7 @@ public class ReservationServiceTest {
             .andExpect(header("Content-Type", "application/json"))
             .andRespond(withStatus(HttpStatus.INTERNAL_SERVER_ERROR));
 
-        assertThrows(RuntimeException.class, () -> service.insertReservation(request));
+        assertThrows(RuntimeException.class, () -> service.insertReservation(request, null));
         this.mockRestServiceServer.verify();
     }
 

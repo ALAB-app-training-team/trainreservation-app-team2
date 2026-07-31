@@ -220,21 +220,21 @@ public class ReservationService {
      */
     @Transactional
     public UUID insertReservation(ReserveRequestDto reserveRequestDto, AccountSessionDto session) {
+        AccountEntity account = null;
+        if (session != null) {
+            account = accountRepository.findById(session.getId()).orElseThrow(() -> new BadCredentialsException("認証に失敗しました"));
+            reserveRequestDto.setReserverName(account.getName());
+            reserveRequestDto.setReserverMail(account.getMail());
+        } else if (reserveRequestDto.getReserverName().isEmpty() || reserveRequestDto.getReserverMail().isEmpty()) {
+            throw new IllegalArgumentException("氏名とメールアドレスがありません");
+        }
+
         if (reserveRequestDto.getSeats() == null || reserveRequestDto.getSeats().isEmpty()) {
             throw new IllegalArgumentException("Seats is Not found");
         }
 
         if (reserveRequestDto.getSeats().size() > 6) {
             throw new IllegalArgumentException("Seat limit exceeded");
-        }
-
-        if (session == null) {
-            if (reserveRequestDto.getReserverName().isEmpty() || reserveRequestDto.getReserverMail().isEmpty())
-                throw new BadCredentialsException("認証に失敗しました, session null");
-        } else {
-            AccountEntity account = accountRepository.findById(session.getId()).orElseThrow(() -> new BadCredentialsException("認証に失敗しました, account not found"));
-            reserveRequestDto.setReserverName(account.getName());
-            reserveRequestDto.setReserverMail(account.getMail());
         }
 
         List<String> SectionKmCdsByDepartureStation = sectionKmRepository.findByStartStationCd(reserveRequestDto.getDepartureStationCd()).stream().map(SectionKmEntity::getSectionCd).toList();
@@ -252,9 +252,9 @@ public class ReservationService {
             throw new IllegalArgumentException("SectionCd is Not found");
         }
 
+        ReservationEntity reservationToPost = new ReservationEntity();
         String paymentTrackingId = "";
         UUID reservationId = UUID.randomUUID();
-        ReservationEntity reservationToPost = new ReservationEntity();
         reservationToPost.setId(reservationId);
         reservationToPost.setRideDate(reserveRequestDto.getRideDate());
         reservationToPost.setScheduleCd(reserveRequestDto.getScheduleCd());
@@ -264,6 +264,7 @@ public class ReservationService {
         reservationToPost.setReserverMail(removeSpaces(reserveRequestDto.getReserverMail()));
         reservationToPost.setPaymentTrackingId(paymentTrackingId);
         reservationToPost.setIsDeleted(false);
+        if (session != null) reservationToPost.setAccountId(account.getId());
 
         ReservationEntity reservationResult = reservationRepository.save(reservationToPost);
         if (reservationResult.getId() == null) {
