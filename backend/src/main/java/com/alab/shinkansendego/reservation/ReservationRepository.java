@@ -41,6 +41,4 @@ public interface ReservationRepository extends JpaRepository<ReservationEntity, 
     Optional<ReservationEntity> findByIdAndAccountId(UUID reservationId, UUID accountId);
 
     List<ReservationEntity> findByAccountId(UUID accountId);
-
-    Optional<ReservationEntity> findByIdAndAccountId(UUID reservationId, UUID accounId);
 }
