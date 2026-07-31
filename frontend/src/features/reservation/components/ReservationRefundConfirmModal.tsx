@@ -50,16 +50,25 @@ export function ReservationRefundConfirmModal({
                 <div className="flex w-full flex-col gap-2 rounded-lg bg-slate-50 p-3">
                     <div className="flex justify-between">
                         <span>チケット料金</span>
-                        <span>{seatFare}円</span>
+                        <span>￥{seatFare.toLocaleString()}</span>
                     </div>
                     <div className="flex justify-between">
-                        <span>払い戻し手数料</span>
-                        <span>-{countSeat * FARE_CONSTANTS.REFUND}円</span>
+                        <span>手数料</span>
+                        <span>
+                            -￥
+                            {(
+                                countSeat * FARE_CONSTANTS.REFUND
+                            ).toLocaleString()}
+                        </span>
                     </div>
                     <div className="flex justify-between text-xl font-bold">
                         <span>払い戻し金額</span>{' '}
                         <span>
-                            {seatFare - countSeat * FARE_CONSTANTS.REFUND}円
+                            ￥
+                            {(
+                                seatFare -
+                                countSeat * FARE_CONSTANTS.REFUND
+                            ).toLocaleString()}
                         </span>
                     </div>
                 </div>
@@ -69,7 +78,7 @@ export function ReservationRefundConfirmModal({
                         disabled={isSubmitting}
                         className="border-primary text-primary rounded-lg border-2 p-2 disabled:border-gray-300 disabled:bg-gray-300 disabled:text-white"
                     >
-                        予約を取消さない
+                        予約を取り消さない
                     </button>
                     <button
                         data-testid={'refund-confirm-button'}
