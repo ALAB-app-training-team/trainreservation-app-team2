@@ -3,12 +3,11 @@ import customParseFormat from 'dayjs/plugin/customParseFormat';
 import { FiArrowRight } from 'react-icons/fi';
 import { useNavigate } from 'react-router-dom';
 
+import { SEAT_TYPE_LABELS } from '@/features/schedule/constants/SeatTypeLabel';
 import type { ScheduleInfoDto } from '@/features/schedule/types/ScheduleInfoDto';
 import type { SearchRequestDto } from '@/features/schedule/types/SearchRequestDto';
 import type { SearchResponseDto } from '@/features/schedule/types/SearchResponseDto';
 import { TrainIcon } from '@/shared/components/TrainIcon';
-
-import { SEAT_TYPE_LABELS } from '../constants/SeatTypeLabel';
 
 type ScheduleItemProps = {
     schedule: SearchResponseDto;
@@ -75,18 +74,30 @@ export function ScheduleItem({
     dayjs.extend(customParseFormat);
 
     const seatList = [
-        { label: SEAT_TYPE_LABELS.SEAT01, count: schedule.reservedSeats },
-        { label: SEAT_TYPE_LABELS.SEAT02, count: schedule.greenSeats },
-        { label: SEAT_TYPE_LABELS.SEAT03, count: schedule.gcSeats },
+        {
+            label: SEAT_TYPE_LABELS.SEAT01,
+            name: 'reserved-seat',
+            count: schedule.reservedSeats,
+        },
+        {
+            label: SEAT_TYPE_LABELS.SEAT02,
+            name: 'green-seat',
+            count: schedule.greenSeats,
+        },
+        {
+            label: SEAT_TYPE_LABELS.SEAT03,
+            name: 'gc-seat',
+            count: schedule.gcSeats,
+        },
     ];
 
     return (
         <>
             <div
                 data-testid="schedule"
-                className="border-primary-light rounded-2xl border-2 p-8"
+                className="border-primary-light flex flex-col rounded-2xl border-2"
             >
-                <div className="flex w-full flex-row flex-wrap items-center justify-start gap-4 md:items-center">
+                <div className="border-primary-light flex w-full flex-row flex-wrap items-center justify-start gap-4 border-b-2 px-12 py-4 md:items-center">
                     <div
                         data-testid="schedule-train"
                         className="order-1 flex flex-1 gap-4 md:flex-none"
@@ -156,13 +167,39 @@ export function ScheduleItem({
                         詳細を見る
                     </button>
                 </div>
-                <div>
-                    {seatList.map((seat) => (
-                        <div key={seat.label}>
-                            {seat.label}
-                            {seat.count}
-                        </div>
-                    ))}
+                <div className="divide-primary-light flex items-center justify-between divide-x-2">
+                    {seatList.map((seat) => {
+                        const seatColorClass =
+                            seat.count === 0
+                                ? 'text-gray-400'
+                                : {
+                                      'reserved-seat': 'text-reserved-seat',
+                                      'green-seat': 'text-green-seat',
+                                      'gc-seat': 'text-gc-seat',
+                                  }[seat.name] || '';
+
+                        return (
+                            <div
+                                key={seat.label}
+                                className={`flex w-full items-end justify-between px-16 py-4 ${seatColorClass}`}
+                            >
+                                <div>{seat.label}</div>
+                                <div className="text-sm">
+                                    {seat.count === 0 ? (
+                                        <div>残席なし</div>
+                                    ) : (
+                                        <div>
+                                            残り
+                                            <span className="text-xl font-bold">
+                                                {seat.count}
+                                            </span>
+                                            席
+                                        </div>
+                                    )}
+                                </div>
+                            </div>
+                        );
+                    })}
                 </div>
             </div>
         </>
