@@ -41,10 +41,10 @@ const guestLoginLoader = (request: LoaderFunctionArgs) => {
     const targetReservationId = url.searchParams.get('reservationId');
     const account = localStorage.getItem('name');
     if (targetReservationId === null) {
-        toast.warning(ERROR_MESSAGE.GUESTLOGIN_ERROR);
+        toast.warning(ERROR_MESSAGE.GUESTLOGIN_ERROR); // TODO:ここの「Toastがでない。リダイレクトはされる」を修正する
         return redirect('/scheduleSearch');
     } else if (account !== null) {
-        toast.warning(ERROR_MESSAGE.EXIST_ACCOUNT);
+        toast.warning(ERROR_MESSAGE.EXIST_ACCOUNT); // TODO:ここの「Toastがでない。リダイレクトはされる」を修正する
         return redirect('/reservationList');
     }
     return null;
