@@ -58,7 +58,7 @@ export function ReservationListBody() {
                             : reservation,
                     ),
             );
-            toast.success('予約を取消しました');
+            toast.success('予約を取り消しました');
         } catch {
             alert(ERROR_MESSAGE.REFUND_RETRY);
         } finally {
