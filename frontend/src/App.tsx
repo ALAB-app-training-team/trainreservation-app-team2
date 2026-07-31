@@ -1,5 +1,6 @@
 import {
     createBrowserRouter,
+    type LoaderFunctionArgs,
     redirect,
     RouterProvider,
 } from 'react-router-dom';
@@ -18,8 +19,7 @@ import { Error } from '@/shared/pages/Error';
 const sessionLoader = () => {
     const info = localStorage.getItem('name');
     if (info === null) {
-        // toast.warning(ERROR_MESSAGE.LOGIN_ERROR);
-        sessionStorage.setItem('message', ERROR_MESSAGE.EXIST_ACCOUNT);
+        sessionStorage.setItem('message', ERROR_MESSAGE.LOGIN_ERROR);
 
         return redirect('/login');
     }
@@ -36,20 +36,18 @@ const authLoader = () => {
     return null;
 };
 
-const guestLoginLoader = () => {
+const guestLoginLoader = (request: LoaderFunctionArgs) => {
     const account = localStorage.getItem('name');
     if (account !== null) {
         sessionStorage.setItem('message', ERROR_MESSAGE.EXIST_ACCOUNT);
-        // toast.warning(ERROR_MESSAGE.EXIST_ACCOUNT);
         return redirect('/login');
     }
-    // const url = new URL(request.url);
-    // const targetReservationId = url.searchParams.get('reservationId');
-    // // const account = localStorage.getItem('name');
-    // if (targetReservationId === null) {
-    //     toast.warning(ERROR_MESSAGE.GUESTLOGIN_ERROR); // TODO:ここの「Toastがでない。リダイレクトはされる」を修正する
-    //     return redirect('/scheduleSearch');
-    // }
+    const url = new URL(request.url);
+    const targetReservationId = url.searchParams.get('reservationId');
+    if (targetReservationId === null) {
+        sessionStorage.setItem('message', ERROR_MESSAGE.GUESTLOGIN_ERROR);
+        return redirect('/scheduleSearch');
+    }
     return null;
 };
 
@@ -92,8 +90,7 @@ const router = createBrowserRouter([
             },
             {
                 path: '/reservationGuestLogin',
-                // loader: (args) => guestLoginLoader(args),
-                loader: () => guestLoginLoader(),
+                loader: (args) => guestLoginLoader(args),
                 element: <ReservationGuestLogin />,
                 errorElement: <Error />,
             },

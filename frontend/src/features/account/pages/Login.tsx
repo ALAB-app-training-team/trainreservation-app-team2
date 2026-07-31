@@ -1,20 +1,15 @@
-import { useEffect, useState } from 'react';
+import { useState } from 'react';
 import { FiLogIn } from 'react-icons/fi';
 import { MdVisibility, MdVisibilityOff } from 'react-icons/md';
-import { toast } from 'sonner';
 
 import { useLoginRequestDto } from '@/features/account/hooks/useLoginRequestDto';
+import { useToastForRedirect } from '@/shared/hooks/useToastForRedirect';
 
 export function Login() {
     const { loginRequestDto, handleChange, handleLogin, isSubmitting } =
         useLoginRequestDto();
     const [passwordType, setPasswordType] = useState('password');
-
-    useEffect(() => {
-        console.log('ゆーずえっふぇくと');
-        const message = sessionStorage.getItem('message');
-        if (message) toast.warning(message);
-    }, []);
+    useToastForRedirect();
 
     return (
         <div className="flex justify-center">
