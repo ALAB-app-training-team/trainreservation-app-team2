@@ -33,13 +33,18 @@ export function useReservedTickets(reservationId: string) {
     };
 
     const accountInfo = localStorage.getItem('name');
+    const guestLoginInfo = getGuestLoginInfo();
 
     const { data: reservedTickets } = useSuspenseQuery({
-        queryKey: ['reservationTickets', reservationId],
+        queryKey: [
+            'reservationTickets',
+            reservationId,
+            guestLoginInfo.reserverMail,
+        ],
         queryFn: () =>
             accountInfo !== null
                 ? getAccountReservedTickets(reservationId)
-                : getGuestReservedTickets(reservationId, getGuestLoginInfo()),
+                : getGuestReservedTickets(reservationId, guestLoginInfo),
         refetchOnMount: true,
     });
 
