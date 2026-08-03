@@ -13,6 +13,7 @@ import com.alab.shinkansendego.seattype.SeatTypeEntity;
 import com.alab.shinkansendego.sectionkm.SectionKmEntity;
 import com.alab.shinkansendego.sectionkm.SectionKmRepository;
 import com.alab.shinkansendego.station.StationEntity;
+import com.alab.shinkansendego.trainSeries.TrainSeriesEntity;
 import com.alab.shinkansendego.traincar.TrainCarEntity;
 import com.alab.shinkansendego.traincar.TrainCarRepository;
 import com.alab.shinkansendego.traincartype.TrainCarTypeEntity;
@@ -263,7 +264,7 @@ public class ReservationServiceTest {
         reservation.get().setId(reservationId1);
         reservation.get().setDepartureArrivalTime(Set.of(departureArrivalTime1, departureArrivalTime2, departureArrivalTime3, departureArrivalTime4, departureArrivalTime5, departureArrivalTime6, departureArrivalTime7));
 
-        TrainTypeEntity trainType = new TrainTypeEntity("YM001", "やまびこ1号", "E5SER");
+        TrainTypeEntity trainType = new TrainTypeEntity("YM001", "やまびこ1号", "E5SER", new TrainSeriesEntity());
         ScheduleEntity schedule = new ScheduleEntity("TEST01", "YM001", trainType);
         reservation.get().setDepartureStationCd("THK01");
         reservation.get().setArrivalStationCd("THK09");
