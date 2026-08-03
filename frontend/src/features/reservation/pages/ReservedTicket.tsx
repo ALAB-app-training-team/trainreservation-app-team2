@@ -17,13 +17,13 @@ export function ReservedTicket() {
     const { reservationId, isBack } = location.state;
     const { reservedTickets } = useReservedTickets(reservationId);
     const shareUrl = `${window.location.origin}/reservationGuestLogin?reservationId=${reservationId}`;
-    console.log(reservedTickets);
     const queryClient = useQueryClient();
+    const accountInfo = localStorage.getItem('name');
     useEffect(() => {
         const nv = performance.getEntriesByType(
             'navigation',
         )[0] as PerformanceNavigationTiming;
-        if (!isBack && nv.type !== 'reload') {
+        if (accountInfo !== null && !isBack && nv.type !== 'reload') {
             removeGuestReservation(queryClient);
         }
     }, []);
@@ -50,7 +50,7 @@ export function ReservedTicket() {
                                 data-testid="reserve-complete"
                                 className="m-0! text-left text-3xl!"
                             >
-                                予約完了
+                                予約詳細
                             </h1>
                         )}
                     </div>

@@ -20,8 +20,7 @@ export function TicketShare({ shareUrl = '' }: TicketShareProps) {
             await navigator.clipboard.writeText(shareUrl);
             setCopied(true);
             setTimeout(() => setCopied(false), 2000);
-        } catch (error) {
-            console.log('Failed to copy the link', error);
+        } catch {
             toast.error('リンクのコピーに失敗しました');
         }
     };

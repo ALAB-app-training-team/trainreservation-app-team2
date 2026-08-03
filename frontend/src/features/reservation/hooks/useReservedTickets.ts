@@ -52,16 +52,18 @@ export function useReservedTickets(reservationId: string) {
         reservationId: string,
         guestLoginInfo: ReservationListRequestDto,
     ): Promise<ReservationResponseDto> => {
-        const response = await apiClient.get<ReservationResponseDto>(
-            ENDPOINTS.GUESTRESERVATION(reservationId),
-            {
-                params: {
-                    reserverName: guestLoginInfo.reserverName,
-                    reserverMail: guestLoginInfo.reserverMail,
+        const response = await apiClient
+            .get<ReservationResponseDto>(
+                ENDPOINTS.GUESTRESERVATION(reservationId),
+                {
+                    params: {
+                        reserverName: guestLoginInfo.reserverName,
+                        reserverMail: guestLoginInfo.reserverMail,
+                    },
                 },
-            },
-        );
-        return response.data;
+            )
+            .then((response) => response.data);
+        return response;
     };
     return { reservedTickets, getReservationTicket };
 }

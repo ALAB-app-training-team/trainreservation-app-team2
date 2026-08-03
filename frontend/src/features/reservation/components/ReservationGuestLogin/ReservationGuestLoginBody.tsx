@@ -44,7 +44,7 @@ export function ReservationGuestLoginBody() {
                 targetReservationId,
                 request,
             );
-            if (targetReservation === null) {
+            if ((await targetReservation).trainTypeName === undefined) {
                 setRequestError(ERROR_MESSAGE.NO_RESERVATION);
                 return;
             }
