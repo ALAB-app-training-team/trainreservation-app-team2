@@ -11,8 +11,8 @@ test('お支払い合計が正しく表示されていること', async ({
     const reservationListPage = new ReservationListPage(page);
 
     await login();
-    await createReservation();
     await expect(page).toHaveURL('/scheduleSearch');
+    await createReservation();
     await reservationListPage.goto();
     await expect(page).toHaveURL('/reservationList');
     await expect(reservationListPage.totalFareElement.first()).toBeVisible();
