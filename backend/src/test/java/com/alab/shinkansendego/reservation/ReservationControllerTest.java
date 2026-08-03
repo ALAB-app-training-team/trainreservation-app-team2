@@ -45,6 +45,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 public class ReservationControllerTest {
     private final ObjectMapper objectMapper = new ObjectMapper();
     private final String baseUrl = "/api/reservations";
+    private AccountSessionDto session;
     @Autowired
     private MockMvc mockMvc;
     @MockitoBean
@@ -71,14 +72,14 @@ public class ReservationControllerTest {
     void setUp() {
         objectMapper.registerModule(new JavaTimeModule());
         objectMapper.disable(SerializationFeature.WRITE_DATES_AS_TIMESTAMPS);
+        session = new AccountSessionDto(
+            UUID.fromString("f79d8bbc-fcba-b538-b132-2f726ce0120c"), "test-common@test.com", "一般太郎"
+        );
     }
 
     @Test
     @DisplayName("ログイン情報から予約情報の一覧が取得できる")
     void getReservationList_withSession_returnGetReservationListSuccess() throws Exception {
-        AccountSessionDto session = new AccountSessionDto(
-            UUID.fromString("f79d8bbc-fcba-b538-b132-2f726ce0120c"), "test-common@test.com", "一般太郎"
-        );
         Authentication auth = new UsernamePasswordAuthenticationToken(session, null, Collections.emptyList());
 
         List<ReservationResponseDto> expectList = Arrays.asList(
@@ -148,9 +149,6 @@ public class ReservationControllerTest {
     @Test
     @DisplayName("ログイン情報に該当する予約がない場合、空のリストを返す")
     void getReservationList_withSession_returnEmptyList() throws Exception {
-        AccountSessionDto session = new AccountSessionDto(
-            UUID.fromString("f79d8bbc-fcba-b538-b132-2f726ce0120c"), "test-common@test.com", "一般太郎"
-        );
         Authentication auth = new UsernamePasswordAuthenticationToken(session, null, Collections.emptyList());
 
         List<ReservationResponseDto> expectList = new ArrayList<>();
@@ -227,8 +225,36 @@ public class ReservationControllerTest {
     }
 
     @Test
-    @DisplayName("予約情報・予約座席情報を挿入できる")
+    @DisplayName("ログインした状態で座席予約ができる")
     void insertReservation_withValidReserveRequestDto_return201AndInsertReservationId() throws Exception {
+        ReserveRequestDto request = new ReserveRequestDto(
+            "Test01",
+            LocalDate.now(),
+            "Test0",
+            "Test1",
+            "",
+            "",
+            "Test2",
+            List.of(
+                new ReserveRequestDto.SelectedSeatDto("E5SER01", "CAR01", "SEAT01001", 2800),
+                new ReserveRequestDto.SelectedSeatDto("E5SER01", "CAR01", "SEAT01002", 2800)
+            ));
+        UUID mockedReservationId = UUID.randomUUID();
+        Authentication auth = new UsernamePasswordAuthenticationToken(session, null, Collections.emptyList());
+
+        Mockito.when(service.insertReservation(request, session)).thenReturn(mockedReservationId);
+
+        mockMvc.perform(post(baseUrl)
+                .with(SecurityMockMvcRequestPostProcessors.authentication(auth))
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(objectMapper.writeValueAsString(request)))
+            .andExpect(status().isCreated())
+            .andExpect(content().string("\"" + mockedReservationId + "\""));
+    }
+
+    @Test
+    @DisplayName("ゲストが座席予約ができる")
+    void insertReservation_withoutLogIn_return201AndInsertReservationId() throws Exception {
         ReserveRequestDto request = new ReserveRequestDto(
             "Test01",
             LocalDate.now(),
@@ -242,7 +268,7 @@ public class ReservationControllerTest {
                 new ReserveRequestDto.SelectedSeatDto("E5SER01", "CAR01", "SEAT01002", 2800)
             ));
         UUID mockedReservationId = UUID.randomUUID();
-        Mockito.when(service.insertReservation(request)).thenReturn(mockedReservationId);
+        Mockito.when(service.insertReservation(request, null)).thenReturn(mockedReservationId);
 
         mockMvc.perform(post(baseUrl)
                 .contentType(MediaType.APPLICATION_JSON)
@@ -280,9 +306,6 @@ public class ReservationControllerTest {
     @Test
     @DisplayName("認証ありのアクセスの場合、特定の予約情報IDに紐づく予約情報を削除できる")
     void deleteReservation_withAuthorized_return204() throws Exception {
-        AccountSessionDto session = new AccountSessionDto(
-            UUID.fromString("f79d8bbc-fcba-b538-b132-2f726ce0120c"), "test-common@test.com", "一般太郎"
-        );
         Authentication auth = new UsernamePasswordAuthenticationToken(session, null, Collections.emptyList());
         UUID requestReservationId = UUID.randomUUID();
         String url = baseUrl + "/" + requestReservationId;

@@ -4,8 +4,9 @@ import type { SeatResponseDto } from '@/features/schedule/types/SeatResponseDto'
 import { ERROR_MESSAGE } from '@/shared/constants/ErrorMessages';
 import { LIMIT } from '@/shared/constants/Limit';
 
-export function useSelectedSeats() {
-    const [selectedSeats, setSelectedSeats] = useState<SeatResponseDto[]>([]);
+export function useSelectedSeats(initialSeats: SeatResponseDto[] = []) {
+    const [selectedSeats, setSelectedSeats] =
+        useState<SeatResponseDto[]>(initialSeats);
 
     const handleSelectedSeats = (seat: SeatResponseDto) => {
         if (selectedSeats.includes(seat)) {

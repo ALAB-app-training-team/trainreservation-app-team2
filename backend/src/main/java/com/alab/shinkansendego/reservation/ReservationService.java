@@ -1,6 +1,9 @@
 package com.alab.shinkansendego.reservation;
 
 import ch.qos.logback.core.util.StringUtil;
+import com.alab.shinkansendego.account.AccountEntity;
+import com.alab.shinkansendego.account.AccountRepository;
+import com.alab.shinkansendego.account.AccountSessionDto;
 import com.alab.shinkansendego.departurearrivaltime.DepartureArrivalTimeEntity;
 import com.alab.shinkansendego.departurearrivaltime.DepartureArrivalTimeRepository;
 import com.alab.shinkansendego.reservedseat.ReservedSeatEntity;
@@ -16,6 +19,7 @@ import com.alab.shinkansendego.traincar.TrainCarRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
+import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.client.RestClient;
@@ -42,6 +46,7 @@ public class ReservationService {
     private final ReservedSeatSectionRepository reservedSeatSectionRepository;
     private final TrainCarRepository trainCarRepository;
     private final SeatRepository seatRepository;
+    private final AccountRepository accountRepository;
 
     @Autowired
     public ReservationService(
@@ -52,6 +57,7 @@ public class ReservationService {
         ReservedSeatSectionRepository reservedSeatSectionRepository,
         TrainCarRepository trainCarRepository,
         SeatRepository seatRepository,
+        AccountRepository accountRepository,
         RestClient.Builder restClientBuilder
     ) {
         this.reservationRepository = reservationRepository;
@@ -61,6 +67,7 @@ public class ReservationService {
         this.reservedSeatSectionRepository = reservedSeatSectionRepository;
         this.trainCarRepository = trainCarRepository;
         this.seatRepository = seatRepository;
+        this.accountRepository = accountRepository;
         this.restClient = restClientBuilder.build();
     }
 
@@ -211,7 +218,16 @@ public class ReservationService {
      * @return 登録した予約情報ID
      */
     @Transactional
-    public UUID insertReservation(ReserveRequestDto reserveRequestDto) {
+    public UUID insertReservation(ReserveRequestDto reserveRequestDto, AccountSessionDto session) {
+        AccountEntity account = null;
+        if (session != null) {
+            account = accountRepository.findById(session.getId()).orElseThrow(() -> new BadCredentialsException("認証に失敗しました"));
+            reserveRequestDto.setReserverName(session.getName());
+            reserveRequestDto.setReserverMail(session.getMail());
+        } else if (reserveRequestDto.getReserverName().isBlank() || reserveRequestDto.getReserverMail().isBlank()) {
+            throw new IllegalArgumentException("氏名とメールアドレスがありません");
+        }
+
         if (reserveRequestDto.getSeats() == null || reserveRequestDto.getSeats().isEmpty()) {
             throw new IllegalArgumentException("Seats is Not found");
         }
@@ -247,6 +263,7 @@ public class ReservationService {
         reservationToPost.setReserverMail(removeSpaces(reserveRequestDto.getReserverMail()));
         reservationToPost.setPaymentTrackingId(paymentTrackingId);
         reservationToPost.setIsDeleted(false);
+        if (session != null) reservationToPost.setAccountId(account.getId());
 
         ReservationEntity reservationResult = reservationRepository.save(reservationToPost);
         if (reservationResult.getId() == null) {
