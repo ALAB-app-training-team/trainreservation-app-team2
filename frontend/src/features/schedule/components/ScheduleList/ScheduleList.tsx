@@ -24,6 +24,7 @@ type ScheduleListProps = {
     departureStationName: string;
     arrivalStationCd: string;
     arrivalStationName: string;
+    isOnlyAvailable: boolean;
 };
 
 export function ScheduleList({
@@ -33,6 +34,7 @@ export function ScheduleList({
     departureStationName,
     arrivalStationCd,
     arrivalStationName,
+    isOnlyAvailable,
 }: ScheduleListProps) {
     const { schedules } = useSchedules(searchRequestDto, isInvalid);
 
@@ -44,16 +46,27 @@ export function ScheduleList({
         setOffset(pageNumber * perPage);
     };
 
+    const filteredSchedules = (schedules || []).filter((schedule) => {
+        if (!isOnlyAvailable) return true;
+        return (
+            schedule.reservedSeats !== 0 ||
+            schedule.greenSeats !== 0 ||
+            schedule.gcSeats !== 0
+        );
+    });
+
     return (
         <>
             <div className="flex flex-col gap-4">
                 <div className="flex flex-wrap justify-between gap-4">
-                    <div>{schedules.length}件の列車が見つかりました</div>
+                    <div>
+                        {filteredSchedules.length}件の列車が見つかりました
+                    </div>
                     <EmptySeatCount />
                 </div>
-                {schedules.length ? (
+                {filteredSchedules.length ? (
                     <>
-                        {schedules
+                        {filteredSchedules
                             .slice(offset, offset + perPage)
                             .map((schedule, index) => {
                                 return (
@@ -72,7 +85,9 @@ export function ScheduleList({
                                 );
                             })}
                         <ReactPaginate
-                            pageCount={Math.ceil(schedules.length / perPage)}
+                            pageCount={Math.ceil(
+                                filteredSchedules.length / perPage,
+                            )}
                             forcePage={Math.floor(offset / perPage)}
                             marginPagesDisplayed={1}
                             pageRangeDisplayed={2}

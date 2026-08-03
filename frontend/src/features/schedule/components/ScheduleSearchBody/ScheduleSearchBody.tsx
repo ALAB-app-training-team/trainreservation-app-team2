@@ -1,4 +1,4 @@
-import { Suspense } from 'react';
+import { Suspense, useState } from 'react';
 import { useLocation } from 'react-router-dom';
 
 import { ScheduleList } from '@/features/schedule/components/ScheduleList/ScheduleList';
@@ -27,6 +27,7 @@ export function ScheduleSearchBody() {
     } = useSearchRequestDto({ stations, initialDto });
     const departureDtos = stationResponseDtos;
     const arrivalDtos = stationResponseDtos;
+    const [isOnlyAvailable, setIsOnlyAvailable] = useState<boolean>(true);
 
     return (
         <>
@@ -44,6 +45,8 @@ export function ScheduleSearchBody() {
                         getFieldError={getFieldError}
                         maxDate={maxDate}
                         minDate={minDate}
+                        isOnlyAvailable={isOnlyAvailable}
+                        setIsOnlyAvailable={setIsOnlyAvailable}
                     />
                     <Suspense fallback={<ScheduleListSkeleton />}>
                         <ScheduleList
@@ -68,6 +71,7 @@ export function ScheduleSearchBody() {
                                         searchRequestDto.arrivalStationCd,
                                 )?.name || ERROR_MESSAGE.ERROR
                             }
+                            isOnlyAvailable={isOnlyAvailable}
                         />
                     </Suspense>
                 </div>
