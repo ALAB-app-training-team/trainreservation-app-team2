@@ -175,12 +175,9 @@ export function SelectSeats() {
                             selectedSeats={selectedSeats}
                             handleClear={handleClear}
                         />
-
                         {!isLoggedIn && (
                             <div className="border-primary-mid-light bg-primary-light flex w-full flex-col gap-4 rounded-2xl border-2 p-4 text-center">
-                                <span className="">
-                                    アカウントをお持ちですか？
-                                </span>
+                                <span>アカウントをお持ちですか？</span>
                                 <button
                                     onClick={() =>
                                         navigate('/login', {

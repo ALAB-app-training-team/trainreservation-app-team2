@@ -12,7 +12,6 @@ import com.alab.shinkansendego.reservedseatsection.ReservedSeatSectionEntity;
 import com.alab.shinkansendego.reservedseatsection.ReservedSeatSectionRepository;
 import com.alab.shinkansendego.seat.SeatEntity;
 import com.alab.shinkansendego.seat.SeatRepository;
-import com.alab.shinkansendego.sectionkm.SectionKmEntity;
 import com.alab.shinkansendego.sectionkm.SectionKmRepository;
 import com.alab.shinkansendego.traincar.SeatResponseDto;
 import com.alab.shinkansendego.traincar.TrainCarEntity;
@@ -223,9 +222,9 @@ public class ReservationService {
         AccountEntity account = null;
         if (session != null) {
             account = accountRepository.findById(session.getId()).orElseThrow(() -> new BadCredentialsException("認証に失敗しました"));
-            reserveRequestDto.setReserverName(account.getName());
-            reserveRequestDto.setReserverMail(account.getMail());
-        } else if (reserveRequestDto.getReserverName().isEmpty() || reserveRequestDto.getReserverMail().isEmpty()) {
+            reserveRequestDto.setReserverName(session.getName());
+            reserveRequestDto.setReserverMail(session.getMail());
+        } else if (reserveRequestDto.getReserverName().isBlank() || reserveRequestDto.getReserverMail().isBlank()) {
             throw new IllegalArgumentException("氏名とメールアドレスがありません");
         }
 
@@ -237,8 +236,8 @@ public class ReservationService {
             throw new IllegalArgumentException("Seat limit exceeded");
         }
 
-        List<String> SectionKmCdsByDepartureStation = sectionKmRepository.findByStartStationCd(reserveRequestDto.getDepartureStationCd()).stream().map(SectionKmEntity::getSectionCd).toList();
-        List<String> SectionKmCdsByArrivalStation = sectionKmRepository.findByGoalStationCd(reserveRequestDto.getArrivalStationCd()).stream().map(SectionKmEntity::getSectionCd).toList();
+        List<String> SectionKmCdsByDepartureStation = sectionKmRepository.findByStartStationCd(reserveRequestDto.getDepartureStationCd()).stream().map(entity -> entity.getSectionCd()).toList();
+        List<String> SectionKmCdsByArrivalStation = sectionKmRepository.findByGoalStationCd(reserveRequestDto.getArrivalStationCd()).stream().map(entity -> entity.getSectionCd()).toList();
 
         DepartureArrivalTimeEntity departureArrivalTimeOfStart = departureArrivalTimeRepository.findByScheduleCdAndSectionCdIn(reserveRequestDto.getScheduleCd(), SectionKmCdsByDepartureStation);
         DepartureArrivalTimeEntity departureArrivalTimeOfGoal = departureArrivalTimeRepository.findByScheduleCdAndSectionCdIn(reserveRequestDto.getScheduleCd(), SectionKmCdsByArrivalStation);
@@ -252,9 +251,9 @@ public class ReservationService {
             throw new IllegalArgumentException("SectionCd is Not found");
         }
 
-        ReservationEntity reservationToPost = new ReservationEntity();
         String paymentTrackingId = "";
         UUID reservationId = UUID.randomUUID();
+        ReservationEntity reservationToPost = new ReservationEntity();
         reservationToPost.setId(reservationId);
         reservationToPost.setRideDate(reserveRequestDto.getRideDate());
         reservationToPost.setScheduleCd(reserveRequestDto.getScheduleCd());

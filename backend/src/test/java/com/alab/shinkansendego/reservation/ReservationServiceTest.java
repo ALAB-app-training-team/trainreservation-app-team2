@@ -33,6 +33,7 @@ import org.springframework.http.HttpMethod;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.mock.web.MockHttpServletRequest;
+import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.test.web.client.MockRestServiceServer;
 import org.springframework.web.client.RestClient;
 import org.springframework.web.context.request.RequestContextHolder;
@@ -472,6 +473,15 @@ public class ReservationServiceTest {
         UUID result = service.insertReservation(request, null);
         assertNotNull(result);
         this.mockRestServiceServer.verify();
+    }
+
+    @Test
+    @DisplayName("DBに存在しないアカウントからのリクエストの場合BadCredentialsExceptionが発生する")
+    void insertReservation_withNotExistAccount_throwsBadCredentialsException() {
+        ReserveRequestDto request = new ReserveRequestDto("Test01", LocalDate.now(), "Test0", "Test1", "", "", "Test2", List.of(new ReserveRequestDto.SelectedSeatDto("E5SER01", "CAR01", "SEAT01001", 2800), new ReserveRequestDto.SelectedSeatDto("E5SER01", "CAR01", "SEAT01002", 2800), new ReserveRequestDto.SelectedSeatDto("E5SER01", "CAR01", "SEAT01003", 2800), new ReserveRequestDto.SelectedSeatDto("E5SER01", "CAR01", "SEAT01004", 2800), new ReserveRequestDto.SelectedSeatDto("E5SER01", "CAR01", "SEAT01005", 2800), new ReserveRequestDto.SelectedSeatDto("E5SER01", "CAR01", "SEAT01006", 2800)));
+        when(accountRepo.findById(any())).thenReturn(Optional.empty());
+
+        assertThrows(BadCredentialsException.class, () -> service.insertReservation(request, session));
     }
 
     @Test

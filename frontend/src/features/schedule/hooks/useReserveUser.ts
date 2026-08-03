@@ -24,8 +24,8 @@ export function useReserveUser() {
     const [invalidMessages, setInvalidMessages] = useState<InvalidMessage[]>(
         [],
     );
-    const isLoggedIn = useContext(authContext);
-
+    const isLoggedIn = !!useContext(authContext).name;
+    
     const isNameEmpty = (value: string) => {
         return removeWhiteSpace(value) === '';
     };

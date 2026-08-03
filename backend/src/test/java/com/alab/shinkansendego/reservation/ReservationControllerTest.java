@@ -268,11 +268,9 @@ public class ReservationControllerTest {
                 new ReserveRequestDto.SelectedSeatDto("E5SER01", "CAR01", "SEAT01002", 2800)
             ));
         UUID mockedReservationId = UUID.randomUUID();
-        Authentication auth = new UsernamePasswordAuthenticationToken(null, null, Collections.emptyList());
         Mockito.when(service.insertReservation(request, null)).thenReturn(mockedReservationId);
 
         mockMvc.perform(post(baseUrl)
-                .with(SecurityMockMvcRequestPostProcessors.authentication(auth))
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(objectMapper.writeValueAsString(request)))
             .andExpect(status().isCreated())
@@ -308,9 +306,6 @@ public class ReservationControllerTest {
     @Test
     @DisplayName("認証ありのアクセスの場合、特定の予約情報IDに紐づく予約情報を削除できる")
     void deleteReservation_withAuthorized_return204() throws Exception {
-        AccountSessionDto session = new AccountSessionDto(
-            UUID.fromString("f79d8bbc-fcba-b538-b132-2f726ce0120c"), "test-common@test.com", "一般太郎"
-        );
         Authentication auth = new UsernamePasswordAuthenticationToken(session, null, Collections.emptyList());
         UUID requestReservationId = UUID.randomUUID();
         String url = baseUrl + "/" + requestReservationId;
