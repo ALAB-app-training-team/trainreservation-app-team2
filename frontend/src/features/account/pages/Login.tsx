@@ -4,6 +4,7 @@ import { FiLogIn } from 'react-icons/fi';
 import { MdVisibility, MdVisibilityOff } from 'react-icons/md';
 
 import { useLoginRequestDto } from '@/features/account/hooks/useLoginRequestDto';
+import { useToastForRedirect } from '@/shared/hooks/useToastForRedirect';
 import { removeGuestReservation } from '@/shared/utils/RemoveGuestReservation';
 
 export function Login() {
@@ -11,6 +12,7 @@ export function Login() {
     const { loginRequestDto, handleChange, handleLogin, isSubmitting } =
         useLoginRequestDto();
     const [passwordType, setPasswordType] = useState('password');
+    useToastForRedirect();
     useEffect(() => {
         removeGuestReservation(queryClient);
     }, []);

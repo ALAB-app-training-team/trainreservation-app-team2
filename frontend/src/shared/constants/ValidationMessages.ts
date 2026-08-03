@@ -9,7 +9,6 @@ export const VALIDATION_MESSAGE = {
     EMPTY_RESERVER_MAIL: 'メールアドレスを入力してください',
     INVALID_RESERVER_MAIL: 'メールアドレスの形式（~~@~~.~~）で入力してください',
     MAX_LENGTH_RESERVER_MAIL: 'メールアドレスは255文字以内で入力してください',
-    EMPTY_RESERVATION_ID: '予約情報IDが不正です',
     INVALID_CARD_NUMBER: '14-16桁の有効なカード番号を入力してください',
     EMPTY_CARD_NAME: 'カード名義人を入力してください',
     INVALID_CARD_NAME: '半角英大文字・半角スペースで入力してください',
