@@ -5,6 +5,7 @@ import { ReservedTicketPage } from '@tests/pages/ReservedTicket/ReservedTicketPa
 import { ReservationListPage } from '@tests/pages/ReservationList/ReservationListPage';
 import { ScheduleSearchPage } from '@tests/pages/ScheduleSearch/ScheduleSearchPage';
 import { SelectSeatPage } from '@tests/pages/SelectSeat/SelectSeatPage';
+import { LoginPage } from './pages/Login/LoginPage';
 
 test('visual-scheduleSearch', async ({ page }) => {
     const scheduleSearchPage = new ScheduleSearchPage(page);
@@ -67,6 +68,25 @@ test('visual-reservationGuestLogin', async ({ page }) => {
 
     await expect(page).toHaveScreenshot({
         maxDiffPixelRatio: 0.0,
+        fullPage: true,
+        animations: 'disabled',
+        mask: [
+            // テストに含めたくない要素をマスク(無視)する
+            // 例 page.locator('.hoge'),
+        ],
+        maskColor: '#ffffff',
+    });
+});
+
+test('visual-login', async ({ page }) => {
+    const loginPage = new LoginPage(page);
+    await loginPage.goto();
+    await expect(page).toHaveURL('/login');
+    await loginPage.loginButton.waitFor({ state: 'visible' });
+    await page.evaluate(() => document.fonts.ready);
+
+    await expect(page).toHaveScreenshot({
+        maxDiffPixelRatio: 0.05,
         fullPage: true,
         animations: 'disabled',
         mask: [
