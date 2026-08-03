@@ -26,7 +26,6 @@ export function ReservationGuestLoginBody() {
     const [isSubmitting, setIsSubmitting] = useState<boolean>(false);
     const [requestError, setRequestError] = useState<string>('');
     const navigate = useNavigate();
-
     const handleGuestLogin = async (e: React.SubmitEvent<HTMLFormElement>) => {
         e.preventDefault();
         if (isSubmitting) return;
@@ -49,7 +48,6 @@ export function ReservationGuestLoginBody() {
                 return;
             }
             sessionStorage.setItem('guestLoginInfo', JSON.stringify(request));
-
             navigate('/reservedTicket', {
                 state: {
                     reservationId: targetReservationId,
@@ -58,7 +56,6 @@ export function ReservationGuestLoginBody() {
                 },
             });
             window.scrollTo(0, 0);
-            return;
         } catch {
             setRequestError(ERROR_MESSAGE.ANY_RESERVATION_ERROR);
             return;
