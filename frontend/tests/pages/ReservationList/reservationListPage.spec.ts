@@ -77,12 +77,12 @@ test('過去タブは過去の日付であること', async ({
 
 test('削除すると予約が1件削除されること', async ({
     page,
-    createReservation,
+    createGuestReservation,
     login,
 }) => {
     const reservationListPage = new ReservationListPage(page);
 
-    await createReservation();
+    await createGuestReservation();
     await login();
     await expect(page).toHaveURL('/scheduleSearch');
     await reservationListPage.goto();
