@@ -20,6 +20,8 @@ type ScheduleSearchFormProps = {
     getFieldError: (field: string) => string;
     maxDate: Date;
     minDate: Date;
+    isOnlyAvailable: boolean;
+    setIsOnlyAvailable: React.Dispatch<React.SetStateAction<boolean>>;
 };
 
 export function ScheduleSearchForm({
@@ -34,6 +36,8 @@ export function ScheduleSearchForm({
     getFieldError,
     maxDate,
     minDate,
+    isOnlyAvailable,
+    setIsOnlyAvailable,
 }: ScheduleSearchFormProps) {
     const { availableDepartureStations, availableArrivalStations } =
         useStationFilter(
@@ -88,6 +92,20 @@ export function ScheduleSearchForm({
                                 setValue={setTime}
                                 getFieldError={getFieldError}
                             />
+                        </div>
+                        <div className="flex gap-2 bg-transparent text-left">
+                            <input
+                                type="checkbox"
+                                id="isOnlyAvailable"
+                                checked={isOnlyAvailable}
+                                onChange={(e) =>
+                                    setIsOnlyAvailable(e.target.checked)
+                                }
+                                className="accent-primary"
+                            />
+                            <label htmlFor="isOnlyAvailable">
+                                空席がある列車のみ表示する
+                            </label>
                         </div>
                     </div>
                 </div>
