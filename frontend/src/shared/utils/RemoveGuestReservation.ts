@@ -1,6 +1,10 @@
 import { QueryClient } from '@tanstack/react-query';
 
 export const removeGuestReservation = (queryClient: QueryClient) => {
-    sessionStorage.removeItem('guestLoginInfo');
+    removeGuestLoginInfo();
     queryClient.removeQueries({ queryKey: ['reservationList'] });
+};
+
+export const removeGuestLoginInfo = () => {
+    sessionStorage.removeItem('guestLoginInfo');
 };

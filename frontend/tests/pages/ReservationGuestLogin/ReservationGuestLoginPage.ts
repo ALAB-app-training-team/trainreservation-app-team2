@@ -21,7 +21,9 @@ export class ReservationGuestLoginPage {
     }
 
     async goto() {
-        await this.page.goto('/reservationGuestLogin');
+        await this.page.goto(
+            '/reservationGuestLogin?reservationId=1c5289e8-72a7-4cb0-a0cb-fe6da57005eb',
+        );
     }
 
     async fillName(name: string) {
@@ -61,5 +63,9 @@ export class ReservationGuestLoginPage {
 
     async inputInvalidReserverMail() {
         await this.fillMailAddress('aaa@あああ.co');
+    }
+
+    async gotoEmpty() {
+        await this.page.goto('/reservationGuestLogin');
     }
 }

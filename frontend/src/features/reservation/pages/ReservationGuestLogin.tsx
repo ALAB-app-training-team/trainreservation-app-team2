@@ -1,14 +1,12 @@
-import { useQueryClient } from '@tanstack/react-query';
 import { Suspense, useEffect } from 'react';
 
 import { ReservationGuestLoginBody } from '@/features/reservation/components/ReservationGuestLogin/ReservationGuestLoginBody';
 import { ReservationGuestLoginBodySkeleton } from '@/features/reservation/components/ReservationGuestLogin/ReservationGuestLoginBodySkeleton';
-import { removeGuestReservation } from '@/shared/utils/RemoveGuestReservation';
+import { removeGuestLoginInfo } from '@/shared/utils/RemoveGuestReservation';
 
 export function ReservationGuestLogin() {
-    const queryClient = useQueryClient();
     useEffect(() => {
-        removeGuestReservation(queryClient);
+        removeGuestLoginInfo();
     }, []);
     return (
         <>
