@@ -101,7 +101,11 @@ export function SelectSeats() {
                 }),
             );
             navigate('/reservedTicket', {
-                state: { reservationId: reservationId, isBack: false },
+                state: {
+                    reservationId: reservationId,
+                    isBack: false,
+                    guestLogin: false,
+                },
             });
         } catch (error) {
             if (

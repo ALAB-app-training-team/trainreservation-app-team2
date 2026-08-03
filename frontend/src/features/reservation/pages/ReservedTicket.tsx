@@ -14,7 +14,7 @@ import { removeGuestReservation } from '@/shared/utils/RemoveGuestReservation';
 export function ReservedTicket() {
     const location = useLocation();
     const navigate = useNavigate();
-    const { reservationId, isBack } = location.state;
+    const { reservationId, isBack, guestLogin } = location.state;
     const { reservedTickets } = useReservedTickets(reservationId);
     const shareUrl = `${window.location.origin}/reservationGuestLogin?reservationId=${reservationId}`;
     const queryClient = useQueryClient();
@@ -50,7 +50,7 @@ export function ReservedTicket() {
                                 data-testid="reserve-complete"
                                 className="m-0! text-left text-3xl!"
                             >
-                                予約詳細
+                                {guestLogin ? '予約詳細' : '予約完了'}
                             </h1>
                         )}
                     </div>

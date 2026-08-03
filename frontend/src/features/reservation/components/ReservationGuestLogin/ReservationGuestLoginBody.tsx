@@ -54,6 +54,7 @@ export function ReservationGuestLoginBody() {
                 state: {
                     reservationId: targetReservationId,
                     isBack: false,
+                    guestLogin: true,
                 },
             });
             window.scrollTo(0, 0);
