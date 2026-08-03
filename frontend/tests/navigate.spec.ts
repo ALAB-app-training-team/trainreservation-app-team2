@@ -123,13 +123,12 @@ test('navigate-検索～シートマップからログイン～予約完了', as
     await selectSeatPage.inputCardInfo();
     await selectSeatPage.clickReseveButton();
     await selectSeatPage.clickConfirmButton();
-    // TODO: 予約詳細画面ができたら、予約完了画面を確認する
-    // await expect(page).toHaveURL('/reservedTicket');
-    // await expect(
-    //     page.getByText(
-    //         'エラーが発生しました。しばらくしてから再度お試しください。',
-    //     ),
-    // ).toBeHidden();
+    await expect(page).toHaveURL('/reservedTicket');
+    await expect(
+        page.getByText(
+            'エラーが発生しました。しばらくしてから再度お試しください。',
+        ),
+    ).toBeHidden();
 });
 
 test('navigate-ログイン～検索～予約完了', async ({ page, login }) => {
@@ -148,11 +147,10 @@ test('navigate-ログイン～検索～予約完了', async ({ page, login }) =>
     await selectSeatPage.inputCardInfo();
     await selectSeatPage.clickReseveButton();
     await selectSeatPage.clickConfirmButton();
-    // TODO: 予約詳細画面ができたら、予約完了画面を確認する
-    // await expect(page).toHaveURL('/reservedTicket');
-    // await expect(
-    //     page.getByText(
-    //         'エラーが発生しました。しばらくしてから再度お試しください。',
-    //     ),
-    // ).toBeHidden();
+    await expect(page).toHaveURL('/reservedTicket');
+    await expect(
+        page.getByText(
+            'エラーが発生しました。しばらくしてから再度お試しください。',
+        ),
+    ).toBeHidden();
 });

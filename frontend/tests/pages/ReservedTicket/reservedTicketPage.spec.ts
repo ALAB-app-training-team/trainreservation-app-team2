@@ -1,18 +1,21 @@
 import { expect } from '@playwright/test';
 import { ReservationListPage } from '@tests/pages/ReservationList/ReservationListPage';
+import { Header } from '@tests/pages/shared/Header';
 import { ReservedTicketPage } from '@tests/pages/ReservedTicket/ReservedTicketPage';
 import { test } from '@tests/fixtures';
 
 test('座席ごとの金額が正しく表示されていること', async ({
     page,
     createReservation,
-    guestLogin,
+    login,
 }) => {
     const reservationListPage = new ReservationListPage(page);
     const reservedTicketPage = new ReservedTicketPage(page);
+    const header = new Header(page);
 
+    await login();
     await createReservation();
-    await guestLogin();
+    await header.goToReservationLogin();
     await reservationListPage.clickTicketButton();
     await expect(page).toHaveURL('/reservedTicket');
     await expect(reservedTicketPage.title).toBeHidden();

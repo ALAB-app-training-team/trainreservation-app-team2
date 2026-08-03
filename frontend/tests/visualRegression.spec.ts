@@ -59,10 +59,6 @@ test('visual-selectSeat', async ({ page }) => {
 test('visual-reservationGuestLogin', async ({ page }) => {
     const reservationGuestLoginPage = new ReservationGuestLoginPage(page);
     await reservationGuestLoginPage.goto();
-    await page.screenshot({
-        path: '/tests/visual-reservationGuestLogin-1.png',
-        fullPage: true,
-    });
     await expect(page).toHaveURL(
         '/reservationGuestLogin?reservationId=1c5289e8-72a7-4cb0-a0cb-fe6da57005eb',
     );
