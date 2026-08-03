@@ -1,5 +1,5 @@
 import { type ChangeEvent, useContext, useState } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { useLocation, useNavigate } from 'react-router-dom';
 
 import apiClient from '@/api/apiClient';
 import { ENDPOINTS } from '@/api/routes';
@@ -15,6 +15,8 @@ export function useLoginRequestDto() {
         mail: '',
         password: '',
     });
+    const location = useLocation();
+    const { prevPath, ...prevData } = location.state ?? {};
 
     const handleChange = (e: ChangeEvent<HTMLInputElement>) => {
         const { name, value } = e.target;
@@ -36,7 +38,11 @@ export function useLoginRequestDto() {
             if (setName) {
                 setName(response.data);
             }
-            navigate('/scheduleSearch');
+            if (!prevPath) {
+                navigate('/scheduleSearch', { replace: true });
+            } else {
+                navigate(prevPath, { state: prevData, replace: true });
+            }
         } catch {
             alert(ERROR_MESSAGE.LOGIN_RETRY);
         } finally {

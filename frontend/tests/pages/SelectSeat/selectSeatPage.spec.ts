@@ -1,6 +1,7 @@
-import { test, expect } from '@playwright/test';
+import { expect } from '@playwright/test';
 import { ScheduleSearchPage } from '@tests/pages/ScheduleSearch/ScheduleSearchPage';
 import { SelectSeatPage } from '@tests/pages/SelectSeat/SelectSeatPage';
+import { test } from '@tests/fixtures';
 
 test('ゴミ箱ボタンを押すと、選択した座席が解除される', async ({ page }) => {
     const scheduleSearchPage = new ScheduleSearchPage(page);
@@ -146,4 +147,35 @@ test('予約確定', async ({ page }) => {
             'エラーが発生しました。しばらくしてから再度お試しください。',
         ),
     ).toBeHidden();
+});
+
+test('ログイン中は氏名・メールアドレス入力欄とログインボタンが表示されない', async ({
+    page,
+    login,
+}) => {
+    const scheduleSearchPage = new ScheduleSearchPage(page);
+    const selectSeatPagePage = new SelectSeatPage(page);
+
+    await login();
+    await expect(page).toHaveURL('/scheduleSearch');
+    await scheduleSearchPage.clickDetailButton();
+
+    await selectSeatPagePage.name.isHidden();
+    await selectSeatPagePage.mailAddress.isHidden();
+    await selectSeatPagePage.loginButton.isHidden();
+});
+
+test('未ログイン時は氏名・メールアドレス入力欄とログインボタンが表示される', async ({
+    page,
+}) => {
+    const scheduleSearchPage = new ScheduleSearchPage(page);
+    const selectSeatPagePage = new SelectSeatPage(page);
+
+    scheduleSearchPage.goto();
+    await expect(page).toHaveURL('/scheduleSearch');
+    await scheduleSearchPage.clickDetailButton();
+
+    await selectSeatPagePage.name.isEditable();
+    await selectSeatPagePage.mailAddress.isEditable();
+    await selectSeatPagePage.loginButton.isEnabled();
 });

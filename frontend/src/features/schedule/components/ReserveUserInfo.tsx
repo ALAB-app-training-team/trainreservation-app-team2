@@ -1,8 +1,10 @@
 import 'react-credit-cards-2/dist/es/styles-compiled.css';
 
+import { useContext } from 'react';
 import Cards, { type Focused } from 'react-credit-cards-2';
 import { IoCardOutline, IoMailOutline, IoPersonOutline } from 'react-icons/io5';
 
+import { authContext } from '@/context/AuthContext';
 import { ReserveUserInfoInput } from '@/features/schedule/components/ReserveUserInfoInput';
 import type { ReserveUser } from '@/features/schedule/types/ReserveUser';
 
@@ -23,38 +25,41 @@ export function ReserveUserInfo({
     handleInputBlur,
     getFieldError,
 }: ReserveUserInfoProps) {
+    const isLoggedIn = !!useContext(authContext).name;
     return (
         <>
             <div className="border-primary/20 flex flex-col items-start gap-8 border-b-2 py-4">
-                <div className="flex w-full flex-col gap-4">
-                    <h1 className="!mt-0 !mb-0 !text-lg">予約者情報</h1>
-                    <ReserveUserInfoInput
-                        reserveUser={reserveUser}
-                        label="予約者氏名"
-                        id="reserverName"
-                        type="text"
-                        placeholder="山田 太郎"
-                        onChange={handleInputChange}
-                        onFocus={handleInputFocus}
-                        onBlur={handleInputBlur}
-                        autoComplete="name"
-                        icon={IoPersonOutline}
-                        getFieldError={getFieldError}
-                    />
-                    <ReserveUserInfoInput
-                        reserveUser={reserveUser}
-                        label="メールアドレス"
-                        id="reserverMail"
-                        type="text"
-                        placeholder="demo@example.com"
-                        onChange={handleInputChange}
-                        onFocus={handleInputFocus}
-                        onBlur={handleInputBlur}
-                        autoComplete="email"
-                        icon={IoMailOutline}
-                        getFieldError={getFieldError}
-                    />
-                </div>
+                {!isLoggedIn && (
+                    <div className="flex w-full flex-col gap-4">
+                        <h1 className="!mt-0 !mb-0 !text-lg">予約者情報</h1>
+                        <ReserveUserInfoInput
+                            reserveUser={reserveUser}
+                            label="予約者氏名"
+                            id="reserverName"
+                            type="text"
+                            placeholder="山田 太郎"
+                            onChange={handleInputChange}
+                            onFocus={handleInputFocus}
+                            onBlur={handleInputBlur}
+                            autoComplete="name"
+                            icon={IoPersonOutline}
+                            getFieldError={getFieldError}
+                        />
+                        <ReserveUserInfoInput
+                            reserveUser={reserveUser}
+                            label="メールアドレス"
+                            id="reserverMail"
+                            type="text"
+                            placeholder="demo@example.com"
+                            onChange={handleInputChange}
+                            onFocus={handleInputFocus}
+                            onBlur={handleInputBlur}
+                            autoComplete="email"
+                            icon={IoMailOutline}
+                            getFieldError={getFieldError}
+                        />
+                    </div>
+                )}
                 <div className="flex w-full flex-col gap-4">
                     <h1 className="!mt-0 !mb-0 !text-lg">
                         クレジットカード情報
