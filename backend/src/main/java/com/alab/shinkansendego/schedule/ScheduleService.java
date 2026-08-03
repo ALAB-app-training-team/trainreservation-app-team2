@@ -86,12 +86,9 @@ public class ScheduleService {
                         throw new IllegalArgumentException("OptionalSchedule is Not found");
                     }
 
-                    List<String> sectionCdList = departureArrivalTimeRepository.findByScheduleCdAndDepartureTimeAndArrivalTime(
-                        departure.getScheduleCd(),
-                        departure.getDepartureTime(),
-                        arrival.getArrivalTime()
-                    );
-
+                    List<String> sectionCdList = departureArrivalTimeRepository.findByScheduleCdAndDepartureTimeGreaterThanEqualAndArrivalTimeLessThanEqual(
+                            departure.getScheduleCd(), departure.getDepartureTime(), arrival.getArrivalTime())
+                        .stream().map(entity -> entity.getSectionCd()).toList();
                     List<ReservedSeatSectionEntity> reservedSeatSectionEntities
                         = reservedSeatSectionRepository
                         .findByRideDateAndScheduleCdAndReservedSectionCdIn(

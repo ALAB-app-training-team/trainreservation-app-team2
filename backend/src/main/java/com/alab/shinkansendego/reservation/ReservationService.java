@@ -245,8 +245,9 @@ public class ReservationService {
             throw new IllegalArgumentException("Section is Not found");
         }
 
-        List<String> sectionCdList =
-            departureArrivalTimeRepository.findByScheduleCdAndDepartureTimeAndArrivalTime(reserveRequestDto.getScheduleCd(), departureArrivalTimeOfStart.getDepartureTime(), departureArrivalTimeOfGoal.getArrivalTime());
+        List<String> sectionCdList = departureArrivalTimeRepository.findByScheduleCdAndDepartureTimeGreaterThanEqualAndArrivalTimeLessThanEqual(
+                reserveRequestDto.getScheduleCd(), departureArrivalTimeOfStart.getDepartureTime(), departureArrivalTimeOfGoal.getArrivalTime())
+            .stream().map(entity -> entity.getSectionCd()).toList();
         if (sectionCdList.isEmpty()) {
             throw new IllegalArgumentException("SectionCd is Not found");
         }
