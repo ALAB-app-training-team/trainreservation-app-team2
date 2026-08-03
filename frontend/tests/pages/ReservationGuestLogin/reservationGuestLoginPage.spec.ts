@@ -6,7 +6,7 @@ test('予約データが存在しない場合', async ({ page }) => {
     const reservationGuestLogin = new ReservationGuestLoginPage(page);
     reservationGuestLogin.goto();
     await expect(page).toHaveURL(
-        '/reservationGuestLogin/reservationId=1c5289e8-72a7-4cb0-a0cb-fe6da57005eb',
+        '/reservationGuestLogin?reservationId=1c5289e8-72a7-4cb0-a0cb-fe6da57005eb',
     );
     await reservationGuestLogin.inputNoReservationGuestLoginInfo();
     await reservationGuestLogin.clickGuestLoginButton();
@@ -17,7 +17,7 @@ test('予約者氏名の未入力', async ({ page }) => {
     const reservationGuestLogin = new ReservationGuestLoginPage(page);
     reservationGuestLogin.goto();
     await expect(page).toHaveURL(
-        '/reservationGuestLogin/reservationId=1c5289e8-72a7-4cb0-a0cb-fe6da57005eb',
+        '/reservationGuestLogin?reservationId=1c5289e8-72a7-4cb0-a0cb-fe6da57005eb',
     );
     await reservationGuestLogin.inputEmptyReserverName();
     await reservationGuestLogin.clickReserverMailInput();
@@ -28,7 +28,7 @@ test('メールアドレスの未入力', async ({ page }) => {
     const reservationGuestLogin = new ReservationGuestLoginPage(page);
     reservationGuestLogin.goto();
     await expect(page).toHaveURL(
-        '/reservationGuestLogin/reservationId=1c5289e8-72a7-4cb0-a0cb-fe6da57005eb',
+        '/reservationGuestLogin?reservationId=1c5289e8-72a7-4cb0-a0cb-fe6da57005eb',
     );
     await reservationGuestLogin.inputEmptyReserverMail();
     await reservationGuestLogin.clickReserverNameInput();
@@ -41,7 +41,7 @@ test('メールアドレスのバリデーションエラー', async ({ page }) 
     const reservationGuestLogin = new ReservationGuestLoginPage(page);
     reservationGuestLogin.goto();
     await expect(page).toHaveURL(
-        '/reservationGuestLogin/reservationId=1c5289e8-72a7-4cb0-a0cb-fe6da57005eb',
+        '/reservationGuestLogin?reservationId=1c5289e8-72a7-4cb0-a0cb-fe6da57005eb',
     );
     await reservationGuestLogin.inputInvalidReserverMail();
     await reservationGuestLogin.clickReserverNameInput();
