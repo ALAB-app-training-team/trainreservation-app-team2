@@ -137,11 +137,16 @@ public class ScheduleService {
     }
 
     public List<TrainCarFormationResponseDto> getTrainCarList(String scheduledCd) {
-        List<TrainCarFormationResponseDto> trainCarList = scheduleRepository.findTrainCarFormationByScheduleCd(scheduledCd);
+        ScheduleEntity schedule = scheduleRepository.findByScheduleCd(scheduledCd).orElseThrow(() -> new IllegalArgumentException("Schedule is Not found"));
 
-        if (trainCarList.isEmpty()) {
-            throw new IllegalArgumentException("ScheduleCd is Not found");
-        }
+        List<TrainCarFormationResponseDto> trainCarList = schedule.getTrainType().getTrainSeries().getTrainCars().stream()
+            .sorted(Comparator.comparing(tc -> tc.getTrainCarNumber()))
+            .map(tc -> new TrainCarFormationResponseDto(
+                tc.getTrainCarCd(),
+                tc.getTrainCarNumber(),
+                tc.getSeatType().getSeatTypeCd(),
+                tc.getSeatType().getTrainCarType().getName()
+            )).collect(Collectors.toList());
         return trainCarList;
     }
 }

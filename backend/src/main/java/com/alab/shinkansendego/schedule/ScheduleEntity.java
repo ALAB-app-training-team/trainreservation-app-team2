@@ -11,6 +11,7 @@ import jakarta.persistence.Table;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import lombok.ToString;
 
 @Data
 @NoArgsConstructor
@@ -24,6 +25,7 @@ public class ScheduleEntity {
     @Column(name = "train_type_cd")
     private String trainTypeCd;
     @ManyToOne(fetch = FetchType.LAZY)
+    @ToString.Exclude
     @JoinColumn(name = "train_type_cd", referencedColumnName = "train_type_cd", insertable = false, updatable = false)
     private TrainTypeEntity trainType;
 }
