@@ -29,9 +29,9 @@ test('有効タブは本日または未来の日付であること', async ({
     const today = new Date();
     today.setHours(0, 0, 0, 0);
 
-    await createReservation();
     await login();
     await expect(page).toHaveURL('/scheduleSearch');
+    await createReservation();
     await reservationListPage.goto();
     await expect(page).toHaveURL('/reservationList');
 
@@ -57,9 +57,9 @@ test('過去タブは過去の日付であること', async ({
     const today = new Date();
     today.setHours(0, 0, 0, 0);
 
-    await createReservation();
     await login();
     await expect(page).toHaveURL('/scheduleSearch');
+    await createReservation();
     await reservationListPage.goto();
     await expect(page).toHaveURL('/reservationList');
     await reservationListPage.clickPastButton();
