@@ -8,6 +8,7 @@ test('座席ごとの金額が正しく表示されていること', async ({
     page,
     createReservation,
     login,
+    logout,
 }) => {
     const reservationListPage = new ReservationListPage(page);
     const reservedTicketPage = new ReservedTicketPage(page);
@@ -16,7 +17,7 @@ test('座席ごとの金額が正しく表示されていること', async ({
     await login();
     await expect(page).toHaveURL('/scheduleSearch');
     await createReservation();
-    await header.goToReservationLogin();
+    await header.goToReservationList();
     await reservationListPage.clickTicketButton();
     await expect(page).toHaveURL('/reservedTicket');
     await expect(reservedTicketPage.title).toBeHidden();
@@ -29,4 +30,6 @@ test('座席ごとの金額が正しく表示されていること', async ({
     await expect(reservedTicketPage.seatFareElement.first()).toContainText(
         '2,600',
     );
+    await logout();
+    await expect(page).toHaveURL('/login');
 });

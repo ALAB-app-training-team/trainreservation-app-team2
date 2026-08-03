@@ -97,7 +97,7 @@ test('visual-login', async ({ page }) => {
     });
 });
 
-test('visual-reservationList', async ({ page, login }) => {
+test('visual-reservationList', async ({ page, login, logout }) => {
     const reservationListPage = new ReservationListPage(page);
 
     await login();
@@ -134,9 +134,11 @@ test('visual-reservationList', async ({ page, login }) => {
         mask: maskTargets,
         maskColor: '#ffffff',
     });
+    await logout();
+    await expect(page).toHaveURL('/login');
 });
 
-test('visual-reservedTicket', async ({ page, login }) => {
+test('visual-reservedTicket', async ({ page, login, logout }) => {
     const reservationListPage = new ReservationListPage(page);
     const reservedTicketPage = new ReservedTicketPage(page);
 
@@ -169,4 +171,6 @@ test('visual-reservedTicket', async ({ page, login }) => {
         ],
         maskColor: '#ffffff',
     });
+    await logout();
+    await expect(page).toHaveURL('/login');
 });

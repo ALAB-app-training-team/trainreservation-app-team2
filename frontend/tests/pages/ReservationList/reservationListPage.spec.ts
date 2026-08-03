@@ -2,15 +2,16 @@ import { expect } from '@playwright/test';
 import { test } from '@tests/fixtures';
 import { ReservationListPage } from '@tests/pages/ReservationList/ReservationListPage';
 
-/* test('お支払い合計が正しく表示されていること', async ({
+test('お支払い合計が正しく表示されていること', async ({
     page,
     createReservation,
     login,
+    logout,
 }) => {
     const reservationListPage = new ReservationListPage(page);
 
-    await createReservation();
     await login();
+    await createReservation();
     await expect(page).toHaveURL('/scheduleSearch');
     await reservationListPage.goto();
     await expect(page).toHaveURL('/reservationList');
@@ -18,12 +19,15 @@ import { ReservationListPage } from '@tests/pages/ReservationList/ReservationLis
     await expect(reservationListPage.totalFareElement.first()).toContainText(
         '2,600',
     );
-}); */
+    await logout();
+    await expect(page).toHaveURL('/login');
+});
 
 test('有効タブは本日または未来の日付であること', async ({
     page,
     createReservation,
     login,
+    logout,
 }) => {
     const reservationListPage = new ReservationListPage(page);
     const today = new Date();
@@ -45,12 +49,15 @@ test('有効タブは本日または未来の日付であること', async ({
         const date = new Date(Number(year), Number(month), Number(day));
         await expect(date.getTime()).toBeGreaterThanOrEqual(today.getTime());
     }
+    await logout();
+    await expect(page).toHaveURL('/login');
 });
 
 test('過去タブは過去の日付であること', async ({
     page,
     createReservation,
     login,
+    logout,
 }) => {
     const reservationListPage = new ReservationListPage(page);
 
@@ -73,12 +80,15 @@ test('過去タブは過去の日付であること', async ({
         const date = new Date(Number(year), Number(month), Number(day));
         await expect(date.getTime()).toBeLessThan(today.getTime());
     }
+    await logout();
+    await expect(page).toHaveURL('/login');
 });
 
 test('削除すると予約が1件削除されること', async ({
     page,
     createGuestReservation,
     login,
+    logout,
 }) => {
     const reservationListPage = new ReservationListPage(page);
 
@@ -99,4 +109,6 @@ test('削除すると予約が1件削除されること', async ({
     await expect(reservationListPage.refundButton).toHaveCount(
         beforeReservationCount - 1,
     );
+    await logout();
+    await expect(page).toHaveURL('/login');
 });

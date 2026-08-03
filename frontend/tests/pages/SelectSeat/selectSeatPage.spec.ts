@@ -152,6 +152,7 @@ test('予約確定', async ({ page }) => {
 test('ログイン中は氏名・メールアドレス入力欄とログインボタンが表示されない', async ({
     page,
     login,
+    logout,
 }) => {
     const scheduleSearchPage = new ScheduleSearchPage(page);
     const selectSeatPagePage = new SelectSeatPage(page);
@@ -163,6 +164,8 @@ test('ログイン中は氏名・メールアドレス入力欄とログイン�
     await selectSeatPagePage.name.isHidden();
     await selectSeatPagePage.mailAddress.isHidden();
     await selectSeatPagePage.loginButton.isHidden();
+    await logout();
+    await expect(page).toHaveURL('/login');
 });
 
 test('未ログイン時は氏名・メールアドレス入力欄とログインボタンが表示される', async ({

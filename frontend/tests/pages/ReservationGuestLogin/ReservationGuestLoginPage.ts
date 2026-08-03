@@ -64,4 +64,8 @@ export class ReservationGuestLoginPage {
     async inputInvalidReserverMail() {
         await this.fillMailAddress('aaa@あああ.co');
     }
+
+    async gotoEmpty() {
+        await this.page.goto('/reservationGuestLogin');
+    }
 }
