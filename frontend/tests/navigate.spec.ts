@@ -1,15 +1,15 @@
 import { expect } from '@playwright/test';
 import { ScheduleSearchPage } from '@tests/pages/ScheduleSearch/ScheduleSearchPage';
 import { SelectSeatPage } from '@tests/pages/SelectSeat/SelectSeatPage';
-/*import { ReservationListPage } from '@tests/pages/ReservationList/ReservationListPage';
+import { ReservationListPage } from '@tests/pages/ReservationList/ReservationListPage';
 import { ReservedTicketPage } from '@tests/pages/ReservedTicket/ReservedTicketPage';
 import { ReservationGuestLoginPage } from '@tests/pages/ReservationGuestLogin/ReservationGuestLoginPage';
-import { App } from '@tests/pages/shared/App';*/
+import { App } from '@tests/pages/shared/App';
 import { LoginPage } from '@tests/pages/Login/LoginPage';
 import { Header } from '@tests/pages/shared/Header';
 import { test } from '@tests/fixtures';
 
-/* test('navigate-検索～予約確認', async ({ page }) => {
+test('navigate-検索～予約確認', async ({ page }) => {
     const scheduleSearchPage = new ScheduleSearchPage(page);
     const selectSeatPage = new SelectSeatPage(page);
     const reservationGuestLogin = new ReservationGuestLoginPage(page);
@@ -39,7 +39,7 @@ import { test } from '@tests/fixtures';
     ).toBeHidden();
 
     await reservationGuestLogin.goto();
-    await expect(page).toHaveURL('/reservationGuestLogin');
+    await expect(page).toHaveURL(/\/reservationGuestLogin\?.+/);
     await reservationGuestLogin.inputGuestLoginInfo();
     await reservationGuestLogin.clickGuestLoginButton();
     await expect(page).toHaveURL('/reservationList');
@@ -63,7 +63,7 @@ test('navigate-header', async ({ page }) => {
     await expect(page).toHaveURL('/reservationGuestLogin');
     await reservationGuestLoginPage.header.goToSchduleSearchBySystemName();
     await expect(page).toHaveURL('/scheduleSearch');
-    await scheduleSearchPage.header.goToReservationGuestLogin();
+    await scheduleSearchPage.header.goToReservationLogin();
     await expect(page).toHaveURL('/reservationGuestLogin');
     await reservationGuestLoginPage.header.goToScheduleSearch();
     await expect(page).toHaveURL('/scheduleSearch');
@@ -97,7 +97,7 @@ test('navigate-ゲスト認証がない場合に予約一覧・予約詳細に�
     await reservedTicketPage.goto();
     await expect(page).toHaveURL('/reservationGuestLogin');
 });
-*/
+
 test('navigate-検索～シートマップからログイン～予約完了', async ({ page }) => {
     const scheduleSearchPage = new ScheduleSearchPage(page);
     const selectSeatPage = new SelectSeatPage(page);
