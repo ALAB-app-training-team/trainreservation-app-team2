@@ -3,6 +3,7 @@ import customParseFormat from 'dayjs/plugin/customParseFormat';
 import { FiArrowRight } from 'react-icons/fi';
 import { useNavigate } from 'react-router-dom';
 
+import { EmptySeatCount } from '@/features/schedule/components/EmptySeatCount';
 import type { ScheduleInfoDto } from '@/features/schedule/types/ScheduleInfoDto';
 import type { SearchRequestDto } from '@/features/schedule/types/SearchRequestDto';
 import type { SearchResponseDto } from '@/features/schedule/types/SearchResponseDto';
@@ -138,13 +139,25 @@ export function ScheduleItem({
                         <div>{arrivalStationName}</div>
                     </div>
                 </div>
-                <button
-                    type="button"
-                    onClick={handleSearch}
-                    className="bg-primary order-2 rounded-lg p-2 text-white md:order-3"
-                >
-                    詳細を見る
-                </button>
+                <div className="order-2 flex flex-wrap items-center gap-2 md:order-3 md:w-55 md:flex-col md:items-end">
+                    <EmptySeatCount
+                        reservedSeats={schedule.reservedSeats}
+                        greenSeats={schedule.greenSeats}
+                        gcSeats={schedule.gcSeats}
+                    />
+                    <button
+                        type="button"
+                        onClick={handleSearch}
+                        className="bg-primary order-2 rounded-lg p-2 text-white md:order-3"
+                        disabled={
+                            schedule.reservedSeats === 0 &&
+                            schedule.greenSeats === 0 &&
+                            schedule.gcSeats === 0
+                        }
+                    >
+                        詳細を見る
+                    </button>
+                </div>
             </div>
         </>
     );
