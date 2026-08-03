@@ -137,7 +137,7 @@ public class ScheduleService {
     }
 
     public List<TrainCarFormationResponseDto> getTrainCarList(String scheduledCd) {
-        ScheduleEntity schedule = scheduleRepository.findByScheduleCd(scheduledCd).orElseThrow(() -> new IllegalArgumentException("Schedule is Not found"));
+        ScheduleEntity schedule = scheduleRepository.findByScheduleCd(scheduledCd).orElseThrow(() -> new IllegalArgumentException("Schedule is not found"));
 
         List<TrainCarFormationResponseDto> trainCarList = schedule.getTrainType().getTrainSeries().getTrainCars().stream()
             .sorted(Comparator.comparing(tc -> tc.getTrainCarNumber()))

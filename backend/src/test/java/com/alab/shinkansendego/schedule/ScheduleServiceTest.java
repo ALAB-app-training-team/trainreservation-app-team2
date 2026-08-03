@@ -10,6 +10,7 @@ import com.alab.shinkansendego.sectionkm.SectionKmRepository;
 import com.alab.shinkansendego.totalseat.TotalSeatEntity;
 import com.alab.shinkansendego.totalseat.TotalSeatRepository;
 import com.alab.shinkansendego.trainSeries.TrainSeriesEntity;
+import com.alab.shinkansendego.traincar.TrainCarEntity;
 import com.alab.shinkansendego.traincartype.TrainCarTypeEntity;
 import com.alab.shinkansendego.traintype.TrainTypeEntity;
 import org.jspecify.annotations.NonNull;
@@ -71,8 +72,7 @@ public class ScheduleServiceTest {
         return Arrays.asList(expect01, expect02, expect03, expect04);
     }
 
-    // TODO: ここは関係あり
-    private static @NonNull List<TrainCarFormationResponseDto> getTrainCarResponseDtosList() {
+    private static @NonNull ScheduleEntity getExpectScheduleByScheduleCd() {
         TrainCarTypeEntity reservedTraicarType = new TrainCarTypeEntity("CAR01", "指定席");
         TrainCarTypeEntity greenTrainCarType = new TrainCarTypeEntity("CAR02", "グリーン");
 
@@ -85,10 +85,24 @@ public class ScheduleServiceTest {
         greenSeatType.setTrainCarTypeCd("CAR02");
         greenSeatType.setTrainCarType(greenTrainCarType);
 
-        TrainCarFormationResponseDto expect01 = new TrainCarFormationResponseDto("E5SER01", 1, "SEAT01", "指定席");
-        TrainCarFormationResponseDto expect02 = new TrainCarFormationResponseDto("E5SER02", 2, "SEAT01", "指定席");
+        TrainCarEntity reservedTrainCar = new TrainCarEntity();
+        reservedTrainCar.setTrainCarCd("E2SER01");
+        reservedTrainCar.setTrainCarNumber(1);
+        reservedTrainCar.setTrainSeriesCd("E2");
+        reservedTrainCar.setSeatType(reservedSeatType);
+        TrainCarEntity greenTrainCar = new TrainCarEntity();
+        greenTrainCar.setTrainCarCd("E2SER02");
+        greenTrainCar.setTrainCarNumber(2);
+        greenTrainCar.setTrainSeriesCd("E2");
+        greenTrainCar.setSeatType(greenSeatType);
 
-        return Arrays.asList(expect01, expect02);
+        TrainSeriesEntity trainSeries = new TrainSeriesEntity("E2SER", "E2系", List.of(reservedTrainCar, greenTrainCar));
+
+        TrainTypeEntity trainType = new TrainTypeEntity("YM001", "やまびこ1号", "E5SER", trainSeries);
+
+        ScheduleEntity schedule = new ScheduleEntity("TEST01", trainType.getTrainTypeCd(), trainType);
+
+        return schedule;
     }
 
     private static @NonNull Optional<ScheduleEntity> getScheduleEntity(TrainTypeEntity trainType) {
@@ -325,18 +339,32 @@ public class ScheduleServiceTest {
         assertEquals("AvailableSeats is Not found", ex.getMessage());
     }
 
-    // TODO: ここを変更する
     @Test
     @DisplayName("ダイヤコードを指定して車両編成が取得できる")
     void getTrainCarList_returnTrainCarListSuccess() {
         String scheduleCd = "TEST01";
-        List<TrainCarFormationResponseDto> expectList = getTrainCarResponseDtosList();
+        ScheduleEntity mockSchedule = getExpectScheduleByScheduleCd();
 
-        when(scheduleRepo.findByScheduleCd(scheduleCd)).thenReturn(expectList);
+        TrainCarFormationResponseDto expect01 = new TrainCarFormationResponseDto("E2SER01", 1, "SEAT01", "指定席");
+        TrainCarFormationResponseDto expect02 = new TrainCarFormationResponseDto("E2SER02", 2, "SEAT02", "グリーン");
+        List<TrainCarFormationResponseDto> expectTrainCarFormation = List.of(expect01, expect02);
+        when(scheduleRepo.findByScheduleCd(scheduleCd)).thenReturn(Optional.of(mockSchedule));
 
         List<TrainCarFormationResponseDto> actualList = service.getTrainCarList(scheduleCd);
 
         assertEquals(2, actualList.size());
-        assertEquals(expectList, actualList);
+        assertEquals(expectTrainCarFormation, actualList);
+    }
+
+    @Test
+    @DisplayName("ダイヤコードに対してデータがないときIllegalArgumentExceptionが発生する")
+    void getTrainCarList_withNotExistSchedule_returnIllegalArgumentException() {
+        String scheduleCd = "TEST01";
+        ScheduleEntity mockSchedule = getExpectScheduleByScheduleCd();
+
+        when(scheduleRepo.findByScheduleCd(scheduleCd)).thenReturn(Optional.empty());
+        
+        IllegalArgumentException exception = assertThrows(IllegalArgumentException.class, () -> service.getTrainCarList(scheduleCd));
+        assertEquals("Schedule is not found", exception.getMessage());
     }
 }
