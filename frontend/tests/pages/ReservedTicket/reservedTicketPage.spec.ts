@@ -14,6 +14,7 @@ test('座席ごとの金額が正しく表示されていること', async ({
     const header = new Header(page);
 
     await login();
+    await expect(page).toHaveURL('/scheduleSearch');
     await createReservation();
     await header.goToReservationLogin();
     await reservationListPage.clickTicketButton();

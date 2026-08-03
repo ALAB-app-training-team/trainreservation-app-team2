@@ -5,16 +5,36 @@ import { SelectSeatPage } from '@tests/pages/SelectSeat/SelectSeatPage';
 import { ReservationGuestLoginPage } from '@tests/pages/ReservationGuestLogin/ReservationGuestLoginPage';
 import { LoginPage } from './pages/Login/LoginPage';
 
+type CreateGuestReservation = () => Promise<void>;
 type CreateReservation = () => Promise<void>;
 type GuestLogin = () => Promise<void>;
 type Login = () => Promise<void>;
 type Fixture = {
+    createGuestReservation: CreateGuestReservation;
     createReservation: CreateReservation;
     guestLogin: GuestLogin;
     login: Login;
 };
 
 export const test = base.extend<Fixture>({
+    createGuestReservation: async (
+        { page }: { page: Page },
+        use: (fn: CreateGuestReservation) => Promise<void>,
+    ) => {
+        const create = async () => {
+            const scheduleSearchPage = new ScheduleSearchPage(page);
+            const selectSeatPage = new SelectSeatPage(page);
+
+            await scheduleSearchPage.goto();
+            await scheduleSearchPage.clickDetailButton();
+            await selectSeatPage.selectSeat();
+            await selectSeatPage.inputResererInfo();
+            await selectSeatPage.inputCardInfo();
+            await selectSeatPage.clickReseveButton();
+            await selectSeatPage.clickConfirmButton();
+        };
+        await use(create);
+    },
     createReservation: async (
         { page }: { page: Page },
         use: (fn: CreateReservation) => Promise<void>,
@@ -26,7 +46,6 @@ export const test = base.extend<Fixture>({
             await scheduleSearchPage.goto();
             await scheduleSearchPage.clickDetailButton();
             await selectSeatPage.selectSeat();
-            await selectSeatPage.inputResererInfo();
             await selectSeatPage.inputCardInfo();
             await selectSeatPage.clickReseveButton();
             await selectSeatPage.clickConfirmButton();
