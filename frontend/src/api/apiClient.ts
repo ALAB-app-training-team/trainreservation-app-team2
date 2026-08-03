@@ -9,7 +9,8 @@ apiClient.interceptors.response.use(
     (error) => {
         if (
             error.response &&
-            error.response.status === HttpStatusCode.Unauthorized
+            error.response.status === HttpStatusCode.Unauthorized &&
+            !window.location.pathname.startsWith('/reservationGuestLogin')
         ) {
             localStorage.clear();
             sessionStorage.clear();

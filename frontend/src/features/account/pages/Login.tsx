@@ -1,14 +1,21 @@
-import { useState } from 'react';
+import { useQueryClient } from '@tanstack/react-query';
+import { useEffect, useState } from 'react';
 import { FiLogIn } from 'react-icons/fi';
 import { MdVisibility, MdVisibilityOff } from 'react-icons/md';
 
 import { useLoginRequestDto } from '@/features/account/hooks/useLoginRequestDto';
+import { useToastForRedirect } from '@/shared/hooks/useToastForRedirect';
+import { removeGuestReservation } from '@/shared/utils/RemoveGuestReservation';
 
 export function Login() {
+    const queryClient = useQueryClient();
     const { loginRequestDto, handleChange, handleLogin, isSubmitting } =
         useLoginRequestDto();
     const [passwordType, setPasswordType] = useState('password');
-
+    useToastForRedirect();
+    useEffect(() => {
+        removeGuestReservation(queryClient);
+    }, []);
     return (
         <div className="flex justify-center">
             <div className="flex w-full flex-col items-center justify-center gap-4 p-8 md:w-6/10">

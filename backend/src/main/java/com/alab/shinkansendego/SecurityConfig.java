@@ -36,8 +36,10 @@ public class SecurityConfig {
             )
             .authorizeHttpRequests(auth -> auth
                 .requestMatchers("/api/login", "/api/logout", "/api/stations", "/api/stopstations", "/api/schedules", "/api/traincars",
-                    "/api/payments", "/api/payments/tokens", "/api/schedules/**", "/api/traincars/**", "/api/reservations/*").permitAll()
+                    "/api/payments", "/api/payments/tokens", "/api/schedules/**", "/api/traincars/**").permitAll()
+                .requestMatchers(HttpMethod.GET, "/api/reservations/guest/*").permitAll()
                 .requestMatchers(HttpMethod.POST, "/api/reservations").permitAll()
+                .requestMatchers(HttpMethod.DELETE, "/api/reservations/*").permitAll()
                 .anyRequest().authenticated()
             )
             .formLogin(form -> form.disable())

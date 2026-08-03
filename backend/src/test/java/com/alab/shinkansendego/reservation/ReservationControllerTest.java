@@ -174,14 +174,14 @@ public class ReservationControllerTest {
     }
 
     @Test
-    @DisplayName("予約情報IDと予約者氏名とメールアドレスから予約チケット情報が取得できる")
-    void getReservation_withReservationIdAndReserverNameAndReserverMail_returnGetReservationSuccess() throws Exception {
+    @DisplayName("ゲストログインとして予約情報IDと予約者氏名とメールアドレスから予約チケット情報が取得できる")
+    void getGuestReservation_withReservationIdAndReserverNameAndReserverMail_returnGetGuestReservationSuccess() throws Exception {
 
         UUID request = UUID.fromString("4156b939-2e3e-46c1-92d3-7aa64b6ca575");
         ReservationResponseDto expect = getExpectReservationResponseDto(request);
-        String url = baseUrl + "/4156b939-2e3e-46c1-92d3-7aa64b6ca575";
+        String url = baseUrl + "/guest/4156b939-2e3e-46c1-92d3-7aa64b6ca575";
 
-        Mockito.when(service.getReservation(request, "山田太郎", "email@sample.com")).thenReturn(expect);
+        Mockito.when(service.getGuestReservation(request, "山田太郎", "email@sample.com")).thenReturn(expect);
 
         mockMvc.perform(
                 get(url + "?reserverName=山田太郎&reserverMail=email@sample.com")
@@ -217,11 +217,70 @@ public class ReservationControllerTest {
 
     @Test
     @DisplayName("idがNullの場合、NOTFOUNDを返す")
-    void getReservation_withReservationIdIsNull_returnRequestParamError() throws Exception {
-        String url = baseUrl + "/";
+    void getGuestReservation_withGuestReservationIdIsNull_returnRequestParamError() throws Exception {
+        String url = baseUrl + "/guest/";
 
         mockMvc.perform(get(url))
             .andExpect(status().isNotFound());
+    }
+
+    @Test
+    @DisplayName("予約情報IDとアカウントログイン情報から予約チケット情報が取得できる")
+    void getAccountReservation_withReservationIdAndSession_returnGetGuestReservationSuccess() throws Exception {
+
+        AccountSessionDto session = new AccountSessionDto(
+            UUID.fromString("f79d8bbc-fcba-b538-b132-2f726ce0120c"), "test-common@test.com", "一般太郎"
+        );
+        Authentication auth = new UsernamePasswordAuthenticationToken(session, null, Collections.emptyList());
+
+        UUID request = UUID.fromString("4156b939-2e3e-46c1-92d3-7aa64b6ca575");
+        ReservationResponseDto expect = getExpectReservationResponseDto(request);
+        String url = baseUrl + "/4156b939-2e3e-46c1-92d3-7aa64b6ca575";
+
+        Mockito.when(service.getAccountReservation(request, session.getId())).thenReturn(expect);
+
+        mockMvc.perform(
+                get(url)
+                    .with(SecurityMockMvcRequestPostProcessors.authentication(auth))
+                    .contentType(MediaType.APPLICATION_JSON))
+            .andExpect(status().isOk())
+            .andExpect(jsonPath("$.reservationId").value("4156b939-2e3e-46c1-92d3-7aa64b6ca575"))
+            .andExpect(jsonPath("$.trainTypeName").value("やまびこ1号"))
+            .andExpect(jsonPath("$.departureStationName").value("東京"))
+            .andExpect(jsonPath("$.departureTime").value("12:00:00"))
+            .andExpect(jsonPath("$.arrivalStationName").value("仙台"))
+            .andExpect(jsonPath("$.arrivalTime").value("13:00:00"))
+            .andExpect(jsonPath("$.rideDate").value("2026-06-01"))
+            .andExpect(jsonPath("$.reservedSeats.length()").value(3))
+            .andExpect(jsonPath("$.reservedSeats[0].trainCarTypeName").value("指定席"))
+            .andExpect(jsonPath("$.reservedSeats[1].trainCarTypeName").value("グリーン車"))
+            .andExpect(jsonPath("$.reservedSeats[2].trainCarTypeName").value("グランクラス"))
+            .andExpect(jsonPath("$.reservedSeats[0].trainCarNumber").value(1))
+            .andExpect(jsonPath("$.reservedSeats[1].trainCarNumber").value(9))
+            .andExpect(jsonPath("$.reservedSeats[2].trainCarNumber").value(10))
+            .andExpect(jsonPath("$.reservedSeats[0].seatNumber").value(1))
+            .andExpect(jsonPath("$.reservedSeats[1].seatNumber").value(1))
+            .andExpect(jsonPath("$.reservedSeats[2].seatNumber").value(1))
+            .andExpect(jsonPath("$.reservedSeats[0].seatColumn").value("A"))
+            .andExpect(jsonPath("$.reservedSeats[1].seatColumn").value("A"))
+            .andExpect(jsonPath("$.reservedSeats[2].seatColumn").value("A"))
+            .andExpect(jsonPath("$.reservedSeats[0].codeToken").value("60a1ab63-a41f-430d-a2d1-10a76368d0f5"))
+            .andExpect(jsonPath("$.reservedSeats[1].codeToken").value("3de8909e-32de-478e-bd9b-739f3fe6d6c3"))
+            .andExpect(jsonPath("$.reservedSeats[2].codeToken").value("e192e5f1-318e-4d10-b76d-2f2bf15e8b70"))
+            .andExpect(jsonPath("$.reservedSeats[0].seatFare").value(5000))
+            .andExpect(jsonPath("$.reservedSeats[1].seatFare").value(10000))
+            .andExpect(jsonPath("$.reservedSeats[2].seatFare").value(15000));
+    }
+
+    @Test
+    @DisplayName("未ログインの場合、401エラーが発生する")
+    void getAccountReservation_withNoSession_return401StatusCode() throws Exception {
+        String url = baseUrl + "/4156b939-2e3e-46c1-92d3-7aa64b6ca575";
+        mockMvc.perform(
+                get(url)
+                    .contentType(MediaType.APPLICATION_JSON))
+            .andExpect(status().isUnauthorized())
+            .andExpect(content().string("Unauthorized"));
     }
 
     @Test
