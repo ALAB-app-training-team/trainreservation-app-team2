@@ -1,12 +1,13 @@
 import { useQueryClient } from '@tanstack/react-query';
 import axios, { HttpStatusCode } from 'axios';
-import { Suspense, useState } from 'react';
+import { Suspense, useContext, useState } from 'react';
 import { IoCardOutline } from 'react-icons/io5';
-import { LuArrowLeft } from 'react-icons/lu';
+import { LuArrowLeft, LuLogIn } from 'react-icons/lu';
 import { useLocation, useNavigate } from 'react-router-dom';
 
 import apiClient from '@/api/apiClient';
 import { ENDPOINTS } from '@/api/routes';
+import { authContext } from '@/context/AuthContext';
 import { ReserveConfirmModal } from '@/features/schedule/components/ReserveConfirmModal';
 import { ReserveUserInfo } from '@/features/schedule/components/ReserveUserInfo';
 import { SelectedSeats } from '@/features/schedule/components/SelectedSeats';
@@ -28,13 +29,17 @@ export function SelectSeats() {
     const queryClient = useQueryClient();
     const navigate = useNavigate();
     const location = useLocation();
-    const { scheduleInfoDto, searchRequestDto } = location.state;
+    const {
+        scheduleInfoDto,
+        searchRequestDto,
+        selectedSeats: prevSelectedSeats,
+    } = location.state;
     const {
         selectedSeats,
         handleSelectedSeats,
         handleClear,
         checkReservedSeats,
-    } = useSelectedSeats();
+    } = useSelectedSeats(prevSelectedSeats ?? []);
     const {
         reserveUser,
         focus,
@@ -46,6 +51,7 @@ export function SelectSeats() {
     } = useReserveUser();
     const { isOpen, handleModalOpen, onRequestClose } = useModal();
     const [isSubmitting, setIsSubmitting] = useState<boolean>(false);
+    const isLoggedIn = !!useContext(authContext).name;
 
     const getPaymentToken = async (): Promise<string> => {
         const paymentRequestDto: PaymentRequestDto = {
@@ -93,15 +99,25 @@ export function SelectSeats() {
         try {
             const paymentToken = await getPaymentToken();
             const reservationId = await submitOrderWithToken(paymentToken);
-            sessionStorage.setItem(
-                'guestLoginInfo',
-                JSON.stringify({
-                    reserverName: removeWhiteSpace(reserveUser.reserverName),
-                    reserverMail: removeWhiteSpace(reserveUser.reserverMail),
-                }),
-            );
+            if (!isLoggedIn) {
+                sessionStorage.setItem(
+                    'guestLoginInfo',
+                    JSON.stringify({
+                        reserverName: removeWhiteSpace(
+                            reserveUser.reserverName,
+                        ),
+                        reserverMail: removeWhiteSpace(
+                            reserveUser.reserverMail,
+                        ),
+                    }),
+                );
+            }
             navigate('/reservedTicket', {
-                state: { reservationId: reservationId, isBack: false },
+                state: {
+                    reservationId: reservationId,
+                    isBack: false,
+                    guestLogin: false,
+                },
             });
         } catch (error) {
             if (
@@ -163,6 +179,27 @@ export function SelectSeats() {
                             selectedSeats={selectedSeats}
                             handleClear={handleClear}
                         />
+                        {!isLoggedIn && (
+                            <div className="border-primary-mid-light bg-primary-light flex w-full flex-col gap-4 rounded-2xl border-2 p-4 text-center">
+                                <span>アカウントをお持ちですか？</span>
+                                <button
+                                    onClick={() =>
+                                        navigate('/login', {
+                                            state: {
+                                                prevPath: location.pathname,
+                                                scheduleInfoDto,
+                                                searchRequestDto,
+                                                selectedSeats,
+                                            },
+                                        })
+                                    }
+                                    className="border-primary-mid-light flex w-full items-center justify-center gap-4 rounded-2xl border-2 bg-white p-2 text-center font-medium"
+                                >
+                                    <LuLogIn />
+                                    ログインして氏名・メールアドレスを省略
+                                </button>
+                            </div>
+                        )}
                         <form
                             onSubmit={(e) => {
                                 e.preventDefault();

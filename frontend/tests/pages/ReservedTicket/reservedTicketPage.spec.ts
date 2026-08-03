@@ -1,18 +1,23 @@
-/* import { expect } from '@playwright/test';
+import { expect } from '@playwright/test';
 import { ReservationListPage } from '@tests/pages/ReservationList/ReservationListPage';
+import { Header } from '@tests/pages/shared/Header';
 import { ReservedTicketPage } from '@tests/pages/ReservedTicket/ReservedTicketPage';
 import { test } from '@tests/fixtures';
 
 test('座席ごとの金額が正しく表示されていること', async ({
     page,
     createReservation,
-    guestLogin,
+    login,
+    logout,
 }) => {
     const reservationListPage = new ReservationListPage(page);
     const reservedTicketPage = new ReservedTicketPage(page);
+    const header = new Header(page);
 
+    await login();
+    await expect(page).toHaveURL('/scheduleSearch');
     await createReservation();
-    await guestLogin();
+    await header.goToReservationList();
     await reservationListPage.clickTicketButton();
     await expect(page).toHaveURL('/reservedTicket');
     await expect(reservedTicketPage.title).toBeHidden();
@@ -25,5 +30,6 @@ test('座席ごとの金額が正しく表示されていること', async ({
     await expect(reservedTicketPage.seatFareElement.first()).toContainText(
         '2,600',
     );
+    await logout();
+    await expect(page).toHaveURL('/login');
 });
- */

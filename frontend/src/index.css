@@ -3,6 +3,10 @@
 @theme {
     --color-primary: #008803;
     --color-primary-light: #f0f5f0;
+    --color-primary-mid-light: #cce7cc;
+    --color-reserved-seat: #b45309cc;
+    --color-green-seat: #2e9823;
+    --color-gc-seat: #6449ba;
     /* やまびこ */
     --color-YM: #27ae60;
     /* はやぶさ */
@@ -150,4 +154,13 @@ button {
 button:disabled {
     cursor: not-allowed;
     background-color: var(--color-gray-300);
+}
+
+input:read-only {
+    cursor: not-allowed;
+    background-color: var(--color-gray-200);
+}
+input:read-only:focus {
+    border: 0px;
+    outline: none;
 }

@@ -1,12 +1,12 @@
-import { useQueryClient } from '@tanstack/react-query';
 import { useState } from 'react';
 import { CiMail } from 'react-icons/ci';
 import { FiUser } from 'react-icons/fi';
-import { useNavigate } from 'react-router-dom';
+import { MdConfirmationNumber } from 'react-icons/md';
+import { useNavigate, useSearchParams } from 'react-router-dom';
 
 import { GuestLoginInput } from '@/features/reservation/components/GuestLoginInput';
-import { useReservationList } from '@/features/reservation/hooks/useReservationList';
 import { useReservationListRequestDto } from '@/features/reservation/hooks/useReservationListRequestDto';
+import { useReservedTickets } from '@/features/reservation/hooks/useReservedTickets';
 import { ERROR_MESSAGE } from '@/shared/constants/ErrorMessages';
 import { removeWhiteSpace } from '@/shared/utils/RemoveWhiteSpace';
 
@@ -18,17 +18,20 @@ export function ReservationGuestLoginBody() {
         getFieldError,
         isInvalid,
     } = useReservationListRequestDto();
-    const { getReservation } = useReservationList();
+    const [searchParams] = useSearchParams();
+    const targetReservationId = searchParams.get('reservationId');
+    const { getReservationTicket } = useReservedTickets(
+        targetReservationId === null ? '' : targetReservationId,
+    );
     const [isSubmitting, setIsSubmitting] = useState<boolean>(false);
     const [requestError, setRequestError] = useState<string>('');
     const navigate = useNavigate();
-    const queryClient = useQueryClient();
     const handleGuestLogin = async (e: React.SubmitEvent<HTMLFormElement>) => {
         e.preventDefault();
         if (isSubmitting) return;
         setIsSubmitting(true);
         try {
-            if (isInvalid) {
+            if (isInvalid || targetReservationId == null) {
                 return;
             }
             const request = {
@@ -36,14 +39,22 @@ export function ReservationGuestLoginBody() {
                 reserverName: removeWhiteSpace(guestLoginForm.reserverName),
                 reserverMail: removeWhiteSpace(guestLoginForm.reserverMail),
             };
-            const reservationList = await getReservation();
-            if (reservationList.length === 0) {
+            const targetReservation = getReservationTicket(
+                targetReservationId,
+                request,
+            );
+            if ((await targetReservation).trainTypeName === undefined) {
                 setRequestError(ERROR_MESSAGE.NO_RESERVATION);
                 return;
             }
-            queryClient.setQueryData(['reservationList'], reservationList);
             sessionStorage.setItem('guestLoginInfo', JSON.stringify(request));
-            navigate('/reservationList');
+            navigate('/reservedTicket', {
+                state: {
+                    reservationId: targetReservationId,
+                    isBack: false,
+                    guestLogin: true,
+                },
+            });
             window.scrollTo(0, 0);
         } catch {
             setRequestError(ERROR_MESSAGE.ANY_RESERVATION_ERROR);
@@ -69,6 +80,21 @@ export function ReservationGuestLoginBody() {
                                 onSubmit={handleGuestLogin}
                             >
                                 <GuestLoginInput
+                                    id="reservationId"
+                                    label="予約ID"
+                                    type="text"
+                                    inputMode="text"
+                                    value={
+                                        targetReservationId === null
+                                            ? ''
+                                            : targetReservationId
+                                    }
+                                    placeHolder="予約ID"
+                                    autoComplete="text"
+                                    icon={MdConfirmationNumber}
+                                    readOnly={true}
+                                />
+                                <GuestLoginInput
                                     id="reserverName"
                                     label="予約者氏名"
                                     type="text"
@@ -80,6 +106,7 @@ export function ReservationGuestLoginBody() {
                                     onChange={handleChange}
                                     onBlur={handleBlur}
                                     validMessage={getFieldError('reserverName')}
+                                    readOnly={false}
                                 />
                                 <GuestLoginInput
                                     id="reserverMail"
@@ -93,6 +120,7 @@ export function ReservationGuestLoginBody() {
                                     onChange={handleChange}
                                     onBlur={handleBlur}
                                     validMessage={getFieldError('reserverMail')}
+                                    readOnly={false}
                                 />
                                 <button
                                     type="submit"

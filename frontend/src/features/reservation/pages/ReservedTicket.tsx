@@ -7,21 +7,23 @@ import { ReservedTicketInfo } from '@/features/reservation/components/ReservedTi
 import { ReservedTicketInfoSkeleton } from '@/features/reservation/components/ReservedTicketInfo/ReservedTicketInfoSkeleton';
 import { ReservedTicketQrCode } from '@/features/reservation/components/ReservedTicketQrCode/ReservedTicketQrCode';
 import { ReservedTicketQrCodeSkeleton } from '@/features/reservation/components/ReservedTicketQrCode/ReservedTicketQrCodeSkeleton';
+import { TicketShare } from '@/features/reservation/components/TicketShare';
 import { useReservedTickets } from '@/features/reservation/hooks/useReservedTickets';
 import { removeGuestReservation } from '@/shared/utils/RemoveGuestReservation';
 
 export function ReservedTicket() {
     const location = useLocation();
     const navigate = useNavigate();
-    const { reservationId, isBack } = location.state;
+    const { reservationId, isBack, guestLogin } = location.state;
     const { reservedTickets } = useReservedTickets(reservationId);
-
+    const shareUrl = `${window.location.origin}/reservationGuestLogin?reservationId=${reservationId}`;
     const queryClient = useQueryClient();
+    const accountInfo = localStorage.getItem('name');
     useEffect(() => {
         const nv = performance.getEntriesByType(
             'navigation',
         )[0] as PerformanceNavigationTiming;
-        if (!isBack && nv.type !== 'reload') {
+        if (accountInfo !== null && !isBack && nv.type !== 'reload') {
             removeGuestReservation(queryClient);
         }
     }, []);
@@ -29,7 +31,7 @@ export function ReservedTicket() {
     return (
         <>
             <div className="flex w-full flex-col items-center gap-4 p-4">
-                <div className="w-full max-w-5xl min-w-[360px] md:w-7/10">
+                <div className="w-full max-w-5xl min-w-90 md:w-7/10">
                     <div className="flex items-center justify-start">
                         {isBack ? (
                             <button
@@ -46,9 +48,9 @@ export function ReservedTicket() {
                         ) : (
                             <h1
                                 data-testid="reserve-complete"
-                                className="!m-0 text-left !text-3xl"
+                                className="m-0! text-left text-3xl!"
                             >
-                                予約完了
+                                {guestLogin ? '予約詳細' : '予約完了'}
                             </h1>
                         )}
                     </div>
@@ -61,6 +63,7 @@ export function ReservedTicket() {
                     <Suspense fallback={<ReservedTicketInfoSkeleton />}>
                         <ReservedTicketInfo ticketInfo={reservedTickets} />
                     </Suspense>
+                    <TicketShare shareUrl={shareUrl} />
                 </div>
             </div>
         </>
