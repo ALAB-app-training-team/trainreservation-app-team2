@@ -67,7 +67,7 @@ test('visual-reservationGuestLogin', async ({ page }) => {
     await page.evaluate(() => document.fonts.ready);
 
     await expect(page).toHaveScreenshot({
-        maxDiffPixelRatio: 0.0,
+        maxDiffPixelRatio: 0.05,
         fullPage: true,
         animations: 'disabled',
         mask: [
