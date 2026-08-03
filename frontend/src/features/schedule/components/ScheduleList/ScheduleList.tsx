@@ -5,6 +5,7 @@ import { AiOutlineExclamationCircle } from 'react-icons/ai';
 import type { ReactPaginateProps } from 'react-paginate';
 import _ReactPaginate from 'react-paginate';
 
+import { EmptySeatCount } from '@/features/schedule/components/EmptySeatCount';
 import { ScheduleItem } from '@/features/schedule/components/ScheduleItem';
 import { useSchedules } from '@/features/schedule/hooks/useSchedules';
 import type { SearchRequestDto } from '@/features/schedule/types/SearchRequestDto';
@@ -46,8 +47,9 @@ export function ScheduleList({
     return (
         <>
             <div className="flex flex-col gap-4">
-                <div className="self-end">
-                    {schedules.length}件の列車が見つかりました
+                <div className="flex justify-between">
+                    <div>{schedules.length}件の列車が見つかりました</div>
+                    <EmptySeatCount />
                 </div>
                 {schedules.length ? (
                     <>
