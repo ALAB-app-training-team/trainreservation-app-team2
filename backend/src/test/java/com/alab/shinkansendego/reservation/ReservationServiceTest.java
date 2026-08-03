@@ -76,6 +76,7 @@ public class ReservationServiceTest {
     private final UUID accountId = UUID.fromString("f79d8bbc-fcba-b538-b132-2f726ce0120c");
     private final UUID noReservationAccountId = UUID.fromString("f79d8bbc-fcba-b538-b132-2f726ce0120c");
     private final AccountSessionDto session = new AccountSessionDto(accountId, "test-common@test.com", "一般太郎");
+    private final AccountEntity account = new AccountEntity();
     @Mock
     private ReservationRepository reservationRepo;
     @Mock

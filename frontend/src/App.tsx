@@ -40,7 +40,7 @@ const guestLoginLoader = (request: LoaderFunctionArgs) => {
     const account = localStorage.getItem('name');
     if (account !== null) {
         sessionStorage.setItem('message', ERROR_MESSAGE.EXIST_ACCOUNT);
-        return redirect('/login');
+        return redirect('/reservationList');
     }
     const url = new URL(request.url);
     const targetReservationId = url.searchParams.get('reservationId');
