@@ -30,6 +30,15 @@ export function EmptySeatCount({
             count: gcSeats,
         },
     ];
+
+    if (reservedSeats === 0 && greenSeats === 0 && gcSeats === 0) {
+        return (
+            <>
+                <div className="text-red-500">満席</div>
+            </>
+        );
+    }
+
     return (
         <>
             <div className="flex gap-1">
