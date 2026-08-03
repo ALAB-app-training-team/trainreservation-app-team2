@@ -25,13 +25,9 @@ export const test = base.extend<Fixture>({
 
             await scheduleSearchPage.goto();
             await scheduleSearchPage.clickDetailButton();
-            await selectSeatPage.clickBackButton();
-            await scheduleSearchPage.clickDetailButton();
             await selectSeatPage.selectSeat();
             await selectSeatPage.inputResererInfo();
             await selectSeatPage.inputCardInfo();
-            await selectSeatPage.clickReseveButton();
-            await selectSeatPage.clickCancelButton();
             await selectSeatPage.clickReseveButton();
             await selectSeatPage.clickConfirmButton();
         };

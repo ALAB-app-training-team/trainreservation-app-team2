@@ -75,7 +75,7 @@ test('過去タブは過去の日付であること', async ({
     }
 });
 
-/* test('削除すると予約が1件削除されること', async ({
+test('削除すると予約が1件削除されること', async ({
     page,
     createReservation,
     login,
@@ -99,4 +99,4 @@ test('過去タブは過去の日付であること', async ({
     await expect(reservationListPage.refundButton).toHaveCount(
         beforeReservationCount - 1,
     );
-}); */
+});
