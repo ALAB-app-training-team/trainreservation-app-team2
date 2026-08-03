@@ -41,7 +41,7 @@ export function EmptySeatCount({
 
     return (
         <>
-            <div className="flex gap-1">
+            <div className="flex flex-wrap gap-1">
                 {seatTypeist.map((seat) => {
                     const seatColorClass =
                         seat.count === 0

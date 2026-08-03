@@ -139,7 +139,7 @@ export function ScheduleItem({
                         <div>{arrivalStationName}</div>
                     </div>
                 </div>
-                <div className="order-2 flex items-center gap-2 md:order-3 md:flex-col md:items-end">
+                <div className="order-2 flex flex-wrap items-center gap-2 md:order-3 md:w-50 md:flex-col md:items-end">
                     <EmptySeatCount
                         reservedSeats={schedule.reservedSeats}
                         greenSeats={schedule.greenSeats}
