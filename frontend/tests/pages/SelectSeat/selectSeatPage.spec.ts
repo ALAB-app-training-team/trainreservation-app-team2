@@ -103,29 +103,144 @@ test('座席を6席選択すると、それ以上選択できない', async ({ p
     await expect(page.locator('button.bg-gray-200').first()).toBeDisabled();
 });
 
-// TODO: バリデーションの画面テストを実装する
-// test('バリデーション？', async ({ page }) => {
-//     const scheduleSearchPage = new ScheduleSearchPage(page);
-//     const selectSeatPage = new SelectSeatPage(page);
-//     await scheduleSearchPage.goto();
-//     await expect(page).toHaveURL('/scheduleSearch');
-//     await scheduleSearchPage.clickDetailButton();
-//     await selectSeatPage.selectSeat();
-//     await page.getByRole('textbox', { name: '予約者氏名' }).fill('山田 太郎');
-//     await page
-//         .getByRole('textbox', { name: 'メールアドレス' })
-//         .fill('demo@example.com');
-//     await page
-//         .getByRole('textbox', { name: 'カード番号' })
-//         .fill('4111222233334444');
-//     await page
-//         .getByRole('textbox', { name: 'カード名義人' })
-//         .fill('TARO YAMADa');
-//     await page
-//         .getByRole('textbox', { name: '有効期限（月/年）' })
-//         .fill('12/28');
-//     await page.getByRole('textbox', { name: 'セキュリティコード' }).fill('123');
-// });
+test('購入者情報バリデーションチェック', async ({ page }) => {
+    const scheduleSearchPage = new ScheduleSearchPage(page);
+    const selectSeatPage = new SelectSeatPage(page);
+
+    await scheduleSearchPage.goto();
+    await expect(page).toHaveURL('/scheduleSearch');
+    await scheduleSearchPage.clickDetailButton();
+    await selectSeatPage.selectSeat();
+    await expect(selectSeatPage.reserveButton).toBeDisabled();
+
+    // 名前-必須
+    await selectSeatPage.name.click();
+    await selectSeatPage.trainCars.first().click();
+    await expect(selectSeatPage.reservationInfoError).toContainText(
+        '予約者氏名を入力してください',
+    );
+    // 名前-文字数
+    const name256str =
+        'あいうえおかきくけこさしすせそたちつてとなにぬねのはひふへほまみむめもやゆよらりるれろわをんあいうえおかきくけこさしすせそたちつてとなにぬねのはひふへほまみむめもやゆよらりるれろわをんあいうえおかきくけこさしすせそたちつてとなにぬねのはひふへほまみむめもやゆよらりるれろわをんあいうえおかきくけこさしすせそたちつてとなにぬねのはひふへほまみむめもやゆよらりるれろわをんあいうえおかきくけこさしすせそたちつてとなにぬねのはひふへほまみむめもやゆよらりるれろわをんあいうえおかきくけこさしすせそたちつてとなにぬねのは';
+    await selectSeatPage.fillName(name256str);
+    await expect(selectSeatPage.reservationInfoError).toContainText(
+        '予約者氏名は255文字以内で入力してください',
+    );
+    // 名前-正常系
+    await selectSeatPage.fillName('田中太郎');
+    await expect(selectSeatPage.reservationInfoError).toBeHidden();
+
+    // メールアドレス-必須
+    await selectSeatPage.mailAddress.click();
+    await selectSeatPage.name.click();
+    await expect(selectSeatPage.reservationInfoError).toContainText(
+        'メールアドレスを入力してください',
+    );
+    // メールアドレス-形式
+    await selectSeatPage.fillMailAddress('a@c');
+    await expect(selectSeatPage.reservationInfoError).toContainText(
+        'メールアドレスの形式（~~@~~.~~）で入力してください',
+    );
+    await selectSeatPage.fillMailAddress('a@c.c');
+    await expect(selectSeatPage.reservationInfoError).toContainText(
+        'メールアドレスの形式（~~@~~.~~）で入力してください',
+    );
+    await selectSeatPage.fillMailAddress('a@c.[');
+    await expect(selectSeatPage.reservationInfoError).toContainText(
+        'メールアドレスの形式（~~@~~.~~）で入力してください',
+    );
+    // メールアドレス-文字数
+    const mail256str =
+        'aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa@co.mmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmm';
+    await selectSeatPage.fillMailAddress(mail256str);
+    await expect(selectSeatPage.reservationInfoError).toContainText(
+        'メールアドレスは255文字以内で入力してください',
+    );
+    // メールアドレス-正常系
+    await selectSeatPage.fillMailAddress('a@c.co');
+    await expect(selectSeatPage.reservationInfoError).toBeHidden();
+
+    // カード番号-必須
+    await selectSeatPage.cardNumber.click();
+    await selectSeatPage.mailAddress.click();
+    await expect(selectSeatPage.reservationInfoError).toContainText(
+        '14-16桁の有効なカード番号を入力してください',
+    );
+    // カード番号-文字数
+    const cardNum13 = '1234567890123';
+    await selectSeatPage.fillCardNumber(cardNum13);
+    await expect(selectSeatPage.reservationInfoError).toContainText(
+        '14-16桁の有効なカード番号を入力してください',
+    );
+    const cardNum14 = '12345678901234';
+    await selectSeatPage.fillCardNumber(cardNum14);
+    await expect(selectSeatPage.reservationInfoError).toBeHidden();
+
+    const cardNum16 = '1234567890123456';
+    await selectSeatPage.fillCardNumber(cardNum16);
+    await expect(selectSeatPage.reservationInfoError).toBeHidden();
+    const cardNum17 = '12345678901234567';
+    await selectSeatPage.fillCardNumber(cardNum17);
+    await expect(selectSeatPage.reservationInfoError).toContainText(
+        '14-16桁の有効なカード番号を入力してください',
+    );
+    // カード番号-形式
+    await selectSeatPage.fillCardNumber('aaaaa');
+    await expect(selectSeatPage.cardNumber).not.toHaveText('aaaaa');
+    await expect(selectSeatPage.reservationInfoError).toContainText(
+        '14-16桁の有効なカード番号を入力してください',
+    );
+    // カード番号-正常系
+    await selectSeatPage.fillCardNumber('4111222233334444');
+    await expect(selectSeatPage.reservationInfoError).toBeHidden();
+
+    // カード名義人-必須
+    await selectSeatPage.cardHolderName.click();
+    await selectSeatPage.cardNumber.click();
+    await expect(selectSeatPage.reservationInfoError).toContainText(
+        'カード名義人を入力してください',
+    );
+    // カード名義人-形式
+    await selectSeatPage.fillCardHolderName('あああああ');
+    await expect(selectSeatPage.cardHolderName).not.toHaveText('あああああ');
+    await expect(selectSeatPage.reservationInfoError).toContainText(
+        'カード名義人を入力してください',
+    );
+    // カード名義人-正常系
+    await selectSeatPage.fillCardHolderName('TARO YAMADA');
+    await expect(selectSeatPage.reservationInfoError).toBeHidden();
+
+    // 有効期限-必須
+    await selectSeatPage.cardExpiry.click();
+    await selectSeatPage.cardNumber.click();
+    await expect(selectSeatPage.reservationInfoError).toContainText(
+        'MM/YY（月/年）の形式で入力してください',
+    );
+    // 有効期限-形式
+    await selectSeatPage.fillCardExpiry('ああああ');
+    await expect(selectSeatPage.cardExpiry).not.toHaveText('ああああ');
+    await expect(selectSeatPage.reservationInfoError).toContainText(
+        'MM/YY（月/年）の形式で入力してください',
+    );
+    // 有効期限-正常系
+    await selectSeatPage.fillCardExpiry('12/28');
+    await expect(selectSeatPage.reservationInfoError).toBeHidden();
+
+    // セキュリティコード-必須
+    await selectSeatPage.secureCode.click();
+    await selectSeatPage.cardNumber.click();
+    await expect(selectSeatPage.reservationInfoError).toContainText(
+        '半角数字3-4桁で入力してください',
+    );
+    // セキュリティコード-形式
+    await selectSeatPage.fillSecureCode('ああああ');
+    await expect(selectSeatPage.secureCode).not.toHaveText('ああああ');
+    await expect(selectSeatPage.reservationInfoError).toContainText(
+        '半角数字3-4桁で入力してください',
+    );
+    // セキュリティコード-正常系
+    await selectSeatPage.fillSecureCode('123');
+});
 
 test('予約確定', async ({ page }) => {
     const scheduleSearchPage = new ScheduleSearchPage(page);
