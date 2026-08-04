@@ -127,7 +127,8 @@ public class ReservationService {
                     seat.getSeat().getSeatNumber(),
                     seat.getSeat().getSeatColumn(),
                     seat.getCodeToken(),
-                    seat.getSeatFare()))
+                    seat.getSeatFare(),
+                    seat.getName()))
                 .sorted(Comparator.comparing(ReservedSeatDto::getTrainCarNumber)
                     .thenComparing(ReservedSeatDto::getSeatNumber)
                     .thenComparing(ReservedSeatDto::getSeatColumn))
@@ -221,7 +222,8 @@ public class ReservationService {
                 seat.getSeat().getSeatNumber(),
                 seat.getSeat().getSeatColumn(),
                 seat.getCodeToken(),
-                seat.getSeatFare()))
+                seat.getSeatFare(),
+                seat.getName()))
             .sorted(Comparator.comparing(ReservedSeatDto::getTrainCarNumber)
                 .thenComparing(ReservedSeatDto::getSeatNumber)
                 .thenComparing(ReservedSeatDto::getSeatColumn)).toList();
