@@ -1,6 +1,7 @@
 package com.alab.shinkansendego.traincar;
 
 import com.alab.shinkansendego.seattype.SeatTypeEntity;
+import com.alab.shinkansendego.trainSeries.TrainSeriesEntity;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.FetchType;
@@ -32,4 +33,8 @@ public class TrainCarEntity {
     @ToString.Exclude
     @JoinColumn(name = "seat_type_cd", referencedColumnName = "seat_type_cd", insertable = false, updatable = false)
     private SeatTypeEntity seatType;
+    @ManyToOne(fetch = FetchType.LAZY)
+    @ToString.Exclude
+    @JoinColumn(name = "train_series_cd", referencedColumnName = "train_series_cd", insertable = false, updatable = false)
+    private TrainSeriesEntity trainSeries;
 }
