@@ -10,9 +10,10 @@ type GuestLoginInputProps = {
     placeHolder: string;
     autoComplete: string;
     icon: ElementType;
-    onChange: (e: React.ChangeEvent<HTMLInputElement>) => void;
-    onBlur: (e: React.FocusEvent<HTMLInputElement>) => void;
-    validMessage: string;
+    onChange?: (e: React.ChangeEvent<HTMLInputElement>) => void;
+    onBlur?: (e: React.FocusEvent<HTMLInputElement>) => void;
+    validMessage?: string;
+    readOnly: boolean;
 } & React.InputHTMLAttributes<HTMLInputElement>;
 
 export function GuestLoginInput({
@@ -27,6 +28,7 @@ export function GuestLoginInput({
     onChange,
     onBlur,
     validMessage,
+    readOnly,
 }: GuestLoginInputProps) {
     return (
         <div className="flex w-full flex-col items-start gap-2">
@@ -48,6 +50,7 @@ export function GuestLoginInput({
                     onBlur={onBlur}
                     autoComplete={autoComplete}
                     placeholder={placeHolder}
+                    readOnly={readOnly}
                     className="focus:border-primary bg-primary-light w-full rounded-xl p-2 pl-10 outline-none focus:border-2"
                 />
             </div>

@@ -14,6 +14,7 @@ export const ENDPOINTS = {
     LOGOUT: () => LOGOUT,
     PAYMENT_TOKEN: () => `${PAYMENT}/tokens`,
     RESERVATION: (id?: string) => (id ? `${RESERVATION}/${id}` : RESERVATION),
+    GUESTRESERVATION: (id?: string) => `${RESERVATION}/guest/${id}`,
     SCHEDULES_SEARCH: () => SCHEDULES,
     SEATS_SELECT: () => `${TRAINCARS}/seats`,
     STATIONS: () => STATIONS,

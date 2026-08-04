@@ -7,12 +7,12 @@ import type { ReservationListRequestDto } from '@/features/reservation/types/Res
 import type { ReservationResponseDto } from '@/features/reservation/types/ReservationResponseDto';
 
 export function useReservedTickets(reservationId: string) {
-    const getReservedTickets = async (
+    const getGuestReservedTickets = async (
         reservationId: string,
         guestLoginInfo: ReservationListRequestDto,
     ): Promise<ReservationResponseDto> => {
         const response = await apiClient.get<ReservationResponseDto>(
-            ENDPOINTS.RESERVATION(reservationId),
+            ENDPOINTS.GUESTRESERVATION(reservationId),
             {
                 params: {
                     reserverName: guestLoginInfo.reserverName,
@@ -23,11 +23,47 @@ export function useReservedTickets(reservationId: string) {
         return response.data;
     };
 
+    const getAccountReservedTickets = async (
+        reservationId: string,
+    ): Promise<ReservationResponseDto> => {
+        const response = await apiClient.get<ReservationResponseDto>(
+            ENDPOINTS.RESERVATION(reservationId),
+        );
+        return response.data;
+    };
+
+    const accountInfo = localStorage.getItem('name');
+    const guestLoginInfo = getGuestLoginInfo();
+
     const { data: reservedTickets } = useSuspenseQuery({
-        queryKey: ['reservationTickets', reservationId],
-        queryFn: () => getReservedTickets(reservationId, getGuestLoginInfo()),
+        queryKey: [
+            'reservationTickets',
+            reservationId,
+            guestLoginInfo.reserverMail,
+        ],
+        queryFn: () =>
+            accountInfo !== null
+                ? getAccountReservedTickets(reservationId)
+                : getGuestReservedTickets(reservationId, guestLoginInfo),
         refetchOnMount: true,
     });
 
-    return { reservedTickets };
+    const getReservationTicket = async (
+        reservationId: string,
+        guestLoginInfo: ReservationListRequestDto,
+    ): Promise<ReservationResponseDto> => {
+        const response = await apiClient
+            .get<ReservationResponseDto>(
+                ENDPOINTS.GUESTRESERVATION(reservationId),
+                {
+                    params: {
+                        reserverName: guestLoginInfo.reserverName,
+                        reserverMail: guestLoginInfo.reserverMail,
+                    },
+                },
+            )
+            .then((response) => response.data);
+        return response;
+    };
+    return { reservedTickets, getReservationTicket };
 }

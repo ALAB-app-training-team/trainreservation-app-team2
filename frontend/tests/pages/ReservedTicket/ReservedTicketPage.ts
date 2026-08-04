@@ -8,6 +8,10 @@ export class ReservedTicketPage {
     readonly title: Locator;
     readonly departureArrivalElement: Locator;
     readonly seatFareElement: Locator;
+    readonly ticketShareButton: Locator;
+    readonly ticketShareElement: Locator;
+    readonly linkCopyButton: Locator;
+    readonly linkCopyElement: Locator;
 
     constructor(page: Page) {
         this.page = page;
@@ -16,6 +20,12 @@ export class ReservedTicketPage {
         this.title = page.getByTestId('reserve-title');
         this.departureArrivalElement = page.getByTestId('departure-arrival');
         this.seatFareElement = page.getByTestId('reserved-seats');
+        this.ticketShareButton = page.getByRole('button', {
+            name: 'チケットを共有',
+        });
+        this.ticketShareElement = page.getByTestId('ticket-share');
+        this.linkCopyButton = page.getByRole('button', { name: 'コピー' });
+        this.linkCopyElement = page.getByTestId('link-copy');
     }
 
     async goto() {
@@ -24,5 +34,9 @@ export class ReservedTicketPage {
 
     async clickBackButton() {
         await this.backButton.first().click();
+    }
+
+    async clickTicketShareButton() {
+        await this.ticketShareButton.click();
     }
 }

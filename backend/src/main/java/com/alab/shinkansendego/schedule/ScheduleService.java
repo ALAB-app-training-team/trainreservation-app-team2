@@ -86,12 +86,9 @@ public class ScheduleService {
                         throw new IllegalArgumentException("OptionalSchedule is Not found");
                     }
 
-                    List<String> sectionCdList = departureArrivalTimeRepository.findByScheduleCdAndDepartureTimeAndArrivalTime(
-                        departure.getScheduleCd(),
-                        departure.getDepartureTime(),
-                        arrival.getArrivalTime()
-                    );
-
+                    List<String> sectionCdList = departureArrivalTimeRepository.findByScheduleCdAndDepartureTimeGreaterThanEqualAndArrivalTimeLessThanEqual(
+                            departure.getScheduleCd(), departure.getDepartureTime(), arrival.getArrivalTime())
+                        .stream().map(entity -> entity.getSectionCd()).toList();
                     List<ReservedSeatSectionEntity> reservedSeatSectionEntities
                         = reservedSeatSectionRepository
                         .findByRideDateAndScheduleCdAndReservedSectionCdIn(
@@ -137,11 +134,16 @@ public class ScheduleService {
     }
 
     public List<TrainCarFormationResponseDto> getTrainCarList(String scheduledCd) {
-        List<TrainCarFormationResponseDto> trainCarList = scheduleRepository.findTrainCarFormationByScheduleCd(scheduledCd);
+        ScheduleEntity schedule = scheduleRepository.findByScheduleCd(scheduledCd).orElseThrow(() -> new IllegalArgumentException("Schedule is not found"));
 
-        if (trainCarList.isEmpty()) {
-            throw new IllegalArgumentException("ScheduleCd is Not found");
-        }
+        List<TrainCarFormationResponseDto> trainCarList = schedule.getTrainType().getTrainSeries().getTrainCars().stream()
+            .sorted(Comparator.comparing(tc -> tc.getTrainCarNumber()))
+            .map(tc -> new TrainCarFormationResponseDto(
+                tc.getTrainCarCd(),
+                tc.getTrainCarNumber(),
+                tc.getSeatType().getSeatTypeCd(),
+                tc.getSeatType().getTrainCarType().getName()
+            )).collect(Collectors.toList());
         return trainCarList;
     }
 }

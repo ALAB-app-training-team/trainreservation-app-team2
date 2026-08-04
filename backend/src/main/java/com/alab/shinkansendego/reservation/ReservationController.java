@@ -37,9 +37,16 @@ public class ReservationController {
         return ResponseEntity.ok(response);
     }
 
+    @GetMapping(value = "/guest/{id}")
+    public ResponseEntity<ReservationResponseDto> getGuestReservation(@PathVariable("id") UUID reservationId, @RequestParam("reserverName") String name, @RequestParam("reserverMail") String email) {
+        ReservationResponseDto response = reservationService.getGuestReservation(reservationId, name, email);
+        return ResponseEntity.ok(response);
+    }
+
     @GetMapping(value = "{id}")
-    public ResponseEntity<ReservationResponseDto> getReservation(@PathVariable("id") UUID reservationId, @RequestParam("reserverName") String name, @RequestParam("reserverMail") String email) {
-        ReservationResponseDto response = reservationService.getReservation(reservationId, name, email);
+    @PreAuthorize("isAuthenticated()")
+    public ResponseEntity<ReservationResponseDto> getAccountReservation(@PathVariable("id") UUID reservationId, @AuthenticationPrincipal AccountSessionDto session) {
+        ReservationResponseDto response = reservationService.getAccountReservation(reservationId, session.getId());
         return ResponseEntity.ok(response);
     }
 
