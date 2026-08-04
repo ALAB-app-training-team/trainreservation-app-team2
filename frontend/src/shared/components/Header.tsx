@@ -37,7 +37,6 @@ export function Header() {
     const handleLogout = async () => {
         await apiClient.post<string>(ENDPOINTS.LOGOUT());
         localStorage.clear();
-        localStorage.setItem('name', null);
         handleMenuOpen();
         navigate('/login');
     };
