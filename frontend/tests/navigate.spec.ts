@@ -82,10 +82,11 @@ test('navigate-検索～シートマップからログイン～予約完了', as
     await expect(page).toHaveURL('/login');
 });
 
-test('navigate-ログイン～検索～予約完了', async ({ page, login, logout }) => {
+test('navigate-ログイン～検索～予約確認', async ({ page, login, logout }) => {
     const scheduleSearchPage = new ScheduleSearchPage(page);
     const selectSeatPage = new SelectSeatPage(page);
     const reservedTicketPage = new ReservedTicketPage(page);
+    const reservationListPage = new ReservationListPage(page);
 
     await login();
     await expect(page).toHaveURL('/scheduleSearch');
@@ -98,7 +99,12 @@ test('navigate-ログイン～検索～予約完了', async ({ page, login, logo
     await selectSeatPage.clickReseveButton();
     await selectSeatPage.clickConfirmButton();
     await expect(page).toHaveURL('/reservedTicket');
-    reservedTicketPage.clickTicketShareButton();
+    await reservedTicketPage.header.goToReservationList();
+    await expect(page).toHaveURL('/reservationList');
+    await reservationListPage.clickTicketButton();
+    await expect(page).toHaveURL('/reservedTicket');
+    await reservedTicketPage.clickBackButton();
+    await expect(page).toHaveURL('/reservationList');
     await logout();
     await expect(page).toHaveURL('/login');
 });
