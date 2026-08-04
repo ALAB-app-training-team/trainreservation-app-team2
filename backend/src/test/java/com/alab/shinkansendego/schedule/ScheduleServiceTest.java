@@ -47,7 +47,7 @@ public class ScheduleServiceTest {
     private final TrainTypeEntity trainType5 = new TrainTypeEntity("YM005", "やまびこ5号", "E5SER", new TrainSeriesEntity());
     private final TrainTypeEntity trainType6 = new TrainTypeEntity("YM006", "やまびこ6号", "E5SER", new TrainSeriesEntity());
     private final List<TotalSeatEntity> totalSeatList = new ArrayList<>();
-    private final List<String> secList = new ArrayList<>();
+    private final List<DepartureArrivalTimeEntity> secList = new ArrayList<>();
     private final List<ReservedSeatSectionEntity> reservedSeatSecList = new ArrayList<>();
     private final ScheduleRequestDto request = new ScheduleRequestDto(LocalDate.of(2026, 6, 1), LocalTime.of(9, 0, 0), "東京", "上野");
     private final List<SectionKmEntity> emptySectionCdList = new ArrayList<>();
@@ -183,7 +183,7 @@ public class ScheduleServiceTest {
         totalSeatList.add(new TotalSeatEntity("E7SER", 1000, 60, 18));
         totalSeatList.add(new TotalSeatEntity("E8SER", 600, 60, 0));
 
-        secList.addAll(Arrays.asList("SEC01", "SEC02", "SEC03"));
+        secList.addAll(Arrays.asList(data01, data03, data05));
         reservedSeatSecList.add(new ReservedSeatSectionEntity(UUID.randomUUID(), UUID.randomUUID(), LocalDate.of(2026, 6, 1), "TIME01", "E5SER01", "SEAT01001", "SEC01", "CAR01"));
         reservedSeatSecList.add(new ReservedSeatSectionEntity(UUID.randomUUID(), UUID.randomUUID(), LocalDate.of(2026, 6, 1), "TIME01", "E5SER01", "SEAT01001", "SEC02", "CAR01"));
         reservedSeatSecList.add(new ReservedSeatSectionEntity(UUID.randomUUID(), UUID.randomUUID(), LocalDate.of(2026, 6, 1), "TIME01", "E5SER01", "SEAT01002", "SEC01", "CAR01"));
@@ -213,7 +213,7 @@ public class ScheduleServiceTest {
         when(scheduleRepo.findById("TIME04")).thenReturn(getScheduleEntity(trainType4));
         when(scheduleRepo.findById("TIME05")).thenReturn(getScheduleEntity(trainType5));
         when(scheduleRepo.findById("TIME06")).thenReturn(getScheduleEntity(trainType6));
-        when(timeRepo.findByScheduleCdAndDepartureTimeAndArrivalTime(any(), any(), any())).thenReturn(secList);
+        when(timeRepo.findByScheduleCdAndDepartureTimeGreaterThanEqualAndArrivalTimeLessThanEqual(any(), any(), any())).thenReturn(secList);
         when(reservedSeatSectionRepo.findByRideDateAndScheduleCdAndReservedSectionCdIn(any(), any(), any())).thenReturn(reservedSeatSecList);
 
         List<ScheduleResponseDto> expectList = getExpectScheduleResponseDtosList();
@@ -330,7 +330,7 @@ public class ScheduleServiceTest {
         when(scheduleRepo.findById("TIME04")).thenReturn(getScheduleEntity(trainType4));
         when(scheduleRepo.findById("TIME05")).thenReturn(getScheduleEntity(trainType5));
         when(scheduleRepo.findById("TIME06")).thenReturn(getScheduleEntity(trainType6));
-        when(timeRepo.findByScheduleCdAndDepartureTimeAndArrivalTime(any(), any(), any())).thenReturn(secList);
+        when(timeRepo.findByScheduleCdAndDepartureTimeGreaterThanEqualAndArrivalTimeLessThanEqual(any(), any(), any())).thenReturn(secList);
         when(reservedSeatSectionRepo.findByRideDateAndScheduleCdAndReservedSectionCdIn(any(), any(), any())).thenReturn(reservedSeatSecList);
         Exception ex = assertThrows(
             IllegalArgumentException.class,
