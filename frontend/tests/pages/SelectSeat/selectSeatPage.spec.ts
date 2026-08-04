@@ -2,6 +2,7 @@ import { expect } from '@playwright/test';
 import { ScheduleSearchPage } from '@tests/pages/ScheduleSearch/ScheduleSearchPage';
 import { SelectSeatPage } from '@tests/pages/SelectSeat/SelectSeatPage';
 import { test } from '@tests/fixtures';
+import { LoginPage } from '../Login/LoginPage';
 
 test('ゴミ箱ボタンを押すと、選択した座席が解除される', async ({ page }) => {
     const scheduleSearchPage = new ScheduleSearchPage(page);
@@ -296,4 +297,27 @@ test('未ログイン時は氏名・メールアドレス入力欄とログイ�
     await selectSeatPagePage.name.isEditable();
     await selectSeatPagePage.mailAddress.isEditable();
     await selectSeatPagePage.loginButton.isEnabled();
+});
+
+test('シートマップでログインすると選択した座席が保持されていること', async ({
+    page,
+}) => {
+    const scheduleSearchPage = new ScheduleSearchPage(page);
+    const selectSeatPage = new SelectSeatPage(page);
+    const loginPage = new LoginPage(page);
+
+    await scheduleSearchPage.goto();
+    await expect(page).toHaveURL('/scheduleSearch');
+    await scheduleSearchPage.clickDetailButton();
+    await expect(page).toHaveURL('/selectSeat');
+    await expect(page.getByText('座席が選択されていません')).toBeVisible();
+    await selectSeatPage.selectSeat();
+    await expect(page.getByText('座席が選択されていません')).toBeHidden();
+    await selectSeatPage.clickLoginButton();
+    await expect(page).toHaveURL('/login');
+    await loginPage.loginButton.waitFor({ state: 'visible' });
+    await loginPage.inputLoginInfo();
+    await loginPage.clickLoginButton();
+    await expect(page).toHaveURL('/selectSeat');
+    await expect(page.getByText('座席が選択されていません')).toBeHidden();
 });
