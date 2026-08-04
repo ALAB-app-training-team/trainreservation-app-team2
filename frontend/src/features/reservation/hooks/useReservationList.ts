@@ -18,11 +18,22 @@ export function useReservationList() {
         refetchOnMount: true,
     });
 
-    const sortReservationList = (reservationList: ReservationResponseDto[]) => {
+    const sortReservationsAsc = (reservationList: ReservationResponseDto[]) => {
         return reservationList.sort(
             (a, b) =>
-                new Date(a.rideDate).getDate() -
-                    new Date(b.rideDate).getDate() ||
+                new Date(a.rideDate).getTime() -
+                    new Date(b.rideDate).getTime() ||
+                a.departureTime.localeCompare(b.departureTime),
+        );
+    };
+
+    const sortReservationsDesc = (
+        reservationList: ReservationResponseDto[],
+    ) => {
+        return reservationList.sort(
+            (a, b) =>
+                new Date(b.rideDate).getTime() -
+                    new Date(a.rideDate).getTime() ||
                 a.departureTime.localeCompare(b.departureTime),
         );
     };
@@ -30,18 +41,18 @@ export function useReservationList() {
     const now = new Date();
     now.setHours(0, 0, 0, 0);
 
-    const activeReservations = sortReservationList(
+    const activeReservations = sortReservationsAsc(
         reservationList?.filter((reservation) => {
             const departureDate = new Date(reservation.rideDate);
             return departureDate >= now && !reservation.isDeleted;
         }),
     );
 
-    const canceledReservations = sortReservationList(
+    const canceledReservations = sortReservationsDesc(
         reservationList?.filter((reservation) => reservation.isDeleted),
     );
 
-    const pastReservations = sortReservationList(
+    const pastReservations = sortReservationsDesc(
         reservationList?.filter((reservation) => {
             const departureDate = new Date(reservation.rideDate);
             return departureDate < now && !reservation.isDeleted;
