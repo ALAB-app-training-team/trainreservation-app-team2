@@ -18,7 +18,8 @@ public class ReservedSeatService {
     }
 
     @Transactional
-    public void updateReservedSeats(UUID reservationId, UUID accountId) {
+    // TODO: nullを受け取れるか確認
+    public void updateReservedSeats(UUID reservationId, ReservedSeatUpdateDto reservedSeat, UUID accountId) {
         ReservationEntity reservation = reservationRepository.findById(reservationId)
             .orElseThrow(() -> new IllegalArgumentException("Reservation is Not found"));
 
@@ -33,7 +34,5 @@ public class ReservedSeatService {
                 throw new SecurityException("権限がありません（ログインが必要です）");
             }
         }
-
-        
     }
 }
