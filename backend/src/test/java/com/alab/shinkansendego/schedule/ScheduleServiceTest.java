@@ -153,7 +153,7 @@ public class ScheduleServiceTest {
         totalSeatList.add(new TotalSeatEntity("E7SER", 1000, 60, 18));
         totalSeatList.add(new TotalSeatEntity("E8SER", 600, 60, 0));
 
-        secList.addAll(Arrays.asList(data01, data02, data03));
+        secList.addAll(Arrays.asList(data01, data03, data05));
         reservedSeatSecList.add(new ReservedSeatSectionEntity(UUID.randomUUID(), UUID.randomUUID(), LocalDate.of(2026, 6, 1), "TIME01", "E5SER01", "SEAT01001", "SEC01", "CAR01"));
         reservedSeatSecList.add(new ReservedSeatSectionEntity(UUID.randomUUID(), UUID.randomUUID(), LocalDate.of(2026, 6, 1), "TIME01", "E5SER01", "SEAT01001", "SEC02", "CAR01"));
         reservedSeatSecList.add(new ReservedSeatSectionEntity(UUID.randomUUID(), UUID.randomUUID(), LocalDate.of(2026, 6, 1), "TIME01", "E5SER01", "SEAT01002", "SEC01", "CAR01"));
