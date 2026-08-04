@@ -32,7 +32,6 @@ import static org.mockito.Mockito.when;
 
 public class TrainCarServiceTest {
     private final List<SeatResponseDto> emptySeatList = new ArrayList<>();
-    private final List<String> emptySectionCdList = new ArrayList<>();
     private final List<DepartureArrivalTimeEntity> emptyDepartureArrivalTimeList = new ArrayList<>();
     private final SeatRequestDto request = new SeatRequestDto();
     private final List<SectionKmEntity> sectionKmEntities = new ArrayList<>();
