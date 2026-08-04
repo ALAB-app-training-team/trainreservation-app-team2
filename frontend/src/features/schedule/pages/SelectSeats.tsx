@@ -1,9 +1,9 @@
 import { useQueryClient } from '@tanstack/react-query';
 import axios, { HttpStatusCode } from 'axios';
-import { Suspense, useContext, useState } from 'react';
+import { Suspense, useContext, useEffect, useState } from 'react';
 import { IoCardOutline } from 'react-icons/io5';
 import { LuArrowLeft, LuLogIn } from 'react-icons/lu';
-import { useLocation, useNavigate } from 'react-router-dom';
+import { redirect, useLocation, useNavigate } from 'react-router-dom';
 
 import apiClient from '@/api/apiClient';
 import { ENDPOINTS } from '@/api/routes';
@@ -20,6 +20,7 @@ import { useSelectedSeats } from '@/features/schedule/hooks/useSelectedSeats';
 import type { PaymentRequestDto } from '@/features/schedule/types/PaymentRequestDto';
 import type { ReserveRequestDto } from '@/features/schedule/types/ReserveRequestDto';
 import type { SeatResponseDto } from '@/features/schedule/types/SeatResponseDto';
+import type { SelectSeatsLocationState } from '@/features/schedule/types/SelectSeatsLocationState';
 import { CustomModal } from '@/shared/components/CustomModal';
 import { ERROR_MESSAGE } from '@/shared/constants/ErrorMessages';
 import { useModal } from '@/shared/hooks/useModal';
@@ -33,7 +34,7 @@ export function SelectSeats() {
         scheduleInfoDto,
         searchRequestDto,
         selectedSeats: prevSelectedSeats,
-    } = location.state;
+    } = location.state as SelectSeatsLocationState;
     const {
         selectedSeats,
         handleSelectedSeats,
@@ -52,6 +53,16 @@ export function SelectSeats() {
     const { isOpen, handleModalOpen, onRequestClose } = useModal();
     const [isSubmitting, setIsSubmitting] = useState<boolean>(false);
     const isLoggedIn = !!useContext(authContext).name;
+
+    useEffect(() => {
+        const nv = performance.getEntriesByType(
+            'navigation',
+        )[0] as PerformanceNavigationTiming;
+        if (!isLoggedIn && searchRequestDto === null && nv.type !== 'reload') {
+            sessionStorage.setItem('message', ERROR_MESSAGE.LOGIN_ERROR);
+            redirect('/login');
+        }
+    }, []);
 
     const getPaymentToken = async (): Promise<string> => {
         const paymentRequestDto: PaymentRequestDto = {
@@ -147,20 +158,35 @@ export function SelectSeats() {
     return (
         <>
             <div className="flex items-center justify-start p-4 pb-0">
-                <button
-                    type="button"
-                    onClick={() => {
-                        navigate('/scheduleSearch', {
-                            state: { searchRequestDto },
-                        });
-                    }}
-                >
-                    <div className="flex items-center gap-2">
-                        <LuArrowLeft />
-                        検索画面に戻る
-                    </div>
-                </button>
+                {searchRequestDto !== null ? (
+                    <button
+                        type="button"
+                        onClick={() => {
+                            navigate('/scheduleSearch', {
+                                state: { searchRequestDto },
+                            });
+                        }}
+                    >
+                        <div className="flex items-center gap-2">
+                            <LuArrowLeft />
+                            検索画面に戻る
+                        </div>
+                    </button>
+                ) : (
+                    <button
+                        type="button"
+                        onClick={() => {
+                            navigate('/reservationList');
+                        }}
+                    >
+                        <div className="flex items-center gap-2">
+                            <LuArrowLeft />
+                            予約一覧へ戻る
+                        </div>
+                    </button>
+                )}
             </div>
+
             <div className="flex w-full flex-col items-start justify-between gap-4 p-4 md:flex-row">
                 <div className="w-full md:w-7/10">
                     <TrainInfo scheduleInfoDto={scheduleInfoDto} />
@@ -179,7 +205,7 @@ export function SelectSeats() {
                             selectedSeats={selectedSeats}
                             handleClear={handleClear}
                         />
-                        {!isLoggedIn && (
+                        {!isLoggedIn && searchRequestDto !== null && (
                             <div className="border-primary-mid-light bg-primary-light flex w-full flex-col gap-4 rounded-2xl border-2 p-4 text-center">
                                 <span>アカウントをお持ちですか？</span>
                                 <button

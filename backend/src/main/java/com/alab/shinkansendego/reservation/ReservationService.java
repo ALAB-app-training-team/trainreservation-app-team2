@@ -133,9 +133,12 @@ public class ReservationService {
                 .toList();
 
             dto.setReservationId(reservation.getId());
+            dto.setScheduleCd(reservation.getScheduleCd());
             dto.setTrainTypeName(reservation.getSchedule().getTrainType().getName());
+            dto.setDepartureStationCd(reservation.getDepartureStationCd());
             dto.setDepartureStationName(departureSchedule.getSectionKm().getStartStation().getName());
             dto.setDepartureTime(departureSchedule.getDepartureTime());
+            dto.setArrivalStationCd(reservation.getArrivalStationCd());
             dto.setArrivalStationName(arrivalSchedule.getSectionKm().getGoalStation().getName());
             dto.setArrivalTime(arrivalSchedule.getArrivalTime());
             dto.setRideDate(reservation.getRideDate());

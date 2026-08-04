@@ -1,7 +1,7 @@
 import dayjs from 'dayjs';
 import customParseFormat from 'dayjs/plugin/customParseFormat';
 import { BsQrCode } from 'react-icons/bs';
-import { FaClock } from 'react-icons/fa';
+import { FaClock, FaExchangeAlt } from 'react-icons/fa';
 import { IoTrashOutline } from 'react-icons/io5';
 import { LuTicket } from 'react-icons/lu';
 import { useNavigate } from 'react-router-dom';
@@ -12,11 +12,13 @@ import type { ReservationResponseDto } from '@/features/reservation/types/Reserv
 type ReservationSelectItemProps = {
     details: ReservationResponseDto;
     onRefundClicked: (details: ReservationResponseDto) => void;
+    onChangeClicked: (details: ReservationResponseDto) => void;
 };
 
 export function ReservationSelectItem({
     details,
     onRefundClicked,
+    onChangeClicked,
 }: ReservationSelectItemProps) {
     const navigate = useNavigate();
 
@@ -108,7 +110,7 @@ export function ReservationSelectItem({
                     </div>
                 </div>
                 {!details.isDeleted && departureDate >= now && (
-                    <div className="flex justify-end">
+                    <div className="flex justify-end gap-2">
                         <button
                             onClick={() => onRefundClicked(details)}
                             className="text-primary flex items-center justify-center gap-2 rounded-xl px-3 text-sm"
@@ -116,6 +118,14 @@ export function ReservationSelectItem({
                         >
                             <IoTrashOutline />
                             キャンセル
+                        </button>
+                        <button
+                            onClick={() => onChangeClicked(details)}
+                            className="border-primary text-primary flex items-center justify-center gap-2 rounded-md border-1 px-4 py-2 text-sm"
+                            data-testid={'change-button'}
+                        >
+                            <FaExchangeAlt />
+                            予約を変更
                         </button>
                         <button
                             onClick={handleReservationDetail}

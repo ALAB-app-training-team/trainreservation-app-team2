@@ -1,6 +1,4 @@
-import dayjs from 'dayjs';
-
-import { ReservedSeats } from '@/features/reservation/components/ReservedSeats';
+import { ReservationInfo } from '@/features/reservation/components/ReservationInfo';
 import { FARE_CONSTANTS } from '@/features/reservation/constants/FareConstant';
 import type { ReservationResponseDto } from '@/features/reservation/types/ReservationResponseDto';
 
@@ -28,25 +26,7 @@ export function ReservationRefundConfirmModal({
                 <h1 className="!m-0 text-left !text-xl">予約キャンセル確認</h1>
                 <div>以下の予約を取り消しますか？</div>
 
-                <div>
-                    <span className="text-xl font-bold">
-                        {dayjs(details.rideDate).format('YYYY年MM月DD日')}
-                        <br />
-                        {dayjs(details.departureTime, 'HH:mm:ss').format(
-                            'HH:mm',
-                        )}
-                        発
-                    </span>
-                </div>
-                <div className="text-2xl font-bold">
-                    {details.departureStationName} →{' '}
-                    {details.arrivalStationName}
-                </div>
-                <ReservedSeats
-                    id="reservationList"
-                    title=""
-                    seats={details.reservedSeats}
-                />
+                <ReservationInfo details={details} />
                 <div className="flex w-full flex-col gap-2 rounded-lg bg-slate-50 p-3">
                     <div className="flex justify-between">
                         <span>チケット料金</span>
