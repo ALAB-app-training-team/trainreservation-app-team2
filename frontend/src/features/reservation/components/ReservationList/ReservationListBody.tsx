@@ -1,5 +1,5 @@
 import { useQueryClient } from '@tanstack/react-query';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { CiCalendar } from 'react-icons/ci';
 import { LuTicket } from 'react-icons/lu';
 import { RiGroupLine } from 'react-icons/ri';
@@ -21,9 +21,6 @@ import { ERROR_MESSAGE } from '@/shared/constants/ErrorMessages';
 import { useModal } from '@/shared/hooks/useModal';
 
 export function ReservationListBody() {
-    const [selectedTab, setSelectedTab] = useState<ReservationTabKey>(
-        DEFAULT_RESERVATION_TAB,
-    );
     const { activeReservations, canceledReservations, pastReservations } =
         useReservationList();
     const { isOpen, handleModalOpen, onRequestClose } = useModal();
@@ -31,6 +28,19 @@ export function ReservationListBody() {
     const [selectedReservation, setSelectedReservation] =
         useState<ReservationResponseDto>();
     const queryClient = useQueryClient();
+
+    const getInitialTab = (): ReservationTabKey => {
+        const savedTab = sessionStorage.getItem('selectedReservationTab');
+        return (savedTab as ReservationTabKey) || DEFAULT_RESERVATION_TAB;
+    };
+    const [selectedTab, setSelectedTab] =
+        useState<ReservationTabKey>(getInitialTab);
+    useEffect(() => {
+        sessionStorage.setItem('selectedReservationTab', selectedTab);
+        return () => {
+            sessionStorage.removeItem('selectedReservationTab');
+        };
+    }, [selectedTab]);
 
     const filteredReservations =
         selectedTab === RESERVATION_TAB[0].key
