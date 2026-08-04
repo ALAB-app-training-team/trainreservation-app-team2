@@ -8,7 +8,7 @@ import { App } from '@tests/pages/shared/App';
 import { LoginPage } from '@tests/pages/Login/LoginPage';
 import { test } from '@tests/fixtures';
 
-test('navigate-ゲストログイン検索～予約確認', async ({ page }) => {
+test('navigate-ゲストログイン検索～予約確認', async ({ page, context }) => {
     const scheduleSearchPage = new ScheduleSearchPage(page);
     const selectSeatPage = new SelectSeatPage(page);
     const reservationGuestLoginPage = new ReservationGuestLoginPage(page);
@@ -32,6 +32,7 @@ test('navigate-ゲストログイン検索～予約確認', async ({ page }) => 
     await expect(page).toHaveURL('/reservedTicket');
     await reservedTicketPage.clickTicketShareButton();
     await reservedTicketPage.linkCopyElement.waitFor({ state: 'visible' });
+    await context.grantPermissions(['clipboard-read', 'clipboard-write']);
     await reservedTicketPage.clickLinkCopyButton();
     await expect(reservedTicketPage.linkCopyElement).toHaveText('コピー完了');
     const clipboardText = await page.evaluate(async () => {
