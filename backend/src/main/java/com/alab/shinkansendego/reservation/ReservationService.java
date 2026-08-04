@@ -121,6 +121,7 @@ public class ReservationService {
             List<ReservedSeatDto> reservedSeatDtos = reservedSeatEntityMap
                 .getOrDefault(reservation.getId(), new ArrayList<>()).stream()
                 .map(seat -> new ReservedSeatDto(
+                    seat.getId(),
                     seat.getTrainCar().getSeatType().getTrainCarType().getName(),
                     seat.getTrainCar().getTrainCarNumber(),
                     seat.getSeat().getSeatNumber(),
@@ -214,6 +215,7 @@ public class ReservationService {
         List<ReservedSeatEntity> reservedSeatEntityList = reservationEntity.stream().map(ReservationEntity::getReservedSeat).flatMap(Set::stream).toList();
         List<ReservedSeatDto> reservedSeatList = reservedSeatEntityList.stream()
             .map(seat -> new ReservedSeatDto(
+                seat.getId(),
                 seat.getTrainCar().getSeatType().getTrainCarType().getName(),
                 seat.getTrainCar().getTrainCarNumber(),
                 seat.getSeat().getSeatNumber(),
