@@ -8,8 +8,10 @@ export class ReservationListPage {
     readonly totalFareElement: Locator;
     readonly activeButton: Locator;
     readonly refundButton: Locator;
+    readonly changeButton: Locator;
     readonly pastButton: Locator;
     readonly refundConfirmButton: Locator;
+    readonly changeSeatConfirmButton: Locator;
 
     constructor(page: Page) {
         this.page = page;
@@ -20,8 +22,12 @@ export class ReservationListPage {
         this.totalFareElement = page.getByTestId('total-fare');
         this.activeButton = page.getByTestId('active-button');
         this.refundButton = page.getByTestId('refund-button');
+        this.changeButton = page.getByTestId('change-button');
         this.pastButton = page.getByTestId('past-button');
         this.refundConfirmButton = page.getByTestId('refund-confirm-button');
+        this.changeSeatConfirmButton = page.getByTestId(
+            'change-seat-confirm-button',
+        );
     }
 
     async goto() {
@@ -43,7 +49,15 @@ export class ReservationListPage {
         await this.refundButton.first().click();
     }
 
-    async clickrefundConfirmButton() {
+    async clickChangeButton() {
+        await this.changeButton.first().click();
+    }
+
+    async clickRefundConfirmButton() {
         await this.refundConfirmButton.first().click();
+    }
+
+    async clickChangeSeatConfirmButton() {
+        await this.changeSeatConfirmButton.first().click();
     }
 }

@@ -29,6 +29,7 @@ export function ReservationChangeConfirmModal({
                 <ReservationInfo details={details} id="reservationChange" />
                 <div className="flex w-full items-center justify-center gap-4">
                     <button
+                        data-testid={'change-seat-confirm-button'}
                         onClick={() => onChangeSeatClick(details)}
                         disabled={isSubmitting}
                         className="bg-primary flex items-center rounded-lg p-2 text-white"

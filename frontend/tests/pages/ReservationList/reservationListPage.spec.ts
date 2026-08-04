@@ -104,7 +104,7 @@ test('削除すると予約が1件削除されること', async ({
         await reservationListPage.refundButton.count();
 
     await reservationListPage.clickRefundButton();
-    await reservationListPage.clickrefundConfirmButton();
+    await reservationListPage.clickRefundConfirmButton();
 
     await expect(reservationListPage.refundButton).toHaveCount(
         beforeReservationCount - 1,

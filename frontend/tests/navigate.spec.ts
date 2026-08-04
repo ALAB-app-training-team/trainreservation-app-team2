@@ -202,3 +202,24 @@ test('navigate-ログイン～検索～予約完了', async ({ page, login, logo
     await logout();
     await expect(page).toHaveURL('/login');
 });
+
+test('navigate-ログイン～予約一覧～予約変更（人数・座席変更）', async ({
+    page,
+    login,
+}) => {
+    const reservationListPage = new ReservationListPage(page);
+    const scheduleSearchPage = new ScheduleSearchPage(page);
+    const selectSeatPage = new SelectSeatPage(page);
+
+    await login();
+    await scheduleSearchPage.clickDetailButton();
+    await selectSeatPage.selectSeat();
+    await selectSeatPage.inputCardInfo();
+    await selectSeatPage.clickReseveButton();
+    await selectSeatPage.clickConfirmButton();
+    await reservationListPage.goto();
+    await reservationListPage.clickChangeButton();
+    await reservationListPage.clickChangeSeatConfirmButton();
+    await expect(page).toHaveURL('/selectSeat');
+    //TODO:予約変更実装後、追加
+});
