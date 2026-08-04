@@ -93,6 +93,8 @@ test('navigate-ログイン～検索～予約完了', async ({ page, login, logo
     await selectSeatPage.clickConfirmButton();
     await expect(page).toHaveURL('/reservedTicket');
     reservedTicketPage.clickTicketShareButton();
+    await logout();
+    await expect(page).toHaveURL('/login');
 });
 
 test('navigate-header', async ({ page }) => {
