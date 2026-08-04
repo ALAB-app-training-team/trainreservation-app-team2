@@ -1,13 +1,12 @@
 import { useQueryClient } from '@tanstack/react-query';
 import axios, { HttpStatusCode } from 'axios';
-import { Suspense, useContext, useState } from 'react';
+import { Suspense, useState } from 'react';
 import { IoCardOutline } from 'react-icons/io5';
 import { LuArrowLeft, LuLogIn } from 'react-icons/lu';
 import { useLocation, useNavigate } from 'react-router-dom';
 
 import apiClient from '@/api/apiClient';
 import { ENDPOINTS } from '@/api/routes';
-import { authContext } from '@/context/AuthContext';
 import { ReserveConfirmModal } from '@/features/schedule/components/ReserveConfirmModal';
 import { ReserveUserInfo } from '@/features/schedule/components/ReserveUserInfo';
 import { SelectedSeats } from '@/features/schedule/components/SelectedSeats';
@@ -51,7 +50,7 @@ export function SelectSeats() {
     } = useReserveUser();
     const { isOpen, handleModalOpen, onRequestClose } = useModal();
     const [isSubmitting, setIsSubmitting] = useState<boolean>(false);
-    const isLoggedIn = !!useContext(authContext).name;
+    const isLoggedIn = !!localStorage.getItem('name');
 
     const getPaymentToken = async (): Promise<string> => {
         const paymentRequestDto: PaymentRequestDto = {

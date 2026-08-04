@@ -1,16 +1,15 @@
-import { useContext, useState } from 'react';
+import { useState } from 'react';
 import { BsTrainFreightFrontFill } from 'react-icons/bs';
 import { FiMenu } from 'react-icons/fi';
 import { NavLink, useLocation, useNavigate } from 'react-router-dom';
 
 import apiClient from '@/api/apiClient';
 import { ENDPOINTS } from '@/api/routes';
-import { authContext } from '@/context/AuthContext';
 
 export function Header() {
     const location = useLocation();
     const navigate = useNavigate();
-    const { name, setName } = useContext(authContext);
+    const name = localStorage.getItem('name');
     const buttons = [
         {
             label: '新幹線を探す',
@@ -38,7 +37,7 @@ export function Header() {
     const handleLogout = async () => {
         await apiClient.post<string>(ENDPOINTS.LOGOUT());
         localStorage.clear();
-        setName(null);
+        localStorage.setItem('name', null);
         handleMenuOpen();
         navigate('/login');
     };
