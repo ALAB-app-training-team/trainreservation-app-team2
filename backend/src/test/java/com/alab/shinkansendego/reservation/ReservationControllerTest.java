@@ -63,7 +63,7 @@ public class ReservationControllerTest {
             "THK01",
             "東京",
             LocalTime.of(12, 0, 0),
-            "THK02",
+            "THK09",
             "仙台",
             LocalTime.of(13, 0, 0),
             LocalDate.of(2026, 6, 1),
@@ -101,7 +101,7 @@ public class ReservationControllerTest {
             .andExpect(jsonPath("$[0].departureStationCd").value("THK01"))
             .andExpect(jsonPath("$[0].departureStationName").value("東京"))
             .andExpect(jsonPath("$[0].departureTime").value("12:00:00"))
-            .andExpect(jsonPath("$[0].arrivalStationCd").value("THK02"))
+            .andExpect(jsonPath("$[0].arrivalStationCd").value("THK09"))
             .andExpect(jsonPath("$[0].arrivalStationName").value("仙台"))
             .andExpect(jsonPath("$[0].arrivalTime").value("13:00:00"))
             .andExpect(jsonPath("$[0].rideDate").value("2026-06-01"))
@@ -130,7 +130,7 @@ public class ReservationControllerTest {
             .andExpect(jsonPath("$[1].departureStationCd").value("THK01"))
             .andExpect(jsonPath("$[1].departureStationName").value("東京"))
             .andExpect(jsonPath("$[1].departureTime").value("12:00:00"))
-            .andExpect(jsonPath("$[1].arrivalStationCd").value("THK02"))
+            .andExpect(jsonPath("$[1].arrivalStationCd").value("THK09"))
             .andExpect(jsonPath("$[1].arrivalStationName").value("仙台"))
             .andExpect(jsonPath("$[1].arrivalTime").value("13:00:00"))
             .andExpect(jsonPath("$[1].rideDate").value("2026-06-01"))
@@ -202,7 +202,7 @@ public class ReservationControllerTest {
             .andExpect(jsonPath("$.departureStationCd").value("THK01"))
             .andExpect(jsonPath("$.departureStationName").value("東京"))
             .andExpect(jsonPath("$.departureTime").value("12:00:00"))
-            .andExpect(jsonPath("$.arrivalStationCd").value("THK02"))
+            .andExpect(jsonPath("$.arrivalStationCd").value("THK09"))
             .andExpect(jsonPath("$.arrivalStationName").value("仙台"))
             .andExpect(jsonPath("$.arrivalTime").value("13:00:00"))
             .andExpect(jsonPath("$.rideDate").value("2026-06-01"))
@@ -262,7 +262,7 @@ public class ReservationControllerTest {
             .andExpect(jsonPath("$.departureStationCd").value("THK01"))
             .andExpect(jsonPath("$.departureStationName").value("東京"))
             .andExpect(jsonPath("$.departureTime").value("12:00:00"))
-            .andExpect(jsonPath("$.arrivalStationCd").value("THK02"))
+            .andExpect(jsonPath("$.arrivalStationCd").value("THK09"))
             .andExpect(jsonPath("$.arrivalStationName").value("仙台"))
             .andExpect(jsonPath("$.arrivalTime").value("13:00:00"))
             .andExpect(jsonPath("$.rideDate").value("2026-06-01"))
