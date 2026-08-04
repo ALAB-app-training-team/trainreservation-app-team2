@@ -37,6 +37,7 @@ export function ReservationListBody() {
         useState<ReservationTabKey>(getInitialTab);
     useEffect(() => {
         sessionStorage.setItem('selectedReservationTab', selectedTab);
+        window.scrollTo(0, 0);
         return () => {
             sessionStorage.removeItem('selectedReservationTab');
         };
