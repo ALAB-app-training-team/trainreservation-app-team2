@@ -56,12 +56,18 @@ test('navigate-検索～シートマップからログイン～予約完了', as
 }) => {
     const scheduleSearchPage = new ScheduleSearchPage(page);
     const selectSeatPage = new SelectSeatPage(page);
+    const loginPage = new LoginPage(page);
 
     await scheduleSearchPage.goto();
     await expect(page).toHaveURL('/scheduleSearch');
     await scheduleSearchPage.clickDetailButton();
     await expect(page).toHaveURL('/selectSeat');
-    await selectSeatPage.selectSeat();
+    await selectSeatPage.clickLoginButton();
+    await expect(page).toHaveURL('/login');
+    await loginPage.loginButton.waitFor({ state: 'visible' });
+    await loginPage.inputLoginInfo();
+    await loginPage.clickLoginButton();
+    await await selectSeatPage.selectSeat();
     await expect(page.getByText('座席が選択されていません')).toBeHidden();
     await selectSeatPage.inputCardInfo();
     await selectSeatPage.clickReseveButton();
