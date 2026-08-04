@@ -81,7 +81,7 @@ export function ReservationListBody() {
         <>
             <div className="mx-auto flex max-w-4xl flex-col gap-8 p-4">
                 <h1 className="!m-0 text-left !text-3xl">予約確認</h1>
-                <div className="bg-primary/8 flex gap-6 rounded-3xl p-2">
+                <div className="bg-primary-light sticky top-20 z-10 flex gap-6 rounded-3xl p-2">
                     <div className="flex w-full items-center">
                         {RESERVATION_TAB.map((tab) => (
                             <button
