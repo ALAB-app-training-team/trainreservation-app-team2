@@ -227,9 +227,12 @@ public class ReservationService {
                 .thenComparing(ReservedSeatDto::getSeatNumber)
                 .thenComparing(ReservedSeatDto::getSeatColumn)).toList();
 
+        dto.setScheduleCd(reservationEntity.get().getScheduleCd());
         dto.setTrainTypeName(reservationEntity.get().getSchedule().getTrainType().getName());
+        dto.setDepartureStationCd(departureSchedule.getFirst().getDepartureStationCd());
         dto.setDepartureStationName(departureSchedule.getFirst().getDepartureStationName());
         dto.setDepartureTime(departureSchedule.getFirst().getDepartureTime());
+        dto.setArrivalStationCd(arrivalSchedule.getFirst().getArrivalStationCd());
         dto.setArrivalStationName(arrivalSchedule.getFirst().getArrivalStationName());
         dto.setArrivalTime(arrivalSchedule.getFirst().getArrivalTime());
         dto.setRideDate(reservationEntity.get().getRideDate());
