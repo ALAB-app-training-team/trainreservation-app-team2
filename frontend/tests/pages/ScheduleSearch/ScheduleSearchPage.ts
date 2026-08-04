@@ -9,6 +9,7 @@ export class ScheduleSearchPage {
     readonly arrivalStation: Locator;
     readonly date: Locator;
     readonly time: Locator;
+    readonly availableTrainCheckBox: Locator;
 
     constructor(page: Page) {
         this.page = page;
@@ -18,6 +19,9 @@ export class ScheduleSearchPage {
         this.arrivalStation = page.getByLabel('降車駅');
         this.date = page.getByRole('textbox', { name: '出発日' });
         this.time = page.getByRole('textbox', { name: '出発時刻' });
+        this.availableTrainCheckBox = page.getByRole('checkbox', {
+            name: '空席がある列車のみ表示する',
+        });
     }
 
     async goto() {
@@ -34,5 +38,9 @@ export class ScheduleSearchPage {
 
     async openArrivalStationDropdown() {
         await this.arrivalStation.first().click();
+    }
+
+    async clickAvailableTrainCheckBox() {
+        await this.availableTrainCheckBox.first().click();
     }
 }
