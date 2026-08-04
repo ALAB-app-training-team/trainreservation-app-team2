@@ -6,9 +6,10 @@ import type { ReservationResponseDto } from '@/features/reservation/types/Reserv
 
 type ReservationInfoProps = {
     details: ReservationResponseDto;
+    id: 'reservationDetail' | 'reservationList' | 'reservationChange';
 };
 
-export function ReservationInfo({ details }: ReservationInfoProps) {
+export function ReservationInfo({ details, id }: ReservationInfoProps) {
     dayjs.extend(customParseFormat);
     return (
         <>
@@ -22,11 +23,7 @@ export function ReservationInfo({ details }: ReservationInfoProps) {
             <div className="text-2xl font-bold">
                 {details.departureStationName} → {details.arrivalStationName}
             </div>
-            <ReservedSeats
-                id="reservationList"
-                title=""
-                seats={details.reservedSeats}
-            />
+            <ReservedSeats id={id} title="" seats={details.reservedSeats} />
         </>
     );
 }

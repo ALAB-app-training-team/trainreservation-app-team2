@@ -46,6 +46,7 @@ export function ReservationListBody() {
               : canceledReservations;
 
     const handleRefundModalOpen = (details: ReservationResponseDto) => {
+        setIsChange(false);
         setSelectedReservation(details);
         handleModalOpen();
     };

@@ -248,7 +248,8 @@ export function SelectSeats() {
                                     disabled={
                                         selectedSeats.length === 0 ||
                                         isInvalid ||
-                                        isSubmitting
+                                        isSubmitting ||
+                                        searchRequestDto === null //TODO:予約変更API作成後、ボタン押せるようにする
                                     }
                                 >
                                     <div className="flex items-center justify-center gap-4">
