@@ -72,12 +72,18 @@ test('navigate-ログイン全機能', async ({ page, login, logout }) => {
     await selectSeatPage.clickConfirmButton();
     await expect(page).toHaveURL('/reservedTicket');
 
-    // 予約一覧～予約確認、ログアウト
+    // 予約一覧～予約確認・キャンセル、ログアウト
     await reservedTicketPage.header.goToReservationList();
     await expect(page).toHaveURL('/reservationList');
     await reservationListPage.clickTicketButton();
     await expect(page).toHaveURL('/reservedTicket');
     await reservedTicketPage.clickBackButton();
+    await expect(page).toHaveURL('/reservationList');
+    await reservationListPage.clickCancelButton();
+    await reservationListPage.clickCancelBackButton();
+    await expect(page).toHaveURL('/reservationList');
+    await reservationListPage.clickCancelButton();
+    await reservationListPage.clickCancelConfirmButton();
     await expect(page).toHaveURL('/reservationList');
     await logout();
     await expect(page).toHaveURL('/login');
