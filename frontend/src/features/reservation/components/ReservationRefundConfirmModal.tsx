@@ -81,7 +81,6 @@ export function ReservationRefundConfirmModal({
                         予約を取り消さない
                     </button>
                     <button
-                        data-testid={'refund-confirm-button'}
                         onClick={() => onClick(details.reservationId!)}
                         disabled={isSubmitting}
                         className="bg-primary rounded-lg p-2 text-white"
