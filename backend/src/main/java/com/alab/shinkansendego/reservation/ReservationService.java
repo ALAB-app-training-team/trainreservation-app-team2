@@ -231,6 +231,7 @@ public class ReservationService {
                 .thenComparing(ReservedSeatDto::getSeatNumber)
                 .thenComparing(ReservedSeatDto::getSeatColumn)).toList();
 
+        dto.setReservationId(reservationEntity.get().getId());
         dto.setScheduleCd(reservationEntity.get().getScheduleCd());
         dto.setTrainTypeName(reservationEntity.get().getSchedule().getTrainType().getName());
         dto.setDepartureStationCd(departureSchedule.getFirst().getDepartureStationCd());

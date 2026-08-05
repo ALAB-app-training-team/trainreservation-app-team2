@@ -141,7 +141,9 @@ public class ReservationServiceTest {
      *
      * @return ReservedSeatEntity
      */
-    private @NonNull ReservedSeatEntity buildSeat(UUID reservationId, String trainCarTypeName, Integer trainCarNumber, Integer seatNumber, String seatColumn, UUID codeToken, Integer seatFare) {
+    private @NonNull ReservedSeatEntity buildSeat(UUID id, UUID reservationId, String trainCarTypeName,
+                                                  Integer trainCarNumber, Integer seatNumber, String seatColumn,
+                                                  UUID codeToken, Integer seatFare, String name) {
         TrainCarTypeEntity trainCarType = new TrainCarTypeEntity();
         trainCarType.setName(trainCarTypeName);
         SeatTypeEntity seatType = new SeatTypeEntity();
@@ -178,8 +180,10 @@ public class ReservationServiceTest {
         DepartureArrivalTimeEntity arrival = buildSchedule(LocalTime.of(7, 50, 0), "THK08", "白石", LocalTime.of(7, 58, 0), "THK09", "仙台");
 
         Set<ReservedSeatEntity> seats = Set.of(
-            buildSeat(id, "指定席", 1, 1, "A", UUID.fromString("60a1ab63-a41f-430d-a2d1-10a76368d0f5"), 5000),
-            buildSeat(id, "グリーン車", 9, 1, "A", UUID.fromString("3de8909e-32de-478e-bd9b-739f3fe6d6c3"), 10000)
+            buildSeat(seat1.getId(), id, "指定席", 1, 1, "A", UUID.fromString("60a1ab63-a41f-430d-a2d1-10a76368d0f5"),
+                5000, seat1.getName()),
+            buildSeat(seat2.getId(), id, "グリーン車", 9, 1, "A", UUID.fromString("3de8909e-32de-478e-bd9b-739f3fe6d6c3"),
+                10000, seat2.getName())
         );
 
         ReservationEntity reservation = new ReservationEntity();
@@ -270,9 +274,12 @@ public class ReservationServiceTest {
         DepartureArrivalTimeEntity departureArrivalTime7 = buildSchedule(LocalTime.of(8, 0, 0), "THK09", "仙台", LocalTime.of(8, 12, 0), "THK10", "古川");
 
         Set<ReservedSeatEntity> seats = Set.of(
-            buildSeat(reservationId1, "指定席", 1, 1, "A", UUID.fromString("60a1ab63-a41f-430d-a2d1-10a76368d0f5"), 5000),
-            buildSeat(reservationId1, "グリーン車", 9, 1, "A", UUID.fromString("3de8909e-32de-478e-bd9b-739f3fe6d6c3"), 10000),
-            buildSeat(reservationId1, "グランクラス", 10, 1, "A", UUID.fromString("e192e5f1-318e-4d10-b76d-2f2bf15e8b70"), 15000)
+            buildSeat(seat1.getId(), reservationId1, "指定席", 1, 1, "A", UUID.fromString("60a1ab63-a41f-430d-a2d1-10a76368d0f5"),
+                5000, seat1.getName()),
+            buildSeat(seat2.getId(), reservationId1, "グリーン車", 9, 1, "A", UUID.fromString("3de8909e-32de-478e-bd9b-739f3fe6d6c3"),
+                10000, seat2.getName()),
+            buildSeat(seat3.getId(), reservationId1, "グランクラス", 10, 1, "A", UUID.fromString("e192e5f1-318e-4d10-b76d-2f2bf15e8b70"),
+                15000, seat3.getName())
         );
 
         reservation.get().setId(reservationId1);
@@ -332,7 +339,7 @@ public class ReservationServiceTest {
     void getGuestReservation_withReservationIdAndReserverNameAndReserverMail_returnGetGuestReservationSuccess() {
         when(reservationRepo.findByIdAndReserverNameAndReserverMail(reservationId1, "山田太郎", "email@sample.com")).thenReturn(reservation);
 
-        ReservationResponseDto expect = getExpectReservationResponseDto(null);
+        ReservationResponseDto expect = getExpectReservationResponseDto(reservationId1);
 
         ReservationResponseDto actual = service.getGuestReservation(reservationId1, "山田太郎", "email@sample.com");
 
@@ -361,11 +368,11 @@ public class ReservationServiceTest {
 
         when(reservationRepo.findWithEntityGraphByIdAndAccountId(reservationId1, accountId)).thenReturn(reservation);
 
-        ReservationResponseDto expect = getExpectReservationResponseDto(null);
+        ReservationResponseDto expect = getExpectReservationResponseDto(reservationId1);
 
         ReservationResponseDto actual = service.getAccountReservation(reservationId1, accountId);
 
-        assertEquals(actual, expect);
+        assertEquals(expect, actual);
     }
 
     @Test
