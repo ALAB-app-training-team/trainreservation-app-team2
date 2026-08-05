@@ -22,7 +22,6 @@ public class ReservedSeatService {
     }
 
     @Transactional
-    // TODO: nullを受け取れるか確認
     public void updateReservedSeats(UUID reservationId, List<ReservedSeatUpdateDto> reservedSeats, UUID accountId) {
         ReservationEntity reservation = reservationRepository.findById(reservationId)
             .orElseThrow(() -> new IllegalArgumentException("Reservation is Not found"));
@@ -36,7 +35,7 @@ public class ReservedSeatService {
             }
         } else {
             if (reservation.getAccountId() != null) {
-                throw new AccessDeniedException("Login required");
+                throw new AccessDeniedException("Login Required");
             }
         }
 
