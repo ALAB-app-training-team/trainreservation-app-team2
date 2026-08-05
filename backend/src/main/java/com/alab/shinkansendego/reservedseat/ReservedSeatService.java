@@ -3,6 +3,7 @@ package com.alab.shinkansendego.reservedseat;
 import com.alab.shinkansendego.reservation.ReservationEntity;
 import com.alab.shinkansendego.reservation.ReservationRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.access.AccessDeniedException;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
@@ -26,13 +27,11 @@ public class ReservedSeatService {
 
         if (accountId != null) {
             if (!accountId.equals(reservation.getAccountId())) {
-                // TODO: Exception&StatusCode検討
-                throw new SecurityException("権限がありません（所有者が一致しません）");
+                throw new AccessDeniedException("Forbidden");
             }
         } else {
             if (reservation.getAccountId() != null) {
-                // TODO: Exception&StatusCode検討
-                throw new SecurityException("権限がありません（ログインが必要です）");
+                throw new AccessDeniedException("Login required");
             }
         }
 
