@@ -417,7 +417,7 @@ public class ReservationService {
      * @return 登録した予約情報ID
      */
     @Transactional
-    public UUID patchReservedSeat(UUID reservationId, ReserveRequestDto changedReservation, AccountSessionDto session) {
+    public UUID putReservedSeat(UUID reservationId, ReserveRequestDto changedReservation, AccountSessionDto session) {
         if (changedReservation.getSeats() == null || changedReservation.getSeats().isEmpty()) {
             throw new IllegalArgumentException("RefreshSeats is Null");
         }

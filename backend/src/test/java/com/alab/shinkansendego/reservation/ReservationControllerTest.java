@@ -34,6 +34,7 @@ import java.util.UUID;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.delete;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.put;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
@@ -46,6 +47,7 @@ public class ReservationControllerTest {
     private final ObjectMapper objectMapper = new ObjectMapper();
     private final String baseUrl = "/api/reservations";
     private AccountSessionDto session;
+    private Authentication auth;
     @Autowired
     private MockMvc mockMvc;
     @MockitoBean
@@ -75,12 +77,12 @@ public class ReservationControllerTest {
         session = new AccountSessionDto(
             UUID.fromString("f79d8bbc-fcba-b538-b132-2f726ce0120c"), "test-common@test.com", "一般太郎"
         );
+        auth = new UsernamePasswordAuthenticationToken(session, null, Collections.emptyList());
     }
 
     @Test
     @DisplayName("ログイン情報から予約情報の一覧が取得できる")
     void getReservationList_withSession_returnGetReservationListSuccess() throws Exception {
-        Authentication auth = new UsernamePasswordAuthenticationToken(session, null, Collections.emptyList());
 
         List<ReservationResponseDto> expectList = Arrays.asList(
             getExpectReservationResponseDto(UUID.fromString("4156b939-2e3e-46c1-92d3-7aa64b6ca575")),
@@ -149,8 +151,6 @@ public class ReservationControllerTest {
     @Test
     @DisplayName("ログイン情報に該当する予約がない場合、空のリストを返す")
     void getReservationList_withSession_returnEmptyList() throws Exception {
-        Authentication auth = new UsernamePasswordAuthenticationToken(session, null, Collections.emptyList());
-
         List<ReservationResponseDto> expectList = new ArrayList<>();
         Mockito.when(service.getReservationList(Mockito.any())).thenReturn(expectList);
 
@@ -231,7 +231,6 @@ public class ReservationControllerTest {
         AccountSessionDto session = new AccountSessionDto(
             UUID.fromString("f79d8bbc-fcba-b538-b132-2f726ce0120c"), "test-common@test.com", "一般太郎"
         );
-        Authentication auth = new UsernamePasswordAuthenticationToken(session, null, Collections.emptyList());
 
         UUID request = UUID.fromString("4156b939-2e3e-46c1-92d3-7aa64b6ca575");
         ReservationResponseDto expect = getExpectReservationResponseDto(request);
@@ -299,7 +298,6 @@ public class ReservationControllerTest {
                 new ReserveRequestDto.SelectedSeatDto("E5SER01", "CAR01", "SEAT01002", 2800)
             ));
         UUID mockedReservationId = UUID.randomUUID();
-        Authentication auth = new UsernamePasswordAuthenticationToken(session, null, Collections.emptyList());
 
         Mockito.when(service.insertReservation(request, session)).thenReturn(mockedReservationId);
 
@@ -363,9 +361,118 @@ public class ReservationControllerTest {
     }
 
     @Test
+    @DisplayName("ログインした状態で人数・座席変更ができる")
+    void putReservedSeat_withReservationIdAndValidReserveRequestDto_return200AndPutReservationId() throws Exception {
+        ReserveRequestDto request = new ReserveRequestDto(
+            "Test01",
+            LocalDate.now(),
+            "Test0",
+            "Test1",
+            "",
+            "",
+            "Test2",
+            List.of(
+                new ReserveRequestDto.SelectedSeatDto("E5SER01", "CAR01", "SEAT01001", 2800),
+                new ReserveRequestDto.SelectedSeatDto("E5SER01", "CAR01", "SEAT01002", 2800)
+            ));
+        UUID reservationId = UUID.randomUUID();
+
+        Mockito.when(service.putReservedSeat(reservationId, request, session)).thenReturn(reservationId);
+
+        String url = baseUrl + "/seat/" + reservationId;
+
+        mockMvc.perform(put(url)
+                .with(SecurityMockMvcRequestPostProcessors.authentication(auth))
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(objectMapper.writeValueAsString(request)))
+            .andExpect(status().isOk())
+            .andExpect(content().string("\"" + reservationId + "\""));
+    }
+
+    @Test
+    @DisplayName("リクエストのカラムがNullの場合、バリデーションエラー発生")
+    void putReservedSeat_withNotValidReserveRequestDto_returnValidationError() throws Exception {
+        ReserveRequestDto request = new ReserveRequestDto(
+            null, LocalDate.now(), "Test0", "Test1", "TestTaro", "test@main", "Test2", List.of(
+            new ReserveRequestDto.SelectedSeatDto("E5SER01", "CAR01", "SEAT01001", 2800),
+            new ReserveRequestDto.SelectedSeatDto("E5SER01", "CAR01", "SEAT01002", 2800)
+        ));
+
+        UUID reservationId = UUID.randomUUID();
+        String url = baseUrl + "/seat/" + reservationId;
+
+        mockMvc.perform(put(url)
+                .with(SecurityMockMvcRequestPostProcessors.authentication(auth))
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(objectMapper.writeValueAsString(request)))
+            .andExpect(status().isBadRequest())
+            .andExpect(content().string("ScheduleCd is Null"));
+    }
+
+    @Test
+    @DisplayName("リクエストDTO自体がNullの場合、バインドエラー発生")
+    void putReservedSeat_withReserveRequestDtoIsNull_returnBindError() throws Exception {
+        UUID reservationId = UUID.randomUUID();
+        String url = baseUrl + "/seat/" + reservationId;
+        //バインド順が毎回異なるためエラーメッセージの比較は行わない
+        mockMvc.perform(put(url)
+                .with(SecurityMockMvcRequestPostProcessors.authentication(auth))
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(objectMapper.writeValueAsString(new ReserveRequestDto())))
+            .andExpect(status().isBadRequest());
+    }
+
+    @Test
+    @DisplayName("未ログインの場合、401エラーが発生する")
+    void putReservedSeat_withNoSession_return401StatusCode() throws Exception {
+        ReserveRequestDto request = new ReserveRequestDto(
+            "Test01",
+            LocalDate.now(),
+            "Test0",
+            "Test1",
+            "",
+            "",
+            "Test2",
+            List.of(
+                new ReserveRequestDto.SelectedSeatDto("E5SER01", "CAR01", "SEAT01001", 2800),
+                new ReserveRequestDto.SelectedSeatDto("E5SER01", "CAR01", "SEAT01002", 2800)
+            ));
+        UUID reservationId = UUID.randomUUID();
+        String url = baseUrl + "/seat/" + reservationId;
+        mockMvc.perform(put(url)
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(objectMapper.writeValueAsString(request)))
+            .andExpect(status().isUnauthorized())
+            .andExpect(content().string("Unauthorized"));
+    }
+
+    @Test
+    @DisplayName("idがNullの場合、NOTFOUNDを返す")
+    void putReservedSeat_withGuestReservationIdIsNull_returnRequestParamError() throws Exception {
+        ReserveRequestDto request = new ReserveRequestDto(
+            "Test01",
+            LocalDate.now(),
+            "Test0",
+            "Test1",
+            "",
+            "",
+            "Test2",
+            List.of(
+                new ReserveRequestDto.SelectedSeatDto("E5SER01", "CAR01", "SEAT01001", 2800),
+                new ReserveRequestDto.SelectedSeatDto("E5SER01", "CAR01", "SEAT01002", 2800)
+            ));
+        String url = baseUrl + "/seat/";
+
+        mockMvc.perform(put(url)
+                .with(SecurityMockMvcRequestPostProcessors.authentication(auth))
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(objectMapper.writeValueAsString(request)))
+            .andExpect(status().isNotFound());
+    }
+
+    @Test
     @DisplayName("認証ありのアクセスの場合、特定の予約情報IDに紐づく予約情報を削除できる")
     void deleteReservation_withAuthorized_return204() throws Exception {
-        Authentication auth = new UsernamePasswordAuthenticationToken(session, null, Collections.emptyList());
         UUID requestReservationId = UUID.randomUUID();
         String url = baseUrl + "/" + requestReservationId;
 

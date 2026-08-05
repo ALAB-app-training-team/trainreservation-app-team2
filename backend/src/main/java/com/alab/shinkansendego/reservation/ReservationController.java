@@ -59,7 +59,7 @@ public class ReservationController {
     @PutMapping(value = "/seat/{id}")
     @PreAuthorize("isAuthenticated()")
     public ResponseEntity<UUID> patchReservedSeat(@PathVariable("id") UUID reservationId, @Valid @RequestBody ReserveRequestDto request, @AuthenticationPrincipal AccountSessionDto session) {
-        UUID response = reservationService.patchReservedSeat(reservationId, request, session);
+        UUID response = reservationService.putReservedSeat(reservationId, request, session);
         return ResponseEntity.status(HttpStatus.OK).body(response);
     }
 
