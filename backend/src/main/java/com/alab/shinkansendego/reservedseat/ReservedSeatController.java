@@ -2,6 +2,7 @@ package com.alab.shinkansendego.reservedseat;
 
 import com.alab.shinkansendego.account.AccountSessionDto;
 import jakarta.validation.Valid;
+import jakarta.validation.constraints.NotEmpty;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -25,9 +26,9 @@ public class ReservedSeatController {
         this.reservedSeatService = reservedSeatService;
     }
 
-    @PatchMapping
+    @PatchMapping(value = "{id}")
     public ResponseEntity<Void> updateReservedSeats(@PathVariable("id") UUID reservationId,
-                                                    @Valid @RequestBody List<ReservedSeatUpdateDto> reservedSeats,
+                                                    @Valid @RequestBody @NotEmpty List<ReservedSeatUpdateDto> reservedSeats,
                                                     @AuthenticationPrincipal AccountSessionDto session) {
         UUID accountId = (session != null) ? session.getId() : null;
         reservedSeatService.updateReservedSeats(reservationId, reservedSeats, accountId);
