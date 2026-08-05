@@ -55,7 +55,6 @@ public class ReservationController {
     @PostMapping
     public ResponseEntity<UUID> insertReservation(@Valid @RequestBody ReserveRequestDto request, @AuthenticationPrincipal AccountSessionDto session) {
         UUID response = reservationService.insertReservation(request, session);
-        emailService.sendReservationConfirmation(request.getReserverMail(), response.toString());
         return ResponseEntity.status(HttpStatus.CREATED).body(response);
     }
 

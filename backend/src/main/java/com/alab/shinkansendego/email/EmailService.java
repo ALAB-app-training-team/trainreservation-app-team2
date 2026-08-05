@@ -6,6 +6,8 @@ import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
 
+import java.util.stream.Collectors;
+
 @Service
 public class EmailService {
     private final JavaMailSender mailSender;
@@ -16,36 +18,57 @@ public class EmailService {
     }
 
     @Async
-    public void sendReservationConfirmation(String toEmail, String reservationId) {
+    public void sendReservationConfirmation(EmailRequestDto dto) {
         SimpleMailMessage message = new SimpleMailMessage();
 
         message.setFrom("noreply@shinkansendego.com");
-        message.setTo(toEmail);
-        message.setSubject("[予約成立/支払完了] 予約が完了いたしました");
+        message.setTo(dto.getReserverMail());
+        message.setSubject("[予約完了/支払完了] 予約が完了いたしました");
+
+        String seatDetail = "";
+        if (dto.getSeats() != null && !dto.getSeats().isEmpty()) {
+            seatDetail = dto.getSeats().stream()
+                .map(seat -> String.format("・%s号車 %s番 (%s)",
+                    seat.getTrainCarCd(),
+                    seat.getSeatCd(),
+                    seat.getTrainCarTypeCd()))
+                .collect(Collectors.joining("\n"));
+        }
 
         String body = String.format("""
-            ユーザーさま
+                %s さま
 
-            「新幹線でGO!」アプリでチケットのご予約が完了いたしました。
-            以下に
+                「新幹線でGO!」アプリでチケットのご予約が完了いたしました。
+                以下に予約詳細をお知らせいたします。
 
-            ==基本情報==
-            乗車日：
-            区間：東京　→　大宮
+                ==基本情報==
+                予約ID：%s
+                乗車日：%s
+                区間：%s （%s発）　→　%s　（%s着）
 
-            ==列車情報==
-            列車名：
-            座席：
+                ==列車情報==
+                列車名：%s
+                座席：%s
 
-            ==金額情報==
-            お支払い合計：
+                ==金額情報==
+                お支払い合計：%d 円
 
-            【ログインURL】
-            詳細はマイページよりご確認ください。
+                【ログインURL】
+                詳細はマイページよりご確認ください。
 
-            """, reservationId);
+                """,
+            dto.getReserverName(),
+            dto.getReservationId(),
+            dto.getTrainTypeName(),
+            dto.getRideDate(),
+            dto.getDepartureStationName(),
+            dto.getDepartureTime(),
+            dto.getArrivalStationName(),
+            dto.getArrivalTime(),
+            seatDetail,
+            dto.getTotalAmount()
+        );
         message.setText(body);
-
         mailSender.send(message);
     }
 }
