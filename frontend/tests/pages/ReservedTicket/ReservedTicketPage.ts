@@ -39,4 +39,8 @@ export class ReservedTicketPage {
     async clickTicketShareButton() {
         await this.ticketShareButton.click();
     }
+
+    async clickLinkCopyButton() {
+        await this.linkCopyButton.click();
+    }
 }

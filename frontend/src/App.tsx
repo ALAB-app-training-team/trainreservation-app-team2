@@ -31,7 +31,7 @@ const authLoader = () => {
     const account = localStorage.getItem('name');
     if (account === null && info === null) {
         alert(ERROR_MESSAGE.SESSION_ERROR);
-        return redirect('/reservationGuestLogin');
+        return redirect('/scheduleSearch');
     }
     return null;
 };
@@ -51,6 +51,15 @@ const guestLoginLoader = (request: LoaderFunctionArgs) => {
     return null;
 };
 
+const loginLoader = () => {
+    const account = localStorage.getItem('name');
+    if (account !== null) {
+        sessionStorage.setItem('message', ERROR_MESSAGE.LOGIN_ALREADY);
+        return redirect('/scheduleSearch');
+    }
+    return null;
+};
+
 const router = createBrowserRouter([
     {
         path: '/',
@@ -63,6 +72,7 @@ const router = createBrowserRouter([
             },
             {
                 path: '/login',
+                loader: () => loginLoader(),
                 element: <Login />,
                 errorElement: <Error />,
             },
