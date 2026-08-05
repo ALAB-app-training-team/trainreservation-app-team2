@@ -1,15 +1,13 @@
-import { type ChangeEvent, useContext, useState } from 'react';
+import { type ChangeEvent, useState } from 'react';
 import { useLocation, useNavigate } from 'react-router-dom';
 
 import apiClient from '@/api/apiClient';
 import { ENDPOINTS } from '@/api/routes';
-import { authContext } from '@/context/AuthContext';
 import type { LoginRequestDto } from '@/features/account/types/LoginRequestDto';
 import { ERROR_MESSAGE } from '@/shared/constants/ErrorMessages';
 
 export function useLoginRequestDto() {
     const navigate = useNavigate();
-    const { setName } = useContext(authContext);
     const [isSubmitting, setIsSubmitting] = useState<boolean>(false);
     const [loginRequestDto, setLoginRequestDto] = useState<LoginRequestDto>({
         mail: '',
@@ -35,9 +33,6 @@ export function useLoginRequestDto() {
                 loginRequestDto,
             );
             localStorage.setItem('name', response.data);
-            if (setName) {
-                setName(response.data);
-            }
             if (!prevPath) {
                 navigate('/scheduleSearch', { replace: true });
             } else {

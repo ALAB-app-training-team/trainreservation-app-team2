@@ -17,6 +17,7 @@ export class SelectSeatPage {
     readonly cancelButton: Locator;
     readonly confirmButton: Locator;
     readonly loginButton: Locator;
+    readonly reservationInfoError: Locator;
 
     constructor(page: Page) {
         this.page = page;
@@ -38,6 +39,7 @@ export class SelectSeatPage {
         this.secureCode = page.getByRole('textbox', {
             name: 'セキュリティコード',
         });
+        this.reservationInfoError = page.getByTestId('error').first();
         this.reserveButton = page.getByRole('button', { name: '予約する' });
         this.cancelButton = page.getByRole('button', { name: 'キャンセル' });
         this.confirmButton = page.getByRole('button', {
