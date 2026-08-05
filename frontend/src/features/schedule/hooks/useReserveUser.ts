@@ -1,7 +1,6 @@
-import { useContext, useState } from 'react';
+import { useState } from 'react';
 import type { Focused } from 'react-credit-cards-2';
 
-import { authContext } from '@/context/AuthContext';
 import type { ReserveUser } from '@/features/schedule/types/ReserveUser';
 import { VALIDATION_MESSAGE } from '@/shared/constants/ValidationMessages';
 import { checkMailRegex } from '@/shared/utils/CheckMailRegex';
@@ -24,8 +23,8 @@ export function useReserveUser() {
     const [invalidMessages, setInvalidMessages] = useState<InvalidMessage[]>(
         [],
     );
-    const isLoggedIn = !!useContext(authContext).name;
-    
+    const isLoggedIn = !!localStorage.getItem('name');
+
     const isNameEmpty = (value: string) => {
         return removeWhiteSpace(value) === '';
     };
