@@ -5,11 +5,12 @@ export class ReservationListPage {
     readonly page: Page;
     readonly header: Header;
     readonly ticketButton: Locator;
+    readonly cancelConfirmButton: Locator;
+    readonly cancelBackButton: Locator;
     readonly totalFareElement: Locator;
     readonly activeButton: Locator;
     readonly refundButton: Locator;
     readonly pastButton: Locator;
-    readonly refundConfirmButton: Locator;
 
     constructor(page: Page) {
         this.page = page;
@@ -17,11 +18,16 @@ export class ReservationListPage {
         this.ticketButton = page.getByRole('button', {
             name: 'チケットを表示',
         });
+        this.cancelConfirmButton = page.getByRole('button', {
+            name: '予約を取り消す',
+        });
+        this.cancelBackButton = page.getByRole('button', {
+            name: '予約を取り消さない',
+        });
         this.totalFareElement = page.getByTestId('total-fare');
         this.activeButton = page.getByTestId('active-button');
         this.refundButton = page.getByTestId('refund-button');
         this.pastButton = page.getByTestId('past-button');
-        this.refundConfirmButton = page.getByTestId('refund-confirm-button');
     }
 
     async goto() {
@@ -30,6 +36,14 @@ export class ReservationListPage {
 
     async clickTicketButton() {
         await this.ticketButton.first().click();
+    }
+
+    async clickCancelConfirmButton() {
+        await this.cancelConfirmButton.first().click();
+    }
+
+    async clickCancelBackButton() {
+        await this.cancelBackButton.first().click();
     }
 
     async clickActiveButton() {
@@ -41,9 +55,5 @@ export class ReservationListPage {
 
     async clickRefundButton() {
         await this.refundButton.first().click();
-    }
-
-    async clickrefundConfirmButton() {
-        await this.refundConfirmButton.first().click();
     }
 }

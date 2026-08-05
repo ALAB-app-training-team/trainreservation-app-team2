@@ -78,7 +78,7 @@ export function ReserveUserInfo({
                         onChange={handleInputChange}
                         onFocus={handleInputFocus}
                         onBlur={handleInputBlur}
-                        autoComplete="off"
+                        autoComplete="cc-number"
                         icon={IoCardOutline}
                         getFieldError={getFieldError}
                     />
@@ -91,7 +91,7 @@ export function ReserveUserInfo({
                         onChange={handleInputChange}
                         onFocus={handleInputFocus}
                         onBlur={handleInputBlur}
-                        autoComplete="off"
+                        autoComplete="cc-name"
                         getFieldError={getFieldError}
                     />
                     <ReserveUserInfoInput
@@ -103,7 +103,7 @@ export function ReserveUserInfo({
                         onChange={handleInputChange}
                         onFocus={handleInputFocus}
                         onBlur={handleInputBlur}
-                        autoComplete="off"
+                        autoComplete="cc-exp"
                         getFieldError={getFieldError}
                     />
                     <ReserveUserInfoInput
@@ -115,7 +115,7 @@ export function ReserveUserInfo({
                         onChange={handleInputChange}
                         onFocus={handleInputFocus}
                         onBlur={handleInputBlur}
-                        autoComplete="off"
+                        autoComplete="cc-csc"
                         getFieldError={getFieldError}
                     />
                 </div>
