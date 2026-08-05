@@ -7,7 +7,6 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
-import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -51,7 +50,14 @@ public class ReservationController {
     }
 
     @PostMapping
+    @PreAuthorize("isAuthenticated()")
     public ResponseEntity<UUID> insertReservation(@Valid @RequestBody ReserveRequestDto request, @AuthenticationPrincipal AccountSessionDto session) {
+        UUID response = reservationService.insertReservation(request, session);
+        return ResponseEntity.status(HttpStatus.CREATED).body(response);
+    }
+
+    @PostMapping(path = "guest")
+    public ResponseEntity<UUID> insertGuestReservation(@Valid @RequestBody ReserveRequestDto request, @AuthenticationPrincipal AccountSessionDto session) {
         UUID response = reservationService.insertReservation(request, session);
         return ResponseEntity.status(HttpStatus.CREATED).body(response);
     }
