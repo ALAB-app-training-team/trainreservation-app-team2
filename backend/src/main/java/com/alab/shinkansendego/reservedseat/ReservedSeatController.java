@@ -12,6 +12,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import java.util.List;
 import java.util.UUID;
 
 @RestController
@@ -26,10 +27,10 @@ public class ReservedSeatController {
 
     @PatchMapping
     public ResponseEntity<Void> updateReservedSeats(@PathVariable("id") UUID reservationId,
-                                                    @Valid @RequestBody ReservedSeatUpdateDto reservedSeat,
+                                                    @Valid @RequestBody List<ReservedSeatUpdateDto> reservedSeats,
                                                     @AuthenticationPrincipal AccountSessionDto session) {
         UUID accountId = (session != null) ? session.getId() : null;
-        reservedSeatService.updateReservedSeats(reservationId, reservedSeat, accountId);
+        reservedSeatService.updateReservedSeats(reservationId, reservedSeats, accountId);
         return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
     }
 }

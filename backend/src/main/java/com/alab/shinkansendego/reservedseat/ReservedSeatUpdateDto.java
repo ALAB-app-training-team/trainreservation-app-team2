@@ -1,6 +1,6 @@
 package com.alab.shinkansendego.reservedseat;
 
-import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.NotNull;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -11,10 +11,10 @@ import java.util.UUID;
 @NoArgsConstructor
 @AllArgsConstructor
 public class ReservedSeatUpdateDto {
-    @NotBlank(message = "id is Blank")
+    @NotNull(message = "id is Null")
     private UUID id;
-    @NotBlank(message = "name is Blank")
+    @NotNull(message = "name is Null")
     private String name;
-    @NotBlank(message = "mail is Blank")
+    @NotNull(message = "mail is Null")
     private String mail;
 }

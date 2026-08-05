@@ -5,6 +5,7 @@ import com.alab.shinkansendego.reservation.ReservationRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.List;
 import java.util.UUID;
 
 public class ReservedSeatService {
@@ -19,7 +20,7 @@ public class ReservedSeatService {
 
     @Transactional
     // TODO: nullを受け取れるか確認
-    public void updateReservedSeats(UUID reservationId, ReservedSeatUpdateDto reservedSeat, UUID accountId) {
+    public void updateReservedSeats(UUID reservationId, List<ReservedSeatUpdateDto> reservedSeats, UUID accountId) {
         ReservationEntity reservation = reservationRepository.findById(reservationId)
             .orElseThrow(() -> new IllegalArgumentException("Reservation is Not found"));
 
@@ -33,6 +34,14 @@ public class ReservedSeatService {
                 // TODO: Exception&StatusCode検討
                 throw new SecurityException("権限がありません（ログインが必要です）");
             }
+        }
+
+        for (ReservedSeatUpdateDto reservedSeat : reservedSeats) {
+            ReservedSeatEntity reservedSeatEntity =
+                reservedSeatRepository.findByIdAndReservationId(reservedSeat.getId(),
+                    reservationId).orElseThrow(() -> new IllegalArgumentException("ReservedSeat is Not found"));
+            reservedSeatEntity.setName(reservedSeat.getName());
+            reservedSeatEntity.setMail(reservedSeat.getMail());
         }
     }
 }
