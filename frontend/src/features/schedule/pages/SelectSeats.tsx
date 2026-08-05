@@ -7,6 +7,7 @@ import { redirect, useLocation, useNavigate } from 'react-router-dom';
 
 import apiClient from '@/api/apiClient';
 import { ENDPOINTS } from '@/api/routes';
+import { ReloginConfirmModal } from '@/features/schedule/components/ReloginConfirmModal';
 import { ReserveConfirmModal } from '@/features/schedule/components/ReserveConfirmModal';
 import { ReserveUserInfo } from '@/features/schedule/components/ReserveUserInfo';
 import { SelectedSeats } from '@/features/schedule/components/SelectedSeats';
@@ -24,8 +25,6 @@ import { CustomModal } from '@/shared/components/CustomModal';
 import { ERROR_MESSAGE } from '@/shared/constants/ErrorMessages';
 import { useModal } from '@/shared/hooks/useModal';
 import { removeWhiteSpace } from '@/shared/utils/RemoveWhiteSpace';
-
-import { ReloginConfirmModal } from '../components/ReloginConfirmModal';
 
 export function SelectSeats() {
     const queryClient = useQueryClient();
