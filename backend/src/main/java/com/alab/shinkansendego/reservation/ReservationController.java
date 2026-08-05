@@ -1,12 +1,12 @@
 package com.alab.shinkansendego.reservation;
 
 import com.alab.shinkansendego.account.AccountSessionDto;
+import com.alab.shinkansendego.email.EmailService;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
-import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -24,10 +24,12 @@ import java.util.UUID;
 @RequestMapping(path = "api/reservations")
 public class ReservationController {
     private final ReservationService reservationService;
+    private final EmailService emailService;
 
     @Autowired
-    public ReservationController(ReservationService reservationService) {
+    public ReservationController(ReservationService reservationService, EmailService emailService) {
         this.reservationService = reservationService;
+        this.emailService = emailService;
     }
 
     @GetMapping
@@ -53,6 +55,7 @@ public class ReservationController {
     @PostMapping
     public ResponseEntity<UUID> insertReservation(@Valid @RequestBody ReserveRequestDto request, @AuthenticationPrincipal AccountSessionDto session) {
         UUID response = reservationService.insertReservation(request, session);
+        emailService.sendReservationConfirmation(request.getReserverMail(), response.toString());
         return ResponseEntity.status(HttpStatus.CREATED).body(response);
     }
 
