@@ -112,3 +112,38 @@ test('削除すると予約が1件削除されること', async ({
     await logout();
     await expect(page).toHaveURL('/login');
 });
+
+test('予約キャンセル：キャンセルすることで予約一覧(有効)から予約の数が一個減っていること', async ({
+    page,
+    createReservation,
+    login,
+    logout,
+}) => {
+    const reservationListPage = new ReservationListPage(page);
+
+    await login();
+    await expect(page).toHaveURL('/scheduleSearch');
+    await createReservation();
+    await reservationListPage.goto();
+    await expect(page).toHaveURL('/reservationList');
+    await reservationListPage.ticketButton
+        .first()
+        .waitFor({ state: 'visible' });
+
+    const activeTicketCount = await reservationListPage.ticketButton.count();
+    await reservationListPage.clickRefundButton();
+    await reservationListPage.clickCancelBackButton();
+    const notCancelTicketCount = await reservationListPage.ticketButton.count();
+    await expect(notCancelTicketCount).toEqual(activeTicketCount);
+    await reservationListPage.clickRefundButton();
+    await reservationListPage.clickCancelConfirmButton();
+    await page
+        .getByRole('button', {
+            name: 'キャンセル(0)',
+        })
+        .waitFor({ state: 'hidden' });
+    const cancelTicketCount = await reservationListPage.ticketButton.count();
+    await expect(cancelTicketCount).toEqual(activeTicketCount - 1);
+    await logout();
+    await expect(page).toHaveURL('/login');
+});

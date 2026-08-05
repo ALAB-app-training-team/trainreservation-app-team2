@@ -79,10 +79,10 @@ test('navigate-ログイン全機能', async ({ page, login, logout }) => {
     await expect(page).toHaveURL('/reservedTicket');
     await reservedTicketPage.clickBackButton();
     await expect(page).toHaveURL('/reservationList');
-    await reservationListPage.clickCancelButton();
+    await reservationListPage.clickRefundButton();
     await reservationListPage.clickCancelBackButton();
     await expect(page).toHaveURL('/reservationList');
-    await reservationListPage.clickCancelButton();
+    await reservationListPage.clickRefundButton();
     await reservationListPage.clickCancelConfirmButton();
     await expect(page).toHaveURL('/reservationList');
     await logout();
