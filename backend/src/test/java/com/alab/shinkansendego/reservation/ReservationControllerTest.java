@@ -313,7 +313,7 @@ public class ReservationControllerTest {
 
     @Test
     @DisplayName("ゲストが座席予約ができる")
-    void insertReservation_withoutLogIn_return201AndInsertReservationId() throws Exception {
+    void insertGuestReservation_withoutLogIn_return201AndInsertReservationId() throws Exception {
         ReserveRequestDto request = new ReserveRequestDto(
             "Test01",
             LocalDate.now(),
@@ -327,9 +327,10 @@ public class ReservationControllerTest {
                 new ReserveRequestDto.SelectedSeatDto("E5SER01", "CAR01", "SEAT01002", 2800)
             ));
         UUID mockedReservationId = UUID.randomUUID();
+        String url = baseUrl + "/guest";
         Mockito.when(service.insertReservation(request, null)).thenReturn(mockedReservationId);
 
-        mockMvc.perform(post(baseUrl)
+        mockMvc.perform(post(url)
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(objectMapper.writeValueAsString(request)))
             .andExpect(status().isCreated())
