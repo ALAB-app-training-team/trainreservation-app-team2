@@ -26,6 +26,9 @@ public class ReservedSeatService {
     public void updateReservedSeats(UUID reservationId, List<ReservedSeatUpdateDto> reservedSeats, UUID accountId) {
         ReservationEntity reservation = reservationRepository.findById(reservationId)
             .orElseThrow(() -> new IllegalArgumentException("Reservation is Not found"));
+        if (reservation.getIsDeleted()) {
+            throw new IllegalArgumentException("Reservation is Not found");
+        }
 
         if (accountId != null) {
             if (!accountId.equals(reservation.getAccountId())) {
@@ -39,8 +42,8 @@ public class ReservedSeatService {
 
         for (ReservedSeatUpdateDto reservedSeat : reservedSeats) {
             ReservedSeatEntity reservedSeatEntity =
-                reservedSeatRepository.findByIdAndReservationId(reservedSeat.getId(),
-                    reservationId).orElseThrow(() -> new IllegalArgumentException("ReservedSeat is Not found"));
+                reservedSeatRepository.findByIdAndReservationIdAndIsDeleted(reservedSeat.getId(),
+                    reservationId, false).orElseThrow(() -> new IllegalArgumentException("ReservedSeat is Not found"));
             reservedSeatEntity.setName(reservedSeat.getName());
             reservedSeatEntity.setMail(reservedSeat.getMail());
         }
