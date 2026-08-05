@@ -143,7 +143,7 @@ public class ReservationServiceTest {
      */
     private @NonNull ReservedSeatEntity buildSeat(UUID id, UUID reservationId, String trainCarTypeName,
                                                   Integer trainCarNumber, Integer seatNumber, String seatColumn,
-                                                  UUID codeToken, Integer seatFare, String name) {
+                                                  UUID codeToken, Integer seatFare, String name, String mail) {
         TrainCarTypeEntity trainCarType = new TrainCarTypeEntity();
         trainCarType.setName(trainCarTypeName);
         SeatTypeEntity seatType = new SeatTypeEntity();
@@ -155,12 +155,15 @@ public class ReservationServiceTest {
         seat.setSeatNumber(seatNumber);
         seat.setSeatColumn(seatColumn);
         ReservedSeatEntity reservedSeat = new ReservedSeatEntity();
+        reservedSeat.setId(id);
         reservedSeat.setReservationId(reservationId);
         reservedSeat.setCodeToken(codeToken);
         reservedSeat.setSeatFare(seatFare);
         reservedSeat.setTrainCar(trainCar);
         reservedSeat.setSeat(seat);
         reservedSeat.setSeatFare(seatFare);
+        reservedSeat.setName(name);
+        reservedSeat.setMail(mail);
         return reservedSeat;
     }
 
@@ -181,9 +184,9 @@ public class ReservationServiceTest {
 
         Set<ReservedSeatEntity> seats = Set.of(
             buildSeat(seat1.getId(), id, "指定席", 1, 1, "A", UUID.fromString("60a1ab63-a41f-430d-a2d1-10a76368d0f5"),
-                5000, seat1.getName()),
+                5000, seat1.getName(), "test1-common@test.com"),
             buildSeat(seat2.getId(), id, "グリーン車", 9, 1, "A", UUID.fromString("3de8909e-32de-478e-bd9b-739f3fe6d6c3"),
-                10000, seat2.getName())
+                10000, seat2.getName(), "test2-common@test.com")
         );
 
         ReservationEntity reservation = new ReservationEntity();
@@ -275,14 +278,16 @@ public class ReservationServiceTest {
 
         Set<ReservedSeatEntity> seats = Set.of(
             buildSeat(seat1.getId(), reservationId1, "指定席", 1, 1, "A", UUID.fromString("60a1ab63-a41f-430d-a2d1-10a76368d0f5"),
-                5000, seat1.getName()),
+                5000, seat1.getName(), "test1-common@test.com"),
             buildSeat(seat2.getId(), reservationId1, "グリーン車", 9, 1, "A", UUID.fromString("3de8909e-32de-478e-bd9b-739f3fe6d6c3"),
-                10000, seat2.getName()),
+                10000, seat2.getName(), "test2-common@test.com"),
             buildSeat(seat3.getId(), reservationId1, "グランクラス", 10, 1, "A", UUID.fromString("e192e5f1-318e-4d10-b76d-2f2bf15e8b70"),
-                15000, seat3.getName())
+                15000, seat3.getName(), "test3-common@test.com")
         );
 
         reservation.get().setId(reservationId1);
+        reservation.get().setReserverName("山田太郎");
+        reservation.get().setReserverMail("email@sample.com");
         reservation.get().setDepartureArrivalTime(Set.of(departureArrivalTime1, departureArrivalTime2, departureArrivalTime3, departureArrivalTime4, departureArrivalTime5, departureArrivalTime6, departureArrivalTime7));
 
         TrainTypeEntity trainType = new TrainTypeEntity("YM001", "やまびこ1号", "E5SER", new TrainSeriesEntity());
@@ -357,6 +362,7 @@ public class ReservationServiceTest {
     @Test
     @DisplayName("ゲストログインとしてアカウントIDが登録済みの予約がリクエストされた場合にNullを返す")
     void getGuestReservation_withUnauthorizedReservation_returnIllegalArgumentException() {
+        reservation.get().setAccountId(UUID.fromString("1234b939-2e3e-46c1-92d3-7aa64b6ca666"));
         when(reservationRepo.findById(reservationId1)).thenReturn(reservation);
         ReservationResponseDto actual = service.getGuestReservation(reservationId1, "山田太郎", "email@sample.com");
         assertNull(actual);
@@ -366,15 +372,19 @@ public class ReservationServiceTest {
     @DisplayName("同行者として予約情報IDと同行者者氏名とメールアドレスから予約チケット情報が取得できる")
     void getGuestReservation_withReservationIdAndCompanionNameAndCompanionMail_returnIllegalArgumentException() {
         when(reservationRepo.findById(reservationId1)).thenReturn(reservation);
-        ReservationResponseDto actual = service.getGuestReservation(reservationId1, "山田太郎", "email@sample.com");
-        assertNull(actual);
+
+        ReservationResponseDto expect = getExpectReservationResponseDto(reservationId1);
+
+        ReservationResponseDto actual = service.getGuestReservation(reservationId1, "一般次郎", "test2-common@test.com");
+
+        assertEquals(expect, actual);
     }
 
     @Test
     @DisplayName("同行者として予約情報データに存在しない予約情報IDがリクエストされた場合にNullを返す")
     void getGuestReservation_withReservationIdAndNotExistCompanionNameAndCompanionMail_returnIllegalArgumentException() {
         when(reservationRepo.findById(reservationId1)).thenReturn(reservation);
-        ReservationResponseDto actual = service.getGuestReservation(reservationId1, "山田太郎", "email@sample.com");
+        ReservationResponseDto actual = service.getGuestReservation(reservationId1, "一般四郎", "email@sample.com");
         assertNull(actual);
     }
 
