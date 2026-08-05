@@ -15,6 +15,7 @@ export function CustomModalTitle({
             <div className="relative flex w-full">
                 <h1 className="!m-0 text-left !text-xl">{title}</h1>
                 <button
+                    data-testid="modal-close-button"
                     onClick={onRequestClose}
                     disabled={isSubmitting}
                     className="absolute right-0 rounded-full"
