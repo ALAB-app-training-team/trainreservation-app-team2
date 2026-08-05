@@ -132,7 +132,7 @@ test('予約キャンセル：キャンセルすることで予約一覧(有効)
 
     const activeTicketCount = await reservationListPage.ticketButton.count();
     await reservationListPage.clickRefundButton();
-    await reservationListPage.clickCancelBackButton();
+    await reservationListPage.clickModalCloseButton();
     const notCancelTicketCount = await reservationListPage.ticketButton.count();
     await expect(notCancelTicketCount).toEqual(activeTicketCount);
     await reservationListPage.clickRefundButton();
