@@ -80,7 +80,7 @@ test('navigate-ログイン全機能', async ({ page, login, logout }) => {
     await reservedTicketPage.clickBackButton();
     await expect(page).toHaveURL('/reservationList');
     await reservationListPage.clickRefundButton();
-    await reservationListPage.clickCancelBackButton();
+    await reservationListPage.clickModalCloseButton();
     await expect(page).toHaveURL('/reservationList');
     await reservationListPage.clickRefundButton();
     await reservationListPage.clickCancelConfirmButton();
@@ -215,4 +215,25 @@ test('navigate-ログイン状態でloginのパスを入力すると検索画面
     await expect(page).toHaveURL('/scheduleSearch');
     await logout();
     await expect(page).toHaveURL('/login');
+});
+
+test('navigate-ログイン～予約一覧～予約変更（人数・座席変更）', async ({
+    page,
+    login,
+}) => {
+    const reservationListPage = new ReservationListPage(page);
+    const scheduleSearchPage = new ScheduleSearchPage(page);
+    const selectSeatPage = new SelectSeatPage(page);
+
+    await login();
+    await scheduleSearchPage.clickDetailButton();
+    await selectSeatPage.selectSeat();
+    await selectSeatPage.inputCardInfo();
+    await selectSeatPage.clickReseveButton();
+    await selectSeatPage.clickConfirmButton();
+    await reservationListPage.goto();
+    await reservationListPage.clickChangeButton();
+    await reservationListPage.clickChangeSeatConfirmButton();
+    await expect(page).toHaveURL('/selectSeat');
+    //TODO:予約変更実装後、追加
 });

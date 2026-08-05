@@ -103,9 +103,12 @@ public class ReservationServiceTest {
         List<ReservedSeatDto> reservedSeatList = Arrays.asList(seat1, seat2, seat3);
         return new ReservationResponseDto(
             reservationId,
+            "Test01",
             "やまびこ1号",
+            "THK01",
             "東京",
             LocalTime.of(6, 4, 0),
+            "THK09",
             "仙台",
             LocalTime.of(7, 58, 0),
             LocalDate.of(2026, 6, 1),
@@ -276,13 +279,15 @@ public class ReservationServiceTest {
         reservation.get().setDepartureArrivalTime(Set.of(departureArrivalTime1, departureArrivalTime2, departureArrivalTime3, departureArrivalTime4, departureArrivalTime5, departureArrivalTime6, departureArrivalTime7));
 
         TrainTypeEntity trainType = new TrainTypeEntity("YM001", "やまびこ1号", "E5SER", new TrainSeriesEntity());
-        ScheduleEntity schedule = new ScheduleEntity("TEST01", "YM001", trainType);
+        ScheduleEntity schedule = new ScheduleEntity("Test01", "YM001", trainType);
+        reservation.get().setScheduleCd("Test01");
         reservation.get().setDepartureStationCd("THK01");
         reservation.get().setArrivalStationCd("THK09");
         reservation.get().setRideDate(LocalDate.of(2026, 6, 1));
         reservation.get().setIsDeleted(false);
         reservation.get().setSchedule(schedule);
         reservation.get().setReservedSeat(seats);
+        reservation.get().setDepartureArrivalTime(Set.of(departureArrivalTime1, departureArrivalTime2, departureArrivalTime3, departureArrivalTime4, departureArrivalTime5, departureArrivalTime6, departureArrivalTime7));
         account.setId(UUID.fromString("f79d8bbc-fcba-b538-b132-2f726ce0120c"));
         account.setName("一般太郎");
         account.setMail("test-common@test.com");
