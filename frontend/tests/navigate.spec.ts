@@ -202,3 +202,18 @@ test('navigate-ログイン～検索～予約完了', async ({ page, login, logo
     await logout();
     await expect(page).toHaveURL('/login');
 });
+
+test('ログイン状態でloginのパスを入力すると検索画面に遷移', async ({
+    page,
+    login,
+    logout,
+}) => {
+    const loginPage = new LoginPage(page);
+
+    await login();
+    await expect(page).toHaveURL('/scheduleSearch');
+    await loginPage.goto();
+    await expect(page).toHaveURL('/scheduleSearch');
+    await logout();
+    await expect(page).toHaveURL('/login');
+});
