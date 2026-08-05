@@ -160,12 +160,10 @@ export function SelectSeats() {
                 axios.isAxiosError(error) &&
                 error.response?.status === HttpStatusCode.Unauthorized
             ) {
-                console.log('a');
                 handleReloginConfirmModalOpen();
 
                 return;
             }
-            console.log(error.response);
             alert(ERROR_MESSAGE.RESERVE_RETRY);
         } finally {
             setIsSubmitting(false);
