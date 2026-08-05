@@ -160,11 +160,18 @@ public class ReservationService {
      * @return 予約情報の入ったReservationResponseDto(1件)
      */
     public ReservationResponseDto getGuestReservation(UUID reservationId, String name, String email) {
-
-        Optional<ReservationEntity> reservationEntity = reservationRepository
-            .findByIdAndReserverNameAndReserverMail(reservationId, removeSpaces(name), removeSpaces(email));
-
+        Optional<ReservationEntity> reservationEntity = reservationRepository.findById(reservationId);
         if (reservationEntity.isEmpty()) return null;
+
+        if (Objects.equals(reservationEntity.get().getReserverName(), removeSpaces(name))
+            && Objects.equals(reservationEntity.get().getReserverMail(), removeSpaces(email))) {
+            if (reservationEntity.get().getAccountId() != null) return null;
+        } else {
+            boolean isCompanionMatched = reservationEntity.get().getReservedSeat().stream()
+                .anyMatch(seat -> Objects.equals(seat.getName(), removeSpaces(name)) && Objects.equals(seat.getMail(), removeSpaces(email)));
+            if (!isCompanionMatched) return null;
+        }
+
         return createReservationResponseDto(reservationEntity);
     }
 
