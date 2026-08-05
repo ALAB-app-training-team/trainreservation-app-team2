@@ -44,5 +44,9 @@ public interface ReservationRepository extends JpaRepository<ReservationEntity, 
 
     Optional<ReservationEntity> findByIdAndAccountId(UUID reservationId, UUID accountId);
 
+    @EntityGraph(attributePaths = {
+        "reservedSeat",
+        "reservedSeat.reservedSeatSection"
+    })
     Optional<ReservationEntity> findByIdAndIsDeleted(UUID reservationId, Boolean flag);
 }

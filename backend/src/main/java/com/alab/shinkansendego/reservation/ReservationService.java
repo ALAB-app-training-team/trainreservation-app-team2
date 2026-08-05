@@ -26,6 +26,7 @@ import org.springframework.web.client.RestClient;
 import org.springframework.web.server.ResponseStatusException;
 import tools.jackson.databind.ObjectMapper;
 
+import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.List;
@@ -261,21 +262,7 @@ public class ReservationService {
             throw new IllegalArgumentException("Seat limit exceeded");
         }
 
-        List<String> SectionKmCdsByDepartureStation = sectionKmRepository.findByStartStationCd(reserveRequestDto.getDepartureStationCd()).stream().map(entity -> entity.getSectionCd()).toList();
-        List<String> SectionKmCdsByArrivalStation = sectionKmRepository.findByGoalStationCd(reserveRequestDto.getArrivalStationCd()).stream().map(entity -> entity.getSectionCd()).toList();
-
-        DepartureArrivalTimeEntity departureArrivalTimeOfStart = departureArrivalTimeRepository.findByScheduleCdAndSectionCdIn(reserveRequestDto.getScheduleCd(), SectionKmCdsByDepartureStation);
-        DepartureArrivalTimeEntity departureArrivalTimeOfGoal = departureArrivalTimeRepository.findByScheduleCdAndSectionCdIn(reserveRequestDto.getScheduleCd(), SectionKmCdsByArrivalStation);
-        if (departureArrivalTimeOfStart == null || departureArrivalTimeOfGoal == null) {
-            throw new IllegalArgumentException("Section is Not found");
-        }
-
-        List<String> sectionCdList = departureArrivalTimeRepository.findByScheduleCdAndDepartureTimeGreaterThanEqualAndArrivalTimeLessThanEqual(
-                reserveRequestDto.getScheduleCd(), departureArrivalTimeOfStart.getDepartureTime(), departureArrivalTimeOfGoal.getArrivalTime())
-            .stream().map(entity -> entity.getSectionCd()).toList();
-        if (sectionCdList.isEmpty()) {
-            throw new IllegalArgumentException("SectionCd is Not found");
-        }
+        List<String> sectionCdList = getSectionCdList(reserveRequestDto.getScheduleCd(), reserveRequestDto.getDepartureStationCd(), reserveRequestDto.getArrivalStationCd());
 
         String paymentTrackingId = "";
         UUID reservationId = UUID.randomUUID();
@@ -296,11 +283,72 @@ public class ReservationService {
             throw new RuntimeException("Insert Reservation is failed");
         }
 
+        insertReservedSeatAndReservedSeatSection(reservationResult.getId(), reserveRequestDto.getSeats(), sectionCdList, reserveRequestDto.getRideDate(), reserveRequestDto.getScheduleCd());
+
+        String paymentUrl = "http://localhost:8080/api/payments";
+        paymentTrackingId = restClient.post()
+            .uri(paymentUrl)
+            .contentType(MediaType.APPLICATION_JSON)
+            .body(reserveRequestDto.getPaymentToken())
+            .retrieve()
+            .body(String.class);
+        if (StringUtil.isNullOrEmpty(paymentTrackingId)) {
+            throw new RuntimeException("Get PaymentTrackingId is failed");
+        }
+
+        reservationResult.setPaymentTrackingId(paymentTrackingId);
+        reservationRepository.save(reservationResult);
+
+        return reservationId;
+    }
+
+    /**
+     * 出発駅と到着駅から区間CDリストを取得するメソッド
+     *
+     * @param scheduleCd         ダイヤCd
+     * @param departureStationCd 出発駅CD
+     * @param arrivalStationCd   到着駅CD
+     * @return 区間CDリスト
+     */
+    private List<String> getSectionCdList(String scheduleCd, String departureStationCd, String arrivalStationCd) {
+        List<String> SectionKmCdsByDepartureStation = sectionKmRepository.findByStartStationCd(departureStationCd).stream().map(entity -> entity.getSectionCd()).toList();
+        List<String> SectionKmCdsByArrivalStation = sectionKmRepository.findByGoalStationCd(arrivalStationCd).stream().map(entity -> entity.getSectionCd()).toList();
+
+        DepartureArrivalTimeEntity departureArrivalTimeOfStart = departureArrivalTimeRepository.findByScheduleCdAndSectionCdIn(scheduleCd, SectionKmCdsByDepartureStation);
+        DepartureArrivalTimeEntity departureArrivalTimeOfGoal = departureArrivalTimeRepository.findByScheduleCdAndSectionCdIn(scheduleCd, SectionKmCdsByArrivalStation);
+        if (departureArrivalTimeOfStart == null || departureArrivalTimeOfGoal == null) {
+            throw new IllegalArgumentException("Section is Not found");
+        }
+
+        List<String> sectionCdList = departureArrivalTimeRepository.findByScheduleCdAndDepartureTimeGreaterThanEqualAndArrivalTimeLessThanEqual(
+                scheduleCd, departureArrivalTimeOfStart.getDepartureTime(), departureArrivalTimeOfGoal.getArrivalTime())
+            .stream().map(entity -> entity.getSectionCd()).toList();
+        if (sectionCdList.isEmpty()) {
+            throw new IllegalArgumentException("SectionCd is Not found");
+        }
+        return sectionCdList;
+    }
+
+    /**
+     * 予約座席情報予約済座席区間を登録するメソッド
+     *
+     * @param reservationId 予約情報ID
+     * @param seatDtos      登録する座席情報
+     * @param sectionCdList 登録する区間情報
+     * @param rideDate      登録する乗車日付
+     * @param scheduleCd    登録するダイヤCD
+     */
+    private void insertReservedSeatAndReservedSeatSection(
+        UUID reservationId,
+        List<ReserveRequestDto.SelectedSeatDto> seatDtos,
+        List<String> sectionCdList,
+        LocalDate rideDate,
+        String scheduleCd) {
         List<ReservedSeatEntity> reservedSeatsToPost = new ArrayList<>();
-        for (ReserveRequestDto.SelectedSeatDto seatDto : reserveRequestDto.getSeats()) {
+        for (ReserveRequestDto.SelectedSeatDto seatDto : seatDtos) {
             ReservedSeatEntity reservedSeat = new ReservedSeatEntity();
             reservedSeat.setId(UUID.randomUUID());
-            reservedSeat.setReservationId(reservationResult.getId());
+            reservedSeat.setReservationId(reservationId);
             reservedSeat.setTrainCarCd(seatDto.getTrainCarCd());
             reservedSeat.setSeatCd(seatDto.getSeatCd());
             reservedSeat.setCodeToken(UUID.randomUUID());
@@ -314,15 +362,15 @@ public class ReservationService {
         }
         List<ReservedSeatEntity> savedReservedSeats = reservedSeatRepository.saveAll(reservedSeatsToPost);
         int reservedSeatResult = savedReservedSeats.size();
-        if (reservedSeatResult != reserveRequestDto.getSeats().size()) {
+        if (reservedSeatResult != seatDtos.size()) {
             throw new RuntimeException("Insert ReservedSeats is failed");
         }
 
         List<ReservedSeatSectionEntity> reservedSeatSectionsToPost = new ArrayList<>();
-        for (ReserveRequestDto.SelectedSeatDto seatDto : reserveRequestDto.getSeats()) {
+        for (ReserveRequestDto.SelectedSeatDto seatDto : seatDtos) {
             for (String sectionCd : sectionCdList) {
                 ReservedSeatSectionEntity reservedSeatSection = new ReservedSeatSectionEntity(
-                    UUID.randomUUID(), reservationId, reserveRequestDto.getRideDate(), reserveRequestDto.getScheduleCd(),
+                    UUID.randomUUID(), reservationId, rideDate, scheduleCd,
                     seatDto.getTrainCarCd(),
                     seatDto.getSeatCd(), sectionCd, seatDto.getTrainCarTypeCd()
                 );
@@ -357,25 +405,9 @@ public class ReservationService {
         }
 
         int reservedSeatSectionResult = reservedSeatSectionRepository.saveAll(reservedSeatSectionsToPost).size();
-        if (reservedSeatSectionResult != sectionCdList.size() * reserveRequestDto.getSeats().size()) {
+        if (reservedSeatSectionResult != sectionCdList.size() * seatDtos.size()) {
             throw new RuntimeException("Insert ReservedSeatSections is failed");
         }
-
-        String paymentUrl = "http://localhost:8080/api/payments";
-        paymentTrackingId = restClient.post()
-            .uri(paymentUrl)
-            .contentType(MediaType.APPLICATION_JSON)
-            .body(reserveRequestDto.getPaymentToken())
-            .retrieve()
-            .body(String.class);
-        if (StringUtil.isNullOrEmpty(paymentTrackingId)) {
-            throw new RuntimeException("Get PaymentTrackingId is failed");
-        }
-
-        reservationResult.setPaymentTrackingId(paymentTrackingId);
-        reservationRepository.save(reservationResult);
-
-        return reservationId;
     }
 
     /**
@@ -385,8 +417,8 @@ public class ReservationService {
      * @return 登録した予約情報ID
      */
     @Transactional
-    public UUID patchReservedSeat(UUID reservationId, List<ReserveRequestDto.SelectedSeatDto> seats, AccountSessionDto session) {
-        if (seats == null || seats.isEmpty()) {
+    public UUID patchReservedSeat(UUID reservationId, ReserveRequestDto changedReservation, AccountSessionDto session) {
+        if (changedReservation.getSeats() == null || changedReservation.getSeats().isEmpty()) {
             throw new IllegalArgumentException("RefreshSeats is Null");
         }
 
@@ -395,18 +427,37 @@ public class ReservationService {
             throw new BadCredentialsException("Reservation doesn't match");
         }
 
-        List<ReservedSeatEntity> reservedSeats = reservedSeatRepository.findByReservationIdAndIsDeleted(reservationId, false);
+        Set<ReservedSeatEntity> reservedSeats = reservation.get().getReservedSeat();
         if (reservedSeats.isEmpty()) {
             throw new IllegalArgumentException("Reserved Seats is Not found");
         }
 
-        List<ReservedSeatEntity> addSeats = new ArrayList<>();
-        for (ReservedSeatEntity reservedSeat : reservedSeats) {
-            Optional<ReserveRequestDto.SelectedSeatDto> matchSeat = seats.stream()
-                .filter(s -> Objects.equals(s.getTrainCarCd(), reservedSeat.getTrainCarCd()))
-                .filter(s -> Objects.equals(s.getSeatCd(), reservedSeat.getSeatCd()))
-                .findFirst();
+        // 削除対象座席Entityを抽出
+        List<ReservedSeatEntity> deleteSeats = reservedSeats.stream()
+            .filter(reserved -> changedReservation.getSeats().stream().noneMatch(changed -> isSame(changed, reserved)))
+            .toList();
+
+        // 追加対象座席リクエストを抽出
+        List<ReserveRequestDto.SelectedSeatDto> postSeats = changedReservation.getSeats().stream()
+            .filter(changed -> reservedSeats.stream().noneMatch(reserved -> isSame(changed, reserved)))
+            .toList();
+
+        if (!deleteSeats.isEmpty()) {
+            List<ReservedSeatSectionEntity> deleteSeatSections = deleteSeats.stream()
+                .flatMap(seat -> seat.getReservedSeatSection().stream())
+                .toList();
+            reservedSeatRepository.deleteAll(deleteSeats);
+            reservedSeatSectionRepository.deleteAll(deleteSeatSections);
         }
+
+        List<String> sectionCds = getSectionCdList(changedReservation.getScheduleCd(),
+            changedReservation.getDepartureStationCd(),
+            changedReservation.getArrivalStationCd());
+        insertReservedSeatAndReservedSeatSection(
+            reservationId,
+            postSeats, sectionCds,
+            changedReservation.getRideDate(),
+            changedReservation.getScheduleCd());
 
         return reservationId;
     }
@@ -435,5 +486,17 @@ public class ReservationService {
         reservationRepository.save(reservation);
         reservedSeatRepository.saveAll(seats);
         reservedSeatSectionRepository.deleteAll(sections);
+    }
+
+    /**
+     * 異なるオブジェクト型要素が一致するか比較するメソッド
+     *
+     * @param afterSeat  変更後座席
+     * @param beforeSeat 変更前座席
+     * @return 比較結果
+     */
+    private boolean isSame(ReserveRequestDto.SelectedSeatDto afterSeat, ReservedSeatEntity beforeSeat) {
+        return Objects.equals(afterSeat.getTrainCarCd(), beforeSeat.getTrainCarCd())
+            && Objects.equals(afterSeat.getSeatCd(), beforeSeat.getSeatCd());
     }
 }
