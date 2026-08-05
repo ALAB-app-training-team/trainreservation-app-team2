@@ -1,7 +1,7 @@
 import dayjs from 'dayjs';
 import customParseFormat from 'dayjs/plugin/customParseFormat';
 import { BsQrCode } from 'react-icons/bs';
-import { FaClock, FaExchangeAlt } from 'react-icons/fa';
+import { FaClock, FaEdit } from 'react-icons/fa';
 import { IoTrashOutline } from 'react-icons/io5';
 import { LuTicket } from 'react-icons/lu';
 import { useNavigate } from 'react-router-dom';
@@ -124,7 +124,7 @@ export function ReservationSelectItem({
                             className="border-primary text-primary flex items-center justify-center gap-2 rounded-md border-1 px-4 py-2 text-sm"
                             data-testid={'change-button'}
                         >
-                            <FaExchangeAlt />
+                            <FaEdit />
                             予約を変更
                         </button>
                         <button
