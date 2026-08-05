@@ -24,8 +24,8 @@ export class LoginPage {
         await this.page.goto('/login');
     }
 
-    async fillMailAddress(mailAddress: string) {
-        await this.mailAddress.fill(mailAddress);
+    async fillMailAddress(address: string) {
+        await this.mailAddress.fill(address);
     }
 
     async fillPassword(password: string) {

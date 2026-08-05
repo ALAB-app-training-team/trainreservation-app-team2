@@ -49,7 +49,10 @@ export function ReserveUserInfoInput({
                     />
                 </div>
                 {getFieldError?.(id) && (
-                    <p className="text-left text-sm text-red-600">
+                    <p
+                        className="text-left text-sm text-red-600"
+                        data-testId="error"
+                    >
                         {getFieldError(id)}
                     </p>
                 )}

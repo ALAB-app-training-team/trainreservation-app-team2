@@ -138,3 +138,19 @@ test('出発日は本日から一か月後まで選択できる', async ({ page 
         dayjs().add(1, 'month').format('YYYY-MM-DD'),
     );
 });
+
+test('空席表示チェックボックスにチェックが入っていると満席がないこと、チェックをはずすと満席が0以上であること', async ({
+    page,
+}) => {
+    const scheduleSearchPage = new ScheduleSearchPage(page);
+
+    scheduleSearchPage.goto();
+    await expect(page).toHaveURL('/scheduleSearch');
+    await expect(scheduleSearchPage.availableTrainCheckBox).toBeChecked();
+    await expect(page.getByText('満席')).toBeHidden();
+
+    await scheduleSearchPage.clickAvailableTrainCheckBox();
+    await expect(scheduleSearchPage.availableTrainCheckBox).not.toBeChecked();
+    const fullTrainCount = await page.getByText('満席').count();
+    await expect(fullTrainCount).toBeGreaterThanOrEqual(0);
+});

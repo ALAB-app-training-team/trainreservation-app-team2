@@ -134,9 +134,12 @@ public class ReservationService {
                 .toList();
 
             dto.setReservationId(reservation.getId());
+            dto.setScheduleCd(reservation.getScheduleCd());
             dto.setTrainTypeName(reservation.getSchedule().getTrainType().getName());
+            dto.setDepartureStationCd(departureSchedule.getSectionKm().getStartStationCd());
             dto.setDepartureStationName(departureSchedule.getSectionKm().getStartStation().getName());
             dto.setDepartureTime(departureSchedule.getDepartureTime());
+            dto.setArrivalStationCd(arrivalSchedule.getSectionKm().getGoalStationCd());
             dto.setArrivalStationName(arrivalSchedule.getSectionKm().getGoalStation().getName());
             dto.setArrivalTime(arrivalSchedule.getArrivalTime());
             dto.setRideDate(reservation.getRideDate());
@@ -225,9 +228,12 @@ public class ReservationService {
                 .thenComparing(ReservedSeatDto::getSeatNumber)
                 .thenComparing(ReservedSeatDto::getSeatColumn)).toList();
 
+        dto.setScheduleCd(reservationEntity.get().getScheduleCd());
         dto.setTrainTypeName(reservationEntity.get().getSchedule().getTrainType().getName());
+        dto.setDepartureStationCd(departureSchedule.getFirst().getDepartureStationCd());
         dto.setDepartureStationName(departureSchedule.getFirst().getDepartureStationName());
         dto.setDepartureTime(departureSchedule.getFirst().getDepartureTime());
+        dto.setArrivalStationCd(arrivalSchedule.getFirst().getArrivalStationCd());
         dto.setArrivalStationName(arrivalSchedule.getFirst().getArrivalStationName());
         dto.setArrivalTime(arrivalSchedule.getFirst().getArrivalTime());
         dto.setRideDate(reservationEntity.get().getRideDate());
