@@ -9,4 +9,6 @@ import java.util.UUID;
 @Repository
 public interface ReservedSeatRepository extends JpaRepository<ReservedSeatEntity, UUID> {
     List<ReservedSeatEntity> findByReservationId(UUID reservationId);
+
+    List<ReservedSeatEntity> findByReservationIdAndIsDeleted(UUID reservationId, Boolean flag);
 }

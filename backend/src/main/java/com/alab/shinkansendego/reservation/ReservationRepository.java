@@ -43,4 +43,6 @@ public interface ReservationRepository extends JpaRepository<ReservationEntity, 
     List<ReservationEntity> findByAccountId(UUID accountId);
 
     Optional<ReservationEntity> findByIdAndAccountId(UUID reservationId, UUID accountId);
+
+    Optional<ReservationEntity> findByIdAndIsDeleted(UUID reservationId, Boolean flag);
 }

@@ -379,6 +379,39 @@ public class ReservationService {
     }
 
     /**
+     * 人数・座席変更メソッド
+     *
+     * @param reservationId 画面で選択した登録するべき予約情報
+     * @return 登録した予約情報ID
+     */
+    @Transactional
+    public UUID patchReservedSeat(UUID reservationId, List<ReserveRequestDto.SelectedSeatDto> seats, AccountSessionDto session) {
+        if (seats == null || seats.isEmpty()) {
+            throw new IllegalArgumentException("RefreshSeats is Null");
+        }
+
+        Optional<ReservationEntity> reservation = reservationRepository.findByIdAndIsDeleted(reservationId, false);
+        if (session == null || reservation.get().getAccountId() == session.getId()) {
+            throw new BadCredentialsException("Reservation doesn't match");
+        }
+
+        List<ReservedSeatEntity> reservedSeats = reservedSeatRepository.findByReservationIdAndIsDeleted(reservationId, false);
+        if (reservedSeats.isEmpty()) {
+            throw new IllegalArgumentException("Reserved Seats is Not found");
+        }
+
+        List<ReservedSeatEntity> addSeats = new ArrayList<>();
+        for (ReservedSeatEntity reservedSeat : reservedSeats) {
+            Optional<ReserveRequestDto.SelectedSeatDto> matchSeat = seats.stream()
+                .filter(s -> Objects.equals(s.getTrainCarCd(), reservedSeat.getTrainCarCd()))
+                .filter(s -> Objects.equals(s.getSeatCd(), reservedSeat.getSeatCd()))
+                .findFirst();
+        }
+
+        return reservationId;
+    }
+
+    /**
      * 特定の予約情報IDに紐づく予約情報・予約座席情報を論理削除、予約済座席区間を物理削除するメソッド
      *
      * @param reservationId 予約情報ID
