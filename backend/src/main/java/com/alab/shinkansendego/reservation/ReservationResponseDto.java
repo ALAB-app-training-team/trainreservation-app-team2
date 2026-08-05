@@ -18,9 +18,12 @@ import java.util.UUID;
 @Setter
 public class ReservationResponseDto {
     private UUID reservationId;
+    private String scheduleCd;
     private String trainTypeName;
+    private String departureStationCd;
     private String departureStationName;
     private LocalTime departureTime;
+    private String arrivalStationCd;
     private String arrivalStationName;
     private LocalTime arrivalTime;
     private LocalDate rideDate;

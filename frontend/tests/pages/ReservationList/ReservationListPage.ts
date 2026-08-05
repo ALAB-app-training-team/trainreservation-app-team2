@@ -6,11 +6,13 @@ export class ReservationListPage {
     readonly header: Header;
     readonly ticketButton: Locator;
     readonly cancelConfirmButton: Locator;
-    readonly cancelBackButton: Locator;
+    readonly modalCloseButton: Locator;
     readonly totalFareElement: Locator;
     readonly activeButton: Locator;
     readonly refundButton: Locator;
+    readonly changeButton: Locator;
     readonly pastButton: Locator;
+    readonly changeSeatConfirmButton: Locator;
 
     constructor(page: Page) {
         this.page = page;
@@ -21,13 +23,15 @@ export class ReservationListPage {
         this.cancelConfirmButton = page.getByRole('button', {
             name: '予約を取り消す',
         });
-        this.cancelBackButton = page.getByRole('button', {
-            name: '予約を取り消さない',
-        });
         this.totalFareElement = page.getByTestId('total-fare');
         this.activeButton = page.getByTestId('active-button');
         this.refundButton = page.getByTestId('refund-button');
+        this.changeButton = page.getByTestId('change-button');
         this.pastButton = page.getByTestId('past-button');
+        this.changeSeatConfirmButton = page.getByTestId(
+            'change-seat-confirm-button',
+        );
+        this.modalCloseButton = page.getByTestId('modal-close-button');
     }
 
     async goto() {
@@ -42,8 +46,8 @@ export class ReservationListPage {
         await this.cancelConfirmButton.first().click();
     }
 
-    async clickCancelBackButton() {
-        await this.cancelBackButton.first().click();
+    async clickModalCloseButton() {
+        await this.modalCloseButton.first().click();
     }
 
     async clickActiveButton() {
@@ -55,5 +59,13 @@ export class ReservationListPage {
 
     async clickRefundButton() {
         await this.refundButton.first().click();
+    }
+
+    async clickChangeButton() {
+        await this.changeButton.first().click();
+    }
+
+    async clickChangeSeatConfirmButton() {
+        await this.changeSeatConfirmButton.first().click();
     }
 }

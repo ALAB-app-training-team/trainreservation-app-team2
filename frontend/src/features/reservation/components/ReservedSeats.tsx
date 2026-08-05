@@ -7,12 +7,13 @@ import type { ReservedSeatDto } from '@/features/reservation/types/ReservedSeatD
 import { ERROR_MESSAGE } from '@/shared/constants/ErrorMessages';
 
 const reservedSeatsStyle = tv({
-    base: 'flex items-center gap-1 rounded-lg px-2',
+    base: 'flex items-center gap-1 px-2',
     variants: {
         id: {
-            reservationList: 'border-primary border',
+            reservationList: 'rounded-lg border-primary border',
             reservationDetail:
-                'border-primary-light text-primary bg-green-100 border-2',
+                'rounded-lg border-primary-light text-primary bg-green-100 border-2',
+            reservationChange: 'border-primary border-l-2',
         },
     },
     defaultVariants: {

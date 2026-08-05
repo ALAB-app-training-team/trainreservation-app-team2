@@ -3,10 +3,12 @@ import { useEffect, useState } from 'react';
 import { CiCalendar } from 'react-icons/ci';
 import { LuTicket } from 'react-icons/lu';
 import { RiGroupLine } from 'react-icons/ri';
+import { useNavigate } from 'react-router-dom';
 import { toast } from 'sonner';
 
 import apiClient from '@/api/apiClient';
 import { ENDPOINTS } from '@/api/routes';
+import { ReservationChangeConfirmModal } from '@/features/reservation/components/ReservationChangeConfirmModal';
 import { ReservationSelectItem } from '@/features/reservation/components/ReservationList/ReservationSelectItem';
 import { ReservationRefundConfirmModal } from '@/features/reservation/components/ReservationRefundConfirmModal';
 import type { ReservationTabKey } from '@/features/reservation/constants/ReservationTab';
@@ -16,6 +18,8 @@ import {
 } from '@/features/reservation/constants/ReservationTab';
 import { useReservationList } from '@/features/reservation/hooks/useReservationList';
 import type { ReservationResponseDto } from '@/features/reservation/types/ReservationResponseDto';
+import type { ScheduleInfoDto } from '@/features/schedule/types/ScheduleInfoDto';
+import type { SearchRequestDto } from '@/features/schedule/types/SearchRequestDto';
 import { CustomModal } from '@/shared/components/CustomModal';
 import { ERROR_MESSAGE } from '@/shared/constants/ErrorMessages';
 import { useModal } from '@/shared/hooks/useModal';
@@ -27,7 +31,9 @@ export function ReservationListBody() {
     const [isSubmitting, setIsSubmitting] = useState<boolean>(false);
     const [selectedReservation, setSelectedReservation] =
         useState<ReservationResponseDto>();
+    const [isChange, setIsChange] = useState(false);
     const queryClient = useQueryClient();
+    const navigate = useNavigate();
 
     const getInitialTab = (): ReservationTabKey => {
         const savedTab = sessionStorage.getItem('selectedReservationTab');
@@ -51,6 +57,12 @@ export function ReservationListBody() {
               : canceledReservations;
 
     const handleRefundModalOpen = (details: ReservationResponseDto) => {
+        setIsChange(false);
+        setSelectedReservation(details);
+        handleModalOpen();
+    };
+    const handleChangeModalOpen = (details: ReservationResponseDto) => {
+        setIsChange(true);
         setSelectedReservation(details);
         handleModalOpen();
     };
@@ -76,6 +88,29 @@ export function ReservationListBody() {
             setIsSubmitting(false);
             onRequestClose();
         }
+    };
+
+    const handleChangeSeat = async (details: ReservationResponseDto) => {
+        const scheduleInfoDto: ScheduleInfoDto = {
+            scheduleCd: details.scheduleCd,
+            date: details.rideDate,
+            departureTime: details.departureTime,
+            arrivalTime: details.arrivalTime,
+            trainTypeName: details.trainTypeName,
+            departureStationCd: details.departureStationCd,
+            arrivalStationCd: details.arrivalStationCd,
+            departureStationName: details.departureStationName,
+            arrivalStationName: details.arrivalStationName,
+        };
+        const searchRequestDto: SearchRequestDto | null = null;
+        navigate('/selectSeat', {
+            state: {
+                scheduleInfoDto,
+                searchRequestDto,
+            },
+        });
+        window.scrollTo(0, 0);
+        onRequestClose();
     };
 
     return (
@@ -115,6 +150,7 @@ export function ReservationListBody() {
                                 key={reservation.reservationId}
                                 details={reservation}
                                 onRefundClicked={handleRefundModalOpen}
+                                onChangeClicked={handleChangeModalOpen}
                             />
                         );
                     })
@@ -123,14 +159,22 @@ export function ReservationListBody() {
                 )}
             </div>
             <CustomModal isOpen={isOpen} onRequestClose={onRequestClose}>
-                {selectedReservation?.reservationId && (
-                    <ReservationRefundConfirmModal
-                        onClick={handleReservationRefund}
-                        onRequestClose={onRequestClose}
-                        isSubmitting={isSubmitting}
-                        details={selectedReservation}
-                    />
-                )}
+                {selectedReservation?.reservationId &&
+                    (isChange ? (
+                        <ReservationChangeConfirmModal
+                            onChangeSeatClick={handleChangeSeat}
+                            onRequestClose={onRequestClose}
+                            isSubmitting={isSubmitting}
+                            details={selectedReservation}
+                        />
+                    ) : (
+                        <ReservationRefundConfirmModal
+                            onClick={handleReservationRefund}
+                            onRequestClose={onRequestClose}
+                            isSubmitting={isSubmitting}
+                            details={selectedReservation}
+                        />
+                    ))}
             </CustomModal>
         </>
     );
