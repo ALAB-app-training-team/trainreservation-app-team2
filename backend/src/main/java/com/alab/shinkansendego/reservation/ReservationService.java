@@ -16,6 +16,8 @@ import com.alab.shinkansendego.sectionkm.SectionKmRepository;
 import com.alab.shinkansendego.traincar.SeatResponseDto;
 import com.alab.shinkansendego.traincar.TrainCarEntity;
 import com.alab.shinkansendego.traincar.TrainCarRepository;
+import jakarta.persistence.EntityManager;
+import jakarta.persistence.PersistenceContext;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
@@ -71,6 +73,9 @@ public class ReservationService {
         this.accountRepository = accountRepository;
         this.restClient = restClientBuilder.build();
     }
+
+    @PersistenceContext
+    private EntityManager entityManager;
 
     /**
      * 文字列から全角半角の空白をすべて除く
@@ -448,6 +453,20 @@ public class ReservationService {
             .filter(changed -> reservedSeats.stream().noneMatch(reserved -> isSame(changed, reserved)))
             .toList();
 
+        if (!postSeats.isEmpty()) {
+            List<String> sectionCds = getSectionCdList(changedReservation.getScheduleCd(),
+                changedReservation.getDepartureStationCd(),
+                changedReservation.getArrivalStationCd());
+
+            insertReservedSeatAndReservedSeatSection(
+                reservationId,
+                postSeats, sectionCds,
+                changedReservation.getRideDate(),
+                changedReservation.getScheduleCd());
+        }
+        entityManager.flush();
+        entityManager.clear();
+
         if (!deleteSeats.isEmpty()) {
             List<ReservedSeatSectionEntity> deleteSeatSections = deleteSeats.stream()
                 .flatMap(seat -> seat.getReservedSeatSection().stream())
@@ -455,15 +474,6 @@ public class ReservationService {
             reservedSeatRepository.deleteAll(deleteSeats);
             reservedSeatSectionRepository.deleteAll(deleteSeatSections);
         }
-
-        List<String> sectionCds = getSectionCdList(changedReservation.getScheduleCd(),
-            changedReservation.getDepartureStationCd(),
-            changedReservation.getArrivalStationCd());
-        insertReservedSeatAndReservedSeatSection(
-            reservationId,
-            postSeats, sectionCds,
-            changedReservation.getRideDate(),
-            changedReservation.getScheduleCd());
 
         return reservationId;
     }

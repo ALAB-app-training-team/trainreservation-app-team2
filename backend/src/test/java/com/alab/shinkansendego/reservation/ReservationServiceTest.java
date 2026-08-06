@@ -294,7 +294,7 @@ public class ReservationServiceTest {
         DepartureArrivalTimeEntity departureArrivalTime7 = buildSchedule(LocalTime.of(8, 0, 0), "THK09", "仙台", LocalTime.of(8, 12, 0), "THK10", "古川");
 
         LocalDate rideDate = LocalDate.of(2026, 6, 1);
-        String scheduleCd = "TEST01";
+        String scheduleCd = "Test01";
 
         Set<ReservedSeatEntity> seats = Set.of(
             buildSeat(reservationId1, "指定席", 1, 1, "A", UUID.fromString("60a1ab63-a41f-430d-a2d1-10a76368d0f5"), 5000, rideDate, scheduleCd, "E5SER01", "SEAT01001", "CAR01"),

@@ -51,6 +51,5 @@ public class ReservedSeatEntity {
         @JoinColumn(name = "train_car_cd", referencedColumnName = "train_car_cd", insertable = false, updatable = false),
         @JoinColumn(name = "seat_cd", referencedColumnName = "seat_cd", insertable = false, updatable = false),
     })
-
     private Set<ReservedSeatSectionEntity> reservedSeatSection;
 }
