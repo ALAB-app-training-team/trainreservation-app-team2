@@ -1,9 +1,8 @@
-import type { ReservedSeatUpdateDto } from '@features/reservation/types/ReservedSeatUpdateDto';
-
 import apiClient from '@/api/apiClient';
 import { ENDPOINTS } from '@/api/routes';
 import { CompanionForm } from '@/features/reservation/components/CompanionForm';
 import type { ReservedSeatDto } from '@/features/reservation/types/ReservedSeatDto';
+import type { ReservedSeatUpdateDto } from '@/features/reservation/types/ReservedSeatUpdateDto';
 
 type CompanionModalProps = {
     reservationId: string;
@@ -20,7 +19,11 @@ export function CompanionModal({
             name: seat.name,
             mail: seat.mail,
         }));
-        await apiClient.patch(ENDPOINTS.RESERVEDSEAT(reservationId), request);
+        const response = await apiClient.patch(
+            ENDPOINTS.RESERVEDSEAT(reservationId),
+            request,
+        );
+        console.log('response', response);
     };
     return (
         <>
