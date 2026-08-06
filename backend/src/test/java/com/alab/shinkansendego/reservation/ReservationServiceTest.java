@@ -29,6 +29,7 @@ import org.mockito.ArgumentMatchers;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.dao.DuplicateKeyException;
 import org.springframework.http.HttpMethod;
 import org.springframework.http.HttpStatus;
@@ -94,6 +95,8 @@ public class ReservationServiceTest {
     private SeatRepository seatRepo;
     @Mock
     private AccountRepository accountRepo;
+    @Mock
+    private ApplicationEventPublisher eventPublisher;
     private ReservationService service;
     private MockRestServiceServer mockRestServiceServer;
     @Autowired
@@ -265,7 +268,7 @@ public class ReservationServiceTest {
         restClientBuilder = RestClient.builder();
         this.mockRestServiceServer = MockRestServiceServer.bindTo(restClientBuilder).build();
         this.service = new ReservationService(
-            reservationRepo, reservedSeatRepo, sectionKmRepo, departureArrivalTimeRepo, reservedSeatSectionRepo, trainCarRepo, seatRepo, accountRepo, restClientBuilder
+            reservationRepo, reservedSeatRepo, sectionKmRepo, departureArrivalTimeRepo, reservedSeatSectionRepo, trainCarRepo, seatRepo, accountRepo, restClientBuilder, eventPublisher
         );
 
         DepartureArrivalTimeEntity departureArrivalTime1 = buildSchedule(LocalTime.of(6, 4, 0), "THK01", "東京", LocalTime.of(6, 9, 0), "THK02", "上野");
