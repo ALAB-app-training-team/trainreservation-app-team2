@@ -1,5 +1,6 @@
 import { Suspense } from 'react';
 
+import type { ReservedSeatDto } from '@/features/reservation/types/ReservedSeatDto';
 import { SeatsByTrainCar } from '@/features/schedule/components/SeatsByTrainCar/SeatsByTrainCar';
 import { SeatsByTrainCarSkeleton } from '@/features/schedule/components/SeatsByTrainCar/SeatsByTrainCarSkeleton';
 import { SEAT_TYPE_LABELS } from '@/features/schedule/constants/SeatTypeLabel';
@@ -14,6 +15,7 @@ type TrainCarsProps = {
     selectedSeats: SeatResponseDto[];
     handleSelectedSeats: (seat: SeatResponseDto) => void;
     checkReservedSeats: (seats: SeatResponseDto[]) => void;
+    reservedSeats?: ReservedSeatDto[];
 };
 
 export function TrainCars({
@@ -21,6 +23,7 @@ export function TrainCars({
     selectedSeats,
     handleSelectedSeats,
     checkReservedSeats,
+    reservedSeats,
 }: TrainCarsProps) {
     const {
         trainCars,
@@ -30,7 +33,7 @@ export function TrainCars({
         handleSeatTypeChange,
         setSelectedTrainCarCd,
         seatsRequestDto,
-    } = useTrainCar(scheduleInfoDto);
+    } = useTrainCar(scheduleInfoDto, reservedSeats);
 
     return (
         <div className="border-primary-light flex flex-col gap-8 rounded-2xl border-2 p-8">
@@ -86,6 +89,7 @@ export function TrainCars({
                             selectedSeats={selectedSeats}
                             handleSelectedSeats={handleSelectedSeats}
                             checkReservedSeats={checkReservedSeats}
+                            reservedSeats={reservedSeats}
                         />
                     </Suspense>
                 </>

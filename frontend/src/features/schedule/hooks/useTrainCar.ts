@@ -3,13 +3,17 @@ import { useMemo, useState } from 'react';
 
 import apiClient from '@/api/apiClient';
 import { ENDPOINTS } from '@/api/routes';
+import type { ReservedSeatDto } from '@/features/reservation/types/ReservedSeatDto';
 import { DEFAULT_SEAT_TYPE } from '@/features/schedule/constants/SeatTypeLabel';
 import type { ScheduleInfoDto } from '@/features/schedule/types/ScheduleInfoDto';
 import type { SeatsRequestDto } from '@/features/schedule/types/SeatsRequestDto';
 import type { SeatTypeCd } from '@/features/schedule/types/SeatTypeCd';
 import type { TrainCarFormationResponseDto } from '@/features/schedule/types/TrainCarFormationResponseDto';
 
-export function useTrainCar(scheduleInfoDto: ScheduleInfoDto) {
+export function useTrainCar(
+    scheduleInfoDto: ScheduleInfoDto,
+    reservedSeats?: ReservedSeatDto[],
+) {
     const { data: trainCars } = useSuspenseQuery({
         queryKey: ['ScheduleCd', scheduleInfoDto.scheduleCd],
         queryFn: async () => {
@@ -20,21 +24,26 @@ export function useTrainCar(scheduleInfoDto: ScheduleInfoDto) {
         },
     });
 
-    const [activeSeatTypeCd, setActiveSeatTypeCd] =
-        useState<SeatTypeCd>(DEFAULT_SEAT_TYPE);
+    const reservedFirstCar = trainCars?.find(
+        (car) => car.trainCarNumber === reservedSeats?.[0]?.trainCarNumber,
+    );
+    const [activeSeatTypeCd, setActiveSeatTypeCd] = useState<SeatTypeCd>(
+        () => (reservedFirstCar?.seatTypeCd as SeatTypeCd) ?? DEFAULT_SEAT_TYPE,
+    );
 
     const filteredCars = useMemo(() => {
         if (!trainCars) return [];
         return trainCars.filter((car) => car.seatTypeCd === activeSeatTypeCd);
     }, [trainCars, activeSeatTypeCd]);
 
-    const [selectedTrainCarCd, setSelectedTrainCarCd] = useState<string>('');
+    const [selectedTrainCarCd, setSelectedTrainCarCd] = useState<string>(
+        () => reservedFirstCar?.trainCarCd ?? '',
+    );
 
     const activeTrainCarCd = useMemo(() => {
         const isCarInCurrentTab = filteredCars.some(
             (car) => car.trainCarCd === selectedTrainCarCd,
         );
-
         if (selectedTrainCarCd && isCarInCurrentTab) {
             return selectedTrainCarCd;
         }

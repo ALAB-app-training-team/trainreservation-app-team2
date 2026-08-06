@@ -1,5 +1,6 @@
 import { Fragment, useEffect } from 'react';
 
+import type { ReservedSeatDto } from '@/features/reservation/types/ReservedSeatDto';
 import { Seat } from '@/features/schedule/components/Seat';
 import { useSeatsByTrainCar } from '@/features/schedule/hooks/useSeatsByTrainCar';
 import type { SeatResponseDto } from '@/features/schedule/types/SeatResponseDto';
@@ -11,6 +12,7 @@ type SeatsByTrainCarProps = {
     selectedSeats: SeatResponseDto[];
     handleSelectedSeats: (seat: SeatResponseDto) => void;
     checkReservedSeats: (seats: SeatResponseDto[]) => void;
+    reservedSeats?: ReservedSeatDto[];
 };
 
 export function SeatsByTrainCar({
@@ -18,9 +20,10 @@ export function SeatsByTrainCar({
     selectedSeats,
     handleSelectedSeats,
     checkReservedSeats,
+    reservedSeats,
 }: SeatsByTrainCarProps) {
     const { seats } = useSeatsByTrainCar(seatsRequestDto);
-
+    console.log('reservedSeats:', reservedSeats);
     const columns: string[] = Array.from(
         new Set(seats.map((seat) => seat.seatColumn)),
     ).sort();
@@ -28,6 +31,13 @@ export function SeatsByTrainCar({
         new Set(seats.map((seat) => seat.seatNumber)),
     ).sort((a, b) => a - b);
 
+    const isOwnReservedSeat = (seat: SeatResponseDto) =>
+        reservedSeats?.some(
+            (reserved) =>
+                reserved.trainCarNumber === seat.trainCarNumber &&
+                reserved.seatNumber === seat.seatNumber &&
+                reserved.seatColumn === seat.seatColumn,
+        ) ?? false;
     useEffect(() => {
         checkReservedSeats(seats);
     }, [seats]);
@@ -58,7 +68,8 @@ export function SeatsByTrainCar({
                                 if (!seat) {
                                     return <div key={column + row} />;
                                 }
-
+                                const isReserved =
+                                    seat.isReserved && !isOwnReservedSeat(seat);
                                 const isSelected = selectedSeats.some(
                                     (selectedSeat) =>
                                         selectedSeat.seatCd === seat.seatCd &&
@@ -73,11 +84,11 @@ export function SeatsByTrainCar({
                                         seat={seat}
                                         onClick={handleSelectedSeats}
                                         disabled={
-                                            seat.isReserved ||
+                                            isReserved ||
                                             (isMaxSelected && !isSelected)
                                         }
                                         type={
-                                            seat.isReserved
+                                            isReserved
                                                 ? 'unreservable'
                                                 : isSelected
                                                   ? 'isSelected'
