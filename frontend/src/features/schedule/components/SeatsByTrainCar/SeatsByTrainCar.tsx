@@ -23,7 +23,6 @@ export function SeatsByTrainCar({
     checkReservedSeats,
 }: SeatsByTrainCarProps) {
     const { seats } = useSeatsByTrainCar(seatsRequestDto);
-    console.log('reservedSeats:', reservedSeats);
     const columns: string[] = Array.from(
         new Set(seats.map((seat) => seat.seatColumn)),
     ).sort();
