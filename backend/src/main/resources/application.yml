@@ -22,7 +22,7 @@ springdoc:
 server:
   servlet:
     session:
-      timeout: 1m
+      timeout: 30m
       cookie:
         same-site: "none"
         secure: true
