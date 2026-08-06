@@ -16,6 +16,7 @@ import com.alab.shinkansendego.sectionkm.SectionKmRepository;
 import com.alab.shinkansendego.traincar.SeatResponseDto;
 import com.alab.shinkansendego.traincar.TrainCarEntity;
 import com.alab.shinkansendego.traincar.TrainCarRepository;
+import com.alab.shinkansendego.utils.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.http.HttpStatus;
@@ -76,16 +77,6 @@ public class ReservationService {
     }
 
     /**
-     * 文字列から全角半角の空白をすべて除く
-     *
-     * @param value 対象の文字列
-     * @return 空白がすべて除かれた対象文字列
-     */
-    private static String removeSpaces(String value) {
-        return value == null ? null : value.replaceAll("[\\s\u3000]", "");
-    }
-
-    /**
      * ログイン中のアカウント情報をもとに、紐づく予約情報一覧を取得するメソッド
      *
      * @return ログイン中のアカウント情報に紐づくReservationResponseDto(複数件)
@@ -125,12 +116,14 @@ public class ReservationService {
             List<ReservedSeatDto> reservedSeatDtos = reservedSeatEntityMap
                 .getOrDefault(reservation.getId(), new ArrayList<>()).stream()
                 .map(seat -> new ReservedSeatDto(
+                    seat.getId(),
                     seat.getTrainCar().getSeatType().getTrainCarType().getName(),
                     seat.getTrainCar().getTrainCarNumber(),
                     seat.getSeat().getSeatNumber(),
                     seat.getSeat().getSeatColumn(),
                     seat.getCodeToken(),
-                    seat.getSeatFare()))
+                    seat.getSeatFare(),
+                    seat.getName()))
                 .sorted(Comparator.comparing(ReservedSeatDto::getTrainCarNumber)
                     .thenComparing(ReservedSeatDto::getSeatNumber)
                     .thenComparing(ReservedSeatDto::getSeatColumn))
@@ -162,11 +155,18 @@ public class ReservationService {
      * @return 予約情報の入ったReservationResponseDto(1件)
      */
     public ReservationResponseDto getGuestReservation(UUID reservationId, String name, String email) {
-
-        Optional<ReservationEntity> reservationEntity = reservationRepository
-            .findByIdAndReserverNameAndReserverMail(reservationId, removeSpaces(name), removeSpaces(email));
-
+        Optional<ReservationEntity> reservationEntity = reservationRepository.findById(reservationId);
         if (reservationEntity.isEmpty()) return null;
+
+        if (Objects.equals(reservationEntity.get().getReserverName(), StringUtils.removeSpaces(name))
+            && Objects.equals(reservationEntity.get().getReserverMail(), StringUtils.removeSpaces(email))) {
+            if (reservationEntity.get().getAccountId() != null) return null;
+        } else {
+            boolean isCompanionMatched = reservationEntity.get().getReservedSeat().stream()
+                .anyMatch(seat -> Objects.equals(seat.getName(), StringUtils.removeSpaces(name)) && Objects.equals(seat.getMail(), StringUtils.removeSpaces(email)));
+            if (!isCompanionMatched) return null;
+        }
+
         return createReservationResponseDto(reservationEntity);
     }
 
@@ -221,16 +221,19 @@ public class ReservationService {
         List<ReservedSeatEntity> reservedSeatEntityList = reservationEntity.stream().map(ReservationEntity::getReservedSeat).flatMap(Set::stream).toList();
         List<ReservedSeatDto> reservedSeatList = reservedSeatEntityList.stream()
             .map(seat -> new ReservedSeatDto(
+                seat.getId(),
                 seat.getTrainCar().getSeatType().getTrainCarType().getName(),
                 seat.getTrainCar().getTrainCarNumber(),
                 seat.getSeat().getSeatNumber(),
                 seat.getSeat().getSeatColumn(),
                 seat.getCodeToken(),
-                seat.getSeatFare()))
+                seat.getSeatFare(),
+                seat.getName()))
             .sorted(Comparator.comparing(ReservedSeatDto::getTrainCarNumber)
                 .thenComparing(ReservedSeatDto::getSeatNumber)
                 .thenComparing(ReservedSeatDto::getSeatColumn)).toList();
 
+        dto.setReservationId(reservationEntity.get().getId());
         dto.setScheduleCd(reservationEntity.get().getScheduleCd());
         dto.setTrainTypeName(reservationEntity.get().getSchedule().getTrainType().getName());
         dto.setDepartureStationCd(departureSchedule.getFirst().getDepartureStationCd());
@@ -295,8 +298,8 @@ public class ReservationService {
         reservationToPost.setScheduleCd(reserveRequestDto.getScheduleCd());
         reservationToPost.setDepartureStationCd(reserveRequestDto.getDepartureStationCd());
         reservationToPost.setArrivalStationCd(reserveRequestDto.getArrivalStationCd());
-        reservationToPost.setReserverName(removeSpaces(reserveRequestDto.getReserverName()));
-        reservationToPost.setReserverMail(removeSpaces(reserveRequestDto.getReserverMail()));
+        reservationToPost.setReserverName(StringUtils.removeSpaces(reserveRequestDto.getReserverName()));
+        reservationToPost.setReserverMail(StringUtils.removeSpaces(reserveRequestDto.getReserverMail()));
         reservationToPost.setPaymentTrackingId(paymentTrackingId);
         reservationToPost.setIsDeleted(false);
         if (session != null) reservationToPost.setAccountId(account.getId());

@@ -52,9 +52,13 @@ public class ReservationControllerTest {
     private ReservationService service;
 
     private static @NonNull ReservationResponseDto getExpectReservationResponseDto(UUID reservationId) {
-        ReservedSeatDto seat1 = new ReservedSeatDto("指定席", 1, 1, "A", UUID.fromString("60a1ab63-a41f-430d-a2d1-10a76368d0f5"), 5000);
-        ReservedSeatDto seat2 = new ReservedSeatDto("グリーン車", 9, 1, "A", UUID.fromString("3de8909e-32de-478e-bd9b-739f3fe6d6c3"), 10000);
-        ReservedSeatDto seat3 = new ReservedSeatDto("グランクラス", 10, 1, "A", UUID.fromString("e192e5f1-318e-4d10-b76d-2f2bf15e8b70"), 15000);
+        ReservedSeatDto seat1 = new ReservedSeatDto(UUID.fromString("60a1ab63-a41f-430d-a2d1-10a76368d0f5"), "指定席", 1
+            , 1, "A", UUID.fromString("60a1ab63-a41f-430d-a2d1-10a76368d0f5"), 5000, "一般太郎");
+        ReservedSeatDto seat2 = new ReservedSeatDto(UUID.fromString("3de8909e-32de-478e-bd9b-739f3fe6d6c3"), "グリーン車",
+            9, 1, "A", UUID.fromString("3de8909e-32de-478e-bd9b-739f3fe6d6c3"), 10000, "一般次郎");
+        ReservedSeatDto seat3 = new ReservedSeatDto(UUID.fromString("e192e5f1-318e-4d10-b76d-2f2bf15e8b70"), "グランクラス",
+            10, 1, "A", UUID.fromString("e192e5f1-318e-4d10-b76d" +
+            "-2f2bf15e8b70"), 15000, "一般三郎");
         List<ReservedSeatDto> reservedSeatList = Arrays.asList(seat1, seat2, seat3);
         return new ReservationResponseDto(
             reservationId,
@@ -300,7 +304,7 @@ public class ReservationControllerTest {
 
     @Test
     @DisplayName("ログインした状態で座席予約ができる")
-    void insertReservation_withValidReserveRequestDto_return201AndInsertReservationId() throws Exception {
+    void insertAccountReservation_withValidReserveRequestDto_return201AndInsertReservationId() throws Exception {
         ReserveRequestDto request = new ReserveRequestDto(
             "Test01",
             LocalDate.now(),
@@ -327,8 +331,39 @@ public class ReservationControllerTest {
     }
 
     @Test
+    @DisplayName("リクエストのカラムがNullの場合、バリデーションエラー発生")
+    void insertAccountReservation_withNotValidReserveRequestDto_returnValidationError() throws Exception {
+        ReserveRequestDto request = new ReserveRequestDto(
+            null, LocalDate.now(), "Test0", "Test1", "TestTaro", "test@main", "Test2", List.of(
+            new ReserveRequestDto.SelectedSeatDto("E5SER01", "CAR01", "SEAT01001", 2800),
+            new ReserveRequestDto.SelectedSeatDto("E5SER01", "CAR01", "SEAT01002", 2800)
+        ));
+        Authentication auth = new UsernamePasswordAuthenticationToken(session, null, Collections.emptyList());
+
+        mockMvc.perform(post(baseUrl)
+                .with(SecurityMockMvcRequestPostProcessors.authentication(auth))
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(objectMapper.writeValueAsString(request)))
+            .andExpect(status().isBadRequest())
+            .andExpect(content().string("ScheduleCd is Null"));
+    }
+
+    @Test
+    @DisplayName("リクエストDTO自体がNullの場合、バインドエラー発生")
+    void insertAccountReservation_withReserveRequestDtoIsNull_returnBindError() throws Exception {
+        //バインド順が毎回異なるためエラーメッセージの比較は行わない
+        Authentication auth = new UsernamePasswordAuthenticationToken(session, null, Collections.emptyList());
+
+        mockMvc.perform(post(baseUrl)
+                .with(SecurityMockMvcRequestPostProcessors.authentication(auth))
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(objectMapper.writeValueAsString(new ReserveRequestDto())))
+            .andExpect(status().isBadRequest());
+    }
+
+    @Test
     @DisplayName("ゲストが座席予約ができる")
-    void insertReservation_withoutLogIn_return201AndInsertReservationId() throws Exception {
+    void insertGuestReservation_withoutLogIn_return201AndInsertReservationId() throws Exception {
         ReserveRequestDto request = new ReserveRequestDto(
             "Test01",
             LocalDate.now(),
@@ -342,9 +377,10 @@ public class ReservationControllerTest {
                 new ReserveRequestDto.SelectedSeatDto("E5SER01", "CAR01", "SEAT01002", 2800)
             ));
         UUID mockedReservationId = UUID.randomUUID();
+        String url = baseUrl + "/guest";
         Mockito.when(service.insertReservation(request, null)).thenReturn(mockedReservationId);
 
-        mockMvc.perform(post(baseUrl)
+        mockMvc.perform(post(url)
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(objectMapper.writeValueAsString(request)))
             .andExpect(status().isCreated())
@@ -353,14 +389,14 @@ public class ReservationControllerTest {
 
     @Test
     @DisplayName("リクエストのカラムがNullの場合、バリデーションエラー発生")
-    void insertReservation_withNotValidReserveRequestDto_returnValidationError() throws Exception {
+    void insertGuestReservation_withNotValidReserveRequestDto_returnValidationError() throws Exception {
         ReserveRequestDto request = new ReserveRequestDto(
             null, LocalDate.now(), "Test0", "Test1", "TestTaro", "test@main", "Test2", List.of(
             new ReserveRequestDto.SelectedSeatDto("E5SER01", "CAR01", "SEAT01001", 2800),
             new ReserveRequestDto.SelectedSeatDto("E5SER01", "CAR01", "SEAT01002", 2800)
         ));
-
-        mockMvc.perform(post(baseUrl)
+        String url = baseUrl + "/guest";
+        mockMvc.perform(post(url)
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(objectMapper.writeValueAsString(request)))
             .andExpect(status().isBadRequest())
@@ -369,9 +405,10 @@ public class ReservationControllerTest {
 
     @Test
     @DisplayName("リクエストDTO自体がNullの場合、バインドエラー発生")
-    void insertReservation_withReserveRequestDtoIsNull_returnBindError() throws Exception {
+    void insertGuestReservation_withReserveRequestDtoIsNull_returnBindError() throws Exception {
         //バインド順が毎回異なるためエラーメッセージの比較は行わない
-        mockMvc.perform(post(baseUrl)
+        String url = baseUrl + "/guest";
+        mockMvc.perform(post(url)
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(objectMapper.writeValueAsString(new ReserveRequestDto())))
             .andExpect(status().isBadRequest());
