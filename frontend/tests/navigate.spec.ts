@@ -235,5 +235,6 @@ test('navigate-ログイン～予約一覧～予約変更（人数・座席変�
     await reservationListPage.clickChangeButton();
     await reservationListPage.clickChangeSeatConfirmButton();
     await expect(page).toHaveURL('/selectSeat');
+    await expect(page.getByText('座席が選択されていません')).not.toBeVisible();
     //TODO:予約変更実装後、追加
 });
