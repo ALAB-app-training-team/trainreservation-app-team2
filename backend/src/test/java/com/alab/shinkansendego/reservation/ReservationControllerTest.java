@@ -331,6 +331,37 @@ public class ReservationControllerTest {
     }
 
     @Test
+    @DisplayName("リクエストのカラムがNullの場合、バリデーションエラー発生")
+    void insertReservation_withNotValidReserveRequestDto_returnValidationError() throws Exception {
+        ReserveRequestDto request = new ReserveRequestDto(
+            null, LocalDate.now(), "Test0", "Test1", "TestTaro", "test@main", "Test2", List.of(
+            new ReserveRequestDto.SelectedSeatDto("E5SER01", "CAR01", "SEAT01001", 2800),
+            new ReserveRequestDto.SelectedSeatDto("E5SER01", "CAR01", "SEAT01002", 2800)
+        ));
+        Authentication auth = new UsernamePasswordAuthenticationToken(session, null, Collections.emptyList());
+
+        mockMvc.perform(post(baseUrl)
+                .with(SecurityMockMvcRequestPostProcessors.authentication(auth))
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(objectMapper.writeValueAsString(request)))
+            .andExpect(status().isBadRequest())
+            .andExpect(content().string("ScheduleCd is Null"));
+    }
+
+    @Test
+    @DisplayName("リクエストDTO自体がNullの場合、バインドエラー発生")
+    void insertReservation_withReserveRequestDtoIsNull_returnBindError() throws Exception {
+        //バインド順が毎回異なるためエラーメッセージの比較は行わない
+        Authentication auth = new UsernamePasswordAuthenticationToken(session, null, Collections.emptyList());
+
+        mockMvc.perform(post(baseUrl)
+                .with(SecurityMockMvcRequestPostProcessors.authentication(auth))
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(objectMapper.writeValueAsString(new ReserveRequestDto())))
+            .andExpect(status().isBadRequest());
+    }
+
+    @Test
     @DisplayName("ゲストが座席予約ができる")
     void insertGuestReservation_withoutLogIn_return201AndInsertReservationId() throws Exception {
         ReserveRequestDto request = new ReserveRequestDto(
@@ -358,14 +389,14 @@ public class ReservationControllerTest {
 
     @Test
     @DisplayName("リクエストのカラムがNullの場合、バリデーションエラー発生")
-    void insertReservation_withNotValidReserveRequestDto_returnValidationError() throws Exception {
+    void insertGuestReservation_withNotValidReserveRequestDto_returnValidationError() throws Exception {
         ReserveRequestDto request = new ReserveRequestDto(
             null, LocalDate.now(), "Test0", "Test1", "TestTaro", "test@main", "Test2", List.of(
             new ReserveRequestDto.SelectedSeatDto("E5SER01", "CAR01", "SEAT01001", 2800),
             new ReserveRequestDto.SelectedSeatDto("E5SER01", "CAR01", "SEAT01002", 2800)
         ));
-
-        mockMvc.perform(post(baseUrl)
+        String url = baseUrl + "/guest";
+        mockMvc.perform(post(url)
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(objectMapper.writeValueAsString(request)))
             .andExpect(status().isBadRequest())
@@ -374,9 +405,10 @@ public class ReservationControllerTest {
 
     @Test
     @DisplayName("リクエストDTO自体がNullの場合、バインドエラー発生")
-    void insertReservation_withReserveRequestDtoIsNull_returnBindError() throws Exception {
+    void insertGuestReservation_withReserveRequestDtoIsNull_returnBindError() throws Exception {
         //バインド順が毎回異なるためエラーメッセージの比較は行わない
-        mockMvc.perform(post(baseUrl)
+        String url = baseUrl + "/guest";
+        mockMvc.perform(post(url)
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(objectMapper.writeValueAsString(new ReserveRequestDto())))
             .andExpect(status().isBadRequest());
