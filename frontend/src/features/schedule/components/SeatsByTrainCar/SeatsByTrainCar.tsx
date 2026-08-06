@@ -18,9 +18,9 @@ type SeatsByTrainCarProps = {
 export function SeatsByTrainCar({
     seatsRequestDto,
     selectedSeats,
+    reservedSeats,
     handleSelectedSeats,
     checkReservedSeats,
-    reservedSeats,
 }: SeatsByTrainCarProps) {
     const { seats } = useSeatsByTrainCar(seatsRequestDto);
     console.log('reservedSeats:', reservedSeats);
@@ -38,9 +38,14 @@ export function SeatsByTrainCar({
                 reserved.seatNumber === seat.seatNumber &&
                 reserved.seatColumn === seat.seatColumn,
         ) ?? false;
+
+    const displaySeats = seats.map((seat) =>
+        isOwnReservedSeat(seat) ? { ...seat, isReserved: false } : seat,
+    );
+
     useEffect(() => {
-        checkReservedSeats(seats);
-    }, [seats]);
+        checkReservedSeats(displaySeats);
+    }, [displaySeats]);
 
     return (
         <>
@@ -60,7 +65,7 @@ export function SeatsByTrainCar({
                                 {row}
                             </div>
                             {columns.map((column) => {
-                                const seat = seats.find(
+                                const seat = displaySeats.find(
                                     (seat) =>
                                         seat.seatColumn === column &&
                                         seat.seatNumber === row,
@@ -84,7 +89,7 @@ export function SeatsByTrainCar({
                                         seat={seat}
                                         onClick={handleSelectedSeats}
                                         disabled={
-                                            isReserved ||
+                                            seat.isReserved ||
                                             (isMaxSelected && !isSelected)
                                         }
                                         type={

@@ -21,9 +21,9 @@ type TrainCarsProps = {
 export function TrainCars({
     scheduleInfoDto,
     selectedSeats,
+    reservedSeats,
     handleSelectedSeats,
     checkReservedSeats,
-    reservedSeats,
 }: TrainCarsProps) {
     const {
         trainCars,
