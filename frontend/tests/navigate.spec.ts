@@ -53,7 +53,12 @@ test('navigate-ゲストログイン全機能', async ({ page, context }) => {
     ).toBeHidden();
 });
 
-test('navigate-ログイン全機能', async ({ page, login, logout }) => {
+test('navigate-ログイン全機能', async ({
+    page,
+    login,
+    logout,
+    createReservation,
+}) => {
     const scheduleSearchPage = new ScheduleSearchPage(page);
     const selectSeatPage = new SelectSeatPage(page);
     const reservedTicketPage = new ReservedTicketPage(page);
@@ -72,19 +77,29 @@ test('navigate-ログイン全機能', async ({ page, login, logout }) => {
     await selectSeatPage.clickConfirmButton();
     await expect(page).toHaveURL('/reservedTicket');
 
-    // 予約一覧～予約確認・キャンセル、ログアウト
+    // 予約一覧～予約確認～予約変更
     await reservedTicketPage.header.goToReservationList();
     await expect(page).toHaveURL('/reservationList');
     await reservationListPage.clickTicketButton();
     await expect(page).toHaveURL('/reservedTicket');
     await reservedTicketPage.clickBackButton();
     await expect(page).toHaveURL('/reservationList');
+    // キャンセル
     await reservationListPage.clickRefundButton();
     await reservationListPage.clickModalCloseButton();
     await expect(page).toHaveURL('/reservationList');
     await reservationListPage.clickRefundButton();
     await reservationListPage.clickCancelConfirmButton();
     await expect(page).toHaveURL('/reservationList');
+    // 予約変更
+    // TODO:予約変更実装後、予約変更からキャンセルの順番にし、createReservationを削除する
+    await createReservation();
+    await reservationListPage.goto();
+    await reservationListPage.clickChangeButton();
+    await reservationListPage.clickChangeSeatConfirmButton();
+    await expect(page).toHaveURL('/selectSeat');
+    await expect(page.getByText('座席が選択されていません')).not.toBeVisible();
+    // ログアウト
     await logout();
     await expect(page).toHaveURL('/login');
 });
@@ -215,25 +230,4 @@ test('navigate-ログイン状態でloginのパスを入力すると検索画面
     await expect(page).toHaveURL('/scheduleSearch');
     await logout();
     await expect(page).toHaveURL('/login');
-});
-
-test('navigate-ログイン～予約一覧～予約変更（人数・座席変更）', async ({
-    page,
-    login,
-}) => {
-    const reservationListPage = new ReservationListPage(page);
-    const scheduleSearchPage = new ScheduleSearchPage(page);
-    const selectSeatPage = new SelectSeatPage(page);
-
-    await login();
-    await scheduleSearchPage.clickDetailButton();
-    await selectSeatPage.selectSeat();
-    await selectSeatPage.inputCardInfo();
-    await selectSeatPage.clickReseveButton();
-    await selectSeatPage.clickConfirmButton();
-    await reservationListPage.goto();
-    await reservationListPage.clickChangeButton();
-    await reservationListPage.clickChangeSeatConfirmButton();
-    await expect(page).toHaveURL('/selectSeat');
-    //TODO:予約変更実装後、追加
 });

@@ -107,6 +107,7 @@ export function ReservationListBody() {
             state: {
                 scheduleInfoDto,
                 searchRequestDto,
+                reservedSeats: details.reservedSeats,
             },
         });
         window.scrollTo(0, 0);
