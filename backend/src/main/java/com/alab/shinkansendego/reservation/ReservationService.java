@@ -17,6 +17,7 @@ import com.alab.shinkansendego.traincar.SeatResponseDto;
 import com.alab.shinkansendego.traincar.TrainCarEntity;
 import com.alab.shinkansendego.traincar.TrainCarRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.security.authentication.BadCredentialsException;
@@ -47,6 +48,7 @@ public class ReservationService {
     private final TrainCarRepository trainCarRepository;
     private final SeatRepository seatRepository;
     private final AccountRepository accountRepository;
+    private final ApplicationEventPublisher eventPublisher;
 
     @Autowired
     public ReservationService(
@@ -58,7 +60,8 @@ public class ReservationService {
         TrainCarRepository trainCarRepository,
         SeatRepository seatRepository,
         AccountRepository accountRepository,
-        RestClient.Builder restClientBuilder
+        RestClient.Builder restClientBuilder,
+        ApplicationEventPublisher eventPublisher
     ) {
         this.reservationRepository = reservationRepository;
         this.reservedSeatRepository = reservedSeatRepository;
@@ -69,6 +72,7 @@ public class ReservationService {
         this.seatRepository = seatRepository;
         this.accountRepository = accountRepository;
         this.restClient = restClientBuilder.build();
+        this.eventPublisher = eventPublisher;
     }
 
     /**
@@ -380,6 +384,13 @@ public class ReservationService {
 
         reservationResult.setPaymentTrackingId(paymentTrackingId);
         reservationRepository.save(reservationResult);
+
+        eventPublisher.publishEvent(new ReservationCreatedEvent(
+            reservationId,
+            reserveRequestDto,
+            departureArrivalTimeOfStart.getDepartureTime(),
+            departureArrivalTimeOfGoal.getArrivalTime()
+        ));
 
         return reservationId;
     }

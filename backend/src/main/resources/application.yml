@@ -39,3 +39,6 @@ server:
         same-site: "none"
         secure: true
         http-only: true
+app:
+  frontend:
+    base-url: ${FRONTEND_BASE_URL:http://localhost:5173}
