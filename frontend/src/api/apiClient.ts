@@ -20,6 +20,7 @@ apiClient.interceptors.response.use(
             sessionStorage.clear();
 
             if (isPostReservation) {
+                // 予約時のセッション切れ対応
                 return Promise.reject(error);
             }
 
