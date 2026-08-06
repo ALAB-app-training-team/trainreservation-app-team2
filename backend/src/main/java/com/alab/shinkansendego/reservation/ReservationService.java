@@ -16,9 +16,8 @@ import com.alab.shinkansendego.sectionkm.SectionKmRepository;
 import com.alab.shinkansendego.traincar.SeatResponseDto;
 import com.alab.shinkansendego.traincar.TrainCarEntity;
 import com.alab.shinkansendego.traincar.TrainCarRepository;
-import jakarta.persistence.EntityManager;
-import jakarta.persistence.PersistenceContext;
 import com.alab.shinkansendego.utils.StringUtils;
+import jakarta.persistence.EntityManager;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
@@ -43,6 +42,7 @@ import java.util.stream.Collectors;
 @Service
 public class ReservationService {
     private final RestClient restClient;
+    private final EntityManager entityManager;
     private final ReservationRepository reservationRepository;
     private final ReservedSeatRepository reservedSeatRepository;
     private final SectionKmRepository sectionKmRepository;
@@ -62,7 +62,8 @@ public class ReservationService {
         TrainCarRepository trainCarRepository,
         SeatRepository seatRepository,
         AccountRepository accountRepository,
-        RestClient.Builder restClientBuilder
+        RestClient.Builder restClientBuilder,
+        EntityManager entityManager
     ) {
         this.reservationRepository = reservationRepository;
         this.reservedSeatRepository = reservedSeatRepository;
@@ -73,10 +74,11 @@ public class ReservationService {
         this.seatRepository = seatRepository;
         this.accountRepository = accountRepository;
         this.restClient = restClientBuilder.build();
+        this.entityManager = entityManager;
     }
 
-    @PersistenceContext
-    private EntityManager entityManager;
+//    @PersistenceContext
+//    private EntityManager entityManager;
 
     /**
      * ログイン中のアカウント情報をもとに、紐づく予約情報一覧を取得するメソッド
@@ -392,8 +394,8 @@ public class ReservationService {
             }
         }
 
-        List<String> sectionCds = reservedSeatSectionsToPost.stream().map(sec -> sec.getReservedSectionCd()).distinct().toList();
-        List<String> trainCarCds = reservedSeatsToPost.stream().map(seat -> seat.getTrainCarCd()).distinct().toList();
+        List<String> sectionCds = reservedSeatSectionsToPost.stream().map(ReservedSeatSectionEntity::getReservedSectionCd).distinct().toList();
+        List<String> trainCarCds = reservedSeatsToPost.stream().map(ReservedSeatEntity::getTrainCarCd).distinct().toList();
         List<ReservedSeatSectionEntity> existingReservedSeatSections = reservedSeatSectionRepository.findByRideDateAndScheduleCdAndTrainCarCdInAndReservedSectionCdIn(
             reservedSeatSectionsToPost.getFirst().getRideDate(),
             reservedSeatSectionsToPost.getFirst().getScheduleCd(),
@@ -437,7 +439,7 @@ public class ReservationService {
         }
 
         Optional<ReservationEntity> reservation = reservationRepository.findByIdAndIsDeleted(reservationId, false);
-        if (session == null || reservation.get().getAccountId() == session.getId()) {
+        if (session == null || !Objects.equals(reservation.get().getAccountId(), session.getId())) {
             throw new BadCredentialsException("Reservation doesn't match");
         }
 

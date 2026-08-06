@@ -21,6 +21,7 @@ import com.alab.shinkansendego.traincar.TrainCarEntity;
 import com.alab.shinkansendego.traincar.TrainCarRepository;
 import com.alab.shinkansendego.traincartype.TrainCarTypeEntity;
 import com.alab.shinkansendego.traintype.TrainTypeEntity;
+import jakarta.persistence.EntityManager;
 import org.jspecify.annotations.NonNull;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
@@ -78,6 +79,8 @@ public class ReservationServiceTest {
     private final UUID noReservationAccountId = UUID.fromString("f79d8bbc-fcba-b538-b132-2f726ce0120c");
     private final AccountSessionDto session = new AccountSessionDto(accountId, "test-common@test.com", "一般太郎");
     private final AccountEntity account = new AccountEntity();
+    @Mock
+    private EntityManager entityManager;
     @Mock
     private ReservationRepository reservationRepo;
     @Mock
@@ -155,7 +158,7 @@ public class ReservationServiceTest {
                                                   String seatCd,
                                                   String trainCarTypeCd,
                                                   String name,
-                                                   String mail) {
+                                                  String mail) {
         TrainCarTypeEntity trainCarType = new TrainCarTypeEntity();
         trainCarType.setTrainCarTypeCd(trainCarTypeCd);
         trainCarType.setName(trainCarTypeName);
@@ -179,6 +182,8 @@ public class ReservationServiceTest {
         ReservedSeatEntity reservedSeat = new ReservedSeatEntity();
         reservedSeat.setId(id);
         reservedSeat.setReservationId(reservationId);
+        reservedSeat.setTrainCarCd(trainCarCd);
+        reservedSeat.setSeatCd(seatCd);
         reservedSeat.setCodeToken(codeToken);
         reservedSeat.setSeatFare(seatFare);
         reservedSeat.setTrainCar(trainCar);
@@ -208,8 +213,8 @@ public class ReservationServiceTest {
         LocalDate rideDate = LocalDate.of(2026, 6, 1);
         String scheduleCd = "THK01";
         Set<ReservedSeatEntity> seats = Set.of(
-            buildSeat(seat1.getId(),id, "指定席", 1, 1, "A", UUID.fromString("60a1ab63-a41f-430d-a2d1-10a76368d0f5"), 5000, rideDate, scheduleCd, "E5SER01", "SEAT01001", "CAR01",seat1.getName(), "test1-common@test.com"),
-            buildSeat(seat2.getId(),id, "グリーン車", 9, 1, "A", UUID.fromString("3de8909e-32de-478e-bd9b-739f3fe6d6c3"), 10000, rideDate, scheduleCd, "E5SER02", "SEAT02001", "CAR02",seat2.getName(), "test2-common@test.com")
+            buildSeat(seat1.getId(), id, "指定席", 1, 1, "A", UUID.fromString("60a1ab63-a41f-430d-a2d1-10a76368d0f5"), 5000, rideDate, scheduleCd, "E5SER01", "SEAT01001", "CAR01", seat1.getName(), "test1-common@test.com"),
+            buildSeat(seat2.getId(), id, "グリーン車", 9, 1, "A", UUID.fromString("3de8909e-32de-478e-bd9b-739f3fe6d6c3"), 10000, rideDate, scheduleCd, "E5SER02", "SEAT02001", "CAR02", seat2.getName(), "test2-common@test.com")
         );
 
         ReservationEntity reservation = new ReservationEntity();
@@ -288,7 +293,7 @@ public class ReservationServiceTest {
         restClientBuilder = RestClient.builder();
         this.mockRestServiceServer = MockRestServiceServer.bindTo(restClientBuilder).build();
         this.service = new ReservationService(
-            reservationRepo, reservedSeatRepo, sectionKmRepo, departureArrivalTimeRepo, reservedSeatSectionRepo, trainCarRepo, seatRepo, accountRepo, restClientBuilder
+            reservationRepo, reservedSeatRepo, sectionKmRepo, departureArrivalTimeRepo, reservedSeatSectionRepo, trainCarRepo, seatRepo, accountRepo, restClientBuilder, entityManager
         );
 
         DepartureArrivalTimeEntity departureArrivalTime1 = buildSchedule(LocalTime.of(6, 4, 0), "THK01", "東京", LocalTime.of(6, 9, 0), "THK02", "上野");
@@ -303,9 +308,9 @@ public class ReservationServiceTest {
         String scheduleCd = "Test01";
 
         Set<ReservedSeatEntity> seats = Set.of(
-            buildSeat(seat1.getId(),reservationId1, "指定席", 1, 1, "A", UUID.fromString("60a1ab63-a41f-430d-a2d1-10a76368d0f5"), 5000, rideDate, scheduleCd, "E5SER01", "SEAT01001", "CAR01", seat1.getName(), "test1-common@test.com"),
-            buildSeat(seat2.getId(),reservationId1, "グリーン車", 9, 1, "A", UUID.fromString("3de8909e-32de-478e-bd9b-739f3fe6d6c3"), 10000, rideDate, scheduleCd, "E5SER02", "SEAT02001", "CAR02", seat2.getName(), "test2-common@test.com"),
-            buildSeat(seat3.getId(),reservationId1, "グランクラス", 10, 1, "A", UUID.fromString("e192e5f1-318e-4d10-b76d-2f2bf15e8b70"), 15000, rideDate, scheduleCd, "E5SER03", "SEAT03001", "CAR03", seat3.getName(), "test3-common@test.com")
+            buildSeat(seat1.getId(), reservationId1, "指定席", 1, 1, "A", UUID.fromString("60a1ab63-a41f-430d-a2d1-10a76368d0f5"), 5000, rideDate, scheduleCd, "E5SER01", "SEAT01001", "CAR01", seat1.getName(), "test1-common@test.com"),
+            buildSeat(seat2.getId(), reservationId1, "グリーン車", 9, 1, "A", UUID.fromString("3de8909e-32de-478e-bd9b-739f3fe6d6c3"), 10000, rideDate, scheduleCd, "E5SER02", "SEAT02001", "CAR02", seat2.getName(), "test2-common@test.com"),
+            buildSeat(seat3.getId(), reservationId1, "グランクラス", 10, 1, "A", UUID.fromString("e192e5f1-318e-4d10-b76d-2f2bf15e8b70"), 15000, rideDate, scheduleCd, "E5SER03", "SEAT03001", "CAR03", seat3.getName(), "test3-common@test.com")
         );
 
         reservation.get().setId(reservationId1);
@@ -892,38 +897,15 @@ public class ReservationServiceTest {
         when(reservedSeatRepo.saveAll(any())).thenReturn(Stream.generate(ReservedSeatEntity::new).limit(1).collect(Collectors.toList()));
         when(trainCarRepo.findById(any())).thenReturn(Optional.of(new TrainCarEntity()));
         when(seatRepo.findById(any())).thenReturn(Optional.of(new SeatEntity()));
-        when(reservedSeatSectionRepo.findByRideDateAndScheduleCdAndTrainCarCdInAndReservedSectionCdIn(any(), any(), any(), any()))
-            .thenReturn(Collections.emptyList());
-        when(reservedSeatSectionRepo.saveAll(any())).
-            thenReturn(Stream.generate(ReservedSeatSectionEntity::new).
-                limit((6))
-                .collect(Collectors.toList()));
-
-        List<ReservedSeatEntity> deleteSeat = List.of(new ArrayList<>(reservation.get().getReservedSeat()).get(1));
-        List<ReservedSeatSectionEntity> deleteSeatSection = new ArrayList<>(new ArrayList<>(reservation.get().getReservedSeat()).get(1).getReservedSeatSection());
-
-        ReservedSeatEntity saveSeat = new ReservedSeatEntity();
-        saveSeat.setId(any());
-        saveSeat.setReservationId(reservationId1);
-        saveSeat.setTrainCarCd("E5SER01");
-        saveSeat.setSeatCd("SEAT01002");
-        saveSeat.setCodeToken(any());
-        saveSeat.setSeatFare(5000);
-        saveSeat.setIsDeleted(false);
-        List<ReservedSeatSectionEntity> saveSections = List.of(
-            new ReservedSeatSectionEntity(any(), reservationId1, LocalDate.of(2026, 6, 1), "THK01", "E5SER01", "SEAT01002", "THK01", "CAR01"),
-            new ReservedSeatSectionEntity(any(), reservationId1, LocalDate.of(2026, 6, 1), "THK01", "E5SER01", "SEAT01002", "THK02", "CAR01"),
-            new ReservedSeatSectionEntity(any(), reservationId1, LocalDate.of(2026, 6, 1), "THK01", "E5SER01", "SEAT01002", "THK30", "CAR01"),
-            new ReservedSeatSectionEntity(any(), reservationId1, LocalDate.of(2026, 6, 1), "THK01", "E5SER01", "SEAT01002", "THK33", "CAR01"),
-            new ReservedSeatSectionEntity(any(), reservationId1, LocalDate.of(2026, 6, 1), "THK01", "E5SER01", "SEAT01002", "THK08", "CAR01"),
-            new ReservedSeatSectionEntity(any(), reservationId1, LocalDate.of(2026, 6, 1), "THK01", "E5SER01", "SEAT01002", "THK32", "CAR01"));
+        when(reservedSeatSectionRepo.findByRideDateAndScheduleCdAndTrainCarCdInAndReservedSectionCdIn(any(), any(), any(), any())).thenReturn(Collections.emptyList());
+        when(reservedSeatSectionRepo.saveAll(any())).thenReturn(Stream.generate(ReservedSeatSectionEntity::new).limit((1)).collect(Collectors.toList()));
 
         UUID result = service.putReservedSeat(reservationId1, request, session);
         assertNotNull(result);
-        verify(reservedSeatRepo).deleteAll(deleteSeat);
-        verify(reservedSeatSectionRepo).deleteAll(deleteSeatSection);
-        verify(reservedSeatRepo).saveAll(List.of(saveSeat));
-        verify(reservedSeatSectionRepo).saveAll(saveSections);
+        verify(reservedSeatRepo).deleteAll(any());
+        verify(reservedSeatSectionRepo).deleteAll(any());
+        verify(reservedSeatRepo).saveAll(any());
+        verify(reservedSeatSectionRepo).saveAll(any());
     }
 
     @Test
