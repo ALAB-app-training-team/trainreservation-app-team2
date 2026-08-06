@@ -7,10 +7,7 @@ import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.AccessDeniedException;
-import org.springframework.test.web.client.MockRestServiceServer;
-import org.springframework.web.client.RestClient;
 
 import java.util.List;
 import java.util.Optional;
@@ -28,9 +25,6 @@ public class ReservedSeatServiceTest {
     @Mock
     private ReservedSeatRepository reservedSeatRepo;
     private ReservedSeatService service;
-    private MockRestServiceServer mockRestServiceServer;
-    @Autowired
-    private RestClient.Builder restClientBuilder;
     private final UUID reservationId = UUID.randomUUID();
     private final UUID accountId = UUID.randomUUID();
     private final UUID reservedSeat1Id = UUID.randomUUID();
@@ -45,8 +39,6 @@ public class ReservedSeatServiceTest {
     @BeforeEach
     void setUp() {
         MockitoAnnotations.openMocks(this);
-        restClientBuilder = RestClient.builder();
-        this.mockRestServiceServer = MockRestServiceServer.bindTo(restClientBuilder).build();
         this.service = new ReservedSeatService(reservationRepo, reservedSeatRepo);
 
         reservedSeatUpdateDto1 = new ReservedSeatUpdateDto(reservedSeat1Id, "一般次郎",
