@@ -1,6 +1,7 @@
 import { useQueryClient } from '@tanstack/react-query';
 import { Suspense, useEffect } from 'react';
 import { LuArrowLeft } from 'react-icons/lu';
+import { RiGroupLine } from 'react-icons/ri';
 import { useLocation, useNavigate } from 'react-router-dom';
 
 import { ReservedTicketInfo } from '@/features/reservation/components/ReservedTicketInfo/ReservedTicketInfo';
@@ -30,40 +31,44 @@ export function ReservedTicket() {
 
     return (
         <>
-            <div className="flex w-full flex-col items-center gap-4 p-4">
-                <div className="w-full max-w-5xl min-w-90 md:w-7/10">
-                    <div className="flex items-center justify-start">
-                        {isBack ? (
-                            <button
-                                type="button"
-                                onClick={() => {
-                                    navigate('/reservationList');
-                                }}
-                            >
-                                <div className="flex items-center gap-2">
-                                    <LuArrowLeft />
-                                    予約一覧へ戻る
-                                </div>
-                            </button>
-                        ) : (
-                            <h1
-                                data-testid="reserve-title"
-                                className="m-0! text-left text-3xl!"
-                            >
-                                {guestLogin ? '予約詳細' : '予約完了'}
-                            </h1>
-                        )}
-                    </div>
-                    <Suspense fallback={<ReservedTicketQrCodeSkeleton />}>
-                        <ReservedTicketQrCode
-                            trainTypeName={reservedTickets.trainTypeName}
-                            reservedSeats={reservedTickets.reservedSeats}
-                        />
-                    </Suspense>
-                    <Suspense fallback={<ReservedTicketInfoSkeleton />}>
-                        <ReservedTicketInfo ticketInfo={reservedTickets} />
-                    </Suspense>
+            <div className="mx-auto flex w-full max-w-5xl min-w-90 flex-col items-center gap-2 p-4 md:w-7/10">
+                <div className="flex w-full items-center justify-start">
+                    {isBack ? (
+                        <button
+                            type="button"
+                            onClick={() => {
+                                navigate('/reservationList');
+                            }}
+                        >
+                            <div className="flex items-center gap-2">
+                                <LuArrowLeft />
+                                予約一覧へ戻る
+                            </div>
+                        </button>
+                    ) : (
+                        <h1
+                            data-testid="reserve-title"
+                            className="m-0! text-left text-3xl!"
+                        >
+                            {guestLogin ? '予約詳細' : '予約完了'}
+                        </h1>
+                    )}
+                </div>
+                <Suspense fallback={<ReservedTicketQrCodeSkeleton />}>
+                    <ReservedTicketQrCode
+                        trainTypeName={reservedTickets.trainTypeName}
+                        reservedSeats={reservedTickets.reservedSeats}
+                    />
+                </Suspense>
+                <Suspense fallback={<ReservedTicketInfoSkeleton />}>
+                    <ReservedTicketInfo ticketInfo={reservedTickets} />
+                </Suspense>
+                <div className="flex w-full gap-4">
                     <TicketShare shareUrl={shareUrl} />
+                    <button className="bg-primary flex w-full items-center justify-center gap-2 rounded-xl text-sm text-white">
+                        <RiGroupLine className="h-4 w-4" />
+                        <div>同行者に割り当て</div>
+                    </button>
                 </div>
             </div>
         </>

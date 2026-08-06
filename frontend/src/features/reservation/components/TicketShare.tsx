@@ -26,10 +26,10 @@ export function TicketShare({ shareUrl = '' }: TicketShareProps) {
     };
 
     return (
-        <div className="mx-auto mt-4 w-full max-w-xl">
+        <>
             <button
                 onClick={() => setIsOpen(true)}
-                className="bg-primary flex w-full items-center justify-center gap-2 rounded-xl px-4 py-2.5 text-sm text-white"
+                className="bg-primary flex w-full items-center justify-center gap-2 rounded-xl p-2 text-sm text-white"
                 data-testid="ticket-share"
             >
                 <BsShare className="h-4 w-4" />
@@ -71,6 +71,6 @@ export function TicketShare({ shareUrl = '' }: TicketShareProps) {
                     </div>
                 </div>
             </CustomModal>
-        </div>
+        </>
     );
 }
