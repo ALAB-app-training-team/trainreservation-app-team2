@@ -37,9 +37,11 @@ export function ReservedTicket() {
         }
     }, []);
     const [isSubmitting, setIsSubmitting] = useState<boolean>(false);
+    const [isInvalid, setIsInvalid] = useState<boolean>(true);
 
     const handleUpdateCompanions = async () => {
         if (isSubmitting) return;
+        if (isInvalid) return;
         setIsSubmitting(true);
         try {
             const request: ReservedSeatUpdateDto[] =
@@ -107,6 +109,8 @@ export function ReservedTicket() {
             </div>
             <CustomModal isOpen={isOpen} onRequestClose={onRequestClose}>
                 <CompanionModal
+                    isInvalid={isInvalid}
+                    setIsInvalid={setIsInvalid}
                     isSubmitting={isSubmitting}
                     handleSubmit={handleUpdateCompanions}
                     reservedSeats={reservedTickets.reservedSeats}

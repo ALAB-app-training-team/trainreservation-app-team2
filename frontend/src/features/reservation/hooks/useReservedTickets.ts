@@ -65,5 +65,7 @@ export function useReservedTickets(reservationId: string) {
             .then((response) => response.data);
         return response;
     };
+
+    console.log('reservedTickets', reservedTickets);
     return { reservedTickets, getReservationTicket };
 }
