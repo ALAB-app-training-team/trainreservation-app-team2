@@ -2,11 +2,13 @@ import { CompanionForm } from '@/features/reservation/components/CompanionForm';
 import type { ReservedSeatDto } from '@/features/reservation/types/ReservedSeatDto';
 
 type CompanionModalProps = {
+    isSubmitting: boolean;
     reservedSeats: ReservedSeatDto[];
     handleSubmit: () => void;
 };
 
 export function CompanionModal({
+    isSubmitting,
     reservedSeats,
     handleSubmit,
 }: CompanionModalProps) {
@@ -27,6 +29,7 @@ export function CompanionModal({
                 <button
                     type="button"
                     onClick={handleSubmit}
+                    disabled={isSubmitting}
                     className="bg-primary w-full rounded-lg p-2 text-white"
                 >
                     確定

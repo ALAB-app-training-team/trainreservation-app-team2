@@ -1,5 +1,5 @@
 import { useQueryClient } from '@tanstack/react-query';
-import { Suspense, useEffect } from 'react';
+import { Suspense, useEffect, useState } from 'react';
 import { LuArrowLeft } from 'react-icons/lu';
 import { RiGroupLine } from 'react-icons/ri';
 import { useLocation, useNavigate } from 'react-router-dom';
@@ -15,6 +15,7 @@ import { TicketShare } from '@/features/reservation/components/TicketShare';
 import { useReservedTickets } from '@/features/reservation/hooks/useReservedTickets';
 import type { ReservedSeatUpdateDto } from '@/features/reservation/types/ReservedSeatUpdateDto';
 import { CustomModal } from '@/shared/components/CustomModal';
+import { ERROR_MESSAGE } from '@/shared/constants/ErrorMessages';
 import { useModal } from '@/shared/hooks/useModal';
 import { removeGuestReservation } from '@/shared/utils/RemoveGuestReservation';
 
@@ -35,18 +36,28 @@ export function ReservedTicket() {
             removeGuestReservation(queryClient);
         }
     }, []);
+    const [isSubmitting, setIsSubmitting] = useState<boolean>(false);
 
     const handleUpdateCompanions = async () => {
-        const request: ReservedSeatUpdateDto[] =
-            reservedTickets.reservedSeats.map((seat) => ({
-                id: seat.id,
-                name: seat.name,
-                mail: seat.mail,
-            }));
-        await apiClient.patch(
-            ENDPOINTS.RESERVEDSEAT(reservedTickets.reservationId),
-            request,
-        );
+        if (isSubmitting) return;
+        setIsSubmitting(true);
+        try {
+            const request: ReservedSeatUpdateDto[] =
+                reservedTickets.reservedSeats.map((seat) => ({
+                    id: seat.id,
+                    name: seat.name,
+                    mail: seat.mail,
+                }));
+            await apiClient.patch(
+                ENDPOINTS.RESERVEDSEAT(reservedTickets.reservationId),
+                request,
+            );
+        } catch {
+            alert(ERROR_MESSAGE.COMPANION);
+        } finally {
+            setIsSubmitting(false);
+            onRequestClose();
+        }
     };
 
     return (
@@ -96,6 +107,7 @@ export function ReservedTicket() {
             </div>
             <CustomModal isOpen={isOpen} onRequestClose={onRequestClose}>
                 <CompanionModal
+                    isSubmitting={isSubmitting}
                     handleSubmit={handleUpdateCompanions}
                     reservedSeats={reservedTickets.reservedSeats}
                 />
