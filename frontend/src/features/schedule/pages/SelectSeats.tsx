@@ -37,7 +37,7 @@ export function SelectSeats() {
         prevSelectedSeats,
         reservedSeats,
     }: SelectSeatsLocationState = location.state;
-    const resolveReservedSeat = useResolveReservedSeats(
+    const { resolveReservedSeat } = useResolveReservedSeats(
         scheduleInfoDto,
         reservedSeats,
     );
@@ -196,7 +196,7 @@ export function SelectSeats() {
                 prevPath: location.pathname,
                 scheduleInfoDto,
                 searchRequestDto,
-                selectedSeats,
+                prevSelectedSeats: selectedSeats,
             },
         });
     };

@@ -72,8 +72,7 @@ export function SeatsByTrainCar({
                                 if (!seat) {
                                     return <div key={column + row} />;
                                 }
-                                const isReserved =
-                                    seat.isReserved && !isOwnReservedSeat(seat);
+
                                 const isSelected = selectedSeats.some(
                                     (selectedSeat) =>
                                         selectedSeat.seatCd === seat.seatCd &&
@@ -92,7 +91,7 @@ export function SeatsByTrainCar({
                                             (isMaxSelected && !isSelected)
                                         }
                                         type={
-                                            isReserved
+                                            seat.isReserved
                                                 ? 'unreservable'
                                                 : isSelected
                                                   ? 'isSelected'

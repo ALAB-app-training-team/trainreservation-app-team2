@@ -11,9 +11,9 @@ import type { TrainCarFormationResponseDto } from '@/features/schedule/types/Tra
 export function useResolveReservedSeats(
     scheduleInfoDto: ScheduleInfoDto,
     reservedSeats?: ReservedSeatDto[],
-): SeatResponseDto[] {
+) {
     const { data: trainCars } = useSuspenseQuery({
-        queryKey: ['ScheduleCd', scheduleInfoDto.scheduleCd],
+        queryKey: ['scheduleCd', scheduleInfoDto.scheduleCd],
         queryFn: async () => {
             const response = await apiClient.get<
                 TrainCarFormationResponseDto[]
@@ -51,7 +51,7 @@ export function useResolveReservedSeats(
         }),
     });
     const allSeats = results.flatMap((result) => result.data);
-    return allSeats.filter((seat) =>
+    const resolveReservedSeat = allSeats.filter((seat) =>
         (reservedSeats ?? []).some(
             (reserved) =>
                 reserved.trainCarNumber === seat.trainCarNumber &&
@@ -59,4 +59,5 @@ export function useResolveReservedSeats(
                 reserved.seatColumn === seat.seatColumn,
         ),
     );
+    return { resolveReservedSeat };
 }

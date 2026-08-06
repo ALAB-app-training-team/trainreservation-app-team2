@@ -15,7 +15,7 @@ export function useTrainCar(
     reservedSeats?: ReservedSeatDto[],
 ) {
     const { data: trainCars } = useSuspenseQuery({
-        queryKey: ['ScheduleCd', scheduleInfoDto.scheduleCd],
+        queryKey: ['scheduleCd', scheduleInfoDto.scheduleCd],
         queryFn: async () => {
             const response = await apiClient.get<
                 TrainCarFormationResponseDto[]
