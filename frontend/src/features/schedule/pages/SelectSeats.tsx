@@ -141,6 +141,12 @@ export function SelectSeats() {
                     }),
                 );
             }
+
+            sessionStorage.setItem(
+                'message',
+                'チケットを共有からリンクを保存してください',
+            );
+
             navigate('/reservedTicket', {
                 state: {
                     reservationId: reservationId,
