@@ -1,7 +1,7 @@
 import type { ReservedSeatDto } from '@/features/reservation/types/ReservedSeatDto';
 
 export type ReservationResponseDto = {
-    reservationId?: string;
+    reservationId: string;
     scheduleCd: string;
     trainTypeName: string;
     departureTime: string;

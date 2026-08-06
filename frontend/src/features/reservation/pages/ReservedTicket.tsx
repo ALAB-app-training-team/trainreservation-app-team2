@@ -4,12 +4,15 @@ import { LuArrowLeft } from 'react-icons/lu';
 import { RiGroupLine } from 'react-icons/ri';
 import { useLocation, useNavigate } from 'react-router-dom';
 
+import { CompanionModal } from '@/features/reservation/components/CompanionModal';
 import { ReservedTicketInfo } from '@/features/reservation/components/ReservedTicketInfo/ReservedTicketInfo';
 import { ReservedTicketInfoSkeleton } from '@/features/reservation/components/ReservedTicketInfo/ReservedTicketInfoSkeleton';
 import { ReservedTicketQrCode } from '@/features/reservation/components/ReservedTicketQrCode/ReservedTicketQrCode';
 import { ReservedTicketQrCodeSkeleton } from '@/features/reservation/components/ReservedTicketQrCode/ReservedTicketQrCodeSkeleton';
 import { TicketShare } from '@/features/reservation/components/TicketShare';
 import { useReservedTickets } from '@/features/reservation/hooks/useReservedTickets';
+import { CustomModal } from '@/shared/components/CustomModal';
+import { useModal } from '@/shared/hooks/useModal';
 import { removeGuestReservation } from '@/shared/utils/RemoveGuestReservation';
 
 export function ReservedTicket() {
@@ -17,6 +20,7 @@ export function ReservedTicket() {
     const navigate = useNavigate();
     const { reservationId, isBack, guestLogin } = location.state;
     const { reservedTickets } = useReservedTickets(reservationId);
+    const { isOpen, handleModalOpen, onRequestClose } = useModal();
     const shareUrl = `${window.location.origin}/reservationGuestLogin?reservationId=${reservationId}`;
     const queryClient = useQueryClient();
     const accountInfo = localStorage.getItem('name');
@@ -65,12 +69,21 @@ export function ReservedTicket() {
                 </Suspense>
                 <div className="flex w-full gap-4">
                     <TicketShare shareUrl={shareUrl} />
-                    <button className="bg-primary flex w-full items-center justify-center gap-2 rounded-xl text-sm text-white">
+                    <button
+                        onClick={handleModalOpen}
+                        className="bg-primary flex w-full items-center justify-center gap-2 rounded-xl text-sm text-white"
+                    >
                         <RiGroupLine className="h-4 w-4" />
                         <div>同行者に割り当て</div>
                     </button>
                 </div>
             </div>
+            <CustomModal isOpen={isOpen} onRequestClose={onRequestClose}>
+                <CompanionModal
+                    reservationId={reservedTickets.reservationId}
+                    reservedSeats={reservedTickets.reservedSeats}
+                />
+            </CustomModal>
         </>
     );
 }
