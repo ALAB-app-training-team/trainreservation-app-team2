@@ -192,6 +192,12 @@ export function SelectSeats() {
         });
     };
 
+    const handleLogout = () => {
+        localStorage.clear();
+        sessionStorage.clear();
+        onRequestReloginConfirmModalClose();
+    };
+
     return (
         <>
             <div className="flex items-center justify-start p-4 pb-0">
@@ -314,8 +320,8 @@ export function SelectSeats() {
                 onRequestClose={onRequestReloginConfirmModalClose}
             >
                 <ReloginConfirmModal
-                    onClick={handleRelogin}
-                    onRequestClose={onRequestReloginConfirmModalClose}
+                    onReloginClick={handleRelogin}
+                    onLogoutClick={handleLogout}
                     isSubmitting={isSubmitting}
                 />
             </CustomModal>

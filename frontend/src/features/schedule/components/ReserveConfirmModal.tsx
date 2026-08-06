@@ -14,12 +14,11 @@ export function ReserveConfirmModal({
     return (
         <>
             <div className="flex flex-col items-start justify-center gap-4">
-                <h1 className="!m-0 text-left !text-xl">予約確認</h1>
-                <div>予約を確定しますか？</div>
+                <h2 className="text-left">予約確認</h2>
+                <p>予約を確定しますか？</p>
                 <div>
-                    ※予約の取り消しには手数料が発生します
-                    <br />
-                    (1座席につき {FARE_CONSTANTS.REFUND}円)
+                    <p>※予約の取り消しには手数料が発生します</p>
+                    <p>(1座席につき {FARE_CONSTANTS.REFUND}円)</p>
                 </div>
                 <div className="flex w-full items-center justify-end gap-4">
                     <button
