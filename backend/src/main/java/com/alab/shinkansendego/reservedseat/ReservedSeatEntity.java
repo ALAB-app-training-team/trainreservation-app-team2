@@ -37,6 +37,10 @@ public class ReservedSeatEntity {
     private Integer seatFare;
     @Column(name = "is_deleted")
     private Boolean isDeleted;
+    @Column(name = "name")
+    private String name;
+    @Column(name = "mail")
+    private String mail;
     @ManyToOne(fetch = FetchType.LAZY)
     @ToString.Exclude
     @JoinColumn(name = "train_car_cd", referencedColumnName = "train_car_cd", insertable = false, updatable = false)

@@ -10,10 +10,12 @@ import java.util.UUID;
 @NoArgsConstructor
 @AllArgsConstructor
 public class ReservedSeatDto {
+    private UUID id;
     private String trainCarTypeName;
     private Integer trainCarNumber;
     private Integer seatNumber;
     private String seatColumn;
     private UUID codeToken;
     private Integer seatFare;
+    private String name;
 }
