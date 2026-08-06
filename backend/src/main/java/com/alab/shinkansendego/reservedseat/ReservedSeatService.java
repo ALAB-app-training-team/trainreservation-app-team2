@@ -2,6 +2,7 @@ package com.alab.shinkansendego.reservedseat;
 
 import com.alab.shinkansendego.reservation.ReservationEntity;
 import com.alab.shinkansendego.reservation.ReservationRepository;
+import com.alab.shinkansendego.utils.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.AccessDeniedException;
 import org.springframework.stereotype.Service;
@@ -43,8 +44,8 @@ public class ReservedSeatService {
             ReservedSeatEntity reservedSeatEntity =
                 reservedSeatRepository.findByIdAndReservationIdAndIsDeleted(reservedSeat.getId(),
                     reservationId, false).orElseThrow(() -> new IllegalArgumentException("ReservedSeat is Not found"));
-            reservedSeatEntity.setName(reservedSeat.getName());
-            reservedSeatEntity.setMail(reservedSeat.getMail());
+            reservedSeatEntity.setName(StringUtils.removeSpaces(reservedSeat.getName()));
+            reservedSeatEntity.setMail(StringUtils.removeSpaces(reservedSeat.getMail()));
         }
     }
 }

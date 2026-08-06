@@ -16,6 +16,7 @@ import com.alab.shinkansendego.sectionkm.SectionKmRepository;
 import com.alab.shinkansendego.traincar.SeatResponseDto;
 import com.alab.shinkansendego.traincar.TrainCarEntity;
 import com.alab.shinkansendego.traincar.TrainCarRepository;
+import com.alab.shinkansendego.utils.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
@@ -69,16 +70,6 @@ public class ReservationService {
         this.seatRepository = seatRepository;
         this.accountRepository = accountRepository;
         this.restClient = restClientBuilder.build();
-    }
-
-    /**
-     * 文字列から全角半角の空白をすべて除く
-     *
-     * @param value 対象の文字列
-     * @return 空白がすべて除かれた対象文字列
-     */
-    private static String removeSpaces(String value) {
-        return value == null ? null : value.replaceAll("[\\s\u3000]", "");
     }
 
     /**
@@ -163,12 +154,12 @@ public class ReservationService {
         Optional<ReservationEntity> reservationEntity = reservationRepository.findById(reservationId);
         if (reservationEntity.isEmpty()) return null;
 
-        if (Objects.equals(reservationEntity.get().getReserverName(), removeSpaces(name))
-            && Objects.equals(reservationEntity.get().getReserverMail(), removeSpaces(email))) {
+        if (Objects.equals(reservationEntity.get().getReserverName(), StringUtils.removeSpaces(name))
+            && Objects.equals(reservationEntity.get().getReserverMail(), StringUtils.removeSpaces(email))) {
             if (reservationEntity.get().getAccountId() != null) return null;
         } else {
             boolean isCompanionMatched = reservationEntity.get().getReservedSeat().stream()
-                .anyMatch(seat -> Objects.equals(seat.getName(), removeSpaces(name)) && Objects.equals(seat.getMail(), removeSpaces(email)));
+                .anyMatch(seat -> Objects.equals(seat.getName(), StringUtils.removeSpaces(name)) && Objects.equals(seat.getMail(), StringUtils.removeSpaces(email)));
             if (!isCompanionMatched) return null;
         }
 
@@ -303,8 +294,8 @@ public class ReservationService {
         reservationToPost.setScheduleCd(reserveRequestDto.getScheduleCd());
         reservationToPost.setDepartureStationCd(reserveRequestDto.getDepartureStationCd());
         reservationToPost.setArrivalStationCd(reserveRequestDto.getArrivalStationCd());
-        reservationToPost.setReserverName(removeSpaces(reserveRequestDto.getReserverName()));
-        reservationToPost.setReserverMail(removeSpaces(reserveRequestDto.getReserverMail()));
+        reservationToPost.setReserverName(StringUtils.removeSpaces(reserveRequestDto.getReserverName()));
+        reservationToPost.setReserverMail(StringUtils.removeSpaces(reserveRequestDto.getReserverMail()));
         reservationToPost.setPaymentTrackingId(paymentTrackingId);
         reservationToPost.setIsDeleted(false);
         if (session != null) reservationToPost.setAccountId(account.getId());
