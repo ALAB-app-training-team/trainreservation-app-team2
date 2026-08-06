@@ -38,9 +38,16 @@ export function ReservedSeats({
         <>
             <div className="flex w-full flex-col items-start gap-2">
                 {title && (
-                    <div className="flex items-center gap-2">
-                        <MdAirlineSeatReclineExtra className="mt-0.5" />
-                        <label>座席</label>
+                    <div className="flex items-center gap-4">
+                        <div className="flex items-center gap-2">
+                            <MdAirlineSeatReclineExtra className="mt-0.5" />
+                            <label>座席</label>
+                        </div>
+                        {seats.some((seat) => !seat.name) && (
+                            <div className="mx-auto w-fit rounded-full px-2 text-orange-500">
+                                同行者が割り当てられていない座席があります
+                            </div>
+                        )}
                     </div>
                 )}
                 <div
@@ -55,13 +62,13 @@ export function ReservedSeats({
                                     a.seatNumber - b.seatNumber ||
                                     a.seatColumn.localeCompare(b.seatColumn),
                             )
-                            .map((reservedSeats) => {
+                            .map((seat) => {
                                 return (
                                     <div
                                         key={
-                                            reservedSeats.trainCarNumber +
-                                            reservedSeats.seatNumber +
-                                            reservedSeats.seatColumn
+                                            seat.trainCarNumber +
+                                            seat.seatNumber +
+                                            seat.seatColumn
                                         }
                                         className={`${reservedSeatsStyle({ id })} flex shrink-0 items-center gap-2`}
                                     >
@@ -69,17 +76,15 @@ export function ReservedSeats({
                                             {id === 'reservationDetail' && (
                                                 <BsTrainFreightFrontFill className="text-primary" />
                                             )}
-                                            <div>{`${reservedSeats.trainCarNumber}号車`}</div>
+                                            <div>{`${seat.trainCarNumber}号車`}</div>
                                             {id === 'reservationDetail' && (
                                                 <div>
-                                                    {
-                                                        reservedSeats.trainCarTypeName
-                                                    }
+                                                    {seat.trainCarTypeName}
                                                 </div>
                                             )}
                                             <div>
-                                                {`${reservedSeats.seatNumber}番` +
-                                                    `${reservedSeats.seatColumn}席`}
+                                                {`${seat.seatNumber}番` +
+                                                    `${seat.seatColumn}席`}
                                             </div>
                                         </div>
                                         {id === 'reservationDetail' && (
@@ -88,8 +93,7 @@ export function ReservedSeats({
                                                 <div className="text-primary flex items-center text-xl font-bold whitespace-nowrap">
                                                     <RiMoneyCnyBoxLine />
                                                     {(
-                                                        reservedSeats.seatFare ||
-                                                        0
+                                                        seat.seatFare || 0
                                                     ).toLocaleString()}
                                                 </div>
                                             </>
