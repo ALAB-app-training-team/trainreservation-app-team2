@@ -77,9 +77,6 @@ public class ReservationService {
         this.entityManager = entityManager;
     }
 
-//    @PersistenceContext
-//    private EntityManager entityManager;
-
     /**
      * ログイン中のアカウント情報をもとに、紐づく予約情報一覧を取得するメソッド
      *
@@ -435,7 +432,7 @@ public class ReservationService {
     @Transactional
     public UUID putReservedSeat(UUID reservationId, ReserveRequestDto changedReservation, AccountSessionDto session) {
         if (changedReservation.getSeats() == null || changedReservation.getSeats().isEmpty()) {
-            throw new IllegalArgumentException("RefreshSeats is Null");
+            throw new IllegalArgumentException("ChangedSeats is Null");
         }
 
         Optional<ReservationEntity> reservation = reservationRepository.findByIdAndIsDeleted(reservationId, false);

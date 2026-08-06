@@ -909,6 +909,58 @@ public class ReservationServiceTest {
     }
 
     @Test
+    @DisplayName("変更後座席リストがNullの場合、IllegalArgumentExceptionが発生する")
+    void putReservedSeat_withNullSelectedSeatDto_throwsIllegalArgumentException() {
+        ReserveRequestDto request = new ReserveRequestDto("Test01", LocalDate.now(), "Test0", "Test1", "TestTaro", "test@main", "Test2", null);
+        Exception ex = assertThrows(IllegalArgumentException.class, () -> service.putReservedSeat(reservationId1, request, session));
+        assertEquals("ChangedSeats is Null", ex.getMessage());
+    }
+
+    @Test
+    @DisplayName("変更後座席リストが空の場合、IllegalArgumentExceptionが発生する")
+    void putReservedSeat_withEmptySelectedSeatDto_throwsIllegalArgumentException() {
+        ReserveRequestDto request = new ReserveRequestDto("Test01", LocalDate.now(), "Test0", "Test1", "TestTaro", "test@main", "Test2", List.of());
+        Exception ex = assertThrows(IllegalArgumentException.class, () -> service.putReservedSeat(reservationId1, request, session));
+        assertEquals("ChangedSeats is Null", ex.getMessage());
+    }
+
+    @Test
+    @DisplayName("sessionがNullの場合、IllegalArgumentExceptionが発生する")
+    void putReservedSeat_withNullSession_throwsIllegalArgumentException() {
+        ReserveRequestDto request = new ReserveRequestDto("THK01", LocalDate.of(2026, 6, 1), "THK01", "THK09", "", "", "", List.of(new ReserveRequestDto.SelectedSeatDto("E5SER01", "CAR01", "SEAT01001", 5000), new ReserveRequestDto.SelectedSeatDto("E5SER01", "CAR01", "SEAT01002", 5000)));
+        Optional<ReservationEntity> reservation = Optional.of(buildReservation(reservationId1));
+        reservation.get().setAccountId(accountId);
+        when(reservationRepo.findByIdAndIsDeleted(reservationId1, false)).thenReturn(reservation);
+        Exception ex = assertThrows(IllegalArgumentException.class, () -> service.putReservedSeat(reservationId1, request, null));
+        assertEquals("Reservation doesn't match", ex.getMessage());
+    }
+
+    @Test
+    @DisplayName("sessionで渡されたアカウントIDと予約情報の持つアカウントIDが一致しない場合、IllegalArgumentExceptionが発生する")
+    void putReservedSeat_withNotExistAccountId_throwsIllegalArgumentException() {
+        ReserveRequestDto request = new ReserveRequestDto("THK01", LocalDate.of(2026, 6, 1), "THK01", "THK09", "", "", "", List.of(new ReserveRequestDto.SelectedSeatDto("E5SER01", "CAR01", "SEAT01001", 5000), new ReserveRequestDto.SelectedSeatDto("E5SER01", "CAR01", "SEAT01002", 5000)));
+        Optional<ReservationEntity> reservation = Optional.of(buildReservation(reservationId1));
+        reservation.get().setAccountId(accountId);
+        session.setId(noReservationAccountId);
+        when(reservationRepo.findByIdAndIsDeleted(reservationId1, false)).thenReturn(reservation);
+        Exception ex = assertThrows(IllegalArgumentException.class, () -> service.putReservedSeat(reservationId1, request, session));
+        assertEquals("Reservation doesn't match", ex.getMessage());
+    }
+
+    @Test
+    @DisplayName("予約情報の持つ予約済座席リストが空の場合、IllegalArgumentExceptionが発生する")
+    void putReservedSeat_withEmptyReservedSeat_throwsIllegalArgumentException() {
+        ReserveRequestDto request = new ReserveRequestDto("THK01", LocalDate.of(2026, 6, 1), "THK01", "THK09", "", "", "", List.of(new ReserveRequestDto.SelectedSeatDto("E5SER01", "CAR01", "SEAT01001", 5000), new ReserveRequestDto.SelectedSeatDto("E5SER01", "CAR01", "SEAT01002", 5000)));
+        Optional<ReservationEntity> reservation = Optional.of(buildReservation(reservationId1));
+        reservation.get().setAccountId(accountId);
+        reservation.get().setReservedSeat(Set.of());
+        session.setId(noReservationAccountId);
+        when(reservationRepo.findByIdAndIsDeleted(reservationId1, false)).thenReturn(reservation);
+        Exception ex = assertThrows(IllegalArgumentException.class, () -> service.putReservedSeat(reservationId1, request, session));
+        assertEquals("Reserved Seats is Not found", ex.getMessage());
+    }
+
+    @Test
     @DisplayName("予約情報・予約座席情報の論理削除、予約済座席区間の物理削除ができる")
     void deleteReservation_withReservationId() {
         UUID reservationId = UUID.randomUUID();
