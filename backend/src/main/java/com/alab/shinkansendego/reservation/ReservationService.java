@@ -12,6 +12,7 @@ import com.alab.shinkansendego.reservedseatsection.ReservedSeatSectionEntity;
 import com.alab.shinkansendego.reservedseatsection.ReservedSeatSectionRepository;
 import com.alab.shinkansendego.seat.SeatEntity;
 import com.alab.shinkansendego.seat.SeatRepository;
+import com.alab.shinkansendego.sectionkm.SectionKmEntity;
 import com.alab.shinkansendego.sectionkm.SectionKmRepository;
 import com.alab.shinkansendego.traincar.SeatResponseDto;
 import com.alab.shinkansendego.traincar.TrainCarEntity;
@@ -324,8 +325,8 @@ public class ReservationService {
      * @return 区間CDリスト
      */
     private List<String> getSectionCdList(String scheduleCd, String departureStationCd, String arrivalStationCd) {
-        List<String> SectionKmCdsByDepartureStation = sectionKmRepository.findByStartStationCd(departureStationCd).stream().map(entity -> entity.getSectionCd()).toList();
-        List<String> SectionKmCdsByArrivalStation = sectionKmRepository.findByGoalStationCd(arrivalStationCd).stream().map(entity -> entity.getSectionCd()).toList();
+        List<String> SectionKmCdsByDepartureStation = sectionKmRepository.findByStartStationCd(departureStationCd).stream().map(SectionKmEntity::getSectionCd).toList();
+        List<String> SectionKmCdsByArrivalStation = sectionKmRepository.findByGoalStationCd(arrivalStationCd).stream().map(SectionKmEntity::getSectionCd).toList();
 
         DepartureArrivalTimeEntity departureArrivalTimeOfStart = departureArrivalTimeRepository.findByScheduleCdAndSectionCdIn(scheduleCd, SectionKmCdsByDepartureStation);
         DepartureArrivalTimeEntity departureArrivalTimeOfGoal = departureArrivalTimeRepository.findByScheduleCdAndSectionCdIn(scheduleCd, SectionKmCdsByArrivalStation);
@@ -335,7 +336,7 @@ public class ReservationService {
 
         List<String> sectionCdList = departureArrivalTimeRepository.findByScheduleCdAndDepartureTimeGreaterThanEqualAndArrivalTimeLessThanEqual(
                 scheduleCd, departureArrivalTimeOfStart.getDepartureTime(), departureArrivalTimeOfGoal.getArrivalTime())
-            .stream().map(entity -> entity.getSectionCd()).toList();
+            .stream().map(DepartureArrivalTimeEntity::getSectionCd).toList();
         if (sectionCdList.isEmpty()) {
             throw new IllegalArgumentException("SectionCd is Not found");
         }

@@ -11,7 +11,5 @@ import java.util.UUID;
 public interface ReservedSeatRepository extends JpaRepository<ReservedSeatEntity, UUID> {
     List<ReservedSeatEntity> findByReservationId(UUID reservationId);
 
-    List<ReservedSeatEntity> findByReservationIdAndIsDeleted(UUID reservationId, Boolean flag);
-    
     Optional<ReservedSeatEntity> findByIdAndReservationIdAndIsDeleted(UUID id, UUID reservationId, boolean isDeleted);
 }
