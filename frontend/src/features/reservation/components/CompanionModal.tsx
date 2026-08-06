@@ -1,30 +1,15 @@
-import apiClient from '@/api/apiClient';
-import { ENDPOINTS } from '@/api/routes';
 import { CompanionForm } from '@/features/reservation/components/CompanionForm';
 import type { ReservedSeatDto } from '@/features/reservation/types/ReservedSeatDto';
-import type { ReservedSeatUpdateDto } from '@/features/reservation/types/ReservedSeatUpdateDto';
 
 type CompanionModalProps = {
-    reservationId: string;
     reservedSeats: ReservedSeatDto[];
+    handleSubmit: () => void;
 };
 
 export function CompanionModal({
-    reservationId,
     reservedSeats,
+    handleSubmit,
 }: CompanionModalProps) {
-    const handleSubmit = async () => {
-        const request: ReservedSeatUpdateDto[] = reservedSeats.map((seat) => ({
-            id: seat.id,
-            name: seat.name,
-            mail: seat.mail,
-        }));
-        const response = await apiClient.patch(
-            ENDPOINTS.RESERVEDSEAT(reservationId),
-            request,
-        );
-        console.log('response', response);
-    };
     return (
         <>
             <div className="flex flex-col gap-2">

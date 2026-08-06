@@ -4,6 +4,8 @@ import { LuArrowLeft } from 'react-icons/lu';
 import { RiGroupLine } from 'react-icons/ri';
 import { useLocation, useNavigate } from 'react-router-dom';
 
+import apiClient from '@/api/apiClient';
+import { ENDPOINTS } from '@/api/routes';
 import { CompanionModal } from '@/features/reservation/components/CompanionModal';
 import { ReservedTicketInfo } from '@/features/reservation/components/ReservedTicketInfo/ReservedTicketInfo';
 import { ReservedTicketInfoSkeleton } from '@/features/reservation/components/ReservedTicketInfo/ReservedTicketInfoSkeleton';
@@ -11,6 +13,7 @@ import { ReservedTicketQrCode } from '@/features/reservation/components/Reserved
 import { ReservedTicketQrCodeSkeleton } from '@/features/reservation/components/ReservedTicketQrCode/ReservedTicketQrCodeSkeleton';
 import { TicketShare } from '@/features/reservation/components/TicketShare';
 import { useReservedTickets } from '@/features/reservation/hooks/useReservedTickets';
+import type { ReservedSeatUpdateDto } from '@/features/reservation/types/ReservedSeatUpdateDto';
 import { CustomModal } from '@/shared/components/CustomModal';
 import { useModal } from '@/shared/hooks/useModal';
 import { removeGuestReservation } from '@/shared/utils/RemoveGuestReservation';
@@ -32,6 +35,19 @@ export function ReservedTicket() {
             removeGuestReservation(queryClient);
         }
     }, []);
+
+    const handleUpdateCompanions = async () => {
+        const request: ReservedSeatUpdateDto[] =
+            reservedTickets.reservedSeats.map((seat) => ({
+                id: seat.id,
+                name: seat.name,
+                mail: seat.mail,
+            }));
+        await apiClient.patch(
+            ENDPOINTS.RESERVEDSEAT(reservedTickets.reservationId),
+            request,
+        );
+    };
 
     return (
         <>
@@ -80,7 +96,7 @@ export function ReservedTicket() {
             </div>
             <CustomModal isOpen={isOpen} onRequestClose={onRequestClose}>
                 <CompanionModal
-                    reservationId={reservedTickets.reservationId}
+                    handleSubmit={handleUpdateCompanions}
                     reservedSeats={reservedTickets.reservedSeats}
                 />
             </CustomModal>
