@@ -53,7 +53,12 @@ test('navigate-ゲストログイン全機能', async ({ page, context }) => {
     ).toBeHidden();
 });
 
-test('navigate-ログイン全機能', async ({ page, login, logout }) => {
+test('navigate-ログイン全機能', async ({
+    page,
+    login,
+    logout,
+    createReservation,
+}) => {
     const scheduleSearchPage = new ScheduleSearchPage(page);
     const selectSeatPage = new SelectSeatPage(page);
     const reservedTicketPage = new ReservedTicketPage(page);
@@ -79,19 +84,22 @@ test('navigate-ログイン全機能', async ({ page, login, logout }) => {
     await expect(page).toHaveURL('/reservedTicket');
     await reservedTicketPage.clickBackButton();
     await expect(page).toHaveURL('/reservationList');
+    // キャンセル
     await reservationListPage.clickRefundButton();
     await reservationListPage.clickModalCloseButton();
     await expect(page).toHaveURL('/reservationList');
     await reservationListPage.clickRefundButton();
     await reservationListPage.clickCancelConfirmButton();
     await expect(page).toHaveURL('/reservationList');
+    // 予約変更
+    // TODO:予約変更実装後、予約変更からキャンセルの順番にし、createReservationを削除する
+    await createReservation();
+    await reservationListPage.goto();
     await reservationListPage.clickChangeButton();
     await reservationListPage.clickChangeSeatConfirmButton();
     await expect(page).toHaveURL('/selectSeat');
     await expect(page.getByText('座席が選択されていません')).not.toBeVisible();
-    //TODO:予約変更実装後、追加
-
-    // キャンセル、ログアウト
+    // ログアウト
     await logout();
     await expect(page).toHaveURL('/login');
 });
