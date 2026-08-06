@@ -1,12 +1,12 @@
 type ReloginConfirmModalProps = {
     onReloginClick: () => void;
-    onLogoutClick: () => void;
+    onRequestClose: () => void;
     isSubmitting: boolean;
 };
 
 export function ReloginConfirmModal({
     onReloginClick,
-    onLogoutClick,
+    onRequestClose,
     isSubmitting,
 }: ReloginConfirmModalProps) {
     return (
@@ -16,7 +16,7 @@ export function ReloginConfirmModal({
                 <p>セッションが切れました。再ログインしますか？</p>
                 <div className="flex w-full items-center justify-end gap-4">
                     <button
-                        onClick={onLogoutClick}
+                        onClick={onRequestClose}
                         disabled={isSubmitting}
                         className="border-primary text-primary rounded-lg border-2 p-2 disabled:border-gray-300 disabled:bg-gray-300 disabled:text-white"
                     >
