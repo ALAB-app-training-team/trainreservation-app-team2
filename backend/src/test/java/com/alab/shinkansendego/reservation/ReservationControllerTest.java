@@ -304,7 +304,7 @@ public class ReservationControllerTest {
 
     @Test
     @DisplayName("ログインした状態で座席予約ができる")
-    void insertReservation_withValidReserveRequestDto_return201AndInsertReservationId() throws Exception {
+    void insertAccountReservation_withValidReserveRequestDto_return201AndInsertReservationId() throws Exception {
         ReserveRequestDto request = new ReserveRequestDto(
             "Test01",
             LocalDate.now(),
@@ -332,7 +332,7 @@ public class ReservationControllerTest {
 
     @Test
     @DisplayName("リクエストのカラムがNullの場合、バリデーションエラー発生")
-    void insertReservation_withNotValidReserveRequestDto_returnValidationError() throws Exception {
+    void insertAccountReservation_withNotValidReserveRequestDto_returnValidationError() throws Exception {
         ReserveRequestDto request = new ReserveRequestDto(
             null, LocalDate.now(), "Test0", "Test1", "TestTaro", "test@main", "Test2", List.of(
             new ReserveRequestDto.SelectedSeatDto("E5SER01", "CAR01", "SEAT01001", 2800),
@@ -350,7 +350,7 @@ public class ReservationControllerTest {
 
     @Test
     @DisplayName("リクエストDTO自体がNullの場合、バインドエラー発生")
-    void insertReservation_withReserveRequestDtoIsNull_returnBindError() throws Exception {
+    void insertAccountReservation_withReserveRequestDtoIsNull_returnBindError() throws Exception {
         //バインド順が毎回異なるためエラーメッセージの比較は行わない
         Authentication auth = new UsernamePasswordAuthenticationToken(session, null, Collections.emptyList());
 
