@@ -25,8 +25,8 @@ export function CompanionForm({
         isInvalid,
     } = useReservationListRequestDto();
     const isInitialized = useRef(false);
-    const [isReadOnly, setIsReadOnry] = useState<boolean>(
-        !reservedSeats[index]?.name && !reservedSeats[index]?.mail,
+    const [canUpdate, setCanUpdate] = useState<boolean>(
+        !!(reservedSeats[index]?.name && reservedSeats[index]?.mail),
     );
 
     useEffect(() => {
@@ -55,15 +55,15 @@ export function CompanionForm({
     }, [guestLoginForm]);
 
     useEffect(() => {
-        if (isReadOnly) {
+        if (!canUpdate) {
             setIsInvalid(false);
         } else {
             setIsInvalid(isInvalid);
         }
-    }, [isInvalid, isReadOnly]);
+    }, [isInvalid, canUpdate]);
 
     useEffect(() => {
-        if (isReadOnly) {
+        if (!canUpdate) {
             handleChange({
                 target: {
                     name: 'reserverName',
@@ -77,7 +77,7 @@ export function CompanionForm({
                 },
             } as React.ChangeEvent<HTMLInputElement>);
         }
-    }, [isReadOnly]);
+    }, [canUpdate]);
 
     return (
         <>
@@ -94,12 +94,12 @@ export function CompanionForm({
                         <input
                             type="checkbox"
                             id={`isCompanionUpdated${index}`}
-                            checked={isReadOnly}
-                            onChange={(e) => setIsReadOnry(e.target.checked)}
+                            checked={canUpdate}
+                            onChange={(e) => setCanUpdate(e.target.checked)}
                             className="accent-primary"
                         />
                         <label htmlFor={`isCompanionUpdated${index}`}>
-                            同行者を割り当てない
+                            同行者を割り当てる
                         </label>
                     </div>
                 </div>
@@ -109,15 +109,15 @@ export function CompanionForm({
                     type="text"
                     inputMode="text"
                     value={guestLoginForm.reserverName}
-                    placeHolder={isReadOnly ? '割り当てなし' : '山田 太郎'}
+                    placeHolder={canUpdate ? '山田 太郎' : '割り当てなし'}
                     autoComplete="name"
                     icon={FiUser}
                     onChange={handleChange}
                     onBlur={handleBlur}
                     validMessage={
-                        isReadOnly ? undefined : getFieldError('reserverName')
+                        canUpdate ? getFieldError('reserverName') : undefined
                     }
-                    readOnly={isReadOnly}
+                    readOnly={!canUpdate}
                 />
                 <GuestLoginInput
                     id="reserverMail"
@@ -126,16 +126,16 @@ export function CompanionForm({
                     inputMode="email"
                     value={guestLoginForm.reserverMail}
                     placeHolder={
-                        isReadOnly ? '割り当てなし' : 'example@email.com'
+                        canUpdate ? 'example@email.com' : '割り当てなし'
                     }
                     autoComplete="email"
                     icon={CiMail}
                     onChange={handleChange}
                     onBlur={handleBlur}
                     validMessage={
-                        isReadOnly ? undefined : getFieldError('reserverMail')
+                        canUpdate ? getFieldError('reserverMail') : undefined
                     }
-                    readOnly={isReadOnly}
+                    readOnly={!canUpdate}
                 />
             </div>
         </>
