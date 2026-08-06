@@ -11,6 +11,7 @@ import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -60,6 +61,13 @@ public class ReservationController {
     public ResponseEntity<UUID> insertGuestReservation(@Valid @RequestBody ReserveRequestDto request, @AuthenticationPrincipal AccountSessionDto session) {
         UUID response = reservationService.insertReservation(request, session);
         return ResponseEntity.status(HttpStatus.CREATED).body(response);
+    }
+
+    @PutMapping(value = "/seat/{id}")
+    @PreAuthorize("isAuthenticated()")
+    public ResponseEntity<UUID> patchReservedSeat(@PathVariable("id") UUID reservationId, @Valid @RequestBody ReserveRequestDto request, @AuthenticationPrincipal AccountSessionDto session) {
+        UUID response = reservationService.putReservedSeat(reservationId, request, session);
+        return ResponseEntity.status(HttpStatus.OK).body(response);
     }
 
     @DeleteMapping(value = "{id}")
