@@ -76,6 +76,7 @@ public class ReservationServiceTest {
     private final ReservedSeatDto seat2 = new ReservedSeatDto(UUID.fromString("3de8909e-32de-478e-bd9b-739f3fe6d6c3"), "グリーン車", 9, 1, "A", UUID.fromString("3de8909e-32de-478e-bd9b-739f3fe6d6c3"), 10000, "一般次郎");
     private final ReservedSeatDto seat3 = new ReservedSeatDto(UUID.fromString("e192e5f1-318e-4d10-b76d-2f2bf15e8b70"), "グランクラス", 10, 1, "A", UUID.fromString("e192e5f1-318e-4d10-b76d-2f2bf15e8b70"), 15000, "一般三郎");
     private final UUID accountId = UUID.fromString("f79d8bbc-fcba-b538-b132-2f726ce0120c");
+    private final UUID noExistAccountId = UUID.fromString("f65d8bbc-fcba-b538-b132-2f726ce0120c");
     private final UUID noReservationAccountId = UUID.fromString("f79d8bbc-fcba-b538-b132-2f726ce0120c");
     private final AccountSessionDto session = new AccountSessionDto(accountId, "test-common@test.com", "一般太郎");
     private final AccountEntity account = new AccountEntity();
@@ -331,6 +332,10 @@ public class ReservationServiceTest {
         account.setId(UUID.fromString("f79d8bbc-fcba-b538-b132-2f726ce0120c"));
         account.setName("一般太郎");
         account.setMail("test-common@test.com");
+
+        session.setId(accountId);
+        session.setMail("test-common@test.com");
+        session.setName("一般太郎");
     }
 
     @Test
@@ -925,25 +930,25 @@ public class ReservationServiceTest {
     }
 
     @Test
-    @DisplayName("sessionがNullの場合、IllegalArgumentExceptionが発生する")
+    @DisplayName("sessionがNullの場合、BadCredentialsExceptionが発生する")
     void putReservedSeat_withNullSession_throwsIllegalArgumentException() {
         ReserveRequestDto request = new ReserveRequestDto("THK01", LocalDate.of(2026, 6, 1), "THK01", "THK09", "", "", "", List.of(new ReserveRequestDto.SelectedSeatDto("E5SER01", "CAR01", "SEAT01001", 5000), new ReserveRequestDto.SelectedSeatDto("E5SER01", "CAR01", "SEAT01002", 5000)));
         Optional<ReservationEntity> reservation = Optional.of(buildReservation(reservationId1));
         reservation.get().setAccountId(accountId);
         when(reservationRepo.findByIdAndIsDeleted(reservationId1, false)).thenReturn(reservation);
-        Exception ex = assertThrows(IllegalArgumentException.class, () -> service.putReservedSeat(reservationId1, request, null));
+        Exception ex = assertThrows(BadCredentialsException.class, () -> service.putReservedSeat(reservationId1, request, null));
         assertEquals("Reservation doesn't match", ex.getMessage());
     }
 
     @Test
-    @DisplayName("sessionで渡されたアカウントIDと予約情報の持つアカウントIDが一致しない場合、IllegalArgumentExceptionが発生する")
+    @DisplayName("sessionで渡されたアカウントIDと予約情報の持つアカウントIDが一致しない場合、BadCredentialsExceptionが発生する")
     void putReservedSeat_withNotExistAccountId_throwsIllegalArgumentException() {
         ReserveRequestDto request = new ReserveRequestDto("THK01", LocalDate.of(2026, 6, 1), "THK01", "THK09", "", "", "", List.of(new ReserveRequestDto.SelectedSeatDto("E5SER01", "CAR01", "SEAT01001", 5000), new ReserveRequestDto.SelectedSeatDto("E5SER01", "CAR01", "SEAT01002", 5000)));
         Optional<ReservationEntity> reservation = Optional.of(buildReservation(reservationId1));
         reservation.get().setAccountId(accountId);
-        session.setId(noReservationAccountId);
+        session.setId(noExistAccountId);
         when(reservationRepo.findByIdAndIsDeleted(reservationId1, false)).thenReturn(reservation);
-        Exception ex = assertThrows(IllegalArgumentException.class, () -> service.putReservedSeat(reservationId1, request, session));
+        Exception ex = assertThrows(BadCredentialsException.class, () -> service.putReservedSeat(reservationId1, request, session));
         assertEquals("Reservation doesn't match", ex.getMessage());
     }
 
