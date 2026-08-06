@@ -16,6 +16,7 @@ import { TrainCars } from '@/features/schedule/components/TrainCars/TrainCars';
 import { TrainCarsSkeleton } from '@/features/schedule/components/TrainCars/TrainCarsSkeleton';
 import { TrainInfo } from '@/features/schedule/components/TrainInfo';
 import { useReserveUser } from '@/features/schedule/hooks/useReserveUser';
+import { useResolveReservedSeats } from '@/features/schedule/hooks/useResolveReservedSeats';
 import { useSelectedSeats } from '@/features/schedule/hooks/useSelectedSeats';
 import type { PaymentRequestDto } from '@/features/schedule/types/PaymentRequestDto';
 import type { ReserveRequestDto } from '@/features/schedule/types/ReserveRequestDto';
@@ -33,14 +34,22 @@ export function SelectSeats() {
     const {
         scheduleInfoDto,
         searchRequestDto,
-        selectedSeats: prevSelectedSeats,
-    } = location.state as SelectSeatsLocationState;
+        prevSelectedSeats,
+        reservedSeats,
+    }: SelectSeatsLocationState = location.state;
+    const { resolveReservedSeat } = useResolveReservedSeats(
+        scheduleInfoDto,
+        reservedSeats,
+    );
+    const initialSelectedSeats = reservedSeats
+        ? resolveReservedSeat
+        : (prevSelectedSeats ?? []);
     const {
         selectedSeats,
         handleSelectedSeats,
         handleClear,
         checkReservedSeats,
-    } = useSelectedSeats(prevSelectedSeats ?? []);
+    } = useSelectedSeats(initialSelectedSeats);
     const {
         reserveUser,
         focus,
@@ -187,7 +196,7 @@ export function SelectSeats() {
                 prevPath: location.pathname,
                 scheduleInfoDto,
                 searchRequestDto,
-                selectedSeats,
+                prevSelectedSeats: selectedSeats,
             },
         });
     };
@@ -233,6 +242,7 @@ export function SelectSeats() {
                             selectedSeats={selectedSeats}
                             handleSelectedSeats={handleSelectedSeats}
                             checkReservedSeats={checkReservedSeats}
+                            reservedSeats={reservedSeats}
                         />
                     </Suspense>
                 </div>
@@ -252,7 +262,8 @@ export function SelectSeats() {
                                                 prevPath: location.pathname,
                                                 scheduleInfoDto,
                                                 searchRequestDto,
-                                                selectedSeats,
+                                                prevSelectedSeats:
+                                                    selectedSeats,
                                             },
                                         })
                                     }

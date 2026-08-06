@@ -9,7 +9,7 @@ export function useSelectedSeats(initialSeats: SeatResponseDto[] = []) {
         useState<SeatResponseDto[]>(initialSeats);
 
     const handleSelectedSeats = (seat: SeatResponseDto) => {
-        if (selectedSeats.includes(seat)) {
+        if (selectedSeats.some(selectedSeat => selectedSeat.seatCd === seat.seatCd && selectedSeat.trainCarCd === seat.trainCarCd)) {
             setSelectedSeats((prevSeats) =>
                 prevSeats.filter(
                     (selectedSeat) =>
