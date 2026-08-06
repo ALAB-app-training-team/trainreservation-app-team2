@@ -51,7 +51,7 @@ export function ReserveUserInfoInput({
                 {getFieldError?.(id) && (
                     <p
                         className="text-left text-sm text-red-600"
-                        data-testId="error"
+                        data-testid="error"
                     >
                         {getFieldError(id)}
                     </p>

@@ -51,7 +51,14 @@ public class ReservationController {
     }
 
     @PostMapping
-    public ResponseEntity<UUID> insertReservation(@Valid @RequestBody ReserveRequestDto request, @AuthenticationPrincipal AccountSessionDto session) {
+    @PreAuthorize("isAuthenticated()")
+    public ResponseEntity<UUID> insertAccountReservation(@Valid @RequestBody ReserveRequestDto request, @AuthenticationPrincipal AccountSessionDto session) {
+        UUID response = reservationService.insertReservation(request, session);
+        return ResponseEntity.status(HttpStatus.CREATED).body(response);
+    }
+
+    @PostMapping(path = "guest")
+    public ResponseEntity<UUID> insertGuestReservation(@Valid @RequestBody ReserveRequestDto request, @AuthenticationPrincipal AccountSessionDto session) {
         UUID response = reservationService.insertReservation(request, session);
         return ResponseEntity.status(HttpStatus.CREATED).body(response);
     }

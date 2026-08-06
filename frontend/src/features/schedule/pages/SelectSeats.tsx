@@ -7,6 +7,7 @@ import { redirect, useLocation, useNavigate } from 'react-router-dom';
 
 import apiClient from '@/api/apiClient';
 import { ENDPOINTS } from '@/api/routes';
+import { ReloginConfirmModal } from '@/features/schedule/components/ReloginConfirmModal';
 import { ReserveConfirmModal } from '@/features/schedule/components/ReserveConfirmModal';
 import { ReserveUserInfo } from '@/features/schedule/components/ReserveUserInfo';
 import { SelectedSeats } from '@/features/schedule/components/SelectedSeats';
@@ -49,7 +50,16 @@ export function SelectSeats() {
         isInvalid,
         getFieldError,
     } = useReserveUser();
-    const { isOpen, handleModalOpen, onRequestClose } = useModal();
+    const {
+        isOpen: isReserveConfirmModalOpen,
+        handleModalOpen: handleReserveConfirmModalOpen,
+        onRequestClose: onRequestReserveConfirmModalClose,
+    } = useModal();
+    const {
+        isOpen: isReloginConfirmModalOpen,
+        handleModalOpen: handleReloginConfirmModalOpen,
+        onRequestClose: onRequestReloginConfirmModalClose,
+    } = useModal();
     const [isSubmitting, setIsSubmitting] = useState<boolean>(false);
     const isLoggedIn = !!localStorage.getItem('name');
 
@@ -96,11 +106,20 @@ export function SelectSeats() {
             reserverMail: reserveUser.reserverMail,
             paymentToken: paymentToken,
         };
-        const response = await apiClient.post(
-            ENDPOINTS.RESERVATION(),
-            reserveRequestDto,
-        );
-        return response.data;
+
+        if (!reserveUser.reserverMail && !reserveUser.reserverName) {
+            const response = await apiClient.post(
+                ENDPOINTS.RESERVATION(),
+                reserveRequestDto,
+            );
+            return response.data;
+        } else {
+            const response = await apiClient.post(
+                ENDPOINTS.GUESTRESERVATION(),
+                reserveRequestDto,
+            );
+            return response.data;
+        }
     };
 
     const handleReserve = async () => {
@@ -147,11 +166,30 @@ export function SelectSeats() {
                 });
                 return;
             }
+            if (
+                axios.isAxiosError(error) &&
+                error.response?.status === HttpStatusCode.Unauthorized
+            ) {
+                handleReloginConfirmModalOpen();
+
+                return;
+            }
             alert(ERROR_MESSAGE.RESERVE_RETRY);
         } finally {
             setIsSubmitting(false);
-            onRequestClose();
+            onRequestReserveConfirmModalClose();
         }
+    };
+
+    const handleRelogin = () => {
+        navigate('/login', {
+            state: {
+                prevPath: location.pathname,
+                scheduleInfoDto,
+                searchRequestDto,
+                selectedSeats,
+            },
+        });
     };
 
     return (
@@ -228,7 +266,7 @@ export function SelectSeats() {
                         <form
                             onSubmit={(e) => {
                                 e.preventDefault();
-                                handleModalOpen();
+                                handleReserveConfirmModalOpen();
                             }}
                         >
                             <div className="flex flex-col gap-4">
@@ -261,10 +299,23 @@ export function SelectSeats() {
                     </div>
                 </div>
             </div>
-            <CustomModal isOpen={isOpen} onRequestClose={onRequestClose}>
+            <CustomModal
+                isOpen={isReserveConfirmModalOpen}
+                onRequestClose={onRequestReserveConfirmModalClose}
+            >
                 <ReserveConfirmModal
                     onClick={handleReserve}
-                    onRequestClose={onRequestClose}
+                    onRequestClose={onRequestReserveConfirmModalClose}
+                    isSubmitting={isSubmitting}
+                />
+            </CustomModal>
+            <CustomModal
+                isOpen={isReloginConfirmModalOpen}
+                onRequestClose={onRequestReloginConfirmModalClose}
+            >
+                <ReloginConfirmModal
+                    onReloginClick={handleRelogin}
+                    onRequestClose={onRequestReloginConfirmModalClose}
                     isSubmitting={isSubmitting}
                 />
             </CustomModal>

@@ -1,26 +1,19 @@
-import { FARE_CONSTANTS } from '@/features/reservation/constants/FareConstant';
-
-type ReserveConfirmModalProps = {
-    onClick: () => void;
+type ReloginConfirmModalProps = {
+    onReloginClick: () => void;
     onRequestClose: () => void;
     isSubmitting: boolean;
 };
 
-export function ReserveConfirmModal({
-    onClick,
+export function ReloginConfirmModal({
+    onReloginClick,
     onRequestClose,
     isSubmitting,
-}: ReserveConfirmModalProps) {
+}: ReloginConfirmModalProps) {
     return (
         <>
             <div className="flex flex-col items-start justify-center gap-4">
-                <h2 className="text-left">予約確認</h2>
-                <p>予約を確定しますか？</p>
-                <p>
-                    ※予約の取り消しには手数料が発生します
-                    <br />
-                    (1座席につき {FARE_CONSTANTS.REFUND}円)
-                </p>
+                <h2 className="text-left">再ログイン確認</h2>
+                <p>セッションが切れました。再ログインしますか？</p>
                 <div className="flex w-full items-center justify-end gap-4">
                     <button
                         onClick={onRequestClose}
@@ -30,11 +23,11 @@ export function ReserveConfirmModal({
                         キャンセル
                     </button>
                     <button
-                        onClick={onClick}
+                        onClick={onReloginClick}
                         disabled={isSubmitting}
                         className="bg-primary rounded-lg p-2 text-white"
                     >
-                        予約を確定する
+                        再ログインする
                     </button>
                 </div>
             </div>

@@ -16,7 +16,7 @@ import { Layout } from '@/Layout';
 import { ERROR_MESSAGE } from '@/shared/constants/ErrorMessages';
 import { Error } from '@/shared/pages/Error';
 
-const sessionLoader = () => {
+const reservationListLoader = () => {
     const info = localStorage.getItem('name');
     if (info === null) {
         sessionStorage.setItem('message', ERROR_MESSAGE.LOGIN_ERROR);
@@ -26,7 +26,7 @@ const sessionLoader = () => {
     return null;
 };
 
-const authLoader = () => {
+const reservedTicketLoader = () => {
     const info = sessionStorage.getItem('guestLoginInfo');
     const account = localStorage.getItem('name');
     if (account === null && info === null) {
@@ -88,13 +88,13 @@ const router = createBrowserRouter([
             },
             {
                 path: '/reservedTicket',
-                loader: () => authLoader(),
+                loader: () => reservedTicketLoader(),
                 element: <ReservedTicket />,
                 errorElement: <Error />,
             },
             {
                 path: '/reservationList',
-                loader: () => sessionLoader(),
+                loader: () => reservationListLoader(),
                 element: <ReservationList />,
                 errorElement: <Error />,
             },
