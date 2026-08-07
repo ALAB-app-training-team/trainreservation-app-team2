@@ -390,16 +390,20 @@ export function SelectSeats() {
                     isSubmitting={isSubmitting}
                 />
             </CustomModal>
-            <CustomModal
-                isOpen={isUpdateConfirmModalOpen}
-                onRequestClose={onRequestUpdateConfirmModalClose}
-            >
-                <UpdateConfirmModal
-                    onClick={handleUpdate}
+            {reservedSeats && (
+                <CustomModal
+                    isOpen={isUpdateConfirmModalOpen}
                     onRequestClose={onRequestUpdateConfirmModalClose}
-                    isSubmitting={isSubmitting}
-                />
-            </CustomModal>
+                >
+                    <UpdateConfirmModal
+                        onClick={handleUpdate}
+                        onRequestClose={onRequestUpdateConfirmModalClose}
+                        isSubmitting={isSubmitting}
+                        reservedSeats={reservedSeats}
+                        selectedSeats={selectedSeats}
+                    />
+                </CustomModal>
+            )}
         </>
     );
 }

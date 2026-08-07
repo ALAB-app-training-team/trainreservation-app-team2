@@ -11,6 +11,7 @@ const reservedSeatsStyle = tv({
     variants: {
         id: {
             reservationList: 'rounded-lg border-primary border',
+            updateReservation: 'rounded-lg border-primary border',
             reservationDetail:
                 'rounded-lg border-primary-light text-primary bg-green-100 border-2',
             reservationChange: 'border-primary border-l-2',
