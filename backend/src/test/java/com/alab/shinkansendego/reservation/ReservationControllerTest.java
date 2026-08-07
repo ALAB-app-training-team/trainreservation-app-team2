@@ -2,6 +2,7 @@ package com.alab.shinkansendego.reservation;
 
 import com.alab.shinkansendego.SecurityConfig;
 import com.alab.shinkansendego.account.AccountSessionDto;
+import com.alab.shinkansendego.email.EmailService;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.SerializationFeature;
 import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
@@ -52,6 +53,8 @@ public class ReservationControllerTest {
     private MockMvc mockMvc;
     @MockitoBean
     private ReservationService service;
+    @MockitoBean
+    private EmailService emailService;
 
     private static @NonNull ReservationResponseDto getExpectReservationResponseDto(UUID reservationId) {
         ReservedSeatDto seat1 = new ReservedSeatDto(UUID.fromString("60a1ab63-a41f-430d-a2d1-10a76368d0f5"), "指定席", 1

@@ -9,9 +9,11 @@ import { ReservedTicketQrCode } from '@/features/reservation/components/Reserved
 import { ReservedTicketQrCodeSkeleton } from '@/features/reservation/components/ReservedTicketQrCode/ReservedTicketQrCodeSkeleton';
 import { TicketShare } from '@/features/reservation/components/TicketShare';
 import { useReservedTickets } from '@/features/reservation/hooks/useReservedTickets';
+import { useToastForRedirect } from '@/shared/hooks/useToastForRedirect';
 import { removeGuestReservation } from '@/shared/utils/RemoveGuestReservation';
 
 export function ReservedTicket() {
+    useToastForRedirect();
     const location = useLocation();
     const navigate = useNavigate();
     const { reservationId, isBack, guestLogin } = location.state;
