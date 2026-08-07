@@ -1,6 +1,7 @@
 package com.alab.shinkansendego.reservation;
 
 import com.alab.shinkansendego.account.AccountSessionDto;
+import com.alab.shinkansendego.email.EmailService;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -24,10 +25,12 @@ import java.util.UUID;
 @RequestMapping(path = "api/reservations")
 public class ReservationController {
     private final ReservationService reservationService;
+    private final EmailService emailService;
 
     @Autowired
-    public ReservationController(ReservationService reservationService) {
+    public ReservationController(ReservationService reservationService, EmailService emailService) {
         this.reservationService = reservationService;
+        this.emailService = emailService;
     }
 
     @GetMapping

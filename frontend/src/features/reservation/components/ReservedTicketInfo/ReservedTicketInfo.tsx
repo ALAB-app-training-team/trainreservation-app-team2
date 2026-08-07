@@ -17,7 +17,7 @@ export function ReservedTicketInfo({ ticketInfo }: ReservedTicketInfoProps) {
     });
     return (
         <>
-            <div className="flex justify-center">
+            <div className="flex w-full justify-center">
                 <div className="flex w-full max-w-5xl flex-col gap-4">
                     <div className="border-primary-light flex flex-col justify-between gap-4 rounded-2xl border-2 p-4">
                         <div

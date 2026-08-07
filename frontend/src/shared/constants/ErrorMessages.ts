@@ -1,6 +1,8 @@
 import { LIMIT } from '@/shared/constants/Limit';
 
 export const ERROR_MESSAGE = {
+    COMPANION:
+        '同行者割り当て処理中にエラーが発生しました。お手数ですが、再度お試しください。',
     ERROR: 'エラーが発生しました。しばらくしてから再度お試しください。',
     SESSION_ERROR: 'セッションが切れました。再ログインしてください。',
     GUESTLOGIN_ERROR: '無効なURLです',

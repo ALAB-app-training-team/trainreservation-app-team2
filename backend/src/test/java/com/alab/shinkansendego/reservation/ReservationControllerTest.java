@@ -2,6 +2,7 @@ package com.alab.shinkansendego.reservation;
 
 import com.alab.shinkansendego.SecurityConfig;
 import com.alab.shinkansendego.account.AccountSessionDto;
+import com.alab.shinkansendego.email.EmailService;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.SerializationFeature;
 import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
@@ -52,15 +53,16 @@ public class ReservationControllerTest {
     private MockMvc mockMvc;
     @MockitoBean
     private ReservationService service;
+    @MockitoBean
+    private EmailService emailService;
 
     private static @NonNull ReservationResponseDto getExpectReservationResponseDto(UUID reservationId) {
         ReservedSeatDto seat1 = new ReservedSeatDto(UUID.fromString("60a1ab63-a41f-430d-a2d1-10a76368d0f5"), "指定席", 1
-            , 1, "A", UUID.fromString("60a1ab63-a41f-430d-a2d1-10a76368d0f5"), 5000, "一般太郎");
+            , 1, "A", UUID.fromString("60a1ab63-a41f-430d-a2d1-10a76368d0f5"), 5000, "一般太郎", "test1-common@test.com");
         ReservedSeatDto seat2 = new ReservedSeatDto(UUID.fromString("3de8909e-32de-478e-bd9b-739f3fe6d6c3"), "グリーン車",
-            9, 1, "A", UUID.fromString("3de8909e-32de-478e-bd9b-739f3fe6d6c3"), 10000, "一般次郎");
+            9, 1, "A", UUID.fromString("3de8909e-32de-478e-bd9b-739f3fe6d6c3"), 10000, "一般次郎", "test2-common@test.com");
         ReservedSeatDto seat3 = new ReservedSeatDto(UUID.fromString("e192e5f1-318e-4d10-b76d-2f2bf15e8b70"), "グランクラス",
-            10, 1, "A", UUID.fromString("e192e5f1-318e-4d10-b76d" +
-            "-2f2bf15e8b70"), 15000, "一般三郎");
+            10, 1, "A", UUID.fromString("e192e5f1-318e-4d10-b76d-2f2bf15e8b70"), 15000, "一般三郎", "test3-common@test.com");
         List<ReservedSeatDto> reservedSeatList = Arrays.asList(seat1, seat2, seat3);
         return new ReservationResponseDto(
             reservationId,

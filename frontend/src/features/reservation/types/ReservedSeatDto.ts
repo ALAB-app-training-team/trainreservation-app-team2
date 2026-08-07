@@ -7,4 +7,5 @@ export type ReservedSeatDto = {
     codeToken: string;
     seatFare: number;
     name: string;
+    mail: string;
 };
