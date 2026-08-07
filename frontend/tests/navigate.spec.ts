@@ -85,6 +85,7 @@ test('navigate-ログイン全機能', async ({ page, login, logout }) => {
     await expect(page).toHaveURL('/selectSeat');
     await expect(page.getByText('座席が選択されていません')).not.toBeVisible();
     await selectSeatPage.selectSeat();
+    await selectSeatPage.emptySeat.nth(1).click();
     await selectSeatPage.clickUpdateButton();
     await selectSeatPage.clickUpdateConfirmButton();
     await expect(page).toHaveURL('/reservedTicket');
