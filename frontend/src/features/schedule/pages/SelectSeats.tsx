@@ -80,6 +80,10 @@ export function SelectSeats() {
     const isLoggedIn = !!localStorage.getItem('name');
 
     useEffect(() => {
+        window.scrollTo(0, 0);
+    }, [location.pathname]);
+
+    useEffect(() => {
         const nv = performance.getEntriesByType(
             'navigation',
         )[0] as PerformanceNavigationTiming;
@@ -243,6 +247,23 @@ export function SelectSeats() {
         }
     };
 
+    const reservedKeys = (reservedSeats ?? [])
+        .map(
+            (seat) =>
+                `${seat.trainCarNumber}-${seat.seatNumber}-${seat.seatColumn}`,
+        )
+        .sort();
+    const selectedKeys = selectedSeats
+        .map(
+            (seat) =>
+                `${seat.trainCarNumber}-${seat.seatNumber}-${seat.seatColumn}`,
+        )
+        .sort();
+    const isSameSeats =
+        reservedSeats &&
+        reservedKeys.length === selectedKeys.length &&
+        reservedKeys.every((key, index) => key === selectedKeys[index]);
+
     return (
         <>
             <div className="flex items-center justify-start p-4 pb-0">
@@ -351,11 +372,11 @@ export function SelectSeats() {
                                     type="submit"
                                     className="bg-primary w-full rounded-lg p-2 text-white"
                                     disabled={
-                                        reservedSeats
-                                            ? false
-                                            : selectedSeats.length === 0 ||
-                                              isInvalid ||
-                                              isSubmitting
+                                        (reservedSeats
+                                            ? isSameSeats
+                                            : isInvalid) ||
+                                        selectedSeats.length === 0 ||
+                                        isSubmitting
                                     }
                                 >
                                     <div className="flex items-center justify-center gap-4">
