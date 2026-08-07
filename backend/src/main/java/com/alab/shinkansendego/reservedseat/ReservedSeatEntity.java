@@ -1,5 +1,6 @@
 package com.alab.shinkansendego.reservedseat;
 
+import com.alab.shinkansendego.reservedseatsection.ReservedSeatSectionEntity;
 import com.alab.shinkansendego.seat.SeatEntity;
 import com.alab.shinkansendego.traincar.TrainCarEntity;
 import jakarta.persistence.Column;
@@ -7,11 +8,14 @@ import jakarta.persistence.Entity;
 import jakarta.persistence.FetchType;
 import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
+import jakarta.persistence.JoinColumns;
 import jakarta.persistence.ManyToOne;
+import jakarta.persistence.OneToMany;
 import jakarta.persistence.Table;
 import lombok.Data;
 import lombok.ToString;
 
+import java.util.Set;
 import java.util.UUID;
 
 @Data
@@ -45,4 +49,11 @@ public class ReservedSeatEntity {
     @ToString.Exclude
     @JoinColumn(name = "seat_cd", referencedColumnName = "seat_cd", insertable = false, updatable = false)
     private SeatEntity seat;
+    @OneToMany(fetch = FetchType.LAZY)
+    @JoinColumns({
+        @JoinColumn(name = "reservation_id", referencedColumnName = "reservation_id", insertable = false, updatable = false),
+        @JoinColumn(name = "train_car_cd", referencedColumnName = "train_car_cd", insertable = false, updatable = false),
+        @JoinColumn(name = "seat_cd", referencedColumnName = "seat_cd", insertable = false, updatable = false),
+    })
+    private Set<ReservedSeatSectionEntity> reservedSeatSection;
 }
