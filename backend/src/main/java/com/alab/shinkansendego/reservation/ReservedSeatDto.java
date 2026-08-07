@@ -18,4 +18,5 @@ public class ReservedSeatDto {
     private UUID codeToken;
     private Integer seatFare;
     private String name;
+    private String mail;
 }

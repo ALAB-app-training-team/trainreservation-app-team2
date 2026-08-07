@@ -13,7 +13,7 @@ public class CorsConfig implements WebMvcConfigurer {
             // アクセスを許可するオリジン
             .allowedOrigins("http://localhost:5173", "https://d220o4bv1ls3lr.cloudfront.net/")
             // アクセスを許可するHTTPメソッド
-            .allowedMethods("GET", "POST", "PUT", "DELETE")
+            .allowedMethods("GET", "POST", "PUT", "PATCH", "DELETE")
             // アクセスを許可するHTTPヘッダ
             .allowedHeaders("*")
             // Javascriptからの参照を許可するヘッダ

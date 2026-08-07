@@ -4,6 +4,7 @@ const LOGIN = `${BASE_URL}/login`;
 const LOGOUT = `${BASE_URL}/logout`;
 const PAYMENT = `${BASE_URL}/payments`;
 const RESERVATION = `${BASE_URL}/reservations`;
+const RESERVEDSEAT = `${BASE_URL}/reservedseats`;
 const SCHEDULES = `${BASE_URL}/schedules`;
 const STATIONS = `${BASE_URL}/stations`;
 const STOPSTATIONS = `${BASE_URL}/stopstations`;
@@ -16,6 +17,7 @@ export const ENDPOINTS = {
     RESERVATION: (id?: string) => (id ? `${RESERVATION}/${id}` : RESERVATION),
     GUESTRESERVATION: (id?: string) =>
         id ? `${RESERVATION}/guest/${id}` : `${RESERVATION}/guest`,
+    RESERVEDSEAT: (id?: string) => `${RESERVEDSEAT}/${id}`,
     SCHEDULES_SEARCH: () => SCHEDULES,
     SEATS_SELECT: () => `${TRAINCARS}/seats`,
     STATIONS: () => STATIONS,
