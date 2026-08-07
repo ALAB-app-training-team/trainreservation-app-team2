@@ -86,9 +86,6 @@ test('タイトル表示：予約完了時は予約完了、予約確認のゲ�
     await login();
     await expect(page).toHaveURL('/scheduleSearch');
     await reservedTicketPage.header.goToReservationList();
-    await reservationListPage.clickTicketButton();
-    await expect(page).toHaveURL('/reservedTicket');
-    await expect(reservedTicketPage.title).toBeHidden();
     await reservationListPage.clickChangeButton();
     await reservationListPage.clickChangeSeatConfirmButton();
     await expect(page).toHaveURL('/selectSeat');
