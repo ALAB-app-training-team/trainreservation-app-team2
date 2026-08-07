@@ -5,16 +5,19 @@ import { FiUser } from 'react-icons/fi';
 import { GuestLoginInput } from '@/features/reservation/components/GuestLoginInput';
 import { useReservationListRequestDto } from '@/features/reservation/hooks/useReservationListRequestDto';
 import type { ReservedSeatDto } from '@/features/reservation/types/ReservedSeatDto';
+import type { ReservedSeatUpdateDto } from '@/features/reservation/types/ReservedSeatUpdateDto';
 
 type CompanionFormProps = {
     index: number;
-    reservedSeats: ReservedSeatDto[];
+    reservedSeat: ReservedSeatDto;
+    onFormChange: (updated: ReservedSeatUpdateDto) => void;
     setIsInvalid: React.Dispatch<React.SetStateAction<boolean>>;
 };
 
 export function CompanionForm({
     index,
-    reservedSeats,
+    reservedSeat,
+    onFormChange,
     setIsInvalid,
 }: CompanionFormProps) {
     const {
@@ -26,7 +29,7 @@ export function CompanionForm({
     } = useReservationListRequestDto();
     const isInitialized = useRef(false);
     const [canUpdate, setCanUpdate] = useState<boolean>(
-        !!(reservedSeats[index]?.name && reservedSeats[index]?.mail),
+        !!(reservedSeat.name && reservedSeat.mail),
     );
 
     useEffect(() => {
@@ -34,25 +37,25 @@ export function CompanionForm({
             handleChange({
                 target: {
                     name: 'reserverName',
-                    value: reservedSeats[index]?.name ?? '',
+                    value: reservedSeat.name ?? '',
                 },
             } as React.ChangeEvent<HTMLInputElement>);
             handleChange({
                 target: {
                     name: 'reserverMail',
-                    value: reservedSeats[index]?.mail ?? '',
+                    value: reservedSeat.mail ?? '',
                 },
             } as React.ChangeEvent<HTMLInputElement>);
             isInitialized.current = true;
             return;
         }
 
-        reservedSeats[index] = {
-            ...reservedSeats[index],
-            name: guestLoginForm.reserverName,
-            mail: guestLoginForm.reserverMail,
-        };
-    }, [guestLoginForm]);
+        onFormChange({
+            id: reservedSeat.id,
+            name: canUpdate ? guestLoginForm.reserverName : '',
+            mail: canUpdate ? guestLoginForm.reserverMail : '',
+        });
+    }, [guestLoginForm, canUpdate]);
 
     useEffect(() => {
         if (!canUpdate) {
@@ -84,10 +87,10 @@ export function CompanionForm({
             <div className="border-primary-light flex w-full flex-col items-start gap-2 rounded-xl border-2 p-4">
                 <div className="flex w-full items-center justify-between">
                     <h2 className="flex gap-2">
-                        <div>{reservedSeats[index].trainCarNumber}号車</div>
+                        <div>{reservedSeat.trainCarNumber}号車</div>
                         <div>
-                            {reservedSeats[index].seatNumber}
-                            {reservedSeats[index].seatColumn}
+                            {reservedSeat.seatNumber}
+                            {reservedSeat.seatColumn}
                         </div>
                     </h2>
                     <div className="flex items-center gap-2">

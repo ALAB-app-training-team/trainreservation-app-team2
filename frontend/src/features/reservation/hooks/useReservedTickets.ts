@@ -1,12 +1,19 @@
-import { useSuspenseQuery } from '@tanstack/react-query';
+import {
+    useMutation,
+    useQueryClient,
+    useSuspenseQuery,
+} from '@tanstack/react-query';
 
 import apiClient from '@/api/apiClient';
 import { ENDPOINTS } from '@/api/routes';
 import { getGuestLoginInfo } from '@/features/reservation/helpers/getGuestLoginInfo';
 import type { ReservationListRequestDto } from '@/features/reservation/types/ReservationListRequestDto';
 import type { ReservationResponseDto } from '@/features/reservation/types/ReservationResponseDto';
+import type { ReservedSeatUpdateDto } from '@/features/reservation/types/ReservedSeatUpdateDto';
 
 export function useReservedTickets(reservationId: string) {
+    const queryClient = useQueryClient();
+
     const getGuestReservedTickets = async (
         reservationId: string,
         guestLoginInfo: ReservationListRequestDto,
@@ -48,6 +55,24 @@ export function useReservedTickets(reservationId: string) {
         refetchOnMount: true,
     });
 
+    const updateCompanionsMutation = useMutation({
+        mutationFn: async (formValues: ReservedSeatUpdateDto[]) => {
+            await apiClient.patch(
+                ENDPOINTS.RESERVEDSEAT(reservedTickets.reservationId),
+                formValues,
+            );
+        },
+        onSuccess: () => {
+            queryClient.invalidateQueries({
+                queryKey: [
+                    'reservationTickets',
+                    reservationId,
+                    guestLoginInfo.reserverMail,
+                ],
+            });
+        },
+    });
+
     const getReservationTicket = async (
         reservationId: string,
         guestLoginInfo: ReservationListRequestDto,
@@ -67,5 +92,10 @@ export function useReservedTickets(reservationId: string) {
     };
 
     console.log('reservedTickets', reservedTickets);
-    return { reservedTickets, getReservationTicket };
+    return {
+        reservedTickets,
+        updateCompanions: updateCompanionsMutation.mutateAsync,
+        isUpdating: updateCompanionsMutation.isPending,
+        getReservationTicket,
+    };
 }

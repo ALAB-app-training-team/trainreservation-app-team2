@@ -1,12 +1,15 @@
+import { useState } from 'react';
+
 import { CompanionForm } from '@/features/reservation/components/CompanionForm';
 import type { ReservedSeatDto } from '@/features/reservation/types/ReservedSeatDto';
+import type { ReservedSeatUpdateDto } from '@/features/reservation/types/ReservedSeatUpdateDto';
 
 type CompanionModalProps = {
     isInvalid: boolean;
     setIsInvalid: React.Dispatch<React.SetStateAction<boolean>>;
     isSubmitting: boolean;
     reservedSeats: ReservedSeatDto[];
-    handleSubmit: () => void;
+    handleSubmit: (formValues: ReservedSeatUpdateDto[]) => void;
 };
 
 export function CompanionModal({
@@ -16,6 +19,24 @@ export function CompanionModal({
     reservedSeats,
     handleSubmit,
 }: CompanionModalProps) {
+    const [formValues, setFormValues] = useState<ReservedSeatUpdateDto[]>(() =>
+        reservedSeats.map((seat) => ({
+            id: seat.id,
+            name: seat.name ?? '',
+            mail: seat.mail ?? '',
+        })),
+    );
+
+    const handleFormChange = (
+        index: number,
+        updatedValue: ReservedSeatUpdateDto,
+    ) => {
+        setFormValues((prev) => {
+            const next = [...prev];
+            next[index] = updatedValue;
+            return next;
+        });
+    };
     return (
         <>
             <div className="flex flex-col gap-2 p-2">
@@ -27,13 +48,16 @@ export function CompanionModal({
                     <CompanionForm
                         key={reservedSeat.id}
                         index={index}
-                        reservedSeats={reservedSeats}
+                        reservedSeat={reservedSeat}
+                        onFormChange={(updated) =>
+                            handleFormChange(index, updated)
+                        }
                         setIsInvalid={setIsInvalid}
                     />
                 ))}
                 <button
                     type="button"
-                    onClick={handleSubmit}
+                    onClick={() => handleSubmit(formValues)}
                     disabled={isSubmitting || isInvalid}
                     className="bg-primary w-full rounded-lg p-2 text-white"
                 >

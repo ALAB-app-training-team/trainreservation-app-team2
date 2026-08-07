@@ -4,8 +4,6 @@ import { LuArrowLeft } from 'react-icons/lu';
 import { RiGroupLine } from 'react-icons/ri';
 import { useLocation, useNavigate } from 'react-router-dom';
 
-import apiClient from '@/api/apiClient';
-import { ENDPOINTS } from '@/api/routes';
 import { CompanionModal } from '@/features/reservation/components/CompanionModal';
 import { ReservedTicketInfo } from '@/features/reservation/components/ReservedTicketInfo/ReservedTicketInfo';
 import { ReservedTicketInfoSkeleton } from '@/features/reservation/components/ReservedTicketInfo/ReservedTicketInfoSkeleton';
@@ -23,7 +21,8 @@ export function ReservedTicket() {
     const location = useLocation();
     const navigate = useNavigate();
     const { reservationId, isBack, guestLogin } = location.state;
-    const { reservedTickets } = useReservedTickets(reservationId);
+    const { reservedTickets, updateCompanions, isUpdating } =
+        useReservedTickets(reservationId);
     const { isOpen, handleModalOpen, onRequestClose } = useModal();
     const shareUrl = `${window.location.origin}/reservationGuestLogin?reservationId=${reservationId}`;
     const queryClient = useQueryClient();
@@ -36,28 +35,17 @@ export function ReservedTicket() {
             removeGuestReservation(queryClient);
         }
     }, []);
-    const [isSubmitting, setIsSubmitting] = useState<boolean>(false);
     const [isInvalid, setIsInvalid] = useState<boolean>(true);
 
-    const handleUpdateCompanions = async () => {
-        if (isSubmitting) return;
-        if (isInvalid) return;
-        setIsSubmitting(true);
+    const handleUpdateCompanions = async (
+        formValues: ReservedSeatUpdateDto[],
+    ) => {
+        if (isUpdating || isInvalid) return;
         try {
-            const request: ReservedSeatUpdateDto[] =
-                reservedTickets.reservedSeats.map((seat) => ({
-                    id: seat.id,
-                    name: seat.name,
-                    mail: seat.mail,
-                }));
-            await apiClient.patch(
-                ENDPOINTS.RESERVEDSEAT(reservedTickets.reservationId),
-                request,
-            );
+            await updateCompanions(formValues);
         } catch {
             alert(ERROR_MESSAGE.COMPANION);
         } finally {
-            setIsSubmitting(false);
             onRequestClose();
         }
     };
@@ -111,7 +99,7 @@ export function ReservedTicket() {
                 <CompanionModal
                     isInvalid={isInvalid}
                     setIsInvalid={setIsInvalid}
-                    isSubmitting={isSubmitting}
+                    isSubmitting={isUpdating}
                     handleSubmit={handleUpdateCompanions}
                     reservedSeats={reservedTickets.reservedSeats}
                 />
