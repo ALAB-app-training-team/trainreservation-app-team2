@@ -91,7 +91,6 @@ export function useReservedTickets(reservationId: string) {
         return response;
     };
 
-    console.log('reservedTickets', reservedTickets);
     return {
         reservedTickets,
         updateCompanions: updateCompanionsMutation.mutateAsync,
