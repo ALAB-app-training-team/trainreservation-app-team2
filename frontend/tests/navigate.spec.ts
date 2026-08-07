@@ -53,12 +53,7 @@ test('navigate-ゲストログイン全機能', async ({ page, context }) => {
     ).toBeHidden();
 });
 
-test('navigate-ログイン全機能', async ({
-    page,
-    login,
-    logout,
-    createReservation,
-}) => {
+test('navigate-ログイン全機能', async ({ page, login, logout }) => {
     const scheduleSearchPage = new ScheduleSearchPage(page);
     const selectSeatPage = new SelectSeatPage(page);
     const reservedTicketPage = new ReservedTicketPage(page);
