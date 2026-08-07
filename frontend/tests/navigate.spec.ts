@@ -90,6 +90,8 @@ test('navigate-ログイン全機能', async ({ page, login, logout }) => {
     await selectSeatPage.clickUpdateConfirmButton();
     await expect(page).toHaveURL('/reservedTicket');
     // キャンセル
+    await reservedTicketPage.header.goToReservationList();
+    await expect(page).toHaveURL('/reservationList');
     await reservationListPage.clickRefundButton();
     await reservationListPage.clickModalCloseButton();
     await expect(page).toHaveURL('/reservationList');
