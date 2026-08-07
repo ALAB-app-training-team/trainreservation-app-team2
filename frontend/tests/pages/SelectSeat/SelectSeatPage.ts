@@ -104,7 +104,7 @@ export class SelectSeatPage {
     }
 
     async clickUpdateConfirmButton() {
-        await this.reserveConfirmButton.click();
+        await this.updateConfirmButton.click();
     }
 
     async inputResererInfo() {

@@ -61,6 +61,19 @@ test('タイトル表示：予約完了時は予約完了、予約確認のゲ�
     await expect(page).toHaveURL('/reservedTicket');
     await expect(reservedTicketPage.title).toBeHidden();
 
+    // 予約変更時に「予約変更完了」と表示されること
+    await reservedTicketPage.header.goToReservationList();
+    await reservationListPage.clickChangeButton();
+    await reservationListPage.clickChangeSeatConfirmButton();
+    await expect(page).toHaveURL('/selectSeat');
+    await expect(page.getByText('座席が選択されていません')).not.toBeVisible();
+    await selectSeatPage.selectSeat();
+    await selectSeatPage.emptySeat.nth(1).click();
+    await selectSeatPage.clickUpdateButton();
+    await selectSeatPage.clickUpdateConfirmButton();
+    await expect(page).toHaveURL('/reservedTicket');
+    await expect(reservedTicketPage.title).toHaveText('予約変更完了');
+
     // 予約確認のゲストログイン時は予約詳細と表示されること
     await logout();
     await expect(page).toHaveURL('/login');
@@ -81,19 +94,4 @@ test('タイトル表示：予約完了時は予約完了、予約確認のゲ�
     await reservationGuestLoginPage.clickGuestLoginButton();
     await expect(page).toHaveURL('/reservedTicket');
     await expect(reservedTicketPage.title).toHaveText('予約詳細');
-
-    // 予約変更時に「予約変更完了」と表示されること
-    await login();
-    await expect(page).toHaveURL('/scheduleSearch');
-    await reservedTicketPage.header.goToReservationList();
-    await reservationListPage.clickChangeButton();
-    await reservationListPage.clickChangeSeatConfirmButton();
-    await expect(page).toHaveURL('/selectSeat');
-    await expect(page.getByText('座席が選択されていません')).not.toBeVisible();
-    await selectSeatPage.selectSeat();
-    await selectSeatPage.emptySeat.nth(1).click();
-    await selectSeatPage.clickUpdateButton();
-    await selectSeatPage.clickUpdateConfirmButton();
-    await expect(page).toHaveURL('/reservedTicket');
-    await expect(reservedTicketPage.title).toHaveText('予約変更完了');
 });
