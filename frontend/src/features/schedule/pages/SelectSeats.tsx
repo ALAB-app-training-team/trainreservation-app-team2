@@ -231,6 +231,7 @@ export function SelectSeats() {
                     reservationId: reservationId,
                     isBack: false,
                     guestLogin: false,
+                    isUpdated: true,
                 },
             });
         } catch {
