@@ -14,8 +14,10 @@ export class SelectSeatPage {
     readonly cardExpiry: Locator;
     readonly secureCode: Locator;
     readonly reserveButton: Locator;
+    readonly updateButton: Locator;
     readonly cancelButton: Locator;
-    readonly confirmButton: Locator;
+    readonly reserveConfirmButton: Locator;
+    readonly updateConfirmButton: Locator;
     readonly loginButton: Locator;
     readonly reservationInfoError: Locator;
 
@@ -41,9 +43,13 @@ export class SelectSeatPage {
         });
         this.reservationInfoError = page.getByTestId('error').first();
         this.reserveButton = page.getByRole('button', { name: '予約する' });
+        this.updateButton = page.getByRole('button', { name: '変更する' });
         this.cancelButton = page.getByRole('button', { name: 'キャンセル' });
-        this.confirmButton = page.getByRole('button', {
+        this.reserveConfirmButton = page.getByRole('button', {
             name: '予約を確定する',
+        });
+        this.updateConfirmButton = page.getByRole('button', {
+            name: '変更を確定する',
         });
         this.loginButton = page.getByRole('button', {
             name: 'ログインして氏名・メールアドレスを省略',
@@ -85,12 +91,20 @@ export class SelectSeatPage {
         await this.reserveButton.click();
     }
 
+    async clickUpdateButton() {
+        await this.updateButton.click();
+    }
+
     async clickCancelButton() {
         await this.cancelButton.click();
     }
 
-    async clickConfirmButton() {
-        await this.confirmButton.click();
+    async clickReserveConfirmButton() {
+        await this.reserveConfirmButton.click();
+    }
+
+    async clickUpdateConfirmButton() {
+        await this.reserveConfirmButton.click();
     }
 
     async inputResererInfo() {
