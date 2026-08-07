@@ -15,6 +15,7 @@ import { TotalSeatsFare } from '@/features/schedule/components/TotalSeatsFare';
 import { TrainCars } from '@/features/schedule/components/TrainCars/TrainCars';
 import { TrainCarsSkeleton } from '@/features/schedule/components/TrainCars/TrainCarsSkeleton';
 import { TrainInfo } from '@/features/schedule/components/TrainInfo';
+import { UpdateConfirmModal } from '@/features/schedule/components/UpdateConfirmModal';
 import { useReserveUser } from '@/features/schedule/hooks/useReserveUser';
 import { useResolveReservedSeats } from '@/features/schedule/hooks/useResolveReservedSeats';
 import { useSelectedSeats } from '@/features/schedule/hooks/useSelectedSeats';
@@ -386,11 +387,11 @@ export function SelectSeats() {
                 isOpen={isUpdateConfirmModalOpen}
                 onRequestClose={onRequestUpdateConfirmModalClose}
             >
-                {/* <ReloginConfirmModal
-                    onReloginClick={}
-                    onRequestClose={}
+                <UpdateConfirmModal
+                    onClick={handleUpdate}
+                    onRequestClose={onRequestUpdateConfirmModalClose}
                     isSubmitting={isSubmitting}
-                /> */}
+                />
             </CustomModal>
         </>
     );
