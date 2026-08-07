@@ -45,10 +45,9 @@ export function ReservedTicket() {
         if (isUpdating || isInvalid) return;
         try {
             await updateCompanions(formValues);
+            onRequestClose();
         } catch {
             alert(ERROR_MESSAGE.COMPANION);
-        } finally {
-            onRequestClose();
         }
     };
 
