@@ -15,9 +15,11 @@ import type { ReservedSeatUpdateDto } from '@/features/reservation/types/Reserve
 import { CustomModal } from '@/shared/components/CustomModal';
 import { ERROR_MESSAGE } from '@/shared/constants/ErrorMessages';
 import { useModal } from '@/shared/hooks/useModal';
+import { useToastForRedirect } from '@/shared/hooks/useToastForRedirect';
 import { removeGuestReservation } from '@/shared/utils/RemoveGuestReservation';
 
 export function ReservedTicket() {
+    useToastForRedirect();
     const location = useLocation();
     const navigate = useNavigate();
     const { reservationId, isBack, guestLogin } = location.state;

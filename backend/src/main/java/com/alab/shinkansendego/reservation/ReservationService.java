@@ -20,6 +20,7 @@ import com.alab.shinkansendego.traincar.TrainCarRepository;
 import com.alab.shinkansendego.utils.StringUtils;
 import jakarta.persistence.EntityManager;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.security.authentication.BadCredentialsException;
@@ -52,6 +53,7 @@ public class ReservationService {
     private final TrainCarRepository trainCarRepository;
     private final SeatRepository seatRepository;
     private final AccountRepository accountRepository;
+    private final ApplicationEventPublisher eventPublisher;
 
     @Autowired
     public ReservationService(
@@ -64,7 +66,8 @@ public class ReservationService {
         SeatRepository seatRepository,
         AccountRepository accountRepository,
         RestClient.Builder restClientBuilder,
-        EntityManager entityManager
+        EntityManager entityManager,
+        ApplicationEventPublisher eventPublisher
     ) {
         this.reservationRepository = reservationRepository;
         this.reservedSeatRepository = reservedSeatRepository;
@@ -76,6 +79,7 @@ public class ReservationService {
         this.accountRepository = accountRepository;
         this.restClient = restClientBuilder.build();
         this.entityManager = entityManager;
+        this.eventPublisher = eventPublisher;
     }
 
     /**
@@ -314,6 +318,19 @@ public class ReservationService {
 
         reservationResult.setPaymentTrackingId(paymentTrackingId);
         reservationRepository.save(reservationResult);
+
+        DepartureArrivalTimeEntity departureArrivalTimeOfStart = departureArrivalTimeRepository
+            .findByScheduleCdAndSectionCdIn(reserveRequestDto.getScheduleCd(), List.of(sectionCdList.get(0)));
+
+        DepartureArrivalTimeEntity departureArrivalTimeOfGoal = departureArrivalTimeRepository
+            .findByScheduleCdAndSectionCdIn(reserveRequestDto.getScheduleCd(), List.of(sectionCdList.get(sectionCdList.size() - 1)));
+
+        eventPublisher.publishEvent(new ReservationCreatedEvent(
+            reservationId,
+            reserveRequestDto,
+            departureArrivalTimeOfStart.getDepartureTime(),
+            departureArrivalTimeOfGoal.getArrivalTime()
+        ));
 
         return reservationId;
     }
