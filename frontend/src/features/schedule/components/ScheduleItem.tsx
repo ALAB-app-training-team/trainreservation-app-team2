@@ -77,10 +77,13 @@ export function ScheduleItem({
             state: {
                 scheduleInfoDto,
                 searchRequestDto,
-                reservationId,
-                preChangeScheduleCd,
-                preChangeReservedSeats: reservedSeats,
-                reservedSeats: isScheduleCdUnchanged ? reservedSeats : [],
+                ...(reservationId && { reservationId }),
+                ...(preChangeScheduleCd && { preChangeScheduleCd }),
+                ...(reservedSeats &&
+                    reservedSeats.length > 0 && {
+                        preChangeReservedSeats: reservedSeats,
+                    }),
+                ...(isScheduleCdUnchanged && { reservedSeats }),
             },
         });
         window.scrollTo(0, 0);

@@ -276,9 +276,13 @@ export function SelectSeats() {
                             navigate('/scheduleSearch', {
                                 state: {
                                     searchRequestDto,
-                                    reservationId,
-                                    reservedSeats: preChangeReservedSeats,
-                                    preChangeScheduleCd,
+                                    ...(reservationId && { reservationId }),
+                                    ...(preChangeReservedSeats && {
+                                        reservedSeats: preChangeReservedSeats,
+                                    }),
+                                    ...(preChangeScheduleCd && {
+                                        preChangeScheduleCd,
+                                    }),
                                 },
                             });
                         }}
@@ -371,18 +375,19 @@ export function SelectSeats() {
                                 <TotalSeatsFare
                                     selectedSeats={selectedSeats}
                                     prevFare={
-                                        reservedSeats &&
-                                        reservedSeats?.length > 0
+                                        reservedSeats
                                             ? reservedSeats?.reduce(
                                                   (sum, seat) =>
                                                       sum + seat.seatFare,
                                                   0,
                                               )
-                                            : preChangeReservedSeats?.reduce(
-                                                  (sum, seat) =>
-                                                      sum + seat.seatFare,
-                                                  0,
-                                              )
+                                            : preChangeReservedSeats
+                                              ? preChangeReservedSeats?.reduce(
+                                                    (sum, seat) =>
+                                                        sum + seat.seatFare,
+                                                    0,
+                                                )
+                                              : undefined
                                     }
                                 />
                                 <button

@@ -8,7 +8,7 @@ import { ScheduleSearchForm } from '@/features/schedule/components/ScheduleSearc
 import { useSearchRequestDto } from '@/features/schedule/hooks/useSearchRequestDto';
 import { useStations } from '@/features/schedule/hooks/useStations';
 import { useStopStations } from '@/features/schedule/hooks/useStopStations';
-import type { ScheduleSearchLocationState } from '@/features/schedule/types/SchduleSearchLocationState';
+import type { ScheduleSearchLocationState } from '@/features/schedule/types/ScheduleSearchLocationState';
 import { ERROR_MESSAGE } from '@/shared/constants/ErrorMessages';
 
 export function ScheduleSearchBody() {
