@@ -150,7 +150,7 @@ public class ReservationServiceTest {
     }
 
     /**
-     * 予約一覧・人数座席変更に関するテストケースのインスタンスを作成するためのメソッド
+     * 予約一覧・日時経路変更・人数座席変更に関するテストケースのインスタンスを作成するためのメソッド
      *
      * @return ReservedSeatEntity
      */
@@ -206,7 +206,7 @@ public class ReservationServiceTest {
     }
 
     /**
-     * 予約一覧・人数座席変更に関するテストケースのインスタンスを作成するためのメソッド
+     * 予約一覧・日時経路変更・人数座席変更に関するテストケースのインスタンスを作成するためのメソッド
      *
      * @return ReservationEntity
      */
@@ -887,6 +887,92 @@ public class ReservationServiceTest {
 
         assertThrows(RuntimeException.class, () -> service.insertReservation(request, null));
         this.mockRestServiceServer.verify();
+    }
+
+    @Test
+    @DisplayName("ログイン状態で日付・経路を変更できる")
+    void putReservation_withReservationIdAndLoginAndValidReserveRequestDto_returnPutReservationId() {
+        ReserveRequestDto request = new ReserveRequestDto("THK02", LocalDate.now(), "THK01", "THK02", "", "", "", List.of(new ReserveRequestDto.SelectedSeatDto("E5SER01", "CAR01", "SEAT01001", 5000), new ReserveRequestDto.SelectedSeatDto("E5SER01", "CAR01", "SEAT01010", 5000)));
+        Optional<ReservationEntity> reservation = Optional.of(buildReservation(reservationId1));
+        reservation.get().setAccountId(accountId);
+        DepartureArrivalTimeEntity departureArrivalTime = new DepartureArrivalTimeEntity();
+        departureArrivalTime.setTimeCd("Test1");
+        departureArrivalTime.setScheduleCd(request.getScheduleCd());
+        departureArrivalTime.setDepartureTime(LocalTime.of(6, 4));
+        departureArrivalTime.setArrivalTime(LocalTime.of(6, 9));
+        departureArrivalTime.setSectionCd("THK01");
+        SectionKmEntity sectionKm = new SectionKmEntity();
+        sectionKm.setSectionCd(departureArrivalTime.getSectionCd());
+        when(reservationRepo.findByIdAndIsDeleted(reservationId1, false)).thenReturn(reservation);
+        when(sectionKmRepo.findByStartStationCd(request.getDepartureStationCd())).thenReturn(List.of(sectionKm));
+        when(sectionKmRepo.findByGoalStationCd(request.getArrivalStationCd())).thenReturn(List.of(sectionKm));
+        when(departureArrivalTimeRepo.findByScheduleCdAndSectionCdIn(request.getScheduleCd(), List.of(departureArrivalTime.getSectionCd()))).thenReturn(departureArrivalTime);
+        when(departureArrivalTimeRepo.findByScheduleCdAndDepartureTimeGreaterThanEqualAndArrivalTimeLessThanEqual(request.getScheduleCd(), departureArrivalTime.getDepartureTime(), departureArrivalTime.getArrivalTime())).thenReturn(List.of(departureArrivalTime));
+        when(reservedSeatRepo.saveAll(any())).thenReturn(Stream.generate(ReservedSeatEntity::new).limit(2).collect(Collectors.toList()));
+        when(trainCarRepo.findById(any())).thenReturn(Optional.of(new TrainCarEntity()));
+        when(seatRepo.findById(any())).thenReturn(Optional.of(new SeatEntity()));
+        when(reservedSeatSectionRepo.findByRideDateAndScheduleCdAndTrainCarCdInAndReservedSectionCdIn(any(), any(), any(), any())).thenReturn(Collections.emptyList());
+        when(reservedSeatSectionRepo.saveAll(any())).thenReturn(Stream.generate(ReservedSeatSectionEntity::new).limit((2)).collect(Collectors.toList()));
+
+        UUID result = service.putReservation(reservationId1, request, session);
+        assertNotNull(result);
+        verify(reservedSeatRepo).deleteAll(any());
+        verify(reservedSeatSectionRepo).deleteAll(any());
+        verify(reservedSeatRepo).saveAll(any());
+        verify(reservedSeatSectionRepo).saveAll(any());
+        verify(reservationRepo).save(any());
+    }
+
+    @Test
+    @DisplayName("変更後座席リストがNullの場合、IllegalArgumentExceptionが発生する")
+    void putReservation_withNullSelectedSeatDto_throwsIllegalArgumentException() {
+        ReserveRequestDto request = new ReserveRequestDto("THK02", LocalDate.now(), "THK01", "THK02", "TestTaro", "test@main", "Test2", null);
+        Exception ex = assertThrows(IllegalArgumentException.class, () -> service.putReservation(reservationId1, request, session));
+        assertEquals("ChangedSeats is Null", ex.getMessage());
+    }
+
+    @Test
+    @DisplayName("変更後座席リストが空の場合、IllegalArgumentExceptionが発生する")
+    void putReservation_withEmptySelectedSeatDto_throwsIllegalArgumentException() {
+        ReserveRequestDto request = new ReserveRequestDto("THK02", LocalDate.now(), "THK01", "THK02", "TestTaro", "test@main", "Test2", List.of());
+        Exception ex = assertThrows(IllegalArgumentException.class, () -> service.putReservation(reservationId1, request, session));
+        assertEquals("ChangedSeats is Null", ex.getMessage());
+    }
+
+    @Test
+    @DisplayName("sessionがNullの場合、BadCredentialsExceptionが発生する")
+    void putReservation_withNullSession_throwsIllegalArgumentException() {
+        ReserveRequestDto request = new ReserveRequestDto("THK02", LocalDate.now(), "THK01", "THK02", "", "", "", List.of(new ReserveRequestDto.SelectedSeatDto("E5SER01", "CAR01", "SEAT01001", 5000), new ReserveRequestDto.SelectedSeatDto("E5SER01", "CAR01", "SEAT01010", 5000)));
+        Optional<ReservationEntity> reservation = Optional.of(buildReservation(reservationId1));
+        reservation.get().setAccountId(accountId);
+        when(reservationRepo.findByIdAndIsDeleted(reservationId1, false)).thenReturn(reservation);
+        Exception ex = assertThrows(BadCredentialsException.class, () -> service.putReservation(reservationId1, request, null));
+        assertEquals("Reservation doesn't match", ex.getMessage());
+    }
+
+    @Test
+    @DisplayName("sessionで渡されたアカウントIDと予約情報の持つアカウントIDが一致しない場合、BadCredentialsExceptionが発生する")
+    void putReservation_withNotExistAccountId_throwsIllegalArgumentException() {
+        ReserveRequestDto request = new ReserveRequestDto("THK02", LocalDate.now(), "THK01", "THK02", "", "", "", List.of(new ReserveRequestDto.SelectedSeatDto("E5SER01", "CAR01", "SEAT01001", 5000), new ReserveRequestDto.SelectedSeatDto("E5SER01", "CAR01", "SEAT01010", 5000)));
+        Optional<ReservationEntity> reservation = Optional.of(buildReservation(reservationId1));
+        reservation.get().setAccountId(accountId);
+        session.setId(noExistAccountId);
+        when(reservationRepo.findByIdAndIsDeleted(reservationId1, false)).thenReturn(reservation);
+        Exception ex = assertThrows(BadCredentialsException.class, () -> service.putReservation(reservationId1, request, session));
+        assertEquals("Reservation doesn't match", ex.getMessage());
+    }
+
+    @Test
+    @DisplayName("予約情報の持つ予約済座席リストが空の場合、IllegalArgumentExceptionが発生する")
+    void putReservation_withEmptyReservedSeat_throwsIllegalArgumentException() {
+        ReserveRequestDto request = new ReserveRequestDto("THK02", LocalDate.now(), "THK01", "THK02", "", "", "", List.of(new ReserveRequestDto.SelectedSeatDto("E5SER01", "CAR01", "SEAT01001", 5000), new ReserveRequestDto.SelectedSeatDto("E5SER01", "CAR01", "SEAT01010", 5000)));
+        Optional<ReservationEntity> reservation = Optional.of(buildReservation(reservationId1));
+        reservation.get().setAccountId(accountId);
+        reservation.get().setReservedSeat(Set.of());
+        session.setId(noReservationAccountId);
+        when(reservationRepo.findByIdAndIsDeleted(reservationId1, false)).thenReturn(reservation);
+        Exception ex = assertThrows(IllegalArgumentException.class, () -> service.putReservation(reservationId1, request, session));
+        assertEquals("Reserved Seats is Not found", ex.getMessage());
     }
 
     @Test
