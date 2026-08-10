@@ -454,7 +454,6 @@ public class ReservationService {
     @Transactional
     public UUID putReservation(UUID reservationId, ReserveRequestDto changedReservation, AccountSessionDto session) {
         Optional<ReservationEntity> reservation = putError(reservationId, changedReservation, session);
-        Set<ReservedSeatEntity> reservedSeats = reservation.get().getReservedSeat();
         reservation.get().setRideDate(changedReservation.getRideDate());
         reservation.get().setScheduleCd(changedReservation.getScheduleCd());
         reservation.get().setDepartureStationCd(changedReservation.getDepartureStationCd());
@@ -464,6 +463,7 @@ public class ReservationService {
         entityManager.flush();
         entityManager.clear();
 
+        Set<ReservedSeatEntity> reservedSeats = reservation.get().getReservedSeat();
         List<ReservedSeatSectionEntity> deleteSeatSections = reservedSeats.stream()
             .flatMap(seat -> seat.getReservedSeatSection().stream())
             .toList();
