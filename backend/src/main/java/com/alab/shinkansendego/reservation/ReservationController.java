@@ -66,9 +66,16 @@ public class ReservationController {
         return ResponseEntity.status(HttpStatus.CREATED).body(response);
     }
 
+    @PutMapping(value = "/{id}")
+    @PreAuthorize("isAuthenticated()")
+    public ResponseEntity<UUID> putReservation(@PathVariable("id") UUID reservationId, @Valid @RequestBody ReserveRequestDto request, @AuthenticationPrincipal AccountSessionDto session) {
+        UUID response = reservationService.putReservation(reservationId, request, session);
+        return ResponseEntity.status(HttpStatus.OK).body(response);
+    }
+
     @PutMapping(value = "/seat/{id}")
     @PreAuthorize("isAuthenticated()")
-    public ResponseEntity<UUID> patchReservedSeat(@PathVariable("id") UUID reservationId, @Valid @RequestBody ReserveRequestDto request, @AuthenticationPrincipal AccountSessionDto session) {
+    public ResponseEntity<UUID> putReservedSeat(@PathVariable("id") UUID reservationId, @Valid @RequestBody ReserveRequestDto request, @AuthenticationPrincipal AccountSessionDto session) {
         UUID response = reservationService.putReservedSeat(reservationId, request, session);
         return ResponseEntity.status(HttpStatus.OK).body(response);
     }

@@ -416,6 +416,92 @@ public class ReservationControllerTest {
 
     @Test
     @DisplayName("ログインした状態で人数・座席変更ができる")
+    void putReservation_withReservationIdAndValidReserveRequestDto_return200AndPutReservationId() throws Exception {
+        ReserveRequestDto request = new ReserveRequestDto(
+            "Test01",
+            LocalDate.now(),
+            "Test0",
+            "Test1",
+            "",
+            "",
+            "Test2",
+            List.of(
+                new ReserveRequestDto.SelectedSeatDto("E5SER01", "CAR01", "SEAT01001", 2800),
+                new ReserveRequestDto.SelectedSeatDto("E5SER01", "CAR01", "SEAT01002", 2800)
+            ));
+        UUID reservationId = UUID.randomUUID();
+
+        Mockito.when(service.putReservation(reservationId, request, session)).thenReturn(reservationId);
+
+        String url = baseUrl + "/" + reservationId;
+
+        mockMvc.perform(put(url)
+                .with(SecurityMockMvcRequestPostProcessors.authentication(auth))
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(objectMapper.writeValueAsString(request)))
+            .andExpect(status().isOk())
+            .andExpect(content().string("\"" + reservationId + "\""));
+    }
+
+    @Test
+    @DisplayName("リクエストのカラムがNullの場合、バリデーションエラー発生")
+    void putReservation_withNotValidReserveRequestDto_returnValidationError() throws Exception {
+        ReserveRequestDto request = new ReserveRequestDto(
+            null, LocalDate.now(), "Test0", "Test1", "TestTaro", "test@main", "Test2", List.of(
+            new ReserveRequestDto.SelectedSeatDto("E5SER01", "CAR01", "SEAT01001", 2800),
+            new ReserveRequestDto.SelectedSeatDto("E5SER01", "CAR01", "SEAT01002", 2800)
+        ));
+
+        UUID reservationId = UUID.randomUUID();
+        String url = baseUrl + "/" + reservationId;
+
+        mockMvc.perform(put(url)
+                .with(SecurityMockMvcRequestPostProcessors.authentication(auth))
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(objectMapper.writeValueAsString(request)))
+            .andExpect(status().isBadRequest())
+            .andExpect(content().string("ScheduleCd is Null"));
+    }
+
+    @Test
+    @DisplayName("リクエストDTO自体がNullの場合、バインドエラー発生")
+    void putReservation_withReserveRequestDtoIsNull_returnBindError() throws Exception {
+        UUID reservationId = UUID.randomUUID();
+        String url = baseUrl + "/" + reservationId;
+        //バインド順が毎回異なるためエラーメッセージの比較は行わない
+        mockMvc.perform(put(url)
+                .with(SecurityMockMvcRequestPostProcessors.authentication(auth))
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(objectMapper.writeValueAsString(new ReserveRequestDto())))
+            .andExpect(status().isBadRequest());
+    }
+
+    @Test
+    @DisplayName("未ログインの場合、401エラーが発生する")
+    void putReservation_withNoSession_return401StatusCode() throws Exception {
+        ReserveRequestDto request = new ReserveRequestDto(
+            "Test01",
+            LocalDate.now(),
+            "Test0",
+            "Test1",
+            "",
+            "",
+            "Test2",
+            List.of(
+                new ReserveRequestDto.SelectedSeatDto("E5SER01", "CAR01", "SEAT01001", 2800),
+                new ReserveRequestDto.SelectedSeatDto("E5SER01", "CAR01", "SEAT01002", 2800)
+            ));
+        UUID reservationId = UUID.randomUUID();
+        String url = baseUrl + "/" + reservationId;
+        mockMvc.perform(put(url)
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(objectMapper.writeValueAsString(request)))
+            .andExpect(status().isUnauthorized())
+            .andExpect(content().string("Unauthorized"));
+    }
+
+    @Test
+    @DisplayName("ログインした状態で人数・座席変更ができる")
     void putReservedSeat_withReservationIdAndValidReserveRequestDto_return200AndPutReservationId() throws Exception {
         ReserveRequestDto request = new ReserveRequestDto(
             "Test01",
