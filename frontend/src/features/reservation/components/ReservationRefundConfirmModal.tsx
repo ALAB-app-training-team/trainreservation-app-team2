@@ -7,17 +7,17 @@ type ReservationRefundConfirmModalProps = {
     onClick: (reeservationId: string) => void;
     onRequestClose: () => void;
     isSubmitting: boolean;
-    details: ReservationResponseDto;
+    detail: ReservationResponseDto;
 };
 
 export function ReservationRefundConfirmModal({
     onClick,
     onRequestClose,
     isSubmitting,
-    details,
+    detail,
 }: ReservationRefundConfirmModalProps) {
-    const countSeat: number = details.reservedSeats.length;
-    const seatFare: number = details.reservedSeats.reduce(
+    const countSeat: number = detail.reservedSeats.length;
+    const seatFare: number = detail.reservedSeats.reduce(
         (sum, seat) => sum + seat.seatFare,
         0,
     );
@@ -31,7 +31,7 @@ export function ReservationRefundConfirmModal({
                 />
                 <div>以下の予約を取り消しますか？</div>
 
-                <ReservationInfo details={details} id="reservationList" />
+                <ReservationInfo detail={detail} id="reservationList" />
                 <div className="flex w-full flex-col gap-2 rounded-lg bg-slate-50 p-3">
                     <div className="flex justify-between">
                         <span>チケット料金</span>
@@ -60,7 +60,7 @@ export function ReservationRefundConfirmModal({
                 <div className="flex w-full items-center justify-end gap-4">
                     <button
                         data-testid={'refund-confirm-button'}
-                        onClick={() => onClick(details.reservationId!)}
+                        onClick={() => onClick(detail.reservationId!)}
                         disabled={isSubmitting}
                         className="bg-primary rounded-lg p-2 text-white"
                     >

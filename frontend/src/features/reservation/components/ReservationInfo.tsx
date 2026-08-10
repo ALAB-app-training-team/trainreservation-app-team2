@@ -5,25 +5,25 @@ import { ReservedSeats } from '@/features/reservation/components/ReservedSeats';
 import type { ReservationResponseDto } from '@/features/reservation/types/ReservationResponseDto';
 
 type ReservationInfoProps = {
-    details: ReservationResponseDto;
+    detail: ReservationResponseDto;
     id: 'reservationDetail' | 'reservationList' | 'reservationChange';
 };
 
-export function ReservationInfo({ details, id }: ReservationInfoProps) {
+export function ReservationInfo({ detail, id }: ReservationInfoProps) {
     dayjs.extend(customParseFormat);
     return (
         <>
             <div>
                 <span className="text-xl font-bold">
-                    {dayjs(details.rideDate).format('YYYY年MM月DD日')}
+                    {dayjs(detail.rideDate).format('YYYY年MM月DD日')}
                     <br />
-                    {dayjs(details.departureTime, 'HH:mm:ss').format('HH:mm')}発
+                    {dayjs(detail.departureTime, 'HH:mm:ss').format('HH:mm')}発
                 </span>
             </div>
             <div className="text-2xl font-bold">
-                {details.departureStationName} → {details.arrivalStationName}
+                {detail.departureStationName} → {detail.arrivalStationName}
             </div>
-            <ReservedSeats id={id} title="" seats={details.reservedSeats} />
+            <ReservedSeats id={id} title="" seats={detail.reservedSeats} />
         </>
     );
 }
