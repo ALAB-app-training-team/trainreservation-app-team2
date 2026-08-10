@@ -454,13 +454,38 @@ public class ReservationService {
     @Transactional
     public UUID putReservation(UUID reservationId, ReserveRequestDto changedReservation, AccountSessionDto session) {
         Optional<ReservationEntity> reservation = putError(reservationId, changedReservation, session);
-        Set<ReservedSeatEntity> reservedSeats = reservation.get().getReservedSeat();
+        List<ReservedSeatEntity> reservedSeats = reservation.get().getReservedSeat().stream()
+            .map(seat -> {
+                ReservedSeatEntity copy = new ReservedSeatEntity();
+                copy.setId(seat.getId());
+                copy.setReservationId(seat.getReservationId());
+                copy.setTrainCarCd(seat.getTrainCarCd());
+                copy.setSeatCd(seat.getSeatCd());
+                copy.setCodeToken(seat.getCodeToken());
+                copy.setSeatFare(seat.getSeatFare());
+                copy.setIsDeleted(seat.getIsDeleted());
+                copy.setName(seat.getName());
+                copy.setMail(seat.getMail());
+                return copy;
+            }).toList();
 
-        List<ReservedSeatSectionEntity> deleteSeatSections = reservedSeats.stream()
+        List<ReservedSeatSectionEntity> deleteSeatSections = reservation.get().getReservedSeat().stream()
             .flatMap(seat -> seat.getReservedSeatSection().stream())
-            .toList();
-        reservedSeatRepository.deleteAll(reservedSeats);
+            .map(sec -> {
+                ReservedSeatSectionEntity copy = new ReservedSeatSectionEntity();
+                copy.setId(sec.getId());
+                copy.setReservationId(sec.getReservationId());
+                copy.setRideDate(sec.getRideDate());
+                copy.setScheduleCd(sec.getScheduleCd());
+                copy.setTrainCarCd(sec.getTrainCarCd());
+                copy.setSeatCd(sec.getSeatCd());
+                copy.setReservedSectionCd(sec.getReservedSectionCd());
+                copy.setTrainCarTypeCd(sec.getTrainCarTypeCd());
+                return copy;
+            }).toList();
+        reservation.get().getReservedSeat().clear();
         reservedSeatSectionRepository.deleteAll(deleteSeatSections);
+        reservedSeatRepository.deleteAll(reservedSeats);
 
         entityManager.flush();
         entityManager.clear();
