@@ -454,38 +454,21 @@ public class ReservationService {
     @Transactional
     public UUID putReservation(UUID reservationId, ReserveRequestDto changedReservation, AccountSessionDto session) {
         Optional<ReservationEntity> reservation = putError(reservationId, changedReservation, session);
-        List<ReservedSeatEntity> reservedSeats = reservation.get().getReservedSeat().stream()
-            .map(seat -> {
-                ReservedSeatEntity copy = new ReservedSeatEntity();
-                copy.setId(seat.getId());
-                copy.setReservationId(seat.getReservationId());
-                copy.setTrainCarCd(seat.getTrainCarCd());
-                copy.setSeatCd(seat.getSeatCd());
-                copy.setCodeToken(seat.getCodeToken());
-                copy.setSeatFare(seat.getSeatFare());
-                copy.setIsDeleted(seat.getIsDeleted());
-                copy.setName(seat.getName());
-                copy.setMail(seat.getMail());
-                return copy;
-            }).toList();
+        Set<ReservedSeatEntity> reservedSeats = reservation.get().getReservedSeat();
+        reservation.get().setRideDate(changedReservation.getRideDate());
+        reservation.get().setScheduleCd(changedReservation.getScheduleCd());
+        reservation.get().setDepartureStationCd(changedReservation.getDepartureStationCd());
+        reservation.get().setArrivalStationCd(changedReservation.getArrivalStationCd());
+        reservationRepository.save(reservation.get());
 
-        List<ReservedSeatSectionEntity> deleteSeatSections = reservation.get().getReservedSeat().stream()
+        entityManager.flush();
+        entityManager.clear();
+
+        List<ReservedSeatSectionEntity> deleteSeatSections = reservedSeats.stream()
             .flatMap(seat -> seat.getReservedSeatSection().stream())
-            .map(sec -> {
-                ReservedSeatSectionEntity copy = new ReservedSeatSectionEntity();
-                copy.setId(sec.getId());
-                copy.setReservationId(sec.getReservationId());
-                copy.setRideDate(sec.getRideDate());
-                copy.setScheduleCd(sec.getScheduleCd());
-                copy.setTrainCarCd(sec.getTrainCarCd());
-                copy.setSeatCd(sec.getSeatCd());
-                copy.setReservedSectionCd(sec.getReservedSectionCd());
-                copy.setTrainCarTypeCd(sec.getTrainCarTypeCd());
-                return copy;
-            }).toList();
-        reservation.get().setReservedSeat(null);
-        reservedSeatSectionRepository.deleteAll(deleteSeatSections);
+            .toList();
         reservedSeatRepository.deleteAll(reservedSeats);
+        reservedSeatSectionRepository.deleteAll(deleteSeatSections);
 
         entityManager.flush();
         entityManager.clear();
@@ -499,12 +482,6 @@ public class ReservationService {
             changedReservation.getSeats(), sectionCds,
             changedReservation.getRideDate(),
             changedReservation.getScheduleCd());
-
-        reservation.get().setRideDate(changedReservation.getRideDate());
-        reservation.get().setScheduleCd(changedReservation.getScheduleCd());
-        reservation.get().setDepartureStationCd(changedReservation.getDepartureStationCd());
-        reservation.get().setArrivalStationCd(changedReservation.getArrivalStationCd());
-        reservationRepository.save(reservation.get());
 
         return reservationId;
     }
