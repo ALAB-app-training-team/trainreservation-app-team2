@@ -6,10 +6,10 @@ import { CustomModalTitle } from '@/shared/components/CustomModalTitle';
 
 type ReservationRefundConfirmModalProps = {
     onChangeSeatClick: (reservation: ReservationResponseDto) => void;
-    onChangeTrainClick: () => void;
+    onChangeTrainClick: (reservation: ReservationResponseDto) => void;
     onRequestClose: () => void;
     isSubmitting: boolean;
-    details: ReservationResponseDto;
+    detail: ReservationResponseDto;
 };
 
 export function ReservationChangeConfirmModal({
@@ -17,7 +17,7 @@ export function ReservationChangeConfirmModal({
     onChangeTrainClick,
     onRequestClose,
     isSubmitting,
-    details,
+    detail,
 }: ReservationRefundConfirmModalProps) {
     return (
         <>
@@ -28,11 +28,11 @@ export function ReservationChangeConfirmModal({
                     isSubmitting={isSubmitting}
                 />
                 <div>変更する内容を選択してください</div>
-                <ReservationInfo details={details} id="reservationChange" />
+                <ReservationInfo details={detail} id="reservationChange" />
                 <div className="flex w-full items-center justify-center gap-4">
                     <button
                         data-testid={'change-seat-confirm-button'}
-                        onClick={() => onChangeSeatClick(details)}
+                        onClick={() => onChangeSeatClick(detail)}
                         disabled={isSubmitting}
                         className="bg-primary flex items-center rounded-lg p-2 text-white"
                     >
@@ -40,7 +40,7 @@ export function ReservationChangeConfirmModal({
                         人数・座席変更
                     </button>
                     <button
-                        onClick={() => onChangeTrainClick()}
+                        onClick={() => onChangeTrainClick(detail)}
                         disabled={isSubmitting}
                         className="bg-primary flex items-center rounded-lg p-2 text-white"
                     >

@@ -115,12 +115,17 @@ export function ReservationListBody() {
         onRequestClose();
     };
 
-    const handleChangeTrain = () => {
+    const handleChangeTrain = (details: ReservationResponseDto) => {
+        const searchRequestDto: SearchRequestDto = {
+            date: details.rideDate,
+            time: details.departureTime,
+            departureStationCd: details.departureStationCd,
+            arrivalStationCd: details.arrivalStationCd,
+        };
         navigate('/scheduleSearch', {
             state: {
-                scheduleInfoDto,
                 searchRequestDto,
-                reservedSeats: details.reservedSeats,
+                isBack: true,
             },
         });
     };
@@ -178,7 +183,7 @@ export function ReservationListBody() {
                             onChangeTrainClick={handleChangeTrain}
                             onRequestClose={onRequestClose}
                             isSubmitting={isSubmitting}
-                            details={selectedReservation}
+                            detail={selectedReservation}
                         />
                     ) : (
                         <ReservationRefundConfirmModal
