@@ -444,26 +444,58 @@ public class ReservationService {
     }
 
     /**
+     * 日時・経路変更メソッド
+     *
+     * @param reservationId      画面で選択した登録するべき予約情報
+     * @param changedReservation 画面で選択した変更するべき予約情報
+     * @param session            ログイン情報
+     * @return 登録した予約情報ID
+     */
+    @Transactional
+    public UUID putReservation(UUID reservationId, ReserveRequestDto changedReservation, AccountSessionDto session) {
+        Optional<ReservationEntity> reservation = putError(reservationId, changedReservation, session);
+        Set<ReservedSeatEntity> reservedSeats = reservation.get().getReservedSeat();
+
+        List<ReservedSeatSectionEntity> deleteSeatSections = reservedSeats.stream()
+            .flatMap(seat -> seat.getReservedSeatSection().stream())
+            .toList();
+        reservedSeatRepository.deleteAll(reservedSeats);
+        reservedSeatSectionRepository.deleteAll(deleteSeatSections);
+
+        entityManager.flush();
+        entityManager.clear();
+
+        List<String> sectionCds = getSectionCdList(changedReservation.getScheduleCd(),
+            changedReservation.getDepartureStationCd(),
+            changedReservation.getArrivalStationCd());
+
+        insertReservedSeatAndReservedSeatSection(
+            reservationId,
+            changedReservation.getSeats(), sectionCds,
+            changedReservation.getRideDate(),
+            changedReservation.getScheduleCd());
+
+        reservation.get().setRideDate(changedReservation.getRideDate());
+        reservation.get().setScheduleCd(changedReservation.getScheduleCd());
+        reservation.get().setDepartureStationCd(changedReservation.getDepartureStationCd());
+        reservation.get().setArrivalStationCd(changedReservation.getArrivalStationCd());
+        reservationRepository.save(reservation.get());
+
+        return reservationId;
+    }
+
+    /**
      * 人数・座席変更メソッド
      *
-     * @param reservationId 画面で選択した登録するべき予約情報
+     * @param reservationId      画面で選択した登録するべき予約情報
+     * @param changedReservation 画面で選択した変更するべき予約情報
+     * @param session            ログイン情報
      * @return 登録した予約情報ID
      */
     @Transactional
     public UUID putReservedSeat(UUID reservationId, ReserveRequestDto changedReservation, AccountSessionDto session) {
-        if (changedReservation.getSeats() == null || changedReservation.getSeats().isEmpty()) {
-            throw new IllegalArgumentException("ChangedSeats is Null");
-        }
-
-        Optional<ReservationEntity> reservation = reservationRepository.findByIdAndIsDeleted(reservationId, false);
-        if (session == null || !Objects.equals(reservation.get().getAccountId(), session.getId())) {
-            throw new BadCredentialsException("Reservation doesn't match");
-        }
-
+        Optional<ReservationEntity> reservation = putError(reservationId, changedReservation, session);
         Set<ReservedSeatEntity> reservedSeats = reservation.get().getReservedSeat();
-        if (reservedSeats.isEmpty()) {
-            throw new IllegalArgumentException("Reserved Seats is Not found");
-        }
 
         // 削除対象座席Entityを抽出
         List<ReservedSeatEntity> deleteSeats = reservedSeats.stream()
@@ -498,6 +530,32 @@ public class ReservationService {
         }
 
         return reservationId;
+    }
+
+    /**
+     * 変更エラー判定メソッド
+     *
+     * @param reservationId      画面で選択した登録するべき予約情報
+     * @param changedReservation 画面で選択した変更するべき予約情報
+     * @param session            ログイン情報
+     * @return 予約IDに紐づく予約情報
+     */
+    @Transactional
+    public Optional<ReservationEntity> putError(UUID reservationId, ReserveRequestDto changedReservation, AccountSessionDto session) {
+        if (changedReservation.getSeats() == null || changedReservation.getSeats().isEmpty()) {
+            throw new IllegalArgumentException("ChangedSeats is Null");
+        }
+
+        Optional<ReservationEntity> reservation = reservationRepository.findByIdAndIsDeleted(reservationId, false);
+        if (session == null || !Objects.equals(reservation.get().getAccountId(), session.getId())) {
+            throw new BadCredentialsException("Reservation doesn't match");
+        }
+
+        if (reservation.get().getReservedSeat().isEmpty()) {
+            throw new IllegalArgumentException("Reserved Seats is Not found");
+        }
+
+        return reservation;
     }
 
     /**
