@@ -18,23 +18,23 @@ export function TotalSeatsFare({
 
     return (
         <div className="flex flex-col gap-2">
-            <div className="flex items-center gap-2 text-sm">
-                <div>座席数合計：</div>
-                <div className="ml-auto">{`${selectedSeats.length}席`}</div>
+            <div className="flex justify-between text-sm">
+                <span>座席数合計：</span>
+                <span>{`${selectedSeats.length}席`}</span>
             </div>
             <div className="flex flex-wrap items-center gap-2">
-                <h1 className="!mt-0 !mb-0 !text-lg">お支払い合計：</h1>
-                <div className="text-primary ml-auto text-xl font-bold">
+                <h2 className="my-0!">お支払い合計：</h2>
+                <span className="text-primary ml-auto text-xl font-bold">
                     {!prevFare && `￥${totalFare.toLocaleString()}`}
-                </div>
+                </span>
             </div>
             {prevFare && (
                 <div>
-                    <div className="flex justify-between">
+                    <div className="flex justify-between text-sm">
                         <span>変更前</span>
                         <span>￥{prevFare.toLocaleString()}</span>
                     </div>
-                    <div className="flex justify-between">
+                    <div className="flex justify-between text-sm">
                         <span>変更後</span>
                         <span>￥{totalFare.toLocaleString()}</span>
                     </div>
