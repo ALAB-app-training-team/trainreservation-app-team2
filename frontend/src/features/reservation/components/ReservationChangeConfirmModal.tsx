@@ -1,4 +1,4 @@
-import { CiUser } from 'react-icons/ci';
+import { CiCalendarDate, CiUser } from 'react-icons/ci';
 
 import { ReservationInfo } from '@/features/reservation/components/ReservationInfo';
 import type { ReservationResponseDto } from '@/features/reservation/types/ReservationResponseDto';
@@ -6,6 +6,7 @@ import { CustomModalTitle } from '@/shared/components/CustomModalTitle';
 
 type ReservationRefundConfirmModalProps = {
     onChangeSeatClick: (reservation: ReservationResponseDto) => void;
+    onChangeTrainClick: () => void;
     onRequestClose: () => void;
     isSubmitting: boolean;
     details: ReservationResponseDto;
@@ -13,6 +14,7 @@ type ReservationRefundConfirmModalProps = {
 
 export function ReservationChangeConfirmModal({
     onChangeSeatClick,
+    onChangeTrainClick,
     onRequestClose,
     isSubmitting,
     details,
@@ -37,15 +39,14 @@ export function ReservationChangeConfirmModal({
                         <CiUser />
                         人数・座席変更
                     </button>
-                    {/* TODO:日時・経路変更実装時コメント外す
-                     <button
-                        onClick={() => }
+                    <button
+                        onClick={() => onChangeTrainClick()}
                         disabled={isSubmitting}
                         className="bg-primary flex items-center rounded-lg p-2 text-white"
                     >
                         <CiCalendarDate />
                         日時・経路変更
-                    </button> */}
+                    </button>
                 </div>
             </div>
         </>

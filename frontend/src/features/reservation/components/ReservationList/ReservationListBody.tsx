@@ -114,6 +114,16 @@ export function ReservationListBody() {
         onRequestClose();
     };
 
+    const handleChangeTrain = () => {
+        navigate('/scheduleSearch', {
+            state: {
+                scheduleInfoDto,
+                searchRequestDto,
+                reservedSeats: details.reservedSeats,
+            },
+        });
+    };
+
     return (
         <>
             <div className="mx-auto flex max-w-4xl flex-col gap-8 p-4">
@@ -164,6 +174,7 @@ export function ReservationListBody() {
                     (isChange ? (
                         <ReservationChangeConfirmModal
                             onChangeSeatClick={handleChangeSeat}
+                            onChangeTrainClick={handleChangeTrain}
                             onRequestClose={onRequestClose}
                             isSubmitting={isSubmitting}
                             details={selectedReservation}
