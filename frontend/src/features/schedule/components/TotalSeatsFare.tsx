@@ -25,11 +25,25 @@ export function TotalSeatsFare({
             <div className="flex flex-wrap items-center gap-2">
                 <h1 className="!mt-0 !mb-0 !text-lg">お支払い合計：</h1>
                 <div className="text-primary ml-auto text-xl font-bold">
-                    {prevFare
-                        ? `￥${totalFare.toLocaleString()} - ￥${prevFare?.toLocaleString()} = ￥${(totalFare - prevFare).toLocaleString()}`
-                        : `￥${totalFare.toLocaleString()}`}
+                    {!prevFare && `￥${totalFare.toLocaleString()}`}
                 </div>
             </div>
+            {prevFare && (
+                <div>
+                    <div className="flex justify-between">
+                        <span>変更前</span>
+                        <span>￥{prevFare.toLocaleString()}</span>
+                    </div>
+                    <div className="flex justify-between">
+                        <span>変更後</span>
+                        <span>￥{totalFare.toLocaleString()}</span>
+                    </div>
+                    <div className="text-primary flex justify-between text-xl font-bold">
+                        <span>差額</span>
+                        <span>￥{(totalFare - prevFare).toLocaleString()}</span>
+                    </div>
+                </div>
+            )}
         </div>
     );
 }
