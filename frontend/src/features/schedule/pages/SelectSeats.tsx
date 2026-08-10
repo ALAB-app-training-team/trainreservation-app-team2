@@ -15,6 +15,7 @@ import { TotalSeatsFare } from '@/features/schedule/components/TotalSeatsFare';
 import { TrainCars } from '@/features/schedule/components/TrainCars/TrainCars';
 import { TrainCarsSkeleton } from '@/features/schedule/components/TrainCars/TrainCarsSkeleton';
 import { TrainInfo } from '@/features/schedule/components/TrainInfo';
+import { UpdateConfirmModal } from '@/features/schedule/components/UpdateConfirmModal';
 import { useReserveUser } from '@/features/schedule/hooks/useReserveUser';
 import { useResolveReservedSeats } from '@/features/schedule/hooks/useResolveReservedSeats';
 import { useSelectedSeats } from '@/features/schedule/hooks/useSelectedSeats';
@@ -36,6 +37,7 @@ export function SelectSeats() {
         searchRequestDto,
         prevSelectedSeats,
         reservedSeats,
+        reservationId,
     }: SelectSeatsLocationState = location.state;
     const { resolveReservedSeat } = useResolveReservedSeats(
         scheduleInfoDto,
@@ -69,8 +71,17 @@ export function SelectSeats() {
         handleModalOpen: handleReloginConfirmModalOpen,
         onRequestClose: onRequestReloginConfirmModalClose,
     } = useModal();
+    const {
+        isOpen: isUpdateConfirmModalOpen,
+        handleModalOpen: handleUpdateConfirmModalOpen,
+        onRequestClose: onRequestUpdateConfirmModalClose,
+    } = useModal();
     const [isSubmitting, setIsSubmitting] = useState<boolean>(false);
     const isLoggedIn = !!localStorage.getItem('name');
+
+    useEffect(() => {
+        window.scrollTo(0, 0);
+    }, [location.pathname]);
 
     useEffect(() => {
         const nv = performance.getEntriesByType(
@@ -98,7 +109,7 @@ export function SelectSeats() {
     };
 
     const submitOrderWithToken = async (
-        paymentToken: string,
+        paymentToken?: string,
     ): Promise<string> => {
         const reserveRequestDto: ReserveRequestDto = {
             scheduleCd: scheduleInfoDto.scheduleCd,
@@ -113,9 +124,16 @@ export function SelectSeats() {
             })),
             reserverName: reserveUser.reserverName,
             reserverMail: reserveUser.reserverMail,
-            paymentToken: paymentToken,
+            paymentToken: paymentToken ? paymentToken : '',
         };
 
+        if (reservedSeats && reservationId) {
+            const response = await apiClient.put(
+                ENDPOINTS.RESERVATION_SEAT_UPDATE(reservationId),
+                reserveRequestDto,
+            );
+            return response.data;
+        }
         if (!reserveUser.reserverMail && !reserveUser.reserverName) {
             const response = await apiClient.post(
                 ENDPOINTS.RESERVATION(),
@@ -207,6 +225,45 @@ export function SelectSeats() {
         });
     };
 
+    const handleUpdate = async () => {
+        if (isSubmitting) return;
+        setIsSubmitting(true);
+        try {
+            const reservationId = await submitOrderWithToken();
+            navigate('/reservedTicket', {
+                state: {
+                    reservationId: reservationId,
+                    isBack: false,
+                    guestLogin: false,
+                    isUpdated: true,
+                },
+            });
+        } catch {
+            // TODO: セッション切れ時の挙動を制御する
+            alert(ERROR_MESSAGE.UPDATE_RETRY);
+        } finally {
+            setIsSubmitting(false);
+            onRequestUpdateConfirmModalClose();
+        }
+    };
+
+    const reservedKeys = (reservedSeats ?? [])
+        .map(
+            (seat) =>
+                `${seat.trainCarNumber}-${seat.seatNumber}-${seat.seatColumn}`,
+        )
+        .sort();
+    const selectedKeys = selectedSeats
+        .map(
+            (seat) =>
+                `${seat.trainCarNumber}-${seat.seatNumber}-${seat.seatColumn}`,
+        )
+        .sort();
+    const isSameSeats =
+        reservedSeats &&
+        reservedKeys.length === selectedKeys.length &&
+        reservedKeys.every((key, index) => key === selectedKeys[index]);
+
     return (
         <>
             <div className="flex items-center justify-start p-4 pb-0">
@@ -283,31 +340,50 @@ export function SelectSeats() {
                         <form
                             onSubmit={(e) => {
                                 e.preventDefault();
-                                handleReserveConfirmModalOpen();
+                                (reservedSeats
+                                    ? handleUpdateConfirmModalOpen
+                                    : handleReserveConfirmModalOpen)();
                             }}
                         >
                             <div className="flex flex-col gap-4">
-                                <ReserveUserInfo
-                                    reserveUser={reserveUser}
-                                    focus={focus}
-                                    handleInputChange={handleInputChange}
-                                    handleInputFocus={handleInputFocus}
-                                    getFieldError={getFieldError}
-                                    handleInputBlur={handleInputBlur}
+                                {reservedSeats ? (
+                                    <div className="rounded-xl bg-orange-100 px-4 py-2 text-center text-orange-500">
+                                        ※初回予約時と同じ <br />
+                                        クレジットカードを使用します
+                                    </div>
+                                ) : (
+                                    <ReserveUserInfo
+                                        reserveUser={reserveUser}
+                                        focus={focus}
+                                        handleInputChange={handleInputChange}
+                                        handleInputFocus={handleInputFocus}
+                                        getFieldError={getFieldError}
+                                        handleInputBlur={handleInputBlur}
+                                    />
+                                )}
+                                <TotalSeatsFare
+                                    selectedSeats={selectedSeats}
+                                    prevFare={reservedSeats?.reduce(
+                                        (sum, seat) => sum + seat.seatFare,
+                                        0,
+                                    )}
                                 />
-                                <TotalSeatsFare selectedSeats={selectedSeats} />
                                 <button
                                     type="submit"
                                     className="bg-primary w-full rounded-lg p-2 text-white"
                                     disabled={
+                                        (reservedSeats
+                                            ? isSameSeats
+                                            : isInvalid) ||
                                         selectedSeats.length === 0 ||
-                                        isInvalid ||
                                         isSubmitting
                                     }
                                 >
                                     <div className="flex items-center justify-center gap-4">
                                         <IoCardOutline />
-                                        予約する
+                                        {reservedSeats
+                                            ? '変更する'
+                                            : '予約する'}
                                     </div>
                                 </button>
                             </div>
@@ -335,6 +411,20 @@ export function SelectSeats() {
                     isSubmitting={isSubmitting}
                 />
             </CustomModal>
+            {reservedSeats && (
+                <CustomModal
+                    isOpen={isUpdateConfirmModalOpen}
+                    onRequestClose={onRequestUpdateConfirmModalClose}
+                >
+                    <UpdateConfirmModal
+                        onClick={handleUpdate}
+                        onRequestClose={onRequestUpdateConfirmModalClose}
+                        isSubmitting={isSubmitting}
+                        reservedSeats={reservedSeats}
+                        selectedSeats={selectedSeats}
+                    />
+                </CustomModal>
+            )}
         </>
     );
 }
