@@ -483,7 +483,7 @@ public class ReservationService {
                 copy.setTrainCarTypeCd(sec.getTrainCarTypeCd());
                 return copy;
             }).toList();
-        reservation.get().getReservedSeat().clear();
+        reservation.get().setReservedSeat(null);
         reservedSeatSectionRepository.deleteAll(deleteSeatSections);
         reservedSeatRepository.deleteAll(reservedSeats);
 
