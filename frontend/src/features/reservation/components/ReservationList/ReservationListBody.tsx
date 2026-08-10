@@ -108,6 +108,7 @@ export function ReservationListBody() {
                 scheduleInfoDto,
                 searchRequestDto,
                 reservedSeats: details.reservedSeats,
+                reservationId: details.reservationId,
             },
         });
         window.scrollTo(0, 0);
