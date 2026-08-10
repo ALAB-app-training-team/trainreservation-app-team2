@@ -8,13 +8,14 @@ import { ScheduleSearchForm } from '@/features/schedule/components/ScheduleSearc
 import { useSearchRequestDto } from '@/features/schedule/hooks/useSearchRequestDto';
 import { useStations } from '@/features/schedule/hooks/useStations';
 import { useStopStations } from '@/features/schedule/hooks/useStopStations';
+import type { ScheduleSearchLocationState } from '@/features/schedule/types/SchduleSearchLocationState';
 import { ERROR_MESSAGE } from '@/shared/constants/ErrorMessages';
 
 export function ScheduleSearchBody() {
     const location = useLocation();
     const navigate = useNavigate();
-    const { searchRequestDto: initialDto = null, isBack = false } =
-        location.state;
+    const { searchRequestDto: initialDto, isBack = false } =
+        (location.state as ScheduleSearchLocationState | null) ?? {};
     const { stations } = useStations();
     const { stationResponseDtos } = useStopStations();
     const {
