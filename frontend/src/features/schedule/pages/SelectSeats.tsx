@@ -129,7 +129,7 @@ export function SelectSeats() {
 
         if (reservedSeats && reservationId) {
             const response = await apiClient.put(
-                ENDPOINTS.RESERVATION_UPDATE(reservationId),
+                ENDPOINTS.RESERVATION_SEAT_UPDATE(reservationId),
                 reserveRequestDto,
             );
             return response.data;
