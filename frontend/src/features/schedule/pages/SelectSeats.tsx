@@ -38,6 +38,8 @@ export function SelectSeats() {
         prevSelectedSeats,
         reservedSeats,
         reservationId,
+        preChangeScheduleCd,
+        preChangeReservedSeats,
     }: SelectSeatsLocationState = location.state;
     const { resolveReservedSeat } = useResolveReservedSeats(
         scheduleInfoDto,
@@ -272,7 +274,12 @@ export function SelectSeats() {
                         type="button"
                         onClick={() => {
                             navigate('/scheduleSearch', {
-                                state: { searchRequestDto, reservationId },
+                                state: {
+                                    searchRequestDto,
+                                    reservationId,
+                                    reservedSeats: preChangeReservedSeats,
+                                    preChangeScheduleCd,
+                                },
                             });
                         }}
                     >

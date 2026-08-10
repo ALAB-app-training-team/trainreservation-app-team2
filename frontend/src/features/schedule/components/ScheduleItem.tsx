@@ -3,6 +3,7 @@ import customParseFormat from 'dayjs/plugin/customParseFormat';
 import { FiArrowRight } from 'react-icons/fi';
 import { useNavigate } from 'react-router-dom';
 
+import type { ReservedSeatDto } from '@/features/reservation/types/ReservedSeatDto';
 import { EmptySeatCount } from '@/features/schedule/components/EmptySeatCount';
 import type { ScheduleInfoDto } from '@/features/schedule/types/ScheduleInfoDto';
 import type { SearchRequestDto } from '@/features/schedule/types/SearchRequestDto';
@@ -18,6 +19,8 @@ type ScheduleItemProps = {
     arrivalStationName: string;
     searchRequestDto: SearchRequestDto;
     reservationId: string | null;
+    reservedSeats: ReservedSeatDto[];
+    preChangeScheduleCd: string | null;
 };
 
 export function ScheduleItem({
@@ -29,6 +32,8 @@ export function ScheduleItem({
     arrivalStationName,
     searchRequestDto,
     reservationId,
+    reservedSeats,
+    preChangeScheduleCd,
 }: ScheduleItemProps) {
     const navigate = useNavigate();
 
@@ -64,11 +69,18 @@ export function ScheduleItem({
             departureStationName,
             arrivalStationName,
         };
+        const isScheduleCdUnchanged =
+            preChangeScheduleCd &&
+            scheduleInfoDto.scheduleCd === preChangeScheduleCd;
+
         navigate('/selectSeat', {
             state: {
                 scheduleInfoDto,
                 searchRequestDto,
                 reservationId,
+                preChangeScheduleCd,
+                preChangeReservedSeats: reservedSeats,
+                reservedSeats: isScheduleCdUnchanged ? reservedSeats : [],
             },
         });
         window.scrollTo(0, 0);

@@ -5,6 +5,7 @@ import { AiOutlineExclamationCircle } from 'react-icons/ai';
 import type { ReactPaginateProps } from 'react-paginate';
 import _ReactPaginate from 'react-paginate';
 
+import type { ReservedSeatDto } from '@/features/reservation/types/ReservedSeatDto';
 import { EmptySeatCount } from '@/features/schedule/components/EmptySeatCount';
 import { ScheduleItem } from '@/features/schedule/components/ScheduleItem';
 import { useSchedules } from '@/features/schedule/hooks/useSchedules';
@@ -26,6 +27,8 @@ type ScheduleListProps = {
     arrivalStationName: string;
     isOnlyAvailable: boolean;
     reservationId: string | null;
+    reservedSeats: ReservedSeatDto[];
+    preChangeScheduleCd: string | null;
 };
 
 export function ScheduleList({
@@ -37,6 +40,8 @@ export function ScheduleList({
     arrivalStationName,
     isOnlyAvailable,
     reservationId,
+    reservedSeats,
+    preChangeScheduleCd,
 }: ScheduleListProps) {
     const { schedules } = useSchedules(searchRequestDto, isInvalid);
 
@@ -84,6 +89,10 @@ export function ScheduleList({
                                         arrivalStationName={arrivalStationName}
                                         searchRequestDto={searchRequestDto}
                                         reservationId={reservationId ?? null}
+                                        reservedSeats={reservedSeats ?? []}
+                                        preChangeScheduleCd={
+                                            preChangeScheduleCd ?? null
+                                        }
                                     />
                                 );
                             })}
