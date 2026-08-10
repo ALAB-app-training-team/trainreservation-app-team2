@@ -34,7 +34,7 @@ export const test = base.extend<Fixture>({
             await selectSeatPage.inputResererInfo();
             await selectSeatPage.inputCardInfo();
             await selectSeatPage.clickReseveButton();
-            await selectSeatPage.clickConfirmButton();
+            await selectSeatPage.clickReserveConfirmButton();
         };
         await use(create);
     },
@@ -51,7 +51,7 @@ export const test = base.extend<Fixture>({
             await selectSeatPage.selectSeat();
             await selectSeatPage.inputCardInfo();
             await selectSeatPage.clickReseveButton();
-            await selectSeatPage.clickConfirmButton();
+            await selectSeatPage.clickReserveConfirmButton();
         };
         await use(create);
     },

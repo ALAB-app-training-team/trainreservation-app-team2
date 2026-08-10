@@ -8,4 +8,5 @@ export type SelectSeatsLocationState = {
     searchRequestDto: SearchRequestDto | null;
     prevSelectedSeats?: SeatResponseDto[];
     reservedSeats?: ReservedSeatDto[];
+    reservationId?: string;
 };

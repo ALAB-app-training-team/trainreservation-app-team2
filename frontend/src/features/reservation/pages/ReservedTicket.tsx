@@ -22,7 +22,7 @@ export function ReservedTicket() {
     useToastForRedirect();
     const location = useLocation();
     const navigate = useNavigate();
-    const { reservationId, isBack, guestLogin } = location.state;
+    const { reservationId, isBack, guestLogin, isUpdated } = location.state;
     const { reservedTickets, updateCompanions, isUpdating } =
         useReservedTickets(reservationId);
     const { isOpen, handleModalOpen, onRequestClose } = useModal();
@@ -72,7 +72,11 @@ export function ReservedTicket() {
                             data-testid="reserve-title"
                             className="m-0! text-left text-3xl!"
                         >
-                            {guestLogin ? '予約詳細' : '予約完了'}
+                            {isUpdated
+                                ? '予約変更完了'
+                                : guestLogin
+                                  ? '予約詳細'
+                                  : '予約完了'}
                         </h1>
                     )}
                 </div>
