@@ -28,7 +28,7 @@ export function ReservationChangeConfirmModal({
                     isSubmitting={isSubmitting}
                 />
                 <div>変更する内容を選択してください</div>
-                <ReservationInfo details={detail} id="reservationChange" />
+                <ReservationInfo detail={detail} id="reservationChange" />
                 <div className="flex w-full items-center justify-center gap-4">
                     <button
                         data-testid={'change-seat-confirm-button'}
