@@ -3,6 +3,7 @@ package com.alab.shinkansendego.account;
 import jakarta.servlet.http.HttpSession;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
@@ -44,5 +45,11 @@ public class AccountController {
     public ResponseEntity logout(HttpSession session) {
         session.invalidate();
         return ResponseEntity.noContent().build();
+    }
+
+    @PostMapping("create")
+    public ResponseEntity<String> create(@Valid @RequestBody AccountRequestDto request) {
+        String mail = accountService.create(request);
+        return ResponseEntity.status(HttpStatus.CREATED).body(mail);
     }
 }
