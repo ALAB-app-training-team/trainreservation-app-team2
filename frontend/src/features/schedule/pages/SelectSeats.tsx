@@ -370,10 +370,20 @@ export function SelectSeats() {
                                 )}
                                 <TotalSeatsFare
                                     selectedSeats={selectedSeats}
-                                    prevFare={reservedSeats?.reduce(
-                                        (sum, seat) => sum + seat.seatFare,
-                                        0,
-                                    )}
+                                    prevFare={
+                                        reservedSeats &&
+                                        reservedSeats?.length > 0
+                                            ? reservedSeats?.reduce(
+                                                  (sum, seat) =>
+                                                      sum + seat.seatFare,
+                                                  0,
+                                              )
+                                            : preChangeReservedSeats?.reduce(
+                                                  (sum, seat) =>
+                                                      sum + seat.seatFare,
+                                                  0,
+                                              )
+                                    }
                                 />
                                 <button
                                     type="submit"
