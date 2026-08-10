@@ -17,6 +17,7 @@ type ScheduleItemProps = {
     arrivalStationCd: string;
     arrivalStationName: string;
     searchRequestDto: SearchRequestDto;
+    reservationId: string | null;
 };
 
 export function ScheduleItem({
@@ -27,6 +28,7 @@ export function ScheduleItem({
     arrivalStationCd,
     arrivalStationName,
     searchRequestDto,
+    reservationId,
 }: ScheduleItemProps) {
     const navigate = useNavigate();
 
@@ -66,6 +68,7 @@ export function ScheduleItem({
             state: {
                 scheduleInfoDto,
                 searchRequestDto,
+                reservationId,
             },
         });
         window.scrollTo(0, 0);

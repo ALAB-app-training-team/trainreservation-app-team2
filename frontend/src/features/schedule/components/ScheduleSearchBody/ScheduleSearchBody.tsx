@@ -14,8 +14,11 @@ import { ERROR_MESSAGE } from '@/shared/constants/ErrorMessages';
 export function ScheduleSearchBody() {
     const location = useLocation();
     const navigate = useNavigate();
-    const { searchRequestDto: initialDto, isBack = false } =
-        (location.state as ScheduleSearchLocationState | null) ?? {};
+    const {
+        searchRequestDto: initialDto,
+        isBack = false,
+        reservationId,
+    } = (location.state as ScheduleSearchLocationState | null) ?? {};
     const { stations } = useStations();
     const { stationResponseDtos } = useStopStations();
     const {
@@ -89,6 +92,7 @@ export function ScheduleSearchBody() {
                                 )?.name || ERROR_MESSAGE.ERROR
                             }
                             isOnlyAvailable={isOnlyAvailable}
+                            reservationId={reservationId ?? null}
                         />
                     </Suspense>
                 </div>

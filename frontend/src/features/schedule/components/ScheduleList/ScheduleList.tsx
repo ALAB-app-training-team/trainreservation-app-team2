@@ -25,6 +25,7 @@ type ScheduleListProps = {
     arrivalStationCd: string;
     arrivalStationName: string;
     isOnlyAvailable: boolean;
+    reservationId: string | null;
 };
 
 export function ScheduleList({
@@ -35,6 +36,7 @@ export function ScheduleList({
     arrivalStationCd,
     arrivalStationName,
     isOnlyAvailable,
+    reservationId,
 }: ScheduleListProps) {
     const { schedules } = useSchedules(searchRequestDto, isInvalid);
 
@@ -81,6 +83,7 @@ export function ScheduleList({
                                         arrivalStationCd={arrivalStationCd}
                                         arrivalStationName={arrivalStationName}
                                         searchRequestDto={searchRequestDto}
+                                        reservationId={reservationId ?? null}
                                     />
                                 );
                             })}

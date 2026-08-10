@@ -272,7 +272,7 @@ export function SelectSeats() {
                         type="button"
                         onClick={() => {
                             navigate('/scheduleSearch', {
-                                state: { searchRequestDto },
+                                state: { searchRequestDto, reservationId },
                             });
                         }}
                     >

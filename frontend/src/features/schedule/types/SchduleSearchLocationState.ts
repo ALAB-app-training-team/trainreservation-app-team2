@@ -3,4 +3,5 @@ import type { SearchRequestDto } from '@/features/schedule/types/SearchRequestDt
 export type ScheduleSearchLocationState = {
     searchRequestDto: SearchRequestDto;
     isBack: boolean;
+    reservationId: string;
 };
