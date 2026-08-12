@@ -20,10 +20,15 @@ export function Account() {
     return (
         <div className="flex justify-center">
             <div className="flex w-full flex-col items-center justify-center gap-4 p-8 md:w-6/10">
-                <h1 className="!text-primary !m-0 flex items-center justify-center !text-3xl">
-                    <CiUser />
-                    アカウント作成
-                </h1>
+                <div className="flex flex-col items-center justify-center gap-1">
+                    <h1 className="!text-primary !m-0 flex items-center justify-center !text-3xl">
+                        <CiUser />
+                        新規登録
+                    </h1>
+                    <div className="text-gray-500">
+                        登録するアカウント情報を入力してください
+                    </div>
+                </div>
 
                 <form
                     onSubmit={(e) => {
@@ -32,7 +37,7 @@ export function Account() {
                     }}
                     className="flex w-full flex-col gap-4"
                 >
-                    <div className="flex w-full flex-col gap-2">
+                    <div className="flex w-full flex-col gap-8">
                         <div className="flex flex-col items-start">
                             <label htmlFor="name">氏名</label>
                             <div className="focus-within:border-primary bg-primary-light box-border flex w-full items-center justify-between gap-4 rounded-lg px-4 py-2 outline-none focus-within:border-2">
@@ -42,7 +47,7 @@ export function Account() {
                                     name="mail"
                                     value={loginRequestDto.mail}
                                     onChange={handleChange}
-                                    placeholder="example@email.com"
+                                    placeholder="山田 太郎"
                                     autoComplete="email"
                                     required
                                     className="w-full outline-none"
@@ -67,30 +72,61 @@ export function Account() {
                         </div>
                         <div className="flex flex-col items-start">
                             <label htmlFor="password">パスワード</label>
-                            <div className="focus-within:border-primary bg-primary-light box-border flex w-full items-center justify-between gap-4 rounded-lg px-4 py-2 outline-none focus-within:border-2">
-                                <input
-                                    id="password"
-                                    type={passwordType}
-                                    name="password"
-                                    value={loginRequestDto.password}
-                                    onChange={handleChange}
-                                    placeholder="パスワードを入力"
-                                    autoComplete="current-password"
-                                    required
-                                    className="w-full outline-none [&::-ms-reveal]:hidden"
-                                />
-                                {passwordType === 'password' && (
-                                    <MdVisibilityOff
-                                        onClick={() => setPasswordType('text')}
+                            <div className="flex w-full flex-col gap-2">
+                                <div className="focus-within:border-primary bg-primary-light box-border flex w-full items-center justify-between gap-4 rounded-lg px-4 py-2 outline-none focus-within:border-2">
+                                    <input
+                                        id="password"
+                                        type={passwordType}
+                                        name="password"
+                                        value={loginRequestDto.password}
+                                        onChange={handleChange}
+                                        placeholder="パスワードを入力"
+                                        autoComplete="current-password"
+                                        required
+                                        className="w-full outline-none [&::-ms-reveal]:hidden"
                                     />
-                                )}
-                                {passwordType === 'text' && (
-                                    <MdVisibility
-                                        onClick={() =>
-                                            setPasswordType('password')
-                                        }
+                                    {passwordType === 'password' && (
+                                        <MdVisibilityOff
+                                            onClick={() =>
+                                                setPasswordType('text')
+                                            }
+                                        />
+                                    )}
+                                    {passwordType === 'text' && (
+                                        <MdVisibility
+                                            onClick={() =>
+                                                setPasswordType('password')
+                                            }
+                                        />
+                                    )}
+                                </div>
+                                <div className="focus-within:border-primary bg-primary-light box-border flex w-full items-center justify-between gap-4 rounded-lg px-4 py-2 outline-none focus-within:border-2">
+                                    <input
+                                        id="password"
+                                        type={passwordType}
+                                        name="password"
+                                        value={loginRequestDto.password}
+                                        onChange={handleChange}
+                                        placeholder="パスワードを入力"
+                                        autoComplete="current-password"
+                                        required
+                                        className="w-full outline-none [&::-ms-reveal]:hidden"
                                     />
-                                )}
+                                    {passwordType === 'password' && (
+                                        <MdVisibilityOff
+                                            onClick={() =>
+                                                setPasswordType('text')
+                                            }
+                                        />
+                                    )}
+                                    {passwordType === 'text' && (
+                                        <MdVisibility
+                                            onClick={() =>
+                                                setPasswordType('password')
+                                            }
+                                        />
+                                    )}
+                                </div>
                             </div>
                         </div>
                     </div>

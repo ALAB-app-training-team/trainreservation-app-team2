@@ -1,8 +1,9 @@
 import { useQueryClient } from '@tanstack/react-query';
 import { useEffect, useState } from 'react';
+import { CiUser } from 'react-icons/ci';
 import { FiLogIn } from 'react-icons/fi';
 import { MdVisibility, MdVisibilityOff } from 'react-icons/md';
-import { Link } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
 
 import { useLoginRequestDto } from '@/features/account/hooks/useLoginRequestDto';
 import { useToastForRedirect } from '@/shared/hooks/useToastForRedirect';
@@ -10,6 +11,7 @@ import { removeGuestReservation } from '@/shared/utils/RemoveGuestReservation';
 
 export function Login() {
     const queryClient = useQueryClient();
+    const navigate = useNavigate();
     const { loginRequestDto, handleChange, handleLogin, isSubmitting } =
         useLoginRequestDto();
     const [passwordType, setPasswordType] = useState('password');
@@ -19,7 +21,7 @@ export function Login() {
     }, []);
     return (
         <div className="flex justify-center">
-            <div className="flex w-full flex-col items-center justify-center gap-4 p-8 md:w-6/10">
+            <div className="flex w-1/2 flex-col items-center justify-center gap-4 p-8 md:w-4/10">
                 <div className="flex flex-col items-center justify-center gap-1">
                     <div>
                         <img src="/logo.svg" className="h-auto w-16" />
@@ -32,69 +34,83 @@ export function Login() {
                     </div>
                 </div>
 
-                <form
-                    onSubmit={(e) => {
-                        e.preventDefault();
-                        handleLogin();
-                    }}
-                    className="flex w-full flex-col gap-4"
-                >
-                    <div className="flex w-full flex-col gap-2">
-                        <div className="flex flex-col items-start">
-                            <label htmlFor="mail">メールアドレス</label>
-                            <div className="focus-within:border-primary bg-primary-light box-border flex w-full items-center justify-between gap-4 rounded-lg px-4 py-2 outline-none focus-within:border-2">
-                                <input
-                                    id="mail"
-                                    type="email"
-                                    name="mail"
-                                    value={loginRequestDto.mail}
-                                    onChange={handleChange}
-                                    placeholder="example@email.com"
-                                    autoComplete="email"
-                                    required
-                                    className="w-full outline-none"
-                                />
-                            </div>
-                        </div>
-                        <div className="flex flex-col items-start">
-                            <label htmlFor="password">パスワード</label>
-                            <div className="focus-within:border-primary bg-primary-light box-border flex w-full items-center justify-between gap-4 rounded-lg px-4 py-2 outline-none focus-within:border-2">
-                                <input
-                                    id="password"
-                                    type={passwordType}
-                                    name="password"
-                                    value={loginRequestDto.password}
-                                    onChange={handleChange}
-                                    placeholder="パスワードを入力"
-                                    autoComplete="current-password"
-                                    required
-                                    className="w-full outline-none [&::-ms-reveal]:hidden"
-                                />
-                                {passwordType === 'password' && (
-                                    <MdVisibilityOff
-                                        onClick={() => setPasswordType('text')}
-                                    />
-                                )}
-                                {passwordType === 'text' && (
-                                    <MdVisibility
-                                        onClick={() =>
-                                            setPasswordType('password')
-                                        }
-                                    />
-                                )}
-                            </div>
-                        </div>
-                    </div>
-                    <button
-                        type="submit"
-                        disabled={isSubmitting}
-                        className="bg-primary flex w-full items-center justify-center gap-2 rounded-lg p-2 text-white"
+                <div className="border-primary w-full border-b border-b-1 pb-4">
+                    <form
+                        onSubmit={(e) => {
+                            e.preventDefault();
+                            handleLogin();
+                        }}
+                        className="flex w-full flex-col gap-4"
                     >
-                        <FiLogIn />
-                        ログイン
+                        <div className="flex w-full flex-col gap-2">
+                            <div className="flex flex-col items-start">
+                                <label htmlFor="mail">メールアドレス</label>
+                                <div className="focus-within:border-primary bg-primary-light box-border flex w-full items-center justify-between gap-4 rounded-lg px-4 py-2 outline-none focus-within:border-2">
+                                    <input
+                                        id="mail"
+                                        type="email"
+                                        name="mail"
+                                        value={loginRequestDto.mail}
+                                        onChange={handleChange}
+                                        placeholder="example@email.com"
+                                        autoComplete="email"
+                                        required
+                                        className="w-full outline-none"
+                                    />
+                                </div>
+                            </div>
+                            <div className="flex flex-col items-start">
+                                <label htmlFor="password">パスワード</label>
+                                <div className="focus-within:border-primary bg-primary-light box-border flex w-full items-center justify-between gap-4 rounded-lg px-4 py-2 outline-none focus-within:border-2">
+                                    <input
+                                        id="password"
+                                        type={passwordType}
+                                        name="password"
+                                        value={loginRequestDto.password}
+                                        onChange={handleChange}
+                                        placeholder="パスワードを入力"
+                                        autoComplete="current-password"
+                                        required
+                                        className="w-full outline-none [&::-ms-reveal]:hidden"
+                                    />
+                                    {passwordType === 'password' && (
+                                        <MdVisibilityOff
+                                            onClick={() =>
+                                                setPasswordType('text')
+                                            }
+                                        />
+                                    )}
+                                    {passwordType === 'text' && (
+                                        <MdVisibility
+                                            onClick={() =>
+                                                setPasswordType('password')
+                                            }
+                                        />
+                                    )}
+                                </div>
+                            </div>
+                        </div>
+                        <button
+                            type="submit"
+                            disabled={isSubmitting}
+                            className="bg-primary flex w-full items-center justify-center gap-2 rounded-lg p-2 text-white"
+                        >
+                            <FiLogIn />
+                            ログイン
+                        </button>
+                    </form>
+                </div>
+                <div className="w-full">
+                    <div className="pb-4 text-gray-500">新規登録はこちら</div>
+                    <button
+                        onClick={() => navigate('/account')}
+                        type="button"
+                        className="border-primary-mid-light flex w-full items-center justify-center gap-2 rounded-lg border-2 bg-white p-2 text-center font-medium"
+                    >
+                        <CiUser />
+                        新規登録
                     </button>
-                </form>
-                <Link to="/account">アカウントを作成</Link>
+                </div>
             </div>
         </div>
     );
