@@ -357,7 +357,7 @@ export function SelectSeats() {
                             }}
                         >
                             <div className="flex flex-col gap-4">
-                                {reservedSeats ? (
+                                {reservedSeats || preChangeReservedSeats ? (
                                     <div className="rounded-xl bg-orange-100 px-4 py-2 text-center text-orange-500">
                                         ※初回予約時と同じ <br />
                                         クレジットカードを使用します
