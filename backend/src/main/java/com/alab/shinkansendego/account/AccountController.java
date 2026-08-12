@@ -42,7 +42,7 @@ public class AccountController {
     }
 
     @PostMapping("logout")
-    public ResponseEntity logout(HttpSession session) {
+    public ResponseEntity<Void> logout(HttpSession session) {
         session.invalidate();
         return ResponseEntity.noContent().build();
     }

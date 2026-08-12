@@ -35,7 +35,7 @@ public class SecurityConfig {
                 })
             )
             .authorizeHttpRequests(auth -> auth
-                .requestMatchers("/api/login", "/api/logout", "/api/stations", "/api/stopstations", "/api/schedules", "/api/traincars",
+                .requestMatchers("/api/login", "/api/logout", "/api/create", "/api/stations", "/api/stopstations", "/api/schedules", "/api/traincars",
                     "/api/payments", "/api/payments/tokens", "/api/schedules/**", "/api/traincars/**",
                     "/api/reservedseats/**").permitAll()
                 .requestMatchers(HttpMethod.GET, "/api/reservations/guest/*").permitAll()

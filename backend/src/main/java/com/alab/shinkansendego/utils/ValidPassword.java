@@ -12,7 +12,7 @@ import java.lang.annotation.Target;
 @Retention(RetentionPolicy.RUNTIME)
 @Constraint(validatedBy = PasswordValidator.class)
 public @interface ValidPassword {
-    String message() default "password policy doesn't match";
+    String message() default "Password Policy doesn't match";
 
     Class<?>[] groups() default {};
 
