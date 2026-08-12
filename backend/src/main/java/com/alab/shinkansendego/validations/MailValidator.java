@@ -10,6 +10,13 @@ public class MailValidator
     private static final String MAIL_PATTERN =
         "^[a-zA-Z0-9]+([._+-][a-zA-Z0-9]+)*@([a-zA-Z0-9][a-zA-Z0-9-]*[a-zA-Z0-9]*\\.)+[a-zA-Z]{2,}$";
 
+    /**
+     * メールアドレスのバリデーションチェックを行うメソッド
+     *
+     * @param mail    チェック対象のメールアドレス
+     * @param context Validatorのコンテキスト
+     * @return チェック結果
+     */
     @Override
     public boolean isValid(String mail, ConstraintValidatorContext context) {
         context.disableDefaultConstraintViolation();

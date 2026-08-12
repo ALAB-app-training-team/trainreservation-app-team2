@@ -24,6 +24,13 @@ public class AccountService {
         this.passwordEncoder = passwordEncoder;
     }
 
+    /**
+     * アカウントログインを行うメソッド
+     *
+     * @param mail     リクエストされたメールアドレス
+     * @param password リクエストされたパスワード
+     * @return アカウント情報
+     */
     public AccountEntity login(String mail, String password) {
         AccountEntity account = accountRepository.findByMail(mail).orElseThrow(() -> new BadCredentialsException("login is failed"));
         boolean matches = passwordEncoder.matches(password, account.getPassword());
@@ -33,6 +40,12 @@ public class AccountService {
         return account;
     }
 
+    /**
+     * アカウント新規作成を行うメソッド
+     *
+     * @param request 登録するアカウント情報
+     * @return 登録したメールアドレス
+     */
     @Transactional
     public String create(AccountRequestDto request) {
         Optional<AccountEntity> account = accountRepository.findByMail(request.getMail());

@@ -27,6 +27,13 @@ public class AccountController {
         this.accountService = accountService;
     }
 
+    /**
+     * アカウントログインを行うメソッド
+     *
+     * @param request リクエストされたログイン情報
+     * @param session ログインセッション
+     * @return ログインユーザー名
+     */
     @PostMapping("login")
     public ResponseEntity<String> login(@Valid @RequestBody LoginRequestDto request, HttpSession session) {
         AccountEntity account = accountService.login(request.getMail(), request.getPassword());
@@ -41,12 +48,24 @@ public class AccountController {
         return ResponseEntity.ok(account.getName());
     }
 
+    /**
+     * アカウントログアウトを行うメソッド
+     *
+     * @param session ログインセッション
+     * @return NoContent
+     */
     @PostMapping("logout")
     public ResponseEntity<Void> logout(HttpSession session) {
         session.invalidate();
         return ResponseEntity.noContent().build();
     }
 
+    /**
+     * アカウント新規作成メソッド
+     *
+     * @param request 登録するアカウント情報
+     * @return 登録したメールアドレス
+     */
     @PostMapping("create")
     public ResponseEntity<String> create(@Valid @RequestBody AccountRequestDto request) {
         String mail = accountService.create(request);

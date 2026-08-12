@@ -10,6 +10,13 @@ public class PasswordValidator
     private static final String PASSWORD_PATTERN =
         "^[A-Za-z0-9'!\"#$%&(),./:;?@\\[\\]^_`{}~+<=>*\\-]+$";
 
+    /**
+     * パスワードのバリデーションチェックを行うメソッド
+     *
+     * @param password チェック対象のパスワード
+     * @param context  Validatorのコンテキスト
+     * @return チェック結果
+     */
     @Override
     public boolean isValid(String password, ConstraintValidatorContext context) {
         context.disableDefaultConstraintViolation();
