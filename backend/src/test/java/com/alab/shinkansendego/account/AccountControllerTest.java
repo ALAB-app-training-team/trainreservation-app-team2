@@ -80,7 +80,7 @@ public class AccountControllerTest {
         mockMvc.perform(MockMvcRequestBuilders.post(baseUrl + "account")
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(objectMapper.writeValueAsString(request)))
-            .andExpect(status().isNoContent());
+            .andExpect(status().isCreated());
     }
 
     @Test
