@@ -20,6 +20,7 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.mockito.Mockito.when;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
@@ -31,12 +32,12 @@ public class AccountControllerTest {
     private MockMvc mockMvc;
     private final ObjectMapper objectMapper = new ObjectMapper();
     private final String baseUrl = "/api/";
+    private final String rawPassword = "Password_11/";
+    private final String hashedPassword = "$2a$10$6gZt4xt3F2RnCytRMfqSSumEmrLtqVRpqvVhGAQfgUaxZXeUUWJ4C";
 
     @Test
     @DisplayName("ログインできること")
     void login_return200AndAccount() throws Exception {
-        String rawPassword = "Taro";
-        String hashedPassword = "$2a$10$6gZt4xt3F2RnCytRMfqSSumEmrLtqVRpqvVhGAQfgUaxZXeUUWJ4C";
         AccountEntity account = new AccountEntity(UUID.randomUUID(), "Tarou", "a@a.com", hashedPassword);
         when(service.login(account.getMail(), rawPassword)).thenReturn(account);
 
@@ -69,5 +70,219 @@ public class AccountControllerTest {
                 .session(session))
             .andExpect(status().isNoContent());
         assertTrue(session.isInvalid(), "セッションが破棄されていること");
+    }
+
+    @Test
+    @DisplayName("アカウント作成できること")
+    void insertAccount_return201AndMail() throws Exception {
+        AccountRequestDto request = new AccountRequestDto("太郎", "a@a.com", rawPassword);
+
+        mockMvc.perform(MockMvcRequestBuilders.post(baseUrl + "account")
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(objectMapper.writeValueAsString(request)))
+            .andExpect(status().isCreated());
+    }
+
+    @Test
+    @DisplayName("リクエストの名前がNullの場合、バリデーションエラー発生")
+    void insertAccount_withNameIsNull_returnValidationError() throws Exception {
+        AccountRequestDto request = new AccountRequestDto(null, "a@a.com", rawPassword);
+
+        mockMvc.perform(MockMvcRequestBuilders.post(baseUrl + "account")
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(objectMapper.writeValueAsString(request)))
+            .andExpect(status().isBadRequest())
+            .andExpect(content().string("Name is Blank"));
+    }
+
+    @Test
+    @DisplayName("リクエストの名前が空文字の場合、バリデーションエラー発生")
+    void insertAccount_withNameIsEmpty_returnValidationError() throws Exception {
+        AccountRequestDto request = new AccountRequestDto("", "a@a.com", rawPassword);
+
+        mockMvc.perform(MockMvcRequestBuilders.post(baseUrl + "account")
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(objectMapper.writeValueAsString(request)))
+            .andExpect(status().isBadRequest())
+            .andExpect(content().string("Name is Blank"));
+    }
+
+    @Test
+    @DisplayName("リクエストのメールアドレスがNullの場合、バリデーションエラー発生")
+    void insertAccount_withMailIsNull_returnValidationError() throws Exception {
+
+        AccountRequestDto request = new AccountRequestDto("太郎", null, rawPassword);
+
+        mockMvc.perform(MockMvcRequestBuilders.post(baseUrl + "account")
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(objectMapper.writeValueAsString(request)))
+            .andExpect(status().isBadRequest())
+            .andExpect(content().string("Mail is Null"));
+    }
+
+    @Test
+    @DisplayName("リクエストのメールアドレスが空文字の場合、バリデーションエラー発生")
+    void insertAccount_withMailIsEmpty_returnValidationError() throws Exception {
+
+        AccountRequestDto request = new AccountRequestDto("太郎", "", rawPassword);
+
+        mockMvc.perform(MockMvcRequestBuilders.post(baseUrl + "account")
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(objectMapper.writeValueAsString(request)))
+            .andExpect(status().isBadRequest())
+            .andExpect(content().string("Mail is Empty"));
+    }
+
+    @Test
+    @DisplayName("リクエストのメールアドレスが空白文字の場合、バリデーションエラー発生")
+    void insertAccount_withMailIsBlank_returnValidationError() throws Exception {
+
+        AccountRequestDto request = new AccountRequestDto("太郎", " ", rawPassword);
+
+        mockMvc.perform(MockMvcRequestBuilders.post(baseUrl + "account")
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(objectMapper.writeValueAsString(request)))
+            .andExpect(status().isBadRequest())
+            .andExpect(content().string("Mail is Blank"));
+    }
+
+    @Test
+    @DisplayName("リクエストのメールアドレスが不正形式の場合、バリデーションエラー発生")
+    void insertAccount_withInValidMail_returnValidationError() throws Exception {
+
+        AccountRequestDto request = new AccountRequestDto("太郎", "aa@aa", rawPassword);
+
+        mockMvc.perform(MockMvcRequestBuilders.post(baseUrl + "account")
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(objectMapper.writeValueAsString(request)))
+            .andExpect(status().isBadRequest())
+            .andExpect(content().string("Mail is InValid"));
+    }
+
+    @Test
+    @DisplayName("リクエストのパスワードがNullの場合、バリデーションエラー発生")
+    void insertAccount_withPasswordIsNull_returnValidationError() throws Exception {
+
+        AccountRequestDto request = new AccountRequestDto("太郎", "a@a.com", null);
+
+        mockMvc.perform(MockMvcRequestBuilders.post(baseUrl + "account")
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(objectMapper.writeValueAsString(request)))
+            .andExpect(status().isBadRequest())
+            .andExpect(content().string("Password is Null"));
+    }
+
+    @Test
+    @DisplayName("リクエストのパスワードが空文字の場合、バリデーションエラー発生")
+    void insertAccount_withPasswordIsEmpty_returnValidationError() throws Exception {
+
+        AccountRequestDto request = new AccountRequestDto("太郎", "a@a.com", "");
+
+        mockMvc.perform(MockMvcRequestBuilders.post(baseUrl + "account")
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(objectMapper.writeValueAsString(request)))
+            .andExpect(status().isBadRequest())
+            .andExpect(content().string("Password is Empty"));
+    }
+
+    @Test
+    @DisplayName("リクエストのパスワードが空白文字の場合、バリデーションエラー発生")
+    void insertAccount_withPasswordIsBlank_returnValidationError() throws Exception {
+
+        AccountRequestDto request = new AccountRequestDto("太郎", "a@a.com", " ");
+
+        mockMvc.perform(MockMvcRequestBuilders.post(baseUrl + "account")
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(objectMapper.writeValueAsString(request)))
+            .andExpect(status().isBadRequest())
+            .andExpect(content().string("Password is Blank"));
+    }
+
+    @Test
+    @DisplayName("リクエストのパスワードに使えない文字が入っている場合、バリデーションエラー発生")
+    void insertAccount_withContainUselessSymbol_returnValidationError() throws Exception {
+
+        AccountRequestDto request = new AccountRequestDto("太郎", "a@a.com", "Pass|word1");
+
+        mockMvc.perform(MockMvcRequestBuilders.post(baseUrl + "account")
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(objectMapper.writeValueAsString(request)))
+            .andExpect(status().isBadRequest())
+            .andExpect(content().string("Password Policy doesn't match"));
+    }
+
+    @Test
+    @DisplayName("リクエストのパスワードが8文字未満の場合、バリデーションエラー発生")
+    void insertAccount_withLessThan8_returnValidationError() throws Exception {
+
+        AccountRequestDto request = new AccountRequestDto("太郎", "a@a.com", "Pass1");
+
+        mockMvc.perform(MockMvcRequestBuilders.post(baseUrl + "account")
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(objectMapper.writeValueAsString(request)))
+            .andExpect(status().isBadRequest())
+            .andExpect(content().string("Password is Less Than 8 Characters"));
+    }
+
+    @Test
+    @DisplayName("リクエストのパスワードが64文字より多い場合、バリデーションエラー発生")
+    void insertAccount_withMoreThan64_returnValidationError() throws Exception {
+
+        AccountRequestDto request = new AccountRequestDto("太郎", "a@a.com", "Password12345678Password12345678Password12345678Password1234567899");
+
+        mockMvc.perform(MockMvcRequestBuilders.post(baseUrl + "account")
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(objectMapper.writeValueAsString(request)))
+            .andExpect(status().isBadRequest())
+            .andExpect(content().string("Password is More Than 64 Characters"));
+    }
+
+    @Test
+    @DisplayName("リクエストのパスワードに大文字が入っていない場合、バリデーションエラー発生")
+    void insertAccount_withNoContainUppercase_returnValidationError() throws Exception {
+
+        AccountRequestDto request = new AccountRequestDto("太郎", "a@a.com", "password1");
+
+        mockMvc.perform(MockMvcRequestBuilders.post(baseUrl + "account")
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(objectMapper.writeValueAsString(request)))
+            .andExpect(status().isBadRequest())
+            .andExpect(content().string("Password doesn't Contain Uppercase"));
+    }
+
+    @Test
+    @DisplayName("リクエストのパスワードに小文字が入っていない場合、バリデーションエラー発生")
+    void insertAccount_withNoContainLowercase_returnValidationError() throws Exception {
+
+        AccountRequestDto request = new AccountRequestDto("太郎", "a@a.com", "PASSWORD1");
+
+        mockMvc.perform(MockMvcRequestBuilders.post(baseUrl + "account")
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(objectMapper.writeValueAsString(request)))
+            .andExpect(status().isBadRequest())
+            .andExpect(content().string("Password doesn't Contain Lowercase"));
+    }
+
+    @Test
+    @DisplayName("リクエストのパスワードに数字が入っていない場合、バリデーションエラー発生")
+    void insertAccount_withNoContainNumber_returnValidationError() throws Exception {
+
+        AccountRequestDto request = new AccountRequestDto("太郎", "a@a.com", "Password");
+
+        mockMvc.perform(MockMvcRequestBuilders.post(baseUrl + "account")
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(objectMapper.writeValueAsString(request)))
+            .andExpect(status().isBadRequest())
+            .andExpect(content().string("Password doesn't Contain Number"));
+    }
+
+    @Test
+    @DisplayName("リクエストDTO自体がNullの場合、バインドエラー発生")
+    void insertAccount_withAccountRequestDtoIsNull_returnBindError() throws Exception {
+        //バインド順が毎回異なるためエラーメッセージの比較は行わない
+        mockMvc.perform(MockMvcRequestBuilders.post(baseUrl + "account")
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(objectMapper.writeValueAsString(null)))
+            .andExpect(status().isBadRequest());
     }
 }
