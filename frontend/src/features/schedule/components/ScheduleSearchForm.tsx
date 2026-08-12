@@ -66,13 +66,15 @@ export function ScheduleSearchForm({
                                 value={searchRequestDto.departureStationCd}
                                 setValue={setDepartureStation}
                             />
-                            <button
-                                onClick={switchDepartureAndArrivalStation}
-                                className="w-fit rounded-full border-1 bg-white p-1 text-xl md:mt-8"
-                            >
-                                <HiOutlineSwitchHorizontal className="hidden md:block" />
-                                <HiOutlineSwitchVertical className="block md:hidden" />
-                            </button>
+                            <div className="w-full text-center md:w-fit">
+                                <button
+                                    onClick={switchDepartureAndArrivalStation}
+                                    className="w-fit rounded-full border-1 bg-white p-1 text-xl md:mt-8"
+                                >
+                                    <HiOutlineSwitchHorizontal className="hidden md:block" />
+                                    <HiOutlineSwitchVertical className="block md:hidden" />
+                                </button>
+                            </div>
                             <StationSelect
                                 id="arrivalStation"
                                 label="降車駅"
