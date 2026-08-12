@@ -50,7 +50,7 @@ public class AccountService {
     public String create(AccountRequestDto request) {
         Optional<AccountEntity> account = accountRepository.findByMail(request.getMail());
         if (account.isPresent()) {
-            throw new ResponseStatusException(HttpStatus.CONFLICT, request.getMail());
+            throw new ResponseStatusException(HttpStatus.CONFLICT, request.getMail() + " is Duplicate");
         }
 
         AccountEntity createAccount = new AccountEntity(
