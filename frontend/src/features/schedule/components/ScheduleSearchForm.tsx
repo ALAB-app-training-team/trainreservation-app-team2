@@ -1,5 +1,5 @@
 import type { SetStateAction } from 'react';
-import { FiArrowRight } from 'react-icons/fi';
+import { GoArrowSwitch } from 'react-icons/go';
 
 import { DepartureDateAndTimePicker } from '@/features/schedule/components/DepartureDateAndTimePicker';
 import { StationSelect } from '@/features/schedule/components/StationSelect';
@@ -16,6 +16,7 @@ type ScheduleSearchFormProps = {
     setDate: React.Dispatch<SetStateAction<string>>;
     setDepartureStation: React.Dispatch<SetStateAction<string>>;
     setArrivalStation: React.Dispatch<SetStateAction<string>>;
+    switchDepartureAndArrivalStation: () => void;
     searchRequestDto: SearchRequestDto;
     getFieldError: (field: string) => string;
     maxDate: Date;
@@ -32,6 +33,7 @@ export function ScheduleSearchForm({
     setDate,
     setDepartureStation,
     setArrivalStation,
+    switchDepartureAndArrivalStation,
     searchRequestDto,
     getFieldError,
     maxDate,
@@ -61,9 +63,12 @@ export function ScheduleSearchForm({
                                 value={searchRequestDto.departureStationCd}
                                 setValue={setDepartureStation}
                             />
-                            <div className="mt-4 hidden text-xl md:block">
-                                <FiArrowRight />
-                            </div>
+                            <button
+                                onClick={switchDepartureAndArrivalStation}
+                                className="mt-8 hidden rounded-full border-1 bg-white p-1 text-xl md:block"
+                            >
+                                <GoArrowSwitch />
+                            </button>
                             <StationSelect
                                 id="arrivalStation"
                                 label="降車駅"
