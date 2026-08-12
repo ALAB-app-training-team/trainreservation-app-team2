@@ -13,10 +13,8 @@ import lombok.NoArgsConstructor;
 public class AccountRequestDto {
     @NotBlank(message = "Name is Blank")
     private String name;
-    @NotBlank(message = "Mail is Blank")
     @ValidMail
     private String mail;
-    @NotBlank(message = "Password is Blank")
     @ValidPassword
     private String password;
 }

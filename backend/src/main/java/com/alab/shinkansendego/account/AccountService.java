@@ -1,12 +1,11 @@
 package com.alab.shinkansendego.account;
 
+import com.alab.shinkansendego.exception.ConflictException;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpStatus;
 import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import org.springframework.web.server.ResponseStatusException;
 
 import java.util.Optional;
 import java.util.UUID;
@@ -50,7 +49,7 @@ public class AccountService {
     public String create(AccountRequestDto request) {
         Optional<AccountEntity> account = accountRepository.findByMail(request.getMail());
         if (account.isPresent()) {
-            throw new ResponseStatusException(HttpStatus.CONFLICT, request.getMail() + " is Duplicate");
+            throw new ConflictException(request.getMail() + " is Duplicate");
         }
 
         AccountEntity createAccount = new AccountEntity(

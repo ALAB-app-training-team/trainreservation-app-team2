@@ -21,7 +21,13 @@ public class MailValidator
     public boolean isValid(String mail, ConstraintValidatorContext context) {
         context.disableDefaultConstraintViolation();
 
+        if (Objects.equals(mail, null)) {
+            return SetValidErrorMessage.setErrorMessage(context, "Mail is Null");
+        }
         if (Objects.equals(mail, "")) {
+            return SetValidErrorMessage.setErrorMessage(context, "Mail is Empty");
+        }
+        if (Objects.equals(mail, " ")) {
             return SetValidErrorMessage.setErrorMessage(context, "Mail is Blank");
         }
         if (!mail.matches(MAIL_PATTERN)) {

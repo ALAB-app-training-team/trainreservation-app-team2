@@ -1,22 +1,19 @@
 package com.alab.shinkansendego.account;
 
+import com.alab.shinkansendego.exception.ConflictException;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
-import org.springframework.http.HttpStatus;
 import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.crypto.password.PasswordEncoder;
-import org.springframework.web.server.ResponseStatusException;
 
-import java.util.Objects;
 import java.util.Optional;
 import java.util.UUID;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
-import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.when;
 
@@ -92,8 +89,7 @@ public class AccountServiceTest {
 
         when(accountRepository.findByMail(mail)).thenReturn(account);
 
-        ResponseStatusException exception = assertThrows(ResponseStatusException.class, () -> service.create(request));
-        assertEquals(HttpStatus.CONFLICT, exception.getStatusCode());
-        assertTrue(Objects.requireNonNull(exception.getReason()).contains(request.getMail()));
+        ConflictException exception = assertThrows(ConflictException.class, () -> service.create(request));
+        assertEquals(mail + " is Duplicate", exception.getReason());
     }
 }

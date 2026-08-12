@@ -21,7 +21,13 @@ public class PasswordValidator
     public boolean isValid(String password, ConstraintValidatorContext context) {
         context.disableDefaultConstraintViolation();
 
+        if (Objects.equals(password, null)) {
+            return SetValidErrorMessage.setErrorMessage(context, "Password is Null");
+        }
         if (Objects.equals(password, "")) {
+            return SetValidErrorMessage.setErrorMessage(context, "Password is Empty");
+        }
+        if (Objects.equals(password, " ")) {
             return SetValidErrorMessage.setErrorMessage(context, "Password is Blank");
         }
         if (!password.matches(PASSWORD_PATTERN)) {

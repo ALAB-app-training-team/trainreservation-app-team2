@@ -6,6 +6,7 @@ import com.alab.shinkansendego.account.AccountRepository;
 import com.alab.shinkansendego.account.AccountSessionDto;
 import com.alab.shinkansendego.departurearrivaltime.DepartureArrivalTimeEntity;
 import com.alab.shinkansendego.departurearrivaltime.DepartureArrivalTimeRepository;
+import com.alab.shinkansendego.exception.ConflictException;
 import com.alab.shinkansendego.reservedseat.ReservedSeatEntity;
 import com.alab.shinkansendego.reservedseat.ReservedSeatRepository;
 import com.alab.shinkansendego.reservedseatsection.ReservedSeatSectionEntity;
@@ -21,13 +22,11 @@ import com.alab.shinkansendego.utils.StringUtils;
 import jakarta.persistence.EntityManager;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationEventPublisher;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.client.RestClient;
-import org.springframework.web.server.ResponseStatusException;
 import tools.jackson.databind.ObjectMapper;
 
 import java.time.LocalDate;
@@ -433,7 +432,7 @@ public class ReservationService {
             }
             if (!seatResponseDtos.isEmpty()) {
                 String conflictSeatJson = new ObjectMapper().writeValueAsString(seatResponseDtos);
-                throw new ResponseStatusException(HttpStatus.CONFLICT, conflictSeatJson);
+                throw new ConflictException(conflictSeatJson);
             }
         }
 
