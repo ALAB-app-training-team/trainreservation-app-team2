@@ -126,6 +126,9 @@ export function ReservationListBody() {
             state: {
                 searchRequestDto,
                 isBack: true,
+                reservationId: detail.reservationId,
+                reservedSeats: detail.reservedSeats,
+                preChangeScheduleCd: detail.scheduleCd,
             },
         });
     };
