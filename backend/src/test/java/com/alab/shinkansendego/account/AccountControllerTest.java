@@ -99,16 +99,29 @@ public class AccountControllerTest {
     }
 
     @Test
-    @DisplayName("リクエストのメールアドレスが空白の場合、バリデーションエラー発生")
-    void create_withMailIsBlank_returnValidationError() throws Exception {
+    @DisplayName("リクエストのメールアドレスが空文字の場合、バリデーションエラー発生")
+    void create_withMailIsEmpty_returnValidationError() throws Exception {
 
-        AccountRequestDto request = new AccountRequestDto("太郎", " ", rawPassword);
+        AccountRequestDto request = new AccountRequestDto("太郎", "", rawPassword);
 
         mockMvc.perform(MockMvcRequestBuilders.post(baseUrl + "create")
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(objectMapper.writeValueAsString(request)))
             .andExpect(status().isBadRequest())
             .andExpect(content().string("Mail is Blank"));
+    }
+
+    @Test
+    @DisplayName("リクエストのメールアドレスが不正形式の場合、バリデーションエラー発生")
+    void create_withInValidMail_returnValidationError() throws Exception {
+
+        AccountRequestDto request = new AccountRequestDto("太郎", "aa@aa", rawPassword);
+
+        mockMvc.perform(MockMvcRequestBuilders.post(baseUrl + "create")
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(objectMapper.writeValueAsString(request)))
+            .andExpect(status().isBadRequest())
+            .andExpect(content().string("Mail is InValid"));
     }
 
     @Test

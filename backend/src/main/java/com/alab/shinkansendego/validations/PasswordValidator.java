@@ -15,32 +15,26 @@ public class PasswordValidator
         context.disableDefaultConstraintViolation();
 
         if (Objects.equals(password, "")) {
-            return setErrorMessage(context, "Password is Blank");
+            return SetValidErrorMessage.setErrorMessage(context, "Password is Blank");
         }
         if (!password.matches(PASSWORD_PATTERN)) {
-            return setErrorMessage(context, "Password Policy doesn't match");
+            return SetValidErrorMessage.setErrorMessage(context, "Password Policy doesn't match");
         }
         if (password.length() < 8) {
-            return setErrorMessage(context, "Password is Less Than 8 Characters");
+            return SetValidErrorMessage.setErrorMessage(context, "Password is Less Than 8 Characters");
         }
         if (password.length() > 64) {
-            return setErrorMessage(context, "Password is More Than 64 Characters");
+            return SetValidErrorMessage.setErrorMessage(context, "Password is More Than 64 Characters");
         }
         if (!password.matches(".*[A-Z].*")) {
-            return setErrorMessage(context, "Password doesn't Contain Uppercase");
+            return SetValidErrorMessage.setErrorMessage(context, "Password doesn't Contain Uppercase");
         }
         if (!password.matches(".*[a-z].*")) {
-            return setErrorMessage(context, "Password doesn't Contain Lowercase");
+            return SetValidErrorMessage.setErrorMessage(context, "Password doesn't Contain Lowercase");
         }
         if (!password.matches(".*[0-9].*")) {
-            return setErrorMessage(context, "Password doesn't Contain Number");
+            return SetValidErrorMessage.setErrorMessage(context, "Password doesn't Contain Number");
         }
         return true;
-    }
-
-    private boolean setErrorMessage(ConstraintValidatorContext context, String message) {
-        context.buildConstraintViolationWithTemplate(message)
-            .addConstraintViolation();
-        return false;
     }
 }
