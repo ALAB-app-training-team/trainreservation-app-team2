@@ -78,7 +78,7 @@ public class AccountControllerTest {
         AccountRequestDto request = new AccountRequestDto("太郎", "a@a.com", rawPassword);
         when(service.insertAccount(request)).thenReturn("a@a.com");
 
-        mockMvc.perform(MockMvcRequestBuilders.post(baseUrl + "create")
+        mockMvc.perform(MockMvcRequestBuilders.post(baseUrl + "account")
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(objectMapper.writeValueAsString(request)))
             .andExpect(status().isCreated())
@@ -91,7 +91,7 @@ public class AccountControllerTest {
     void insertAccount_withNameIsNull_returnValidationError() throws Exception {
         AccountRequestDto request = new AccountRequestDto(null, "a@a.com", rawPassword);
 
-        mockMvc.perform(MockMvcRequestBuilders.post(baseUrl + "create")
+        mockMvc.perform(MockMvcRequestBuilders.post(baseUrl + "account")
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(objectMapper.writeValueAsString(request)))
             .andExpect(status().isBadRequest())
@@ -103,7 +103,7 @@ public class AccountControllerTest {
     void insertAccount_withNameIsEmpty_returnValidationError() throws Exception {
         AccountRequestDto request = new AccountRequestDto("", "a@a.com", rawPassword);
 
-        mockMvc.perform(MockMvcRequestBuilders.post(baseUrl + "create")
+        mockMvc.perform(MockMvcRequestBuilders.post(baseUrl + "account")
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(objectMapper.writeValueAsString(request)))
             .andExpect(status().isBadRequest())
@@ -116,7 +116,7 @@ public class AccountControllerTest {
 
         AccountRequestDto request = new AccountRequestDto("太郎", null, rawPassword);
 
-        mockMvc.perform(MockMvcRequestBuilders.post(baseUrl + "create")
+        mockMvc.perform(MockMvcRequestBuilders.post(baseUrl + "account")
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(objectMapper.writeValueAsString(request)))
             .andExpect(status().isBadRequest())
@@ -129,7 +129,7 @@ public class AccountControllerTest {
 
         AccountRequestDto request = new AccountRequestDto("太郎", "", rawPassword);
 
-        mockMvc.perform(MockMvcRequestBuilders.post(baseUrl + "create")
+        mockMvc.perform(MockMvcRequestBuilders.post(baseUrl + "account")
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(objectMapper.writeValueAsString(request)))
             .andExpect(status().isBadRequest())
@@ -142,7 +142,7 @@ public class AccountControllerTest {
 
         AccountRequestDto request = new AccountRequestDto("太郎", " ", rawPassword);
 
-        mockMvc.perform(MockMvcRequestBuilders.post(baseUrl + "create")
+        mockMvc.perform(MockMvcRequestBuilders.post(baseUrl + "account")
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(objectMapper.writeValueAsString(request)))
             .andExpect(status().isBadRequest())
@@ -155,7 +155,7 @@ public class AccountControllerTest {
 
         AccountRequestDto request = new AccountRequestDto("太郎", "aa@aa", rawPassword);
 
-        mockMvc.perform(MockMvcRequestBuilders.post(baseUrl + "create")
+        mockMvc.perform(MockMvcRequestBuilders.post(baseUrl + "account")
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(objectMapper.writeValueAsString(request)))
             .andExpect(status().isBadRequest())
@@ -168,7 +168,7 @@ public class AccountControllerTest {
 
         AccountRequestDto request = new AccountRequestDto("太郎", "a@a.com", null);
 
-        mockMvc.perform(MockMvcRequestBuilders.post(baseUrl + "create")
+        mockMvc.perform(MockMvcRequestBuilders.post(baseUrl + "account")
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(objectMapper.writeValueAsString(request)))
             .andExpect(status().isBadRequest())
@@ -181,7 +181,7 @@ public class AccountControllerTest {
 
         AccountRequestDto request = new AccountRequestDto("太郎", "a@a.com", "");
 
-        mockMvc.perform(MockMvcRequestBuilders.post(baseUrl + "create")
+        mockMvc.perform(MockMvcRequestBuilders.post(baseUrl + "account")
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(objectMapper.writeValueAsString(request)))
             .andExpect(status().isBadRequest())
@@ -194,7 +194,7 @@ public class AccountControllerTest {
 
         AccountRequestDto request = new AccountRequestDto("太郎", "a@a.com", " ");
 
-        mockMvc.perform(MockMvcRequestBuilders.post(baseUrl + "create")
+        mockMvc.perform(MockMvcRequestBuilders.post(baseUrl + "account")
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(objectMapper.writeValueAsString(request)))
             .andExpect(status().isBadRequest())
@@ -207,7 +207,7 @@ public class AccountControllerTest {
 
         AccountRequestDto request = new AccountRequestDto("太郎", "a@a.com", "Pass|word1");
 
-        mockMvc.perform(MockMvcRequestBuilders.post(baseUrl + "create")
+        mockMvc.perform(MockMvcRequestBuilders.post(baseUrl + "account")
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(objectMapper.writeValueAsString(request)))
             .andExpect(status().isBadRequest())
@@ -220,7 +220,7 @@ public class AccountControllerTest {
 
         AccountRequestDto request = new AccountRequestDto("太郎", "a@a.com", "Pass1");
 
-        mockMvc.perform(MockMvcRequestBuilders.post(baseUrl + "create")
+        mockMvc.perform(MockMvcRequestBuilders.post(baseUrl + "account")
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(objectMapper.writeValueAsString(request)))
             .andExpect(status().isBadRequest())
@@ -233,7 +233,7 @@ public class AccountControllerTest {
 
         AccountRequestDto request = new AccountRequestDto("太郎", "a@a.com", "Password12345678Password12345678Password12345678Password1234567899");
 
-        mockMvc.perform(MockMvcRequestBuilders.post(baseUrl + "create")
+        mockMvc.perform(MockMvcRequestBuilders.post(baseUrl + "account")
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(objectMapper.writeValueAsString(request)))
             .andExpect(status().isBadRequest())
@@ -246,7 +246,7 @@ public class AccountControllerTest {
 
         AccountRequestDto request = new AccountRequestDto("太郎", "a@a.com", "password1");
 
-        mockMvc.perform(MockMvcRequestBuilders.post(baseUrl + "create")
+        mockMvc.perform(MockMvcRequestBuilders.post(baseUrl + "account")
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(objectMapper.writeValueAsString(request)))
             .andExpect(status().isBadRequest())
@@ -259,7 +259,7 @@ public class AccountControllerTest {
 
         AccountRequestDto request = new AccountRequestDto("太郎", "a@a.com", "PASSWORD1");
 
-        mockMvc.perform(MockMvcRequestBuilders.post(baseUrl + "create")
+        mockMvc.perform(MockMvcRequestBuilders.post(baseUrl + "account")
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(objectMapper.writeValueAsString(request)))
             .andExpect(status().isBadRequest())
@@ -272,7 +272,7 @@ public class AccountControllerTest {
 
         AccountRequestDto request = new AccountRequestDto("太郎", "a@a.com", "Password");
 
-        mockMvc.perform(MockMvcRequestBuilders.post(baseUrl + "create")
+        mockMvc.perform(MockMvcRequestBuilders.post(baseUrl + "account")
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(objectMapper.writeValueAsString(request)))
             .andExpect(status().isBadRequest())
@@ -283,7 +283,7 @@ public class AccountControllerTest {
     @DisplayName("リクエストDTO自体がNullの場合、バインドエラー発生")
     void insertAccount_withAccountRequestDtoIsNull_returnBindError() throws Exception {
         //バインド順が毎回異なるためエラーメッセージの比較は行わない
-        mockMvc.perform(MockMvcRequestBuilders.post(baseUrl + "create")
+        mockMvc.perform(MockMvcRequestBuilders.post(baseUrl + "account")
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(objectMapper.writeValueAsString(null)))
             .andExpect(status().isBadRequest());
