@@ -66,9 +66,9 @@ public class AccountController {
      * @param request 登録するアカウント情報
      * @return 登録したメールアドレス
      */
-    @PostMapping("create")
-    public ResponseEntity<String> create(@Valid @RequestBody AccountRequestDto request) {
-        String mail = accountService.create(request);
+    @PostMapping("account")
+    public ResponseEntity<String> insertAccount(@Valid @RequestBody AccountRequestDto request) {
+        String mail = accountService.insertAccount(request);
         return ResponseEntity.status(HttpStatus.CREATED).body(mail);
     }
 }

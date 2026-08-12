@@ -68,7 +68,7 @@ public class AccountServiceTest {
 
     @Test
     @DisplayName("アカウント作成できること")
-    void create_withAccountRequestDto_returnAccountCreateSuccess() {
+    void create_withAccountRequestDto_returnAccountInsertAccountSuccess() {
         AccountRequestDto request = new AccountRequestDto("太郎", mail, rawPassword);
         Optional<AccountEntity> account = Optional.empty();
         AccountEntity savedAccount = new AccountEntity(UUID.randomUUID(), "太郎", mail, hashedPassword);
@@ -77,19 +77,19 @@ public class AccountServiceTest {
         when(passwordEncoder.encode(rawPassword)).thenReturn(hashedPassword);
         when(accountRepository.save(any())).thenReturn(savedAccount);
 
-        String result = service.create(request);
+        String result = service.insertAccount(request);
         assertEquals(result, request.getMail());
     }
 
     @Test
     @DisplayName("登録済メールアドレスがリクエストされた場合、CONFLICTを発生させる")
-    void create_withExistMail_return409() {
+    void insertAccount_withExistMail_return409() {
         AccountRequestDto request = new AccountRequestDto("太郎", mail, rawPassword);
         Optional<AccountEntity> account = Optional.of(new AccountEntity(UUID.randomUUID(), "太郎", mail, hashedPassword));
 
         when(accountRepository.findByMail(mail)).thenReturn(account);
 
-        ConflictException exception = assertThrows(ConflictException.class, () -> service.create(request));
+        ConflictException exception = assertThrows(ConflictException.class, () -> service.insertAccount(request));
         assertEquals(mail + " is Duplicate", exception.getReason());
     }
 }

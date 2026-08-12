@@ -46,7 +46,7 @@ public class AccountService {
      * @return 登録したメールアドレス
      */
     @Transactional
-    public String create(AccountRequestDto request) {
+    public String insertAccount(AccountRequestDto request) {
         Optional<AccountEntity> account = accountRepository.findByMail(request.getMail());
         if (account.isPresent()) {
             throw new ConflictException(request.getMail() + " is Duplicate");
