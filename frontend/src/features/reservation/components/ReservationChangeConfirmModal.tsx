@@ -1,4 +1,4 @@
-import { CiUser } from 'react-icons/ci';
+import { CiCalendarDate, CiUser } from 'react-icons/ci';
 
 import { ReservationInfo } from '@/features/reservation/components/ReservationInfo';
 import type { ReservationResponseDto } from '@/features/reservation/types/ReservationResponseDto';
@@ -6,16 +6,18 @@ import { CustomModalTitle } from '@/shared/components/CustomModalTitle';
 
 type ReservationRefundConfirmModalProps = {
     onChangeSeatClick: (reservation: ReservationResponseDto) => void;
+    onChangeTrainClick: (reservation: ReservationResponseDto) => void;
     onRequestClose: () => void;
     isSubmitting: boolean;
-    details: ReservationResponseDto;
+    detail: ReservationResponseDto;
 };
 
 export function ReservationChangeConfirmModal({
     onChangeSeatClick,
+    onChangeTrainClick,
     onRequestClose,
     isSubmitting,
-    details,
+    detail,
 }: ReservationRefundConfirmModalProps) {
     return (
         <>
@@ -26,26 +28,25 @@ export function ReservationChangeConfirmModal({
                     isSubmitting={isSubmitting}
                 />
                 <div>変更する内容を選択してください</div>
-                <ReservationInfo details={details} id="reservationChange" />
+                <ReservationInfo detail={detail} id="reservationChange" />
                 <div className="flex w-full items-center justify-center gap-4">
                     <button
                         data-testid={'change-seat-confirm-button'}
-                        onClick={() => onChangeSeatClick(details)}
+                        onClick={() => onChangeSeatClick(detail)}
                         disabled={isSubmitting}
                         className="bg-primary flex items-center rounded-lg p-2 text-white"
                     >
                         <CiUser />
                         人数・座席変更
                     </button>
-                    {/* TODO:日時・経路変更実装時コメント外す
-                     <button
-                        onClick={() => }
+                    <button
+                        onClick={() => onChangeTrainClick(detail)}
                         disabled={isSubmitting}
                         className="bg-primary flex items-center rounded-lg p-2 text-white"
                     >
                         <CiCalendarDate />
                         日時・経路変更
-                    </button> */}
+                    </button>
                 </div>
             </div>
         </>

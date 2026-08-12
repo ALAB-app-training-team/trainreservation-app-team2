@@ -90,29 +90,44 @@ export function ReservationListBody() {
         }
     };
 
-    const handleChangeSeat = async (details: ReservationResponseDto) => {
+    const handleChangeSeat = async (detail: ReservationResponseDto) => {
         const scheduleInfoDto: ScheduleInfoDto = {
-            scheduleCd: details.scheduleCd,
-            date: details.rideDate,
-            departureTime: details.departureTime,
-            arrivalTime: details.arrivalTime,
-            trainTypeName: details.trainTypeName,
-            departureStationCd: details.departureStationCd,
-            arrivalStationCd: details.arrivalStationCd,
-            departureStationName: details.departureStationName,
-            arrivalStationName: details.arrivalStationName,
+            scheduleCd: detail.scheduleCd,
+            date: detail.rideDate,
+            departureTime: detail.departureTime,
+            arrivalTime: detail.arrivalTime,
+            trainTypeName: detail.trainTypeName,
+            departureStationCd: detail.departureStationCd,
+            arrivalStationCd: detail.arrivalStationCd,
+            departureStationName: detail.departureStationName,
+            arrivalStationName: detail.arrivalStationName,
         };
         const searchRequestDto: SearchRequestDto | null = null;
         navigate('/selectSeat', {
             state: {
                 scheduleInfoDto,
                 searchRequestDto,
-                reservedSeats: details.reservedSeats,
-                reservationId: details.reservationId,
+                reservedSeats: detail.reservedSeats,
+                reservationId: detail.reservationId,
             },
         });
         window.scrollTo(0, 0);
         onRequestClose();
+    };
+
+    const handleChangeTrain = (detail: ReservationResponseDto) => {
+        const searchRequestDto: SearchRequestDto = {
+            date: detail.rideDate,
+            time: detail.departureTime,
+            departureStationCd: detail.departureStationCd,
+            arrivalStationCd: detail.arrivalStationCd,
+        };
+        navigate('/scheduleSearch', {
+            state: {
+                searchRequestDto,
+                isBack: true,
+            },
+        });
     };
 
     return (
@@ -165,16 +180,17 @@ export function ReservationListBody() {
                     (isChange ? (
                         <ReservationChangeConfirmModal
                             onChangeSeatClick={handleChangeSeat}
+                            onChangeTrainClick={handleChangeTrain}
                             onRequestClose={onRequestClose}
                             isSubmitting={isSubmitting}
-                            details={selectedReservation}
+                            detail={selectedReservation}
                         />
                     ) : (
                         <ReservationRefundConfirmModal
                             onClick={handleReservationRefund}
                             onRequestClose={onRequestClose}
                             isSubmitting={isSubmitting}
-                            details={selectedReservation}
+                            detail={selectedReservation}
                         />
                     ))}
             </CustomModal>
