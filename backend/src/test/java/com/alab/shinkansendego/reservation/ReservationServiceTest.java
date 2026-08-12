@@ -5,6 +5,7 @@ import com.alab.shinkansendego.account.AccountRepository;
 import com.alab.shinkansendego.account.AccountSessionDto;
 import com.alab.shinkansendego.departurearrivaltime.DepartureArrivalTimeEntity;
 import com.alab.shinkansendego.departurearrivaltime.DepartureArrivalTimeRepository;
+import com.alab.shinkansendego.exception.ConflictException;
 import com.alab.shinkansendego.reservedseat.ReservedSeatEntity;
 import com.alab.shinkansendego.reservedseat.ReservedSeatRepository;
 import com.alab.shinkansendego.reservedseatsection.ReservedSeatSectionEntity;
@@ -41,7 +42,6 @@ import org.springframework.test.web.client.MockRestServiceServer;
 import org.springframework.web.client.RestClient;
 import org.springframework.web.context.request.RequestContextHolder;
 import org.springframework.web.context.request.ServletRequestAttributes;
-import org.springframework.web.server.ResponseStatusException;
 
 import java.time.LocalDate;
 import java.time.LocalTime;
@@ -755,8 +755,8 @@ public class ReservationServiceTest {
     }
 
     @Test
-    @DisplayName("既に予約済みの座席を予約しようとした場合、ResponseStatusException(CONFLICT)が発生する")
-    void insertReservation_withAlreadyReservedSeat_throwsResponseStatusException() {
+    @DisplayName("既に予約済みの座席を予約しようとした場合、ConflictExceptionが発生する")
+    void insertReservation_withAlreadyReservedSeat_throwsConflictException() {
         TrainCarEntity trainCar = new TrainCarEntity();
         trainCar.setTrainCarNumber(1);
         SeatTypeEntity seatType = new SeatTypeEntity();
@@ -798,8 +798,7 @@ public class ReservationServiceTest {
         when(reservedSeatSectionRepo.findByRideDateAndScheduleCdAndTrainCarCdInAndReservedSectionCdIn(any(), any(), any(), any()))
             .thenReturn(List.of(existingSec));
 
-        ResponseStatusException exception = assertThrows(ResponseStatusException.class, () -> service.insertReservation(request, null));
-        assertEquals(HttpStatus.CONFLICT, exception.getStatusCode());
+        ConflictException exception = assertThrows(ConflictException.class, () -> service.insertReservation(request, null));
         assertTrue(exception.getReason().contains(existingSeat.getSeatCd()));
         assertTrue(exception.getReason().contains(existingSeat.getTrainCarCd()));
     }
