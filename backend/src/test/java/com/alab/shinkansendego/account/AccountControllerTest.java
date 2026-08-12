@@ -121,7 +121,7 @@ public class AccountControllerTest {
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(objectMapper.writeValueAsString(request)))
             .andExpect(status().isBadRequest())
-            .andExpect(content().string("Password Policy doesn't match"));
+            .andExpect(content().string("Password is Blank"));
     }
 
     @Test
@@ -134,7 +134,7 @@ public class AccountControllerTest {
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(objectMapper.writeValueAsString(request)))
             .andExpect(status().isBadRequest())
-            .andExpect(content().string("Password Policy doesn't match"));
+            .andExpect(content().string("Password is Less Than 8 Characters"));
     }
 
     @Test
@@ -147,7 +147,7 @@ public class AccountControllerTest {
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(objectMapper.writeValueAsString(request)))
             .andExpect(status().isBadRequest())
-            .andExpect(content().string("Password Policy doesn't match"));
+            .andExpect(content().string("Password is More Than 64 Characters"));
     }
 
     @Test
@@ -160,7 +160,7 @@ public class AccountControllerTest {
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(objectMapper.writeValueAsString(request)))
             .andExpect(status().isBadRequest())
-            .andExpect(content().string("Password Policy doesn't match"));
+            .andExpect(content().string("Password doesn't Contain Uppercase"));
     }
 
     @Test
@@ -173,7 +173,7 @@ public class AccountControllerTest {
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(objectMapper.writeValueAsString(request)))
             .andExpect(status().isBadRequest())
-            .andExpect(content().string("Password Policy doesn't match"));
+            .andExpect(content().string("Password doesn't Contain Lowercase"));
     }
 
     @Test
@@ -186,7 +186,7 @@ public class AccountControllerTest {
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(objectMapper.writeValueAsString(request)))
             .andExpect(status().isBadRequest())
-            .andExpect(content().string("Password Policy doesn't match"));
+            .andExpect(content().string("Password doesn't Contain Number"));
     }
 
     @Test
