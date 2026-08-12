@@ -9,4 +9,6 @@ export type SelectSeatsLocationState = {
     prevSelectedSeats?: SeatResponseDto[];
     reservedSeats?: ReservedSeatDto[];
     reservationId?: string;
+    preChangeScheduleCd?: string;
+    preChangeReservedSeats?: ReservedSeatDto[];
 };
