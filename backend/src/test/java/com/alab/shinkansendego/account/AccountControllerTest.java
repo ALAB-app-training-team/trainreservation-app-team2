@@ -76,14 +76,11 @@ public class AccountControllerTest {
     @DisplayName("アカウント作成できること")
     void insertAccount_return201AndMail() throws Exception {
         AccountRequestDto request = new AccountRequestDto("太郎", "a@a.com", rawPassword);
-        when(service.insertAccount(request)).thenReturn("a@a.com");
 
         mockMvc.perform(MockMvcRequestBuilders.post(baseUrl + "account")
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(objectMapper.writeValueAsString(request)))
-            .andExpect(status().isCreated())
-            .andExpect(jsonPath("$").value(request.getMail()))
-            .andReturn();
+            .andExpect(status().isNoContent());
     }
 
     @Test

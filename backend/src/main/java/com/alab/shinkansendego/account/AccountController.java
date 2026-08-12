@@ -3,7 +3,6 @@ package com.alab.shinkansendego.account;
 import jakarta.servlet.http.HttpSession;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
@@ -64,11 +63,11 @@ public class AccountController {
      * アカウント新規作成メソッド
      *
      * @param request 登録するアカウント情報
-     * @return 登録したメールアドレス
+     * @return NoContent
      */
     @PostMapping("account")
-    public ResponseEntity<String> insertAccount(@Valid @RequestBody AccountRequestDto request) {
-        String mail = accountService.insertAccount(request);
-        return ResponseEntity.status(HttpStatus.CREATED).body(mail);
+    public ResponseEntity<Void> insertAccount(@Valid @RequestBody AccountRequestDto request) {
+        accountService.insertAccount(request);
+        return ResponseEntity.noContent().build();
     }
 }

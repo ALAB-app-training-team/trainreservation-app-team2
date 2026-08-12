@@ -43,10 +43,9 @@ public class AccountService {
      * アカウント新規作成を行うメソッド
      *
      * @param request 登録するアカウント情報
-     * @return 登録したメールアドレス
      */
     @Transactional
-    public String insertAccount(AccountRequestDto request) {
+    public void insertAccount(AccountRequestDto request) {
         Optional<AccountEntity> account = accountRepository.findByMail(request.getMail());
         if (account.isPresent()) {
             throw new ConflictException(request.getMail() + " is Duplicate");
@@ -58,6 +57,6 @@ public class AccountService {
             removeSpaces(request.getMail()),
             passwordEncoder.encode(request.getPassword()));
 
-        return accountRepository.save(postAccount).getMail();
+        accountRepository.save(postAccount);
     }
 }
