@@ -1,5 +1,8 @@
 import type { SetStateAction } from 'react';
-import { GoArrowSwitch } from 'react-icons/go';
+import {
+    HiOutlineSwitchHorizontal,
+    HiOutlineSwitchVertical,
+} from 'react-icons/hi';
 
 import { DepartureDateAndTimePicker } from '@/features/schedule/components/DepartureDateAndTimePicker';
 import { StationSelect } from '@/features/schedule/components/StationSelect';
@@ -65,9 +68,10 @@ export function ScheduleSearchForm({
                             />
                             <button
                                 onClick={switchDepartureAndArrivalStation}
-                                className="mt-8 hidden rounded-full border-1 bg-white p-1 text-xl md:block"
+                                className="w-fit rounded-full border-1 bg-white p-1 text-xl md:mt-8"
                             >
-                                <GoArrowSwitch />
+                                <HiOutlineSwitchHorizontal className="hidden md:block" />
+                                <HiOutlineSwitchVertical className="block md:hidden" />
                             </button>
                             <StationSelect
                                 id="arrivalStation"
