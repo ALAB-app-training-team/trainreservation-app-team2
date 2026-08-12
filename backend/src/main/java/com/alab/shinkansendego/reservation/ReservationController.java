@@ -14,6 +14,7 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestHeader;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
@@ -82,8 +83,17 @@ public class ReservationController {
 
     @DeleteMapping(value = "{id}")
     @PreAuthorize("isAuthenticated()")
-    public ResponseEntity<Void> deleteReservation(@PathVariable("id") UUID reservationId, @AuthenticationPrincipal AccountSessionDto session) {
-        reservationService.deleteReservation(reservationId, session.getId());
+    public ResponseEntity<Void> deleteAccountReservation(@PathVariable("id") UUID reservationId, @AuthenticationPrincipal AccountSessionDto session) {
+        reservationService.deleteReservation(reservationId, session.getId(), null, null);
+        return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
+    }
+
+    @DeleteMapping(value = "guest/{id}")
+    public ResponseEntity<Void> deleteGuestReservation(@PathVariable("id") UUID reservationId,
+                                                       @AuthenticationPrincipal AccountSessionDto session,
+                                                       @RequestHeader("X-Name") String name,
+                                                       @RequestHeader("X-Mail") String mail) {
+        reservationService.deleteReservation(reservationId, session.getId(), name, mail);
         return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
     }
 }
