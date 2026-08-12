@@ -52,7 +52,7 @@ export function useSearchRequestDto({
     const maxDate = new Date(
         new Date().getFullYear(),
         new Date().getMonth() + 1,
-        new Date().getDate(),
+        new Date().getDate() + 1,
     );
     const minDate = new Date();
     minDate.setHours(0, 0, 0, 0);
