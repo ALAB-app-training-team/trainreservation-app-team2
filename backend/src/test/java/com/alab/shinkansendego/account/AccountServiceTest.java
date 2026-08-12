@@ -68,7 +68,7 @@ public class AccountServiceTest {
 
     @Test
     @DisplayName("アカウント作成できること")
-    void create_withAccountRequestDto_returnAccountInsertAccountSuccess() {
+    void insertAccount_withAccountRequestDto_returnAccountInsertAccountSuccess() {
         AccountRequestDto request = new AccountRequestDto("太郎", mail, rawPassword);
         Optional<AccountEntity> account = Optional.empty();
         AccountEntity savedAccount = new AccountEntity(UUID.randomUUID(), "太郎", mail, hashedPassword);

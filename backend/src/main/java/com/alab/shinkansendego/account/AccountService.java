@@ -52,12 +52,12 @@ public class AccountService {
             throw new ConflictException(request.getMail() + " is Duplicate");
         }
 
-        AccountEntity createAccount = new AccountEntity(
+        AccountEntity postAccount = new AccountEntity(
             UUID.randomUUID(),
             removeSpaces(request.getName()),
             removeSpaces(request.getMail()),
             passwordEncoder.encode(request.getPassword()));
 
-        return accountRepository.save(createAccount).getMail();
+        return accountRepository.save(postAccount).getMail();
     }
 }
