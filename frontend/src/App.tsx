@@ -6,6 +6,7 @@ import {
 } from 'react-router-dom';
 
 import { AuthProvider } from '@/context/AuthContext';
+import { Account } from '@/features/account/pages/Account';
 import { Login } from '@/features/account/pages/Login';
 import { ReservationGuestLogin } from '@/features/reservation/pages/ReservationGuestLogin';
 import { ReservationList } from '@/features/reservation/pages/ReservationList';
@@ -74,6 +75,12 @@ const router = createBrowserRouter([
                 path: '/login',
                 loader: () => loginLoader(),
                 element: <Login />,
+                errorElement: <Error />,
+            },
+            {
+                path: '/account',
+                loader: () => loginLoader(),
+                element: <Account />,
                 errorElement: <Error />,
             },
             {

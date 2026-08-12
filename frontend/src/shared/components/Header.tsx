@@ -22,7 +22,7 @@ export function Header() {
         ...(!name
             ? [
                   {
-                      label: 'ログイン',
+                      label: 'ログイン/会員登録',
                       to: '/login',
                   },
               ]
