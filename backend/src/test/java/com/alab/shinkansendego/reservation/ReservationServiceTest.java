@@ -1060,8 +1060,8 @@ public class ReservationServiceTest {
     }
 
     @Test
-    @DisplayName("予約情報・予約座席情報の論理削除、予約済座席区間の物理削除ができる")
-    void deleteReservation_withReservationId() {
+    @DisplayName("ログイン中のユーザーが予約情報・予約座席情報の論理削除、予約済座席区間の物理削除ができる")
+    void deleteReservation_withReservationIdAndLoggedInUser() {
         UUID reservationId = UUID.randomUUID();
         UUID accountId = UUID.fromString("f79d8bbc-fcba-b538-b132-2f726ce0120c");
         ReservationEntity deletedReservation = getReservation(reservationId);
@@ -1072,7 +1072,7 @@ public class ReservationServiceTest {
         when(reservedSeatRepo.findByReservationId(reservationId)).thenReturn(deletedSeats);
         when(reservedSeatSectionRepo.findByReservationId(reservationId)).thenReturn(deletedSections);
 
-        service.deleteReservation(reservationId, accountId);
+        service.deleteReservation(reservationId, accountId, null, null);
         assertTrue(deletedReservation.getIsDeleted());
         verify(reservationRepo).save(deletedReservation);
         assertTrue(deletedSeats.get(0).getIsDeleted());
@@ -1082,11 +1082,44 @@ public class ReservationServiceTest {
     }
 
     @Test
-    @DisplayName("該当予約情報が存在しない場合、IllegalArgumentExceptionが発生する")
-    void deleteReservation_withNotExistingReservationId_throwsIllegalArgumentException() {
+    @DisplayName("ゲストユーザーが予約情報・予約座席情報の論理削除、予約済座席区間の物理削除ができる")
+    void deleteReservation_withReservationIdAndGuestUser() {
+        UUID reservationId = UUID.randomUUID();
+        String name = "一般太郎";
+        String mail = "test-common@test.com";
+        ReservationEntity deletedReservation = getReservation(reservationId);
+        List<ReservedSeatEntity> deletedSeats = getReservedSeats(reservationId);
+        List<ReservedSeatSectionEntity> deletedSections = getReservedSeatSections(reservationId);
+
+        when(reservationRepo.findByIdAndReserverNameAndReserverMail(reservationId, name, mail)).thenReturn(Optional.of(deletedReservation));
+        when(reservedSeatRepo.findByReservationId(reservationId)).thenReturn(deletedSeats);
+        when(reservedSeatSectionRepo.findByReservationId(reservationId)).thenReturn(deletedSections);
+
+        service.deleteReservation(reservationId, null, name, mail);
+        assertTrue(deletedReservation.getIsDeleted());
+        verify(reservationRepo).save(deletedReservation);
+        assertTrue(deletedSeats.get(0).getIsDeleted());
+        assertTrue(deletedSeats.get(1).getIsDeleted());
+        verify(reservedSeatRepo).saveAll(deletedSeats);
+        verify(reservedSeatSectionRepo).deleteAll(deletedSections);
+    }
+
+    @Test
+    @DisplayName("ログイン中のユーザーで該当予約情報が存在しない場合、IllegalArgumentExceptionが発生する")
+    void deleteReservation_withNotExistingReservationIdAndLoggedInUser_throwsIllegalArgumentException() {
         UUID reservationId = UUID.randomUUID();
         UUID accountId = UUID.fromString("f79d8bbc-fcba-b538-b132-2f726ce0120c");
-        Exception ex = assertThrows(IllegalArgumentException.class, () -> service.deleteReservation(reservationId, accountId));
+        Exception ex = assertThrows(IllegalArgumentException.class, () -> service.deleteReservation(reservationId, accountId, null, null));
+        assertEquals("Reservation is not found", ex.getMessage());
+    }
+
+    @Test
+    @DisplayName("ゲストユーザーで該当予約情報が存在しない場合、IllegalArgumentExceptionが発生する")
+    void deleteReservation_withNotExistingReservationIdAndGuestUser_throwsIllegalArgumentException() {
+        UUID reservationId = UUID.randomUUID();
+        String name = "一般太郎";
+        String mail = "test-common@test.com";
+        Exception ex = assertThrows(IllegalArgumentException.class, () -> service.deleteReservation(reservationId, null, name, mail));
         assertEquals("Reservation is not found", ex.getMessage());
     }
 
@@ -1100,7 +1133,7 @@ public class ReservationServiceTest {
         when(reservationRepo.findByIdAndAccountId(reservationId, accountId)).thenReturn(Optional.of(deletedReservation));
         when(reservedSeatRepo.findByReservationId(reservationId)).thenReturn(List.of());
 
-        Exception ex = assertThrows(IllegalArgumentException.class, () -> service.deleteReservation(reservationId, accountId));
+        Exception ex = assertThrows(IllegalArgumentException.class, () -> service.deleteReservation(reservationId, accountId, null, null));
         assertEquals("Reserved Seats is Not found", ex.getMessage());
     }
 
@@ -1116,7 +1149,7 @@ public class ReservationServiceTest {
         when(reservedSeatRepo.findByReservationId(reservationId)).thenReturn(deletedSeats);
         when(reservedSeatSectionRepo.findByReservationId(reservationId)).thenReturn(List.of());
 
-        Exception ex = assertThrows(IllegalArgumentException.class, () -> service.deleteReservation(reservationId, accountId));
+        Exception ex = assertThrows(IllegalArgumentException.class, () -> service.deleteReservation(reservationId, accountId, null, null));
         assertEquals("Reserved Seat Sections is Not found", ex.getMessage());
     }
 }

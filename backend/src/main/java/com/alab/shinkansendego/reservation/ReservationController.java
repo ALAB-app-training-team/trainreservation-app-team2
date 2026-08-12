@@ -89,11 +89,12 @@ public class ReservationController {
     }
 
     @DeleteMapping(value = "guest/{id}")
-    public ResponseEntity<Void> deleteGuestReservation(@PathVariable("id") UUID reservationId,
-                                                       @AuthenticationPrincipal AccountSessionDto session,
-                                                       @RequestHeader("X-Name") String name,
-                                                       @RequestHeader("X-Mail") String mail) {
-        reservationService.deleteReservation(reservationId, session.getId(), name, mail);
+    public ResponseEntity<?> deleteGuestReservation(@PathVariable("id") UUID reservationId,
+                                                    @AuthenticationPrincipal AccountSessionDto session,
+                                                    @RequestHeader("X-Name") String name,
+                                                    @RequestHeader("X-Mail") String mail) {
+        if (session != null) return ResponseEntity.status(HttpStatus.FORBIDDEN).body("Logout required");
+        reservationService.deleteReservation(reservationId, null, name, mail);
         return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
     }
 }
