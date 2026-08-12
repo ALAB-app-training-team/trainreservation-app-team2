@@ -1,6 +1,6 @@
 package com.alab.shinkansendego.account;
 
-import com.alab.shinkansendego.utils.ValidPassword;
+import com.alab.shinkansendego.validations.ValidPassword;
 import jakarta.validation.constraints.NotBlank;
 import lombok.AllArgsConstructor;
 import lombok.Data;

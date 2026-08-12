@@ -1,4 +1,4 @@
-package com.alab.shinkansendego.utils;
+package com.alab.shinkansendego.validations;
 
 import jakarta.validation.Constraint;
 import jakarta.validation.Payload;
