@@ -1,17 +1,21 @@
 import { useQueryClient } from '@tanstack/react-query';
 import { useEffect, useState } from 'react';
-import { CiUser } from 'react-icons/ci';
-import { FiLogIn } from 'react-icons/fi';
+import { FiUserPlus } from 'react-icons/fi';
 import { MdVisibility, MdVisibilityOff } from 'react-icons/md';
 
-import { useLoginRequestDto } from '@/features/account/hooks/useLoginRequestDto';
+import { useAccountRequestDto } from '@/features/account/hooks/useAccountRequestDto';
 import { useToastForRedirect } from '@/shared/hooks/useToastForRedirect';
 import { removeGuestReservation } from '@/shared/utils/RemoveGuestReservation';
 
 export function Account() {
     const queryClient = useQueryClient();
-    const { loginRequestDto, handleChange, handleLogin, isSubmitting } =
-        useLoginRequestDto();
+    const {
+        accountRequestDto,
+        passwordCheck,
+        handleChange,
+        handleLogin,
+        isSubmitting,
+    } = useAccountRequestDto();
     const [passwordType, setPasswordType] = useState('password');
     useToastForRedirect();
     useEffect(() => {
@@ -19,10 +23,10 @@ export function Account() {
     }, []);
     return (
         <div className="flex justify-center">
-            <div className="flex w-full flex-col items-center justify-center gap-4 p-8 md:w-6/10">
+            <div className="flex w-1/2 flex-col items-center justify-center gap-4 p-8 md:w-4/10">
                 <div className="flex flex-col items-center justify-center gap-1">
                     <h1 className="!text-primary !m-0 flex items-center justify-center !text-3xl">
-                        <CiUser />
+                        <FiUserPlus />
                         新規登録
                     </h1>
                     <div className="text-gray-500">
@@ -45,10 +49,10 @@ export function Account() {
                                     id="name"
                                     type="text"
                                     name="mail"
-                                    value={loginRequestDto.mail}
+                                    value={accountRequestDto.name}
                                     onChange={handleChange}
                                     placeholder="山田 太郎"
-                                    autoComplete="email"
+                                    autoComplete="name"
                                     required
                                     className="w-full outline-none"
                                 />
@@ -61,7 +65,7 @@ export function Account() {
                                     id="mail"
                                     type="email"
                                     name="mail"
-                                    value={loginRequestDto.mail}
+                                    value={accountRequestDto.mail}
                                     onChange={handleChange}
                                     placeholder="example@email.com"
                                     autoComplete="email"
@@ -78,7 +82,7 @@ export function Account() {
                                         id="password"
                                         type={passwordType}
                                         name="password"
-                                        value={loginRequestDto.password}
+                                        value={accountRequestDto.password}
                                         onChange={handleChange}
                                         placeholder="パスワードを入力"
                                         autoComplete="current-password"
@@ -100,14 +104,19 @@ export function Account() {
                                         />
                                     )}
                                 </div>
+                            </div>
+                        </div>
+                        <div className="flex flex-col items-start">
+                            <label htmlFor="password">パスワード再入力</label>
+                            <div className="flex w-full flex-col gap-2">
                                 <div className="focus-within:border-primary bg-primary-light box-border flex w-full items-center justify-between gap-4 rounded-lg px-4 py-2 outline-none focus-within:border-2">
                                     <input
-                                        id="password"
+                                        id="passwordCheck"
                                         type={passwordType}
-                                        name="password"
-                                        value={loginRequestDto.password}
+                                        name="passwordCheck"
+                                        value={passwordCheck}
                                         onChange={handleChange}
-                                        placeholder="パスワードを入力"
+                                        placeholder="パスワードを再入力してください"
                                         autoComplete="current-password"
                                         required
                                         className="w-full outline-none [&::-ms-reveal]:hidden"
@@ -135,8 +144,8 @@ export function Account() {
                         disabled={isSubmitting}
                         className="bg-primary flex w-full items-center justify-center gap-2 rounded-lg p-2 text-white"
                     >
-                        <FiLogIn />
-                        ログイン
+                        <FiUserPlus />
+                        登録
                     </button>
                 </form>
             </div>

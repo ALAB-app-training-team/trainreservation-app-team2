@@ -3,25 +3,32 @@ import { useLocation, useNavigate } from 'react-router-dom';
 
 import apiClient from '@/api/apiClient';
 import { ENDPOINTS } from '@/api/routes';
-import type { LoginRequestDto } from '@/features/account/types/LoginRequestDto';
+import type { AccountRequestDto } from '@/features/account/types/AccountRequestDto';
 import { ERROR_MESSAGE } from '@/shared/constants/ErrorMessages';
 
 export function useAccountRequestDto() {
     const navigate = useNavigate();
     const [isSubmitting, setIsSubmitting] = useState<boolean>(false);
-    const [loginRequestDto, setLoginRequestDto] = useState<LoginRequestDto>({
-        mail: '',
-        password: '',
-    });
+    const [accountRequestDto, setAccountRequestDto] =
+        useState<AccountRequestDto>({
+            name: '',
+            mail: '',
+            password: '',
+        });
+    const [passwordCheck, setPasswordCheck] = useState('');
     const location = useLocation();
     const { prevPath, ...prevData } = location.state ?? {};
 
     const handleChange = (e: ChangeEvent<HTMLInputElement>) => {
         const { name, value } = e.target;
-        setLoginRequestDto((prev) => ({
-            ...prev,
-            [name]: value,
-        }));
+        if (name === 'passwordCheck') {
+            setPasswordCheck(value);
+        } else {
+            setAccountRequestDto((prev) => ({
+                ...prev,
+                [name]: value,
+            }));
+        }
     };
 
     const handleLogin = async () => {
@@ -30,7 +37,7 @@ export function useAccountRequestDto() {
         try {
             const response = await apiClient.post<string>(
                 ENDPOINTS.LOGIN(),
-                loginRequestDto,
+                accountRequestDto,
             );
             localStorage.setItem('name', response.data);
             if (!prevPath) {
@@ -45,5 +52,11 @@ export function useAccountRequestDto() {
         }
     };
 
-    return { loginRequestDto, handleChange, handleLogin, isSubmitting };
+    return {
+        accountRequestDto,
+        passwordCheck,
+        handleChange,
+        handleLogin,
+        isSubmitting,
+    };
 }
