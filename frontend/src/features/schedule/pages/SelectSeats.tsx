@@ -377,19 +377,13 @@ export function SelectSeats() {
                                 <TotalSeatsFare
                                     selectedSeats={selectedSeats}
                                     prevFare={
-                                        reservedSeats
-                                            ? reservedSeats?.reduce(
+                                        preReservedSeats
+                                            ? preReservedSeats.reduce(
                                                   (sum, seat) =>
                                                       sum + seat.seatFare,
                                                   0,
                                               )
-                                            : preChangeReservedSeats
-                                              ? preChangeReservedSeats?.reduce(
-                                                    (sum, seat) =>
-                                                        sum + seat.seatFare,
-                                                    0,
-                                                )
-                                              : undefined
+                                            : undefined
                                     }
                                 />
                                 <button
