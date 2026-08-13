@@ -8,7 +8,7 @@ import { useAccountRequestDto } from '@/features/account/hooks/useAccountRequest
 import { useToastForRedirect } from '@/shared/hooks/useToastForRedirect';
 import { removeGuestReservation } from '@/shared/utils/RemoveGuestReservation';
 
-export function Account() {
+export function AccountCreate() {
     const queryClient = useQueryClient();
     const {
         accountForm,

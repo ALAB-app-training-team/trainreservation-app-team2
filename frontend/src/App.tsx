@@ -6,7 +6,7 @@ import {
 } from 'react-router-dom';
 
 import { AuthProvider } from '@/context/AuthContext';
-import { Account } from '@/features/account/pages/Account';
+import { AccountCreate } from '@/features/account/pages/AccountCreate';
 import { Login } from '@/features/account/pages/Login';
 import { ReservationGuestLogin } from '@/features/reservation/pages/ReservationGuestLogin';
 import { ReservationList } from '@/features/reservation/pages/ReservationList';
@@ -78,9 +78,9 @@ const router = createBrowserRouter([
                 errorElement: <Error />,
             },
             {
-                path: '/account',
+                path: '/accountCreate',
                 loader: () => loginLoader(),
-                element: <Account />,
+                element: <AccountCreate />,
                 errorElement: <Error />,
             },
             {

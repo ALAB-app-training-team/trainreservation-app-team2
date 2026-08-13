@@ -26,7 +26,7 @@ export function Header() {
                   {
                       label: 'ログイン/会員登録',
                       to: '/login',
-                      relatedPath: ['/account'],
+                      relatedPath: ['/accountCreate'],
                   },
               ]
             : []),

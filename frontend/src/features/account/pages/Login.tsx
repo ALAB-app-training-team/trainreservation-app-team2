@@ -102,7 +102,7 @@ export function Login() {
                     <div className="bg-primary h-px flex-1" />
                 </div>
                 <button
-                    onClick={() => navigate('/account')}
+                    onClick={() => navigate('/accountCreate')}
                     type="button"
                     className="border-primary-mid-light flex w-full items-center justify-center gap-2 rounded-lg border-2 bg-white p-2 text-center font-medium"
                 >
