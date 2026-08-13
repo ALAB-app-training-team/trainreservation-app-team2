@@ -1124,6 +1124,15 @@ public class ReservationServiceTest {
     }
 
     @Test
+    @DisplayName("nameがNullの場合、IllegalArgumentExceptionが発生する")
+    void deleteReservation_withNoReserverName_throwsIllegalArgumentException() {
+        UUID reservationId = UUID.randomUUID();
+        String mail = "test-common@test.com";
+        Exception ex = assertThrows(IllegalArgumentException.class, () -> service.deleteReservation(reservationId, null, null, mail));
+        assertEquals("Name and Mail is required", ex.getMessage());
+    }
+
+    @Test
     @DisplayName("該当予約座席情報が存在しない場合、IllegalArgumentExceptionが発生する")
     void deleteReservation_withNotExistingReservationIdOfReservedSeat_throwsIllegalArgumentException() {
         UUID reservationId = UUID.randomUUID();

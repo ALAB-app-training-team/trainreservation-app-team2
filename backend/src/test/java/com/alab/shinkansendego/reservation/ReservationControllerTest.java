@@ -647,8 +647,8 @@ public class ReservationControllerTest {
         String url = baseUrl + "/guest/" + requestReservationId;
 
         mockMvc.perform(delete(url)
-                .header("X-Name", "YamadaTarou")
-                .header("X-Mail", "user@example.com"))
+                .param("ReserverName", "YamadaTarou")
+                .param("ReserverMail", "user@example.com"))
             .andExpect(status().isNoContent());
     }
 
@@ -659,8 +659,8 @@ public class ReservationControllerTest {
         String url = baseUrl + "/guest/" + requestReservationId;
 
         mockMvc.perform(delete(url)
-                .header("X-Name", "YamadaTarou")
-                .header("X-Mail", "user@example.com")
+                .param("ReserverName", "YamadaTarou")
+                .param("ReserverMail", "user@example.com")
                 .with(SecurityMockMvcRequestPostProcessors.authentication(auth)))
             .andExpect(status().isForbidden());
     }
@@ -671,20 +671,8 @@ public class ReservationControllerTest {
         String url = baseUrl + "/guest/";
 
         mockMvc.perform(delete(url)
-                .header("X-Name", "YamadaTarou")
-                .header("X-Mail", "user@example.com"))
+                .param("ReserverName", "YamadaTarou")
+                .param("ReserverMail", "user@example.com"))
             .andExpect(status().isNotFound());
-    }
-
-    @Test
-    @DisplayName("nameがNullの場合、NOTFOUNDを返す")
-    void deleteGuestReservation_withNameIsNull_returnRequestParamError() throws Exception {
-        UUID requestReservationId = UUID.randomUUID();
-        String url = baseUrl + "/guest/" + requestReservationId;
-        Mockito.doThrow(new IllegalArgumentException("Name and Mail is required")).when(service).deleteReservation(Mockito.any(), Mockito.any(), Mockito.any(), Mockito.any());
-
-        mockMvc.perform(delete(url)
-                .header("X-Name", "YamadaTarou"))
-            .andExpect(status().isBadRequest());
     }
 }
