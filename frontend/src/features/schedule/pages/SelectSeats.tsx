@@ -38,7 +38,7 @@ export function SelectSeats() {
         prevSelectedSeats,
         reservedSeats,
         reservationId,
-        preChangeScheduleCd,
+        preChangeScheduleInfo,
         preChangeReservedSeats,
     }: SelectSeatsLocationState = location.state;
     const { resolveReservedSeat } = useResolveReservedSeats(
@@ -283,8 +283,8 @@ export function SelectSeats() {
                                     ...(preChangeReservedSeats && {
                                         reservedSeats: preChangeReservedSeats,
                                     }),
-                                    ...(preChangeScheduleCd && {
-                                        preChangeScheduleCd,
+                                    ...(preChangeScheduleInfo && {
+                                        preChangeScheduleInfo,
                                     }),
                                 },
                             });
@@ -443,7 +443,7 @@ export function SelectSeats() {
                         reservedSeats={preReservedSeats}
                         selectedSeats={selectedSeats}
                         scheduleInfo={scheduleInfoDto}
-                        preChangeScheduleCd={preChangeScheduleCd}
+                        preChangeScheduleInfo={preChangeScheduleInfo}
                     />
                 </CustomModal>
             )}

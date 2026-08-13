@@ -12,7 +12,7 @@ type UpdateConfirmModalProps = {
     reservedSeats: ReservedSeatDto[];
     selectedSeats: SeatResponseDto[];
     scheduleInfo: ScheduleInfoDto;
-    preChangeScheduleCd?: string;
+    preChangeScheduleInfo?: ScheduleInfoDto;
 };
 
 export function UpdateConfirmModal({
@@ -22,9 +22,10 @@ export function UpdateConfirmModal({
     reservedSeats,
     selectedSeats,
     scheduleInfo,
-    preChangeScheduleCd,
+    preChangeScheduleInfo,
 }: UpdateConfirmModalProps) {
-    const isScheduleChanged = scheduleInfo.scheduleCd !== preChangeScheduleCd;
+    const isScheduleChanged =
+        scheduleInfo.scheduleCd !== preChangeScheduleInfo?.scheduleCd;
     return (
         <>
             <div className="flex flex-col items-start justify-center gap-4">

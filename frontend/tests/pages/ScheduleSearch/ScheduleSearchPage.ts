@@ -37,7 +37,7 @@ export class ScheduleSearchPage {
     }
 
     async clickSecondDetailButton() {
-        await this.detailButton.nth(2).click();
+        await this.detailButton.nth(1).click();
     }
     async openDepartureStationDropdown() {
         await this.departureStation.first().click();
