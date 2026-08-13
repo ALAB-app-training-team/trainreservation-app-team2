@@ -129,7 +129,7 @@ export function SelectSeats() {
             paymentToken: paymentToken ? paymentToken : '',
         };
 
-        if (preChangeReservedSeats && reservationId) {
+        if ((reservedSeats || preChangeReservedSeats) && reservationId) {
             const response = await apiClient.put(
                 ENDPOINTS.RESERVATION_SEAT_UPDATE(reservationId),
                 reserveRequestDto,
