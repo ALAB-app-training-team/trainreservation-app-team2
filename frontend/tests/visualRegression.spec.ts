@@ -100,7 +100,10 @@ test('visual-login', async ({ page }) => {
 
 test('visual-accountCreate', async ({ page }) => {
     const accountCreatePage = new AccountCreatePage(page);
-    await accountCreatePage.goto();
+    const loginPage = new LoginPage(page);
+    await loginPage.goto();
+    await expect(page).toHaveURL('/login');
+    await loginPage.clickCreateButton();
     await expect(page).toHaveURL('/accountCreate');
     await accountCreatePage.createButton.waitFor({ state: 'visible' });
     await page.evaluate(() => document.fonts.ready);

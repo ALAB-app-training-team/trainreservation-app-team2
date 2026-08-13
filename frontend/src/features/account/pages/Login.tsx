@@ -1,7 +1,6 @@
 import { useQueryClient } from '@tanstack/react-query';
 import { useEffect, useState } from 'react';
-import { CiUser } from 'react-icons/ci';
-import { FiLogIn } from 'react-icons/fi';
+import { FiLogIn, FiUserPlus } from 'react-icons/fi';
 import { MdVisibility, MdVisibilityOff } from 'react-icons/md';
 import { useNavigate } from 'react-router-dom';
 
@@ -106,7 +105,7 @@ export function Login() {
                     type="button"
                     className="border-primary-mid-light flex w-full items-center justify-center gap-2 rounded-lg border-2 bg-white p-2 text-center font-medium"
                 >
-                    <CiUser />
+                    <FiUserPlus />
                     新規登録
                 </button>
             </div>
