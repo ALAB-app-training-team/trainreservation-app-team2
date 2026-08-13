@@ -70,6 +70,13 @@ test('navigate-ログイン全機能', async ({ page, login, logout }) => {
     await accountCreatePage.clickCreateButton();
     await expect(page).toHaveURL('/login');
 
+    // 作成したアカウントでログイン
+    await loginPage.fillMailAddress('test@test.co.jp');
+    await loginPage.fillPassword('Password1');
+    await loginPage.clickLoginButton();
+    await expect(page).toHaveURL('/scheduleSearch');
+    await logout();
+
     // ログイン、検索～予約
     await login();
     await expect(page).toHaveURL('/scheduleSearch');
