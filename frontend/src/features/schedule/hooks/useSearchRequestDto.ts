@@ -49,13 +49,8 @@ export function useSearchRequestDto({
         message: string;
     };
 
-    const maxDate = new Date(
-        new Date().getFullYear(),
-        new Date().getMonth() + 1,
-        new Date().getDate() + 1,
-    );
-    const minDate = new Date();
-    minDate.setHours(0, 0, 0, 0);
+    const maxDate = dayjs().add(1, 'month').endOf(`day`).toDate();
+    const minDate = dayjs().startOf(`day`).toDate();
 
     const isDateEmpty: boolean = date === '';
     const isDateOutsideOneMonth: boolean =
@@ -74,6 +69,9 @@ export function useSearchRequestDto({
             });
         }
         if (isDateOutsideOneMonth) {
+            console.log(maxDate);
+            console.log(minDate);
+            console.log(new Date(date));
             messages.push({
                 field: 'date',
                 message: VALIDATION_MESSAGE.OUTSIDE_ONE_MONTH,
