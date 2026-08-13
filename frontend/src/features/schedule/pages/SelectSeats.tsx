@@ -273,6 +273,7 @@ export function SelectSeats() {
             <div className="flex items-center justify-start p-4 pb-0">
                 {searchRequestDto !== null ? (
                     <button
+                        data-testid={'back-button-in-selectseat'}
                         type="button"
                         onClick={() => {
                             navigate('/scheduleSearch', {
@@ -296,6 +297,7 @@ export function SelectSeats() {
                     </button>
                 ) : (
                     <button
+                        data-testid={'back-button-in-selectseat'}
                         type="button"
                         onClick={() => {
                             navigate('/reservationList');
