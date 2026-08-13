@@ -44,6 +44,12 @@ export function useSearchRequestDto({
         }
     };
 
+    const switchDepartureAndArrivalStation = () => {
+        const currentDepartureStation = departureStation;
+        setDepartureStation(arrivalStation);
+        setArrivalStation(currentDepartureStation);
+    };
+
     type InvalidMessage = {
         field: 'date' | 'arrivalStation';
         message: string;
@@ -98,6 +104,7 @@ export function useSearchRequestDto({
         setDate,
         setDepartureStation,
         setArrivalStation,
+        switchDepartureAndArrivalStation,
         searchRequestDto,
         isInvalid,
         getFieldError,

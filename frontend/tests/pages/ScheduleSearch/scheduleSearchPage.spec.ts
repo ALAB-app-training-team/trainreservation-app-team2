@@ -139,6 +139,18 @@ test('出発日は本日から一か月後まで選択できる', async ({ page 
     );
 });
 
+test('出発駅・到着駅の入れ替えができること', async ({ page }) => {
+    const scheduleSearchPage = new ScheduleSearchPage(page);
+
+    scheduleSearchPage.goto();
+    await expect(page).toHaveURL('/scheduleSearch');
+    await expect(scheduleSearchPage.departureStation).toHaveValue('THK01');
+    await expect(scheduleSearchPage.arrivalStation).toHaveValue('THK02');
+    scheduleSearchPage.clickSwitchStationButton();
+    await expect(scheduleSearchPage.departureStation).toHaveValue('THK02');
+    await expect(scheduleSearchPage.arrivalStation).toHaveValue('THK01');
+});
+
 test('空席表示チェックボックスにチェックが入っていると満席がないこと、チェックをはずすと満席が0以上であること', async ({
     page,
 }) => {

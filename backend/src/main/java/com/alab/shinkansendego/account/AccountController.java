@@ -3,6 +3,7 @@ package com.alab.shinkansendego.account;
 import jakarta.servlet.http.HttpSession;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
@@ -26,6 +27,13 @@ public class AccountController {
         this.accountService = accountService;
     }
 
+    /**
+     * アカウントログインを行うメソッド
+     *
+     * @param request リクエストされたログイン情報
+     * @param session ログインセッション
+     * @return ログインユーザー名
+     */
     @PostMapping("login")
     public ResponseEntity<String> login(@Valid @RequestBody LoginRequestDto request, HttpSession session) {
         AccountEntity account = accountService.login(request.getMail(), request.getPassword());
@@ -40,9 +48,27 @@ public class AccountController {
         return ResponseEntity.ok(account.getName());
     }
 
+    /**
+     * アカウントログアウトを行うメソッド
+     *
+     * @param session ログインセッション
+     * @return NoContent
+     */
     @PostMapping("logout")
-    public ResponseEntity logout(HttpSession session) {
+    public ResponseEntity<Void> logout(HttpSession session) {
         session.invalidate();
         return ResponseEntity.noContent().build();
+    }
+
+    /**
+     * アカウント新規作成メソッド
+     *
+     * @param request 登録するアカウント情報
+     * @return NoContent
+     */
+    @PostMapping("account")
+    public ResponseEntity<Void> insertAccount(@Valid @RequestBody AccountRequestDto request) {
+        accountService.insertAccount(request);
+        return ResponseEntity.status(HttpStatus.CREATED).build();
     }
 }
