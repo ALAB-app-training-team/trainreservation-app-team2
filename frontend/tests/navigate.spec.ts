@@ -7,6 +7,7 @@ import { ReservationGuestLoginPage } from '@tests/pages/ReservationGuestLogin/Re
 import { App } from '@tests/pages/shared/App';
 import { LoginPage } from '@tests/pages/Login/LoginPage';
 import { test } from '@tests/fixtures';
+import { AccountCreatePage } from '@tests/pages/AccountCreate/AccountCreatePage';
 
 test('navigate-ゲストログイン全機能', async ({ page, context }) => {
     const scheduleSearchPage = new ScheduleSearchPage(page);
@@ -58,6 +59,16 @@ test('navigate-ログイン全機能', async ({ page, login, logout }) => {
     const selectSeatPage = new SelectSeatPage(page);
     const reservedTicketPage = new ReservedTicketPage(page);
     const reservationListPage = new ReservationListPage(page);
+    const accountCreatePage = new AccountCreatePage(page);
+    const loginPage = new LoginPage(page);
+
+    // アカウント新規登録
+    await loginPage.goto();
+    await loginPage.clickCreateButton();
+    await expect(page).toHaveURL('/accountCreate');
+    await accountCreatePage.inputCreateAccountInfo();
+    await accountCreatePage.clickCreateButton();
+    await expect(page).toHaveURL('/login');
 
     // ログイン、検索～予約
     await login();
