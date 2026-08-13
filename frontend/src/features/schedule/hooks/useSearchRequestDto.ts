@@ -75,9 +75,6 @@ export function useSearchRequestDto({
             });
         }
         if (isDateOutsideOneMonth) {
-            console.log(maxDate);
-            console.log(minDate);
-            console.log(new Date(date));
             messages.push({
                 field: 'date',
                 message: VALIDATION_MESSAGE.OUTSIDE_ONE_MONTH,
