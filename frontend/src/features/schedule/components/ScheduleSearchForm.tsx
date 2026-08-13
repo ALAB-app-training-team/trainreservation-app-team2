@@ -1,5 +1,8 @@
 import type { SetStateAction } from 'react';
-import { FiArrowRight } from 'react-icons/fi';
+import {
+    HiOutlineSwitchHorizontal,
+    HiOutlineSwitchVertical,
+} from 'react-icons/hi';
 
 import { DepartureDateAndTimePicker } from '@/features/schedule/components/DepartureDateAndTimePicker';
 import { StationSelect } from '@/features/schedule/components/StationSelect';
@@ -16,6 +19,7 @@ type ScheduleSearchFormProps = {
     setDate: React.Dispatch<SetStateAction<string>>;
     setDepartureStation: React.Dispatch<SetStateAction<string>>;
     setArrivalStation: React.Dispatch<SetStateAction<string>>;
+    switchDepartureAndArrivalStation: () => void;
     searchRequestDto: SearchRequestDto;
     getFieldError: (field: string) => string;
     maxDate: Date;
@@ -32,6 +36,7 @@ export function ScheduleSearchForm({
     setDate,
     setDepartureStation,
     setArrivalStation,
+    switchDepartureAndArrivalStation,
     searchRequestDto,
     getFieldError,
     maxDate,
@@ -61,8 +66,14 @@ export function ScheduleSearchForm({
                                 value={searchRequestDto.departureStationCd}
                                 setValue={setDepartureStation}
                             />
-                            <div className="mt-4 hidden text-xl md:block">
-                                <FiArrowRight />
+                            <div className="w-full text-center md:w-fit">
+                                <button
+                                    onClick={switchDepartureAndArrivalStation}
+                                    className="w-fit rounded-full border-1 bg-white p-1 text-xl md:mt-8"
+                                >
+                                    <HiOutlineSwitchHorizontal className="hidden md:block" />
+                                    <HiOutlineSwitchVertical className="block md:hidden" />
+                                </button>
                             </div>
                             <StationSelect
                                 id="arrivalStation"
