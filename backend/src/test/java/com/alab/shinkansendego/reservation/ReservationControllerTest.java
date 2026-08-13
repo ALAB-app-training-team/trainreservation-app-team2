@@ -612,7 +612,7 @@ public class ReservationControllerTest {
 
     @Test
     @DisplayName("認証ありのアクセスの場合、特定の予約情報IDに紐づく予約情報を削除できる")
-    void deleteReservation_withAuthorized_return204() throws Exception {
+    void deleteAccountReservation_withAuthorized_return204() throws Exception {
         UUID requestReservationId = UUID.randomUUID();
         String url = baseUrl + "/" + requestReservationId;
 
@@ -623,7 +623,7 @@ public class ReservationControllerTest {
 
     @Test
     @DisplayName("認証なしのアクセスの場合、401を返す")
-    void deleteReservation_withNotAuthorized_return401() throws Exception {
+    void deleteAccountReservation_withNotAuthorized_return401() throws Exception {
         UUID requestReservationId = UUID.randomUUID();
         String url = baseUrl + "/" + requestReservationId;
 
@@ -633,10 +633,46 @@ public class ReservationControllerTest {
 
     @Test
     @DisplayName("idがNullの場合、NOTFOUNDを返す")
-    void deleteReservation_withReservationIdIsNull_returnRequestParamError() throws Exception {
+    void deleteAccountReservation_withReservationIdIsNull_returnRequestParamError() throws Exception {
         String url = baseUrl + "/";
 
         mockMvc.perform(delete(url))
+            .andExpect(status().isNotFound());
+    }
+
+    @Test
+    @DisplayName("特定の予約情報IDに紐づく予約情報を削除できる")
+    void deleteGuestReservation_withAuthorized_return204() throws Exception {
+        UUID requestReservationId = UUID.randomUUID();
+        String url = baseUrl + "/guest/" + requestReservationId;
+
+        mockMvc.perform(delete(url)
+                .param("ReserverName", "YamadaTarou")
+                .param("ReserverMail", "user@example.com"))
+            .andExpect(status().isNoContent());
+    }
+
+    @Test
+    @DisplayName("ログイン中の場合、403を返す")
+    void deleteGuestReservation_withAuthorized_return403() throws Exception {
+        UUID requestReservationId = UUID.randomUUID();
+        String url = baseUrl + "/guest/" + requestReservationId;
+
+        mockMvc.perform(delete(url)
+                .param("ReserverName", "YamadaTarou")
+                .param("ReserverMail", "user@example.com")
+                .with(SecurityMockMvcRequestPostProcessors.authentication(auth)))
+            .andExpect(status().isForbidden());
+    }
+
+    @Test
+    @DisplayName("idがNullの場合、NOTFOUNDを返す")
+    void deleteGuestReservation_withReservationIdIsNull_returnRequestParamError() throws Exception {
+        String url = baseUrl + "/guest/";
+
+        mockMvc.perform(delete(url)
+                .param("ReserverName", "YamadaTarou")
+                .param("ReserverMail", "user@example.com"))
             .andExpect(status().isNotFound());
     }
 }

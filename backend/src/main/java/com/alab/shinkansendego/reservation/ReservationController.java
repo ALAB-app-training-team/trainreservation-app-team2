@@ -82,8 +82,18 @@ public class ReservationController {
 
     @DeleteMapping(value = "{id}")
     @PreAuthorize("isAuthenticated()")
-    public ResponseEntity<Void> deleteReservation(@PathVariable("id") UUID reservationId, @AuthenticationPrincipal AccountSessionDto session) {
-        reservationService.deleteReservation(reservationId, session.getId());
+    public ResponseEntity<Void> deleteAccountReservation(@PathVariable("id") UUID reservationId, @AuthenticationPrincipal AccountSessionDto session) {
+        reservationService.deleteReservation(reservationId, session.getId(), null, null);
+        return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
+    }
+
+    @DeleteMapping(value = "guest/{id}")
+    public ResponseEntity<?> deleteGuestReservation(@PathVariable("id") UUID reservationId,
+                                                    @AuthenticationPrincipal AccountSessionDto session,
+                                                    @RequestParam("ReserverName") String name,
+                                                    @RequestParam("ReserverMail") String mail) {
+        if (session != null) return ResponseEntity.status(HttpStatus.FORBIDDEN).body("Logout required");
+        reservationService.deleteReservation(reservationId, null, name, mail);
         return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
     }
 }
