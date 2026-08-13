@@ -416,7 +416,7 @@ test('日時電車変更で新しい電車を選ぶと座席未選択,同じ電�
     await reservationListPage.clickChangeTrainConfirmButton();
     await expect(page).toHaveURL('/scheduleSearch');
     //  確認事項
-    await scheduleSearchPage.clickDetailButton;
+    await scheduleSearchPage.clickDetailButton();
     await expect(page).toHaveURL('selectSeat');
     await expect(page.getByText('座席が選択されていません')).not.toBeVisible();
     await selectSeatPage.clickBackButton();
