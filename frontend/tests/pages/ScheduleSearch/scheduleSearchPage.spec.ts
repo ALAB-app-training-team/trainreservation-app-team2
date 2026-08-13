@@ -135,7 +135,7 @@ test('出発日は本日から一か月後まで選択できる', async ({ page 
     );
     await expect(scheduleSearchPage.date).toHaveAttribute(
         'max',
-        dayjs().add(1, 'month').add(1, 'day').format('YYYY-MM-DD'),
+        dayjs().add(1, 'month').format('YYYY-MM-DD'),
     );
 });
 
