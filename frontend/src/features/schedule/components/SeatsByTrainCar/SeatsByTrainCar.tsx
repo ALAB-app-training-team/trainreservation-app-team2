@@ -68,9 +68,7 @@ export function SeatsByTrainCar({
     return (
         <>
             <div className="flex w-full flex-col items-start justify-center gap-4">
-                <h1 className="!m-0 text-left !text-xl">
-                    {seats[0].trainCarNumber}号車
-                </h1>
+                <h2 className="text-left">{seats[0].trainCarNumber}号車</h2>
                 <div
                     className={`grid gap-2`}
                     style={{
