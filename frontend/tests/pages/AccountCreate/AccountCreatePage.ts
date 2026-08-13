@@ -30,7 +30,7 @@ export class AccountCreatePage {
     }
 
     async goto() {
-        await this.page.goto('/createAccount');
+        await this.page.goto('/accountCreate');
     }
 
     async fillName(name: string) {

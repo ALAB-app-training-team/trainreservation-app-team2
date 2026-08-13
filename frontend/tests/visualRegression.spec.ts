@@ -98,10 +98,9 @@ test('visual-login', async ({ page }) => {
     });
 });
 
-test.only('visual-accountCreate', async ({ page }) => {
+test('visual-accountCreate', async ({ page }) => {
     const accountCreatePage = new AccountCreatePage(page);
     await accountCreatePage.goto();
-    await page.screenshot();
     await expect(page).toHaveURL('/accountCreate');
     await accountCreatePage.createButton.waitFor({ state: 'visible' });
     await page.evaluate(() => document.fonts.ready);
