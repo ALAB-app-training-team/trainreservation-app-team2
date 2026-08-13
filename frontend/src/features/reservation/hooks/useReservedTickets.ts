@@ -91,10 +91,24 @@ export function useReservedTickets(reservationId: string) {
         return response;
     };
 
+    const handleRefundReservation = async () => {
+        if (accountInfo !== null) {
+            await apiClient.delete(ENDPOINTS.RESERVATION(reservationId));
+        } else {
+            await apiClient.delete(ENDPOINTS.GUESTRESERVATION(reservationId), {
+                params: {
+                    ReserverName: guestLoginInfo.reserverName,
+                    ReserverMail: guestLoginInfo.reserverMail,
+                },
+            });
+        }
+    };
+
     return {
         reservedTickets,
         updateCompanions: updateCompanionsMutation.mutateAsync,
         isUpdating: updateCompanionsMutation.isPending,
         getReservationTicket,
+        handleRefundReservation,
     };
 }
