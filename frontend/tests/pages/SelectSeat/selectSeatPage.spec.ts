@@ -3,9 +3,7 @@ import { ScheduleSearchPage } from '@tests/pages/ScheduleSearch/ScheduleSearchPa
 import { SelectSeatPage } from '@tests/pages/SelectSeat/SelectSeatPage';
 import { test } from '@tests/fixtures';
 import { LoginPage } from '../Login/LoginPage';
-import { ReservationList } from '@/features/reservation/pages/ReservationList';
 import { ReservationListPage } from '../ReservationList/ReservationListPage';
-import { FiLogOut } from 'react-icons/fi';
 
 test('ゴミ箱ボタンを押すと、選択した座席が解除される', async ({ page }) => {
     const scheduleSearchPage = new ScheduleSearchPage(page);
