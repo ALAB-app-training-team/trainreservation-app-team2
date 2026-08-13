@@ -1,9 +1,9 @@
 import { useQueryClient } from '@tanstack/react-query';
 import { useEffect, useState } from 'react';
 import { FiUserPlus } from 'react-icons/fi';
-import { MdVisibility, MdVisibilityOff } from 'react-icons/md';
 
-import { PasswordCheckList } from '@/features/account/components/PasswordCheckList';
+import { AccountInput } from '@/features/account/components/AccountInput';
+import { PasswordInput } from '@/features/account/components/PasswordInput';
 import { useAccountRequestDto } from '@/features/account/hooks/useAccountRequestDto';
 import { useToastForRedirect } from '@/shared/hooks/useToastForRedirect';
 import { removeGuestReservation } from '@/shared/utils/RemoveGuestReservation';
@@ -45,123 +45,53 @@ export function Account() {
                     }}
                     className="flex w-full flex-col gap-4"
                 >
-                    <div className="flex w-full flex-col gap-8">
-                        <div className="flex flex-col items-start">
-                            <label htmlFor="name">氏名</label>
-                            <div className="focus-within:border-primary bg-primary-light box-border flex w-full items-center justify-between gap-4 rounded-lg px-4 py-2 outline-none focus-within:border-2">
-                                <input
-                                    id="name"
-                                    type="text"
-                                    name="name"
-                                    value={accountForm.name}
-                                    onChange={handleChange}
-                                    onBlur={handleBlur}
-                                    placeholder="山田 太郎"
-                                    autoComplete="name"
-                                    required
-                                    className="w-full outline-none"
-                                />
-                            </div>
-                            {getFieldError?.('name') && (
-                                <p className="text-left text-sm text-red-600">
-                                    {getFieldError('name')}
-                                </p>
-                            )}
-                        </div>
-                        <div className="flex flex-col items-start">
-                            <label htmlFor="mail">メールアドレス</label>
-                            <div className="focus-within:border-primary bg-primary-light box-border flex w-full items-center justify-between gap-4 rounded-lg px-4 py-2 outline-none focus-within:border-2">
-                                <input
-                                    id="mail"
-                                    type="email"
-                                    name="mail"
-                                    value={accountForm.mail}
-                                    onChange={handleChange}
-                                    onBlur={handleBlur}
-                                    placeholder="example@email.com"
-                                    autoComplete="email"
-                                    required
-                                    className="w-full outline-none"
-                                />
-                            </div>
-                            {getFieldError?.('mail') && (
-                                <p className="text-left text-sm text-red-600">
-                                    {getFieldError('mail')}
-                                </p>
-                            )}
-                        </div>
-                        <div className="flex flex-col items-start">
-                            <label htmlFor="password">パスワード</label>
-                            <div className="flex w-full flex-col gap-2">
-                                <div className="focus-within:border-primary bg-primary-light box-border flex w-full items-center justify-between gap-4 rounded-lg px-4 py-2 outline-none focus-within:border-2">
-                                    <input
-                                        id="password"
-                                        type={passwordType}
-                                        name="password"
-                                        value={accountForm.password}
-                                        onChange={handleChange}
-                                        onBlur={handleBlur}
-                                        placeholder="パスワードを入力"
-                                        autoComplete="current-password"
-                                        required
-                                        className="w-full outline-none [&::-ms-reveal]:hidden"
-                                    />
-                                    {passwordType === 'password' && (
-                                        <MdVisibilityOff
-                                            onClick={() =>
-                                                setPasswordType('text')
-                                            }
-                                        />
-                                    )}
-                                    {passwordType === 'text' && (
-                                        <MdVisibility
-                                            onClick={() =>
-                                                setPasswordType('password')
-                                            }
-                                        />
-                                    )}
-                                </div>
-                            </div>
-                            <PasswordCheckList policy={policy} />
-                        </div>
-                        <div className="flex flex-col items-start">
-                            <label htmlFor="password">パスワード再入力</label>
-                            <div className="flex w-full flex-col gap-2">
-                                <div className="focus-within:border-primary bg-primary-light box-border flex w-full items-center justify-between gap-4 rounded-lg px-4 py-2 outline-none focus-within:border-2">
-                                    <input
-                                        id="passwordCheck"
-                                        type={passwordType}
-                                        name="passwordCheck"
-                                        value={accountForm.passwordCheck}
-                                        onChange={handleChange}
-                                        onBlur={handleBlur}
-                                        placeholder="パスワードを再入力してください"
-                                        autoComplete="current-password"
-                                        required
-                                        className="w-full outline-none [&::-ms-reveal]:hidden"
-                                    />
-                                    {passwordType === 'password' && (
-                                        <MdVisibilityOff
-                                            onClick={() =>
-                                                setPasswordType('text')
-                                            }
-                                        />
-                                    )}
-                                    {passwordType === 'text' && (
-                                        <MdVisibility
-                                            onClick={() =>
-                                                setPasswordType('password')
-                                            }
-                                        />
-                                    )}
-                                </div>
-                            </div>
-                            {getFieldError?.('passwordCheck') && (
-                                <p className="text-left text-sm text-red-600">
-                                    {getFieldError('passwordCheck')}
-                                </p>
-                            )}
-                        </div>
+                    <div className="flex w-full flex-col gap-4">
+                        <AccountInput
+                            id={'name'}
+                            label={'氏名'}
+                            type={'text'}
+                            value={accountForm.name}
+                            placeHolder="山田 太郎"
+                            autoComplete="name"
+                            onChange={handleChange}
+                            onBlur={handleBlur}
+                            getFieldError={getFieldError}
+                        />
+                        <AccountInput
+                            id={'mail'}
+                            label={'メールアドレス'}
+                            type={'email'}
+                            value={accountForm.mail}
+                            placeHolder={'example@email.com'}
+                            autoComplete={'email'}
+                            onChange={handleChange}
+                            onBlur={handleBlur}
+                            getFieldError={getFieldError}
+                        />
+                        <PasswordInput
+                            id={'password'}
+                            label={'パスワード'}
+                            type={passwordType}
+                            value={accountForm.password}
+                            placeHolder={'パスワードを入力'}
+                            autoComplete={'current-password'}
+                            onChange={handleChange}
+                            onBlur={handleBlur}
+                            policy={policy}
+                            setPasswordType={setPasswordType}
+                        />
+                        <PasswordInput
+                            id={'passwordCheck'}
+                            label={'パスワード再入力'}
+                            type={passwordType}
+                            value={accountForm.passwordCheck}
+                            placeHolder={'パスワードを再入力'}
+                            autoComplete={'current-password'}
+                            onChange={handleChange}
+                            onBlur={handleBlur}
+                            getFieldError={getFieldError}
+                            setPasswordType={setPasswordType}
+                        />
                     </div>
                     <button
                         type="submit"

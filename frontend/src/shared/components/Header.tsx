@@ -14,16 +14,19 @@ export function Header() {
         {
             label: '新幹線を探す',
             to: '/scheduleSearch',
+            relatedPath: [],
         },
         {
             label: '予約確認',
             to: '/reservationList',
+            relatedPath: [],
         },
         ...(!name
             ? [
                   {
                       label: 'ログイン/会員登録',
                       to: '/login',
+                      relatedPath: ['/account'],
                   },
               ]
             : []),
@@ -67,7 +70,11 @@ export function Header() {
                                     `rounded-xl px-4 py-3 text-sm font-bold ${
                                         isActive
                                             ? 'bg-primary cursor-default text-white'
-                                            : 'cursor-pointer'
+                                            : button.relatedPath.includes(
+                                                    location.pathname,
+                                                )
+                                              ? 'bg-primary-light cursor-pointer'
+                                              : 'cursor-pointer'
                                     }`
                                 }
                             >
