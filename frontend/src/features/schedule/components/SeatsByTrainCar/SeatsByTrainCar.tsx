@@ -1,4 +1,4 @@
-import { Fragment, useEffect } from 'react';
+import { Fragment, useEffect, useMemo } from 'react';
 
 import type { ReservedSeatDto } from '@/features/reservation/types/ReservedSeatDto';
 import { Seat } from '@/features/schedule/components/Seat';
@@ -30,6 +30,25 @@ export function SeatsByTrainCar({
         new Set(seats.map((seat) => seat.seatNumber)),
     ).sort((a, b) => a - b);
 
+    const layoutColumns: string[] = useMemo(() => {
+        if (columns.length === 5) {
+            return [
+                columns[0],
+                columns[1],
+                columns[2],
+                '',
+                columns[3],
+                columns[4],
+            ];
+        }
+        if (columns.length === 4) {
+            return [columns[0], columns[1], '', columns[2], columns[3]];
+        }
+        if (columns.length === 3) {
+            return [columns[0], '', columns[1], columns[2]];
+        }
+        return columns;
+    }, [columns]);
     const isOwnReservedSeat = (seat: SeatResponseDto) =>
         reservedSeats?.some(
             (reserved) =>
@@ -49,13 +68,11 @@ export function SeatsByTrainCar({
     return (
         <>
             <div className="flex w-full flex-col items-start justify-center gap-4">
-                <h1 className="!m-0 text-left !text-xl">
-                    {seats[0].trainCarNumber}号車
-                </h1>
+                <h2 className="text-left">{seats[0].trainCarNumber}号車</h2>
                 <div
                     className={`grid gap-2`}
                     style={{
-                        gridTemplateColumns: `repeat(${columns.length + 1}, minmax(0, 1fr))`,
+                        gridTemplateColumns: `repeat(${layoutColumns.length + 1}, minmax(0, 1fr))`,
                     }}
                 >
                     {rows.map((row) => (
@@ -63,7 +80,12 @@ export function SeatsByTrainCar({
                             <div className="flex items-center justify-center">
                                 {row}
                             </div>
-                            {columns.map((column) => {
+                            {layoutColumns.map((column, colIndex) => {
+                                if (column === '') {
+                                    return (
+                                        <div key={`aisle-${colIndex}-${row}`} />
+                                    );
+                                }
                                 const seat = displaySeats.find(
                                     (seat) =>
                                         seat.seatColumn === column &&
