@@ -241,3 +241,21 @@ test('navigate-ログイン状態でloginのパスを入力すると検索画面
     await logout();
     await expect(page).toHaveURL('/login');
 });
+
+test('navigate-ログイン状態でaccountCreateのパスを入力すると検索画面に遷移', async ({
+    page,
+    login,
+    logout,
+}) => {
+    const loginPage = new LoginPage(page);
+    const accountCreatePage = new AccountCreatePage(page);
+
+    await login();
+    await expect(page).toHaveURL('/scheduleSearch');
+    await accountCreatePage.goto();
+    await expect(page).toHaveURL('/scheduleSearch');
+    await logout();
+    await expect(page).toHaveURL('/login');
+    await loginPage.clickCreateButton();
+    await expect(page).toHaveURL('/accountCreate');
+});
