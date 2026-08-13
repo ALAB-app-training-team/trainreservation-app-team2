@@ -31,7 +31,7 @@ public class EmailService {
             MimeMessage mimeMessage = mailSender.createMimeMessage();
             MimeMessageHelper helper = new MimeMessageHelper(mimeMessage, "UTF-8");
 
-            helper.setFrom("thashimoto@inet.jeis.co.jp", "新幹線でGO！");
+            helper.setFrom("thashimoto@jeisryokai.onmicrosoft.com", "新幹線でGO！");
             helper.setTo(dto.getReserverMail());
             helper.setSubject("[予約完了] 予約内容のご案内");
 
