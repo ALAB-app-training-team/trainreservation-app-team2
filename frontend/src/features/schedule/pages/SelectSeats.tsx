@@ -266,7 +266,7 @@ export function SelectSeats() {
         reservedKeys.length === selectedKeys.length &&
         reservedKeys.every((key, index) => key === selectedKeys[index]);
 
-    const isChangeMode = reservedSeats || preChangeReservedSeats;
+    const preReservedSeats = reservedSeats ?? preChangeReservedSeats;
 
     return (
         <>
@@ -353,13 +353,13 @@ export function SelectSeats() {
                         <form
                             onSubmit={(e) => {
                                 e.preventDefault();
-                                (isChangeMode
+                                (preReservedSeats
                                     ? handleUpdateConfirmModalOpen
                                     : handleReserveConfirmModalOpen)();
                             }}
                         >
                             <div className="flex flex-col gap-4">
-                                {isChangeMode ? (
+                                {preReservedSeats ? (
                                     <div className="rounded-xl bg-orange-100 px-4 py-2 text-center text-orange-500">
                                         ※初回予約時と同じ <br />
                                         クレジットカードを使用します
@@ -396,7 +396,7 @@ export function SelectSeats() {
                                     type="submit"
                                     className="bg-primary w-full rounded-lg p-2 text-white"
                                     disabled={
-                                        (isChangeMode
+                                        (preReservedSeats
                                             ? isSameSeats
                                             : isInvalid) ||
                                         selectedSeats.length === 0 ||
@@ -405,7 +405,9 @@ export function SelectSeats() {
                                 >
                                     <div className="flex items-center justify-center gap-4">
                                         <IoCardOutline />
-                                        {isChangeMode ? '変更する' : '予約する'}
+                                        {preReservedSeats
+                                            ? '変更する'
+                                            : '予約する'}
                                     </div>
                                 </button>
                             </div>
@@ -433,7 +435,7 @@ export function SelectSeats() {
                     isSubmitting={isSubmitting}
                 />
             </CustomModal>
-            {preChangeReservedSeats && (
+            {preReservedSeats && (
                 <CustomModal
                     isOpen={isUpdateConfirmModalOpen}
                     onRequestClose={onRequestUpdateConfirmModalClose}
@@ -442,7 +444,7 @@ export function SelectSeats() {
                         onClick={handleUpdate}
                         onRequestClose={onRequestUpdateConfirmModalClose}
                         isSubmitting={isSubmitting}
-                        reservedSeats={preChangeReservedSeats}
+                        reservedSeats={preReservedSeats}
                         selectedSeats={selectedSeats}
                         scheduleInfo={scheduleInfoDto}
                         preChangeScheduleCd={preChangeScheduleCd}
