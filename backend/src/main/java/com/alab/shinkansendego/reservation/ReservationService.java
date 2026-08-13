@@ -565,8 +565,15 @@ public class ReservationService {
      * @param reservationId 予約情報ID
      */
     @Transactional
-    public void deleteReservation(UUID reservationId, UUID accountId) {
-        ReservationEntity reservation = reservationRepository.findByIdAndAccountId(reservationId, accountId).orElseThrow(() -> new IllegalArgumentException("Reservation is not found"));
+    public void deleteReservation(UUID reservationId, UUID accountId, String name, String mail) {
+        ReservationEntity reservation;
+        if (accountId != null) {
+            reservation = reservationRepository.findByIdAndAccountId(reservationId, accountId).orElseThrow(() -> new IllegalArgumentException("Reservation is not found"));
+        } else {
+            if (name == null || mail == null) throw new IllegalArgumentException("Name and Mail is required");
+            reservation =
+                reservationRepository.findByIdAndReserverNameAndReserverMail(reservationId, name, mail).orElseThrow(() -> new IllegalArgumentException("Reservation is not found"));
+        }
         reservation.setIsDeleted(true);
 
         List<ReservedSeatEntity> seats = reservedSeatRepository.findByReservationId(reservationId);

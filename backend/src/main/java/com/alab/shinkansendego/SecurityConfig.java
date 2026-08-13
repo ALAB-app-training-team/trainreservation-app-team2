@@ -36,9 +36,8 @@ public class SecurityConfig {
             )
             .authorizeHttpRequests(auth -> auth
                 .requestMatchers("/api/login", "/api/logout", "/api/account", "/api/stations", "/api/stopstations", "/api/schedules", "/api/traincars",
-                    "/api/payments", "/api/payments/tokens", "/api/schedules/**", "/api/traincars/**",
+                    "/api/payments", "/api/payments/tokens", "/api/schedules/**", "/api/traincars/**", "/api/reservations/guest/*",
                     "/api/reservedseats/**").permitAll()
-                .requestMatchers(HttpMethod.GET, "/api/reservations/guest/*").permitAll()
                 .requestMatchers(HttpMethod.POST, "/api/reservations/guest").permitAll()
                 .requestMatchers(HttpMethod.DELETE, "/api/reservations/*").permitAll()
                 .anyRequest().authenticated()
