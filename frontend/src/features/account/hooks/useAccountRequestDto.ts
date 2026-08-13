@@ -1,62 +1,195 @@
+import axios, { HttpStatusCode } from 'axios';
 import { type ChangeEvent, useState } from 'react';
-import { useLocation, useNavigate } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
+import { toast } from 'sonner';
 
 import apiClient from '@/api/apiClient';
 import { ENDPOINTS } from '@/api/routes';
-import type { AccountRequestDto } from '@/features/account/types/AccountRequestDto';
+import type { AccountForm } from '@/features/account/types/AccountForm';
+import type { PasswordCheck } from '@/features/account/types/PasswordCheck';
 import { ERROR_MESSAGE } from '@/shared/constants/ErrorMessages';
+import { VALIDATION_MESSAGE } from '@/shared/constants/ValidationMessages';
+import { checkMailRegex } from '@/shared/utils/CheckMailRegex';
+import { checkPasswordRegex } from '@/shared/utils/CheckPasswordRegex';
+import { removeWhiteSpace } from '@/shared/utils/RemoveWhiteSpace';
 
 export function useAccountRequestDto() {
     const navigate = useNavigate();
     const [isSubmitting, setIsSubmitting] = useState<boolean>(false);
-    const [accountRequestDto, setAccountRequestDto] =
-        useState<AccountRequestDto>({
-            name: '',
-            mail: '',
-            password: '',
-        });
-    const [passwordCheck, setPasswordCheck] = useState('');
-    const location = useLocation();
-    const { prevPath, ...prevData } = location.state ?? {};
+    const [accountForm, setAccountForm] = useState<AccountForm>({
+        name: '',
+        mail: '',
+        password: '',
+        passwordCheck: '',
+    });
+
+    const policy: PasswordCheck = {
+        betweenLength:
+            accountForm.password.length >= 8 &&
+            accountForm.password.length <= 64,
+        hasNumber: /[0-9]/.test(accountForm.password),
+        hasUppercase: /[A-Z]/.test(accountForm.password),
+        hasLowercase: /[a-z]/.test(accountForm.password),
+        isValid: checkPasswordRegex(accountForm.password),
+    };
+
+    type InvalidMessage = {
+        field: keyof AccountForm;
+        message: string;
+    };
+    const [invalidMessages, setInvalidMessages] = useState<InvalidMessage[]>(
+        [],
+    );
+
+    const isNameEmpty = (value: string) => {
+        return removeWhiteSpace(value) === '';
+    };
+    const isNameMaxLength = (value: string) => {
+        return value.length > 255;
+    };
+
+    const isMailEmpty = (value: string) => {
+        return removeWhiteSpace(value) === '';
+    };
+    const isMailInvalid = (value: string) => {
+        return checkMailRegex(value);
+    };
+    const isMailMaxLength = (value: string) => {
+        return value.length > 255;
+    };
+
+    const isCheckPasswordEmpty = (value: string) => {
+        return value == '';
+    };
+    const isNotMatchPassword = (value: string) => {
+        return accountForm.password !== value;
+    };
+
+    const editValidateMessage = (field: string, value: string) => {
+        const messages: InvalidMessage[] = invalidMessages.filter(
+            (item) => item.field !== field,
+        );
+        if (field === 'name') {
+            if (isNameEmpty(value)) {
+                messages.push({
+                    field: 'name',
+                    message: VALIDATION_MESSAGE.EMPTY_NAME,
+                });
+            } else if (isNameMaxLength(value)) {
+                messages.push({
+                    field: 'name',
+                    message: VALIDATION_MESSAGE.MAX_LENGTH_NAME,
+                });
+            }
+        } else if (field === 'mail') {
+            if (isMailEmpty(value)) {
+                messages.push({
+                    field: 'mail',
+                    message: VALIDATION_MESSAGE.EMPTY_MAIL,
+                });
+            } else if (isMailInvalid(value)) {
+                messages.push({
+                    field: 'mail',
+                    message: VALIDATION_MESSAGE.INVALID_MAIL,
+                });
+            } else if (isMailMaxLength(value)) {
+                messages.push({
+                    field: 'mail',
+                    message: VALIDATION_MESSAGE.MAX_LENGTH_MAIL,
+                });
+            }
+        } else if (field === 'passwordCheck') {
+            if (isCheckPasswordEmpty(value)) {
+                messages.push({
+                    field: 'passwordCheck',
+                    message: VALIDATION_MESSAGE.EMPTY_PASSWORD_CHECK,
+                });
+            } else if (isNotMatchPassword(value)) {
+                messages.push({
+                    field: 'passwordCheck',
+                    message: VALIDATION_MESSAGE.PASSWORD_NOT_MATCH,
+                });
+            }
+        }
+        setInvalidMessages(messages);
+    };
+
+    const getFieldError = (field: string) => {
+        return (
+            invalidMessages.find((item) => item.field === field)?.message ?? ''
+        );
+    };
 
     const handleChange = (e: ChangeEvent<HTMLInputElement>) => {
         const { name, value } = e.target;
-        if (name === 'passwordCheck') {
-            setPasswordCheck(value);
-        } else {
-            setAccountRequestDto((prev) => ({
-                ...prev,
-                [name]: value,
-            }));
-        }
+        setAccountForm((prev) => ({
+            ...prev,
+            [name]: value,
+        }));
+        editValidateMessage(name, value);
     };
 
-    const handleLogin = async () => {
+    const handleBlur = (e: React.FocusEvent<HTMLInputElement>) => {
+        const { name, value } = e.target;
+        setAccountForm((prev) => ({
+            ...prev,
+            [name]: value,
+        }));
+        editValidateMessage(name, value);
+    };
+
+    const checkDisable = (account: AccountForm, policy: PasswordCheck) => {
+        return (
+            isNameEmpty(account.name) ||
+            isNameMaxLength(account.name) ||
+            isMailEmpty(account.mail) ||
+            isMailInvalid(account.mail) ||
+            isMailMaxLength(account.mail) ||
+            !policy.betweenLength ||
+            !policy.hasNumber ||
+            !policy.hasUppercase ||
+            !policy.hasLowercase ||
+            !policy.isValid ||
+            isCheckPasswordEmpty(account.passwordCheck) ||
+            isNotMatchPassword(account.passwordCheck)
+        );
+    };
+
+    const isDisable = checkDisable(accountForm, policy);
+
+    const handleAccount = async () => {
         if (isSubmitting) return;
         setIsSubmitting(true);
         try {
-            const response = await apiClient.post<string>(
-                ENDPOINTS.LOGIN(),
-                accountRequestDto,
+            await apiClient.post<void>(ENDPOINTS.ACCOUNT(), {
+                name: removeWhiteSpace(accountForm.name),
+                mail: removeWhiteSpace(accountForm.mail),
+                password: accountForm.password,
+            });
+            toast.success(
+                'アカウント登録が完了しました。ログインしてください。',
             );
-            localStorage.setItem('name', response.data);
-            if (!prevPath) {
-                navigate('/scheduleSearch', { replace: true });
-            } else {
-                navigate(prevPath, { state: prevData, replace: true });
+            navigate('/login', { replace: true });
+        } catch (error) {
+            if (
+                axios.isAxiosError(error) &&
+                error.response?.status === HttpStatusCode.Conflict
+            ) {
+                alert(ERROR_MESSAGE.ACCOUNT_ALREADY);
             }
-        } catch {
-            alert(ERROR_MESSAGE.LOGIN_RETRY);
         } finally {
             setIsSubmitting(false);
         }
     };
 
     return {
-        accountRequestDto,
-        passwordCheck,
+        accountForm,
+        policy,
         handleChange,
-        handleLogin,
+        handleBlur,
+        getFieldError,
+        isDisable,
+        handleAccount,
         isSubmitting,
     };
 }
