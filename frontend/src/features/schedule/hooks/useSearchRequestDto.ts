@@ -44,18 +44,19 @@ export function useSearchRequestDto({
         }
     };
 
+    const switchDepartureAndArrivalStation = () => {
+        const currentDepartureStation = departureStation;
+        setDepartureStation(arrivalStation);
+        setArrivalStation(currentDepartureStation);
+    };
+
     type InvalidMessage = {
         field: 'date' | 'arrivalStation';
         message: string;
     };
 
-    const maxDate = new Date(
-        new Date().getFullYear(),
-        new Date().getMonth() + 1,
-        new Date().getDate(),
-    );
-    const minDate = new Date();
-    minDate.setHours(0, 0, 0, 0);
+    const maxDate = dayjs().add(1, 'month').endOf(`day`).toDate();
+    const minDate = dayjs().startOf(`day`).toDate();
 
     const isDateEmpty: boolean = date === '';
     const isDateOutsideOneMonth: boolean =
@@ -100,6 +101,7 @@ export function useSearchRequestDto({
         setDate,
         setDepartureStation,
         setArrivalStation,
+        switchDepartureAndArrivalStation,
         searchRequestDto,
         isInvalid,
         getFieldError,
