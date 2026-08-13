@@ -68,7 +68,6 @@ test('navigate-ログイン全機能', async ({ page, login, logout }) => {
     await expect(page).toHaveURL('/accountCreate');
     await accountCreatePage.inputCreateAccountInfo();
     await accountCreatePage.clickCreateButton();
-    // TODO:登録後遷移しないため調査
     await expect(page).toHaveURL('/login');
 
     // ログイン、検索～予約
