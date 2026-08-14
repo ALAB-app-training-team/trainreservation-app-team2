@@ -1,5 +1,5 @@
 export type PasswordCheck = {
-    betweenLength: boolean;
+    isBetweenLength: boolean;
     hasNumber: boolean;
     hasUppercase: boolean;
     hasLowercase: boolean;

@@ -20,10 +20,10 @@ export function PasswordCheckList({ policy }: PasswordCheckListProps) {
             </li>
             <li
                 className={
-                    policy.betweenLength ? style.isValid : style.isInvalid
+                    policy.isBetweenLength ? style.isValid : style.isInvalid
                 }
             >
-                {policy.betweenLength ? <FaCheck /> : <FaTimes />}
+                {policy.isBetweenLength ? <FaCheck /> : <FaTimes />}
                 8文字以上64文字以下
             </li>
             <li className={policy.hasNumber ? style.isValid : style.isInvalid}>

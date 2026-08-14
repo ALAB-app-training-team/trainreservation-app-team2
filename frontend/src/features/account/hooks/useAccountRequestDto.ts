@@ -24,7 +24,7 @@ export function useAccountRequestDto() {
     });
 
     const policy: PasswordCheck = {
-        betweenLength:
+        isBetweenLength:
             accountForm.password.length >= 8 &&
             accountForm.password.length <= 64,
         hasNumber: /[0-9]/.test(accountForm.password),
@@ -145,7 +145,7 @@ export function useAccountRequestDto() {
             isMailEmpty(account.mail) ||
             isMailInvalid(account.mail) ||
             isMailMaxLength(account.mail) ||
-            !policy.betweenLength ||
+            !policy.isBetweenLength ||
             !policy.hasNumber ||
             !policy.hasUppercase ||
             !policy.hasLowercase ||
