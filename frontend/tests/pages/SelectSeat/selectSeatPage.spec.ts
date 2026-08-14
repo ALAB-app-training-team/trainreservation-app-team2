@@ -3,6 +3,7 @@ import { ScheduleSearchPage } from '@tests/pages/ScheduleSearch/ScheduleSearchPa
 import { SelectSeatPage } from '@tests/pages/SelectSeat/SelectSeatPage';
 import { test } from '@tests/fixtures';
 import { LoginPage } from '../Login/LoginPage';
+import { ReservationListPage } from '../ReservationList/ReservationListPage';
 
 test('ゴミ箱ボタンを押すと、選択した座席が解除される', async ({ page }) => {
     const scheduleSearchPage = new ScheduleSearchPage(page);
@@ -320,4 +321,109 @@ test('シートマップでログインすると選択した座席が保持さ�
     await loginPage.clickLoginButton();
     await expect(page).toHaveURL('/selectSeat');
     await expect(page.getByText('座席が選択されていません')).toBeHidden();
+});
+
+test('座席変更の際はクレカ入力欄が表示されないこと', async ({
+    page,
+    login,
+    createReservation,
+    logout,
+}) => {
+    const reservationListPage = new ReservationListPage(page);
+
+    // ログイン～予約～座席変更シートマップ
+    login();
+    await expect(page).toHaveURL('/scheduleSearch');
+    await createReservation();
+    await reservationListPage.goto();
+    await expect(page).toHaveURL('/reservationList');
+    await reservationListPage.clickChangeButton();
+    await reservationListPage.clickChangeSeatConfirmButton();
+    await expect(page).toHaveURL('/selectSeat');
+    //  確認事項
+    await expect(
+        page.getByText('※初回予約時と同じ\nクレジットカードを使用します'),
+    ).toBeVisible();
+    logout();
+});
+
+test('座席変更の際は座席選択済みの状態であること', async ({
+    page,
+    login,
+    createReservation,
+    logout,
+}) => {
+    const reservationListPage = new ReservationListPage(page);
+
+    // ログイン～予約～座席変更シートマップ
+    login();
+    await expect(page).toHaveURL('/scheduleSearch');
+    await createReservation();
+    await reservationListPage.goto();
+    await expect(page).toHaveURL('/reservationList');
+    await reservationListPage.clickChangeButton();
+    await reservationListPage.clickChangeSeatConfirmButton();
+    await expect(page).toHaveURL('/selectSeat');
+    //  確認事項
+    await expect(page.getByText('座席が選択されていません')).not.toBeVisible();
+    logout();
+});
+
+test('日時電車変更の際はクレカ入力欄が表示されないこと', async ({
+    page,
+    login,
+    createReservation,
+    logout,
+}) => {
+    const reservationListPage = new ReservationListPage(page);
+    const scheduleSearchPage = new ScheduleSearchPage(page);
+
+    // ログイン～予約～座席変更シートマップ
+    login();
+    await expect(page).toHaveURL('/scheduleSearch');
+    await createReservation();
+    await reservationListPage.goto();
+    await expect(page).toHaveURL('/reservationList');
+    await reservationListPage.clickChangeButton();
+    await reservationListPage.clickChangeTrainConfirmButton();
+    await expect(page).toHaveURL('/scheduleSearch');
+    await scheduleSearchPage.clickDetailButton();
+    await expect(page).toHaveURL('selectSeat');
+    //  確認事項
+    await expect(
+        page.getByText('※初回予約時と同じ\nクレジットカードを使用します'),
+    ).toBeVisible();
+    logout();
+});
+
+test('日時電車変更で新しい電車を選ぶと座席未選択,同じ電車を選ぶと選択済みの状態であること', async ({
+    page,
+    login,
+    createReservation,
+    logout,
+}) => {
+    const reservationListPage = new ReservationListPage(page);
+    const scheduleSearchPage = new ScheduleSearchPage(page);
+    const selectSeatPage = new SelectSeatPage(page);
+
+    // ログイン～予約～座席変更シートマップ
+    login();
+    await expect(page).toHaveURL('/scheduleSearch');
+    await createReservation();
+    await reservationListPage.goto();
+    await expect(page).toHaveURL('/reservationList');
+    await reservationListPage.clickChangeButton();
+    await reservationListPage.clickChangeTrainConfirmButton();
+    await expect(page).toHaveURL('/scheduleSearch');
+    //  確認事項
+    await scheduleSearchPage.clickDetailButton();
+    await expect(page).toHaveURL('selectSeat');
+    await expect(page.getByText('座席が選択されていません')).not.toBeVisible();
+    await selectSeatPage.clickBackButton();
+    await expect(page).toHaveURL('/scheduleSearch');
+    await scheduleSearchPage.clickSecondDetailButton();
+    await expect(page).toHaveURL('selectSeat');
+    await expect(page.getByText('座席が選択されていません')).toBeVisible();
+
+    logout();
 });

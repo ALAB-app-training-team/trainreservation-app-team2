@@ -13,6 +13,7 @@ export class ReservationListPage {
     readonly changeButton: Locator;
     readonly pastButton: Locator;
     readonly changeSeatConfirmButton: Locator;
+    readonly changeTrainConfirmButton: Locator;
 
     constructor(page: Page) {
         this.page = page;
@@ -28,9 +29,8 @@ export class ReservationListPage {
         this.refundButton = page.getByTestId('refund-button');
         this.changeButton = page.getByTestId('change-button');
         this.pastButton = page.getByTestId('past-button');
-        this.changeSeatConfirmButton = page.getByTestId(
-            'change-seat-confirm-button',
-        );
+        this.changeSeatConfirmButton = page.getByTestId('change-seat-button');
+        this.changeTrainConfirmButton = page.getByTestId('change-train-button');
         this.modalCloseButton = page.getByTestId('modal-close-button');
     }
 
@@ -67,5 +67,9 @@ export class ReservationListPage {
 
     async clickChangeSeatConfirmButton() {
         await this.changeSeatConfirmButton.first().click();
+    }
+
+    async clickChangeTrainConfirmButton() {
+        await this.changeTrainConfirmButton.first().click();
     }
 }

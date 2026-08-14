@@ -20,7 +20,7 @@ type ScheduleItemProps = {
     searchRequestDto: SearchRequestDto;
     reservationId: string | null;
     reservedSeats: ReservedSeatDto[];
-    preChangeScheduleCd: string | null;
+    preChangeScheduleInfo: ScheduleInfoDto | null;
 };
 
 export function ScheduleItem({
@@ -33,7 +33,7 @@ export function ScheduleItem({
     searchRequestDto,
     reservationId,
     reservedSeats,
-    preChangeScheduleCd,
+    preChangeScheduleInfo,
 }: ScheduleItemProps) {
     const navigate = useNavigate();
 
@@ -70,15 +70,16 @@ export function ScheduleItem({
             arrivalStationName,
         };
         const isScheduleCdUnchanged =
-            preChangeScheduleCd &&
-            scheduleInfoDto.scheduleCd === preChangeScheduleCd;
+            preChangeScheduleInfo?.scheduleCd &&
+            scheduleInfoDto.scheduleCd === preChangeScheduleInfo.scheduleCd &&
+            scheduleInfoDto.date === preChangeScheduleInfo.date;
 
         navigate('/selectSeat', {
             state: {
                 scheduleInfoDto,
                 searchRequestDto,
                 ...(reservationId && { reservationId }),
-                ...(preChangeScheduleCd && { preChangeScheduleCd }),
+                ...(preChangeScheduleInfo && { preChangeScheduleInfo }),
                 ...(reservedSeats &&
                     reservedSeats.length > 0 && {
                         preChangeReservedSeats: reservedSeats,

@@ -122,13 +122,24 @@ export function ReservationListBody() {
             departureStationCd: detail.departureStationCd,
             arrivalStationCd: detail.arrivalStationCd,
         };
+        const preChangeScheduleInfo = {
+            scheduleCd: detail.scheduleCd,
+            date: detail.rideDate,
+            departureTime: detail.departureTime,
+            arrivalTime: detail.arrivalTime,
+            trainTypeName: detail.trainTypeName,
+            departureStationCd: detail.departureStationCd,
+            arrivalStationCd: detail.arrivalStationCd,
+            departureStationName: detail.departureStationName,
+            arrivalStationName: detail.arrivalStationName,
+        };
         navigate('/scheduleSearch', {
             state: {
                 searchRequestDto,
                 isBack: true,
                 reservationId: detail.reservationId,
                 reservedSeats: detail.reservedSeats,
-                preChangeScheduleCd: detail.scheduleCd,
+                preChangeScheduleInfo: preChangeScheduleInfo,
             },
         });
     };
