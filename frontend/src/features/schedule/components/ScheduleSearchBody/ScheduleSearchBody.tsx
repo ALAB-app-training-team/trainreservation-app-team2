@@ -28,6 +28,7 @@ export function ScheduleSearchBody() {
         setDate,
         setDepartureStation,
         setArrivalStation,
+        setIsArrival,
         switchDepartureAndArrivalStation,
         searchRequestDto,
         isInvalid,
@@ -64,6 +65,7 @@ export function ScheduleSearchBody() {
                         setDate={setDate}
                         setDepartureStation={setDepartureStation}
                         setArrivalStation={setArrivalStation}
+                        setIsArrival={setIsArrival}
                         switchDepartureAndArrivalStation={
                             switchDepartureAndArrivalStation
                         }

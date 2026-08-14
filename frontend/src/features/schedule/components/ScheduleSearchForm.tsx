@@ -19,6 +19,7 @@ type ScheduleSearchFormProps = {
     setDate: React.Dispatch<SetStateAction<string>>;
     setDepartureStation: React.Dispatch<SetStateAction<string>>;
     setArrivalStation: React.Dispatch<SetStateAction<string>>;
+    setIsArrival: React.Dispatch<SetStateAction<boolean>>;
     switchDepartureAndArrivalStation: () => void;
     searchRequestDto: SearchRequestDto;
     getFieldError: (field: string) => string;
@@ -36,6 +37,7 @@ export function ScheduleSearchForm({
     setDate,
     setDepartureStation,
     setArrivalStation,
+    setIsArrival,
     switchDepartureAndArrivalStation,
     searchRequestDto,
     getFieldError,
@@ -116,6 +118,18 @@ export function ScheduleSearchForm({
                             />
                             <label htmlFor="isOnlyAvailable">
                                 空席がある列車のみ表示する
+                            </label>
+                        </div>
+                        <div className="flex gap-2 bg-transparent text-left">
+                            <input
+                                type="checkbox"
+                                id="isArrival"
+                                checked={searchRequestDto.isArrival}
+                                onChange={(e) => setIsArrival(e.target.checked)}
+                                className="accent-primary"
+                            />
+                            <label htmlFor="isArrival">
+                                到着時刻で検索する
                             </label>
                         </div>
                     </div>
