@@ -9,6 +9,7 @@ import type { ReservedSeatDto } from '@/features/reservation/types/ReservedSeatD
 import { EmptySeatCount } from '@/features/schedule/components/EmptySeatCount';
 import { ScheduleItem } from '@/features/schedule/components/ScheduleItem';
 import { useSchedules } from '@/features/schedule/hooks/useSchedules';
+import type { ScheduleInfoDto } from '@/features/schedule/types/ScheduleInfoDto';
 import type { SearchRequestDto } from '@/features/schedule/types/SearchRequestDto';
 import { ERROR_MESSAGE } from '@/shared/constants/ErrorMessages';
 import { VALIDATION_MESSAGE } from '@/shared/constants/ValidationMessages';
@@ -28,7 +29,7 @@ type ScheduleListProps = {
     isOnlyAvailable: boolean;
     reservationId: string | null;
     reservedSeats: ReservedSeatDto[];
-    preChangeScheduleCd: string | null;
+    preChangeScheduleInfo: ScheduleInfoDto | null;
 };
 
 export function ScheduleList({
@@ -41,7 +42,7 @@ export function ScheduleList({
     isOnlyAvailable,
     reservationId,
     reservedSeats,
-    preChangeScheduleCd,
+    preChangeScheduleInfo,
 }: ScheduleListProps) {
     const { schedules } = useSchedules(searchRequestDto, isInvalid);
 
@@ -90,8 +91,8 @@ export function ScheduleList({
                                         searchRequestDto={searchRequestDto}
                                         reservationId={reservationId ?? null}
                                         reservedSeats={reservedSeats ?? []}
-                                        preChangeScheduleCd={
-                                            preChangeScheduleCd ?? null
+                                        preChangeScheduleInfo={
+                                            preChangeScheduleInfo ?? null
                                         }
                                     />
                                 );

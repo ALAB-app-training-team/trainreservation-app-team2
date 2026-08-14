@@ -38,7 +38,7 @@ export function SelectSeats() {
         prevSelectedSeats,
         reservedSeats,
         reservationId,
-        preChangeScheduleCd,
+        preChangeScheduleInfo,
         preChangeReservedSeats,
     }: SelectSeatsLocationState = location.state;
     const { resolveReservedSeat } = useResolveReservedSeats(
@@ -132,6 +132,13 @@ export function SelectSeats() {
         if (reservedSeats && reservationId) {
             const response = await apiClient.put(
                 ENDPOINTS.RESERVATION_SEAT_UPDATE(reservationId),
+                reserveRequestDto,
+            );
+            return response.data;
+        }
+        if (preChangeReservedSeats && reservationId) {
+            const response = await apiClient.put(
+                ENDPOINTS.RESERVATION(reservationId),
                 reserveRequestDto,
             );
             return response.data;
@@ -266,11 +273,14 @@ export function SelectSeats() {
         reservedKeys.length === selectedKeys.length &&
         reservedKeys.every((key, index) => key === selectedKeys[index]);
 
+    const preReservedSeats = reservedSeats ?? preChangeReservedSeats;
+
     return (
         <>
             <div className="flex items-center justify-start p-4 pb-0">
                 {searchRequestDto !== null ? (
                     <button
+                        data-testid={'back-button-in-selectseat'}
                         type="button"
                         onClick={() => {
                             navigate('/scheduleSearch', {
@@ -280,8 +290,8 @@ export function SelectSeats() {
                                     ...(preChangeReservedSeats && {
                                         reservedSeats: preChangeReservedSeats,
                                     }),
-                                    ...(preChangeScheduleCd && {
-                                        preChangeScheduleCd,
+                                    ...(preChangeScheduleInfo && {
+                                        preChangeScheduleInfo,
                                     }),
                                 },
                             });
@@ -294,6 +304,7 @@ export function SelectSeats() {
                     </button>
                 ) : (
                     <button
+                        data-testid={'back-button-in-selectseat'}
                         type="button"
                         onClick={() => {
                             navigate('/reservationList');
@@ -351,13 +362,13 @@ export function SelectSeats() {
                         <form
                             onSubmit={(e) => {
                                 e.preventDefault();
-                                (reservedSeats
+                                (preReservedSeats
                                     ? handleUpdateConfirmModalOpen
                                     : handleReserveConfirmModalOpen)();
                             }}
                         >
                             <div className="flex flex-col gap-4">
-                                {reservedSeats || preChangeReservedSeats ? (
+                                {preReservedSeats ? (
                                     <div className="rounded-xl bg-orange-100 px-4 py-2 text-center text-orange-500">
                                         ※初回予約時と同じ <br />
                                         クレジットカードを使用します
@@ -375,26 +386,20 @@ export function SelectSeats() {
                                 <TotalSeatsFare
                                     selectedSeats={selectedSeats}
                                     prevFare={
-                                        reservedSeats
-                                            ? reservedSeats?.reduce(
+                                        preReservedSeats
+                                            ? preReservedSeats.reduce(
                                                   (sum, seat) =>
                                                       sum + seat.seatFare,
                                                   0,
                                               )
-                                            : preChangeReservedSeats
-                                              ? preChangeReservedSeats?.reduce(
-                                                    (sum, seat) =>
-                                                        sum + seat.seatFare,
-                                                    0,
-                                                )
-                                              : undefined
+                                            : undefined
                                     }
                                 />
                                 <button
                                     type="submit"
                                     className="bg-primary w-full rounded-lg p-2 text-white"
                                     disabled={
-                                        (reservedSeats
+                                        (preReservedSeats
                                             ? isSameSeats
                                             : isInvalid) ||
                                         selectedSeats.length === 0 ||
@@ -403,7 +408,7 @@ export function SelectSeats() {
                                 >
                                     <div className="flex items-center justify-center gap-4">
                                         <IoCardOutline />
-                                        {reservedSeats
+                                        {preReservedSeats
                                             ? '変更する'
                                             : '予約する'}
                                     </div>
@@ -433,7 +438,7 @@ export function SelectSeats() {
                     isSubmitting={isSubmitting}
                 />
             </CustomModal>
-            {reservedSeats && (
+            {preReservedSeats && (
                 <CustomModal
                     isOpen={isUpdateConfirmModalOpen}
                     onRequestClose={onRequestUpdateConfirmModalClose}
@@ -442,8 +447,10 @@ export function SelectSeats() {
                         onClick={handleUpdate}
                         onRequestClose={onRequestUpdateConfirmModalClose}
                         isSubmitting={isSubmitting}
-                        reservedSeats={reservedSeats}
+                        reservedSeats={preReservedSeats}
                         selectedSeats={selectedSeats}
+                        scheduleInfo={scheduleInfoDto}
+                        preChangeScheduleInfo={preChangeScheduleInfo}
                     />
                 </CustomModal>
             )}

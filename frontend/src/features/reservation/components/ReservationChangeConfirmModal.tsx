@@ -31,7 +31,7 @@ export function ReservationChangeConfirmModal({
                 <ReservationInfo detail={detail} id="reservationChange" />
                 <div className="flex w-full items-center justify-center gap-4">
                     <button
-                        data-testid={'change-seat-confirm-button'}
+                        data-testid={'change-seat-button'}
                         onClick={() => onChangeSeatClick(detail)}
                         disabled={isSubmitting}
                         className="bg-primary flex items-center rounded-lg p-2 text-white"
@@ -40,6 +40,7 @@ export function ReservationChangeConfirmModal({
                         人数・座席変更
                     </button>
                     <button
+                        data-testid={'change-train-button'}
                         onClick={() => onChangeTrainClick(detail)}
                         disabled={isSubmitting}
                         className="bg-primary flex items-center rounded-lg p-2 text-white"

@@ -19,7 +19,7 @@ export function ScheduleSearchBody() {
         isBack = false,
         reservationId,
         reservedSeats,
-        preChangeScheduleCd,
+        preChangeScheduleInfo,
     } = (location.state as ScheduleSearchLocationState | null) ?? {};
     const { stations } = useStations();
     const { stationResponseDtos } = useStopStations();
@@ -100,7 +100,9 @@ export function ScheduleSearchBody() {
                             isOnlyAvailable={isOnlyAvailable}
                             reservationId={reservationId ?? null}
                             reservedSeats={reservedSeats ?? []}
-                            preChangeScheduleCd={preChangeScheduleCd ?? null}
+                            preChangeScheduleInfo={
+                                preChangeScheduleInfo ?? null
+                            }
                         />
                     </Suspense>
                 </div>

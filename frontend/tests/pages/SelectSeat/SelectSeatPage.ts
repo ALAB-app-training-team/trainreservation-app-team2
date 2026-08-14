@@ -24,7 +24,7 @@ export class SelectSeatPage {
     constructor(page: Page) {
         this.page = page;
         this.header = new Header(page);
-        this.backButton = page.getByRole('button', { name: '検索画面に戻る' });
+        this.backButton = page.getByTestId('back-button-in-selectseat');
         this.trainCars = page.getByTestId('train-cars').getByRole('button');
         this.emptySeat = page.locator('button.w-12.h-12.cursor-pointer');
         this.name = page.getByRole('textbox', { name: '予約者氏名' });

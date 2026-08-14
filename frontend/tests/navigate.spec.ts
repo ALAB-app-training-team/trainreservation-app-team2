@@ -97,11 +97,31 @@ test('navigate-ログイン全機能', async ({ page, login, logout }) => {
     await expect(page).toHaveURL('/reservedTicket');
     await reservedTicketPage.clickBackButton();
     await expect(page).toHaveURL('/reservationList');
-    // 予約変更
+    // 予約変更（座席変更）
     await reservationListPage.clickChangeButton();
     await reservationListPage.clickChangeSeatConfirmButton();
     await expect(page).toHaveURL('/selectSeat');
     await expect(page.getByText('座席が選択されていません')).not.toBeVisible();
+    await selectSeatPage.selectSeat();
+    await selectSeatPage.emptySeat.nth(1).click();
+    await selectSeatPage.clickUpdateButton();
+    await expect(page.getByText('予約変更確認')).toBeVisible();
+    await selectSeatPage.clickUpdateConfirmButton();
+    await expect(page).toHaveURL('/reservedTicket');
+    //  予約変更（日時列車変更）
+    await reservedTicketPage.header.goToReservationList();
+    await expect(page).toHaveURL('/reservationList');
+    await reservationListPage.clickChangeButton();
+    await reservationListPage.clickChangeTrainConfirmButton();
+    await expect(page).toHaveURL('/scheduleSearch');
+    await scheduleSearchPage.clickDetailButton();
+    await expect(page).toHaveURL('/selectSeat');
+    await expect(page.getByText('座席が選択されていません')).not.toBeVisible();
+    await selectSeatPage.clickBackButton();
+    await expect(page).toHaveURL('/scheduleSearch');
+    await scheduleSearchPage.clickSecondDetailButton();
+    await expect(page).toHaveURL('/selectSeat');
+    await expect(page.getByText('座席が選択されていません')).toBeVisible();
     await selectSeatPage.selectSeat();
     await selectSeatPage.emptySeat.nth(1).click();
     await selectSeatPage.clickUpdateButton();
