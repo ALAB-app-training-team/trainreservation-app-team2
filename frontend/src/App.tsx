@@ -4,6 +4,7 @@ import {
     redirect,
     RouterProvider,
 } from 'react-router-dom';
+import { toast } from 'sonner';
 
 import { AuthProvider } from '@/context/AuthContext';
 import { Login } from '@/features/account/pages/Login';
@@ -30,7 +31,16 @@ const reservedTicketLoader = () => {
     const info = sessionStorage.getItem('guestLoginInfo');
     const account = localStorage.getItem('name');
     if (account === null && info === null) {
-        alert(ERROR_MESSAGE.SESSION_ERROR);
+        toast.error(ERROR_MESSAGE.SESSION_ERROR,{
+                duration:Infinity,
+                action: {
+                    label: 'OK',
+                    onClick: () => {}
+                },
+                classNames: {
+                    title : 'text-left whitespace-pre-line',
+                }
+            });
         return redirect('/scheduleSearch');
     }
     return null;

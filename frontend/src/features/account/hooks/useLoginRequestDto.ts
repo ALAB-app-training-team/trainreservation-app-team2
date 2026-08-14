@@ -1,5 +1,6 @@
 import { type ChangeEvent, useState } from 'react';
 import { useLocation, useNavigate } from 'react-router-dom';
+import { toast } from 'sonner';
 
 import apiClient from '@/api/apiClient';
 import { ENDPOINTS } from '@/api/routes';
@@ -39,7 +40,16 @@ export function useLoginRequestDto() {
                 navigate(prevPath, { state: prevData, replace: true });
             }
         } catch {
-            alert(ERROR_MESSAGE.LOGIN_RETRY);
+            toast.error(ERROR_MESSAGE.LOGIN_RETRY,{
+                duration:Infinity,
+                action: {
+                    label: 'OK',
+                    onClick: () => {}
+                },
+                classNames: {
+                    title : 'text-left whitespace-pre-line',
+                }
+            });
         } finally {
             setIsSubmitting(false);
         }
