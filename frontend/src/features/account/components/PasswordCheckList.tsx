@@ -15,7 +15,7 @@ export function PasswordCheckList({ policy }: PasswordCheckListProps) {
     return (
         <ul className="apace-y-1 mt-3 text-sm">
             <li className="text-left">
-                使用できる文字は数字・英大文字・英小文字・記号（'-!"#$%&(),./:;?@[]^_`
+                使用できる文字は半角数字・半角英大文字・半角英小文字・記号（'-!"#$%&(),./:;?@[]^_`
                 {}~+&lt;=&gt;*）です
             </li>
             <li
@@ -28,7 +28,7 @@ export function PasswordCheckList({ policy }: PasswordCheckListProps) {
             </li>
             <li className={policy.hasNumber ? style.isValid : style.isInvalid}>
                 {policy.hasNumber ? <FaCheck /> : <FaTimes />}
-                数字を含む
+                半角数字を含む
             </li>
             <li
                 className={
@@ -36,7 +36,7 @@ export function PasswordCheckList({ policy }: PasswordCheckListProps) {
                 }
             >
                 {policy.hasUppercase ? <FaCheck /> : <FaTimes />}
-                英大文字を含む
+                半角英大文字を含む
             </li>
             <li
                 className={
@@ -44,7 +44,7 @@ export function PasswordCheckList({ policy }: PasswordCheckListProps) {
                 }
             >
                 {policy.hasLowercase ? <FaCheck /> : <FaTimes />}
-                英小文字を含む
+                半角英小文字を含む
             </li>
             <li className={policy.isValid ? style.isValid : style.isInvalid}>
                 {policy.isValid ? <FaCheck /> : <FaTimes />}
