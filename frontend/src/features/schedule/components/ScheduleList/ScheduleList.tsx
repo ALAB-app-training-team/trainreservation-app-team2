@@ -55,12 +55,16 @@ export function ScheduleList({
     };
 
     const filteredSchedules = (schedules || []).filter((schedule) => {
-        if (!isOnlyAvailable) return true;
-        return (
+        const isAfterDepartureTime =
+            !searchRequestDto?.time ||
+            schedule.departureTime >= searchRequestDto.time;
+        const hasAvailableSeat =
+            !isOnlyAvailable ||
             schedule.reservedSeats !== 0 ||
             schedule.greenSeats !== 0 ||
-            schedule.gcSeats !== 0
-        );
+            schedule.gcSeats !== 0;
+        if (!isOnlyAvailable) return true;
+        return isAfterDepartureTime && hasAvailableSeat;
     });
 
     return (
