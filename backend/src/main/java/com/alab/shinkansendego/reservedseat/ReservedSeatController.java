@@ -11,6 +11,7 @@ import org.springframework.web.bind.annotation.PatchMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import java.util.List;
@@ -29,9 +30,11 @@ public class ReservedSeatController {
     @PatchMapping(value = "{id}")
     public ResponseEntity<Void> updateReservedSeats(@PathVariable("id") UUID reservationId,
                                                     @Valid @RequestBody @NotEmpty List<ReservedSeatUpdateDto> reservedSeats,
-                                                    @AuthenticationPrincipal AccountSessionDto session) {
+                                                    @AuthenticationPrincipal AccountSessionDto session,
+                                                    @RequestParam("ReserverName") String name,
+                                                    @RequestParam("ReserverMail") String mail) {
         UUID accountId = (session != null) ? session.getId() : null;
-        reservedSeatService.updateReservedSeats(reservationId, reservedSeats, accountId);
+        reservedSeatService.updateReservedSeats(reservationId, reservedSeats, accountId, name, mail);
         return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
     }
 }

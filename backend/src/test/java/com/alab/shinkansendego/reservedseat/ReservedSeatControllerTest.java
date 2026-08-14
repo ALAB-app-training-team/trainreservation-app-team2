@@ -57,6 +57,8 @@ public class ReservedSeatControllerTest {
         String url = baseUrl + "/" + reservationId;
 
         mockMvc.perform(patch(url)
+                .param("ReserverName", "")
+                .param("ReserverMail", "")
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(objectMapper.writeValueAsString(updateRequest))
                 .with(SecurityMockMvcRequestPostProcessors.authentication(auth)))
@@ -69,6 +71,8 @@ public class ReservedSeatControllerTest {
         String url = baseUrl + "/" + reservationId;
 
         mockMvc.perform(patch(url)
+                .param("ReserverName", "YamadaTarou")
+                .param("ReserverMail", "user@example.com")
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(objectMapper.writeValueAsString(updateRequest)))
             .andExpect(status().isNoContent());

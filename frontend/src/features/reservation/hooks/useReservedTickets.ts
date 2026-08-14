@@ -60,6 +60,12 @@ export function useReservedTickets(reservationId: string) {
             await apiClient.patch(
                 ENDPOINTS.RESERVEDSEAT(reservedTickets.reservationId),
                 formValues,
+                {
+                    params: {
+                        ReserverName: guestLoginInfo.reserverName,
+                        ReserverMail: guestLoginInfo.reserverMail,
+                    },
+                },
             );
         },
         onSuccess: () => {
