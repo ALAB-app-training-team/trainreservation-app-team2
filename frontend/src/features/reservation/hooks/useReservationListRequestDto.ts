@@ -44,12 +44,12 @@ export function useReservationListRequestDto() {
             if (isMailEmpty(value)) {
                 messages.push({
                     field: 'reserverMail',
-                    message: VALIDATION_MESSAGE.EMPTY_RESERVER_MAIL,
+                    message: VALIDATION_MESSAGE.EMPTY_MAIL,
                 });
             } else if (isMailInvalid(value)) {
                 messages.push({
                     field: 'reserverMail',
-                    message: VALIDATION_MESSAGE.INVALID_RESERVER_MAIL,
+                    message: VALIDATION_MESSAGE.INVALID_MAIL,
                 });
             }
         }

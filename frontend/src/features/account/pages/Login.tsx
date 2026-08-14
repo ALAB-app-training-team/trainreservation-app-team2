@@ -1,7 +1,8 @@
 import { useQueryClient } from '@tanstack/react-query';
 import { useEffect, useState } from 'react';
-import { FiLogIn } from 'react-icons/fi';
+import { FiLogIn, FiUserPlus } from 'react-icons/fi';
 import { MdVisibility, MdVisibilityOff } from 'react-icons/md';
+import { useNavigate } from 'react-router-dom';
 
 import { useLoginRequestDto } from '@/features/account/hooks/useLoginRequestDto';
 import { useToastForRedirect } from '@/shared/hooks/useToastForRedirect';
@@ -9,6 +10,7 @@ import { removeGuestReservation } from '@/shared/utils/RemoveGuestReservation';
 
 export function Login() {
     const queryClient = useQueryClient();
+    const navigate = useNavigate();
     const { loginRequestDto, handleChange, handleLogin, isSubmitting } =
         useLoginRequestDto();
     const [passwordType, setPasswordType] = useState('password');
@@ -18,7 +20,7 @@ export function Login() {
     }, []);
     return (
         <div className="flex justify-center">
-            <div className="flex w-full flex-col items-center justify-center gap-4 p-8 md:w-6/10">
+            <div className="flex w-1/2 flex-col items-center justify-center gap-4 p-8 md:w-4/10">
                 <div className="flex flex-col items-center justify-center gap-1">
                     <div>
                         <img src="/logo.svg" className="h-auto w-16" />
@@ -93,6 +95,19 @@ export function Login() {
                         ログイン
                     </button>
                 </form>
+                <div className="flex w-full items-center gap-4">
+                    <div className="bg-primary h-px flex-1" />
+                    <span className="whitespace-nowrap">または</span>
+                    <div className="bg-primary h-px flex-1" />
+                </div>
+                <button
+                    onClick={() => navigate('/accountCreate')}
+                    type="button"
+                    className="border-primary-mid-light flex w-full items-center justify-center gap-2 rounded-lg border-2 bg-white p-2 text-center font-medium"
+                >
+                    <FiUserPlus />
+                    新規登録
+                </button>
             </div>
         </div>
     );

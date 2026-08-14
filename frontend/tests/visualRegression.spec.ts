@@ -6,6 +6,7 @@ import { ReservationListPage } from '@tests/pages/ReservationList/ReservationLis
 import { ScheduleSearchPage } from '@tests/pages/ScheduleSearch/ScheduleSearchPage';
 import { SelectSeatPage } from '@tests/pages/SelectSeat/SelectSeatPage';
 import { LoginPage } from './pages/Login/LoginPage';
+import { AccountCreatePage } from './pages/AccountCreate/AccountCreatePage';
 
 test('visual-scheduleSearch', async ({ page }) => {
     const scheduleSearchPage = new ScheduleSearchPage(page);
@@ -92,6 +93,27 @@ test('visual-login', async ({ page }) => {
         mask: [
             // テストに含めたくない要素をマスク(無視)する
             // 例 page.locator('.hoge'),
+        ],
+        maskColor: '#ffffff',
+    });
+});
+
+test('visual-accountCreate', async ({ page }) => {
+    const accountCreatePage = new AccountCreatePage(page);
+    const loginPage = new LoginPage(page);
+    await loginPage.goto();
+    await expect(page).toHaveURL('/login');
+    await loginPage.clickCreateButton();
+    await expect(page).toHaveURL('/accountCreate');
+    await accountCreatePage.createButton.waitFor({ state: 'visible' });
+    await page.evaluate(() => document.fonts.ready);
+
+    await expect(page).toHaveScreenshot({
+        maxDiffPixelRatio: 0.05,
+        fullPage: true,
+        animations: 'disabled',
+        mask: [
+            // テストに含めたくない要素をマスク(無視)する
         ],
         maskColor: '#ffffff',
     });
