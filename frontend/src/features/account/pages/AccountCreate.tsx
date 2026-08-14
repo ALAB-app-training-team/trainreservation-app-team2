@@ -74,7 +74,7 @@ export function AccountCreate() {
                             type={passwordType}
                             value={accountForm.password}
                             placeHolder={'パスワードを入力'}
-                            autoComplete={'current-password'}
+                            autoComplete={'new-password'}
                             onChange={handleChange}
                             onBlur={handleBlur}
                             policy={policy}
@@ -86,7 +86,7 @@ export function AccountCreate() {
                             type={passwordType}
                             value={accountForm.passwordCheck}
                             placeHolder={'パスワードを再入力'}
-                            autoComplete={'current-password'}
+                            autoComplete={'new-password'}
                             onChange={handleChange}
                             onBlur={handleBlur}
                             getFieldError={getFieldError}
