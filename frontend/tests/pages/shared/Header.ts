@@ -22,7 +22,7 @@ export class Header {
             name: 'ログイン',
         });
         this.logoutButton = page.getByRole('button', { name: 'ログアウト' });
-        this.commonUser = page.getByRole('button', { name: '一般太郎さん' });
+        this.commonUser = page.getByTestId('user-name').first();
     }
 
     async goToSchduleSearchBySystemName() {

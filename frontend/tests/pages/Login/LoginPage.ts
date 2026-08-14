@@ -7,6 +7,7 @@ export class LoginPage {
     readonly mailAddress: Locator;
     readonly password: Locator;
     readonly loginButton: Locator;
+    readonly createButton: Locator;
 
     constructor(page: Page) {
         this.page = page;
@@ -18,6 +19,7 @@ export class LoginPage {
         this.loginButton = page.getByRole('button', {
             name: 'ログイン',
         });
+        this.createButton = page.getByRole('button', { name: '新規登録' });
     }
 
     async goto() {
@@ -36,8 +38,12 @@ export class LoginPage {
         await this.loginButton.click();
     }
 
+    async clickCreateButton() {
+        await this.createButton.click();
+    }
+
     async inputLoginInfo() {
         await this.fillMailAddress('test-common@test.com');
-        await this.fillPassword('password');
+        await this.fillPassword('Password1');
     }
 }
