@@ -89,7 +89,7 @@ export function ScheduleSearchForm({
                         <div className="flex flex-col justify-between gap-4 md:flex-row">
                             <DepartureDateAndTimePicker
                                 id="date"
-                                label="出発日"
+                                label="乗車日"
                                 type="date"
                                 value={searchRequestDto.date}
                                 setValue={setDate}
@@ -105,8 +105,10 @@ export function ScheduleSearchForm({
                                 setValue={setTime}
                                 getFieldError={getFieldError}
                                 children={
-                                    <div className="flex gap-1">
-                                        <label>
+                                    <div className="border-primary inline-flex items-center overflow-hidden rounded border">
+                                        <label
+                                            className={`cursor-pointer p-1 text-sm ${!searchRequestDto.isArrivalTime ? 'bg-primary text-white' : 'bg-gray-50'}`}
+                                        >
                                             <input
                                                 type="radio"
                                                 checked={
@@ -115,11 +117,13 @@ export function ScheduleSearchForm({
                                                 onChange={() =>
                                                     setIsArrivalTime(false)
                                                 }
-                                                className="accent-primary"
+                                                className="sr-only"
                                             />
                                             出発
                                         </label>
-                                        <label>
+                                        <label
+                                            className={`cursor-pointer p-1 text-sm ${searchRequestDto.isArrivalTime ? 'bg-primary text-white' : 'bg-gray-50'}`}
+                                        >
                                             <input
                                                 type="radio"
                                                 checked={
@@ -128,7 +132,7 @@ export function ScheduleSearchForm({
                                                 onChange={() =>
                                                     setIsArrivalTime(true)
                                                 }
-                                                className="accent-primary"
+                                                className="sr-only"
                                             />
                                             到着
                                         </label>
