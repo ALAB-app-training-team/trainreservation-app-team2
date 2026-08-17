@@ -22,6 +22,8 @@ createRoot(document.getElementById('root')!).render(
                             '!bg-primary-light !border-l-4 !border-l-primary',
                         warning:
                             '!bg-orange-100 !border-l-4 !border-l-orange-400',
+                        error:
+                            '!bg-red-100 !border-l-4 !border-l-red-400',
                     },
                 }}
             />

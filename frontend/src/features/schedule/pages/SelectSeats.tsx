@@ -4,6 +4,7 @@ import { Suspense, useEffect, useState } from 'react';
 import { IoCardOutline } from 'react-icons/io5';
 import { LuArrowLeft, LuLogIn } from 'react-icons/lu';
 import { redirect, useLocation, useNavigate } from 'react-router-dom';
+import { toast } from 'sonner';
 
 import apiClient from '@/api/apiClient';
 import { ENDPOINTS } from '@/api/routes';
@@ -216,7 +217,17 @@ export function SelectSeats() {
 
                 return;
             }
-            alert(ERROR_MESSAGE.RESERVE_RETRY);
+            toast.error(ERROR_MESSAGE.RESERVE_RETRY,{
+                duration:Infinity,
+                action: {
+                    label: 'OK',
+                    onClick: () => {}
+                },
+                classNames: {
+                    title : 'text-left whitespace-pre-line',
+                    actionButton: "!px-4 !py-2 !text-base !h-auto",
+                }
+            });
         } finally {
             setIsSubmitting(false);
             onRequestReserveConfirmModalClose();
@@ -266,7 +277,17 @@ export function SelectSeats() {
                 return;
             }
             // TODO: セッション切れ時の挙動を制御する
-            alert(ERROR_MESSAGE.UPDATE_RETRY);
+            toast.error(ERROR_MESSAGE.UPDATE_RETRY,{
+                duration:Infinity,
+                action: {
+                    label: 'OK',
+                    onClick: () => {}
+                },
+                classNames: {
+                    title : 'text-left whitespace-pre-line',
+                    actionButton: "!px-4 !py-2 !text-base !h-auto",
+                }
+            });
         } finally {
             setIsSubmitting(false);
             onRequestUpdateConfirmModalClose();
