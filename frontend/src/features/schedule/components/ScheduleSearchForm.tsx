@@ -99,12 +99,36 @@ export function ScheduleSearchForm({
                             />
                             <DepartureDateAndTimePicker
                                 id="time"
-                                label="出発時刻"
+                                label="時刻"
                                 type="time"
                                 value={searchRequestDto.time}
                                 setValue={setTime}
                                 getFieldError={getFieldError}
                             />
+                            <div className="flex gap-2 bg-transparent text-left">
+                                <label>
+                                    <input
+                                        type="radio"
+                                        name="timeType"
+                                        checked={
+                                            !searchRequestDto.isArrivalTime
+                                        }
+                                        onChange={() => setIsArrival(false)}
+                                        className="accent-primary"
+                                    />
+                                    出発
+                                </label>
+                                <label>
+                                    <input
+                                        type="radio"
+                                        name="timeType"
+                                        checked={searchRequestDto.isArrivalTime}
+                                        onChange={() => setIsArrival(true)}
+                                        className="accent-primary"
+                                    />
+                                    到着
+                                </label>
+                            </div>
                         </div>
                         <div className="flex gap-2 bg-transparent text-left">
                             <input
@@ -118,18 +142,6 @@ export function ScheduleSearchForm({
                             />
                             <label htmlFor="isOnlyAvailable">
                                 空席がある列車のみ表示する
-                            </label>
-                        </div>
-                        <div className="flex gap-2 bg-transparent text-left">
-                            <input
-                                type="checkbox"
-                                id="isArrival"
-                                checked={searchRequestDto.isArrivalTime}
-                                onChange={(e) => setIsArrival(e.target.checked)}
-                                className="accent-primary"
-                            />
-                            <label htmlFor="isArrival">
-                                到着時刻で検索する
                             </label>
                         </div>
                     </div>
