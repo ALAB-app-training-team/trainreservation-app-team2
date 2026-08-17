@@ -78,7 +78,17 @@ export function ReservedTicket() {
             await updateCompanions(formValues);
             onCompanionsModalRequestClose();
         } catch {
-            alert(ERROR_MESSAGE.COMPANION);
+            toast.error(ERROR_MESSAGE.COMPANION,{
+                duration:Infinity,
+                action: {
+                    label: 'OK',
+                    onClick: () => {}
+                },
+                classNames: {
+                    title : 'text-left whitespace-pre-line',
+                    actionButton: "!px-4 !py-2 !text-base !h-auto",
+                }
+            });
         }
     };
 
@@ -94,7 +104,17 @@ export function ReservedTicket() {
                 navigate('/scheduleSearch');
             }
         } catch {
-            alert(ERROR_MESSAGE.REFUND_RETRY);
+            toast.error(ERROR_MESSAGE.REFUND_RETRY,{
+                duration:Infinity,
+                action: {
+                    label: 'OK',
+                    onClick: () => {}
+                },
+                classNames: {
+                    title : 'text-left whitespace-pre-line',
+                    actionButton: "!px-4 !py-2 !text-base !h-auto",
+                }
+            });
         } finally {
             setIsSubmitting(false);
             onRefundConfirmModalRequestClose();

@@ -9,6 +9,8 @@ export class ScheduleSearchPage {
     readonly arrivalStation: Locator;
     readonly date: Locator;
     readonly time: Locator;
+    readonly arrivalTimeButton: Locator;
+    readonly departureTimeButton: Locator;
     readonly switchStationButton: Locator;
     readonly availableTrainCheckBox: Locator;
     readonly backButton: Locator;
@@ -19,8 +21,10 @@ export class ScheduleSearchPage {
         this.detailButton = page.getByRole('button', { name: '詳細を見る' });
         this.departureStation = page.getByLabel('乗車駅');
         this.arrivalStation = page.getByLabel('降車駅');
-        this.date = page.getByRole('textbox', { name: '出発日' });
-        this.time = page.getByRole('textbox', { name: '出発時刻' });
+        this.date = page.getByRole('textbox', { name: '乗車日' });
+        this.time = page.getByRole('textbox', { name: '時刻' });
+        this.departureTimeButton = page.getByText('出発');
+        this.arrivalTimeButton = page.getByText('到着');
         this.switchStationButton = page
             .getByRole('button')
             .filter({ hasText: /^$/ });
@@ -51,6 +55,14 @@ export class ScheduleSearchPage {
 
     async clickSwitchStationButton() {
         await this.switchStationButton.click();
+    }
+
+    async clickDepartureTimeButton() {
+        await this.departureTimeButton.click();
+    }
+
+    async clickArrivalTimeButton() {
+        await this.arrivalTimeButton.click();
     }
 
     async clickAvailableTrainCheckBox() {

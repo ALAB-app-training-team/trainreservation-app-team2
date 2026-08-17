@@ -86,7 +86,17 @@ export function ReservationListBody() {
             );
             toast.success('予約を取り消しました');
         } catch {
-            alert(ERROR_MESSAGE.REFUND_RETRY);
+            toast.error(ERROR_MESSAGE.REFUND_RETRY, {
+                duration: Infinity,
+                action: {
+                    label: 'OK',
+                    onClick: () => {},
+                },
+                classNames: {
+                    title: 'text-left whitespace-pre-line',
+                    actionButton: '!px-4 !py-2 !text-base !h-auto',
+                },
+            });
         } finally {
             setIsSubmitting(false);
             onRequestClose();

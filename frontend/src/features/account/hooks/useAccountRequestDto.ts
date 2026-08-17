@@ -175,7 +175,17 @@ export function useAccountRequestDto() {
                 axios.isAxiosError(error) &&
                 error.response?.status === HttpStatusCode.Conflict
             ) {
-                alert(ERROR_MESSAGE.ACCOUNT_ALREADY);
+                toast.error(ERROR_MESSAGE.ACCOUNT_ALREADY,{
+                    duration:Infinity,
+                    action: {
+                        label: 'OK',
+                        onClick: () => {}
+                    },
+                    classNames: {
+                        title : 'text-left whitespace-pre-line',
+                        actionButton: "!px-4 !py-2 !text-base !h-auto",
+                }
+                });
             }
         } finally {
             setIsSubmitting(false);

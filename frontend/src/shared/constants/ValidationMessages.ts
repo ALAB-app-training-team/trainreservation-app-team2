@@ -1,6 +1,6 @@
 export const VALIDATION_MESSAGE = {
     EMPTY_DATE: '日付を入力してください',
-    OUTSIDE_ONE_MONTH: '出発日は本日から1か月以内の日付を指定してください',
+    OUTSIDE_ONE_MONTH: '乗車日は本日から1か月以内の日付を指定してください',
     SAME_STATION: '乗車駅と異なる駅を選択してください',
     INVALID_SEARCH_FORM: '検索条件が不正です',
     FIX_SEARCH_FORM: '検索条件を修正してください',

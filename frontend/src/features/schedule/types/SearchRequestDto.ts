@@ -3,4 +3,5 @@ export type SearchRequestDto = {
     time: string;
     departureStationCd: string;
     arrivalStationCd: string;
+    isArrivalTime: boolean;
 };

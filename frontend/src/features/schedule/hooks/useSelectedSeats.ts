@@ -1,4 +1,5 @@
 import { useState } from 'react';
+import { toast } from 'sonner';
 
 import type { SeatResponseDto } from '@/features/schedule/types/SeatResponseDto';
 import { ERROR_MESSAGE } from '@/shared/constants/ErrorMessages';
@@ -47,18 +48,28 @@ export function useSelectedSeats(initialSeats: SeatResponseDto[] = []) {
                         ),
                 ),
             );
-            alert(
-                `${ERROR_MESSAGE.RELEASE_SEAT}\n` +
-                    reservedSeatsInSelectedSeats
-                        .map(
-                            (seat: SeatResponseDto) =>
-                                seat.trainCarNumber +
-                                '号車' +
-                                seat.seatNumber +
-                                seat.seatColumn,
-                        )
-                        .join(','),
-            );
+
+            toast.error(`${ERROR_MESSAGE.RELEASE_SEAT}\n` +
+                reservedSeatsInSelectedSeats
+                    .map(
+                        (seat: SeatResponseDto) =>
+                            '・' +
+                            seat.trainCarNumber +
+                            '号車' +
+                            seat.seatNumber +
+                            seat.seatColumn,
+                    )
+                    .join('\n'),{
+                duration:Infinity,
+                action: {
+                    label: 'OK',
+                    onClick: () => {}
+                },
+                classNames: {
+                    title : 'text-left whitespace-pre-line',
+                    actionButton: "!px-4 !py-2 !text-base !h-auto",
+                }
+            });
         }
     };
 
