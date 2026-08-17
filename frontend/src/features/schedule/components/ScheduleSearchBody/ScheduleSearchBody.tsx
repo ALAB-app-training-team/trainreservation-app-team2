@@ -124,6 +124,8 @@ export function ScheduleSearchBody() {
                             preChangeScheduleInfo={
                                 preChangeScheduleInfo ?? null
                             }
+                            isChanging={isChanging}
+                            isBack={isBack}
                         />
                     </Suspense>
                 </div>

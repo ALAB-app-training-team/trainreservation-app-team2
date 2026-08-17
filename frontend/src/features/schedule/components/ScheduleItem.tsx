@@ -21,6 +21,8 @@ type ScheduleItemProps = {
     reservationId: string | null;
     reservedSeats: ReservedSeatDto[];
     preChangeScheduleInfo: ScheduleInfoDto | null;
+    isChanging: boolean | undefined;
+    isBack: boolean | undefined;
 };
 
 export function ScheduleItem({
@@ -34,6 +36,8 @@ export function ScheduleItem({
     reservationId,
     reservedSeats,
     preChangeScheduleInfo,
+    isChanging,
+    isBack,
 }: ScheduleItemProps) {
     const navigate = useNavigate();
 
@@ -79,6 +83,8 @@ export function ScheduleItem({
                 scheduleInfoDto,
                 searchRequestDto,
                 ...(reservationId && { reservationId }),
+                isChanging: isChanging,
+                isBack: isBack,
                 isFromReservedTicket: false,
                 ...(preChangeScheduleInfo && { preChangeScheduleInfo }),
                 ...(reservedSeats &&

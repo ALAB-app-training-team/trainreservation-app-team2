@@ -40,6 +40,7 @@ export function SelectSeats() {
         reservationId,
         isChanging,
         isFromReservedTicket,
+        isBack,
         preChangeScheduleInfo,
         preChangeReservedSeats,
     }: SelectSeatsLocationState = location.state;
@@ -95,6 +96,7 @@ export function SelectSeats() {
             sessionStorage.setItem('message', ERROR_MESSAGE.LOGIN_ERROR);
             redirect('/login');
         }
+        console.log(isChanging);
     }, []);
 
     const getPaymentToken = async (): Promise<string> => {
@@ -289,6 +291,7 @@ export function SelectSeats() {
                                 state: {
                                     searchRequestDto,
                                     isChanging: isChanging,
+                                    isBack: isBack,
                                     ...(reservationId && { reservationId }),
                                     ...(preChangeReservedSeats && {
                                         reservedSeats: preChangeReservedSeats,

@@ -37,6 +37,7 @@ export function useChangeModal(
                 searchRequestDto,
                 isBack,
                 reservationId: detail.reservationId,
+                isChanging: true,
                 isFromReservedTicket,
                 reservedSeats: detail.reservedSeats,
                 preChangeScheduleInfo: preChangeScheduleInfo,
@@ -66,6 +67,7 @@ export function useChangeModal(
                 searchRequestDto,
                 reservedSeats: detail.reservedSeats,
                 reservationId: detail.reservationId,
+                isChanging: true,
                 isFromReservedTicket,
             },
         });

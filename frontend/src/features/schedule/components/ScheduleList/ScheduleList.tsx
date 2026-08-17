@@ -30,6 +30,8 @@ type ScheduleListProps = {
     reservationId: string | null;
     reservedSeats: ReservedSeatDto[];
     preChangeScheduleInfo: ScheduleInfoDto | null;
+    isChanging: boolean | undefined;
+    isBack: boolean | undefined;
 };
 
 export function ScheduleList({
@@ -43,6 +45,8 @@ export function ScheduleList({
     reservationId,
     reservedSeats,
     preChangeScheduleInfo,
+    isChanging,
+    isBack,
 }: ScheduleListProps) {
     const { schedules } = useSchedules(searchRequestDto, isInvalid);
 
@@ -94,6 +98,8 @@ export function ScheduleList({
                                         preChangeScheduleInfo={
                                             preChangeScheduleInfo ?? null
                                         }
+                                        isChanging={isChanging}
+                                        isBack={isBack}
                                     />
                                 );
                             })}
