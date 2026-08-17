@@ -247,7 +247,24 @@ export function SelectSeats() {
                     isUpdated: true,
                 },
             });
-        } catch {
+        } catch (error) {
+            if (
+                axios.isAxiosError(error) &&
+                error.response?.status === HttpStatusCode.Conflict &&
+                error.response?.data
+            ) {
+                const errorData = error.response.data;
+                const conflictSeats: SeatResponseDto[] =
+                    typeof errorData === 'string'
+                        ? JSON.parse(errorData)
+                        : errorData;
+                checkReservedSeats(conflictSeats);
+
+                await queryClient.refetchQueries({
+                    predicate: (query) => query.queryKey[0] === 'seat',
+                });
+                return;
+            }
             // TODO: セッション切れ時の挙動を制御する
             alert(ERROR_MESSAGE.UPDATE_RETRY);
         } finally {
