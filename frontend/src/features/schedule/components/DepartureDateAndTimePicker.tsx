@@ -10,6 +10,7 @@ type DepartureDateAndTimePickerProps = {
     getFieldError?: (field: string) => string;
     maxDate?: Date;
     minDate?: Date;
+    children?: React.ReactNode;
 };
 
 export function DepartureDateAndTimePicker({
@@ -21,10 +22,14 @@ export function DepartureDateAndTimePicker({
     getFieldError,
     maxDate,
     minDate,
+    children,
 }: DepartureDateAndTimePickerProps) {
     return (
         <div className="flex w-full flex-col items-start gap-2">
-            <label htmlFor={id}>{label}</label>
+            <div className="flex gap-4">
+                <label htmlFor={id}>{label}</label>
+                {children}
+            </div>
             <input
                 id={id}
                 type={type}

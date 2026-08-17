@@ -104,31 +104,37 @@ export function ScheduleSearchForm({
                                 value={searchRequestDto.time}
                                 setValue={setTime}
                                 getFieldError={getFieldError}
+                                children={
+                                    <div className="flex gap-1">
+                                        <label>
+                                            <input
+                                                type="radio"
+                                                checked={
+                                                    !searchRequestDto.isArrivalTime
+                                                }
+                                                onChange={() =>
+                                                    setIsArrivalTime(false)
+                                                }
+                                                className="accent-primary"
+                                            />
+                                            出発
+                                        </label>
+                                        <label>
+                                            <input
+                                                type="radio"
+                                                checked={
+                                                    searchRequestDto.isArrivalTime
+                                                }
+                                                onChange={() =>
+                                                    setIsArrivalTime(true)
+                                                }
+                                                className="accent-primary"
+                                            />
+                                            到着
+                                        </label>
+                                    </div>
+                                }
                             />
-                            <div className="flex gap-2 bg-transparent text-left">
-                                <label>
-                                    <input
-                                        type="radio"
-                                        name="timeType"
-                                        checked={
-                                            !searchRequestDto.isArrivalTime
-                                        }
-                                        onChange={() => setIsArrivalTime(false)}
-                                        className="accent-primary"
-                                    />
-                                    出発
-                                </label>
-                                <label>
-                                    <input
-                                        type="radio"
-                                        name="timeType"
-                                        checked={searchRequestDto.isArrivalTime}
-                                        onChange={() => setIsArrivalTime(true)}
-                                        className="accent-primary"
-                                    />
-                                    到着
-                                </label>
-                            </div>
                         </div>
                         <div className="flex gap-2 bg-transparent text-left">
                             <input
