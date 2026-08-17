@@ -148,7 +148,7 @@ export function ReservedTicket() {
                         <IoTrashOutline className="h-4 w-4" />
                         キャンセル
                     </button>
-                    {accountInfo !== null && (
+                    {accountInfo !== null && isBack && (
                         <button
                             onClick={handleChangeConfirmModalOpen}
                             disabled={isSubmitting}
