@@ -178,7 +178,7 @@ test('出発時刻・到着時刻の切り替えができること、空席表�
         a.localeCompare(b),
     );
     expect(departureTimes).toEqual(sortedDepartureTimes);
-    // availableTrainCheckBoxを外す
+    // 「空席がある列車のみ表示する」ボタンを外す
     await scheduleSearchPage.clickAvailableTrainCheckBox();
     await expect(scheduleSearchPage.availableTrainCheckBox).not.toBeChecked();
     const fullTrainCountWithDepartureTime = await page
@@ -186,7 +186,7 @@ test('出発時刻・到着時刻の切り替えができること、空席表�
         .count();
     await expect(fullTrainCountWithDepartureTime).toBeGreaterThanOrEqual(0);
     const departureTimesWithUnavailableTrain = await page
-        .getByTestId('schedule-arrival-time')
+        .getByTestId('schedule-departure-time')
         .allTextContents();
     departureTimesWithUnavailableTrain.forEach((time) => {
         expect(time >= '06:20').toBe(true);
@@ -203,22 +203,22 @@ test('出発時刻・到着時刻の切り替えができること、空席表�
     await expect(scheduleSearchPage.availableTrainCheckBox).toBeChecked();
     await scheduleSearchPage.clickArrivalTimeButton();
     await expect(scheduleSearchPage.arrivalTimeButton).toBeChecked();
-    await scheduleSearchPage.time.fill('06:25');
+    await scheduleSearchPage.time.fill('06:37');
     await scheduleSearchPage.time.press('Enter');
     await expect(page.getByTestId('schedule-arrival-time').first()).toHaveText(
-        '06:25',
+        '06:37',
     );
     const arrivalTimes = await page
         .getByTestId('schedule-arrival-time')
         .allTextContents();
     arrivalTimes.forEach((time) => {
-        expect(time <= '06:25').toBe(true);
+        expect(time <= '06:37').toBe(true);
     });
     const sortedArrivalTimes = [...arrivalTimes].sort((a, b) =>
         b.localeCompare(a),
     );
     expect(arrivalTimes).toEqual(sortedArrivalTimes);
-    // availableTrainCheckBoxを外す
+    // 「空席がある列車のみ表示する」ボタンを外す
     await scheduleSearchPage.clickAvailableTrainCheckBox();
     await expect(scheduleSearchPage.availableTrainCheckBox).not.toBeChecked();
     const fullTrainCountWithArrivalTime = await page.getByText('満席').count();
@@ -227,7 +227,7 @@ test('出発時刻・到着時刻の切り替えができること、空席表�
         .getByTestId('schedule-arrival-time')
         .allTextContents();
     arrivalTimesWithUnavailableTrain.forEach((time) => {
-        expect(time <= '06:25').toBe(true);
+        expect(time <= '06:37').toBe(true);
     });
     const sortedArrivalTimesWithUnavailableTrain = [
         ...arrivalTimesWithUnavailableTrain,
