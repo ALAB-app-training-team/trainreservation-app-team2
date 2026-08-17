@@ -47,6 +47,7 @@ export function ScheduleSearchBody() {
                 <div className="mx-8 my-4 flex w-full max-w-5xl flex-col gap-4">
                     {isBack ? (
                         <button
+                            data-testid={'back-button-in-scheduleSearch'}
                             type="button"
                             onClick={() => {
                                 navigate('/reservationList');
@@ -59,6 +60,7 @@ export function ScheduleSearchBody() {
                         </button>
                     ) : isFromReservedTicket || isChanging ? (
                         <button
+                            data-testid={'back-button-in-scheduleSearch'}
                             type="button"
                             onClick={() => {
                                 navigate('/reservedTicket', {

@@ -11,6 +11,7 @@ export class ScheduleSearchPage {
     readonly time: Locator;
     readonly switchStationButton: Locator;
     readonly availableTrainCheckBox: Locator;
+    readonly backButton: Locator;
 
     constructor(page: Page) {
         this.page = page;
@@ -26,6 +27,7 @@ export class ScheduleSearchPage {
         this.availableTrainCheckBox = page.getByRole('checkbox', {
             name: '空席がある列車のみ表示する',
         });
+        this.backButton = page.getByTestId('back-button-in-scheduleSearch');
     }
 
     async goto() {
@@ -53,5 +55,9 @@ export class ScheduleSearchPage {
 
     async clickAvailableTrainCheckBox() {
         await this.availableTrainCheckBox.click();
+    }
+
+    async clickBackButton() {
+        await this.backButton.click();
     }
 }
