@@ -19,7 +19,7 @@ export class ScheduleSearchPage {
         this.departureStation = page.getByLabel('乗車駅');
         this.arrivalStation = page.getByLabel('降車駅');
         this.date = page.getByRole('textbox', { name: '出発日' });
-        this.time = page.getByRole('textbox', { name: '出発時刻' });
+        this.time = page.getByRole('textbox', { name: '時刻' });
         this.switchStationButton = page
             .getByRole('button')
             .filter({ hasText: /^$/ });
