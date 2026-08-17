@@ -54,21 +54,27 @@ export function ScheduleList({
         setOffset(pageNumber * perPage);
     };
 
-    const filteredSchedules = (schedules || []).filter((schedule) => {
-        let isTimeValid = true;
-        if (searchRequestDto.isArrivalTime) {
-            isTimeValid = schedule.arrivalTime <= searchRequestDto.time;
-        } else {
-            isTimeValid = schedule.departureTime >= searchRequestDto.time;
-        }
-        const hasAvailableSeat =
-            !isOnlyAvailable ||
-            schedule.reservedSeats !== 0 ||
-            schedule.greenSeats !== 0 ||
-            schedule.gcSeats !== 0;
-        if (!isOnlyAvailable) return true;
-        return isTimeValid && hasAvailableSeat;
-    });
+    const filteredSchedules = (schedules || [])
+        .filter((schedule) => {
+            const isTimeValid = searchRequestDto.isArrivalTime
+                ? schedule.arrivalTime <= searchRequestDto.time
+                : schedule.departureTime >= searchRequestDto.time;
+
+            const hasAvailableSeat =
+                !isOnlyAvailable ||
+                schedule.reservedSeats !== 0 ||
+                schedule.greenSeats !== 0 ||
+                schedule.gcSeats !== 0;
+            if (!isOnlyAvailable) return true;
+            return isTimeValid && hasAvailableSeat;
+        })
+        .sort((a, b) => {
+            if (searchRequestDto.isArrivalTime) {
+                return b.arrivalTime.localeCompare(a.arrivalTime);
+            } else {
+                return a.departureTime.localeCompare(b.departureTime);
+            }
+        });
 
     return (
         <>
