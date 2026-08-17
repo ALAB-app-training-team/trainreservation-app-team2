@@ -15,7 +15,7 @@ export function useOutsideClick(callback: () => void, isActive: boolean) {
         }
 
         return () => {
-            document.addEventListener('mousedown', handleClickOutside);
+            document.removeEventListener('mousedown', handleClickOutside);
         };
     }, [isActive, callback]);
 
