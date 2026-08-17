@@ -26,6 +26,8 @@ spring:
           starttls:
             enable: ${MAIL_STARTTLS_ENABLE:false}
             required: ${MAIL_STARTTLS_REQUIRED:false}
+  profiles:
+    active: local
 springdoc:
   api-docs:
     enabled: false
@@ -42,3 +44,6 @@ server:
 app:
   frontend:
     base-url: ${FRONTEND_BASE_URL:http://localhost:5173}
+  mail:
+    from: ${MAIL_FROM:thashimoto@jeisryokai.onmicrosoft.com}
+    region: ${AWS_REGION:ap-northeast-1}
