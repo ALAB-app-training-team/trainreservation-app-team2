@@ -20,6 +20,7 @@ export function useChangeModal(
             time: detail.departureTime,
             departureStationCd: detail.departureStationCd,
             arrivalStationCd: detail.arrivalStationCd,
+            isArrivalTime: false,
         };
         const preChangeScheduleInfo = {
             scheduleCd: detail.scheduleCd,
