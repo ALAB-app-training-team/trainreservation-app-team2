@@ -164,3 +164,7 @@ input:read-only:focus {
     border: 0px;
     outline: none;
 }
+
+input[type='checkbox'] {
+    cursor: pointer;
+}
