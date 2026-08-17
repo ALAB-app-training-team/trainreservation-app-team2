@@ -14,7 +14,7 @@ export const ERROR_MESSAGE = {
     NO_SELECTED_SEAT: '座席が選択されていません',
     LIMIT_SELECTED_SEAT: `一度に予約できる座席は${LIMIT.SEATS}席までです`,
     RELEASE_SEAT:
-        '選択中の座席が予約されたため、以下の座席の選択を解除しました。',
+        '選択中の座席が予約されたため、\n以下の座席の選択を解除しました。',
     RESERVE_RETRY:
         '予約処理中にエラーが発生しました。お手数ですが再度お試しください。',
     ANY_RESERVATION_ERROR: '予約取得時に何らかのエラーが発生しました',
