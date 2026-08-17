@@ -5,6 +5,7 @@ import { NavLink, useLocation, useNavigate } from 'react-router-dom';
 
 import apiClient from '@/api/apiClient';
 import { ENDPOINTS } from '@/api/routes';
+import { useOutsideClick } from '@/shared/hooks/useOutsideClick';
 
 export function Header() {
     const location = useLocation();
@@ -33,6 +34,10 @@ export function Header() {
     ];
 
     const [isMenuOpen, setIsMenuOpen] = useState(false);
+    const { ref: menuRef } = useOutsideClick(
+        () => setIsMenuOpen(false),
+        isMenuOpen,
+    );
     const handleMenuOpen = () => {
         setIsMenuOpen(!isMenuOpen);
     };
@@ -45,10 +50,11 @@ export function Header() {
     };
 
     return (
-        <>
+        <div ref={menuRef}>
             <div className="border-primary-light relative flex h-16 items-center justify-start gap-6 border-b-2 px-8 py-2">
                 <NavLink
                     to="/"
+                    onClick={() => setIsMenuOpen(false)}
                     className={({ isActive }) =>
                         `text-primary flex items-center gap-2 px-4 text-lg font-bold ${
                             isActive || location.pathname === '/scheduleSearch'
@@ -66,6 +72,7 @@ export function Header() {
                             <NavLink
                                 key={index}
                                 to={button.to}
+                                onClick={() => setIsMenuOpen(false)}
                                 className={({ isActive }) =>
                                     `rounded-xl px-4 py-3 text-sm font-bold ${
                                         isActive
@@ -131,6 +138,6 @@ export function Header() {
                     )}
                 </div>
             )}
-        </>
+        </div>
     );
 }
