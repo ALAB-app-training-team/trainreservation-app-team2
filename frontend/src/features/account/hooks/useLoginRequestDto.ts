@@ -48,6 +48,7 @@ export function useLoginRequestDto() {
                 },
                 classNames: {
                     title : 'text-left whitespace-pre-line',
+                    actionButton: "!px-4 !py-2 !text-base !h-auto",
                 }
             });
         } finally {
