@@ -165,6 +165,7 @@ input:read-only:focus {
     outline: none;
 }
 
-input[type='radio'] {
+input[type='radio'],
+input[type='checkbox'] {
     cursor: pointer;
 }
