@@ -38,6 +38,8 @@ export function SelectSeats() {
         prevSelectedSeats,
         reservedSeats,
         reservationId,
+        isChanging,
+        isFromReservedTicket,
         preChangeScheduleInfo,
         preChangeReservedSeats,
     }: SelectSeatsLocationState = location.state;
@@ -286,6 +288,7 @@ export function SelectSeats() {
                             navigate('/scheduleSearch', {
                                 state: {
                                     searchRequestDto,
+                                    isChanging: isChanging,
                                     ...(reservationId && { reservationId }),
                                     ...(preChangeReservedSeats && {
                                         reservedSeats: preChangeReservedSeats,
@@ -300,6 +303,26 @@ export function SelectSeats() {
                         <div className="flex items-center gap-2">
                             <LuArrowLeft />
                             検索画面に戻る
+                        </div>
+                    </button>
+                ) : isFromReservedTicket ? (
+                    <button
+                        data-testid={'back-button-in-selectseat'}
+                        type="button"
+                        onClick={() => {
+                            navigate('/reservedTicket', {
+                                state: {
+                                    reservationId: reservationId,
+                                    isBack: true,
+                                    guestLogin: false,
+                                    isUpdated: false,
+                                },
+                            });
+                        }}
+                    >
+                        <div className="flex items-center gap-2">
+                            <LuArrowLeft />
+                            予約詳細へ戻る
                         </div>
                     </button>
                 ) : (

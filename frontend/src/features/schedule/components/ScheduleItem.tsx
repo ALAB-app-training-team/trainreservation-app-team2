@@ -79,6 +79,7 @@ export function ScheduleItem({
                 scheduleInfoDto,
                 searchRequestDto,
                 ...(reservationId && { reservationId }),
+                isFromReservedTicket: false,
                 ...(preChangeScheduleInfo && { preChangeScheduleInfo }),
                 ...(reservedSeats &&
                     reservedSeats.length > 0 && {
