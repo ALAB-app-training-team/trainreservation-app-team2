@@ -7,6 +7,7 @@ import { ReservationGuestLoginPage } from '@tests/pages/ReservationGuestLogin/Re
 import { App } from '@tests/pages/shared/App';
 import { LoginPage } from '@tests/pages/Login/LoginPage';
 import { test } from '@tests/fixtures';
+import { AccountCreatePage } from '@tests/pages/AccountCreate/AccountCreatePage';
 
 test('navigate-ゲストログイン全機能', async ({ page, context }) => {
     const scheduleSearchPage = new ScheduleSearchPage(page);
@@ -58,6 +59,23 @@ test('navigate-ログイン全機能', async ({ page, login, logout }) => {
     const selectSeatPage = new SelectSeatPage(page);
     const reservedTicketPage = new ReservedTicketPage(page);
     const reservationListPage = new ReservationListPage(page);
+    const accountCreatePage = new AccountCreatePage(page);
+    const loginPage = new LoginPage(page);
+
+    // アカウント新規登録
+    await loginPage.goto();
+    await loginPage.clickCreateButton();
+    await expect(page).toHaveURL('/accountCreate');
+    await accountCreatePage.inputCreateAccountInfo();
+    await accountCreatePage.clickCreateButton();
+    await expect(page).toHaveURL('/login');
+
+    // 作成したアカウントでログイン
+    await loginPage.fillMailAddress('test@test.co.jp');
+    await loginPage.fillPassword('Password1');
+    await loginPage.clickLoginButton();
+    await expect(page).toHaveURL('/scheduleSearch');
+    await logout();
 
     // ログイン、検索～予約
     await login();
@@ -249,4 +267,22 @@ test('navigate-ログイン状態でloginのパスを入力すると検索画面
     await expect(page).toHaveURL('/scheduleSearch');
     await logout();
     await expect(page).toHaveURL('/login');
+});
+
+test('navigate-ログイン状態でaccountCreateのパスを入力すると検索画面に遷移', async ({
+    page,
+    login,
+    logout,
+}) => {
+    const loginPage = new LoginPage(page);
+    const accountCreatePage = new AccountCreatePage(page);
+
+    await login();
+    await expect(page).toHaveURL('/scheduleSearch');
+    await accountCreatePage.goto();
+    await expect(page).toHaveURL('/scheduleSearch');
+    await logout();
+    await expect(page).toHaveURL('/login');
+    await loginPage.clickCreateButton();
+    await expect(page).toHaveURL('/accountCreate');
 });

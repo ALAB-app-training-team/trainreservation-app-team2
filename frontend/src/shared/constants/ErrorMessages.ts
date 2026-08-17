@@ -27,4 +27,5 @@ export const ERROR_MESSAGE = {
     LOGIN_RETRY: 'ログインに失敗しました',
     LOGIN_ERROR: 'ログインしてください',
     LOGIN_ALREADY: 'すでにログインしています',
+    ACCOUNT_ALREADY: '登録済のメールアドレスです。ログインしてください。',
 } as const;

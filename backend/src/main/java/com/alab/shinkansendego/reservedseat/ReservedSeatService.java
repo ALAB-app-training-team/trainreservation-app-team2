@@ -23,7 +23,7 @@ public class ReservedSeatService {
     }
 
     @Transactional
-    public void updateReservedSeats(UUID reservationId, List<ReservedSeatUpdateDto> reservedSeats, UUID accountId) {
+    public void updateReservedSeats(UUID reservationId, List<ReservedSeatUpdateDto> reservedSeats, UUID accountId, String name, String mail) {
         ReservationEntity reservation = reservationRepository.findById(reservationId)
             .orElseThrow(() -> new IllegalArgumentException("Reservation is Not found"));
         if (reservation.getIsDeleted()) {
@@ -37,6 +37,10 @@ public class ReservedSeatService {
         } else {
             if (reservation.getAccountId() != null) {
                 throw new AccessDeniedException("Login Required");
+            }
+            if (name.isEmpty() || mail.isEmpty()) throw new IllegalArgumentException("Name and Mail is required");
+            if (!name.equals(reservation.getReserverName()) || !mail.equals(reservation.getReserverMail())) {
+                throw new AccessDeniedException("Forbidden");
             }
         }
 

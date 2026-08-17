@@ -50,6 +50,8 @@ public class ReservedSeatServiceTest {
         reservation.setId(reservationId);
         reservation.setAccountId(accountId);
         reservation.setIsDeleted(false);
+        reservation.setReserverName("一般太郎");
+        reservation.setReserverMail("test-common@test.com");
         reservedSeat1 = new ReservedSeatEntity();
         reservedSeat1.setId(reservedSeat1Id);
         reservedSeat1.setReservationId(reservationId);
@@ -71,7 +73,7 @@ public class ReservedSeatServiceTest {
         when(reservedSeatRepo.findByIdAndReservationIdAndIsDeleted(reservedSeat1Id, reservationId, false)).thenReturn(Optional.of(reservedSeat1));
         when(reservedSeatRepo.findByIdAndReservationIdAndIsDeleted(reservedSeat2Id, reservationId, false)).thenReturn(Optional.of(reservedSeat2));
 
-        service.updateReservedSeats(reservationId, updateRequest, accountId);
+        service.updateReservedSeats(reservationId, updateRequest, accountId, null, null);
         assertEquals("一般次郎", reservedSeat1.getName());
         assertEquals("test2-common@test.com", reservedSeat1.getMail());
         assertEquals("", reservedSeat2.getName());
@@ -90,7 +92,7 @@ public class ReservedSeatServiceTest {
         when(reservedSeatRepo.findByIdAndReservationIdAndIsDeleted(reservedSeat1Id, reservationId, false)).thenReturn(Optional.of(reservedSeat1));
         when(reservedSeatRepo.findByIdAndReservationIdAndIsDeleted(reservedSeat2Id, reservationId, false)).thenReturn(Optional.of(reservedSeat2));
 
-        service.updateReservedSeats(reservationId, updateRequest, null);
+        service.updateReservedSeats(reservationId, updateRequest, null, "一般太郎", "test-common@test.com");
         assertEquals("一般次郎", reservedSeat1.getName());
         assertEquals("test2-common@test.com", reservedSeat1.getMail());
         assertEquals("", reservedSeat2.getName());
@@ -108,7 +110,7 @@ public class ReservedSeatServiceTest {
         when(reservationRepo.findById(reservationId)).thenReturn(Optional.empty());
 
         IllegalArgumentException exception = assertThrows(IllegalArgumentException.class, () -> {
-            service.updateReservedSeats(reservationId, updateRequest, accountId);
+            service.updateReservedSeats(reservationId, updateRequest, accountId, null, null);
         });
         assertEquals("Reservation is Not found", exception.getMessage());
     }
@@ -121,7 +123,7 @@ public class ReservedSeatServiceTest {
         when(reservationRepo.findById(reservationId)).thenReturn(Optional.of(reservation));
 
         IllegalArgumentException exception = assertThrows(IllegalArgumentException.class, () -> {
-            service.updateReservedSeats(reservationId, updateRequest, accountId);
+            service.updateReservedSeats(reservationId, updateRequest, accountId, null, null);
         });
         assertEquals("Reservation is Not found", exception.getMessage());
     }
@@ -133,7 +135,7 @@ public class ReservedSeatServiceTest {
         when(reservationRepo.findById(reservationId)).thenReturn(Optional.of(reservation));
 
         AccessDeniedException exception = assertThrows(AccessDeniedException.class, () -> {
-            service.updateReservedSeats(reservationId, updateRequest, accountId);
+            service.updateReservedSeats(reservationId, updateRequest, accountId, null, null);
         });
         assertEquals("Forbidden", exception.getMessage());
     }
@@ -144,9 +146,21 @@ public class ReservedSeatServiceTest {
         when(reservationRepo.findById(reservationId)).thenReturn(Optional.of(reservation));
 
         AccessDeniedException exception = assertThrows(AccessDeniedException.class, () -> {
-            service.updateReservedSeats(reservationId, updateRequest, null);
+            service.updateReservedSeats(reservationId, updateRequest, null, "一般太郎", "test-common@test.com");
         });
         assertEquals("Login Required", exception.getMessage());
+    }
+
+    @Test
+    @DisplayName("同行者が予約を更新しようとした場合、AccessDeniedExceptionを投げる")
+    void updateReservedSeats_withNotAuthorizedAndCompanionUser() {
+        reservation.setAccountId(null);
+        when(reservationRepo.findById(reservationId)).thenReturn(Optional.of(reservation));
+
+        AccessDeniedException exception = assertThrows(AccessDeniedException.class, () -> {
+            service.updateReservedSeats(reservationId, updateRequest, null, "一般次郎", "test2-common@test.com");
+        });
+        assertEquals("Forbidden", exception.getMessage());
     }
 
     @Test
@@ -157,7 +171,7 @@ public class ReservedSeatServiceTest {
         when(reservedSeatRepo.findByIdAndReservationIdAndIsDeleted(reservedSeat2Id, reservationId, false)).thenReturn(Optional.empty());
 
         IllegalArgumentException exception = assertThrows(IllegalArgumentException.class, () -> {
-            service.updateReservedSeats(reservationId, updateRequest, accountId);
+            service.updateReservedSeats(reservationId, updateRequest, accountId, null, null);
         });
         assertEquals("ReservedSeat is Not found", exception.getMessage());
     }
