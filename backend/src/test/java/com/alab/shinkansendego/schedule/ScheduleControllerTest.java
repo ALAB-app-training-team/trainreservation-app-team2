@@ -55,7 +55,6 @@ public class ScheduleControllerTest {
         objectMapper.registerModule(new JavaTimeModule());
         objectMapper.disable(SerializationFeature.WRITE_DATES_AS_TIMESTAMPS);
         request.setDate(LocalDate.of(2026, 6, 1));
-        request.setTime(LocalTime.of(12, 0, 0));
         request.setDepartureStationCd("THK01");
         request.setArrivalStationCd("THK02");
     }

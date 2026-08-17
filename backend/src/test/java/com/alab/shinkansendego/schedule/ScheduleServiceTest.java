@@ -49,7 +49,7 @@ public class ScheduleServiceTest {
     private final List<TotalSeatEntity> totalSeatList = new ArrayList<>();
     private final List<DepartureArrivalTimeEntity> secList = new ArrayList<>();
     private final List<ReservedSeatSectionEntity> reservedSeatSecList = new ArrayList<>();
-    private final ScheduleRequestDto request = new ScheduleRequestDto(LocalDate.of(2026, 6, 1), LocalTime.of(9, 0, 0), "東京", "上野");
+    private final ScheduleRequestDto request = new ScheduleRequestDto(LocalDate.of(2026, 6, 1), "東京", "上野");
     private final List<SectionKmEntity> emptySectionCdList = new ArrayList<>();
     @Mock
     private SectionKmRepository sectionRepo;
@@ -193,13 +193,12 @@ public class ScheduleServiceTest {
         reservedSeatSecList.add(new ReservedSeatSectionEntity(UUID.randomUUID(), UUID.randomUUID(), LocalDate.of(2026, 6, 1), "TIME01", "E5SER01", "SEAT03001", "SEC01", "CAR03"));
 
         request.setDate(LocalDate.of(2026, 6, 1));
-        request.setTime(LocalTime.of(9, 0, 0));
         request.setDepartureStationCd("STATION01");
         request.setArrivalStationCd("STATION02");
     }
 
     @Test
-    @DisplayName("出発・到着駅名と出発時刻のリクエストDTOからダイヤリストが取得できる")
+    @DisplayName("出発・到着駅名のリクエストDTOからダイヤリストが取得できる")
     void getSearchedScheduleByStation_withValidScheduleRequestDto_returnGetScheduleListSuccess() {
         when(sectionRepo.findByStartStationCd("STATION01")).thenReturn(depatureSectionList);
         when(sectionRepo.findByGoalStationCd("STATION02")).thenReturn(arrivalSectionList);
@@ -363,7 +362,7 @@ public class ScheduleServiceTest {
         ScheduleEntity mockSchedule = getExpectScheduleByScheduleCd();
 
         when(scheduleRepo.findByScheduleCd(scheduleCd)).thenReturn(Optional.empty());
-        
+
         IllegalArgumentException exception = assertThrows(IllegalArgumentException.class, () -> service.getTrainCarList(scheduleCd));
         assertEquals("Schedule is not found", exception.getMessage());
     }

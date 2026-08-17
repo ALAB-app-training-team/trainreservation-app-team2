@@ -6,7 +6,6 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import java.time.LocalDate;
-import java.time.LocalTime;
 
 @Data
 @NoArgsConstructor
@@ -14,8 +13,6 @@ import java.time.LocalTime;
 public class ScheduleRequestDto {
     @NotNull(message = "Date is Null")
     private LocalDate date;
-    @NotNull(message = "Time is Null")
-    private LocalTime time;
     @NotNull(message = "DepartureStationCd is Null")
     private String departureStationCd;
     @NotNull(message = "ArrivalStationCd is Null")
