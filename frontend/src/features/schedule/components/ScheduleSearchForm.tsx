@@ -19,6 +19,7 @@ type ScheduleSearchFormProps = {
     setDate: React.Dispatch<SetStateAction<string>>;
     setDepartureStation: React.Dispatch<SetStateAction<string>>;
     setArrivalStation: React.Dispatch<SetStateAction<string>>;
+    setIsArrivalTime: React.Dispatch<SetStateAction<boolean>>;
     switchDepartureAndArrivalStation: () => void;
     searchRequestDto: SearchRequestDto;
     getFieldError: (field: string) => string;
@@ -36,6 +37,7 @@ export function ScheduleSearchForm({
     setDate,
     setDepartureStation,
     setArrivalStation,
+    setIsArrivalTime,
     switchDepartureAndArrivalStation,
     searchRequestDto,
     getFieldError,
@@ -87,7 +89,7 @@ export function ScheduleSearchForm({
                         <div className="flex flex-col justify-between gap-4 md:flex-row">
                             <DepartureDateAndTimePicker
                                 id="date"
-                                label="出発日"
+                                label="乗車日"
                                 type="date"
                                 value={searchRequestDto.date}
                                 setValue={setDate}
@@ -97,11 +99,45 @@ export function ScheduleSearchForm({
                             />
                             <DepartureDateAndTimePicker
                                 id="time"
-                                label="出発時刻"
+                                label="時刻"
                                 type="time"
                                 value={searchRequestDto.time}
                                 setValue={setTime}
                                 getFieldError={getFieldError}
+                                children={
+                                    <div className="border-primary inline-flex items-center overflow-hidden rounded border">
+                                        <label
+                                            className={`cursor-pointer p-1 text-sm ${!searchRequestDto.isArrivalTime ? 'bg-primary text-white' : 'bg-gray-50'}`}
+                                        >
+                                            <input
+                                                type="radio"
+                                                checked={
+                                                    !searchRequestDto.isArrivalTime
+                                                }
+                                                onChange={() =>
+                                                    setIsArrivalTime(false)
+                                                }
+                                                className="sr-only"
+                                            />
+                                            出発
+                                        </label>
+                                        <label
+                                            className={`cursor-pointer p-1 text-sm ${searchRequestDto.isArrivalTime ? 'bg-primary text-white' : 'bg-gray-50'}`}
+                                        >
+                                            <input
+                                                type="radio"
+                                                checked={
+                                                    searchRequestDto.isArrivalTime
+                                                }
+                                                onChange={() =>
+                                                    setIsArrivalTime(true)
+                                                }
+                                                className="sr-only"
+                                            />
+                                            到着
+                                        </label>
+                                    </div>
+                                }
                             />
                         </div>
                         <div className="flex gap-2 bg-transparent text-left">

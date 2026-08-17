@@ -59,9 +59,7 @@ public class ScheduleService {
 
         for (String cd : departureSectionCdList) {
             List<DepartureArrivalTimeEntity> list = departureArrivalTimeRepository.findBySectionCd(cd);
-            List<DepartureArrivalTimeEntity> filteredList = list.stream().filter(
-                d -> !d.getDepartureTime().isBefore(request.getTime())).toList();
-            departureScheduleList.addAll(filteredList);
+            departureScheduleList.addAll(list);
         }
         for (String cd : arrivalSectionCdList) {
             List<DepartureArrivalTimeEntity> list = departureArrivalTimeRepository.findBySectionCd(cd);

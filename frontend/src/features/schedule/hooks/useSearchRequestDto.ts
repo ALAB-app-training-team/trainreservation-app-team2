@@ -26,6 +26,7 @@ export function useSearchRequestDto({
     const [arrivalStation, setArrivalStation] = useState<string>(
         initialDto?.arrivalStationCd || stations[1].stationCd,
     );
+    const [isArrivalTime, setIsArrivalTime] = useState<boolean>(false);
 
     const searchRequestDto: SearchRequestDto = useMemo<SearchRequestDto>(() => {
         return {
@@ -33,8 +34,9 @@ export function useSearchRequestDto({
             time,
             departureStationCd: departureStation,
             arrivalStationCd: arrivalStation,
+            isArrivalTime,
         };
-    }, [date, time, departureStation, arrivalStation]);
+    }, [date, time, departureStation, arrivalStation, isArrivalTime]);
 
     const handleTime = (time: string) => {
         if (time === '') {
@@ -101,6 +103,7 @@ export function useSearchRequestDto({
         setDate,
         setDepartureStation,
         setArrivalStation,
+        setIsArrivalTime,
         switchDepartureAndArrivalStation,
         searchRequestDto,
         isInvalid,
