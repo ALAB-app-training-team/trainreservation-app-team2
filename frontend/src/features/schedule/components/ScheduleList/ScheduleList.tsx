@@ -56,7 +56,7 @@ export function ScheduleList({
 
     const filteredSchedules = (schedules || []).filter((schedule) => {
         let isTimeValid = true;
-        if (searchRequestDto.isArrival) {
+        if (searchRequestDto.isArrivalTime) {
             isTimeValid = schedule.arrivalTime <= searchRequestDto.time;
         } else {
             isTimeValid = schedule.departureTime >= searchRequestDto.time;

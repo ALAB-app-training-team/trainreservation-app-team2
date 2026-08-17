@@ -34,7 +34,7 @@ export function useSearchRequestDto({
             time,
             departureStationCd: departureStation,
             arrivalStationCd: arrivalStation,
-            isArrival,
+            isArrivalTime: isArrival,
         };
     }, [date, time, departureStation, arrivalStation, isArrival]);
 

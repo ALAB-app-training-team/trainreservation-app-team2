@@ -124,7 +124,7 @@ export function ScheduleSearchForm({
                             <input
                                 type="checkbox"
                                 id="isArrival"
-                                checked={searchRequestDto.isArrival}
+                                checked={searchRequestDto.isArrivalTime}
                                 onChange={(e) => setIsArrival(e.target.checked)}
                                 className="accent-primary"
                             />
