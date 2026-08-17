@@ -158,50 +158,81 @@ test('出発時刻・到着時刻の切り替えができること、空席表�
 
     scheduleSearchPage.goto();
     await expect(page).toHaveURL('/scheduleSearch');
-    await expect(scheduleSearchPage.arrivalTimeButton).toBeChecked();
+    await expect(scheduleSearchPage.departureTimeButton).toBeChecked();
     await expect(scheduleSearchPage.availableTrainCheckBox).toBeChecked();
     await expect(page.getByText('満席')).toBeHidden();
 
     // 出発時刻で検索
-    await scheduleSearchPage.time.fill('6:20');
+    await scheduleSearchPage.time.fill('06:20');
+    await scheduleSearchPage.time.press('Enter');
+    await expect(
+        page.getByTestId('schedule-departure-time').first(),
+    ).toHaveText('06:20');
     const departureTimes = await page
         .getByTestId('schedule-departure-time')
         .allTextContents();
-    expect(departureTimes).toContain('6:20');
     departureTimes.forEach((time) => {
-        expect(time >= '6:20').toBe(true);
+        expect(time >= '06:20').toBe(true);
     });
     const sortedDepartureTimes = [...departureTimes].sort((a, b) =>
         a.localeCompare(b),
     );
     expect(departureTimes).toEqual(sortedDepartureTimes);
+    // availableTrainCheckBoxを外す
     await scheduleSearchPage.clickAvailableTrainCheckBox();
     await expect(scheduleSearchPage.availableTrainCheckBox).not.toBeChecked();
     const fullTrainCountWithDepartureTime = await page
         .getByText('満席')
         .count();
     await expect(fullTrainCountWithDepartureTime).toBeGreaterThanOrEqual(0);
-    //TODO: 満席外したらどうなるか
+    const departureTimesWithUnavailableTrain = await page
+        .getByTestId('schedule-arrival-time')
+        .allTextContents();
+    departureTimesWithUnavailableTrain.forEach((time) => {
+        expect(time >= '06:20').toBe(true);
+    });
+    const sortedDepartureTimesWithUnavailableTrain = [
+        ...departureTimesWithUnavailableTrain,
+    ].sort((a, b) => a.localeCompare(b));
+    expect(departureTimesWithUnavailableTrain).toEqual(
+        sortedDepartureTimesWithUnavailableTrain,
+    );
 
     // 到着時刻で検索
     await scheduleSearchPage.clickAvailableTrainCheckBox();
     await expect(scheduleSearchPage.availableTrainCheckBox).toBeChecked();
-    await scheduleSearchPage.clickDepartureTimeButton();
-    await scheduleSearchPage.time.fill('6:25');
+    await scheduleSearchPage.clickArrivalTimeButton();
+    await expect(scheduleSearchPage.arrivalTimeButton).toBeChecked();
+    await scheduleSearchPage.time.fill('06:25');
+    await scheduleSearchPage.time.press('Enter');
+    await expect(page.getByTestId('schedule-arrival-time').first()).toHaveText(
+        '06:25',
+    );
     const arrivalTimes = await page
         .getByTestId('schedule-arrival-time')
         .allTextContents();
-    expect(arrivalTimes).toContain('6:25');
     arrivalTimes.forEach((time) => {
-        expect(time <= '6:25').toBe(true);
+        expect(time <= '06:25').toBe(true);
     });
     const sortedArrivalTimes = [...arrivalTimes].sort((a, b) =>
         b.localeCompare(a),
     );
     expect(arrivalTimes).toEqual(sortedArrivalTimes);
+    // availableTrainCheckBoxを外す
     await scheduleSearchPage.clickAvailableTrainCheckBox();
     await expect(scheduleSearchPage.availableTrainCheckBox).not.toBeChecked();
     const fullTrainCountWithArrivalTime = await page.getByText('満席').count();
     await expect(fullTrainCountWithArrivalTime).toBeGreaterThanOrEqual(0);
-    //TODO: 満席外したらどうなるか
+    const arrivalTimesWithUnavailableTrain = await page
+        .getByTestId('schedule-arrival-time')
+        .allTextContents();
+    arrivalTimesWithUnavailableTrain.forEach((time) => {
+        expect(time <= '06:25').toBe(true);
+    });
+    const sortedArrivalTimesWithUnavailableTrain = [
+        ...arrivalTimesWithUnavailableTrain,
+    ].sort((a, b) => b.localeCompare(a));
+    expect(arrivalTimesWithUnavailableTrain).toEqual(
+        sortedArrivalTimesWithUnavailableTrain,
+    );
 });

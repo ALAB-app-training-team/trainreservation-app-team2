@@ -22,8 +22,8 @@ export class ScheduleSearchPage {
         this.arrivalStation = page.getByLabel('降車駅');
         this.date = page.getByRole('textbox', { name: '乗車日' });
         this.time = page.getByRole('textbox', { name: '時刻' });
-        this.arrivalTimeButton = page.getByText('出発');
-        this.departureTimeButton = page.getByText('到着');
+        this.departureTimeButton = page.getByText('出発');
+        this.arrivalTimeButton = page.getByText('到着');
         this.switchStationButton = page
             .getByRole('button')
             .filter({ hasText: /^$/ });
@@ -55,12 +55,12 @@ export class ScheduleSearchPage {
         await this.switchStationButton.click();
     }
 
-    async clickArrivalTimeButton() {
-        await this.arrivalTimeButton.click();
-    }
-
     async clickDepartureTimeButton() {
         await this.departureTimeButton.click();
+    }
+
+    async clickArrivalTimeButton() {
+        await this.arrivalTimeButton.click();
     }
 
     async clickAvailableTrainCheckBox() {
