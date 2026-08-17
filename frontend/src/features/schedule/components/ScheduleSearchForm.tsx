@@ -19,7 +19,7 @@ type ScheduleSearchFormProps = {
     setDate: React.Dispatch<SetStateAction<string>>;
     setDepartureStation: React.Dispatch<SetStateAction<string>>;
     setArrivalStation: React.Dispatch<SetStateAction<string>>;
-    setIsArrival: React.Dispatch<SetStateAction<boolean>>;
+    setIsArrivalTime: React.Dispatch<SetStateAction<boolean>>;
     switchDepartureAndArrivalStation: () => void;
     searchRequestDto: SearchRequestDto;
     getFieldError: (field: string) => string;
@@ -37,7 +37,7 @@ export function ScheduleSearchForm({
     setDate,
     setDepartureStation,
     setArrivalStation,
-    setIsArrival,
+    setIsArrivalTime,
     switchDepartureAndArrivalStation,
     searchRequestDto,
     getFieldError,
@@ -113,7 +113,7 @@ export function ScheduleSearchForm({
                                         checked={
                                             !searchRequestDto.isArrivalTime
                                         }
-                                        onChange={() => setIsArrival(false)}
+                                        onChange={() => setIsArrivalTime(false)}
                                         className="accent-primary"
                                     />
                                     出発
@@ -123,7 +123,7 @@ export function ScheduleSearchForm({
                                         type="radio"
                                         name="timeType"
                                         checked={searchRequestDto.isArrivalTime}
-                                        onChange={() => setIsArrival(true)}
+                                        onChange={() => setIsArrivalTime(true)}
                                         className="accent-primary"
                                     />
                                     到着
