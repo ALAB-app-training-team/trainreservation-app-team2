@@ -18,7 +18,7 @@ export class ScheduleSearchPage {
         this.detailButton = page.getByRole('button', { name: '詳細を見る' });
         this.departureStation = page.getByLabel('乗車駅');
         this.arrivalStation = page.getByLabel('降車駅');
-        this.date = page.getByRole('textbox', { name: '出発日' });
+        this.date = page.getByRole('textbox', { name: '乗車日' });
         this.time = page.getByRole('textbox', { name: '時刻' });
         this.switchStationButton = page
             .getByRole('button')

@@ -115,7 +115,7 @@ test('駅を選択すると、その路線の駅のみ選択肢に表示され�
     ]);
 });
 
-test('出発日の初期は本日の日付、時刻の初期は現在の時刻', async ({ page }) => {
+test('乗車日の初期は本日の日付、時刻の初期は現在の時刻', async ({ page }) => {
     const scheduleSearchPage = new ScheduleSearchPage(page);
 
     scheduleSearchPage.goto();
@@ -125,7 +125,7 @@ test('出発日の初期は本日の日付、時刻の初期は現在の時刻',
     await expect(scheduleSearchPage.time).toHaveValue(dayjs().format('HH:mm'));
 });
 
-test('出発日は本日から一か月後まで選択できる', async ({ page }) => {
+test('乗車日は本日から一か月後まで選択できる', async ({ page }) => {
     const scheduleSearchPage = new ScheduleSearchPage(page);
 
     scheduleSearchPage.goto();
