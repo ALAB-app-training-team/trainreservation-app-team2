@@ -164,7 +164,6 @@ test('出発時刻・到着時刻の切り替えができること、空席表�
 
     // 出発時刻で検索
     await scheduleSearchPage.time.fill('06:20');
-    await scheduleSearchPage.time.press('Enter');
     await expect(
         page.getByTestId('schedule-departure-time').first(),
     ).toHaveText('06:20');
@@ -204,7 +203,6 @@ test('出発時刻・到着時刻の切り替えができること、空席表�
     await scheduleSearchPage.clickArrivalTimeButton();
     await expect(scheduleSearchPage.arrivalTimeButton).toBeChecked();
     await scheduleSearchPage.time.fill('06:37');
-    await scheduleSearchPage.time.press('Enter');
     await expect(page.getByTestId('schedule-arrival-time').first()).toHaveText(
         '06:37',
     );
