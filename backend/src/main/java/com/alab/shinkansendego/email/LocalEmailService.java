@@ -15,7 +15,7 @@ import java.time.format.DateTimeFormatter;
 import java.util.stream.Collectors;
 
 @Service
-@Profile({"default", "local"})
+@Profile({"local", "test"})
 public class LocalEmailService implements EmailService {
     private static final Logger log = LoggerFactory.getLogger(LocalEmailService.class);
     private final JavaMailSender mailSender;
