@@ -1,5 +1,6 @@
 package com.alab.shinkansendego.email;
 
+import com.alab.shinkansendego.utils.EmailUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Value;
@@ -59,7 +60,7 @@ public class SesEmailService implements EmailService {
                     .collect(Collectors.joining("\n"));
             }
 
-            String loginurl = baseUrl + "/login";
+            String loginurl = baseUrl + EmailUtils.LOGIN_PATH;
 
             String body = String.format("""
                     %s さま
@@ -94,11 +95,11 @@ public class SesEmailService implements EmailService {
             );
 
             SendEmailRequest request = SendEmailRequest.builder()
-                .fromEmailAddress(String.format("新幹線でGO！ <%s>", mailFrom))
+                .fromEmailAddress(String.format("%s <%s>", EmailUtils.SENDER_NAME, mailFrom))
                 .destination(Destination.builder().toAddresses(dto.getReserverMail()).build())
                 .content(EmailContent.builder()
                     .simple(msg -> msg
-                        .subject(Content.builder().data("[予約完了] 予約内容のご案内").charset("UTF-8").build())
+                        .subject(Content.builder().data(EmailUtils.SUBJECT).charset("UTF-8").build())
                         .body(Body.builder().text(Content.builder().data(body).charset("UTF-8").build()).build())
                     )
                     .build()

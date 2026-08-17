@@ -1,5 +1,6 @@
 package com.alab.shinkansendego.email;
 
+import com.alab.shinkansendego.utils.EmailUtils;
 import jakarta.mail.internet.MimeMessage;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -34,9 +35,9 @@ public class LocalEmailService implements EmailService {
             MimeMessage mimeMessage = mailSender.createMimeMessage();
             MimeMessageHelper helper = new MimeMessageHelper(mimeMessage, "UTF-8");
 
-            helper.setFrom("thashimoto@jeisryokai.onmicrosoft.com", "新幹線でGO！");
+            helper.setFrom("thashimoto@jeisryokai.onmicrosoft.com", EmailUtils.SENDER_NAME);
             helper.setTo(dto.getReserverMail());
-            helper.setSubject("[予約完了] 予約内容のご案内");
+            helper.setSubject(EmailUtils.SUBJECT);
 
             String formatterRideDate = "";
             if (dto.getRideDate() != null) {
@@ -60,7 +61,7 @@ public class LocalEmailService implements EmailService {
                     .collect(Collectors.joining("\n"));
             }
 
-            String loginurl = baseUrl + "/login";
+            String loginurl = baseUrl + EmailUtils.LOGIN_PATH;
 
             String body = String.format("""
                     %s さま
