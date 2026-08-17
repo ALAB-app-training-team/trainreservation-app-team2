@@ -57,15 +57,16 @@ export function ScheduleList({
     const filteredSchedules = (schedules || [])
         .filter((schedule) => {
             const isTimeValid = searchRequestDto.isArrivalTime
-                ? schedule.arrivalTime <= searchRequestDto.time
-                : schedule.departureTime >= searchRequestDto.time;
+                ? schedule.arrivalTime.slice(0, 5) <=
+                  searchRequestDto.time.slice(0, 5)
+                : schedule.departureTime.slice(0, 5) >=
+                  searchRequestDto.time.slice(0, 5);
 
             const hasAvailableSeat =
                 !isOnlyAvailable ||
                 schedule.reservedSeats !== 0 ||
                 schedule.greenSeats !== 0 ||
                 schedule.gcSeats !== 0;
-            if (!isOnlyAvailable) return true;
             return isTimeValid && hasAvailableSeat;
         })
         .sort((a, b) => {
