@@ -1,0 +1,115 @@
+package com.alab.shinkansendego.email;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.context.annotation.Profile;
+import org.springframework.scheduling.annotation.Async;
+import org.springframework.stereotype.Service;
+import software.amazon.awssdk.regions.Region;
+import software.amazon.awssdk.services.sesv2.SesV2Client;
+import software.amazon.awssdk.services.sesv2.model.Body;
+import software.amazon.awssdk.services.sesv2.model.Content;
+import software.amazon.awssdk.services.sesv2.model.Destination;
+import software.amazon.awssdk.services.sesv2.model.EmailContent;
+import software.amazon.awssdk.services.sesv2.model.SendEmailRequest;
+
+import java.time.format.DateTimeFormatter;
+import java.util.stream.Collectors;
+
+@Service
+@Profile("prod")
+public class SesEmailService implements EmailService {
+    private static final Logger log = LoggerFactory.getLogger(SesEmailService.class);
+    private final SesV2Client sesV2Client;
+    @Value("${app.frontend.base-url}")
+    private String baseUrl;
+    @Value("${app.mail.from}")
+    private String mailFrom;
+
+    public SesEmailService(@Value("${app.mail.region}") String region) {
+        this.sesV2Client = SesV2Client.builder()
+            .region(Region.of(region))
+            .build();
+    }
+
+    @Async
+    @Override
+    public void sendReservationConfirmation(EmailRequestDto dto) {
+        try {
+            String formatterRideDate = "";
+            if (dto.getRideDate() != null) {
+                formatterRideDate = dto.getRideDate().format(DateTimeFormatter.ofPattern("yyyy年MM月dd日"));
+            }
+
+            String seatDetail = "";
+            if (dto.getSeats() != null && !dto.getSeats().isEmpty()) {
+                seatDetail = dto.getSeats().stream()
+                    .map(seat -> {
+                        String rawCarCd = seat.getTrainCarCd();
+                        String carNum = "";
+                        if (rawCarCd != null && rawCarCd.length() >= 2) {
+                            carNum = rawCarCd.substring(rawCarCd.length() - 2).replaceFirst("^0+", "");
+                        }
+
+                        return String.format("%s号車 %s",
+                            carNum,
+                            seat.getSeatCd());
+                    })
+                    .collect(Collectors.joining("\n"));
+            }
+
+            String loginurl = baseUrl + "/login";
+
+            String body = String.format("""
+                    %s さま
+
+                    「新幹線でGO!」アプリでチケットのご予約が完了いたしました。
+                    以下に予約詳細をお知らせいたします。
+
+                    ■予約詳細
+                    予約ID：%s
+                    乗車日：%s
+                    区間：%s（%s発）　→　%s（%s着）
+                    列車名：%s
+                    座席：%s
+                    お支払い合計：%,d 円
+
+                    ■アプリログインURL
+                    %s
+
+                    またのご利用をお待ちしております。
+                    """,
+                dto.getReserverName() != null ? dto.getReserverName() : "ユーザー",
+                dto.getReservationId(),
+                formatterRideDate,
+                dto.getDepartureStationName(),
+                dto.getDepartureTime(),
+                dto.getArrivalStationName(),
+                dto.getArrivalTime(),
+                dto.getTrainTypeName(),
+                seatDetail,
+                dto.getTotalAmount(),
+                loginurl
+            );
+
+            SendEmailRequest request = SendEmailRequest.builder()
+                .fromEmailAddress(String.format("新幹線でGO！ <%s>", mailFrom))
+                .destination(Destination.builder().toAddresses(dto.getReserverMail()).build())
+                .content(EmailContent.builder()
+                    .simple(msg -> msg
+                        .subject(Content.builder().data("[予約完了] 予約内容のご案内").charset("UTF-8").build())
+                        .body(Body.builder().text(Content.builder().data(body).charset("UTF-8").build()).build())
+                    )
+                    .build()
+                )
+                .build();
+
+            sesV2Client.sendEmail(request);
+            log.info("予約完了メールを正常に送信しました。 To： {}", dto.getReserverMail());
+        } catch (Exception e) {
+            log.error("メール送信中にエラーが発生しました。 To： {}", dto.getReserverMail(), e);
+        }
+    }
+}
+
