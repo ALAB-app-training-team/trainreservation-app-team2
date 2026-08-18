@@ -55,7 +55,7 @@ export class AccountCreatePage {
 
     async inputCreateAccountInfo() {
         await this.fillName('山田 太郎');
-        await this.fillMailAddress('test@test.co.jp');
+        await this.fillMailAddress('test@test.com');
         await this.fillPassword('Password1');
         await this.fillPasswordCheck('Password1');
     }
