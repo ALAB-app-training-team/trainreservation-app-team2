@@ -53,10 +53,17 @@ export class AccountCreatePage {
         await this.createButton.click();
     }
 
-    async inputCreateAccountInfo() {
+    async inputCreateFirstAccountInfo() {
         await this.fillName('山田 太郎');
-        await this.fillMailAddress('test@test.com');
+        await this.fillMailAddress('first@test.co.jp');
         await this.fillPassword('Password1');
         await this.fillPasswordCheck('Password1');
+    }
+
+    async inputCreateSecondAccountInfo() {
+        await this.fillName('山田 次郎');
+        await this.fillMailAddress('second@test.co.jp');
+        await this.fillPassword('Password2');
+        await this.fillPasswordCheck('Password2');
     }
 }

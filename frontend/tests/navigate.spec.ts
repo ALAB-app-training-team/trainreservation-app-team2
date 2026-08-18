@@ -66,7 +66,7 @@ test('navigate-ログイン全機能', async ({ page, login, logout }) => {
     await loginPage.goto();
     await loginPage.clickCreateButton();
     await expect(page).toHaveURL('/accountCreate');
-    await accountCreatePage.inputCreateAccountInfo();
+    await accountCreatePage.inputCreateSecondAccountInfo();
     await accountCreatePage.clickCreateButton();
     await expect(page).toHaveURL('/login');
 
