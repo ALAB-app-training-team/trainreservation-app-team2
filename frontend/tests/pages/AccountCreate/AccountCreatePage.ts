@@ -28,7 +28,7 @@ export class AccountCreatePage {
         this.createButton = page.getByRole('button', {
             name: '登録',
         });
-        this.ramdomMail = 'random' + Math.floor(Math.random()) + '@test.co.jp';
+        this.ramdomMail = 'random' + Math.random() + '@test.co.jp';
     }
 
     async goto() {

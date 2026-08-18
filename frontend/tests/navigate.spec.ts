@@ -71,7 +71,7 @@ test('navigate-ログイン全機能', async ({ page, login, logout }) => {
     await expect(page).toHaveURL('/login');
 
     // 作成したアカウントでログイン
-    await loginPage.fillMailAddress(accountCreatePage.ramdomMail);
+    await loginPage.fillMailAddress(await accountCreatePage.ramdomMail);
     await loginPage.fillPassword('Password1');
     await loginPage.clickLoginButton();
     await expect(page).toHaveURL('/scheduleSearch');
