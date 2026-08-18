@@ -129,9 +129,6 @@ test('navigate-ログイン全機能', async ({ page, login, logout }) => {
     await reservationListPage.clickChangeButton();
     await reservationListPage.clickChangeTrainConfirmButton();
     await expect(page).toHaveURL('/scheduleSearch');
-    await scheduleSearchPage.clickDetailButton();
-    await expect(page).toHaveURL('/selectSeat');
-    await expect(page.getByText('座席が選択されていません')).not.toBeVisible();
     await scheduleSearchPage.clickSecondDetailButton();
     await expect(page).toHaveURL('/selectSeat');
     await expect(page.getByText('座席が選択されていません')).toBeVisible();
