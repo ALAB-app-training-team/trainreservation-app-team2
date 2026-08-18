@@ -109,7 +109,7 @@ export function Header() {
                 </div>
             </div>
             {isMenuOpen && (
-                <div className="absolute top-full right-0 z-50 flex w-[120px] flex-col gap-2 rounded-md bg-white p-2 py-2 text-sm font-bold shadow-md">
+                <div className="absolute top-full right-0 z-50 flex w-[180px] flex-col gap-2 rounded-md bg-white p-2 py-2 text-sm font-bold shadow-md">
                     <div className="flex w-full flex-col gap-2 text-left md:hidden">
                         {buttons.map((button, index) => (
                             <NavLink
@@ -129,12 +129,28 @@ export function Header() {
                         ))}
                     </div>
                     {name && (
-                        <button
-                            onClick={handleLogout}
-                            className="w-full text-left hover:bg-gray-100"
-                        >
-                            ログアウト
-                        </button>
+                        <>
+                            <button
+                                onClick={handleLogout}
+                                className="w-full text-left hover:bg-gray-100"
+                            >
+                                ログアウト
+                            </button>
+
+                            <button
+                                onClick={handleLogout}
+                                className="w-full text-left hover:bg-gray-100"
+                            >
+                                氏名・メールアドレス変更
+                            </button>
+
+                            <button
+                                onClick={handleLogout}
+                                className="w-full text-left hover:bg-gray-100"
+                            >
+                                パスワード変更
+                            </button>
+                        </>
                     )}
                 </div>
             )}
