@@ -482,7 +482,14 @@ export function SelectSeats() {
             >
                 <ReloginConfirmModal
                     onReloginClick={handleRelogin}
-                    onRequestClose={onRequestReloginConfirmModalClose}
+
+                    onRequestClose={
+                        preReservedSeats
+                            ? () => {
+                                  navigate('/scheduleSearch');
+                              }
+                            : onRequestReloginConfirmModalClose
+                    }
                     isSubmitting={isSubmitting}
                 />
             </CustomModal>
