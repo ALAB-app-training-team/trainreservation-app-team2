@@ -66,12 +66,12 @@ test('navigate-ログイン全機能', async ({ page, login, logout }) => {
     await loginPage.goto();
     await loginPage.clickCreateButton();
     await expect(page).toHaveURL('/accountCreate');
-    await accountCreatePage.inputCreateFirstAccountInfo();
+    await accountCreatePage.inputCreateRamdomAccountInfo();
     await accountCreatePage.clickCreateButton();
     await expect(page).toHaveURL('/login');
 
     // 作成したアカウントでログイン
-    await loginPage.fillMailAddress('first@test.co.jp');
+    await loginPage.fillMailAddress(accountCreatePage.ramdomMail);
     await loginPage.fillPassword('Password1');
     await loginPage.clickLoginButton();
     await expect(page).toHaveURL('/scheduleSearch');

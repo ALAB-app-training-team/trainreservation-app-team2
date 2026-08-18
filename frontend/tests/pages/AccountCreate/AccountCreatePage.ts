@@ -9,6 +9,7 @@ export class AccountCreatePage {
     readonly password: Locator;
     readonly passwordCheck: Locator;
     readonly createButton: Locator;
+    readonly ramdomMail: string;
 
     constructor(page: Page) {
         this.page = page;
@@ -27,6 +28,7 @@ export class AccountCreatePage {
         this.createButton = page.getByRole('button', {
             name: '登録',
         });
+        this.ramdomMail = 'random' + Math.floor(Math.random()) + '@test.co.jp';
     }
 
     async goto() {
@@ -65,5 +67,12 @@ export class AccountCreatePage {
         await this.fillMailAddress('second@test.co.jp');
         await this.fillPassword('Password2');
         await this.fillPasswordCheck('Password2');
+    }
+
+    async inputCreateRamdomAccountInfo() {
+        await this.fillName('ランダム 太郎');
+        await this.fillMailAddress(this.ramdomMail);
+        await this.fillPassword('Password1');
+        await this.fillPasswordCheck('Password1');
     }
 }
