@@ -139,32 +139,17 @@ export function ReservedTicket() {
                         </button>
                     </div>
                 )}
-
-                {isBack ? (
-                    reservedTickets.isDeleted && (
-                        <div className="w-full text-left">
-                            <h1
-                                data-testid="reserve-title"
-                                className="m-0! text-3xl!"
-                            >
-                                キャンセル済み
-                            </h1>
-                        </div>
-                    )
-                ) : (
-                    <div className="w-full text-left">
-                        <h1
-                            data-testid="reserve-title"
-                            className="m-0! text-3xl!"
-                        >
-                            {isUpdated
-                                ? '予約変更完了'
-                                : guestLogin
-                                  ? '予約詳細'
-                                  : '予約完了'}
-                        </h1>
-                    </div>
-                )}
+                <div className="w-full text-left">
+                    <h1 data-testid="reserve-title" className="m-0! text-3xl!">
+                        {isBack
+                            ? reservedTickets.isDeleted && 'キャンセル済み'
+                            : isUpdated
+                              ? '予約変更完了'
+                              : guestLogin
+                                ? '予約詳細'
+                                : '予約完了'}
+                    </h1>
+                </div>
                 {reservedTickets.isDeleted ? (
                     <>
                         <Suspense fallback={<ReservedTicketInfoSkeleton />}>
