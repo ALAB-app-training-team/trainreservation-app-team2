@@ -137,5 +137,48 @@ public class LocalEmailService implements EmailService {
             log.error("予約キャンセルメール送信中にエラーが発生しました。 To： {}", dto.getReserverMail(), e);
         }
     }
+
+    @Async
+    @Override
+    public void sendReleaseCompanion(EmailRequestDto dto) {
+        try {
+            MimeMessage mimeMessage = mailSender.createMimeMessage();
+            MimeMessageHelper helper = new MimeMessageHelper(mimeMessage, "UTF-8");
+
+            helper.setFrom("thashimoto@jeisryokai.onmicrosoft.com", EmailUtils.SENDER_NAME);
+            helper.setTo(dto.getReserverMail());
+            helper.setSubject(EmailUtils.RELEASE_SUBJECT);
+
+            String formatterRideDate = "";
+            if (dto.getRideDate() != null) {
+                formatterRideDate = EmailUtils.rideDateFormatter(dto.getRideDate());
+            }
+
+            String seatDetail = "";
+            Integer seatFare = 0;
+            if (dto.getSeats() != null && dto.getSeats().size() == 1) {
+                seatDetail = EmailUtils.seatFormatter(dto.getSeats());
+                seatFare = dto.getSeats().getFirst().getSeatFare();
+            }
+
+            String body = String.format(EmailUtils.RELEASE_BODY,
+                dto.getReserverName() != null ? dto.getReserverName() : "ユーザー",
+                formatterRideDate,
+                dto.getDepartureStationName(),
+                dto.getDepartureTime(),
+                dto.getArrivalStationName(),
+                dto.getArrivalTime(),
+                dto.getTrainTypeName(),
+                seatDetail,
+                seatFare
+            );
+
+            helper.setText(body);
+            mailSender.send(mimeMessage);
+            log.info("割り当て解除メールを正常に送信しました。 To： {}", dto.getReserverMail());
+        } catch (Exception e) {
+            log.error("割り当て解除メール送信中にエラーが発生しました。 To： {}", dto.getReserverMail(), e);
+        }
+    }
 }
 

@@ -3,6 +3,8 @@ package com.alab.shinkansendego.email;
 import com.alab.shinkansendego.reservation.ReservationCanceledEvent;
 import com.alab.shinkansendego.reservation.ReservationCreatedEvent;
 import com.alab.shinkansendego.reservation.ReserveRequestDto;
+import com.alab.shinkansendego.reservedseat.ReservedSeatEntity;
+import com.alab.shinkansendego.reservedseat.ReservedSeatRepository;
 import com.alab.shinkansendego.schedule.ScheduleEntity;
 import com.alab.shinkansendego.schedule.ScheduleRepository;
 import com.alab.shinkansendego.seat.SeatRepository;
@@ -24,17 +26,20 @@ public class ReservationEventListener {
     private final StationRepository stationRepository;
     private final ScheduleRepository scheduleRepository;
     private final SeatRepository seatRepository;
+    private final ReservedSeatRepository reservedSeatRepository;
 
     public ReservationEventListener(
         EmailService emailService,
         StationRepository stationRepository,
         ScheduleRepository scheduleRepository,
-        SeatRepository seatRepository
+        SeatRepository seatRepository,
+        ReservedSeatRepository reservedSeatRepository
     ) {
         this.emailService = emailService;
         this.stationRepository = stationRepository;
         this.scheduleRepository = scheduleRepository;
         this.seatRepository = seatRepository;
+        this.reservedSeatRepository = reservedSeatRepository;
     }
 
     @Async
@@ -51,6 +56,20 @@ public class ReservationEventListener {
 
         EmailRequestDto emailDto = setEmailRequestDto(event.reservationId(), event.request(), event.departureTime(), event.arrivalTime());
         emailService.sendReservationCancel(emailDto);
+
+        List<ReservedSeatEntity> companions = reservedSeatRepository.findByReservationId(event.reservationId());
+
+        for (ReserveRequestDto.SelectedSeatDto seat : event.request().getSeats()) {
+            ReservedSeatEntity info = companions.stream()
+                .filter(companion -> companion.getTrainCarCd().equals(seat.getTrainCarCd())
+                    && companion.getSeatCd().equals(seat.getSeatCd()))
+                .findFirst()
+                .orElseThrow(() -> new IllegalArgumentException("CompanionInfo is Not Found"));
+            emailDto.setReserverMail(info.getMail());
+            emailDto.setReserverName(info.getName());
+            emailDto.setSeats(List.of(new EmailRequestDto.SelectedSeatDto(info.getTrainCarCd(), "", info.getSeatCd(), info.getSeatFare())));
+            emailService.sendReleaseCompanion(emailDto);
+        }
     }
 
     private EmailRequestDto setEmailRequestDto(UUID reservationId,

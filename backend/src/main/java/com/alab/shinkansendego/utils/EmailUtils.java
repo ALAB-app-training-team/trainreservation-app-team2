@@ -15,6 +15,7 @@ public final class EmailUtils {
     public static final String LOGIN_PATH = "/login";
     public static final String SUBJECT = "[予約完了] 予約内容のご案内";
     public static final String CANCEL_SUBJECT = "[予約キャンセル] 予約キャンセル内容のご案内";
+    public static final String RELEASE_SUBJECT = "[割り当て解除] 同行者割り当て解除内容のご案内";
     public static final String SENDER_NAME = "新幹線でGO！";
     public static final String CANCEL_BODY = """
         %s さま
@@ -33,6 +34,21 @@ public final class EmailUtils {
 
         ■アプリログインURL
         %s
+
+        またのご利用をお待ちしております。
+        """;
+    public static final String RELEASE_BODY = """
+        %s さま
+
+        「新幹線でGO!」アプリをご利用いただきありがとうございます。
+        以下座席の同行者割り当てが解除されたことをお知らせいたします。
+
+        ■割り当て解除内容
+        乗車日：%s
+        区間：%s（%s発）　→　%s（%s着）
+        列車名：%s
+        座席：%s
+        金額：%,d 円
 
         またのご利用をお待ちしております。
         """;
