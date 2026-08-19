@@ -54,7 +54,12 @@ test('navigate-ゲストログイン全機能', async ({ page, context }) => {
     ).toBeHidden();
 });
 
-test('navigate-ログイン全機能', async ({ page, login, logout }) => {
+test('navigate-ログイン全機能', async ({
+    page,
+    login,
+    logout,
+    createReservation,
+}) => {
     const scheduleSearchPage = new ScheduleSearchPage(page);
     const selectSeatPage = new SelectSeatPage(page);
     const reservedTicketPage = new ReservedTicketPage(page);
@@ -199,6 +204,8 @@ test('navigate-ログイン全機能', async ({ page, login, logout }) => {
     await expect(page).toHaveURL('/reservationList');
 
     // キャンセル(予約詳細)
+    await createReservation();
+    await reservedTicketPage.header.goToReservationList();
     await reservationListPage.clickTicketButton();
     await expect(page).toHaveURL('/reservedTicket');
     await reservedTicketPage.clickRefundButton();
