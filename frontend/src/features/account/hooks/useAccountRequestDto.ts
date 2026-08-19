@@ -157,6 +157,15 @@ export function useAccountRequestDto() {
 
     const isDisable = checkDisable(accountForm, policy);
 
+    const handleClear = () => {
+        setAccountForm({
+            name: '',
+            mail: '',
+            password: '',
+            passwordCheck: '',
+        });
+    };
+
     const handleAccount = async () => {
         if (isSubmitting) return;
         setIsSubmitting(true);
@@ -175,16 +184,16 @@ export function useAccountRequestDto() {
                 axios.isAxiosError(error) &&
                 error.response?.status === HttpStatusCode.Conflict
             ) {
-                toast.error(ERROR_MESSAGE.ACCOUNT_ALREADY,{
-                    duration:Infinity,
+                toast.error(ERROR_MESSAGE.ACCOUNT_ALREADY, {
+                    duration: Infinity,
                     action: {
                         label: 'OK',
-                        onClick: () => {}
+                        onClick: () => {},
                     },
                     classNames: {
-                        title : 'text-left whitespace-pre-line',
-                        actionButton: "!px-4 !py-2 !text-base !h-auto",
-                }
+                        title: 'text-left whitespace-pre-line',
+                        actionButton: '!px-4 !py-2 !text-base !h-auto',
+                    },
                 });
             }
         } finally {
@@ -201,5 +210,6 @@ export function useAccountRequestDto() {
         isDisable,
         handleAccount,
         isSubmitting,
+        handleClear,
     };
 }

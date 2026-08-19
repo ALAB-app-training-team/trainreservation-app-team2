@@ -29,4 +29,6 @@ export const ERROR_MESSAGE = {
     LOGIN_ALREADY: 'すでにログインしています',
     LOGIN_ROLE_ERROR: '権限がありません',
     ACCOUNT_ALREADY: '登録済のメールアドレスです。ログインしてください。',
+    ADMIN_UPDATE_ERROR:
+        'パスワードの変更が失敗しました。お手数ですが、再度お試しください。',
 } as const;
