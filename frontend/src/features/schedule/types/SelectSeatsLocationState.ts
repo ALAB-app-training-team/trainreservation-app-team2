@@ -9,6 +9,9 @@ export type SelectSeatsLocationState = {
     prevSelectedSeats?: SeatResponseDto[];
     reservedSeats?: ReservedSeatDto[];
     reservationId?: string;
+    isChanging: boolean;
+    isFromReservedTicket: boolean;
+    isBack: boolean;
     preChangeScheduleInfo?: ScheduleInfoDto;
     preChangeReservedSeats?: ReservedSeatDto[];
 };

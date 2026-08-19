@@ -3,7 +3,6 @@ import { useEffect, useState } from 'react';
 import { CiCalendar } from 'react-icons/ci';
 import { LuTicket } from 'react-icons/lu';
 import { RiGroupLine } from 'react-icons/ri';
-import { useNavigate } from 'react-router-dom';
 import { toast } from 'sonner';
 
 import apiClient from '@/api/apiClient';
@@ -16,10 +15,9 @@ import {
     DEFAULT_RESERVATION_TAB,
     RESERVATION_TAB,
 } from '@/features/reservation/constants/ReservationTab';
+import { useChangeModal } from '@/features/reservation/hooks/useChangeModal';
 import { useReservationList } from '@/features/reservation/hooks/useReservationList';
 import type { ReservationResponseDto } from '@/features/reservation/types/ReservationResponseDto';
-import type { ScheduleInfoDto } from '@/features/schedule/types/ScheduleInfoDto';
-import type { SearchRequestDto } from '@/features/schedule/types/SearchRequestDto';
 import { CustomModal } from '@/shared/components/CustomModal';
 import { ERROR_MESSAGE } from '@/shared/constants/ErrorMessages';
 import { useModal } from '@/shared/hooks/useModal';
@@ -33,7 +31,12 @@ export function ReservationListBody() {
         useState<ReservationResponseDto>();
     const [isChange, setIsChange] = useState(false);
     const queryClient = useQueryClient();
-    const navigate = useNavigate();
+    const { handleChangeTrain, handleChangeSeat } = useChangeModal(
+        onRequestClose,
+        true,
+        false,
+        selectedReservation,
+    );
 
     const getInitialTab = (): ReservationTabKey => {
         const savedTab = sessionStorage.getItem('selectedReservationTab');
@@ -83,76 +86,21 @@ export function ReservationListBody() {
             );
             toast.success('予約を取り消しました');
         } catch {
-            toast.error(ERROR_MESSAGE.REFUND_RETRY,{
-                duration:Infinity,
+            toast.error(ERROR_MESSAGE.REFUND_RETRY, {
+                duration: Infinity,
                 action: {
                     label: 'OK',
-                    onClick: () => {}
+                    onClick: () => {},
                 },
                 classNames: {
-                    title : 'text-left whitespace-pre-line',
-                    actionButton: "!px-4 !py-2 !text-base !h-auto",
-                }
+                    title: 'text-left whitespace-pre-line',
+                    actionButton: '!px-4 !py-2 !text-base !h-auto',
+                },
             });
         } finally {
             setIsSubmitting(false);
             onRequestClose();
         }
-    };
-
-    const handleChangeSeat = async (detail: ReservationResponseDto) => {
-        const scheduleInfoDto: ScheduleInfoDto = {
-            scheduleCd: detail.scheduleCd,
-            date: detail.rideDate,
-            departureTime: detail.departureTime,
-            arrivalTime: detail.arrivalTime,
-            trainTypeName: detail.trainTypeName,
-            departureStationCd: detail.departureStationCd,
-            arrivalStationCd: detail.arrivalStationCd,
-            departureStationName: detail.departureStationName,
-            arrivalStationName: detail.arrivalStationName,
-        };
-        const searchRequestDto: SearchRequestDto | null = null;
-        navigate('/selectSeat', {
-            state: {
-                scheduleInfoDto,
-                searchRequestDto,
-                reservedSeats: detail.reservedSeats,
-                reservationId: detail.reservationId,
-            },
-        });
-        window.scrollTo(0, 0);
-        onRequestClose();
-    };
-
-    const handleChangeTrain = (detail: ReservationResponseDto) => {
-        const searchRequestDto: SearchRequestDto = {
-            date: detail.rideDate,
-            time: detail.departureTime,
-            departureStationCd: detail.departureStationCd,
-            arrivalStationCd: detail.arrivalStationCd,
-            isArrivalTime: false,
-        };
-        const preChangeScheduleInfo = {
-            scheduleCd: detail.scheduleCd,
-            date: detail.rideDate,
-            departureTime: detail.departureTime,
-            arrivalTime: detail.arrivalTime,
-            trainTypeName: detail.trainTypeName,
-            departureStationCd: detail.departureStationCd,
-            arrivalStationCd: detail.arrivalStationCd,
-            departureStationName: detail.departureStationName,
-            arrivalStationName: detail.arrivalStationName,
-        };
-        navigate('/scheduleSearch', {
-            state: {
-                searchRequestDto,
-                isBack: true,
-                reservationId: detail.reservationId,
-                reservedSeats: detail.reservedSeats,
-                preChangeScheduleInfo: preChangeScheduleInfo,
-            },
-        });
     };
 
     return (
