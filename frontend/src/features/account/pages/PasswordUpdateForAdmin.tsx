@@ -22,7 +22,7 @@ export function PasswordUpdateForAdmin() {
         handleBlur,
         isDisable,
         handleClear,
-    } = useAccountRequestDto();
+    } = useAccountRequestDto(true);
     const [passwordType, setPasswordType] = useState('password');
     const [isSubmitting, setIsSubmitting] = useState<boolean>(false);
     useToastForRedirect();

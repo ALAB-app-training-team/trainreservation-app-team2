@@ -13,7 +13,7 @@ import { checkMailRegex } from '@/shared/utils/CheckMailRegex';
 import { checkPasswordRegex } from '@/shared/utils/CheckPasswordRegex';
 import { removeWhiteSpace } from '@/shared/utils/RemoveWhiteSpace';
 
-export function useAccountRequestDto() {
+export function useAccountRequestDto(isPasswordUpdateForAdmin: boolean) {
     const navigate = useNavigate();
     const [isSubmitting, setIsSubmitting] = useState<boolean>(false);
     const [accountForm, setAccountForm] = useState<AccountForm>({
@@ -52,6 +52,9 @@ export function useAccountRequestDto() {
         return removeWhiteSpace(value) === '';
     };
     const isMailInvalid = (value: string) => {
+        if (isPasswordUpdateForAdmin === true) {
+            return false;
+        }
         return checkMailRegex(value);
     };
     const isMailMaxLength = (value: string) => {
