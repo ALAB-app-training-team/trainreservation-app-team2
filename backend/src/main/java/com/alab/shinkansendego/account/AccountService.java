@@ -69,9 +69,8 @@ public class AccountService {
      */
     @Transactional
     public void updatePasswordByAdmin(PasswordUpdateByAdminDto request) {
-        //TODO: Exceptionを変更
         AccountEntity account = accountRepository.findByNameAndMail(request.getName(), request.getMail())
-            .orElseThrow(() -> new IllegalArgumentException("Account not found"));
+            .orElseThrow(() -> new IllegalArgumentException("Account not Found"));
         account.setPassword(passwordEncoder.encode(request.getPassword()));
         accountRepository.save(account);
     }

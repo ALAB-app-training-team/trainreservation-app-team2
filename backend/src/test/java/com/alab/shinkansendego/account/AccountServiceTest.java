@@ -93,4 +93,29 @@ public class AccountServiceTest {
         ConflictException exception = assertThrows(ConflictException.class, () -> service.insertAccount(request));
         assertEquals(mail + " is Duplicate", exception.getReason());
     }
+
+    @Test
+    @DisplayName("管理者が他アカウントのパスワードを変更できること")
+    void updatePasswordByAdmin_withDto_returnSuccess() {
+        PasswordUpdateByAdminDto request = new PasswordUpdateByAdminDto("太郎", mail, rawPassword);
+        Optional<AccountEntity> account = Optional.of(new AccountEntity(UUID.randomUUID(), "太郎", mail, hashedPassword, "ROLE_USER"));
+
+        when(accountRepository.findByNameAndMail(request.getName(), request.getMail())).thenReturn(account);
+        when(passwordEncoder.encode(rawPassword)).thenReturn("newHashedPassword");
+
+        service.updatePasswordByAdmin(request);
+        assertEquals("newHashedPassword", account.get().getPassword());
+        verify(accountRepository).save(any());
+    }
+
+    @Test
+    @DisplayName("対象のアカウントが存在しない場合、IllegalArgumentExceptionを投げること")
+    void updatePasswordByAdmin_withNotExistAccount_throwIllegalArgumentException() {
+        PasswordUpdateByAdminDto request = new PasswordUpdateByAdminDto("太郎", mail, rawPassword);
+        Optional<AccountEntity> account = Optional.of(new AccountEntity(UUID.randomUUID(), "太郎", mail, hashedPassword, "ROLE_USER"));
+        when(accountRepository.findByNameAndMail(request.getName(), request.getMail())).thenReturn(Optional.empty());
+
+        Exception ex = assertThrows(IllegalArgumentException.class, () -> service.updatePasswordByAdmin(request));
+        assertEquals("Account not Found", ex.getMessage());
+    }
 }
