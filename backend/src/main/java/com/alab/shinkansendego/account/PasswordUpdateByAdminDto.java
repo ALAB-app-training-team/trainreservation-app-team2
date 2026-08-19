@@ -10,11 +10,11 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @AllArgsConstructor
 public class PasswordUpdateByAdminDto {
-    @NotBlank(message = "Name id blank.")
+    @NotBlank(message = "Name is Blank.")
     private String name;
-    @NotBlank(message = "Mail id blank.")
+    @NotBlank(message = "Mail is Blank.")
     private String mail;
     @ValidPassword
-    @NotBlank(message = "Password id blank.")
+    @NotBlank(message = "Password is Blank.")
     private String password;
 }
