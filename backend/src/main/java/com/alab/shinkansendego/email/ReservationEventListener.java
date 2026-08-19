@@ -65,10 +65,12 @@ public class ReservationEventListener {
                     && companion.getSeatCd().equals(seat.getSeatCd()))
                 .findFirst()
                 .orElseThrow(() -> new IllegalArgumentException("CompanionInfo is Not Found"));
-            emailDto.setReserverMail(info.getMail());
-            emailDto.setReserverName(info.getName());
-            emailDto.setSeats(List.of(new EmailRequestDto.SelectedSeatDto(info.getTrainCarCd(), "", info.getSeatCd(), info.getSeatFare())));
-            emailService.sendReleaseCompanion(emailDto);
+            if (info.getMail() != null && !info.getMail().isEmpty()) {
+                emailDto.setReserverMail(info.getMail());
+                emailDto.setReserverName(info.getName());
+                emailDto.setSeats(setDisplaySeats(List.of(new ReserveRequestDto.SelectedSeatDto(info.getTrainCarCd(), seat.getTrainCarTypeCd(), info.getSeatCd(), info.getSeatFare()))));
+                emailService.sendReleaseCompanion(emailDto);
+            }
         }
     }
 
@@ -108,23 +110,26 @@ public class ReservationEventListener {
         emailDto.setTotalAmount(totalAmount);
 
         if (request.getSeats() != null) {
-            List<EmailRequestDto.SelectedSeatDto> emailSeats = request.getSeats().stream()
-                .map(seat -> {
-                    String seatDisplay = seatRepository.findById(seat.getSeatCd())
-                        .map(seatEntity -> seatEntity.getSeatNumber() + "番" + seatEntity.getSeatColumn() + "席")
-                        .orElse(seat.getSeatCd());
-
-                    return new EmailRequestDto.SelectedSeatDto(
-                        seat.getTrainCarCd(),
-                        seat.getTrainCarTypeCd(),
-                        seatDisplay,
-                        seat.getSeatFare()
-                    );
-                })
-                .toList();
-            emailDto.setSeats(emailSeats);
+            emailDto.setSeats(setDisplaySeats(request.getSeats()));
         }
 
         return emailDto;
+    }
+
+    private List<EmailRequestDto.SelectedSeatDto> setDisplaySeats(List<ReserveRequestDto.SelectedSeatDto> seats) {
+        return seats.stream()
+            .map(seat -> {
+                String seatDisplay = seatRepository.findById(seat.getSeatCd())
+                    .map(seatEntity -> seatEntity.getSeatNumber() + "番" + seatEntity.getSeatColumn() + "席")
+                    .orElse(seat.getSeatCd());
+
+                return new EmailRequestDto.SelectedSeatDto(
+                    seat.getTrainCarCd(),
+                    seat.getTrainCarTypeCd(),
+                    seatDisplay,
+                    seat.getSeatFare()
+                );
+            })
+            .toList();
     }
 }

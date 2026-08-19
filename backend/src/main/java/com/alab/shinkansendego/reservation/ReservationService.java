@@ -602,7 +602,7 @@ public class ReservationService {
         List<ReserveRequestDto.SelectedSeatDto> seatDto = seats.stream()
             .map(seat -> new ReserveRequestDto.SelectedSeatDto(
                 seat.getTrainCarCd(),
-                "",
+                trainCarRepository.findByTrainCarCd(seat.getTrainCarCd()).getSeatType().getTrainCarTypeCd(),
                 seat.getSeatCd(),
                 seat.getSeatFare()
             )).toList();
