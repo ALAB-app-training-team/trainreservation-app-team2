@@ -602,7 +602,7 @@ public class ReservationService {
         List<ReserveRequestDto.SelectedSeatDto> seatDto = seats.stream()
             .map(seat -> new ReserveRequestDto.SelectedSeatDto(
                 seat.getTrainCarCd(),
-                trainCarRepository.findByTrainCarCd(seat.getTrainCarCd()).getSeatType().getTrainCarTypeCd(),
+                trainCarRepository.findByTrainCarCd(seat.getTrainCarCd()).orElseThrow(() -> new IllegalArgumentException("TrainCar is not found")).getSeatType().getTrainCarTypeCd(),
                 seat.getSeatCd(),
                 seat.getSeatFare()
             )).toList();
@@ -621,12 +621,12 @@ public class ReservationService {
         LocalTime departureTime = schedules.stream()
             .filter(schedule -> schedule.getSectionKm().getStartStationCd().equals(reservation.getDepartureStationCd()))
             .findFirst()
-            .orElseThrow(() -> new IllegalArgumentException("DepartureStation is Not Found"))
+            .orElseThrow(() -> new IllegalArgumentException("DepartureTime is not found"))
             .getDepartureTime();
         LocalTime arrivalTime = schedules.stream()
             .filter(schedule -> schedule.getSectionKm().getGoalStationCd().equals(reservation.getArrivalStationCd()))
             .findFirst()
-            .orElseThrow(() -> new IllegalArgumentException("ArrivalStation is Not Found"))
+            .orElseThrow(() -> new IllegalArgumentException("ArrivalTime is not found"))
             .getArrivalTime();
 
         eventPublisher.publishEvent(new ReservationCanceledEvent(

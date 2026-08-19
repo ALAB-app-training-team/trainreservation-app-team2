@@ -6,6 +6,7 @@ import org.springframework.data.jpa.repository.Query;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
+import java.util.Optional;
 
 @Repository
 public interface TrainCarRepository extends JpaRepository<TrainCarEntity, String> {
@@ -16,5 +17,5 @@ public interface TrainCarRepository extends JpaRepository<TrainCarEntity, String
     List<SeatResponseDto> findSeatByTrainCarCd(String trainCarCd);
 
     @EntityGraph(attributePaths = {"seatType", "seatType.trainCarType"})
-    TrainCarEntity findByTrainCarCd(String trainCarCd);
+    Optional<TrainCarEntity> findByTrainCarCd(String trainCarCd);
 }
