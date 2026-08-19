@@ -84,7 +84,7 @@ public class AccountController {
      * @return NoContent
      */
     @PutMapping("admin/password")
-    @PreAuthorize("hasRole('admin')")
+    @PreAuthorize("hasRole('ADMIN')")
     public ResponseEntity<Void> updatePasswordByAdmin(@Valid @RequestBody PasswordUpdateByAdminDto request) {
         accountService.updatePasswordByAdmin(request);
         return ResponseEntity.status(HttpStatus.NO_CONTENT).build();

@@ -1,19 +1,30 @@
 package com.alab.shinkansendego.account;
 
+import com.alab.shinkansendego.SecurityConfig;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.databind.SerializationFeature;
+import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.webmvc.test.autoconfigure.WebMvcTest;
+import org.springframework.context.annotation.Import;
 import org.springframework.http.MediaType;
 import org.springframework.mock.web.MockHttpSession;
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.context.SecurityContext;
+import org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors;
 import org.springframework.security.web.context.HttpSessionSecurityContextRepository;
 import org.springframework.test.context.bean.override.mockito.MockitoBean;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.MvcResult;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 
+import java.util.List;
 import java.util.UUID;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
@@ -25,7 +36,10 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 @WebMvcTest(AccountController.class)
+@Import(SecurityConfig.class)
 public class AccountControllerTest {
+    private Authentication commonAuth;
+    private Authentication adminAuth;
     @MockitoBean
     private AccountService service;
     @Autowired
@@ -35,10 +49,26 @@ public class AccountControllerTest {
     private final String rawPassword = "Password_11/";
     private final String hashedPassword = "$2a$10$6gZt4xt3F2RnCytRMfqSSumEmrLtqVRpqvVhGAQfgUaxZXeUUWJ4C";
 
+    @BeforeEach
+    void setUp() {
+        objectMapper.registerModule(new JavaTimeModule());
+        objectMapper.disable(SerializationFeature.WRITE_DATES_AS_TIMESTAMPS);
+        AccountSessionDto adminSession = new AccountSessionDto(
+            UUID.fromString("d2cdf717-a35c-48d9-828e-0ce86e01d477"), "test-admin@test.com", "管理者"
+        );
+        List<GrantedAuthority> authorities = List.of(new SimpleGrantedAuthority("ROLE_ADMIN"));
+        adminAuth = new UsernamePasswordAuthenticationToken(adminSession, null, authorities);
+        AccountSessionDto commonSession = new AccountSessionDto(
+            UUID.fromString("f79d8bbc-fcba-b538-b132-2f726ce0120c"), "test-common@test.com", "一般太郎"
+        );
+        List<GrantedAuthority> commonAuthorities = List.of(new SimpleGrantedAuthority("ROLE_USER"));
+        commonAuth = new UsernamePasswordAuthenticationToken(commonSession, null, commonAuthorities);
+    }
+
     @Test
     @DisplayName("ログインできること")
     void login_return200AndAccount() throws Exception {
-        AccountEntity account = new AccountEntity(UUID.randomUUID(), "Tarou", "a@a.com", hashedPassword, "common");
+        AccountEntity account = new AccountEntity(UUID.randomUUID(), "Tarou", "a@a.com", hashedPassword, "ROLE_USER");
         when(service.login(account.getMail(), rawPassword)).thenReturn(account);
 
         LoginRequestDto loginRequestDto = new LoginRequestDto(account.getMail(), rawPassword);
@@ -74,7 +104,7 @@ public class AccountControllerTest {
 
     @Test
     @DisplayName("アカウント作成できること")
-    void insertAccount_return201AndMail() throws Exception {
+    void insertAccount_return201() throws Exception {
         AccountRequestDto request = new AccountRequestDto("太郎", "a@a.com", rawPassword);
 
         mockMvc.perform(MockMvcRequestBuilders.post(baseUrl + "account")
@@ -284,5 +314,17 @@ public class AccountControllerTest {
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(objectMapper.writeValueAsString(null)))
             .andExpect(status().isBadRequest());
+    }
+
+    @Test
+    @DisplayName("管理者が他アカウントのパスワードを変更できること")
+    void updatePasswordByAdmin_return204() throws Exception {
+        PasswordUpdateByAdminDto request = new PasswordUpdateByAdminDto("太郎", "a@a.com", rawPassword);
+
+        mockMvc.perform(MockMvcRequestBuilders.put(baseUrl + "admin/password")
+                .with(SecurityMockMvcRequestPostProcessors.authentication(adminAuth))
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(objectMapper.writeValueAsString(request)))
+            .andExpect(status().isNoContent());
     }
 }
