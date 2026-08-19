@@ -27,4 +27,24 @@ public final class EmailUtils {
 
         またのご利用をお待ちしております。
         """;
+    public static final String RESERVATION_CHANGE_SUBJECT = "[予約変更完了] 予約変更内容のご案内";
+    public static final String RESERVATION_CHANGE_BODY = """
+         %s さま
+
+        「新幹線でGO!」アプリをご利用いただきありがとうございます。
+         予約変更が完了しましたので、以下よりご確認ください。
+
+        ■変更後予約情報
+        予約ID：%s
+        乗車日：%s
+        区間：%s（%s発）　→　%s（%s着）
+        列車名：%s
+        座席：%s
+        お支払い合計（変更差額）：%,d 円
+
+        ■アプリログインURL
+        %s
+
+        またのご利用をお待ちしております。
+        """;
 }
