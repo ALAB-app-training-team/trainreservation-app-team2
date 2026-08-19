@@ -25,4 +25,6 @@ public class AccountEntity {
     private String mail;
     @Column(name = "password")
     private String password;
+    @Column(name = "role")
+    private String role;
 }
