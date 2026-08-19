@@ -62,25 +62,8 @@ public class SesEmailService implements EmailService {
 
             String loginurl = baseUrl + EmailUtils.LOGIN_PATH;
 
-            String body = String.format("""
-                    %s さま
-
-                    「新幹線でGO!」アプリでチケットのご予約が完了いたしました。
-                    以下に予約詳細をお知らせいたします。
-
-                    ■予約詳細
-                    予約ID：%s
-                    乗車日：%s
-                    区間：%s（%s発）　→　%s（%s着）
-                    列車名：%s
-                    座席：%s
-                    お支払い合計：%,d 円
-
-                    ■アプリログインURL
-                    %s
-
-                    またのご利用をお待ちしております。
-                    """,
+            String body = String.format(
+                EmailUtils.RESERVATION_CONFIRMATION_BODY,
                 dto.getReserverName() != null ? dto.getReserverName() : "ユーザー",
                 dto.getReservationId(),
                 formatterRideDate,
