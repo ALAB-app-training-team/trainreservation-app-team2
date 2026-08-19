@@ -5,17 +5,21 @@ import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
+import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.context.SecurityContext;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.web.context.HttpSessionSecurityContextRepository;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import java.util.Collections;
+import java.util.List;
 
 @RestController
 @RequestMapping(path = "api")
@@ -39,7 +43,8 @@ public class AccountController {
         AccountEntity account = accountService.login(request.getMail(), request.getPassword());
         // セッション作成
         AccountSessionDto res = new AccountSessionDto(account.getId(), account.getMail(), account.getName());
-        Authentication authentication = new UsernamePasswordAuthenticationToken(res, null, Collections.emptyList());
+        List<GrantedAuthority> authorities = List.of(new SimpleGrantedAuthority(account.getRole()));
+        Authentication authentication = new UsernamePasswordAuthenticationToken(res, null, authorities);
         SecurityContext context = SecurityContextHolder.createEmptyContext();
         context.setAuthentication(authentication);
         SecurityContextHolder.setContext(context);
@@ -70,5 +75,18 @@ public class AccountController {
     public ResponseEntity<Void> insertAccount(@Valid @RequestBody AccountRequestDto request) {
         accountService.insertAccount(request);
         return ResponseEntity.status(HttpStatus.CREATED).build();
+    }
+
+    /**
+     * 管理者が一般アカウントのパスワード変更を行うメソッド
+     *
+     * @param request アカウント情報と新しいパスワード
+     * @return NoContent
+     */
+    @PutMapping("admin/password")
+    @PreAuthorize("hasRole('admin')")
+    public ResponseEntity<Void> updatePasswordByAdmin(@Valid @RequestBody PasswordUpdateByAdminDto request) {
+        accountService.updatePasswordByAdmin(request);
+        return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
     }
 }

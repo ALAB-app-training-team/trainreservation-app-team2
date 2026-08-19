@@ -61,4 +61,18 @@ public class AccountService {
 
         accountRepository.save(postAccount);
     }
+
+    /**
+     * 管理者が一般アカウントのパスワード変更を行うメソッド
+     *
+     * @param request アカウント情報と新しいパスワード
+     */
+    @Transactional
+    public void updatePasswordByAdmin(PasswordUpdateByAdminDto request) {
+        //TODO: Exceptionを変更
+        AccountEntity account = accountRepository.findByNameAndMail(request.getName(), request.getName())
+            .orElseThrow(() -> new IllegalArgumentException("Account not found"));
+        account.setPassword(passwordEncoder.encode(request.getPassword()));
+        accountRepository.save(account);
+    }
 }
