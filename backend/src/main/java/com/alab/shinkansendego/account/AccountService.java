@@ -56,7 +56,7 @@ public class AccountService {
             removeSpaces(request.getName()),
             removeSpaces(request.getMail()),
             passwordEncoder.encode(request.getPassword()),
-            "common"
+            "ROLE_USER"
         );
 
         accountRepository.save(postAccount);
