@@ -36,7 +36,9 @@ export function useLoginRequestDto() {
             );
             localStorage.setItem('name', response.data.name);
             localStorage.setItem('role', response.data.role);
-            if (!prevPath) {
+            if (response.data.role === 'ROLE_ADMIN') {
+                navigate('/admin/password', { replace: true });
+            } else if (!prevPath) {
                 navigate('/scheduleSearch', { replace: true });
             } else {
                 navigate(prevPath, { state: prevData, replace: true });
