@@ -325,6 +325,9 @@ public class ReservationService {
         DepartureArrivalTimeEntity departureArrivalTimeOfGoal = departureArrivalTimeRepository
             .findByScheduleCdAndSectionCdIn(reserveRequestDto.getScheduleCd(), List.of(sectionCdList.get(sectionCdList.size() - 1)));
 
+        reserveRequestDto.setReserverName(StringUtils.removeSpaces(reserveRequestDto.getReserverName()));
+        reserveRequestDto.setReserverMail(StringUtils.removeSpaces(reserveRequestDto.getReserverMail()));
+
         eventPublisher.publishEvent(new ReservationCreatedEvent(
             reservationId,
             reserveRequestDto,

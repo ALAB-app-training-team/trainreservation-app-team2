@@ -47,7 +47,7 @@ export function ReservationRefundConfirmModal({
                         </span>
                     </div>
                     <div className="flex justify-between text-xl font-bold">
-                        <span>払い戻し金額</span>{' '}
+                        <span>払戻金額</span>{' '}
                         <span>
                             ￥
                             {(
