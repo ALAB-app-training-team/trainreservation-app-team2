@@ -18,6 +18,8 @@ export function ScheduleSearchBody() {
         searchRequestDto: initialDto,
         isBack = false,
         reservationId,
+        isChanging,
+        isFromReservedTicket,
         reservedSeats,
         preChangeScheduleInfo,
     } = (location.state as ScheduleSearchLocationState | null) ?? {};
@@ -44,8 +46,9 @@ export function ScheduleSearchBody() {
         <>
             <div className="flex justify-center">
                 <div className="mx-8 my-4 flex w-full max-w-5xl flex-col gap-4">
-                    {isBack && (
+                    {isBack ? (
                         <button
+                            data-testid={'back-button-in-scheduleSearch'}
                             type="button"
                             onClick={() => {
                                 navigate('/reservationList');
@@ -56,7 +59,27 @@ export function ScheduleSearchBody() {
                                 予約一覧へ戻る
                             </div>
                         </button>
-                    )}
+                    ) : isFromReservedTicket || isChanging ? (
+                        <button
+                            data-testid={'back-button-in-scheduleSearch'}
+                            type="button"
+                            onClick={() => {
+                                navigate('/reservedTicket', {
+                                    state: {
+                                        reservationId: reservationId,
+                                        isBack: true,
+                                        guestLogin: false,
+                                        isUpdated: false,
+                                    },
+                                });
+                            }}
+                        >
+                            <div className="flex items-center gap-2">
+                                <LuArrowLeft />
+                                予約詳細へ戻る
+                            </div>
+                        </button>
+                    ) : null}
                     <ScheduleSearchForm
                         stations={stations}
                         departureDtos={departureDtos}
@@ -105,6 +128,8 @@ export function ScheduleSearchBody() {
                             preChangeScheduleInfo={
                                 preChangeScheduleInfo ?? null
                             }
+                            isChanging={isChanging}
+                            isBack={isBack}
                         />
                     </Suspense>
                 </div>
