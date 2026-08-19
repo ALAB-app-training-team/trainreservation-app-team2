@@ -30,7 +30,7 @@ public final class EmailUtils {
         列車名：%s
         座席：%s
         払戻手数料：%,d 円
-        払戻合計金額：%,d 円
+        払戻金額：%,d 円
 
         ■アプリログインURL
         %s

@@ -1063,14 +1063,23 @@ public class ReservationServiceTest {
     @DisplayName("ログイン中のユーザーが予約情報・予約座席情報の論理削除、予約済座席区間の物理削除ができる")
     void deleteReservation_withReservationIdAndLoggedInUser() {
         UUID reservationId = UUID.randomUUID();
-        UUID accountId = UUID.fromString("f79d8bbc-fcba-b538-b132-2f726ce0120c");
         ReservationEntity deletedReservation = getReservation(reservationId);
         List<ReservedSeatEntity> deletedSeats = getReservedSeats(reservationId);
         List<ReservedSeatSectionEntity> deletedSections = getReservedSeatSections(reservationId);
+        TrainCarEntity trainCar = new TrainCarEntity();
+        SeatTypeEntity seatType = new SeatTypeEntity();
+        seatType.setTrainCarTypeCd("CAR01");
+        trainCar.setSeatType(seatType);
 
         when(reservationRepo.findByIdAndAccountId(reservationId, accountId)).thenReturn(Optional.of(deletedReservation));
         when(reservedSeatRepo.findByReservationId(reservationId)).thenReturn(deletedSeats);
         when(reservedSeatSectionRepo.findByReservationId(reservationId)).thenReturn(deletedSections);
+        when(accountRepo.findById(accountId)).thenReturn(Optional.of(account));
+        when(trainCarRepo.findByTrainCarCd(any())).thenReturn(trainCar);
+        when(departureArrivalTimeRepo.findByScheduleCd(any())).thenReturn(List.of(
+            buildSchedule(LocalTime.of(6, 0, 0), "THK01", "東京", LocalTime.of(6, 30, 0), "THK02", "上野"),
+            buildSchedule(LocalTime.of(7, 0, 0), "THK02", "上野", LocalTime.of(7, 30, 0), "CMN01", "大宮"),
+            buildSchedule(LocalTime.of(8, 0, 0), "CMN01", "大宮", LocalTime.of(8, 30, 0), "THK09", "仙台")));
 
         service.deleteReservation(reservationId, accountId, null, null);
         assertTrue(deletedReservation.getIsDeleted());
@@ -1090,10 +1099,19 @@ public class ReservationServiceTest {
         ReservationEntity deletedReservation = getReservation(reservationId);
         List<ReservedSeatEntity> deletedSeats = getReservedSeats(reservationId);
         List<ReservedSeatSectionEntity> deletedSections = getReservedSeatSections(reservationId);
+        TrainCarEntity trainCar = new TrainCarEntity();
+        SeatTypeEntity seatType = new SeatTypeEntity();
+        seatType.setTrainCarTypeCd("CAR01");
+        trainCar.setSeatType(seatType);
 
         when(reservationRepo.findByIdAndReserverNameAndReserverMail(reservationId, name, mail)).thenReturn(Optional.of(deletedReservation));
         when(reservedSeatRepo.findByReservationId(reservationId)).thenReturn(deletedSeats);
         when(reservedSeatSectionRepo.findByReservationId(reservationId)).thenReturn(deletedSections);
+        when(trainCarRepo.findByTrainCarCd(any())).thenReturn(trainCar);
+        when(departureArrivalTimeRepo.findByScheduleCd(any())).thenReturn(List.of(
+            buildSchedule(LocalTime.of(6, 0, 0), "THK01", "東京", LocalTime.of(6, 30, 0), "THK02", "上野"),
+            buildSchedule(LocalTime.of(7, 0, 0), "THK02", "上野", LocalTime.of(7, 30, 0), "CMN01", "大宮"),
+            buildSchedule(LocalTime.of(8, 0, 0), "CMN01", "大宮", LocalTime.of(8, 30, 0), "THK09", "仙台")));
 
         service.deleteReservation(reservationId, null, name, mail);
         assertTrue(deletedReservation.getIsDeleted());
@@ -1136,11 +1154,11 @@ public class ReservationServiceTest {
     @DisplayName("該当予約座席情報が存在しない場合、IllegalArgumentExceptionが発生する")
     void deleteReservation_withNotExistingReservationIdOfReservedSeat_throwsIllegalArgumentException() {
         UUID reservationId = UUID.randomUUID();
-        UUID accountId = UUID.fromString("f79d8bbc-fcba-b538-b132-2f726ce0120c");
         ReservationEntity deletedReservation = getReservation(reservationId);
 
         when(reservationRepo.findByIdAndAccountId(reservationId, accountId)).thenReturn(Optional.of(deletedReservation));
         when(reservedSeatRepo.findByReservationId(reservationId)).thenReturn(List.of());
+        when(accountRepo.findById(accountId)).thenReturn(Optional.of(account));
 
         Exception ex = assertThrows(IllegalArgumentException.class, () -> service.deleteReservation(reservationId, accountId, null, null));
         assertEquals("Reserved Seats is Not found", ex.getMessage());
@@ -1150,13 +1168,13 @@ public class ReservationServiceTest {
     @DisplayName("該当予約済座席区間が存在しない場合、IllegalArgumentExceptionが発生する")
     void deleteReservation_withNotExistingReservationIdOfReservedSeatSection_throwsIllegalArgumentException() {
         UUID reservationId = UUID.randomUUID();
-        UUID accountId = UUID.fromString("f79d8bbc-fcba-b538-b132-2f726ce0120c");
         ReservationEntity deletedReservation = getReservation(reservationId);
         List<ReservedSeatEntity> deletedSeats = getReservedSeats(reservationId);
 
         when(reservationRepo.findByIdAndAccountId(reservationId, accountId)).thenReturn(Optional.of(deletedReservation));
         when(reservedSeatRepo.findByReservationId(reservationId)).thenReturn(deletedSeats);
         when(reservedSeatSectionRepo.findByReservationId(reservationId)).thenReturn(List.of());
+        when(accountRepo.findById(accountId)).thenReturn(Optional.of(account));
 
         Exception ex = assertThrows(IllegalArgumentException.class, () -> service.deleteReservation(reservationId, accountId, null, null));
         assertEquals("Reserved Seat Sections is Not found", ex.getMessage());
