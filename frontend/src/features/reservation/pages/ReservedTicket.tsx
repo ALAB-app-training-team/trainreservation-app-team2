@@ -168,7 +168,7 @@ export function ReservedTicket() {
                         <IoTrashOutline className="h-4 w-4" />
                         キャンセル
                     </button>
-                    {accountInfo !== null && isBack && (
+                    {accountInfo !== null && (
                         <button
                             data-testid="change-button"
                             onClick={handleChangeConfirmModalOpen}

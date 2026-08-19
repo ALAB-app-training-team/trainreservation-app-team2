@@ -165,11 +165,6 @@ test('navigate-ログイン全機能', async ({
     await expect(page.getByText('予約変更確認')).toBeVisible();
     await selectSeatPage.clickUpdateConfirmButton();
     await expect(page).toHaveURL('/reservedTicket');
-    // 予約詳細～予約変更
-    await reservedTicketPage.header.goToReservationList();
-    await expect(page).toHaveURL('/reservationList');
-    await reservationListPage.clickTicketButton();
-    await expect(page).toHaveURL('/reservedTicket');
     //  予約変更（日時列車変更）
     await reservedTicketPage.clickChangeButton();
     await reservedTicketPage.clickChangeTrainConfirmButton();
