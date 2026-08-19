@@ -10,7 +10,8 @@ apiClient.interceptors.response.use(
         const requestUrl = error.config?.url || '';
         const requestMethod = error.config?.method?.toLowerCase() || '';
         const isPostReservation =
-            requestMethod === 'post' && requestUrl.includes('/reservations');
+            (requestMethod === 'post' || requestMethod === 'put') &&
+            requestUrl.includes('/reservations');
 
         if (
             error.response &&
