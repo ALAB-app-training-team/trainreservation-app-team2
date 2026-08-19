@@ -96,7 +96,6 @@ export function SelectSeats() {
             sessionStorage.setItem('message', ERROR_MESSAGE.LOGIN_ERROR);
             redirect('/login');
         }
-        console.log(isChanging);
     }, []);
 
     const getPaymentToken = async (): Promise<string> => {
