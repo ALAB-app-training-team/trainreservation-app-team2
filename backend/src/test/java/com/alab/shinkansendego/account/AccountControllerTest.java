@@ -77,7 +77,8 @@ public class AccountControllerTest {
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(objectMapper.writeValueAsString(loginRequestDto)))
             .andExpect(status().isOk())
-            .andExpect(jsonPath("$").value(account.getName()))
+            .andExpect(jsonPath("$.name").value(account.getName()))
+            .andExpect(jsonPath("$.role").value(account.getRole()))
             .andReturn();
 
         MockHttpSession session = (MockHttpSession) result.getRequest().getSession(false);

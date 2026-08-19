@@ -39,7 +39,7 @@ public class AccountController {
      * @return ログインユーザー名
      */
     @PostMapping("login")
-    public ResponseEntity<String> login(@Valid @RequestBody LoginRequestDto request, HttpSession session) {
+    public ResponseEntity<LoginResponseDto> login(@Valid @RequestBody LoginRequestDto request, HttpSession session) {
         AccountEntity account = accountService.login(request.getMail(), request.getPassword());
         // セッション作成
         AccountSessionDto res = new AccountSessionDto(account.getId(), account.getMail(), account.getName());
@@ -50,7 +50,7 @@ public class AccountController {
         SecurityContextHolder.setContext(context);
         session.setAttribute(HttpSessionSecurityContextRepository.SPRING_SECURITY_CONTEXT_KEY, context);
 
-        return ResponseEntity.ok(account.getName());
+        return ResponseEntity.ok(new LoginResponseDto(account.getName(), account.getRole()));
     }
 
     /**
