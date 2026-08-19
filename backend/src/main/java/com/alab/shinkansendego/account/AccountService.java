@@ -55,7 +55,9 @@ public class AccountService {
             UUID.randomUUID(),
             removeSpaces(request.getName()),
             removeSpaces(request.getMail()),
-            passwordEncoder.encode(request.getPassword()));
+            passwordEncoder.encode(request.getPassword()),
+            "common"
+        );
 
         accountRepository.save(postAccount);
     }

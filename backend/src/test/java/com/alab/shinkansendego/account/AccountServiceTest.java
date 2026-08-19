@@ -38,7 +38,7 @@ public class AccountServiceTest {
     @Test
     @DisplayName("ログインできること")
     void login_withReserverNameAndEmail_returnGetReservationListSuccess() {
-        AccountEntity account = new AccountEntity(UUID.randomUUID(), "Tarou", "a@a.com", hashedPassword);
+        AccountEntity account = new AccountEntity(UUID.randomUUID(), "Tarou", "a@a.com", hashedPassword, "common");
 
         when(accountRepository.findByMail(mail)).thenReturn(Optional.of(account));
         when(passwordEncoder.matches(rawPassword, hashedPassword)).thenReturn(true);
@@ -58,7 +58,7 @@ public class AccountServiceTest {
     @Test
     @DisplayName("入力されたパスワードとDB内のパスワードが合致しないとBadCredentialsExceptionが発生する")
     void login_withNotMatchPassword_throwsBadCredentialsException() {
-        AccountEntity account = new AccountEntity(UUID.randomUUID(), "Tarou", mail, notMatchHashedPassword);
+        AccountEntity account = new AccountEntity(UUID.randomUUID(), "Tarou", mail, notMatchHashedPassword, "common");
 
         when(accountRepository.findByMail(mail)).thenReturn(Optional.of(account));
         when(passwordEncoder.matches(rawPassword, notMatchHashedPassword)).thenReturn(false);
@@ -72,7 +72,7 @@ public class AccountServiceTest {
     void insertAccount_withAccountRequestDto_returnAccountInsertAccountSuccess() {
         AccountRequestDto request = new AccountRequestDto("太郎", mail, rawPassword);
         Optional<AccountEntity> account = Optional.empty();
-        AccountEntity savedAccount = new AccountEntity(UUID.randomUUID(), "太郎", mail, hashedPassword);
+        AccountEntity savedAccount = new AccountEntity(UUID.randomUUID(), "太郎", mail, hashedPassword, "common");
 
         when(accountRepository.findByMail(mail)).thenReturn(account);
         when(passwordEncoder.encode(rawPassword)).thenReturn(hashedPassword);
@@ -86,7 +86,7 @@ public class AccountServiceTest {
     @DisplayName("登録済メールアドレスがリクエストされた場合、CONFLICTを発生させる")
     void insertAccount_withExistMail_return409() {
         AccountRequestDto request = new AccountRequestDto("太郎", mail, rawPassword);
-        Optional<AccountEntity> account = Optional.of(new AccountEntity(UUID.randomUUID(), "太郎", mail, hashedPassword));
+        Optional<AccountEntity> account = Optional.of(new AccountEntity(UUID.randomUUID(), "太郎", mail, hashedPassword, "common"));
 
         when(accountRepository.findByMail(mail)).thenReturn(account);
 

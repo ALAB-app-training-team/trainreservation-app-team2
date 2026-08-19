@@ -38,7 +38,7 @@ public class AccountControllerTest {
     @Test
     @DisplayName("ログインできること")
     void login_return200AndAccount() throws Exception {
-        AccountEntity account = new AccountEntity(UUID.randomUUID(), "Tarou", "a@a.com", hashedPassword);
+        AccountEntity account = new AccountEntity(UUID.randomUUID(), "Tarou", "a@a.com", hashedPassword, "common");
         when(service.login(account.getMail(), rawPassword)).thenReturn(account);
 
         LoginRequestDto loginRequestDto = new LoginRequestDto(account.getMail(), rawPassword);
