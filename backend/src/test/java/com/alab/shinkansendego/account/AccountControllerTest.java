@@ -527,4 +527,16 @@ public class AccountControllerTest {
                 .content(objectMapper.writeValueAsString(null)))
             .andExpect(status().isBadRequest());
     }
+
+    @Test
+    @DisplayName("一般ユーザーが他アカウントのパスワードを変更できないこと")
+    void updatePasswordByAdmin_withCommonAccount_return403() throws Exception {
+        PasswordUpdateByAdminDto request = new PasswordUpdateByAdminDto("太郎", "a@a.com", rawPassword);
+
+        mockMvc.perform(MockMvcRequestBuilders.put(baseUrl + "admin/password")
+                .with(SecurityMockMvcRequestPostProcessors.authentication(commonAuth))
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(objectMapper.writeValueAsString(request)))
+            .andExpect(status().isForbidden());
+    }
 }
