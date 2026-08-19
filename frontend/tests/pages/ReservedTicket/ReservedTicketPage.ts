@@ -26,7 +26,7 @@ export class ReservedTicketPage {
         this.title = page.getByTestId('reserve-title');
         this.departureArrivalElement = page.getByTestId('departure-arrival');
         this.seatFareElement = page.getByTestId('reserved-seats');
-        this.changeButton = page.getByRole('button', { name: '予約を変更' });
+        this.changeButton = page.getByTestId('change-button');
         this.ticketShareButton = page.getByRole('button', {
             name: 'チケットを共有',
         });
@@ -49,7 +49,7 @@ export class ReservedTicketPage {
     }
 
     async clickChangeButton() {
-        await this.changeButton.click();
+        await this.changeButton.first().click();
     }
 
     async clickTicketShareButton() {

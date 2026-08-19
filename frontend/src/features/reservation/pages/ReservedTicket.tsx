@@ -78,16 +78,16 @@ export function ReservedTicket() {
             await updateCompanions(formValues);
             onCompanionsModalRequestClose();
         } catch {
-            toast.error(ERROR_MESSAGE.COMPANION,{
-                duration:Infinity,
+            toast.error(ERROR_MESSAGE.COMPANION, {
+                duration: Infinity,
                 action: {
                     label: 'OK',
-                    onClick: () => {}
+                    onClick: () => {},
                 },
                 classNames: {
-                    title : 'text-left whitespace-pre-line',
-                    actionButton: "!px-4 !py-2 !text-base !h-auto",
-                }
+                    title: 'text-left whitespace-pre-line',
+                    actionButton: '!px-4 !py-2 !text-base !h-auto',
+                },
             });
         }
     };
@@ -104,16 +104,16 @@ export function ReservedTicket() {
                 navigate('/scheduleSearch');
             }
         } catch {
-            toast.error(ERROR_MESSAGE.REFUND_RETRY,{
-                duration:Infinity,
+            toast.error(ERROR_MESSAGE.REFUND_RETRY, {
+                duration: Infinity,
                 action: {
                     label: 'OK',
-                    onClick: () => {}
+                    onClick: () => {},
                 },
                 classNames: {
-                    title : 'text-left whitespace-pre-line',
-                    actionButton: "!px-4 !py-2 !text-base !h-auto",
-                }
+                    title: 'text-left whitespace-pre-line',
+                    actionButton: '!px-4 !py-2 !text-base !h-auto',
+                },
             });
         } finally {
             setIsSubmitting(false);
@@ -170,6 +170,7 @@ export function ReservedTicket() {
                     </button>
                     {accountInfo !== null && isBack && (
                         <button
+                            data-testid="change-button"
                             onClick={handleChangeConfirmModalOpen}
                             disabled={isSubmitting}
                             className="border-primary text-primary flex w-full items-center justify-center gap-2 rounded-xl border-2 p-2 text-sm"

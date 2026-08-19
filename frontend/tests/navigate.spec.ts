@@ -155,6 +155,7 @@ test('navigate-ログイン全機能', async ({ page, login, logout }) => {
     await expect(page).toHaveURL('/selectSeat');
     await selectSeatPage.selectSeat();
     await selectSeatPage.emptySeat.nth(1).click();
+    await selectSeatPage.selectSeat();
     await selectSeatPage.clickUpdateButton();
     await expect(page.getByText('予約変更確認')).toBeVisible();
     await selectSeatPage.clickUpdateConfirmButton();
@@ -202,7 +203,7 @@ test('navigate-ログイン全機能', async ({ page, login, logout }) => {
     await expect(page).toHaveURL('/reservedTicket');
     await reservedTicketPage.clickRefundButton();
     await reservedTicketPage.clickModalCloseButton();
-    await expect(page).toHaveURL('/reservationList');
+    await expect(page).toHaveURL('/reservedTicket');
     await reservedTicketPage.clickRefundButton();
     await reservedTicketPage.clickConfirmRefundButton();
     await expect(page).toHaveURL('/reservationList');
