@@ -136,28 +136,48 @@ export function useAccountUpdateDto() {
         if (isSubmitting) return;
         setIsSubmitting(true);
         try {
-            const response = await apiClient.put(ENDPOINTS.ACCOUNT(), {
+            await apiClient.put(ENDPOINTS.ACCOUNT(), {
                 name: removeWhiteSpace(accountUpdateForm.name),
                 mail: removeWhiteSpace(accountUpdateForm.mail),
                 password: accountUpdateForm.password,
             });
+            localStorage.setItem(
+                'name',
+                removeWhiteSpace(accountUpdateForm.name),
+            );
             toast.success('アカウント情報の変更が完了しました。');
+            navigate('/scheduleSearch', { replace: true });
         } catch (error) {
-            if (
-                axios.isAxiosError(error) &&
-                error.response?.status === HttpStatusCode.Conflict
-            ) {
-                toast.error(ERROR_MESSAGE.ACCOUNT_ALREADY, {
-                    duration: Infinity,
-                    action: {
-                        label: 'OK',
-                        onClick: () => {},
-                    },
-                    classNames: {
-                        title: 'text-left whitespace-pre-line',
-                        actionButton: '!px-4 !py-2 !text-base !h-auto',
-                    },
-                });
+            if (axios.isAxiosError(error)) {
+                if (error.response?.status === HttpStatusCode.Conflict) {
+                    toast.error(ERROR_MESSAGE.ACCOUNT_ALREADY, {/* 省略 */});
+                } else if (
+                    error.response?.status === HttpStatusCode.BadRequest
+                ) {
+                    toast.error(ERROR_MESSAGE.PASSWORD_NOT_MATCH, {
+                        duration: Infinity,
+                        action: {
+                            label: 'OK',
+                            onClick: () => {},
+                        },
+                        classNames: {
+                            title: 'text-left whitespace-pre-line',
+                            actionButton: '!px-4 !py-2 !text-base !h-auto',
+                        },
+                    });
+                } else {
+                    toast.error(ERROR_MESSAGE.ACCOUNT_CHANGE_RETRY, {
+                        duration: Infinity,
+                        action: {
+                            label: 'OK',
+                            onClick: () => {},
+                        },
+                        classNames: {
+                            title: 'text-left whitespace-pre-line',
+                            actionButton: '!px-4 !py-2 !text-base !h-auto',
+                        },
+                    });
+                }
             }
         } finally {
             setIsSubmitting(false);

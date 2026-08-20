@@ -74,7 +74,7 @@ public class AccountService {
 
         // 2. パスワード確認
         if (!passwordEncoder.matches(request.getPassword(), account.getPassword())) {
-            throw new BadCredentialsException("Password does not match");
+            throw new IllegalArgumentException("Password does not match");
         }
 
         // 3. 重複チェック
