@@ -51,6 +51,7 @@ export class Header {
 
     async goToLogout() {
         await this.logoutButton.first().click();
+        await this.page.waitForURL('**/login');
     }
 
     async clickUserName() {
