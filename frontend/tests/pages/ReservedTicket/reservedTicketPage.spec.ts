@@ -181,6 +181,10 @@ test('予約変更ボタン表示有無：アカウントログイン時はあ�
     await createGuestReservation();
     await expect(page).toHaveURL('/reservedTicket');
     await expect(reservedTicketPage.title).toHaveText('予約完了');
+    await reservedTicketPage.clickCompanionChangeButton();
+    await reservedTicketPage.checkCompanionCheckBox();
+    await reservedTicketPage.inputCompanionInfo();
+    await reservedTicketPage.clickCompanionChangeConfirmButton();
     await reservedTicketPage.clickTicketShareButton();
     await reservedTicketPage.linkCopyElement.waitFor({ state: 'visible' });
     await context.grantPermissions(['clipboard-read', 'clipboard-write']);
@@ -196,7 +200,13 @@ test('予約変更ボタン表示有無：アカウントログイン時はあ�
     await expect(page).toHaveURL('/reservedTicket');
     await expect(reservedTicketPage.changeButton).toBeHidden();
 
-    // TODO: 同行者の処理を追加する
+    // 同行者は予約変更ボタンがないこと
+    await page.goto(clipboardText);
+    await expect(page).toHaveURL(/\/reservationGuestLogin\?.+/);
+    await reservationGuestLoginPage.inputCompanionLoginInfo();
+    await reservationGuestLoginPage.clickGuestLoginButton();
+    await expect(page).toHaveURL('/reservedTicket');
+    await expect(reservedTicketPage.changeButton).toBeHidden();
 });
 
 test('予約キャンセルボタン表示有無：アカウントログイン時はあり・ゲストログイン時はあり・同行者はなしであること', async ({
@@ -223,6 +233,10 @@ test('予約キャンセルボタン表示有無：アカウントログイン�
     await createGuestReservation();
     await expect(page).toHaveURL('/reservedTicket');
     await expect(reservedTicketPage.title).toHaveText('予約完了');
+    await reservedTicketPage.clickCompanionChangeButton();
+    await reservedTicketPage.checkCompanionCheckBox();
+    await reservedTicketPage.inputCompanionInfo();
+    await reservedTicketPage.clickCompanionChangeConfirmButton();
     await reservedTicketPage.clickTicketShareButton();
     await reservedTicketPage.linkCopyElement.waitFor({ state: 'visible' });
     await context.grantPermissions(['clipboard-read', 'clipboard-write']);
@@ -238,7 +252,13 @@ test('予約キャンセルボタン表示有無：アカウントログイン�
     await expect(page).toHaveURL('/reservedTicket');
     await expect(reservedTicketPage.refundButton).toBeVisible();
 
-    // TODO: 同行者の処理を追加する
+    // 同行者は予約キャンセルボタンがないこと
+    await page.goto(clipboardText);
+    await expect(page).toHaveURL(/\/reservationGuestLogin\?.+/);
+    await reservationGuestLoginPage.inputCompanionLoginInfo();
+    await reservationGuestLoginPage.clickGuestLoginButton();
+    await expect(page).toHaveURL('/reservedTicket');
+    await expect(reservedTicketPage.refundButton).toBeHidden();
 });
 
 test('同行者割り当てボタン表示有無：アカウントログイン時はあり・ゲストログイン時はあり・同行者はなしであること', async ({
@@ -265,6 +285,10 @@ test('同行者割り当てボタン表示有無：アカウントログイン�
     await createGuestReservation();
     await expect(page).toHaveURL('/reservedTicket');
     await expect(reservedTicketPage.title).toHaveText('予約完了');
+    await reservedTicketPage.clickCompanionChangeButton();
+    await reservedTicketPage.checkCompanionCheckBox();
+    await reservedTicketPage.inputCompanionInfo();
+    await reservedTicketPage.clickCompanionChangeConfirmButton();
     await reservedTicketPage.clickTicketShareButton();
     await reservedTicketPage.linkCopyElement.waitFor({ state: 'visible' });
     await context.grantPermissions(['clipboard-read', 'clipboard-write']);
@@ -280,7 +304,11 @@ test('同行者割り当てボタン表示有無：アカウントログイン�
     await expect(page).toHaveURL('/reservedTicket');
     await expect(reservedTicketPage.companionChangeButton).toBeVisible();
 
-    // TODO: 同行者の処理を追加する
+    // 同行者は同行者割り当てボタンがないこと
+    await page.goto(clipboardText);
+    await expect(page).toHaveURL(/\/reservationGuestLogin\?.+/);
+    await reservationGuestLoginPage.inputCompanionLoginInfo();
+    await reservationGuestLoginPage.clickGuestLoginButton();
+    await expect(page).toHaveURL('/reservedTicket');
+    await expect(reservedTicketPage.companionChangeButton).toBeHidden();
 });
-
-// TODO: 同行者割り当てのテストがなさそうなので追加する
