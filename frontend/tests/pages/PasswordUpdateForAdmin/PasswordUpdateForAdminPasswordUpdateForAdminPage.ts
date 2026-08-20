@@ -55,16 +55,16 @@ export class PasswordUpdateForAdminPage {
         await this.updateButton.click();
     }
 
-    async inputUpdateTestAccountInfo() {
-        await this.fillName('一般 太郎');
-        await this.fillMailAddress('test-common@test.com');
+    async inputUpdateFirstAccountInfo() {
+        await this.fillName('山田 太郎');
+        await this.fillMailAddress('first@test.co.jp');
         await this.fillPassword('Password2');
         await this.fillPasswordCheck('Password2');
     }
 
-    async inputRevertTestAccountInfo() {
-        await this.fillName('一般 太郎');
-        await this.fillMailAddress('test-common@test.com');
+    async inputRevertFirstAccountInfo() {
+        await this.fillName('山田 太郎');
+        await this.fillMailAddress('first@test.co.jp');
         await this.fillPassword('Password1');
         await this.fillPasswordCheck('Password1');
     }

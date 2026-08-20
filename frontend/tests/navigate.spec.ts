@@ -225,26 +225,43 @@ test('navigate-管理者ログイン-管理機能', async ({
     const scheduleSearchPage = new ScheduleSearchPage(page);
     const loginPage = new LoginPage(page);
     const passwordUpdateForAdminPage = new PasswordUpdateForAdminPage(page);
+    const accountCreatePage = new AccountCreatePage(page);
 
-    // 一般太郎のパスワード変更
+    // 山田太郎アカウント新規登録
     await loginPage.goto();
-    await adminLogin();
-    await expect(page).toHaveURL('/admin/password');
-    await passwordUpdateForAdminPage.inputUpdateTestAccountInfo();
-    await passwordUpdateForAdminPage.clickUpdateButton();
-    await expect(page).toHaveURL('/admin/password');
-    await logout();
+    await loginPage.clickCreateButton();
+    await expect(page).toHaveURL('/accountCreate');
+    await accountCreatePage.inputCreateFirstAccountInfo();
+    await accountCreatePage.clickCreateButton();
+    await expect(page).toHaveURL('/login');
 
-    // 一般太郎ログイン
-    await commonLogin();
+    // 山田太郎ログイン
+    await loginPage.fillMailAddress('first@test.co.jp');
+    await loginPage.fillPassword('Password1');
     await expect(page).toHaveURL('/scheduleSearch');
     await expect(scheduleSearchPage.header.userName).toBeVisible();
     await logout();
 
-    // 一般太郎のパスワードを元に戻す
+    // 山田太郎のパスワード変更
+    await loginPage.goto();
     await adminLogin();
     await expect(page).toHaveURL('/admin/password');
-    await passwordUpdateForAdminPage.inputRevertTestAccountInfo();
+    await passwordUpdateForAdminPage.inputUpdateFirstAccountInfo();
+    await passwordUpdateForAdminPage.clickUpdateButton();
+    await expect(page).toHaveURL('/admin/password');
+    await logout();
+
+    // 山田太郎ログイン
+    await loginPage.fillMailAddress('first@test.co.jp');
+    await loginPage.fillPassword('Password2');
+    await expect(page).toHaveURL('/scheduleSearch');
+    await expect(scheduleSearchPage.header.userName).toBeVisible();
+    await logout();
+
+    // 山田太郎のパスワードを元に戻す
+    await adminLogin();
+    await expect(page).toHaveURL('/admin/password');
+    await passwordUpdateForAdminPage.inputRevertFirstAccountInfo();
     await passwordUpdateForAdminPage.clickUpdateButton();
     await expect(page).toHaveURL('/admin/password');
     await logout();
