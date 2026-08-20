@@ -164,6 +164,7 @@ public class ReservationService {
         ReservationEntity reservationEntity = reservationRepository.findById(reservationId).orElse(null);
         if (reservationEntity == null) return null;
 
+        boolean isReserverMatched = true;
         if (Objects.equals(reservationEntity.getReserverName(), StringUtils.removeSpaces(name))
             && Objects.equals(reservationEntity.getReserverMail(), StringUtils.removeSpaces(email))) {
             if (reservationEntity.getAccountId() != null) return null;
@@ -171,9 +172,10 @@ public class ReservationService {
             boolean isCompanionMatched = reservationEntity.getReservedSeat().stream()
                 .anyMatch(seat -> Objects.equals(seat.getName(), StringUtils.removeSpaces(name)) && Objects.equals(seat.getMail(), StringUtils.removeSpaces(email)));
             if (!isCompanionMatched) return null;
+            isReserverMatched = false;
         }
 
-        return createReservationResponseDto(reservationEntity);
+        return createReservationResponseDto(reservationEntity, isReserverMatched);
     }
 
     /**
@@ -188,7 +190,7 @@ public class ReservationService {
         ReservationEntity reservationEntity = reservationRepository
             .findWithEntityGraphByIdAndAccountId(reservationId, accountId).orElseThrow(() -> new IllegalArgumentException("ReservationId is Not found"));
 
-        return createReservationResponseDto(reservationEntity);
+        return createReservationResponseDto(reservationEntity, true);
     }
 
     /**
@@ -198,7 +200,7 @@ public class ReservationService {
      * @return 登録した予約情報ID
      */
     @Transactional
-    public ReservationResponseDto createReservationResponseDto(ReservationEntity reservationEntity) {
+    public ReservationResponseDto createReservationResponseDto(ReservationEntity reservationEntity, boolean isReserverMatched) {
         ReservationResponseDto dto = new ReservationResponseDto();
         List<ReservedScheduleDto> scheduleList = reservationEntity.getDepartureArrivalTime().stream().map(
                 schedule ->
@@ -251,6 +253,7 @@ public class ReservationService {
         dto.setRideDate(reservationEntity.getRideDate());
         dto.setIsDeleted(reservationEntity.getIsDeleted());
         dto.setReservedSeats(reservedSeatList);
+        dto.setIsReserverMatched(isReserverMatched);
 
         return dto;
     }
