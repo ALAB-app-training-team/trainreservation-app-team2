@@ -8,13 +8,13 @@ import { SelectSeatPage } from '@tests/pages/SelectSeat/SelectSeatPage';
 test('座席ごとの金額が正しく表示されていること', async ({
     page,
     createReservation,
-    login,
+    commonLogin,
     logout,
 }) => {
     const reservationListPage = new ReservationListPage(page);
     const reservedTicketPage = new ReservedTicketPage(page);
 
-    await login();
+    await commonLogin();
     await expect(page).toHaveURL('/scheduleSearch');
     await createReservation();
     await expect(page).toHaveURL('/reservedTicket');
@@ -39,7 +39,7 @@ test('タイトル表示：予約完了時は予約完了、予約確認のゲ�
     page,
     createReservation,
     createGuestReservation,
-    login,
+    commonLogin,
     logout,
     context,
 }) => {
@@ -49,7 +49,7 @@ test('タイトル表示：予約完了時は予約完了、予約確認のゲ�
     const selectSeatPage = new SelectSeatPage(page);
 
     // 予約完了時は予約完了と表示されること
-    await login();
+    await commonLogin();
     await expect(page).toHaveURL('/scheduleSearch');
     await createReservation();
     await expect(page).toHaveURL('/reservedTicket');

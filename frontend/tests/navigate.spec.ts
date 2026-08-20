@@ -56,7 +56,7 @@ test('navigate-ゲストログイン全機能', async ({ page, context }) => {
 
 test('navigate-ログイン全機能', async ({
     page,
-    login,
+    commonLogin,
     logout,
     createReservation,
 }) => {
@@ -83,7 +83,7 @@ test('navigate-ログイン全機能', async ({
     await logout();
 
     // ログイン、検索～予約
-    await login();
+    await commonLogin();
     await expect(page).toHaveURL('/scheduleSearch');
     await expect(scheduleSearchPage.header.commonUser).toBeVisible();
     await scheduleSearchPage.clickDetailButton();
@@ -227,7 +227,7 @@ test('navigate-座席選択画面からログインして予約', async ({ page,
     await selectSeatPage.clickLoginButton();
     await expect(page).toHaveURL('/login');
     await loginPage.loginButton.waitFor({ state: 'visible' });
-    await loginPage.inputLoginInfo();
+    await loginPage.inputcommonLoginInfo();
     await loginPage.clickLoginButton();
     await await selectSeatPage.selectSeat();
     await expect(page.getByText('座席が選択されていません')).toBeHidden();
@@ -259,7 +259,7 @@ test('navigate-header', async ({ page }) => {
     await expect(page).toHaveURL('/scheduleSearch');
     await scheduleSearchPage.header.goToLogin();
     await expect(page).toHaveURL('/login');
-    await loginPage.inputLoginInfo();
+    await loginPage.inputcommonLoginInfo();
     await loginPage.clickLoginButton();
     await expect(page).toHaveURL('/scheduleSearch');
     await scheduleSearchPage.header.goToReservationList();
@@ -272,13 +272,13 @@ test('navigate-header', async ({ page }) => {
 // 以下、Loader（特定の条件下でのredirectの処理）のテスト
 test('navigate-ログイン状態で、ゲストログイン画面にアクセスすると予約一覧画面に遷移する', async ({
     page,
-    login,
+    commonLogin,
     logout,
 }) => {
     const reservationGuestLoginPage = new ReservationGuestLoginPage(page);
     const apps = new App(page);
 
-    await login();
+    await commonLogin();
     await expect(page).toHaveURL('/scheduleSearch');
     apps.expectSessionAlert();
     await reservationGuestLoginPage.goto();
@@ -330,12 +330,12 @@ test('navigate-reservationGuestLoginのURLに予約IDがない場合、列車検
 
 test('navigate-ログイン状態でloginのパスを入力すると検索画面に遷移', async ({
     page,
-    login,
+    commonLogin,
     logout,
 }) => {
     const loginPage = new LoginPage(page);
 
-    await login();
+    await commonLogin();
     await expect(page).toHaveURL('/scheduleSearch');
     await loginPage.goto();
     await expect(page).toHaveURL('/scheduleSearch');
@@ -345,13 +345,13 @@ test('navigate-ログイン状態でloginのパスを入力すると検索画面
 
 test('navigate-ログイン状態でaccountCreateのパスを入力すると検索画面に遷移', async ({
     page,
-    login,
+    commonLogin,
     logout,
 }) => {
     const loginPage = new LoginPage(page);
     const accountCreatePage = new AccountCreatePage(page);
 
-    await login();
+    await commonLogin();
     await expect(page).toHaveURL('/scheduleSearch');
     await accountCreatePage.goto();
     await expect(page).toHaveURL('/scheduleSearch');

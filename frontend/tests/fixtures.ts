@@ -9,13 +9,15 @@ import { Header } from '@tests/pages/shared/Header';
 type CreateGuestReservation = () => Promise<void>;
 type CreateReservation = () => Promise<void>;
 type GuestLogin = () => Promise<void>;
-type Login = () => Promise<void>;
+type commonLogin = () => Promise<void>;
+type adminLogin = () => Promise<void>;
 type Logout = () => Promise<void>;
 type Fixture = {
     createGuestReservation: CreateGuestReservation;
     createReservation: CreateReservation;
     guestLogin: GuestLogin;
-    login: Login;
+    commonLogin: commonLogin;
+    adminLogin: adminLogin;
     logout: Logout;
 };
 
@@ -68,15 +70,28 @@ export const test = base.extend<Fixture>({
         };
         await use(login);
     },
-    login: async (
+    commonLogin: async (
         { page }: { page: Page },
-        use: (fn: Login) => Promise<void>,
+        use: (fn: commonLogin) => Promise<void>,
     ) => {
         const login = async () => {
             const login = new LoginPage(page);
 
             await login.goto();
-            await login.inputLoginInfo();
+            await login.inputcommonLoginInfo();
+            await login.clickLoginButton();
+        };
+        await use(login);
+    },
+    adminLogin: async (
+        { page }: { page: Page },
+        use: (fn: commonLogin) => Promise<void>,
+    ) => {
+        const login = async () => {
+            const login = new LoginPage(page);
+
+            await login.goto();
+            await login.inputAdminLoginInfo();
             await login.clickLoginButton();
         };
         await use(login);
