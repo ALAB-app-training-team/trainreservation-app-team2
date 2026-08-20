@@ -15,8 +15,7 @@ import software.amazon.awssdk.services.sesv2.model.Destination;
 import software.amazon.awssdk.services.sesv2.model.EmailContent;
 import software.amazon.awssdk.services.sesv2.model.SendEmailRequest;
 
-import java.time.format.DateTimeFormatter;
-import java.util.stream.Collectors;
+import static com.alab.shinkansendego.utils.EmailUtils.REFUND_FEE;
 
 @Service
 @Profile("prod")
@@ -40,24 +39,12 @@ public class SesEmailService implements EmailService {
         try {
             String formatterRideDate = "";
             if (dto.getRideDate() != null) {
-                formatterRideDate = dto.getRideDate().format(DateTimeFormatter.ofPattern("yyyy年MM月dd日"));
+                formatterRideDate = EmailUtils.rideDateFormatter(dto.getRideDate());
             }
 
             String seatDetail = "";
             if (dto.getSeats() != null && !dto.getSeats().isEmpty()) {
-                seatDetail = dto.getSeats().stream()
-                    .map(seat -> {
-                        String rawCarCd = seat.getTrainCarCd();
-                        String carNum = "";
-                        if (rawCarCd != null && rawCarCd.length() >= 2) {
-                            carNum = rawCarCd.substring(rawCarCd.length() - 2).replaceFirst("^0+", "");
-                        }
-
-                        return String.format("%s号車 %s",
-                            carNum,
-                            seat.getSeatCd());
-                    })
-                    .collect(Collectors.joining("\n"));
+                seatDetail = EmailUtils.seatFormatter(dto.getSeats());
             }
 
             String loginurl = baseUrl + EmailUtils.LOGIN_PATH;
@@ -110,6 +97,107 @@ public class SesEmailService implements EmailService {
             log.info("予約完了メールを正常に送信しました。 To： {}", dto.getReserverMail());
         } catch (Exception e) {
             log.error("メール送信中にエラーが発生しました。 To： {}", dto.getReserverMail(), e);
+        }
+    }
+
+    @Async
+    @Override
+    public void sendReservationCancel(EmailRequestDto dto) {
+        try {
+            String formatterRideDate = "";
+            if (dto.getRideDate() != null) {
+                formatterRideDate = EmailUtils.rideDateFormatter(dto.getRideDate());
+            }
+
+            String seatDetail = "";
+            Integer refund = 0;
+            if (dto.getSeats() != null && !dto.getSeats().isEmpty()) {
+                seatDetail = EmailUtils.seatFormatter(dto.getSeats());
+                refund = dto.getSeats().size() * REFUND_FEE;
+            }
+
+            Integer total = dto.getTotalAmount() - refund;
+
+            String loginurl = baseUrl + EmailUtils.LOGIN_PATH;
+
+            String body = String.format(EmailUtils.CANCEL_BODY,
+                dto.getReserverName() != null ? dto.getReserverName() : "ユーザー",
+                dto.getReservationId(),
+                formatterRideDate,
+                dto.getDepartureStationName(),
+                dto.getDepartureTime(),
+                dto.getArrivalStationName(),
+                dto.getArrivalTime(),
+                dto.getTrainTypeName(),
+                seatDetail,
+                refund,
+                total,
+                loginurl
+            );
+
+            SendEmailRequest request = SendEmailRequest.builder()
+                .fromEmailAddress(String.format("%s <%s>", EmailUtils.SENDER_NAME, mailFrom))
+                .destination(Destination.builder().toAddresses(dto.getReserverMail()).build())
+                .content(EmailContent.builder()
+                    .simple(msg -> msg
+                        .subject(Content.builder().data(EmailUtils.CANCEL_SUBJECT).charset("UTF-8").build())
+                        .body(Body.builder().text(Content.builder().data(body).charset("UTF-8").build()).build())
+                    )
+                    .build()
+                )
+                .build();
+
+            sesV2Client.sendEmail(request);
+            log.info("予約キャンセルメールを正常に送信しました。 To： {}", dto.getReserverMail());
+        } catch (Exception e) {
+            log.error("予約キャンセルメール送信中にエラーが発生しました。 To： {}", dto.getReserverMail(), e);
+        }
+    }
+
+    @Async
+    @Override
+    public void sendReleaseCompanion(EmailRequestDto dto) {
+        try {
+            String formatterRideDate = "";
+            if (dto.getRideDate() != null) {
+                formatterRideDate = EmailUtils.rideDateFormatter(dto.getRideDate());
+            }
+
+            String seatDetail = "";
+            Integer seatFare = 0;
+            if (dto.getSeats() != null && dto.getSeats().size() == 1) {
+                seatDetail = EmailUtils.seatFormatter(dto.getSeats());
+                seatFare = dto.getSeats().getFirst().getSeatFare();
+            }
+
+            String body = String.format(EmailUtils.RELEASE_BODY,
+                dto.getReserverName() != null ? dto.getReserverName() : "ユーザー",
+                formatterRideDate,
+                dto.getDepartureStationName(),
+                dto.getDepartureTime(),
+                dto.getArrivalStationName(),
+                dto.getArrivalTime(),
+                dto.getTrainTypeName(),
+                seatDetail,
+                seatFare
+            );
+
+            SendEmailRequest request = SendEmailRequest.builder()
+                .fromEmailAddress(String.format("%s <%s>", EmailUtils.SENDER_NAME, mailFrom))
+                .destination(Destination.builder().toAddresses(dto.getReserverMail()).build())
+                .content(EmailContent.builder()
+                    .simple(msg -> msg
+                        .subject(Content.builder().data(EmailUtils.RELEASE_SUBJECT).charset("UTF-8").build())
+                        .body(Body.builder().text(Content.builder().data(body).charset("UTF-8").build()).build())
+                    )
+                    .build()
+                )
+                .build();
+
+            sesV2Client.sendEmail(request);
+            log.info("割り当て解除メールを正常に送信しました。 To： {}", dto.getReserverMail());
+        } catch (Exception e) {
+            log.error("割り当て解除メール送信中にエラーが発生しました。 To： {}", dto.getReserverMail(), e);
         }
     }
 }
