@@ -13,7 +13,6 @@ export class Header {
 
     constructor(page: Page) {
         this.page = page;
-        this.header = new Header(page);
         this.systemName = page.getByRole('link', { name: '新幹線でGO！' });
         this.scheduleSearchLink = page.getByRole('link', {
             name: '新幹線を探す',
