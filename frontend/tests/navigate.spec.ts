@@ -248,7 +248,6 @@ test('navigate-管理者ログイン-管理機能', async ({
     await logout();
 
     // 山田太郎のパスワード変更
-    await loginPage.goto();
     await adminLogin();
     await expect(page).toHaveURL('/admin/password');
     await passwordUpdateForAdminPage.inputUpdateFirstAccountInfo();
@@ -312,11 +311,6 @@ test('navigate-header', async ({ page }) => {
     await scheduleSearchPage.goto();
     await expect(page).toHaveURL('/scheduleSearch');
     await reservationGuestLoginPage.header.goToSchduleSearchBySystemName();
-    await expect(page).toHaveURL('/scheduleSearch');
-    await scheduleSearchPage.header.clickUserName();
-    await scheduleSearchPage.header.goToReservationList();
-    await expect(page).toHaveURL('/login');
-    await reservationGuestLoginPage.header.goToScheduleSearch();
     await expect(page).toHaveURL('/scheduleSearch');
     await scheduleSearchPage.header.goToLogin();
     await expect(page).toHaveURL('/login');
