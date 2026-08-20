@@ -26,7 +26,7 @@ export class Header {
             name: '予約一覧',
         });
         this.logoutButton = page.getByRole('button', { name: 'ログアウト' });
-        this.userName = page.getByTestId('user-name');
+        this.userName = page.getByTestId('user-name').first();
     }
 
     async goToSchduleSearchBySystemName() {
