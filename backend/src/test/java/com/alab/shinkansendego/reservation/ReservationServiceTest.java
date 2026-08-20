@@ -902,6 +902,9 @@ public class ReservationServiceTest {
         departureArrivalTime.setSectionCd("THK01");
         SectionKmEntity sectionKm = new SectionKmEntity();
         sectionKm.setSectionCd(departureArrivalTime.getSectionCd());
+        sectionKm.setStartStationCd(request.getDepartureStationCd());
+        sectionKm.setGoalStationCd(request.getArrivalStationCd());
+        departureArrivalTime.setSectionKm(sectionKm);
         when(reservationRepo.findByIdAndIsDeleted(reservationId1, false)).thenReturn(reservation);
         when(sectionKmRepo.findByStartStationCd(request.getDepartureStationCd())).thenReturn(List.of(sectionKm));
         when(sectionKmRepo.findByGoalStationCd(request.getArrivalStationCd())).thenReturn(List.of(sectionKm));
@@ -912,6 +915,9 @@ public class ReservationServiceTest {
         when(seatRepo.findById(any())).thenReturn(Optional.of(new SeatEntity()));
         when(reservedSeatSectionRepo.findByRideDateAndScheduleCdAndTrainCarCdInAndReservedSectionCdIn(any(), any(), any(), any())).thenReturn(Collections.emptyList());
         when(reservedSeatSectionRepo.saveAll(any())).thenReturn(Stream.generate(ReservedSeatSectionEntity::new).limit((2)).collect(Collectors.toList()));
+        when(reservationRepo.findByIdAndIsDeleted(reservationId1, false)).thenReturn(reservation);
+        when(departureArrivalTimeRepo.findByScheduleCd(request.getScheduleCd()))
+            .thenReturn(List.of(departureArrivalTime));
 
         UUID result = service.putReservation(reservationId1, request, session);
         assertNotNull(result);
@@ -988,6 +994,9 @@ public class ReservationServiceTest {
         departureArrivalTime.setSectionCd("Test1");
         SectionKmEntity sectionKm = new SectionKmEntity();
         sectionKm.setSectionCd(departureArrivalTime.getSectionCd());
+        sectionKm.setStartStationCd(request.getDepartureStationCd());
+        sectionKm.setGoalStationCd(request.getArrivalStationCd());
+        departureArrivalTime.setSectionKm(sectionKm);
         when(reservationRepo.findByIdAndIsDeleted(reservationId1, false)).thenReturn(reservation);
         when(sectionKmRepo.findByStartStationCd(request.getDepartureStationCd())).thenReturn(List.of(sectionKm));
         when(sectionKmRepo.findByGoalStationCd(request.getArrivalStationCd())).thenReturn(List.of(sectionKm));
@@ -998,6 +1007,9 @@ public class ReservationServiceTest {
         when(seatRepo.findById(any())).thenReturn(Optional.of(new SeatEntity()));
         when(reservedSeatSectionRepo.findByRideDateAndScheduleCdAndTrainCarCdInAndReservedSectionCdIn(any(), any(), any(), any())).thenReturn(Collections.emptyList());
         when(reservedSeatSectionRepo.saveAll(any())).thenReturn(Stream.generate(ReservedSeatSectionEntity::new).limit((1)).collect(Collectors.toList()));
+        when(reservationRepo.findByIdAndIsDeleted(reservationId1, false)).thenReturn(reservation);
+        when(departureArrivalTimeRepo.findByScheduleCd(request.getScheduleCd()))
+            .thenReturn(List.of(departureArrivalTime));
 
         UUID result = service.putReservedSeat(reservationId1, request, session);
         assertNotNull(result);
