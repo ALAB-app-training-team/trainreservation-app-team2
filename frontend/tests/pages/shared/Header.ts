@@ -56,7 +56,7 @@ export class Header {
     }
 
     async clickUserName() {
-        // await this.userName.first().waitFor({ state: 'visible' });
+        await this.userName.first().waitFor({ state: 'visible' });
         await this.userName.first().click();
     }
 }
