@@ -18,6 +18,7 @@ export class ReservedTicketPage {
     readonly modalCloseButton: Locator;
     readonly refundButton: Locator;
     readonly confirmRefundButton: Locator;
+    readonly companionChangeButton: Locator;
 
     constructor(page: Page) {
         this.page = page;
@@ -26,7 +27,7 @@ export class ReservedTicketPage {
         this.title = page.getByTestId('reserve-title');
         this.departureArrivalElement = page.getByTestId('departure-arrival');
         this.seatFareElement = page.getByTestId('reserved-seats');
-        this.changeButton = page.getByTestId('change-button');
+        this.changeButton = page.getByRole('button', { name: '予約を変更' });
         this.ticketShareButton = page.getByRole('button', {
             name: 'チケットを共有',
         });
@@ -38,6 +39,9 @@ export class ReservedTicketPage {
         this.modalCloseButton = page.getByTestId('modal-close-button');
         this.refundButton = page.getByRole('button', { name: 'キャンセル' });
         this.confirmRefundButton = page.getByTestId('refund-confirm-button');
+        this.companionChangeButton = page.getByRole('button', {
+            name: '同行者に割り当て',
+        });
     }
 
     async goto() {
@@ -50,6 +54,10 @@ export class ReservedTicketPage {
 
     async clickChangeButton() {
         await this.changeButton.first().click();
+    }
+
+    async clickCompanionChangeButton() {
+        await this.companionChangeButton.first().click();
     }
 
     async clickTicketShareButton() {

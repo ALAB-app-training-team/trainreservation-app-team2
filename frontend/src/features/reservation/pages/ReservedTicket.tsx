@@ -184,7 +184,6 @@ export function ReservedTicket() {
                     )}
                     {canUpdateReservation && (
                         <button
-                            data-testid="change-button"
                             onClick={handleChangeConfirmModalOpen}
                             disabled={isSubmitting}
                             className="border-primary text-primary flex w-full items-center justify-center gap-2 rounded-xl border-2 p-2 text-sm"
