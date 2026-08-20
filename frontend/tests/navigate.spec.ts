@@ -219,7 +219,6 @@ test('navigate-ログイン全機能', async ({
 test('navigate-管理者ログイン-管理機能', async ({
     page,
     adminLogin,
-    commonLogin,
     logout,
 }) => {
     const scheduleSearchPage = new ScheduleSearchPage(page);
