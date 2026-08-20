@@ -2,7 +2,6 @@ import { type Locator, type Page } from '@playwright/test';
 
 export class Header {
     readonly page: Page;
-    readonly header: Header;
     readonly systemName: Locator;
     readonly scheduleSearchLink: Locator;
     readonly loginLink: Locator;
