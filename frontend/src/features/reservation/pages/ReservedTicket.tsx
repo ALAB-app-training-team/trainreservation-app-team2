@@ -143,11 +143,13 @@ export function ReservedTicket() {
                     <h1 data-testid="reserve-title" className="m-0! text-3xl!">
                         {reservedTickets.isDeleted
                             ? 'キャンセル済み'
-                            : !isBack && isUpdated
-                              ? '予約変更完了'
-                              : guestLogin
-                                ? '予約詳細'
-                                : '予約完了'}
+                            : !isBack
+                              ? isUpdated
+                                  ? '予約変更完了'
+                                  : guestLogin
+                                    ? '予約詳細'
+                                    : '予約完了'
+                              : null}
                     </h1>
                 </div>
                 {reservedTickets.isDeleted ? (
