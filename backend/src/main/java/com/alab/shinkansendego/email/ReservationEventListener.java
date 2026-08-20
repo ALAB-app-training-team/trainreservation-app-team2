@@ -132,7 +132,7 @@ public class ReservationEventListener {
         emailDto.setTotalAmount(newTotalAmount);
 
         if (oldTotalAmount != null) {
-            String diffStr = EmailUtils.differenceFormatter(oldTotalAmount, newTotalAmount);
+            String diffStr = EmailUtils.differenceFormatter(newTotalAmount, oldTotalAmount);
 
             String diffAmountDisplay = String.format("%,d円（%s）", newTotalAmount, diffStr);
 

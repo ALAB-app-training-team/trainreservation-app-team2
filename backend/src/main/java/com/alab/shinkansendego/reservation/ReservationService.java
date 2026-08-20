@@ -508,6 +508,14 @@ public class ReservationService {
             .orElseThrow(() -> new IllegalArgumentException("ArrivalTime is not found"))
             .getArrivalTime();
 
+        if (changedReservation.getReserverMail() == null || changedReservation.getReserverMail().isBlank()) {
+            changedReservation.setReserverMail(reservation.get().getReserverMail());
+        }
+
+        if (changedReservation.getReserverName() == null || changedReservation.getReserverName().isBlank()) {
+            changedReservation.setReserverName(reservation.get().getReserverName());
+        }
+
         eventPublisher.publishEvent(new ReservationChangedEvent(
             reservationId,
             changedReservation,
@@ -582,6 +590,14 @@ public class ReservationService {
             .findFirst()
             .orElseThrow(() -> new IllegalArgumentException("ArrivalTime is not found"))
             .getArrivalTime();
+
+        if (changedReservation.getReserverMail() == null || changedReservation.getReserverMail().isBlank()) {
+            changedReservation.setReserverMail(reservation.get().getReserverMail());
+        }
+
+        if (changedReservation.getReserverName() == null || changedReservation.getReserverName().isBlank()) {
+            changedReservation.setReserverName(reservation.get().getReserverName());
+        }
 
         eventPublisher.publishEvent(new ReservationChangedEvent(
             reservationId,

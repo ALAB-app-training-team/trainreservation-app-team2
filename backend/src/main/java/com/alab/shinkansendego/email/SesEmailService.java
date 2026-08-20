@@ -228,7 +228,7 @@ public class SesEmailService implements EmailService {
                 dto.getArrivalTime(),
                 dto.getTrainTypeName(),
                 seatDetail,
-                dto.getTotalAmount(),
+                dto.getDiffAmountDisplay(),
                 loginUrl
             );
 
