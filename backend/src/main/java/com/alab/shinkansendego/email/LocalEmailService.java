@@ -48,7 +48,7 @@ public class LocalEmailService implements EmailService {
                 seatDetail = EmailUtils.seatFormatter(dto.getSeats());
             }
 
-            String loginurl = baseUrl + EmailUtils.LOGIN_PATH;
+            String loginUrl = baseUrl + EmailUtils.LOGIN_PATH;
 
             String body = String.format(
                 EmailUtils.CONFIRMATION_BODY,
@@ -62,7 +62,7 @@ public class LocalEmailService implements EmailService {
                 dto.getTrainTypeName(),
                 seatDetail,
                 dto.getTotalAmount(),
-                loginurl
+                loginUrl
             );
 
             helper.setText(body);
@@ -98,7 +98,7 @@ public class LocalEmailService implements EmailService {
 
             Integer total = dto.getTotalAmount() - refund;
 
-            String loginurl = baseUrl + EmailUtils.LOGIN_PATH;
+            String loginUrl = baseUrl + EmailUtils.LOGIN_PATH;
 
             String body = String.format(EmailUtils.CANCEL_BODY,
                 dto.getReserverName() != null ? dto.getReserverName() : "ユーザー",
@@ -112,7 +112,7 @@ public class LocalEmailService implements EmailService {
                 seatDetail,
                 refund,
                 total,
-                loginurl
+                loginUrl
             );
 
             helper.setText(body);
@@ -175,7 +175,7 @@ public class LocalEmailService implements EmailService {
 
             helper.setFrom(EmailUtils.FROM_ADDRESS, EmailUtils.SENDER_NAME);
             helper.setTo(dto.getReserverMail());
-            helper.setSubject(EmailUtils.RESERVATION_CHANGE_SUBJECT);
+            helper.setSubject(EmailUtils.CHANGE_SUBJECT);
 
             String formatterRideDate = "";
             if (dto.getRideDate() != null) {
@@ -187,7 +187,7 @@ public class LocalEmailService implements EmailService {
                 seatDetail = EmailUtils.seatFormatter(dto.getSeats());
             }
 
-            String loginurl = baseUrl + EmailUtils.LOGIN_PATH;
+            String loginUrl = baseUrl + EmailUtils.LOGIN_PATH;
 
             String body = String.format(
                 EmailUtils.CHANGE_BODY,
@@ -201,7 +201,7 @@ public class LocalEmailService implements EmailService {
                 dto.getTrainTypeName(),
                 seatDetail,
                 dto.getTotalAmount(),
-                loginurl
+                loginUrl
             );
 
             helper.setText(body);

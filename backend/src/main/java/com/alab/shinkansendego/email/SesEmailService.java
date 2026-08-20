@@ -47,7 +47,7 @@ public class SesEmailService implements EmailService {
                 seatDetail = EmailUtils.seatFormatter(dto.getSeats());
             }
 
-            String loginurl = baseUrl + EmailUtils.LOGIN_PATH;
+            String loginUrl = baseUrl + EmailUtils.LOGIN_PATH;
 
             String body = String.format("""
                     %s さま
@@ -78,7 +78,7 @@ public class SesEmailService implements EmailService {
                 dto.getTrainTypeName(),
                 seatDetail,
                 dto.getTotalAmount(),
-                loginurl
+                loginUrl
             );
 
             SendEmailRequest request = SendEmailRequest.builder()
@@ -96,7 +96,7 @@ public class SesEmailService implements EmailService {
             sesV2Client.sendEmail(request);
             log.info("予約完了メールを正常に送信しました。 To： {}", dto.getReserverMail());
         } catch (Exception e) {
-            log.error("メール送信中にエラーが発生しました。 To： {}", dto.getReserverMail(), e);
+            log.error("予約完了メール送信中にエラーが発生しました。 To： {}", dto.getReserverMail(), e);
         }
     }
 
@@ -118,7 +118,7 @@ public class SesEmailService implements EmailService {
 
             Integer total = dto.getTotalAmount() - refund;
 
-            String loginurl = baseUrl + EmailUtils.LOGIN_PATH;
+            String loginUrl = baseUrl + EmailUtils.LOGIN_PATH;
 
             String body = String.format(EmailUtils.CANCEL_BODY,
                 dto.getReserverName() != null ? dto.getReserverName() : "ユーザー",
@@ -132,7 +132,7 @@ public class SesEmailService implements EmailService {
                 seatDetail,
                 refund,
                 total,
-                loginurl
+                loginUrl
             );
 
             SendEmailRequest request = SendEmailRequest.builder()
@@ -215,7 +215,7 @@ public class SesEmailService implements EmailService {
                 seatDetail = EmailUtils.seatFormatter(dto.getSeats());
             }
 
-            String loginurl = baseUrl + EmailUtils.LOGIN_PATH;
+            String loginUrl = baseUrl + EmailUtils.LOGIN_PATH;
 
             String body = String.format(
                 EmailUtils.CHANGE_BODY,
@@ -229,7 +229,7 @@ public class SesEmailService implements EmailService {
                 dto.getTrainTypeName(),
                 seatDetail,
                 dto.getTotalAmount(),
-                loginurl
+                loginUrl
             );
 
             SendEmailRequest request = SendEmailRequest.builder()
