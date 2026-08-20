@@ -161,14 +161,14 @@ public class ReservationService {
      * @return 予約情報の入ったReservationResponseDto(1件)
      */
     public ReservationResponseDto getGuestReservation(UUID reservationId, String name, String email) {
-        Optional<ReservationEntity> reservationEntity = reservationRepository.findById(reservationId);
-        if (reservationEntity.isEmpty()) return null;
+        ReservationEntity reservationEntity = reservationRepository.findById(reservationId).orElse(null);
+        if (reservationEntity == null) return null;
 
-        if (Objects.equals(reservationEntity.get().getReserverName(), StringUtils.removeSpaces(name))
-            && Objects.equals(reservationEntity.get().getReserverMail(), StringUtils.removeSpaces(email))) {
-            if (reservationEntity.get().getAccountId() != null) return null;
+        if (Objects.equals(reservationEntity.getReserverName(), StringUtils.removeSpaces(name))
+            && Objects.equals(reservationEntity.getReserverMail(), StringUtils.removeSpaces(email))) {
+            if (reservationEntity.getAccountId() != null) return null;
         } else {
-            boolean isCompanionMatched = reservationEntity.get().getReservedSeat().stream()
+            boolean isCompanionMatched = reservationEntity.getReservedSeat().stream()
                 .anyMatch(seat -> Objects.equals(seat.getName(), StringUtils.removeSpaces(name)) && Objects.equals(seat.getMail(), StringUtils.removeSpaces(email)));
             if (!isCompanionMatched) return null;
         }
@@ -185,10 +185,9 @@ public class ReservationService {
      */
     public ReservationResponseDto getAccountReservation(UUID reservationId, UUID accountId) {
 
-        Optional<ReservationEntity> reservationEntity = reservationRepository
-            .findWithEntityGraphByIdAndAccountId(reservationId, accountId);
+        ReservationEntity reservationEntity = reservationRepository
+            .findWithEntityGraphByIdAndAccountId(reservationId, accountId).orElseThrow(() -> new IllegalArgumentException("ReservationId is Not found"));
 
-        if (reservationEntity.isEmpty()) throw new IllegalArgumentException("ReservationId is Not found");
         return createReservationResponseDto(reservationEntity);
     }
 
@@ -199,9 +198,9 @@ public class ReservationService {
      * @return 登録した予約情報ID
      */
     @Transactional
-    public ReservationResponseDto createReservationResponseDto(Optional<ReservationEntity> reservationEntity) {
+    public ReservationResponseDto createReservationResponseDto(ReservationEntity reservationEntity) {
         ReservationResponseDto dto = new ReservationResponseDto();
-        List<ReservedScheduleDto> scheduleList = reservationEntity.get().getDepartureArrivalTime().stream().map(
+        List<ReservedScheduleDto> scheduleList = reservationEntity.getDepartureArrivalTime().stream().map(
                 schedule ->
                     new ReservedScheduleDto(
                         schedule.getDepartureTime(),
@@ -216,15 +215,15 @@ public class ReservationService {
 
         List<ReservedScheduleDto> departureSchedule =
             scheduleList.stream().filter(schedule -> Objects.equals(schedule.getDepartureStationCd(),
-                reservationEntity.get().getDepartureStationCd())).toList();
+                reservationEntity.getDepartureStationCd())).toList();
         List<ReservedScheduleDto> arrivalSchedule =
             scheduleList.stream().filter(schedule -> Objects.equals(schedule.getArrivalStationCd(),
-                reservationEntity.get().getArrivalStationCd())).toList();
+                reservationEntity.getArrivalStationCd())).toList();
         if (departureSchedule.size() != 1 || arrivalSchedule.size() != 1) {
             throw new IllegalArgumentException("DepartureAndArrivalStation is Not Found");
         }
 
-        List<ReservedSeatEntity> reservedSeatEntityList = reservationEntity.stream().map(ReservationEntity::getReservedSeat).flatMap(Set::stream).toList();
+        List<ReservedSeatEntity> reservedSeatEntityList = reservationEntity.getReservedSeat().stream().toList();
         List<ReservedSeatDto> reservedSeatList = reservedSeatEntityList.stream()
             .map(seat -> new ReservedSeatDto(
                 seat.getId(),
@@ -240,17 +239,17 @@ public class ReservationService {
                 .thenComparing(ReservedSeatDto::getSeatNumber)
                 .thenComparing(ReservedSeatDto::getSeatColumn)).toList();
 
-        dto.setReservationId(reservationEntity.get().getId());
-        dto.setScheduleCd(reservationEntity.get().getScheduleCd());
-        dto.setTrainTypeName(reservationEntity.get().getSchedule().getTrainType().getName());
+        dto.setReservationId(reservationEntity.getId());
+        dto.setScheduleCd(reservationEntity.getScheduleCd());
+        dto.setTrainTypeName(reservationEntity.getSchedule().getTrainType().getName());
         dto.setDepartureStationCd(departureSchedule.getFirst().getDepartureStationCd());
         dto.setDepartureStationName(departureSchedule.getFirst().getDepartureStationName());
         dto.setDepartureTime(departureSchedule.getFirst().getDepartureTime());
         dto.setArrivalStationCd(arrivalSchedule.getFirst().getArrivalStationCd());
         dto.setArrivalStationName(arrivalSchedule.getFirst().getArrivalStationName());
         dto.setArrivalTime(arrivalSchedule.getFirst().getArrivalTime());
-        dto.setRideDate(reservationEntity.get().getRideDate());
-        dto.setIsDeleted(reservationEntity.get().getIsDeleted());
+        dto.setRideDate(reservationEntity.getRideDate());
+        dto.setIsDeleted(reservationEntity.getIsDeleted());
         dto.setReservedSeats(reservedSeatList);
 
         return dto;
