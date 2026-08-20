@@ -200,7 +200,7 @@ public class LocalEmailService implements EmailService {
                 dto.getArrivalTime(),
                 dto.getTrainTypeName(),
                 seatDetail,
-                dto.getTotalAmount(),
+                dto.getDiffAmountDisplay(),
                 loginUrl
             );
 

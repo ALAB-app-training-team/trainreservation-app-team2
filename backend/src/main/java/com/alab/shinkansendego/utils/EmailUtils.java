@@ -87,7 +87,7 @@ public final class EmailUtils {
         区間：%s（%s発）　→　%s（%s着）
         列車名：%s
         座席：%s
-        お支払い合計（変更差額）：%,s 円
+        お支払い合計（変更差額）：%s
 
         ■アプリログインURL
         %s
@@ -121,11 +121,11 @@ public final class EmailUtils {
     public static String differenceFormatter(int oldAmount, int newAmount) {
         int diff = oldAmount - newAmount;
         if (diff > 0) {
-            return String.format("差額：+%,d円", diff);
+            return String.format("変更差額　+%,d円", diff);
         } else if (diff < 0) {
-            return String.format("差額：+%,d円", diff);
+            return String.format("変更差額　%,d円", diff);
         } else {
-            return "差額：0円";
+            return "変更差額なし";
         }
     }
 }

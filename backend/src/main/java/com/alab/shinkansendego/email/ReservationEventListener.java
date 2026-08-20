@@ -13,6 +13,7 @@ import com.alab.shinkansendego.seat.SeatRepository;
 import com.alab.shinkansendego.station.StationEntity;
 import com.alab.shinkansendego.station.StationRepository;
 import com.alab.shinkansendego.traintype.TrainTypeEntity;
+import com.alab.shinkansendego.utils.EmailUtils;
 import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.event.TransactionPhase;
@@ -48,7 +49,7 @@ public class ReservationEventListener {
     @TransactionalEventListener(phase = TransactionPhase.AFTER_COMMIT)
     public void handleReservationCreated(ReservationCreatedEvent event) {
 
-        EmailRequestDto emailDto = setEmailRequestDto(event.reservationId(), event.request(), event.departureTime(), event.arrivalTime());
+        EmailRequestDto emailDto = setEmailRequestDto(event.reservationId(), event.request(), event.departureTime(), event.arrivalTime(), null);
         emailService.sendReservationConfirmation(emailDto);
     }
 
@@ -56,7 +57,7 @@ public class ReservationEventListener {
     @TransactionalEventListener(phase = TransactionPhase.AFTER_COMMIT)
     public void handleReservationCanceled(ReservationCanceledEvent event) {
 
-        EmailRequestDto emailDto = setEmailRequestDto(event.reservationId(), event.request(), event.departureTime(), event.arrivalTime());
+        EmailRequestDto emailDto = setEmailRequestDto(event.reservationId(), event.request(), event.departureTime(), event.arrivalTime(), null);
         emailService.sendReservationCancel(emailDto);
 
         List<ReservedSeatEntity> companions = reservedSeatRepository.findByReservationId(event.reservationId());
@@ -79,14 +80,15 @@ public class ReservationEventListener {
     @Async
     @TransactionalEventListener(phase = TransactionPhase.AFTER_COMMIT)
     public void handleReservationChanged(ReservationChangedEvent event) {
-        EmailRequestDto emailDto = setEmailRequestDto(event.reservationId(), event.request(), event.departureTime(), event.arrivalTime());
+        EmailRequestDto emailDto = setEmailRequestDto(event.reservationId(), event.request(), event.departureTime(), event.arrivalTime(), event.oldTotalAmount());
         emailService.sendReservationChange(emailDto);
     }
 
     private EmailRequestDto setEmailRequestDto(UUID reservationId,
                                                ReserveRequestDto request,
                                                LocalTime departureTime,
-                                               LocalTime arrivalTime) {
+                                               LocalTime arrivalTime,
+                                               Integer oldTotalAmount) {
         String departureStationName = stationRepository.findById(request.getDepartureStationCd())
             .map(StationEntity::getName)
             .orElse(request.getDepartureStationCd());
@@ -119,6 +121,25 @@ public class ReservationEventListener {
             .mapToInt(ReserveRequestDto.SelectedSeatDto::getSeatFare)
             .sum();
         emailDto.setTotalAmount(totalAmount);
+
+        int newTotalAmount = 0;
+        if (request.getSeats() != null) {
+            newTotalAmount = request.getSeats().stream()
+                .filter(seat -> seat.getSeatFare() != null)
+                .mapToInt(ReserveRequestDto.SelectedSeatDto::getSeatFare)
+                .sum();
+        }
+        emailDto.setTotalAmount(newTotalAmount);
+
+        if (oldTotalAmount != null) {
+            String diffStr = EmailUtils.differenceFormatter(oldTotalAmount, newTotalAmount);
+
+            String diffAmountDisplay = String.format("%,d円（%s）", newTotalAmount, diffStr);
+
+            emailDto.setDiffAmountDisplay(diffAmountDisplay);
+        } else {
+            emailDto.setDiffAmountDisplay(String.format("%,d円", newTotalAmount));
+        }
 
         return emailDto;
     }

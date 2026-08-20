@@ -457,6 +457,12 @@ public class ReservationService {
     @Transactional
     public UUID putReservation(UUID reservationId, ReserveRequestDto changedReservation, AccountSessionDto session) {
         Optional<ReservationEntity> reservation = putError(reservationId, changedReservation, session);
+
+        Integer oldTotalAmount = reservation.get().getReservedSeat().stream()
+            .filter(seat -> seat.getSeatFare() != null)
+            .mapToInt(ReservedSeatEntity::getSeatFare)
+            .sum();
+
         reservation.get().setRideDate(changedReservation.getRideDate());
         reservation.get().setScheduleCd(changedReservation.getScheduleCd());
         reservation.get().setDepartureStationCd(changedReservation.getDepartureStationCd());
@@ -476,7 +482,8 @@ public class ReservationService {
         entityManager.flush();
         entityManager.clear();
 
-        List<String> sectionCds = getSectionCdList(changedReservation.getScheduleCd(),
+        List<String> sectionCds = getSectionCdList(
+            changedReservation.getScheduleCd(),
             changedReservation.getDepartureStationCd(),
             changedReservation.getArrivalStationCd());
 
@@ -484,14 +491,31 @@ public class ReservationService {
             reservationId,
             changedReservation.getSeats(), sectionCds,
             changedReservation.getRideDate(),
-            changedReservation.getScheduleCd());
+            changedReservation.getScheduleCd()
+        );
+
+        List<DepartureArrivalTimeEntity> schedules = departureArrivalTimeRepository.findByScheduleCd(changedReservation.getScheduleCd());
+
+        LocalTime departureTime = schedules.stream()
+            .filter(schedule -> schedule.getSectionKm().getStartStationCd().equals(changedReservation.getDepartureStationCd()))
+            .findFirst()
+            .orElseThrow(() -> new IllegalArgumentException("DepartureTime is not found"))
+            .getDepartureTime();
+
+        LocalTime arrivalTime = schedules.stream()
+            .filter(schedule -> schedule.getSectionKm().getGoalStationCd().equals(changedReservation.getArrivalStationCd()))
+            .findFirst()
+            .orElseThrow(() -> new IllegalArgumentException("ArrivalTime is not found"))
+            .getArrivalTime();
 
         eventPublisher.publishEvent(new ReservationChangedEvent(
             reservationId,
-            reserveRequestDto,
+            changedReservation,
             departureTime,
-            arrivalTime
+            arrivalTime,
+            oldTotalAmount
         ));
+
         return reservationId;
     }
 
@@ -507,6 +531,11 @@ public class ReservationService {
     public UUID putReservedSeat(UUID reservationId, ReserveRequestDto changedReservation, AccountSessionDto session) {
         Optional<ReservationEntity> reservation = putError(reservationId, changedReservation, session);
         Set<ReservedSeatEntity> reservedSeats = reservation.get().getReservedSeat();
+
+        Integer oldTotalAmount = reservation.get().getReservedSeat().stream()
+            .filter(seat -> seat.getSeatFare() != null)
+            .mapToInt(ReservedSeatEntity::getSeatFare)
+            .sum();
 
         // 削除対象座席Entityを抽出
         List<ReservedSeatEntity> deleteSeats = reservedSeats.stream()
@@ -540,12 +569,28 @@ public class ReservationService {
             reservedSeatSectionRepository.deleteAll(deleteSeatSections);
         }
 
+        List<DepartureArrivalTimeEntity> schedules = departureArrivalTimeRepository.findByScheduleCd(changedReservation.getScheduleCd());
+
+        LocalTime departureTime = schedules.stream()
+            .filter(schedule -> schedule.getSectionKm().getStartStationCd().equals(changedReservation.getDepartureStationCd()))
+            .findFirst()
+            .orElseThrow(() -> new IllegalArgumentException("DepartureTime is not found"))
+            .getDepartureTime();
+
+        LocalTime arrivalTime = schedules.stream()
+            .filter(schedule -> schedule.getSectionKm().getGoalStationCd().equals(changedReservation.getArrivalStationCd()))
+            .findFirst()
+            .orElseThrow(() -> new IllegalArgumentException("ArrivalTime is not found"))
+            .getArrivalTime();
+
         eventPublisher.publishEvent(new ReservationChangedEvent(
             reservationId,
-            reserveRequestDto,
+            changedReservation,
             departureTime,
-            arrivalTime
+            arrivalTime,
+            oldTotalAmount
         ));
+
         return reservationId;
     }
 

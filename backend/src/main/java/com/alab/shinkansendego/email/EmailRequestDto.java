@@ -28,6 +28,7 @@ public class EmailRequestDto {
     private LocalTime arrivalTime;
     private Integer totalAmount;
     private List<SelectedSeatDto> seats;
+    private String diffAmountDisplay;
 
     @Data
     @NoArgsConstructor

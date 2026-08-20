@@ -7,6 +7,7 @@ public record ReservationChangedEvent(
     UUID reservationId,
     ReserveRequestDto request,
     LocalTime departureTime,
-    LocalTime arrivalTime
+    LocalTime arrivalTime,
+    Integer oldTotalAmount
 ) {
 }
