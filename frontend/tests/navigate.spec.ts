@@ -242,6 +242,7 @@ test('navigate-管理者ログイン-管理機能', async ({
     // 山田太郎ログイン
     await loginPage.fillMailAddress('first@test.co.jp');
     await loginPage.fillPassword('Password1');
+    await loginPage.clickLoginButton();
     await expect(page).toHaveURL('/scheduleSearch');
     await expect(scheduleSearchPage.header.userName).toBeVisible();
     await logout();
@@ -258,6 +259,7 @@ test('navigate-管理者ログイン-管理機能', async ({
     // 山田太郎ログイン
     await loginPage.fillMailAddress('first@test.co.jp');
     await loginPage.fillPassword('Password2');
+    await loginPage.clickLoginButton();
     await expect(page).toHaveURL('/scheduleSearch');
     await expect(scheduleSearchPage.header.userName).toBeVisible();
     await logout();
