@@ -69,7 +69,7 @@ public class LocalEmailService implements EmailService {
             mailSender.send(mimeMessage);
             log.info("予約完了メールを正常に送信しました。 To： {}", dto.getReserverMail());
         } catch (Exception e) {
-            log.error("メール送信中にエラーが発生しました。 To： {}", dto.getReserverMail(), e);
+            log.error("予約完了メール送信中にエラーが発生しました。 To： {}", dto.getReserverMail(), e);
         }
     }
 
