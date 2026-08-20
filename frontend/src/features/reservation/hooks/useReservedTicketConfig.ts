@@ -1,4 +1,4 @@
-import type { ReservationResponseDto } from '../types/ReservationResponseDto';
+import type { ReservationResponseDto } from '@/features/reservation/types/ReservationResponseDto';
 
 export function useReservedTicketConfig(
     reservedTickets: ReservationResponseDto,
