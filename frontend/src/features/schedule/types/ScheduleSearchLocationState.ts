@@ -6,6 +6,8 @@ export type ScheduleSearchLocationState = {
     searchRequestDto: SearchRequestDto;
     isBack: boolean;
     reservationId: string;
+    isChanging: boolean;
+    isFromReservedTicket: boolean;
     reservedSeats: ReservedSeatDto[];
     preChangeScheduleInfo: ScheduleInfoDto;
 };
