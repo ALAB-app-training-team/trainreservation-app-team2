@@ -1,6 +1,6 @@
 import { expect } from '@playwright/test';
 import { test } from '@tests/fixtures';
-import { PasswordUpdateForAdminPage } from './PasswordUpdateForAdminPasswordUpdateForAdminPage';
+import { PasswordUpdateForAdminPage } from './PasswordUpdateForAdminPage';
 
 test('各項目の未入力メッセージが表示されること', async ({
     page,

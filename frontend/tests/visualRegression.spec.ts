@@ -7,7 +7,7 @@ import { ScheduleSearchPage } from '@tests/pages/ScheduleSearch/ScheduleSearchPa
 import { SelectSeatPage } from '@tests/pages/SelectSeat/SelectSeatPage';
 import { LoginPage } from './pages/Login/LoginPage';
 import { AccountCreatePage } from './pages/AccountCreate/AccountCreatePage';
-import { PasswordUpdateForAdminPage } from './pages/PasswordUpdateForAdmin/PasswordUpdateForAdminPasswordUpdateForAdminPage';
+import { PasswordUpdateForAdminPage } from './pages/PasswordUpdateForAdmin/PasswordUpdateForAdminPage';
 
 test('visual-scheduleSearch', async ({ page }) => {
     const scheduleSearchPage = new ScheduleSearchPage(page);

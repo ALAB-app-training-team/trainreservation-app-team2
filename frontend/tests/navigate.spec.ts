@@ -8,7 +8,7 @@ import { App } from '@tests/pages/shared/App';
 import { LoginPage } from '@tests/pages/Login/LoginPage';
 import { test } from '@tests/fixtures';
 import { AccountCreatePage } from '@tests/pages/AccountCreate/AccountCreatePage';
-import { PasswordUpdateForAdminPage } from './pages/PasswordUpdateForAdmin/PasswordUpdateForAdminPasswordUpdateForAdminPage';
+import { PasswordUpdateForAdminPage } from './pages/PasswordUpdateForAdmin/PasswordUpdateForAdminPage';
 
 test('navigate-ゲストログイン全機能', async ({ page, context }) => {
     const scheduleSearchPage = new ScheduleSearchPage(page);
