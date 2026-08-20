@@ -97,7 +97,7 @@ test('navigate-ログイン全機能', async ({
     await expect(page).toHaveURL('/reservedTicket');
 
     // 予約一覧～予約確認～予約変更
-    await reservedTicketPage.header.clickCommonUser();
+    await reservedTicketPage.header.clickUserName();
     await reservedTicketPage.header.goToReservationList();
     await expect(page).toHaveURL('/reservationList');
     await reservationListPage.clickTicketButton();
@@ -121,7 +121,7 @@ test('navigate-ログイン全機能', async ({
     await selectSeatPage.clickUpdateConfirmButton();
     await expect(page).toHaveURL('/reservedTicket');
     //  予約変更（日時列車変更）
-    await reservedTicketPage.header.clickCommonUser();
+    await reservedTicketPage.header.clickUserName();
     await reservedTicketPage.header.goToReservationList();
     await expect(page).toHaveURL('/reservationList');
     await reservationListPage.clickChangeButton();
@@ -147,7 +147,7 @@ test('navigate-ログイン全機能', async ({
     await expect(page).toHaveURL('/reservedTicket');
 
     // 予約詳細～予約変更
-    await reservedTicketPage.header.clickCommonUser();
+    await reservedTicketPage.header.clickUserName();
     await reservedTicketPage.header.goToReservationList();
     await expect(page).toHaveURL('/reservationList');
     await reservationListPage.clickTicketButton();
@@ -193,7 +193,7 @@ test('navigate-ログイン全機能', async ({
     await expect(page).toHaveURL('/reservedTicket');
 
     // キャンセル(予約一覧)
-    await reservedTicketPage.header.clickCommonUser();
+    await reservedTicketPage.header.clickUserName();
     await reservedTicketPage.header.goToReservationList();
     await expect(page).toHaveURL('/reservationList');
     await reservationListPage.clickRefundButton();
@@ -205,7 +205,7 @@ test('navigate-ログイン全機能', async ({
 
     // キャンセル(予約詳細)
     await createReservation();
-    await reservationListPage.header.clickCommonUser();
+    await reservationListPage.header.clickUserName();
     await reservationListPage.header.goToReservationList();
     await reservationListPage.clickTicketButton();
     await expect(page).toHaveURL('/reservedTicket');
@@ -311,7 +311,7 @@ test('navigate-header', async ({ page }) => {
     await expect(page).toHaveURL('/scheduleSearch');
     await reservationGuestLoginPage.header.goToSchduleSearchBySystemName();
     await expect(page).toHaveURL('/scheduleSearch');
-    await scheduleSearchPage.header.clickCommonUser();
+    await scheduleSearchPage.header.clickUserName();
     await scheduleSearchPage.header.goToReservationList();
     await expect(page).toHaveURL('/login');
     await reservationGuestLoginPage.header.goToScheduleSearch();
@@ -321,10 +321,10 @@ test('navigate-header', async ({ page }) => {
     await loginPage.inputcommonLoginInfo();
     await loginPage.clickLoginButton();
     await expect(page).toHaveURL('/scheduleSearch');
-    await scheduleSearchPage.header.clickCommonUser();
+    await scheduleSearchPage.header.clickUserName();
     await scheduleSearchPage.header.goToReservationList();
     await expect(page).toHaveURL('/reservationList');
-    await reservationListPage.header.clickCommonUser();
+    await reservationListPage.header.clickUserName();
     await reservationListPage.header.goToLogout();
     await expect(page).toHaveURL('/login');
     await loginPage.inputAdminLoginInfo();
@@ -332,10 +332,10 @@ test('navigate-header', async ({ page }) => {
     await expect(page).toHaveURL('/admin/password');
     await passwordUpdateForAdminPage.header.goToScheduleSearch();
     await expect(page).toHaveURL('/scheduleSearch');
-    await scheduleSearchPage.header.clickCommonUser();
+    await scheduleSearchPage.header.clickUserName();
     await scheduleSearchPage.header.goToPasswordUpdateForAdmin();
     await expect(page).toHaveURL('/admin/password');
-    await passwordUpdateForAdminPage.header.clickCommonUser();
+    await passwordUpdateForAdminPage.header.clickUserName();
     await passwordUpdateForAdminPage.header.goToLogout();
     await expect(page).toHaveURL('/login');
 });

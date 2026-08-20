@@ -103,7 +103,7 @@ export const test = base.extend<Fixture>({
         const logout = async () => {
             const header = new Header(page);
 
-            await header.clickCommonUser();
+            await header.clickUserName();
             await header.goToLogout();
         };
         await use(logout);

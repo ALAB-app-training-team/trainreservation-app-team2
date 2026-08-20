@@ -18,7 +18,7 @@ test('座席ごとの金額が正しく表示されていること', async ({
     await expect(page).toHaveURL('/scheduleSearch');
     await createReservation();
     await expect(page).toHaveURL('/reservedTicket');
-    await reservedTicketPage.header.clickCommonUser();
+    await reservedTicketPage.header.clickUserName();
     await reservedTicketPage.header.goToReservationList();
     await reservationListPage.clickTicketButton();
     await expect(page).toHaveURL('/reservedTicket');
@@ -57,14 +57,14 @@ test('タイトル表示：予約完了時は予約完了、予約確認のゲ�
     await expect(reservedTicketPage.title).toHaveText('予約完了');
 
     // アカウントログイン時は表記なしであること
-    await reservedTicketPage.header.clickCommonUser();
+    await reservedTicketPage.header.clickUserName();
     await reservedTicketPage.header.goToReservationList();
     await reservationListPage.clickTicketButton();
     await expect(page).toHaveURL('/reservedTicket');
     await expect(reservedTicketPage.title).toBeHidden();
 
     // 予約変更時に「予約変更完了」と表示されること
-    await reservedTicketPage.header.clickCommonUser();
+    await reservedTicketPage.header.clickUserName();
     await reservedTicketPage.header.goToReservationList();
     await reservationListPage.clickChangeButton();
     await reservationListPage.clickChangeSeatConfirmButton();

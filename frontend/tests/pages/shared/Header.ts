@@ -53,7 +53,7 @@ export class Header {
         await this.logoutButton.first().click();
     }
 
-    async clickCommonUser() {
+    async clickUserName() {
         await this.userName.first().click();
     }
 }
