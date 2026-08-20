@@ -1,4 +1,5 @@
 import { FaClock } from 'react-icons/fa';
+import { LuTicket } from 'react-icons/lu';
 
 import { DepartureAndArrivalInfo } from '@/features/reservation/components/DepartureAndArrivalInfo';
 import { ReservedSeats } from '@/features/reservation/components/ReservedSeats';
@@ -20,6 +21,14 @@ export function ReservedTicketInfo({ ticketInfo }: ReservedTicketInfoProps) {
             <div className="flex w-full justify-center">
                 <div className="flex w-full max-w-5xl flex-col gap-4">
                     <div className="border-primary-light flex flex-col justify-between gap-4 rounded-2xl border-2 p-4">
+                        {ticketInfo.isDeleted && (
+                            <div className="mt-2 flex items-center gap-2">
+                                <LuTicket />
+                                <label className="text-xl font-bold">
+                                    {ticketInfo.trainTypeName}
+                                </label>
+                            </div>
+                        )}
                         <div
                             data-testid="departure-arrival"
                             className="flex flex-col justify-between gap-4 md:flex-row md:items-center"

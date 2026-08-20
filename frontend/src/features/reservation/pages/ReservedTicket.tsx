@@ -124,8 +124,8 @@ export function ReservedTicket() {
     return (
         <>
             <div className="mx-auto flex w-full max-w-5xl min-w-90 flex-col items-center gap-2 p-4 md:w-7/10">
-                <div className="flex w-full items-center justify-start">
-                    {isBack ? (
+                {isBack && (
+                    <div className="w-full text-left">
                         <button
                             type="button"
                             onClick={() => {
@@ -137,57 +137,69 @@ export function ReservedTicket() {
                                 予約一覧へ戻る
                             </div>
                         </button>
-                    ) : (
-                        <h1
-                            data-testid="reserve-title"
-                            className="m-0! text-left text-3xl!"
-                        >
-                            {isUpdated
-                                ? '予約変更完了'
-                                : guestLogin
-                                  ? '予約詳細'
-                                  : '予約完了'}
-                        </h1>
-                    )}
+                    </div>
+                )}
+                <div className="w-full text-left">
+                    <h1 data-testid="reserve-title" className="m-0! text-3xl!">
+                        {reservedTickets.isDeleted
+                            ? 'キャンセル済み'
+                            : !isBack
+                              ? isUpdated
+                                  ? '予約変更完了'
+                                  : guestLogin
+                                    ? '予約詳細'
+                                    : '予約完了'
+                              : null}
+                    </h1>
                 </div>
-                <Suspense fallback={<ReservedTicketQrCodeSkeleton />}>
-                    <ReservedTicketQrCode
-                        trainTypeName={reservedTickets.trainTypeName}
-                        reservedSeats={reservedTickets.reservedSeats}
-                    />
-                </Suspense>
-                <Suspense fallback={<ReservedTicketInfoSkeleton />}>
-                    <ReservedTicketInfo ticketInfo={reservedTickets} />
-                </Suspense>
-                <div className="flex w-full flex-col gap-4 md:flex-row">
-                    <button
-                        onClick={handleRefundConfirmModalOpen}
-                        disabled={isSubmitting}
-                        className="border-primary text-primary flex w-full items-center justify-center gap-2 rounded-xl border-2 p-2 text-sm"
-                    >
-                        <IoTrashOutline className="h-4 w-4" />
-                        キャンセル
-                    </button>
-                    {accountInfo !== null && (
-                        <button
-                            data-testid="change-button"
-                            onClick={handleChangeConfirmModalOpen}
-                            disabled={isSubmitting}
-                            className="border-primary text-primary flex w-full items-center justify-center gap-2 rounded-xl border-2 p-2 text-sm"
-                        >
-                            <FaEdit className="h-4 w-4" />
-                            予約を変更
-                        </button>
-                    )}
-                    <TicketShare shareUrl={shareUrl} />
-                    <button
-                        onClick={handleCompanionsModalOpen}
-                        className="bg-primary flex w-full items-center justify-center gap-2 rounded-xl p-2 text-sm text-white"
-                    >
-                        <RiGroupLine className="h-4 w-4" />
-                        <div>同行者に割り当て</div>
-                    </button>
-                </div>
+                {reservedTickets.isDeleted ? (
+                    <>
+                        <Suspense fallback={<ReservedTicketInfoSkeleton />}>
+                            <ReservedTicketInfo ticketInfo={reservedTickets} />
+                        </Suspense>
+                    </>
+                ) : (
+                    <>
+                        <Suspense fallback={<ReservedTicketQrCodeSkeleton />}>
+                            <ReservedTicketQrCode
+                                trainTypeName={reservedTickets.trainTypeName}
+                                reservedSeats={reservedTickets.reservedSeats}
+                            />
+                        </Suspense>
+                        <Suspense fallback={<ReservedTicketInfoSkeleton />}>
+                            <ReservedTicketInfo ticketInfo={reservedTickets} />
+                        </Suspense>
+                        <div className="flex w-full flex-col gap-4 md:flex-row">
+                            <button
+                                onClick={handleRefundConfirmModalOpen}
+                                disabled={isSubmitting}
+                                className="border-primary text-primary flex w-full items-center justify-center gap-2 rounded-xl border-2 p-2 text-sm"
+                            >
+                                <IoTrashOutline className="h-4 w-4" />
+                                キャンセル
+                            </button>
+                            {accountInfo !== null && (
+                                <button
+                                    data-testid="change-button"
+                                    onClick={handleChangeConfirmModalOpen}
+                                    disabled={isSubmitting}
+                                    className="border-primary text-primary flex w-full items-center justify-center gap-2 rounded-xl border-2 p-2 text-sm"
+                                >
+                                    <FaEdit className="h-4 w-4" />
+                                    予約を変更
+                                </button>
+                            )}
+                            <TicketShare shareUrl={shareUrl} />
+                            <button
+                                onClick={handleCompanionsModalOpen}
+                                className="bg-primary flex w-full items-center justify-center gap-2 rounded-xl p-2 text-sm text-white"
+                            >
+                                <RiGroupLine className="h-4 w-4" />
+                                <div>同行者に割り当て</div>
+                            </button>
+                        </div>
+                    </>
+                )}
             </div>
             <CustomModal
                 isOpen={isCompanionsModalOpen}
