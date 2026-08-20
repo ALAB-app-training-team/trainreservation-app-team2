@@ -205,8 +205,8 @@ test('navigate-ログイン全機能', async ({
 
     // キャンセル(予約詳細)
     await createReservation();
-    await reservationListPage.header.clickUserName();
-    await reservationListPage.header.goToReservationList();
+    await reservedTicketPage.header.clickUserName();
+    await reservedTicketPage.header.goToReservationList();
     await reservationListPage.clickTicketButton();
     await expect(page).toHaveURL('/reservedTicket');
     await reservedTicketPage.clickRefundButton();
