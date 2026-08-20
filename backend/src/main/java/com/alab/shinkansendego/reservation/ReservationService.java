@@ -30,6 +30,7 @@ import org.springframework.web.client.RestClient;
 import tools.jackson.databind.ObjectMapper;
 
 import java.time.LocalDate;
+import java.time.LocalTime;
 import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.List;
@@ -326,6 +327,9 @@ public class ReservationService {
         DepartureArrivalTimeEntity departureArrivalTimeOfGoal = departureArrivalTimeRepository
             .findByScheduleCdAndSectionCdIn(reserveRequestDto.getScheduleCd(), List.of(sectionCdList.get(sectionCdList.size() - 1)));
 
+        reserveRequestDto.setReserverName(StringUtils.removeSpaces(reserveRequestDto.getReserverName()));
+        reserveRequestDto.setReserverMail(StringUtils.removeSpaces(reserveRequestDto.getReserverMail()));
+
         eventPublisher.publishEvent(new ReservationCreatedEvent(
             reservationId,
             reserveRequestDto,
@@ -569,12 +573,19 @@ public class ReservationService {
     @Transactional
     public void deleteReservation(UUID reservationId, UUID accountId, String name, String mail) {
         ReservationEntity reservation;
+        String reserverName;
+        String reserverMail;
         if (accountId != null) {
             reservation = reservationRepository.findByIdAndAccountId(reservationId, accountId).orElseThrow(() -> new IllegalArgumentException("Reservation is not found"));
+            AccountEntity account = accountRepository.findById(accountId).orElseThrow(() -> new IllegalArgumentException("Account is not found"));
+            reserverName = account.getName();
+            reserverMail = account.getMail();
         } else {
             if (name == null || mail == null) throw new IllegalArgumentException("Name and Mail is required");
             reservation =
                 reservationRepository.findByIdAndReserverNameAndReserverMail(reservationId, name, mail).orElseThrow(() -> new IllegalArgumentException("Reservation is not found"));
+            reserverName = name;
+            reserverMail = mail;
         }
         reservation.setIsDeleted(true);
 
@@ -592,6 +603,43 @@ public class ReservationService {
         reservationRepository.save(reservation);
         reservedSeatRepository.saveAll(seats);
         reservedSeatSectionRepository.deleteAll(sections);
+
+        List<ReserveRequestDto.SelectedSeatDto> seatDto = seats.stream()
+            .map(seat -> new ReserveRequestDto.SelectedSeatDto(
+                seat.getTrainCarCd(),
+                trainCarRepository.findByTrainCarCd(seat.getTrainCarCd()).orElseThrow(() -> new IllegalArgumentException("TrainCar is not found")).getSeatType().getTrainCarTypeCd(),
+                seat.getSeatCd(),
+                seat.getSeatFare()
+            )).toList();
+        ReserveRequestDto reserveRequestDto = new ReserveRequestDto(
+            reservation.getScheduleCd(),
+            reservation.getRideDate(),
+            reservation.getDepartureStationCd(),
+            reservation.getArrivalStationCd(),
+            reserverName,
+            reserverMail,
+            reservation.getPaymentTrackingId(),
+            seatDto
+        );
+
+        List<DepartureArrivalTimeEntity> schedules = departureArrivalTimeRepository.findByScheduleCd(reservation.getScheduleCd());
+        LocalTime departureTime = schedules.stream()
+            .filter(schedule -> schedule.getSectionKm().getStartStationCd().equals(reservation.getDepartureStationCd()))
+            .findFirst()
+            .orElseThrow(() -> new IllegalArgumentException("DepartureTime is not found"))
+            .getDepartureTime();
+        LocalTime arrivalTime = schedules.stream()
+            .filter(schedule -> schedule.getSectionKm().getGoalStationCd().equals(reservation.getArrivalStationCd()))
+            .findFirst()
+            .orElseThrow(() -> new IllegalArgumentException("ArrivalTime is not found"))
+            .getArrivalTime();
+
+        eventPublisher.publishEvent(new ReservationCanceledEvent(
+            reservationId,
+            reserveRequestDto,
+            departureTime,
+            arrivalTime
+        ));
     }
 
     /**
