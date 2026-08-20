@@ -97,6 +97,7 @@ test('navigate-ログイン全機能', async ({
     await expect(page).toHaveURL('/reservedTicket');
 
     // 予約一覧～予約確認～予約変更
+    await reservedTicketPage.header.clickCommonUser();
     await reservedTicketPage.header.goToReservationList();
     await expect(page).toHaveURL('/reservationList');
     await reservationListPage.clickTicketButton();
@@ -120,6 +121,7 @@ test('navigate-ログイン全機能', async ({
     await selectSeatPage.clickUpdateConfirmButton();
     await expect(page).toHaveURL('/reservedTicket');
     //  予約変更（日時列車変更）
+    await reservedTicketPage.header.clickCommonUser();
     await reservedTicketPage.header.goToReservationList();
     await expect(page).toHaveURL('/reservationList');
     await reservationListPage.clickChangeButton();
@@ -145,6 +147,7 @@ test('navigate-ログイン全機能', async ({
     await expect(page).toHaveURL('/reservedTicket');
 
     // 予約詳細～予約変更
+    await reservedTicketPage.header.clickCommonUser();
     await reservedTicketPage.header.goToReservationList();
     await expect(page).toHaveURL('/reservationList');
     await reservationListPage.clickTicketButton();
@@ -190,6 +193,7 @@ test('navigate-ログイン全機能', async ({
     await expect(page).toHaveURL('/reservedTicket');
 
     // キャンセル(予約一覧)
+    await reservedTicketPage.header.clickCommonUser();
     await reservedTicketPage.header.goToReservationList();
     await expect(page).toHaveURL('/reservationList');
     await reservationListPage.clickRefundButton();
@@ -201,7 +205,8 @@ test('navigate-ログイン全機能', async ({
 
     // キャンセル(予約詳細)
     await createReservation();
-    await reservedTicketPage.header.goToReservationList();
+    await reservationListPage.header.clickCommonUser();
+    await reservationListPage.header.goToReservationList();
     await reservationListPage.clickTicketButton();
     await expect(page).toHaveURL('/reservedTicket');
     await reservedTicketPage.clickRefundButton();
@@ -299,12 +304,14 @@ test('navigate-header', async ({ page }) => {
     const reservationGuestLoginPage = new ReservationGuestLoginPage(page);
     const scheduleSearchPage = new ScheduleSearchPage(page);
     const passwordUpdateForAdminPage = new PasswordUpdateForAdminPage(page);
+    const reservationListPage = new ReservationListPage(page);
     const loginPage = new LoginPage(page);
 
     await scheduleSearchPage.goto();
     await expect(page).toHaveURL('/scheduleSearch');
     await reservationGuestLoginPage.header.goToSchduleSearchBySystemName();
     await expect(page).toHaveURL('/scheduleSearch');
+    await scheduleSearchPage.header.clickCommonUser();
     await scheduleSearchPage.header.goToReservationList();
     await expect(page).toHaveURL('/login');
     await reservationGuestLoginPage.header.goToScheduleSearch();
@@ -314,19 +321,22 @@ test('navigate-header', async ({ page }) => {
     await loginPage.inputcommonLoginInfo();
     await loginPage.clickLoginButton();
     await expect(page).toHaveURL('/scheduleSearch');
+    await scheduleSearchPage.header.clickCommonUser();
     await scheduleSearchPage.header.goToReservationList();
     await expect(page).toHaveURL('/reservationList');
-    await scheduleSearchPage.header.clickCommonUser();
-    await scheduleSearchPage.header.goToLogout();
+    await reservationListPage.header.clickCommonUser();
+    await reservationListPage.header.goToLogout();
     await expect(page).toHaveURL('/login');
     await loginPage.inputAdminLoginInfo();
     await loginPage.clickLoginButton();
     await expect(page).toHaveURL('/admin/password');
     await passwordUpdateForAdminPage.header.goToScheduleSearch();
     await expect(page).toHaveURL('/scheduleSearch');
-    await passwordUpdateForAdminPage.header.goToPasswordUpdateForAdmin();
+    await scheduleSearchPage.header.clickCommonUser();
+    await scheduleSearchPage.header.goToPasswordUpdateForAdmin();
     await expect(page).toHaveURL('/admin/password');
-    await scheduleSearchPage.header.goToLogout();
+    await passwordUpdateForAdminPage.header.clickCommonUser();
+    await passwordUpdateForAdminPage.header.goToLogout();
     await expect(page).toHaveURL('/login');
 });
 
