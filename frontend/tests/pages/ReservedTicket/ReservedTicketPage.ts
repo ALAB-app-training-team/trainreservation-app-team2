@@ -8,10 +8,16 @@ export class ReservedTicketPage {
     readonly title: Locator;
     readonly departureArrivalElement: Locator;
     readonly seatFareElement: Locator;
+    readonly changeButton: Locator;
     readonly ticketShareButton: Locator;
     readonly ticketShareElement: Locator;
     readonly linkCopyButton: Locator;
     readonly linkCopyElement: Locator;
+    readonly changeSeatConfirmButton: Locator;
+    readonly changeTrainConfirmButton: Locator;
+    readonly modalCloseButton: Locator;
+    readonly refundButton: Locator;
+    readonly confirmRefundButton: Locator;
 
     constructor(page: Page) {
         this.page = page;
@@ -20,12 +26,18 @@ export class ReservedTicketPage {
         this.title = page.getByTestId('reserve-title');
         this.departureArrivalElement = page.getByTestId('departure-arrival');
         this.seatFareElement = page.getByTestId('reserved-seats');
+        this.changeButton = page.getByTestId('change-button');
         this.ticketShareButton = page.getByRole('button', {
             name: 'チケットを共有',
         });
         this.ticketShareElement = page.getByTestId('ticket-share');
         this.linkCopyButton = page.getByRole('button', { name: 'コピー' });
         this.linkCopyElement = page.getByTestId('link-copy');
+        this.changeSeatConfirmButton = page.getByTestId('change-seat-button');
+        this.changeTrainConfirmButton = page.getByTestId('change-train-button');
+        this.modalCloseButton = page.getByTestId('modal-close-button');
+        this.refundButton = page.getByRole('button', { name: 'キャンセル' });
+        this.confirmRefundButton = page.getByTestId('refund-confirm-button');
     }
 
     async goto() {
@@ -36,11 +48,35 @@ export class ReservedTicketPage {
         await this.backButton.first().click();
     }
 
+    async clickChangeButton() {
+        await this.changeButton.first().click();
+    }
+
     async clickTicketShareButton() {
         await this.ticketShareButton.click();
     }
 
     async clickLinkCopyButton() {
         await this.linkCopyButton.click();
+    }
+
+    async clickChangeSeatConfirmButton() {
+        await this.changeSeatConfirmButton.first().click();
+    }
+
+    async clickChangeTrainConfirmButton() {
+        await this.changeTrainConfirmButton.first().click();
+    }
+
+    async clickModalCloseButton() {
+        await this.modalCloseButton.first().click();
+    }
+
+    async clickRefundButton() {
+        await this.refundButton.first().click();
+    }
+
+    async clickConfirmRefundButton() {
+        await this.confirmRefundButton.first().click();
     }
 }

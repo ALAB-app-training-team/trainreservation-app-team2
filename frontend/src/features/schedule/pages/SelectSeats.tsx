@@ -39,6 +39,9 @@ export function SelectSeats() {
         prevSelectedSeats,
         reservedSeats,
         reservationId,
+        isChanging,
+        isFromReservedTicket,
+        isBack,
         preChangeScheduleInfo,
         preChangeReservedSeats,
     }: SelectSeatsLocationState = location.state;
@@ -46,9 +49,8 @@ export function SelectSeats() {
         scheduleInfoDto,
         reservedSeats,
     );
-    const initialSelectedSeats = reservedSeats
-        ? resolveReservedSeat
-        : (prevSelectedSeats ?? []);
+    const initialSelectedSeats =
+        prevSelectedSeats ?? (reservedSeats ? resolveReservedSeat : []);
     const {
         selectedSeats,
         handleSelectedSeats,
@@ -217,16 +219,16 @@ export function SelectSeats() {
 
                 return;
             }
-            toast.error(ERROR_MESSAGE.RESERVE_RETRY,{
-                duration:Infinity,
+            toast.error(ERROR_MESSAGE.RESERVE_RETRY, {
+                duration: Infinity,
                 action: {
                     label: 'OK',
-                    onClick: () => {}
+                    onClick: () => {},
                 },
                 classNames: {
-                    title : 'text-left whitespace-pre-line',
-                    actionButton: "!px-4 !py-2 !text-base !h-auto",
-                }
+                    title: 'text-left whitespace-pre-line',
+                    actionButton: '!px-4 !py-2 !text-base !h-auto',
+                },
             });
         } finally {
             setIsSubmitting(false);
@@ -241,6 +243,10 @@ export function SelectSeats() {
                 scheduleInfoDto,
                 searchRequestDto,
                 prevSelectedSeats: selectedSeats,
+                reservedSeats,
+                reservationId,
+                preChangeScheduleInfo,
+                preChangeReservedSeats,
             },
         });
     };
@@ -276,17 +282,24 @@ export function SelectSeats() {
                 });
                 return;
             }
-            // TODO: セッション切れ時の挙動を制御する
-            toast.error(ERROR_MESSAGE.UPDATE_RETRY,{
-                duration:Infinity,
+            if (
+                axios.isAxiosError(error) &&
+                error.response?.status === HttpStatusCode.Unauthorized
+            ) {
+                handleReloginConfirmModalOpen();
+
+                return;
+            }
+            toast.error(ERROR_MESSAGE.UPDATE_RETRY, {
+                duration: Infinity,
                 action: {
                     label: 'OK',
-                    onClick: () => {}
+                    onClick: () => {},
                 },
                 classNames: {
-                    title : 'text-left whitespace-pre-line',
-                    actionButton: "!px-4 !py-2 !text-base !h-auto",
-                }
+                    title: 'text-left whitespace-pre-line',
+                    actionButton: '!px-4 !py-2 !text-base !h-auto',
+                },
             });
         } finally {
             setIsSubmitting(false);
@@ -324,6 +337,8 @@ export function SelectSeats() {
                             navigate('/scheduleSearch', {
                                 state: {
                                     searchRequestDto,
+                                    isChanging: isChanging,
+                                    isBack: isBack,
                                     ...(reservationId && { reservationId }),
                                     ...(preChangeReservedSeats && {
                                         reservedSeats: preChangeReservedSeats,
@@ -338,6 +353,26 @@ export function SelectSeats() {
                         <div className="flex items-center gap-2">
                             <LuArrowLeft />
                             検索画面に戻る
+                        </div>
+                    </button>
+                ) : isFromReservedTicket ? (
+                    <button
+                        data-testid={'back-button-in-selectseat'}
+                        type="button"
+                        onClick={() => {
+                            navigate('/reservedTicket', {
+                                state: {
+                                    reservationId: reservationId,
+                                    isBack: true,
+                                    guestLogin: false,
+                                    isUpdated: false,
+                                },
+                            });
+                        }}
+                    >
+                        <div className="flex items-center gap-2">
+                            <LuArrowLeft />
+                            予約詳細へ戻る
                         </div>
                     </button>
                 ) : (
@@ -472,7 +507,14 @@ export function SelectSeats() {
             >
                 <ReloginConfirmModal
                     onReloginClick={handleRelogin}
-                    onRequestClose={onRequestReloginConfirmModalClose}
+
+                    onRequestClose={
+                        preReservedSeats
+                            ? () => {
+                                  navigate('/scheduleSearch');
+                              }
+                            : onRequestReloginConfirmModalClose
+                    }
                     isSubmitting={isSubmitting}
                 />
             </CustomModal>
