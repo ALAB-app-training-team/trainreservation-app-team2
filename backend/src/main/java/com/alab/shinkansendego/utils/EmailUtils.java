@@ -1,6 +1,7 @@
 package com.alab.shinkansendego.utils;
 
 import com.alab.shinkansendego.email.EmailRequestDto;
+import org.springframework.util.CollectionUtils;
 
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
@@ -17,6 +18,7 @@ public final class EmailUtils {
     public static final String CANCEL_SUBJECT = "[予約キャンセル] 予約キャンセル内容のご案内";
     public static final String RELEASE_SUBJECT = "[割り当て解除] 同行者割り当て解除内容のご案内";
     public static final String SENDER_NAME = "新幹線でGO！";
+    public static final Integer REFUND_FEE = 320;
     public static final String CANCEL_BODY = """
         %s さま
 
@@ -58,6 +60,9 @@ public final class EmailUtils {
     }
 
     public static String seatFormatter(List<EmailRequestDto.SelectedSeatDto> seats) {
+        if (CollectionUtils.isEmpty(seats)) {
+            throw new IllegalArgumentException("メールの座席情報が指定されませんでした");
+        }
         return seats.stream()
             .map(seat -> {
                 String rawCarCd = seat.getTrainCarCd();

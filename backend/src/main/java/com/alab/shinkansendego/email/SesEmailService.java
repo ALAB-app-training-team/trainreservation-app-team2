@@ -15,6 +15,8 @@ import software.amazon.awssdk.services.sesv2.model.Destination;
 import software.amazon.awssdk.services.sesv2.model.EmailContent;
 import software.amazon.awssdk.services.sesv2.model.SendEmailRequest;
 
+import static com.alab.shinkansendego.utils.EmailUtils.REFUND_FEE;
+
 @Service
 @Profile("prod")
 public class SesEmailService implements EmailService {
@@ -108,13 +110,13 @@ public class SesEmailService implements EmailService {
             }
 
             String seatDetail = "";
-            Integer refound = 0;
+            Integer refund = 0;
             if (dto.getSeats() != null && !dto.getSeats().isEmpty()) {
                 seatDetail = EmailUtils.seatFormatter(dto.getSeats());
-                refound = dto.getSeats().size() * 320;
+                refund = dto.getSeats().size() * REFUND_FEE;
             }
 
-            Integer total = dto.getTotalAmount() - refound;
+            Integer total = dto.getTotalAmount() - refund;
 
             String loginurl = baseUrl + EmailUtils.LOGIN_PATH;
 
@@ -128,7 +130,8 @@ public class SesEmailService implements EmailService {
                 dto.getArrivalTime(),
                 dto.getTrainTypeName(),
                 seatDetail,
-                dto.getTotalAmount(),
+                refund,
+                total,
                 loginurl
             );
 

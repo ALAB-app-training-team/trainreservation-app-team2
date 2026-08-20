@@ -12,6 +12,8 @@ import org.springframework.mail.javamail.MimeMessageHelper;
 import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
 
+import static com.alab.shinkansendego.utils.EmailUtils.REFUND_FEE;
+
 @Service
 @Profile({"local", "test"})
 public class LocalEmailService implements EmailService {
@@ -105,13 +107,13 @@ public class LocalEmailService implements EmailService {
             }
 
             String seatDetail = "";
-            Integer refound = 0;
+            Integer refund = 0;
             if (dto.getSeats() != null && !dto.getSeats().isEmpty()) {
                 seatDetail = EmailUtils.seatFormatter(dto.getSeats());
-                refound = dto.getSeats().size() * 320;
+                refund = dto.getSeats().size() * REFUND_FEE;
             }
 
-            Integer total = dto.getTotalAmount() - refound;
+            Integer total = dto.getTotalAmount() - refund;
 
             String loginurl = baseUrl + EmailUtils.LOGIN_PATH;
 
@@ -125,7 +127,7 @@ public class LocalEmailService implements EmailService {
                 dto.getArrivalTime(),
                 dto.getTrainTypeName(),
                 seatDetail,
-                refound,
+                refund,
                 total,
                 loginurl
             );

@@ -7,6 +7,7 @@ import com.alab.shinkansendego.reservedseat.ReservedSeatEntity;
 import com.alab.shinkansendego.reservedseat.ReservedSeatRepository;
 import com.alab.shinkansendego.schedule.ScheduleEntity;
 import com.alab.shinkansendego.schedule.ScheduleRepository;
+import com.alab.shinkansendego.seat.SeatEntity;
 import com.alab.shinkansendego.seat.SeatRepository;
 import com.alab.shinkansendego.station.StationEntity;
 import com.alab.shinkansendego.station.StationRepository;
@@ -103,23 +104,27 @@ public class ReservationEventListener {
         emailDto.setArrivalTime(arrivalTime);
         emailDto.setTrainTypeName(trainTypeName);
 
+        emailDto.setSeats(setDisplaySeats(request.getSeats()));
+
         int totalAmount = request.getSeats().stream()
             .filter(seat -> seat.getSeatFare() != null)
             .mapToInt(ReserveRequestDto.SelectedSeatDto::getSeatFare)
             .sum();
         emailDto.setTotalAmount(totalAmount);
 
-        if (request.getSeats() != null) {
-            emailDto.setSeats(setDisplaySeats(request.getSeats()));
-        }
-
         return emailDto;
     }
 
     private List<EmailRequestDto.SelectedSeatDto> setDisplaySeats(List<ReserveRequestDto.SelectedSeatDto> seats) {
+        List<SeatEntity> seatEntities = seatRepository.findAllById(
+            seats.stream().map(ReserveRequestDto.SelectedSeatDto::getSeatCd).toList()
+        );
+
         return seats.stream()
             .map(seat -> {
-                String seatDisplay = seatRepository.findById(seat.getSeatCd())
+                String seatDisplay = seatEntities.stream()
+                    .filter(entity -> entity.getSeatCd().equals(seat.getSeatCd()))
+                    .findFirst()
                     .map(seatEntity -> seatEntity.getSeatNumber() + "番" + seatEntity.getSeatColumn() + "席")
                     .orElse(seat.getSeatCd());
 
