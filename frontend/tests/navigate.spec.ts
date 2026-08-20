@@ -8,6 +8,7 @@ import { App } from '@tests/pages/shared/App';
 import { LoginPage } from '@tests/pages/Login/LoginPage';
 import { test } from '@tests/fixtures';
 import { AccountCreatePage } from '@tests/pages/AccountCreate/AccountCreatePage';
+import { PasswordUpdateForAdminPage } from './pages/PasswordUpdateForAdmin/PasswordUpdateForAdminPasswordUpdateForAdminPage';
 
 test('navigate-ゲストログイン全機能', async ({ page, context }) => {
     const scheduleSearchPage = new ScheduleSearchPage(page);
@@ -215,6 +216,40 @@ test('navigate-ログイン全機能', async ({
     await expect(page).toHaveURL('/login');
 });
 
+test('navigate-管理者ログイン-管理機能', async ({
+    page,
+    adminLogin,
+    commonLogin,
+    logout,
+}) => {
+    const scheduleSearchPage = new ScheduleSearchPage(page);
+    const loginPage = new LoginPage(page);
+    const passwordUpdateForAdminPage = new PasswordUpdateForAdminPage(page);
+
+    // 一般太郎のパスワード変更
+    await loginPage.goto();
+    await adminLogin();
+    await expect(page).toHaveURL('/admin/password');
+    await passwordUpdateForAdminPage.inputUpdateTestAccountInfo();
+    await passwordUpdateForAdminPage.clickUpdateButton();
+    await expect(page).toHaveURL('/admin/password');
+    await logout();
+
+    // 一般太郎ログイン
+    await commonLogin();
+    await expect(page).toHaveURL('/scheduleSearch');
+    await expect(scheduleSearchPage.header.commonUser).toBeVisible();
+    await logout();
+
+    // 一般太郎のパスワードを元に戻す
+    await adminLogin();
+    await expect(page).toHaveURL('/admin/password');
+    await passwordUpdateForAdminPage.inputRevertTestAccountInfo();
+    await passwordUpdateForAdminPage.clickUpdateButton();
+    await expect(page).toHaveURL('/admin/password');
+    await logout();
+});
+
 test('navigate-座席選択画面からログインして予約', async ({ page, logout }) => {
     const scheduleSearchPage = new ScheduleSearchPage(page);
     const selectSeatPage = new SelectSeatPage(page);
@@ -359,4 +394,16 @@ test('navigate-ログイン状態でaccountCreateのパスを入力すると検�
     await expect(page).toHaveURL('/login');
     await loginPage.clickCreateButton();
     await expect(page).toHaveURL('/accountCreate');
+});
+
+test('navigate-一般ログイン状態でadmin/passwordのパスを入力すると検索画面に遷移', async ({
+    page,
+    commonLogin,
+}) => {
+    const passwordUpdateForAdminPage = new PasswordUpdateForAdminPage(page);
+
+    await commonLogin();
+    await expect(page).toHaveURL('/scheduleSearch');
+    await passwordUpdateForAdminPage.goto();
+    await expect(page).toHaveURL('/scheduleSearch');
 });

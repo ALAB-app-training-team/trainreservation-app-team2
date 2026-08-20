@@ -34,4 +34,38 @@ export class PasswordUpdateForAdminPage {
     async goto() {
         await this.page.goto('/admin/password');
     }
+
+    async fillName(name: string) {
+        await this.name.fill(name);
+    }
+
+    async fillMailAddress(address: string) {
+        await this.mailAddress.fill(address);
+    }
+
+    async fillPassword(password: string) {
+        await this.password.fill(password);
+    }
+
+    async fillPasswordCheck(passwordCheck: string) {
+        await this.passwordCheck.fill(passwordCheck);
+    }
+
+    async clickUpdateButton() {
+        await this.updateButton.click();
+    }
+
+    async inputUpdateTestAccountInfo() {
+        await this.fillName('一般 太郎');
+        await this.fillMailAddress('test-common@test.com');
+        await this.fillPassword('Password2');
+        await this.fillPasswordCheck('Password2');
+    }
+
+    async inputRevertTestAccountInfo() {
+        await this.fillName('一般 太郎');
+        await this.fillMailAddress('test-common@test.com');
+        await this.fillPassword('Password1');
+        await this.fillPasswordCheck('Password1');
+    }
 }
