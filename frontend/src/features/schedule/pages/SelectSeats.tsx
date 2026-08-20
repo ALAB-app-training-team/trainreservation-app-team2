@@ -8,6 +8,10 @@ import { toast } from 'sonner';
 
 import apiClient from '@/api/apiClient';
 import { ENDPOINTS } from '@/api/routes';
+import {
+    RESERVEDTICKET_MODE,
+    RESERVEDTICKET_ROLE,
+} from '@/features/reservation/constants/ReservedTicketState';
 import { ReloginConfirmModal } from '@/features/schedule/components/ReloginConfirmModal';
 import { ReserveConfirmModal } from '@/features/schedule/components/ReserveConfirmModal';
 import { ReserveUserInfo } from '@/features/schedule/components/ReserveUserInfo';
@@ -189,8 +193,10 @@ export function SelectSeats() {
             navigate('/reservedTicket', {
                 state: {
                     reservationId: reservationId,
-                    mode: '予約完了',
-                    role: isLoggedIn ? 'account' : 'guest',
+                    mode: RESERVEDTICKET_MODE.created,
+                    role: isLoggedIn
+                        ? RESERVEDTICKET_ROLE.account
+                        : RESERVEDTICKET_ROLE.guest,
                 },
             });
         } catch (error) {
@@ -259,8 +265,8 @@ export function SelectSeats() {
             navigate('/reservedTicket', {
                 state: {
                     reservationId: reservationId,
-                    mode: '予約変更完了',
-                    role: 'account',
+                    mode: RESERVEDTICKET_MODE.updated,
+                    role: RESERVEDTICKET_ROLE.account,
                 },
             });
         } catch (error) {
@@ -362,8 +368,8 @@ export function SelectSeats() {
                             navigate('/reservedTicket', {
                                 state: {
                                     reservationId: reservationId,
-                                    mode: '予約詳細',
-                                    role: 'account',
+                                    mode: RESERVEDTICKET_MODE.detail,
+                                    role: RESERVEDTICKET_ROLE.account,
                                 },
                             });
                         }}

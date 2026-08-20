@@ -5,6 +5,10 @@ import { MdConfirmationNumber } from 'react-icons/md';
 import { useNavigate, useSearchParams } from 'react-router-dom';
 
 import { GuestLoginInput } from '@/features/reservation/components/GuestLoginInput';
+import {
+    RESERVEDTICKET_MODE,
+    RESERVEDTICKET_ROLE,
+} from '@/features/reservation/constants/ReservedTicketState';
 import { useReservationListRequestDto } from '@/features/reservation/hooks/useReservationListRequestDto';
 import { useReservedTickets } from '@/features/reservation/hooks/useReservedTickets';
 import { ERROR_MESSAGE } from '@/shared/constants/ErrorMessages';
@@ -51,8 +55,8 @@ export function ReservationGuestLoginBody() {
             navigate('/reservedTicket', {
                 state: {
                     reservationId: targetReservationId,
-                    mode: '予約詳細',
-                    role: 'guest',
+                    mode: RESERVEDTICKET_MODE.detail,
+                    role: RESERVEDTICKET_ROLE.guest,
                 },
             });
             window.scrollTo(0, 0);
