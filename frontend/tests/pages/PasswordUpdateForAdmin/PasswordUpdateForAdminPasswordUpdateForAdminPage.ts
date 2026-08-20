@@ -1,7 +1,7 @@
 import { type Locator, type Page } from '@playwright/test';
 import { Header } from '@tests/pages/shared/Header';
 
-export class AccountCreatePage {
+export class PasswordUpdateForAdminPage {
     readonly page: Page;
     readonly header: Header;
     readonly name: Locator;
@@ -32,6 +32,6 @@ export class AccountCreatePage {
     }
 
     async goto() {
-        await this.page.goto('/accountCreate');
+        await this.page.goto('/admin/password');
     }
 }

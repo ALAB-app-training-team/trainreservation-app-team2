@@ -7,6 +7,7 @@ import { ScheduleSearchPage } from '@tests/pages/ScheduleSearch/ScheduleSearchPa
 import { SelectSeatPage } from '@tests/pages/SelectSeat/SelectSeatPage';
 import { LoginPage } from './pages/Login/LoginPage';
 import { AccountCreatePage } from './pages/AccountCreate/AccountCreatePage';
+import { PasswordUpdateForAdminPage } from './pages/PasswordUpdateForAdmin/PasswordUpdateForAdminPasswordUpdateForAdminPage';
 
 test('visual-scheduleSearch', async ({ page }) => {
     const scheduleSearchPage = new ScheduleSearchPage(page);
@@ -119,10 +120,28 @@ test('visual-accountCreate', async ({ page }) => {
     });
 });
 
-test('visual-reservationList', async ({ page, login, logout }) => {
+test('visual-passwordUpdateForAdmin', async ({ page, adminLogin }) => {
+    const passwordUpdateForAdmin = new PasswordUpdateForAdminPage(page);
+    await adminLogin();
+    await expect(page).toHaveURL('/admin/password');
+    await passwordUpdateForAdmin.updateButton.waitFor({ state: 'visible' });
+    await page.evaluate(() => document.fonts.ready);
+
+    await expect(page).toHaveScreenshot({
+        maxDiffPixelRatio: 0.05,
+        fullPage: true,
+        animations: 'disabled',
+        mask: [
+            // テストに含めたくない要素をマスク(無視)する
+        ],
+        maskColor: '#ffffff',
+    });
+});
+
+test('visual-reservationList', async ({ page, commonLogin, logout }) => {
     const reservationListPage = new ReservationListPage(page);
 
-    await login();
+    await commonLogin();
     await expect(page).toHaveURL('/scheduleSearch');
     await reservationListPage.goto();
     await expect(page).toHaveURL('/reservationList');
@@ -160,11 +179,11 @@ test('visual-reservationList', async ({ page, login, logout }) => {
     await expect(page).toHaveURL('/login');
 });
 
-test('visual-reservedTicket', async ({ page, login, logout }) => {
+test('visual-reservedTicket', async ({ page, commonLogin, logout }) => {
     const reservationListPage = new ReservationListPage(page);
     const reservedTicketPage = new ReservedTicketPage(page);
 
-    await login();
+    await commonLogin();
     await expect(page).toHaveURL('/scheduleSearch');
     await reservationListPage.goto();
     await expect(page).toHaveURL('/reservationList');
