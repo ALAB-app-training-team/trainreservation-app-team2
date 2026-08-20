@@ -1,16 +1,11 @@
 import { useQueryClient } from '@tanstack/react-query';
 import { useEffect, useState } from 'react';
-import { toast } from 'sonner';
 
-import apiClient from '@/api/apiClient';
-import { ENDPOINTS } from '@/api/routes';
 import { AccountInput } from '@/features/account/components/AccountInput';
 import { PasswordInput } from '@/features/account/components/PasswordInput';
 import { useAccountRequestDto } from '@/features/account/hooks/useAccountRequestDto';
-import { ERROR_MESSAGE } from '@/shared/constants/ErrorMessages';
 import { useToastForRedirect } from '@/shared/hooks/useToastForRedirect';
 import { removeGuestReservation } from '@/shared/utils/RemoveGuestReservation';
-import { removeWhiteSpace } from '@/shared/utils/RemoveWhiteSpace';
 
 export function PasswordUpdateForAdmin() {
     const queryClient = useQueryClient();
@@ -21,42 +16,14 @@ export function PasswordUpdateForAdmin() {
         handleChange,
         handleBlur,
         isDisable,
-        handleClear,
+        isSubmitting,
+        handleUpdate,
     } = useAccountRequestDto(true);
     const [passwordType, setPasswordType] = useState('password');
-    const [isSubmitting, setIsSubmitting] = useState<boolean>(false);
     useToastForRedirect();
     useEffect(() => {
         removeGuestReservation(queryClient);
     }, []);
-
-    const handleUpdate = async () => {
-        if (isSubmitting) return;
-        setIsSubmitting(true);
-        try {
-            await apiClient.put<void>(ENDPOINTS.ADMIN_UPDATE(), {
-                name: removeWhiteSpace(accountForm.name),
-                mail: removeWhiteSpace(accountForm.mail),
-                password: accountForm.password,
-            });
-            handleClear();
-            toast.success('変更が完了しました');
-        } catch {
-            toast.error(ERROR_MESSAGE.ADMIN_UPDATE_ERROR, {
-                duration: Infinity,
-                action: {
-                    label: 'OK',
-                    onClick: () => {},
-                },
-                classNames: {
-                    title: 'text-left whitespace-pre-line',
-                    actionButton: '!px-4 !py-2 !text-base !h-auto',
-                },
-            });
-        } finally {
-            setIsSubmitting(false);
-        }
-    };
 
     return (
         <>
@@ -65,6 +32,9 @@ export function PasswordUpdateForAdmin() {
                     <h1 className="!text-primary !m-0 flex items-center justify-center !text-3xl">
                         パスワード変更
                     </h1>
+                    <div className="text-gray-500">
+                        パスワードを変更するユーザーの情報を入力してください
+                    </div>
                     <form
                         onSubmit={(e) => {
                             e.preventDefault();

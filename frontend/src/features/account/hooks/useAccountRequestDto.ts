@@ -204,6 +204,34 @@ export function useAccountRequestDto(isPasswordUpdateForAdmin: boolean) {
         }
     };
 
+    const handleUpdate = async () => {
+        if (isSubmitting) return;
+        setIsSubmitting(true);
+        try {
+            await apiClient.put<void>(ENDPOINTS.ADMIN_UPDATE(), {
+                name: removeWhiteSpace(accountForm.name),
+                mail: removeWhiteSpace(accountForm.mail),
+                password: accountForm.password,
+            });
+            handleClear();
+            toast.success('変更が完了しました');
+        } catch {
+            toast.error(ERROR_MESSAGE.ADMIN_UPDATE_ERROR, {
+                duration: Infinity,
+                action: {
+                    label: 'OK',
+                    onClick: () => {},
+                },
+                classNames: {
+                    title: 'text-left whitespace-pre-line',
+                    actionButton: '!px-4 !py-2 !text-base !h-auto',
+                },
+            });
+        } finally {
+            setIsSubmitting(false);
+        }
+    };
+
     return {
         accountForm,
         policy,
@@ -213,6 +241,6 @@ export function useAccountRequestDto(isPasswordUpdateForAdmin: boolean) {
         isDisable,
         handleAccount,
         isSubmitting,
-        handleClear,
+        handleUpdate,
     };
 }
