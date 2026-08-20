@@ -24,6 +24,7 @@ import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 import java.util.UUID;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
@@ -121,7 +122,7 @@ public class TrainCarServiceTest {
             "Test2"))
             .thenReturn(List.of(reservedSeatSectionEntities.get(2)));
         when(sectionKmRepository.findBySectionCdIn(List.of("Test1", "Test2"))).thenReturn(sectionKmEntities);
-        when(trainCarRepo.findByTrainCarCd(request.getTrainCarCd())).thenReturn(trainCarEntity);
+        when(trainCarRepo.findByTrainCarCd(request.getTrainCarCd())).thenReturn(Optional.of(trainCarEntity));
         when(fareKmService.getFareFromDistance(20.0)).thenReturn(fares);
 
         List<SeatResponseDto> expectList = getSeatResponseDtosList();
@@ -160,5 +161,40 @@ public class TrainCarServiceTest {
             () -> service.getSeatListWithReserved(request)
         );
         assertEquals("SectionCdOfSeat is Not found", ex.getMessage());
+    }
+
+    @Test
+    @DisplayName("存在しない号車情報コードがリクエストされた場合にエラーを発生させる")
+    void getSeatListWithReserved_withNotExistTrainCar_returnIllegalArgumentException() {
+        DepartureArrivalTimeEntity departureArrivalTime1 = new DepartureArrivalTimeEntity();
+        DepartureArrivalTimeEntity departureArrivalTime2 = new DepartureArrivalTimeEntity();
+        departureArrivalTime1.setSectionCd("Test1");
+        departureArrivalTime2.setSectionCd("Test2");
+
+        when(trainCarRepo.findSeatByTrainCarCd("Test001"))
+            .thenReturn(getIsreservedIsNullList());
+        when(departureArrivalTimeRepo.findByScheduleCdAndDepartureTimeGreaterThanEqualAndArrivalTimeLessThanEqual(
+            "Test01",
+            LocalTime.of(12, 0, 0),
+            LocalTime.of(13, 0, 0)))
+            .thenReturn(List.of(departureArrivalTime1, departureArrivalTime2));
+        when(reservedSeatSectionRepo.findByRideDateAndScheduleCdAndTrainCarCdAndReservedSectionCdOrderBySeatCd(
+            LocalDate.of(2026, 6, 1),
+            "Test01",
+            "Test001",
+            "Test1"))
+            .thenReturn(List.of(reservedSeatSectionEntities.get(0), reservedSeatSectionEntities.get(1)));
+        when(reservedSeatSectionRepo.findByRideDateAndScheduleCdAndTrainCarCdAndReservedSectionCdOrderBySeatCd(
+            LocalDate.of(2026, 6, 1),
+            "Test01",
+            "Test001",
+            "Test2"))
+            .thenReturn(List.of(reservedSeatSectionEntities.get(2)));
+        when(sectionKmRepository.findBySectionCdIn(List.of("Test1", "Test2"))).thenReturn(sectionKmEntities);
+        Exception ex = assertThrows(
+            IllegalArgumentException.class,
+            () -> service.getSeatListWithReserved(request)
+        );
+        assertEquals("TrainCar is Not found", ex.getMessage());
     }
 }

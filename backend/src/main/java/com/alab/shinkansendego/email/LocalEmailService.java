@@ -12,6 +12,8 @@ import org.springframework.mail.javamail.MimeMessageHelper;
 import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
 
+import static com.alab.shinkansendego.utils.EmailUtils.REFUND_FEE;
+
 @Service
 @Profile({"local", "test"})
 public class LocalEmailService implements EmailService {
@@ -68,6 +70,56 @@ public class LocalEmailService implements EmailService {
             log.info("予約完了メールを正常に送信しました。 To： {}", dto.getReserverMail());
         } catch (Exception e) {
             log.error("メール送信中にエラーが発生しました。 To： {}", dto.getReserverMail(), e);
+        }
+    }
+
+    @Async
+    @Override
+    public void sendReservationCancel(EmailRequestDto dto) {
+        try {
+            MimeMessage mimeMessage = mailSender.createMimeMessage();
+            MimeMessageHelper helper = new MimeMessageHelper(mimeMessage, "UTF-8");
+
+            helper.setFrom(EmailUtils.FROM_ADDRESS, EmailUtils.SENDER_NAME);
+            helper.setTo(dto.getReserverMail());
+            helper.setSubject(EmailUtils.CANCEL_SUBJECT);
+
+            String formatterRideDate = "";
+            if (dto.getRideDate() != null) {
+                formatterRideDate = EmailUtils.rideDateFormatter(dto.getRideDate());
+            }
+
+            String seatDetail = "";
+            Integer refund = 0;
+            if (dto.getSeats() != null && !dto.getSeats().isEmpty()) {
+                seatDetail = EmailUtils.seatFormatter(dto.getSeats());
+                refund = dto.getSeats().size() * REFUND_FEE;
+            }
+
+            Integer total = dto.getTotalAmount() - refund;
+
+            String loginurl = baseUrl + EmailUtils.LOGIN_PATH;
+
+            String body = String.format(EmailUtils.CANCEL_BODY,
+                dto.getReserverName() != null ? dto.getReserverName() : "ユーザー",
+                dto.getReservationId(),
+                formatterRideDate,
+                dto.getDepartureStationName(),
+                dto.getDepartureTime(),
+                dto.getArrivalStationName(),
+                dto.getArrivalTime(),
+                dto.getTrainTypeName(),
+                seatDetail,
+                refund,
+                total,
+                loginurl
+            );
+
+            helper.setText(body);
+            mailSender.send(mimeMessage);
+            log.info("予約キャンセルメールを正常に送信しました。 To： {}", dto.getReserverMail());
+        } catch (Exception e) {
+            log.error("予約キャンセルメール送信中にエラーが発生しました。 To： {}", dto.getReserverMail(), e);
         }
     }
 

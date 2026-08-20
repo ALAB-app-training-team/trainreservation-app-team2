@@ -58,7 +58,7 @@ public class TrainCarService {
 
         List<SectionKmEntity> sectionKmList = sectionKmRepository.findBySectionCdIn(seatOfSectionCdList);
         Double distanceKm = sectionKmList.stream().mapToDouble(SectionKmEntity::getDistanceKm).sum();
-        TrainCarEntity trainCar = trainCarRepository.findByTrainCarCd(request.getTrainCarCd());
+        TrainCarEntity trainCar = trainCarRepository.findByTrainCarCd(request.getTrainCarCd()).orElseThrow(() -> new IllegalArgumentException("TrainCar is Not found"));
         Integer fare;
         switch (trainCar.getSeatType().getTrainCarType().getName()) {
             case "指定席" -> fare = fareKmService.getFareFromDistance(distanceKm).get("reserved");
