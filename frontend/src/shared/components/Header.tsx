@@ -137,19 +137,19 @@ export function Header() {
                                 ログアウト
                             </button>
 
-                            <button
-                                onClick={handleLogout}
+                            <NavLink
+                                to={'/accountUpdate'}
                                 className="w-full text-left hover:bg-gray-100"
                             >
                                 氏名・メールアドレス変更
-                            </button>
+                            </NavLink>
 
-                            <button
-                                onClick={handleLogout}
+                            <NavLink
+                                to={'/passwordUpdate'}
                                 className="w-full text-left hover:bg-gray-100"
                             >
                                 パスワード変更
-                            </button>
+                            </NavLink>
                         </>
                     )}
                 </div>

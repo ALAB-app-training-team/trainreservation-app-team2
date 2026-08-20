@@ -8,7 +8,9 @@ import { toast } from 'sonner';
 
 import { AuthProvider } from '@/context/AuthContext';
 import { AccountCreate } from '@/features/account/pages/AccountCreate';
+import { AccountUpdate } from '@/features/account/pages/AccountUpdate';
 import { Login } from '@/features/account/pages/Login';
+import { PasswordUpdate } from '@/features/account/pages/PasswordUpdate';
 import { ReservationGuestLogin } from '@/features/reservation/pages/ReservationGuestLogin';
 import { ReservationList } from '@/features/reservation/pages/ReservationList';
 import { ReservedTicket } from '@/features/reservation/pages/ReservedTicket';
@@ -32,17 +34,17 @@ const reservedTicketLoader = () => {
     const info = sessionStorage.getItem('guestLoginInfo');
     const account = localStorage.getItem('name');
     if (account === null && info === null) {
-        toast.error(ERROR_MESSAGE.SESSION_ERROR,{
-                duration:Infinity,
-                action: {
-                    label: 'OK',
-                    onClick: () => {}
-                },
-                classNames: {
-                    title : 'text-left whitespace-pre-line',
-                    actionButton: "!px-4 !py-2 !text-base !h-auto",
-                }
-            });
+        toast.error(ERROR_MESSAGE.SESSION_ERROR, {
+            duration: Infinity,
+            action: {
+                label: 'OK',
+                onClick: () => {},
+            },
+            classNames: {
+                title: 'text-left whitespace-pre-line',
+                actionButton: '!px-4 !py-2 !text-base !h-auto',
+            },
+        });
         return redirect('/scheduleSearch');
     }
     return null;
@@ -92,6 +94,16 @@ const router = createBrowserRouter([
                 path: '/accountCreate',
                 loader: () => loginLoader(),
                 element: <AccountCreate />,
+                errorElement: <Error />,
+            },
+            {
+                path: '/accountUpdate',
+                element: <AccountUpdate />,
+                errorElement: <Error />,
+            },
+            {
+                path: '/passwordUpdate',
+                element: <PasswordUpdate />,
                 errorElement: <Error />,
             },
             {

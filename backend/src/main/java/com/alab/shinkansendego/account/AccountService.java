@@ -1,6 +1,7 @@
 package com.alab.shinkansendego.account;
 
 import com.alab.shinkansendego.exception.ConflictException;
+import com.alab.shinkansendego.utils.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -58,5 +59,35 @@ public class AccountService {
             passwordEncoder.encode(request.getPassword()));
 
         accountRepository.save(postAccount);
+    }
+
+    /**
+     * アカウント情報変更メソッド
+     *
+     * @param request 変更するアカウント情報
+     */
+    @Transactional
+    public UUID putAccount(UUID currentUserId, AccountUpdateDto request) {
+        // 1. 存在確認（session.getId() で取得したIDで検索）
+        AccountEntity account = accountRepository.findById(currentUserId)
+            .orElseThrow(() -> new IllegalArgumentException("Account is not found"));
+
+        // 2. パスワード確認
+        if (!passwordEncoder.matches(request.getPassword(), account.getPassword())) {
+            throw new BadCredentialsException("Password does not match");
+        }
+
+        // 3. 重複チェック
+        String newMail = StringUtils.removeSpaces(request.getMail());
+        if (!account.getMail().equals(newMail) && accountRepository.findByMail(newMail).isPresent()) {
+            throw new ConflictException(newMail + " is Duplicate");
+        }
+
+        // 4. 情報更新
+        account.setName(StringUtils.removeSpaces(request.getName()));
+        account.setMail(newMail);
+
+        AccountEntity updatedAccount = accountRepository.save(account);
+        return updatedAccount.getId();
     }
 }
