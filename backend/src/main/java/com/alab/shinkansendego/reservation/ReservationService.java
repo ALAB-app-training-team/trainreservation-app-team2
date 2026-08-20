@@ -482,6 +482,12 @@ public class ReservationService {
             changedReservation.getRideDate(),
             changedReservation.getScheduleCd());
 
+        eventPublisher.publishEvent(new ReservationCanceledEvent(
+            reservationId,
+            reserveRequestDto,
+            departureTime,
+            arrivalTime
+        ));
         return reservationId;
     }
 
@@ -530,6 +536,12 @@ public class ReservationService {
             reservedSeatSectionRepository.deleteAll(deleteSeatSections);
         }
 
+        eventPublisher.publishEvent(new ReservationCanceledEvent(
+            reservationId,
+            reserveRequestDto,
+            departureTime,
+            arrivalTime
+        ));
         return reservationId;
     }
 
