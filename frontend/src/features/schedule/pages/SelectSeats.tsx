@@ -189,8 +189,8 @@ export function SelectSeats() {
             navigate('/reservedTicket', {
                 state: {
                     reservationId: reservationId,
-                    isBack: false,
-                    guestLogin: false,
+                    mode: '予約完了',
+                    role: isLoggedIn ? 'account' : 'guest',
                 },
             });
         } catch (error) {
@@ -259,9 +259,8 @@ export function SelectSeats() {
             navigate('/reservedTicket', {
                 state: {
                     reservationId: reservationId,
-                    isBack: false,
-                    guestLogin: false,
-                    isUpdated: true,
+                    mode: '予約変更完了',
+                    role: 'account',
                 },
             });
         } catch (error) {
@@ -363,9 +362,8 @@ export function SelectSeats() {
                             navigate('/reservedTicket', {
                                 state: {
                                     reservationId: reservationId,
-                                    isBack: true,
-                                    guestLogin: false,
-                                    isUpdated: false,
+                                    mode: '予約詳細',
+                                    role: 'account',
                                 },
                             });
                         }}

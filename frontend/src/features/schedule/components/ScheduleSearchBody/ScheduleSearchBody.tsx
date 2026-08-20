@@ -67,9 +67,8 @@ export function ScheduleSearchBody() {
                                 navigate('/reservedTicket', {
                                     state: {
                                         reservationId: reservationId,
-                                        isBack: true,
-                                        guestLogin: false,
-                                        isUpdated: false,
+                                        mode: '予約詳細',
+                                        role: 'account',
                                     },
                                 });
                             }}

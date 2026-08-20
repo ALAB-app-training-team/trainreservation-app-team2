@@ -51,8 +51,8 @@ export function ReservationGuestLoginBody() {
             navigate('/reservedTicket', {
                 state: {
                     reservationId: targetReservationId,
-                    isBack: false,
-                    guestLogin: true,
+                    mode: '予約詳細',
+                    role: 'guest',
                 },
             });
             window.scrollTo(0, 0);

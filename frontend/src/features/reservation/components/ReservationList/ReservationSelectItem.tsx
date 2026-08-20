@@ -35,7 +35,7 @@ export function ReservationSelectItem({
         navigate('/reservedTicket', {
             state: {
                 reservationId: details.reservationId,
-                isBack: true,
+                role: 'account',
                 guestLogin: false,
             },
         });
