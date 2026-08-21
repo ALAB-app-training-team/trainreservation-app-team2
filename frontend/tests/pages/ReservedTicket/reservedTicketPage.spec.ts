@@ -103,7 +103,7 @@ test('戻るボタン表示有無：予約確認のアカウントログイン�
     page,
     createReservation,
     createGuestReservation,
-    login,
+    commonLogin,
     logout,
     context,
 }) => {
@@ -113,7 +113,7 @@ test('戻るボタン表示有無：予約確認のアカウントログイン�
     const selectSeatPage = new SelectSeatPage(page);
 
     // 予約完了時は戻るボタンがないこと
-    await login();
+    await commonLogin();
     await expect(page).toHaveURL('/scheduleSearch');
     await createReservation();
     await expect(page).toHaveURL('/reservedTicket');
@@ -164,7 +164,7 @@ test('予約変更ボタン表示有無：アカウントログイン時はあ�
     page,
     createReservation,
     createGuestReservation,
-    login,
+    commonLogin,
     logout,
     context,
 }) => {
@@ -172,7 +172,7 @@ test('予約変更ボタン表示有無：アカウントログイン時はあ�
     const reservationGuestLoginPage = new ReservationGuestLoginPage(page);
 
     // アカウントログイン時は予約変更ボタンがあること
-    await login();
+    await commonLogin();
     await expect(page).toHaveURL('/scheduleSearch');
     await createReservation();
     await expect(page).toHaveURL('/reservedTicket');
@@ -216,7 +216,7 @@ test('予約キャンセルボタン表示有無：アカウントログイン�
     page,
     createReservation,
     createGuestReservation,
-    login,
+    commonLogin,
     logout,
     context,
 }) => {
@@ -224,7 +224,7 @@ test('予約キャンセルボタン表示有無：アカウントログイン�
     const reservationGuestLoginPage = new ReservationGuestLoginPage(page);
 
     // アカウントログイン時は予約キャンセルボタンがあること
-    await login();
+    await commonLogin();
     await expect(page).toHaveURL('/scheduleSearch');
     await createReservation();
     await expect(page).toHaveURL('/reservedTicket');
@@ -268,7 +268,7 @@ test('同行者割り当てボタン表示有無：アカウントログイン�
     page,
     createReservation,
     createGuestReservation,
-    login,
+    commonLogin,
     logout,
     context,
 }) => {
@@ -276,7 +276,7 @@ test('同行者割り当てボタン表示有無：アカウントログイン�
     const reservationGuestLoginPage = new ReservationGuestLoginPage(page);
 
     // アカウントログイン時は同行者割り当てボタンがあること
-    await login();
+    await commonLogin();
     await expect(page).toHaveURL('/scheduleSearch');
     await createReservation();
     await expect(page).toHaveURL('/reservedTicket');
