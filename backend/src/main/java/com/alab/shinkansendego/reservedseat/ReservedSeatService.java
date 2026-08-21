@@ -107,23 +107,22 @@ public class ReservedSeatService {
 
             reservedSeatEntity.setName(StringUtils.removeSpaces(reservedSeat.getName()));
             reservedSeatEntity.setMail(StringUtils.removeSpaces(reservedSeat.getMail()));
-
-            if (!releaseSeats.isEmpty()) {
-                eventPublisher.publishEvent(new ReservedSeatReleaseEvent(
-                    reservationId,
-                    releaseSeats,
-                    departureTime,
-                    arrivalTime
-                ));
-            }
-            if (!setSeats.isEmpty()) {
-                eventPublisher.publishEvent(new ReservedSeatSetEvent(
-                    reservationId,
-                    setSeats,
-                    departureTime,
-                    arrivalTime
-                ));
-            }
+        }
+        if (!releaseSeats.isEmpty()) {
+            eventPublisher.publishEvent(new ReservedSeatReleaseEvent(
+                reservationId,
+                releaseSeats,
+                departureTime,
+                arrivalTime
+            ));
+        }
+        if (!setSeats.isEmpty()) {
+            eventPublisher.publishEvent(new ReservedSeatSetEvent(
+                reservationId,
+                setSeats,
+                departureTime,
+                arrivalTime
+            ));
         }
     }
 
