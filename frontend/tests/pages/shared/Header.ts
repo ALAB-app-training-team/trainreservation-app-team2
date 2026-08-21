@@ -1,4 +1,4 @@
-import { type Locator, type Page } from '@playwright/test';
+import { expect, type Locator, type Page } from '@playwright/test';
 
 export class Header {
     readonly page: Page;
@@ -50,9 +50,7 @@ export class Header {
     }
 
     async goToLogout() {
-        // await this.logoutButton.first().waitFor({ state: 'visible' });
         await this.logoutButton.first().click();
-        // await this.page.waitForURL('**/login');
     }
 
     async clickUserName() {
