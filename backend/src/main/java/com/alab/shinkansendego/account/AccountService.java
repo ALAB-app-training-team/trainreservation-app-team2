@@ -33,6 +33,7 @@ public class AccountService {
      */
     public AccountEntity login(String mail, String password) {
         AccountEntity account = accountRepository.findByMail(mail).orElseThrow(() -> new BadCredentialsException("login is failed"));
+
         boolean matches = passwordEncoder.matches(password, account.getPassword());
         if (!matches) {
             throw new BadCredentialsException("login is failed");
@@ -86,6 +87,29 @@ public class AccountService {
         // 4. 情報更新
         account.setName(StringUtils.removeSpaces(request.getName()));
         account.setMail(newMail);
+
+        AccountEntity updatedAccount = accountRepository.save(account);
+        return updatedAccount.getId();
+    }
+
+    /**
+     * パスワード変更メソッド
+     *
+     * @param request 変更する新しいパスワードと現在のパスワード情報
+     */
+    @Transactional
+    public UUID putPassword(UUID currentUserId, PasswordUpdateDto request) {
+        // 1. 存在確認（session.getId() で取得したIDで検索）
+        AccountEntity account = accountRepository.findById(currentUserId)
+            .orElseThrow(() -> new IllegalArgumentException("Account is not found"));
+
+        // 2. パスワード確認
+        if (!passwordEncoder.matches(request.getPassword(), account.getPassword())) {
+            throw new IllegalArgumentException("Password does not match");
+        }
+
+        // 3. 情報更新
+        account.setPassword(passwordEncoder.encode(request.getNewPassword()));
 
         AccountEntity updatedAccount = accountRepository.save(account);
         return updatedAccount.getId();

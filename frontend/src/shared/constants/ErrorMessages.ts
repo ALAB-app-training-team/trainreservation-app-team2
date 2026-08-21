@@ -30,4 +30,5 @@ export const ERROR_MESSAGE = {
     ACCOUNT_ALREADY: '登録済のメールアドレスです。ログインしてください。',
     PASSWORD_NOT_MATCH: 'パスワードが正しくありません',
     ACCOUNT_CHANGE_RETRY: 'アカウント情報の変更に失敗しました',
+    PASSWORD_CHANGE_RETRY: 'パスワードの変更に失敗しました',
 } as const;

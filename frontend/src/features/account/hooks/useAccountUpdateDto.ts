@@ -131,7 +131,6 @@ export function useAccountUpdateDto() {
 
     const isDisable = checkDisable(accountUpdateForm);
 
-    //変更する必要あり
     const handleAccount = async () => {
         if (isSubmitting) return;
         setIsSubmitting(true);
@@ -150,7 +149,17 @@ export function useAccountUpdateDto() {
         } catch (error) {
             if (axios.isAxiosError(error)) {
                 if (error.response?.status === HttpStatusCode.Conflict) {
-                    toast.error(ERROR_MESSAGE.ACCOUNT_ALREADY, {/* 省略 */});
+                    toast.error(ERROR_MESSAGE.ACCOUNT_CHANGE_RETRY, {
+                        duration: Infinity,
+                        action: {
+                            label: 'OK',
+                            onClick: () => {},
+                        },
+                        classNames: {
+                            title: 'text-left whitespace-pre-line',
+                            actionButton: '!px-4 !py-2 !text-base !h-auto',
+                        },
+                    });
                 } else if (
                     error.response?.status === HttpStatusCode.BadRequest
                 ) {

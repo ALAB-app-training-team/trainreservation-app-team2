@@ -107,32 +107,46 @@ export function usePasswordUpdateDto() {
 
     const isDisable = checkDisable(passwordUpdateForm, policy);
 
-    //後で変更
     const handleAccount = async () => {
         if (isSubmitting) return;
         setIsSubmitting(true);
         try {
-            await apiClient.post<void>(ENDPOINTS.ACCOUNT(), {
+            await apiClient.put(ENDPOINTS.PASSWORD(), {
                 password: passwordUpdateForm.password,
+                newPassword: passwordUpdateForm.newPassword,
+                newPasswordCheck: passwordUpdateForm.newPasswordCheck,
             });
             toast.success('パスワードの変更が完了しました。');
-            navigate('/login', { replace: true });
+            navigate('/scheduleSearch', { replace: true });
         } catch (error) {
-            if (
-                axios.isAxiosError(error) &&
-                error.response?.status === HttpStatusCode.Conflict
-            ) {
-                toast.error(ERROR_MESSAGE.ACCOUNT_ALREADY, {
-                    duration: Infinity,
-                    action: {
-                        label: 'OK',
-                        onClick: () => {},
-                    },
-                    classNames: {
-                        title: 'text-left whitespace-pre-line',
-                        actionButton: '!px-4 !py-2 !text-base !h-auto',
-                    },
-                });
+            if (axios.isAxiosError(error)) {
+                if (error.response?.status === HttpStatusCode.Conflict) {
+                    toast.error(ERROR_MESSAGE.PASSWORD_CHANGE_RETRY, {
+                        duration: Infinity,
+                        action: {
+                            label: 'OK',
+                            onClick: () => {},
+                        },
+                        classNames: {
+                            title: 'text-left whitespace-pre-line',
+                            actionButton: '!px-4 !py-2 !text-base !h-auto',
+                        },
+                    });
+                } else if (
+                    error.response?.status === HttpStatusCode.BadRequest
+                ) {
+                    toast.error(ERROR_MESSAGE.PASSWORD_NOT_MATCH, {
+                        duration: Infinity,
+                        action: {
+                            label: 'OK',
+                            onClick: () => {},
+                        },
+                        classNames: {
+                            title: 'text-left whitespace-pre-line',
+                            actionButton: '!px-4 !py-2 !text-base !h-auto',
+                        },
+                    });
+                }
             }
         } finally {
             setIsSubmitting(false);

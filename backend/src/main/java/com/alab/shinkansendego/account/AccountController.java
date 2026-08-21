@@ -86,7 +86,7 @@ public class AccountController {
     @PreAuthorize("isAuthenticated()")
     public ResponseEntity<UUID> putAccount(
         @Valid @RequestBody AccountUpdateDto request,
-        @AuthenticationPrincipal AccountSessionDto session // ★認証情報を取得
+        @AuthenticationPrincipal AccountSessionDto session
     ) {
         UUID response = accountService.putAccount(session.getId(), request);
         return ResponseEntity.status(HttpStatus.OK).body(response);
@@ -98,4 +98,13 @@ public class AccountController {
      * @param request 変更する新しいパスワードを含んだアカウント情報
      * @return NoContent
      */
+    @PutMapping("password")
+    @PreAuthorize("isAuthenticated()")
+    public ResponseEntity<UUID> putPassword(
+        @Valid @RequestBody PasswordUpdateDto request,
+        @AuthenticationPrincipal AccountSessionDto session
+    ) {
+        UUID response = accountService.putPassword(session.getId(), request);
+        return ResponseEntity.status(HttpStatus.OK).body(response);
+    }
 }
