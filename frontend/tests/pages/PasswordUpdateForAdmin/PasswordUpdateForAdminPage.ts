@@ -1,15 +1,15 @@
 import { type Locator, type Page } from '@playwright/test';
 import { Header } from '@tests/pages/shared/Header';
 
-export class AccountCreatePage {
+export class PasswordUpdateForAdminPage {
     readonly page: Page;
     readonly header: Header;
     readonly name: Locator;
     readonly mailAddress: Locator;
     readonly password: Locator;
     readonly passwordCheck: Locator;
-    readonly createButton: Locator;
-    readonly ramdomMail: string;
+    readonly updateButton: Locator;
+    // readonly ramdomMail: string;
 
     constructor(page: Page) {
         this.page = page;
@@ -24,15 +24,16 @@ export class AccountCreatePage {
         });
         this.passwordCheck = page.getByRole('textbox', {
             name: 'パスワード再入力',
+            exact: true,
         });
-        this.createButton = page.getByRole('button', {
-            name: '登録',
+        this.updateButton = page.getByRole('button', {
+            name: '変更を確定',
         });
-        this.ramdomMail = 'random' + Math.random() + '@test.co.jp';
+        // this.ramdomMail = 'random' + Math.random() + '@test.co.jp';
     }
 
     async goto() {
-        await this.page.goto('/accountCreate');
+        await this.page.goto('/admin/password');
     }
 
     async fillName(name: string) {
@@ -51,20 +52,20 @@ export class AccountCreatePage {
         await this.passwordCheck.fill(passwordCheck);
     }
 
-    async clickCreateButton() {
-        await this.createButton.click();
+    async clickUpdateButton() {
+        await this.updateButton.click();
     }
 
-    async inputCreateFirstAccountInfo() {
+    async inputUpdateFirstAccountInfo() {
         await this.fillName('山田 太郎');
         await this.fillMailAddress('first@test.co.jp');
-        await this.fillPassword('Password1');
-        await this.fillPasswordCheck('Password1');
+        await this.fillPassword('Password2');
+        await this.fillPasswordCheck('Password2');
     }
 
-    async inputCreateRamdomAccountInfo() {
-        await this.fillName('ランダム 太郎');
-        await this.fillMailAddress(this.ramdomMail);
+    async inputRevertFirstAccountInfo() {
+        await this.fillName('山田 太郎');
+        await this.fillMailAddress('first@test.co.jp');
         await this.fillPassword('Password1');
         await this.fillPasswordCheck('Password1');
     }

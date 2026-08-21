@@ -268,13 +268,13 @@ test('予約確定', async ({ page }) => {
 
 test('ログイン中は氏名・メールアドレス入力欄とログインボタンが表示されない', async ({
     page,
-    login,
+    commonLogin,
     logout,
 }) => {
     const scheduleSearchPage = new ScheduleSearchPage(page);
     const selectSeatPagePage = new SelectSeatPage(page);
 
-    await login();
+    await commonLogin();
     await expect(page).toHaveURL('/scheduleSearch');
     await scheduleSearchPage.clickDetailButton();
 
@@ -317,7 +317,7 @@ test('シートマップでログインすると選択した座席が保持さ�
     await selectSeatPage.clickLoginButton();
     await expect(page).toHaveURL('/login');
     await loginPage.loginButton.waitFor({ state: 'visible' });
-    await loginPage.inputLoginInfo();
+    await loginPage.inputcommonLoginInfo();
     await loginPage.clickLoginButton();
     await expect(page).toHaveURL('/selectSeat');
     await expect(page.getByText('座席が選択されていません')).toBeHidden();
@@ -325,14 +325,14 @@ test('シートマップでログインすると選択した座席が保持さ�
 
 test('座席変更の際はクレカ入力欄が表示されないこと', async ({
     page,
-    login,
+    commonLogin,
     createReservation,
     logout,
 }) => {
     const reservationListPage = new ReservationListPage(page);
 
     // ログイン～予約～座席変更シートマップ
-    login();
+    commonLogin();
     await expect(page).toHaveURL('/scheduleSearch');
     await createReservation();
     await reservationListPage.goto();
@@ -349,14 +349,14 @@ test('座席変更の際はクレカ入力欄が表示されないこと', async
 
 test('座席変更の際は座席選択済みの状態であること', async ({
     page,
-    login,
+    commonLogin,
     createReservation,
     logout,
 }) => {
     const reservationListPage = new ReservationListPage(page);
 
     // ログイン～予約～座席変更シートマップ
-    login();
+    commonLogin();
     await expect(page).toHaveURL('/scheduleSearch');
     await createReservation();
     await reservationListPage.goto();
@@ -371,7 +371,7 @@ test('座席変更の際は座席選択済みの状態であること', async ({
 
 test('日時電車変更の際はクレカ入力欄が表示されないこと', async ({
     page,
-    login,
+    commonLogin,
     createReservation,
     logout,
 }) => {
@@ -379,7 +379,7 @@ test('日時電車変更の際はクレカ入力欄が表示されないこと',
     const scheduleSearchPage = new ScheduleSearchPage(page);
 
     // ログイン～予約～座席変更シートマップ
-    login();
+    commonLogin();
     await expect(page).toHaveURL('/scheduleSearch');
     await createReservation();
     await reservationListPage.goto();
@@ -398,7 +398,7 @@ test('日時電車変更の際はクレカ入力欄が表示されないこと',
 
 test('日時電車変更で新しい電車を選ぶと座席未選択,同じ電車を選ぶと選択済みの状態であること', async ({
     page,
-    login,
+    commonLogin,
     createReservation,
     logout,
 }) => {
@@ -407,7 +407,7 @@ test('日時電車変更で新しい電車を選ぶと座席未選択,同じ電�
     const selectSeatPage = new SelectSeatPage(page);
 
     // ログイン～予約～座席変更シートマップ
-    login();
+    commonLogin();
     await expect(page).toHaveURL('/scheduleSearch');
     await createReservation();
     await reservationListPage.goto();

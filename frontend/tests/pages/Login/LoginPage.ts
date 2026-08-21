@@ -42,8 +42,13 @@ export class LoginPage {
         await this.createButton.click();
     }
 
-    async inputLoginInfo() {
+    async inputcommonLoginInfo() {
         await this.fillMailAddress('test-common@test.com');
+        await this.fillPassword('Password1');
+    }
+    
+    async inputAdminLoginInfo() {
+        await this.fillMailAddress('test-admin@test.com');
         await this.fillPassword('Password1');
     }
 }
