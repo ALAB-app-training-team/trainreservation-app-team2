@@ -120,12 +120,14 @@ test('戻るボタン表示有無：予約確認のアカウントログイン�
     await expect(reservedTicketPage.backButton).toBeHidden();
 
     // 予約確認のアカウントログイン時は戻るボタンがあること
+    await reservedTicketPage.header.clickUserName();
     await reservedTicketPage.header.goToReservationList();
     await reservationListPage.clickTicketButton();
     await expect(page).toHaveURL('/reservedTicket');
     await expect(reservedTicketPage.backButton).toBeVisible();
 
     // 予約変更時は戻るボタンがないこと
+    await reservedTicketPage.header.clickUserName();
     await reservedTicketPage.header.goToReservationList();
     await reservationListPage.clickChangeButton();
     await reservationListPage.clickChangeSeatConfirmButton();
