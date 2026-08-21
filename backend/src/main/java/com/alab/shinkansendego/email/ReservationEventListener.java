@@ -57,7 +57,7 @@ public class ReservationEventListener {
     @Async
     @TransactionalEventListener(phase = TransactionPhase.AFTER_COMMIT)
     public void handleReservationChanged(ReservationChangedEvent event) {
-        EmailRequestDto emailDto = setEmailRequestDto(event.reservationId(), event.request(), event.departureTime(), event.arrivalTime(), event.oldTotalAmount(), null);
+        EmailRequestDto emailDto = setEmailRequestDto(event.reservationId(), event.request(), event.departureTime(), event.arrivalTime(), event.oldTotalAmount(), event.representativeName());
         emailService.sendReservationChange(emailDto);
         if (!CollectionUtils.isEmpty(event.assignedReservedSeats())) {
             for (ReservedSeatEntity assignedSeat : event.assignedReservedSeats()) {
