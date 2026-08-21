@@ -170,7 +170,7 @@ public class SesEmailService implements EmailService {
                 seatFare = dto.getSeats().getFirst().getSeatFare();
             }
 
-            String ticketUrl = EmailUtils.TICKET_PATH + dto.getReservationId();
+            String ticketUrl = baseUrl + EmailUtils.TICKET_PATH + dto.getReservationId();
 
             String body = String.format(EmailUtils.SET_BODY,
                 dto.getReserverName() != null ? dto.getReserverName() : "ユーザー",

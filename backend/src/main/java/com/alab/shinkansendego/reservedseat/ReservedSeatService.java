@@ -14,6 +14,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalTime;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 import java.util.UUID;
@@ -84,6 +85,9 @@ public class ReservedSeatService {
             .orElseThrow(() -> new IllegalArgumentException("ArrivalTime is not found"))
             .getArrivalTime();
 
+        List<ReserveRequestDto> releaseSeats = new ArrayList<>();
+        List<ReserveRequestDto> setSeats = new ArrayList<>();
+
         for (ReservedSeatUpdateDto reservedSeat : reservedSeats) {
             ReservedSeatEntity reservedSeatEntity =
                 reservedSeatRepository.findByIdAndReservationIdAndIsDeleted(reservedSeat.getId(),
@@ -91,38 +95,35 @@ public class ReservedSeatService {
 
             if ((reservedSeatEntity.getMail() == null || reservedSeatEntity.getMail().isBlank()) && !reservedSeat.getMail().isBlank()) {
                 // 未割り当てを割り当て
-                eventPublisher.publishEvent(new ReservedSeatSetEvent(
-                    reservationId,
-                    setNameAndMail(reservation, reservedSeat.getName(), reservedSeat.getMail(), reservedSeatEntity),
-                    departureTime,
-                    arrivalTime
-                ));
+                setSeats.add(setNameAndMail(reservation, reservedSeat.getName(), reservedSeat.getMail(), reservedSeatEntity));
             } else if (!reservedSeat.getMail().isBlank() && !Objects.equals(reservedSeatEntity.getMail(), reservedSeat.getMail())) {
                 //割り当て済を別の人に割り当て
-                eventPublisher.publishEvent(new ReservedSeatReleaseEvent(
-                    reservationId,
-                    setNameAndMail(reservation, reservedSeatEntity.getName(), reservedSeatEntity.getMail(), reservedSeatEntity),
-                    departureTime,
-                    arrivalTime
-                ));
-                eventPublisher.publishEvent(new ReservedSeatSetEvent(
-                    reservationId,
-                    setNameAndMail(reservation, reservedSeat.getName(), reservedSeat.getMail(), reservedSeatEntity),
-                    departureTime,
-                    arrivalTime
-                ));
+                releaseSeats.add(setNameAndMail(reservation, reservedSeatEntity.getName(), reservedSeatEntity.getMail(), reservedSeatEntity));
+                setSeats.add(setNameAndMail(reservation, reservedSeat.getName(), reservedSeat.getMail(), reservedSeatEntity));
             } else if (!reservedSeat.getMail().isBlank() && reservedSeat.getMail().isBlank()) {
                 // 割り当て済を未割当
-                eventPublisher.publishEvent(new ReservedSeatReleaseEvent(
-                    reservationId,
-                    setNameAndMail(reservation, reservedSeatEntity.getName(), reservedSeatEntity.getMail(), reservedSeatEntity),
-                    departureTime,
-                    arrivalTime
-                ));
+                releaseSeats.add(setNameAndMail(reservation, reservedSeatEntity.getName(), reservedSeatEntity.getMail(), reservedSeatEntity));
             }
 
             reservedSeatEntity.setName(StringUtils.removeSpaces(reservedSeat.getName()));
             reservedSeatEntity.setMail(StringUtils.removeSpaces(reservedSeat.getMail()));
+
+            if (!releaseSeats.isEmpty()) {
+                eventPublisher.publishEvent(new ReservedSeatReleaseEvent(
+                    reservationId,
+                    releaseSeats,
+                    departureTime,
+                    arrivalTime
+                ));
+            }
+            if (!setSeats.isEmpty()) {
+                eventPublisher.publishEvent(new ReservedSeatSetEvent(
+                    reservationId,
+                    setSeats,
+                    departureTime,
+                    arrivalTime
+                ));
+            }
         }
     }
 

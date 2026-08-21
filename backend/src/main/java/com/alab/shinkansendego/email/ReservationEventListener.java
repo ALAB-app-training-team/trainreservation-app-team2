@@ -80,17 +80,19 @@ public class ReservationEventListener {
     @Async
     @TransactionalEventListener(phase = TransactionPhase.AFTER_COMMIT)
     public void handleReservedSetReleased(ReservedSeatSetEvent event) {
-
-        EmailRequestDto emailDto = setEmailRequestDto(event.reservationId(), event.request(), event.departureTime(), event.arrivalTime());
-        emailService.sendSetCompanion(emailDto);
+        for (ReserveRequestDto request : event.requests()) {
+            EmailRequestDto emailDto = setEmailRequestDto(event.reservationId(), request, event.departureTime(), event.arrivalTime());
+            emailService.sendSetCompanion(emailDto);
+        }
     }
 
     @Async
     @TransactionalEventListener(phase = TransactionPhase.AFTER_COMMIT)
     public void handleReservedSeatReleased(ReservedSeatReleaseEvent event) {
-
-        EmailRequestDto emailDto = setEmailRequestDto(event.reservationId(), event.request(), event.departureTime(), event.arrivalTime());
-        emailService.sendReleaseCompanion(emailDto);
+        for (ReserveRequestDto request : event.requests()) {
+            EmailRequestDto emailDto = setEmailRequestDto(event.reservationId(), request, event.departureTime(), event.arrivalTime());
+            emailService.sendReleaseCompanion(emailDto);
+        }
     }
 
     private EmailRequestDto setEmailRequestDto(UUID reservationId,
