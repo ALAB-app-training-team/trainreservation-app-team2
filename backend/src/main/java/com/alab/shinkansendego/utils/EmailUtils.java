@@ -45,7 +45,7 @@ public final class EmailUtils {
     public static final String CHANGE_BODY = """
          %s さま
 
-        「新幹線でGO!」アプリをご利用いただきありがとうございます。
+        「新幹線でGO!」アプリでチケットの変更が完了いたしました。
          以下に予約変更詳細をお知らせいたします。
 
         ■変更後予約詳細

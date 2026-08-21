@@ -14,8 +14,8 @@ import com.alab.shinkansendego.seat.SeatEntity;
 import com.alab.shinkansendego.seat.SeatRepository;
 import com.alab.shinkansendego.station.StationEntity;
 import com.alab.shinkansendego.station.StationRepository;
+import com.alab.shinkansendego.traincar.TrainCarRepository;
 import com.alab.shinkansendego.traintype.TrainTypeEntity;
-import org.apache.commons.lang3.StringUtils;
 import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.event.TransactionPhase;
@@ -33,19 +33,22 @@ public class ReservationEventListener {
     private final ScheduleRepository scheduleRepository;
     private final SeatRepository seatRepository;
     private final ReservedSeatRepository reservedSeatRepository;
+    private final TrainCarRepository trainCarRepository;
 
     public ReservationEventListener(
         EmailService emailService,
         StationRepository stationRepository,
         ScheduleRepository scheduleRepository,
         SeatRepository seatRepository,
-        ReservedSeatRepository reservedSeatRepository
+        ReservedSeatRepository reservedSeatRepository,
+        TrainCarRepository trainCarRepository
     ) {
         this.emailService = emailService;
         this.stationRepository = stationRepository;
         this.scheduleRepository = scheduleRepository;
         this.seatRepository = seatRepository;
         this.reservedSeatRepository = reservedSeatRepository;
+        this.trainCarRepository = trainCarRepository;
     }
 
     @Async
@@ -62,12 +65,18 @@ public class ReservationEventListener {
         emailService.sendReservationChange(emailDto);
         if (!CollectionUtils.isEmpty(event.assignedReservedSeats())) {
             for (ReservedSeatEntity assignedSeat : event.assignedReservedSeats()) {
+                String trainCarCd = trainCarRepository.findByTrainCarCd(assignedSeat.getTrainCarCd())
+                    .orElseThrow(() -> new IllegalArgumentException("TrainCar is not found")).getSeatType().getTrainCarTypeCd();
                 EmailRequestDto companion = setEmailRequestDto(event.reservationId(), event.request(), event.departureTime(), event.arrivalTime(), event.oldTotalAmount());
                 companion.setReserverMail(assignedSeat.getMail());
                 companion.setReserverName(assignedSeat.getName());
-                companion.setSeats(
-                    companion.getSeats().stream().filter(seat -> StringUtils.equals(seat.getSeatCd(), assignedSeat.getSeatCd())).toList()
-                );
+                emailDto.setSeats(
+                    setDisplaySeats(List.of(new ReserveRequestDto.SelectedSeatDto(
+                        assignedSeat.getTrainCarCd(),
+                        trainCarCd,
+                        assignedSeat.getSeatCd(),
+                        assignedSeat.getSeatFare()))));
+                emailService.sendReleaseCompanion(emailDto);
             }
         }
     }
@@ -100,7 +109,7 @@ public class ReservationEventListener {
     @TransactionalEventListener(phase = TransactionPhase.AFTER_COMMIT)
     public void handleReservedSetReleased(ReservedSeatSetEvent event) {
         for (ReserveRequestDto request : event.requests()) {
-            EmailRequestDto emailDto = setEmailRequestDto(event.reservationId(), request, event.departureTime(), event.arrivalTime());
+            EmailRequestDto emailDto = setEmailRequestDto(event.reservationId(), request, event.departureTime(), event.arrivalTime(), null);
             emailService.sendSetCompanion(emailDto);
         }
     }
@@ -109,7 +118,7 @@ public class ReservationEventListener {
     @TransactionalEventListener(phase = TransactionPhase.AFTER_COMMIT)
     public void handleReservedSeatReleased(ReservedSeatReleaseEvent event) {
         for (ReserveRequestDto request : event.requests()) {
-            EmailRequestDto emailDto = setEmailRequestDto(event.reservationId(), request, event.departureTime(), event.arrivalTime());
+            EmailRequestDto emailDto = setEmailRequestDto(event.reservationId(), request, event.departureTime(), event.arrivalTime(), null);
             emailService.sendReleaseCompanion(emailDto);
         }
     }

@@ -177,7 +177,7 @@ public class LocalEmailService implements EmailService {
             MimeMessage mimeMessage = mailSender.createMimeMessage();
             MimeMessageHelper helper = new MimeMessageHelper(mimeMessage, "UTF-8");
 
-            helper.setFrom("thashimoto@jeisryokai.onmicrosoft.com", EmailUtils.SENDER_NAME);
+            helper.setFrom(EmailUtils.FROM_ADDRESS, EmailUtils.SENDER_NAME);
             helper.setTo(dto.getReserverMail());
             helper.setSubject(EmailUtils.SET_SUBJECT);
 
