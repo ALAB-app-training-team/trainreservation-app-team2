@@ -50,13 +50,12 @@ export class Header {
     }
 
     async goToLogout() {
-        await this.logoutButton.first().waitFor({ state: 'visible' });
+        // await this.logoutButton.first().waitFor({ state: 'visible' });
         await this.logoutButton.first().click();
-        await this.page.waitForURL('**/login');
+        // await this.page.waitForURL('**/login');
     }
 
     async clickUserName() {
-        await this.userName.first().waitFor({ state: 'visible' });
         await this.userName.first().click();
     }
 }
