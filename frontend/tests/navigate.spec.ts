@@ -33,8 +33,13 @@ test('navigate-ゲストログイン全機能', async ({ page, context }) => {
     await selectSeatPage.clickReseveButton();
     await selectSeatPage.clickReserveConfirmButton();
     await expect(page).toHaveURL('/reservedTicket');
-
-    // 予約完了画面の共有用URLを用いて予約確認
+    // 同行者割り当て
+    await reservedTicketPage.clickCompanionChangeButton();
+    await reservedTicketPage.checkCompanionCheckBox();
+    await reservedTicketPage.inputCompanionInfo();
+    await reservedTicketPage.clickCompanionChangeConfirmButton();
+    await expect(page).toHaveURL('/reservedTicket');
+    // 共有用URLを用いて同行者で予約確認
     await reservedTicketPage.clickTicketShareButton();
     await reservedTicketPage.linkCopyElement.waitFor({ state: 'visible' });
     await context.grantPermissions(['clipboard-read', 'clipboard-write']);
@@ -45,7 +50,7 @@ test('navigate-ゲストログイン全機能', async ({ page, context }) => {
     });
     await page.goto(clipboardText);
     await expect(page).toHaveURL(/\/reservationGuestLogin\?.+/);
-    await reservationGuestLoginPage.inputGuestLoginInfo();
+    await reservationGuestLoginPage.inputCompanionLoginInfo();
     await reservationGuestLoginPage.clickGuestLoginButton();
     await expect(page).toHaveURL('/reservedTicket');
     await expect(
@@ -55,7 +60,7 @@ test('navigate-ゲストログイン全機能', async ({ page, context }) => {
     ).toBeHidden();
 });
 
-test('navigate-ログイン全機能', async ({
+test('navigate-アカウントログイン全機能', async ({
     page,
     commonLogin,
     logout,
