@@ -39,11 +39,11 @@ export function StationSelect({
                     className="w-full text-left"
                     classNames={{
                         control: ({ isFocused }) =>
-                            'rounded-xl bg-white p-2 ' +
+                            'cursor-pointer rounded-xl bg-white p-2 ' +
                             `${isFocused ? 'border-primary border-2' : 'border-transparent'}`,
                         menu: () => 'bg-white p-2',
                         option: ({ isFocused, isSelected }) =>
-                            `${isSelected ? 'bg-primary text-white' : isFocused ? 'bg-primary-light' : 'text-gray-700'}`,
+                            `cursor-pointer ${isSelected ? 'bg-primary text-white' : isFocused ? 'bg-primary-light' : 'text-gray-700'}`,
                     }}
                     unstyled
                     options={options}
