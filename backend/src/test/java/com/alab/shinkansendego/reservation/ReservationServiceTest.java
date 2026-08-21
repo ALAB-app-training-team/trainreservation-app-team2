@@ -982,6 +982,20 @@ public class ReservationServiceTest {
     }
 
     @Test
+    @DisplayName("DBに存在しないアカウントからのリクエストの場合BadCredentialsExceptionが発生する")
+    void putReservation_withNotExistAccount_throwsBadCredentialsException() {
+        ReserveRequestDto request = new ReserveRequestDto("THK02", LocalDate.now(), "THK01", "THK02", "", "", "", List.of(new ReserveRequestDto.SelectedSeatDto("E5SER01", "CAR01", "SEAT01001", 5000), new ReserveRequestDto.SelectedSeatDto("E5SER01", "CAR01", "SEAT01010", 5000)));
+        Optional<ReservationEntity> reservation = Optional.of(buildReservation(reservationId1));
+        reservation.get().setAccountId(accountId);
+        session.setId(noReservationAccountId);
+        when(reservationRepo.findByIdAndIsDeleted(reservationId1, false)).thenReturn(reservation);
+        when(accountRepo.findById(any())).thenReturn(Optional.empty());
+
+        Exception ex = assertThrows(BadCredentialsException.class, () -> service.insertReservation(request, session));
+        assertEquals("認証に失敗しました", ex.getMessage());
+    }
+
+    @Test
     @DisplayName("予約情報の持つ出発駅と同じスケジュールがない場合、IllegalArgumentExceptionが発生する")
     void putReservation_withoutDepartureTime_throwsIllegalArgumentException() {
         ReserveRequestDto request = new ReserveRequestDto("THK02", LocalDate.now(), "THK01", "THK02", "", "", "", List.of(new ReserveRequestDto.SelectedSeatDto("E5SER01", "CAR01", "SEAT01001", 5000), new ReserveRequestDto.SelectedSeatDto("E5SER01", "CAR01", "SEAT01010", 5000)));
@@ -1138,6 +1152,20 @@ public class ReservationServiceTest {
         when(reservationRepo.findByIdAndIsDeleted(reservationId1, false)).thenReturn(reservation);
         Exception ex = assertThrows(IllegalArgumentException.class, () -> service.putReservedSeat(reservationId1, request, session));
         assertEquals("Reserved Seats is Not found", ex.getMessage());
+    }
+
+    @Test
+    @DisplayName("DBに存在しないアカウントからのリクエストの場合BadCredentialsExceptionが発生する")
+    void putReservedSeat_withNotExistAccount_throwsBadCredentialsException() {
+        ReserveRequestDto request = new ReserveRequestDto("THK01", LocalDate.of(2026, 6, 1), "THK01", "THK09", "", "", "", List.of(new ReserveRequestDto.SelectedSeatDto("E5SER01", "CAR01", "SEAT01001", 5000), new ReserveRequestDto.SelectedSeatDto("E5SER01", "CAR01", "SEAT01002", 5000)));
+        Optional<ReservationEntity> reservation = Optional.of(buildReservation(reservationId1));
+        reservation.get().setAccountId(accountId);
+        session.setId(noReservationAccountId);
+        when(reservationRepo.findByIdAndIsDeleted(reservationId1, false)).thenReturn(reservation);
+        when(accountRepo.findById(any())).thenReturn(Optional.empty());
+
+        Exception ex = assertThrows(BadCredentialsException.class, () -> service.insertReservation(request, session));
+        assertEquals("認証に失敗しました", ex.getMessage());
     }
 
     @Test
