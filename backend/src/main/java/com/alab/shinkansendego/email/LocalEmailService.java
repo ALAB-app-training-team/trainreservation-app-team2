@@ -197,6 +197,7 @@ public class LocalEmailService implements EmailService {
 
             String body = String.format(EmailUtils.SET_BODY,
                 dto.getReserverName() != null ? dto.getReserverName() : "ユーザー",
+                dto.getRepresentativeName(),
                 formatterRideDate,
                 dto.getDepartureStationName(),
                 dto.getDepartureTime(),
@@ -241,6 +242,7 @@ public class LocalEmailService implements EmailService {
 
             String body = String.format(EmailUtils.RELEASE_BODY,
                 dto.getReserverName() != null ? dto.getReserverName() : "ユーザー",
+                dto.getRepresentativeName(),
                 formatterRideDate,
                 dto.getDepartureStationName(),
                 dto.getDepartureTime(),

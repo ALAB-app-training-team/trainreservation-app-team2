@@ -10,6 +10,7 @@ public record ReservedSeatReleaseEvent(
     UUID reservationId,
     List<ReserveRequestDto> requests,
     LocalTime departureTime,
-    LocalTime arrivalTime
+    LocalTime arrivalTime,
+    String representativeName
 ) {
 }

@@ -532,6 +532,7 @@ public class ReservationService {
             departureTime,
             arrivalTime,
             oldTotalAmount,
+            reservation.get().getReserverName(),
             assignedReservedSeats
         ));
 
@@ -618,6 +619,7 @@ public class ReservationService {
             departureTime,
             arrivalTime,
             oldTotalAmount,
+            reservation.get().getReserverName(),
             assignedReservedSeats
         ));
 
@@ -719,11 +721,15 @@ public class ReservationService {
             .orElseThrow(() -> new IllegalArgumentException("ArrivalTime is not found"))
             .getArrivalTime();
 
+        List<ReservedSeatEntity> reservedSeats = reservedSeatRepository.findByReservationId(reservationId);
+
         eventPublisher.publishEvent(new ReservationCanceledEvent(
             reservationId,
             reserveRequestDto,
             departureTime,
-            arrivalTime
+            arrivalTime,
+            reservation.getReserverName(),
+            reservedSeats
         ));
     }
 
