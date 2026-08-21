@@ -94,13 +94,13 @@ public class ReservedSeatService {
                     reservationId, false).orElseThrow(() -> new IllegalArgumentException("ReservedSeat is Not found"));
 
             if ((reservedSeatEntity.getMail() == null || reservedSeatEntity.getMail().isBlank()) && !reservedSeat.getMail().isBlank()) {
-                // 未割り当てを割り当て
+                // 未割当を割り当て
                 setSeats.add(setNameAndMail(reservation, reservedSeat.getName(), reservedSeat.getMail(), reservedSeatEntity));
             } else if (!reservedSeat.getMail().isBlank() && !Objects.equals(reservedSeatEntity.getMail(), reservedSeat.getMail())) {
-                //割り当て済を別の人に割り当て
+                // 割り当て済を別の人に割り当て
                 releaseSeats.add(setNameAndMail(reservation, reservedSeatEntity.getName(), reservedSeatEntity.getMail(), reservedSeatEntity));
                 setSeats.add(setNameAndMail(reservation, reservedSeat.getName(), reservedSeat.getMail(), reservedSeatEntity));
-            } else if (!reservedSeat.getMail().isBlank() && reservedSeat.getMail().isBlank()) {
+            } else if ((reservedSeatEntity.getMail() != null && !reservedSeatEntity.getMail().isBlank()) && reservedSeat.getMail().isBlank()) {
                 // 割り当て済を未割当
                 releaseSeats.add(setNameAndMail(reservation, reservedSeatEntity.getName(), reservedSeatEntity.getMail(), reservedSeatEntity));
             }
