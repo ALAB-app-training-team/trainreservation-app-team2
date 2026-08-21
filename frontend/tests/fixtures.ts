@@ -1,4 +1,4 @@
-import { test as base } from '@playwright/test';
+import { test as base, expect } from '@playwright/test';
 import type { Page } from '@playwright/test';
 import { ScheduleSearchPage } from '@tests/pages/ScheduleSearch/ScheduleSearchPage';
 import { SelectSeatPage } from '@tests/pages/SelectSeat/SelectSeatPage';
@@ -105,6 +105,7 @@ export const test = base.extend<Fixture>({
 
             await header.clickUserName();
             await header.goToLogout();
+            await expect(page).toHaveURL('login');
         };
         await use(logout);
     },

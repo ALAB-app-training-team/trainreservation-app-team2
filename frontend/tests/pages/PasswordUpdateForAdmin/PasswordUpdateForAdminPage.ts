@@ -24,6 +24,7 @@ export class PasswordUpdateForAdminPage {
         });
         this.passwordCheck = page.getByRole('textbox', {
             name: 'パスワード再入力',
+            exact: true,
         });
         this.updateButton = page.getByRole('button', {
             name: '変更を確定',
