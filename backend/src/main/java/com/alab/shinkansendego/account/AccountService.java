@@ -69,22 +69,18 @@ public class AccountService {
      */
     @Transactional
     public UUID putAccount(UUID currentUserId, AccountUpdateDto request) {
-        // 1. 存在確認（session.getId() で取得したIDで検索）
         AccountEntity account = accountRepository.findById(currentUserId)
             .orElseThrow(() -> new IllegalArgumentException("Account is not found"));
 
-        // 2. パスワード確認
         if (!passwordEncoder.matches(request.getPassword(), account.getPassword())) {
             throw new IllegalArgumentException("Password does not match");
         }
 
-        // 3. 重複チェック
         String newMail = StringUtils.removeSpaces(request.getMail());
         if (!account.getMail().equals(newMail) && accountRepository.findByMail(newMail).isPresent()) {
             throw new ConflictException(newMail + " is Duplicate");
         }
 
-        // 4. 情報更新
         account.setName(StringUtils.removeSpaces(request.getName()));
         account.setMail(newMail);
 
@@ -99,16 +95,13 @@ public class AccountService {
      */
     @Transactional
     public UUID putPassword(UUID currentUserId, PasswordUpdateDto request) {
-        // 1. 存在確認（session.getId() で取得したIDで検索）
         AccountEntity account = accountRepository.findById(currentUserId)
             .orElseThrow(() -> new IllegalArgumentException("Account is not found"));
 
-        // 2. パスワード確認
         if (!passwordEncoder.matches(request.getPassword(), account.getPassword())) {
             throw new IllegalArgumentException("Password does not match");
         }
 
-        // 3. 情報更新
         account.setPassword(passwordEncoder.encode(request.getNewPassword()));
 
         AccountEntity updatedAccount = accountRepository.save(account);

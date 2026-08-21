@@ -1,8 +1,8 @@
 import { useState } from 'react';
 import { FiUser } from 'react-icons/fi';
-import { MdVisibility, MdVisibilityOff } from 'react-icons/md';
 
 import { AccountInput } from '@/features/account/components/AccountInput';
+import { PasswordInput } from '@/features/account/components/PasswordInput';
 import { useAccountUpdateDto } from '@/features/account/hooks/useAccountUpdateDto';
 
 export function AccountUpdate() {
@@ -61,41 +61,18 @@ export function AccountUpdate() {
                             onBlur={handleBlur}
                             getFieldError={getFieldError}
                         />
-                        <div className="flex flex-col items-start">
-                            <label htmlFor="password">パスワード</label>
-                            <div className="focus-within:border-primary bg-primary-light box-border flex w-full items-center justify-between gap-4 rounded-lg px-4 py-2 outline-none focus-within:border-2">
-                                <input
-                                    id="password"
-                                    type={passwordType}
-                                    name="password"
-                                    value={accountUpdateForm.password}
-                                    onChange={handleChange}
-                                    onBlur={handleBlur}
-                                    placeholder="パスワードを入力"
-                                    autoComplete="current-password"
-                                    required
-                                    className="w-full outline-none [&::-ms-reveal]:hidden"
-                                />
-                                {passwordType === 'password' && (
-                                    <MdVisibilityOff
-                                        onClick={() => setPasswordType('text')}
-                                    />
-                                )}
-                                {passwordType === 'text' && (
-                                    <MdVisibility
-                                        onClick={() =>
-                                            setPasswordType('password')
-                                        }
-                                    />
-                                )}
-                            </div>
 
-                            {getFieldError('password') && (
-                                <p className="text-left text-sm text-red-600">
-                                    {getFieldError('password')}
-                                </p>
-                            )}
-                        </div>
+                        <PasswordInput
+                            id={'password'}
+                            label={'パスワード'}
+                            type={passwordType}
+                            value={accountUpdateForm.password}
+                            placeHolder={'パスワードを入力'}
+                            autoComplete={'new-password'}
+                            onChange={handleChange}
+                            onBlur={handleBlur}
+                            setPasswordType={setPasswordType}
+                        />
                     </div>
                     <button
                         type="submit"
