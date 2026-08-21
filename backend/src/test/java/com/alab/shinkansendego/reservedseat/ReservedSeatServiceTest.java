@@ -1,9 +1,15 @@
 package com.alab.shinkansendego.reservedseat;
 
+import com.alab.shinkansendego.departurearrivaltime.DepartureArrivalTimeEntity;
 import com.alab.shinkansendego.departurearrivaltime.DepartureArrivalTimeRepository;
 import com.alab.shinkansendego.reservation.ReservationEntity;
 import com.alab.shinkansendego.reservation.ReservationRepository;
+import com.alab.shinkansendego.seattype.SeatTypeEntity;
+import com.alab.shinkansendego.sectionkm.SectionKmEntity;
+import com.alab.shinkansendego.station.StationEntity;
+import com.alab.shinkansendego.traincar.TrainCarEntity;
 import com.alab.shinkansendego.traincar.TrainCarRepository;
+import org.jspecify.annotations.NonNull;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -12,12 +18,14 @@ import org.mockito.MockitoAnnotations;
 import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.security.access.AccessDeniedException;
 
+import java.time.LocalTime;
 import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
@@ -28,9 +36,9 @@ public class ReservedSeatServiceTest {
     @Mock
     private ReservedSeatRepository reservedSeatRepo;
     @Mock
-    private DepartureArrivalTimeRepository departureArrivalTimeRepository;
+    private DepartureArrivalTimeRepository departureArrivalTimeRepo;
     @Mock
-    private TrainCarRepository trainCarRepository;
+    private TrainCarRepository trainCarRepo;
     @Mock
     private ApplicationEventPublisher eventPublisher;
     private ReservedSeatService service;
@@ -45,10 +53,30 @@ public class ReservedSeatServiceTest {
     private ReservedSeatEntity reservedSeat1;
     private ReservedSeatEntity reservedSeat2;
 
+    /**
+     * スケジュールを作成するメソッド
+     *
+     * @return DepartureArrivalTimeEntity
+     */
+    private @NonNull DepartureArrivalTimeEntity buildSchedule(LocalTime departureTime, String departureStationCd, String departureStationName, LocalTime arrivalTime, String arrivalStationCd, String arrivalStationName) {
+        StationEntity startStation = new StationEntity(departureStationCd, departureStationName);
+        StationEntity goalStation = new StationEntity(arrivalStationCd, arrivalStationName);
+        SectionKmEntity sectionKm = new SectionKmEntity();
+        sectionKm.setStartStationCd(departureStationCd);
+        sectionKm.setGoalStationCd(arrivalStationCd);
+        sectionKm.setStartStation(startStation);
+        sectionKm.setGoalStation(goalStation);
+        DepartureArrivalTimeEntity schedule = new DepartureArrivalTimeEntity();
+        schedule.setDepartureTime(departureTime);
+        schedule.setArrivalTime(arrivalTime);
+        schedule.setSectionKm(sectionKm);
+        return schedule;
+    }
+
     @BeforeEach
     void setUp() {
         MockitoAnnotations.openMocks(this);
-        this.service = new ReservedSeatService(reservationRepo, reservedSeatRepo, departureArrivalTimeRepository, trainCarRepository, eventPublisher);
+        this.service = new ReservedSeatService(reservationRepo, reservedSeatRepo, departureArrivalTimeRepo, trainCarRepo, eventPublisher);
 
         reservedSeatUpdateDto1 = new ReservedSeatUpdateDto(reservedSeat1Id, "一般次郎",
             "test2-common@test.com");
@@ -58,6 +86,8 @@ public class ReservedSeatServiceTest {
         reservation = new ReservationEntity();
         reservation.setId(reservationId);
         reservation.setAccountId(accountId);
+        reservation.setDepartureStationCd("THK01");
+        reservation.setArrivalStationCd("THK02");
         reservation.setIsDeleted(false);
         reservation.setReserverName("一般太郎");
         reservation.setReserverMail("test-common@test.com");
@@ -78,9 +108,18 @@ public class ReservedSeatServiceTest {
     @Test
     @DisplayName("ログインユーザーが同行者を割り当てできる")
     void updateReservedSeats_withAuthorized() {
+        TrainCarEntity trainCar = new TrainCarEntity();
+        SeatTypeEntity seatType = new SeatTypeEntity();
+        seatType.setTrainCarTypeCd("CAR01");
+        trainCar.setSeatType(seatType);
         when(reservationRepo.findById(reservationId)).thenReturn(Optional.of(reservation));
         when(reservedSeatRepo.findByIdAndReservationIdAndIsDeleted(reservedSeat1Id, reservationId, false)).thenReturn(Optional.of(reservedSeat1));
         when(reservedSeatRepo.findByIdAndReservationIdAndIsDeleted(reservedSeat2Id, reservationId, false)).thenReturn(Optional.of(reservedSeat2));
+        when(trainCarRepo.findByTrainCarCd(any())).thenReturn(Optional.of(trainCar));
+        when(departureArrivalTimeRepo.findByScheduleCd(any())).thenReturn(List.of(
+            buildSchedule(LocalTime.of(6, 0, 0), "THK01", "東京", LocalTime.of(6, 30, 0), "THK02", "上野"),
+            buildSchedule(LocalTime.of(7, 0, 0), "THK02", "上野", LocalTime.of(7, 30, 0), "CMN01", "大宮"),
+            buildSchedule(LocalTime.of(8, 0, 0), "CMN01", "大宮", LocalTime.of(8, 30, 0), "THK09", "仙台")));
 
         service.updateReservedSeats(reservationId, updateRequest, accountId, null, null);
         assertEquals("一般次郎", reservedSeat1.getName());
@@ -96,10 +135,19 @@ public class ReservedSeatServiceTest {
     @Test
     @DisplayName("ゲストユーザーが同行者を割り当てできる")
     void updateReservedSeats_withNotAuthorized() {
+        TrainCarEntity trainCar = new TrainCarEntity();
+        SeatTypeEntity seatType = new SeatTypeEntity();
+        seatType.setTrainCarTypeCd("CAR01");
+        trainCar.setSeatType(seatType);
         reservation.setAccountId(null);
         when(reservationRepo.findById(reservationId)).thenReturn(Optional.of(reservation));
         when(reservedSeatRepo.findByIdAndReservationIdAndIsDeleted(reservedSeat1Id, reservationId, false)).thenReturn(Optional.of(reservedSeat1));
         when(reservedSeatRepo.findByIdAndReservationIdAndIsDeleted(reservedSeat2Id, reservationId, false)).thenReturn(Optional.of(reservedSeat2));
+        when(trainCarRepo.findByTrainCarCd(any())).thenReturn(Optional.of(trainCar));
+        when(departureArrivalTimeRepo.findByScheduleCd(any())).thenReturn(List.of(
+            buildSchedule(LocalTime.of(6, 0, 0), "THK01", "東京", LocalTime.of(6, 30, 0), "THK02", "上野"),
+            buildSchedule(LocalTime.of(7, 0, 0), "THK02", "上野", LocalTime.of(7, 30, 0), "CMN01", "大宮"),
+            buildSchedule(LocalTime.of(8, 0, 0), "CMN01", "大宮", LocalTime.of(8, 30, 0), "THK09", "仙台")));
 
         service.updateReservedSeats(reservationId, updateRequest, null, "一般太郎", "test-common@test.com");
         assertEquals("一般次郎", reservedSeat1.getName());
@@ -175,8 +223,17 @@ public class ReservedSeatServiceTest {
     @Test
     @DisplayName("ReservationSeatが見つからなかった場合、IllegalArgumentExceptionを投げる")
     void updateReservedSeats_withDeletedReservedSeat() {
+        TrainCarEntity trainCar = new TrainCarEntity();
+        SeatTypeEntity seatType = new SeatTypeEntity();
+        seatType.setTrainCarTypeCd("CAR01");
+        trainCar.setSeatType(seatType);
         when(reservationRepo.findById(reservationId)).thenReturn(Optional.of(reservation));
         when(reservedSeatRepo.findByIdAndReservationIdAndIsDeleted(reservedSeat1Id, reservationId, false)).thenReturn(Optional.of(reservedSeat1));
+        when(trainCarRepo.findByTrainCarCd(any())).thenReturn(Optional.of(trainCar));
+        when(departureArrivalTimeRepo.findByScheduleCd(any())).thenReturn(List.of(
+            buildSchedule(LocalTime.of(6, 0, 0), "THK01", "東京", LocalTime.of(6, 30, 0), "THK02", "上野"),
+            buildSchedule(LocalTime.of(7, 0, 0), "THK02", "上野", LocalTime.of(7, 30, 0), "CMN01", "大宮"),
+            buildSchedule(LocalTime.of(8, 0, 0), "CMN01", "大宮", LocalTime.of(8, 30, 0), "THK09", "仙台")));
         when(reservedSeatRepo.findByIdAndReservationIdAndIsDeleted(reservedSeat2Id, reservationId, false)).thenReturn(Optional.empty());
 
         IllegalArgumentException exception = assertThrows(IllegalArgumentException.class, () -> {
