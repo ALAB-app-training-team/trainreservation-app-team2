@@ -476,6 +476,7 @@ public class ReservationService {
         List<ReservedSeatSectionEntity> deleteSeatSections = reservedSeats.stream()
             .flatMap(seat -> seat.getReservedSeatSection().stream())
             .toList();
+        List<ReservedSeatEntity> assignedReservedSeats = reservedSeats.stream().filter(seat -> org.springframework.util.StringUtils.hasLength(seat.getMail()) && org.springframework.util.StringUtils.hasLength(seat.getName())).toList();
         reservedSeatRepository.deleteAll(reservedSeats);
         reservedSeatSectionRepository.deleteAll(deleteSeatSections);
 
@@ -521,7 +522,8 @@ public class ReservationService {
             changedReservation,
             departureTime,
             arrivalTime,
-            oldTotalAmount
+            oldTotalAmount,
+            assignedReservedSeats
         ));
 
         return reservationId;
@@ -549,7 +551,7 @@ public class ReservationService {
         List<ReservedSeatEntity> deleteSeats = reservedSeats.stream()
             .filter(reserved -> changedReservation.getSeats().stream().noneMatch(changed -> isSame(changed, reserved)))
             .toList();
-
+        List<ReservedSeatEntity> assignedReservedSeats = deleteSeats.stream().filter(seat -> org.springframework.util.StringUtils.hasLength(seat.getMail()) && org.springframework.util.StringUtils.hasLength(seat.getName())).toList();
         // 追加対象座席リクエストを抽出
         List<ReserveRequestDto.SelectedSeatDto> postSeats = changedReservation.getSeats().stream()
             .filter(changed -> reservedSeats.stream().noneMatch(reserved -> isSame(changed, reserved)))
@@ -604,7 +606,8 @@ public class ReservationService {
             changedReservation,
             departureTime,
             arrivalTime,
-            oldTotalAmount
+            oldTotalAmount,
+            assignedReservedSeats
         ));
 
         return reservationId;

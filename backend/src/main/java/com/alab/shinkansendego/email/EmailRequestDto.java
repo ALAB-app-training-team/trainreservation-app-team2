@@ -4,6 +4,7 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import lombok.RequiredArgsConstructor;
 import lombok.Setter;
 
 import java.time.LocalDate;
@@ -33,6 +34,7 @@ public class EmailRequestDto {
     @Data
     @NoArgsConstructor
     @AllArgsConstructor
+    @RequiredArgsConstructor
     public static class SelectedSeatDto {
         private String trainCarCd;
         private String trainCarTypeCd;
