@@ -40,6 +40,25 @@ public final class EmailUtils {
 
         またのご利用をお待ちしております。
         """;
+    public static final String CHANGE_BODY = """
+         %s さま
+
+        「新幹線でGO!」アプリをご利用いただきありがとうございます。
+         以下に予約変更詳細をお知らせいたします。
+
+        ■変更後予約詳細
+        予約ID：%s
+        乗車日：%s
+        区間：%s（%s発）　→　%s（%s着）
+        列車名：%s
+        座席：%s
+        お支払い合計：%s
+
+        ■アプリログインURL
+        %s
+
+        またのご利用をお待ちしております。
+        """;
     public static final String CANCEL_BODY = """
         %s さま
 
@@ -75,25 +94,6 @@ public final class EmailUtils {
 
         またのご利用をお待ちしております。
         """;
-    public static final String CHANGE_BODY = """
-         %s さま
-
-        「新幹線でGO!」アプリをご利用いただきありがとうございます。
-         予約変更が完了しましたので、以下よりご確認ください。
-
-        ■変更後予約情報
-        予約ID：%s
-        乗車日：%s
-        区間：%s（%s発）　→　%s（%s着）
-        列車名：%s
-        座席：%s
-        お支払い合計：%s
-
-        ■アプリログインURL
-        %s
-
-        またのご利用をお待ちしております。
-        """;
 
     public static String rideDateFormatter(LocalDate date) {
         return date.format(DateTimeFormatter.ofPattern("yyyy年MM月dd日"));
@@ -118,14 +118,20 @@ public final class EmailUtils {
             .collect(Collectors.joining("\n　　　"));
     }
 
-    public static String differenceFormatter(int newAmount, int oldAmount) {
-        int diff = newAmount - oldAmount;
-        if (diff > 0) {
-            return String.format("変更差額　+%,d円", diff);
-        } else if (diff < 0) {
-            return String.format("変更差額　%,d円", diff);
-        } else {
-            return "変更差額なし";
+    public static String differenceFormatter(int newAmount, Integer oldAmount) {
+        if (oldAmount == null) {
+            return String.format("%,d円", newAmount);
         }
+
+        int diff = newAmount - oldAmount;
+        String diffStr;
+        if (diff > 0) {
+            diffStr = String.format("変更差額　+%,d円", diff);
+        } else if (diff < 0) {
+            diffStr = String.format("変更差額　%,d円", diff);
+        } else {
+            diffStr = "変更差額なし";
+        }
+        return String.format("%,d円 (%s)", newAmount, diffStr);
     }
 }

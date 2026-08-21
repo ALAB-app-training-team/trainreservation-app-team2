@@ -13,6 +13,7 @@ import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
 
 import static com.alab.shinkansendego.utils.EmailUtils.REFUND_FEE;
+import static com.alab.shinkansendego.utils.EmailUtils.differenceFormatter;
 
 @Service
 @Profile({"local", "test"})
@@ -70,6 +71,52 @@ public class LocalEmailService implements EmailService {
             log.info("予約完了メールを正常に送信しました。 To： {}", dto.getReserverMail());
         } catch (Exception e) {
             log.error("予約完了メール送信中にエラーが発生しました。 To： {}", dto.getReserverMail(), e);
+        }
+    }
+
+    @Async
+    @Override
+    public void sendReservationChange(EmailRequestDto dto) {
+        try {
+            MimeMessage mimeMessage = mailSender.createMimeMessage();
+            MimeMessageHelper helper = new MimeMessageHelper(mimeMessage, "UTF-8");
+
+            helper.setFrom(EmailUtils.FROM_ADDRESS, EmailUtils.SENDER_NAME);
+            helper.setTo(dto.getReserverMail());
+            helper.setSubject(EmailUtils.CHANGE_SUBJECT);
+
+            String formatterRideDate = "";
+            if (dto.getRideDate() != null) {
+                formatterRideDate = EmailUtils.rideDateFormatter(dto.getRideDate());
+            }
+
+            String seatDetail = "";
+            if (dto.getSeats() != null && !dto.getSeats().isEmpty()) {
+                seatDetail = EmailUtils.seatFormatter(dto.getSeats());
+            }
+
+            String loginUrl = baseUrl + EmailUtils.LOGIN_PATH;
+
+            String body = String.format(
+                EmailUtils.CHANGE_BODY,
+                dto.getReserverName() != null ? dto.getReserverName() : "ユーザー",
+                dto.getReservationId(),
+                formatterRideDate,
+                dto.getDepartureStationName(),
+                dto.getDepartureTime(),
+                dto.getArrivalStationName(),
+                dto.getArrivalTime(),
+                dto.getTrainTypeName(),
+                seatDetail,
+                differenceFormatter(dto.getTotalAmount(), dto.getOldAmount()),
+                loginUrl
+            );
+
+            helper.setText(body);
+            mailSender.send(mimeMessage);
+            log.info("予約変更完了メールを正常に送信しました。 To： {}", dto.getReserverMail());
+        } catch (Exception e) {
+            log.error("予約変更完了メール送信中にエラーが発生しました。 To： {}", dto.getReserverMail(), e);
         }
     }
 
@@ -163,52 +210,6 @@ public class LocalEmailService implements EmailService {
             log.info("割り当て解除メールを正常に送信しました。 To： {}", dto.getReserverMail());
         } catch (Exception e) {
             log.error("割り当て解除メール送信中にエラーが発生しました。 To： {}", dto.getReserverMail(), e);
-        }
-    }
-
-    @Async
-    @Override
-    public void sendReservationChange(EmailRequestDto dto) {
-        try {
-            MimeMessage mimeMessage = mailSender.createMimeMessage();
-            MimeMessageHelper helper = new MimeMessageHelper(mimeMessage, "UTF-8");
-
-            helper.setFrom(EmailUtils.FROM_ADDRESS, EmailUtils.SENDER_NAME);
-            helper.setTo(dto.getReserverMail());
-            helper.setSubject(EmailUtils.CHANGE_SUBJECT);
-
-            String formatterRideDate = "";
-            if (dto.getRideDate() != null) {
-                formatterRideDate = EmailUtils.rideDateFormatter(dto.getRideDate());
-            }
-
-            String seatDetail = "";
-            if (dto.getSeats() != null && !dto.getSeats().isEmpty()) {
-                seatDetail = EmailUtils.seatFormatter(dto.getSeats());
-            }
-
-            String loginUrl = baseUrl + EmailUtils.LOGIN_PATH;
-
-            String body = String.format(
-                EmailUtils.CHANGE_BODY,
-                dto.getReserverName() != null ? dto.getReserverName() : "ユーザー",
-                dto.getReservationId(),
-                formatterRideDate,
-                dto.getDepartureStationName(),
-                dto.getDepartureTime(),
-                dto.getArrivalStationName(),
-                dto.getArrivalTime(),
-                dto.getTrainTypeName(),
-                seatDetail,
-                dto.getDiffAmountDisplay(),
-                loginUrl
-            );
-
-            helper.setText(body);
-            mailSender.send(mimeMessage);
-            log.info("予約変更完了メールを正常に送信しました。 To： {}", dto.getReserverMail());
-        } catch (Exception e) {
-            log.error("予約変更完了メール送信中にエラーが発生しました。 To： {}", dto.getReserverMail(), e);
         }
     }
 }

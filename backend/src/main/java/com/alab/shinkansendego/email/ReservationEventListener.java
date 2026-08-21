@@ -13,7 +13,6 @@ import com.alab.shinkansendego.seat.SeatRepository;
 import com.alab.shinkansendego.station.StationEntity;
 import com.alab.shinkansendego.station.StationRepository;
 import com.alab.shinkansendego.traintype.TrainTypeEntity;
-import com.alab.shinkansendego.utils.EmailUtils;
 import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.event.TransactionPhase;
@@ -55,6 +54,13 @@ public class ReservationEventListener {
 
     @Async
     @TransactionalEventListener(phase = TransactionPhase.AFTER_COMMIT)
+    public void handleReservationChanged(ReservationChangedEvent event) {
+        EmailRequestDto emailDto = setEmailRequestDto(event.reservationId(), event.request(), event.departureTime(), event.arrivalTime(), event.oldTotalAmount());
+        emailService.sendReservationChange(emailDto);
+    }
+
+    @Async
+    @TransactionalEventListener(phase = TransactionPhase.AFTER_COMMIT)
     public void handleReservationCanceled(ReservationCanceledEvent event) {
 
         EmailRequestDto emailDto = setEmailRequestDto(event.reservationId(), event.request(), event.departureTime(), event.arrivalTime(), null);
@@ -75,13 +81,6 @@ public class ReservationEventListener {
                 emailService.sendReleaseCompanion(emailDto);
             }
         }
-    }
-
-    @Async
-    @TransactionalEventListener(phase = TransactionPhase.AFTER_COMMIT)
-    public void handleReservationChanged(ReservationChangedEvent event) {
-        EmailRequestDto emailDto = setEmailRequestDto(event.reservationId(), event.request(), event.departureTime(), event.arrivalTime(), event.oldTotalAmount());
-        emailService.sendReservationChange(emailDto);
     }
 
     private EmailRequestDto setEmailRequestDto(UUID reservationId,
@@ -130,16 +129,7 @@ public class ReservationEventListener {
                 .sum();
         }
         emailDto.setTotalAmount(newTotalAmount);
-
-        if (oldTotalAmount != null) {
-            String diffStr = EmailUtils.differenceFormatter(newTotalAmount, oldTotalAmount);
-
-            String diffAmountDisplay = String.format("%,d円（%s）", newTotalAmount, diffStr);
-
-            emailDto.setDiffAmountDisplay(diffAmountDisplay);
-        } else {
-            emailDto.setDiffAmountDisplay(String.format("%,d円", newTotalAmount));
-        }
+        emailDto.setOldAmount(oldTotalAmount);
 
         return emailDto;
     }
