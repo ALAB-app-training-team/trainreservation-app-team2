@@ -41,9 +41,10 @@ export function StationSelect({
                         control: ({ isFocused }) =>
                             'cursor-pointer rounded-xl bg-white p-2 ' +
                             `${isFocused ? 'border-primary border-2' : 'border-transparent'}`,
+                        input: () => 'cursor-pointer',
                         menu: () => 'bg-white p-2',
                         option: ({ isFocused, isSelected }) =>
-                            `cursor-pointer ${isSelected ? 'bg-primary text-white' : isFocused ? 'bg-primary-light' : 'text-gray-700'}`,
+                            `!cursor-pointer ${isSelected ? 'bg-primary text-white' : isFocused ? 'bg-primary-light' : 'text-gray-700'}`,
                     }}
                     unstyled
                     options={options}
