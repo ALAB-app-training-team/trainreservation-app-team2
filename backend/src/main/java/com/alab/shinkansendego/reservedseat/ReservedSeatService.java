@@ -19,6 +19,8 @@ import java.util.List;
 import java.util.Objects;
 import java.util.UUID;
 
+import static com.alab.shinkansendego.utils.StringUtils.removeSpaces;
+
 @Service
 public class ReservedSeatService {
     private final ReservationRepository reservationRepository;
@@ -140,8 +142,8 @@ public class ReservedSeatService {
             reservation.getRideDate(),
             reservation.getDepartureStationCd(),
             reservation.getArrivalStationCd(),
-            name,
-            mail,
+            removeSpaces(name),
+            removeSpaces(mail),
             reservation.getPaymentTrackingId(),
             List.of(new ReserveRequestDto.SelectedSeatDto(
                 reservedSeatEntity.getTrainCarCd(),
