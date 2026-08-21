@@ -29,4 +29,5 @@ public class ReservationResponseDto {
     private LocalDate rideDate;
     private Boolean isDeleted;
     private List<ReservedSeatDto> reservedSeats;
+    private Boolean isReserverMatched;
 }
