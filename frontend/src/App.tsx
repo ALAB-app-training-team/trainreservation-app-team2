@@ -9,6 +9,7 @@ import { toast } from 'sonner';
 import { AuthProvider } from '@/context/AuthContext';
 import { AccountCreate } from '@/features/account/pages/AccountCreate';
 import { Login } from '@/features/account/pages/Login';
+import { PasswordUpdateForAdmin } from '@/features/account/pages/PasswordUpdateForAdmin';
 import { ReservationGuestLogin } from '@/features/reservation/pages/ReservationGuestLogin';
 import { ReservationList } from '@/features/reservation/pages/ReservationList';
 import { ReservedTicket } from '@/features/reservation/pages/ReservedTicket';
@@ -32,17 +33,17 @@ const reservedTicketLoader = () => {
     const info = sessionStorage.getItem('guestLoginInfo');
     const account = localStorage.getItem('name');
     if (account === null && info === null) {
-        toast.error(ERROR_MESSAGE.SESSION_ERROR,{
-                duration:Infinity,
-                action: {
-                    label: 'OK',
-                    onClick: () => {}
-                },
-                classNames: {
-                    title : 'text-left whitespace-pre-line',
-                    actionButton: "!px-4 !py-2 !text-base !h-auto",
-                }
-            });
+        toast.error(ERROR_MESSAGE.SESSION_ERROR, {
+            duration: Infinity,
+            action: {
+                label: 'OK',
+                onClick: () => {},
+            },
+            classNames: {
+                title: 'text-left whitespace-pre-line',
+                actionButton: '!px-4 !py-2 !text-base !h-auto',
+            },
+        });
         return redirect('/scheduleSearch');
     }
     return null;
@@ -72,6 +73,15 @@ const loginLoader = () => {
     return null;
 };
 
+const adminLoader = () => {
+    const role = localStorage.getItem('role');
+    if (role !== 'ROLE_ADMIN') {
+        sessionStorage.setItem('message', ERROR_MESSAGE.LOGIN_ROLE_ERROR);
+        return redirect('/scheduleSearch');
+    }
+    return null;
+};
+
 const router = createBrowserRouter([
     {
         path: '/',
@@ -92,6 +102,12 @@ const router = createBrowserRouter([
                 path: '/accountCreate',
                 loader: () => loginLoader(),
                 element: <AccountCreate />,
+                errorElement: <Error />,
+            },
+            {
+                path: '/admin/password',
+                loader: () => adminLoader(),
+                element: <PasswordUpdateForAdmin />,
                 errorElement: <Error />,
             },
             {

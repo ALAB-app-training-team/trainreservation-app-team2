@@ -2,6 +2,10 @@ import { Suspense, useState } from 'react';
 import { LuArrowLeft } from 'react-icons/lu';
 import { useLocation, useNavigate } from 'react-router-dom';
 
+import {
+    RESERVEDTICKET_MODE,
+    RESERVEDTICKET_ROLE,
+} from '@/features/reservation/constants/ReservedTicketState';
 import { ScheduleList } from '@/features/schedule/components/ScheduleList/ScheduleList';
 import { ScheduleListSkeleton } from '@/features/schedule/components/ScheduleList/ScheduleListSkeleton';
 import { ScheduleSearchForm } from '@/features/schedule/components/ScheduleSearchForm';
@@ -67,9 +71,8 @@ export function ScheduleSearchBody() {
                                 navigate('/reservedTicket', {
                                     state: {
                                         reservationId: reservationId,
-                                        isBack: true,
-                                        guestLogin: false,
-                                        isUpdated: false,
+                                        mode: RESERVEDTICKET_MODE.detail,
+                                        role: RESERVEDTICKET_ROLE.account,
                                     },
                                 });
                             }}

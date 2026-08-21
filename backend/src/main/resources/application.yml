@@ -35,10 +35,11 @@ springdoc:
     enabled: false
 server:
   servlet:
+    forward-headers-strategy: framework
     session:
       timeout: 30m
       cookie:
-        same-site: "none"
+        same-site: "lax"
         secure: true
         http-only: true
 app:

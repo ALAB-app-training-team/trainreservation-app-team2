@@ -44,8 +44,13 @@ export class ReservationGuestLoginPage {
     }
 
     async inputGuestLoginInfo() {
-        await this.fillName('田中太郎');
-        await this.fillMailAddress('tanaka@taro.jp');
+        await this.fillName('ゲスト太郎');
+        await this.fillMailAddress('guest@test.com');
+    }
+
+    async inputCompanionLoginInfo() {
+        await this.fillName('同行者太郎');
+        await this.fillMailAddress('companion@test.com');
     }
 
     async inputNoReservationGuestLoginInfo() {

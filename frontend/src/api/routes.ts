@@ -12,6 +12,7 @@ const STOPSTATIONS = `${BASE_URL}/stopstations`;
 const TRAINCARS = `${BASE_URL}/traincars`;
 
 export const ENDPOINTS = {
+    ADMIN_UPDATE: () => `${BASE_URL}/admin/password`,
     LOGIN: () => LOGIN,
     LOGOUT: () => LOGOUT,
     ACCOUNT: () => ACCOUNT,

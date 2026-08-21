@@ -112,7 +112,7 @@ public class ReservationServiceTest {
     @Autowired
     private RestClient.Builder restClientBuilder;
 
-    private @NonNull ReservationResponseDto getExpectReservationResponseDto(UUID reservationId) {
+    private @NonNull ReservationResponseDto getExpectReservationResponseDto(UUID reservationId, boolean isReserverMatched) {
         List<ReservedSeatDto> reservedSeatList = Arrays.asList(seat1, seat2, seat3);
         return new ReservationResponseDto(
             reservationId,
@@ -126,7 +126,8 @@ public class ReservationServiceTest {
             LocalTime.of(7, 58, 0),
             LocalDate.of(2026, 6, 1),
             false,
-            reservedSeatList);
+            reservedSeatList,
+            isReserverMatched);
     }
 
     /**
@@ -385,7 +386,7 @@ public class ReservationServiceTest {
     @DisplayName("ゲストログインとして予約情報IDと予約者氏名とメールアドレスから予約チケット情報が取得できる")
     void getGuestReservation_withReservationIdAndReserverNameAndReserverMail_returnGetGuestReservationSuccess() {
         when(reservationRepo.findById(reservationId1)).thenReturn(reservation);
-        ReservationResponseDto expect = getExpectReservationResponseDto(reservationId1);
+        ReservationResponseDto expect = getExpectReservationResponseDto(reservationId1, true);
         ReservationResponseDto actual = service.getGuestReservation(reservationId1, "山田太郎", "email@sample.com");
         assertEquals(expect, actual);
     }
@@ -411,7 +412,7 @@ public class ReservationServiceTest {
     @DisplayName("同行者として予約情報IDと同行者者氏名とメールアドレスから予約チケット情報が取得できる")
     void getGuestReservation_withReservationIdAndCompanionNameAndCompanionMail_returnIllegalArgumentException() {
         when(reservationRepo.findById(reservationId1)).thenReturn(reservation);
-        ReservationResponseDto expect = getExpectReservationResponseDto(reservationId1);
+        ReservationResponseDto expect = getExpectReservationResponseDto(reservationId1, false);
         ReservationResponseDto actual = service.getGuestReservation(reservationId1, "一般次郎", "test2-common@test.com");
         assertEquals(expect, actual);
     }
@@ -428,7 +429,7 @@ public class ReservationServiceTest {
     @DisplayName("予約情報IDとアカウントログイン情報から予約チケット情報が取得できる")
     void getAccountReservation_withReservationIdAndSession_returnGetAccountReservationSuccess() {
         when(reservationRepo.findWithEntityGraphByIdAndAccountId(reservationId1, accountId)).thenReturn(reservation);
-        ReservationResponseDto expect = getExpectReservationResponseDto(reservationId1);
+        ReservationResponseDto expect = getExpectReservationResponseDto(reservationId1, true);
         ReservationResponseDto actual = service.getAccountReservation(reservationId1, accountId);
         assertEquals(expect, actual);
     }
