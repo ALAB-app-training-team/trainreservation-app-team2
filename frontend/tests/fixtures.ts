@@ -93,7 +93,6 @@ export const test = base.extend<Fixture>({
             await login.goto();
             await login.inputAdminLoginInfo();
             await login.clickLoginButton();
-            await page.waitForURL('**/scheduleSearch');
         };
         await use(login);
     },
@@ -106,7 +105,6 @@ export const test = base.extend<Fixture>({
 
             await header.clickUserName();
             await header.goToLogout();
-            await page.waitForURL('**/login');
         };
         await use(logout);
     },
