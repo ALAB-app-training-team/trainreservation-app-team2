@@ -105,7 +105,10 @@ export function Header() {
                 </div>
             </div>
             {isMenuOpen && (
-                <div className="absolute top-full right-4 z-50 flex w-[160px] flex-col gap-2 rounded-md bg-white p-2 py-2 text-sm font-bold shadow-md">
+                <div
+                    className="absolute top-full right-4 z-50 flex w-[160px] flex-col gap-2 rounded-md bg-white p-2 py-2 text-sm font-bold shadow-md"
+                    onClick={() => setIsMenuOpen(false)}
+                >
                     <div className="flex w-full flex-col gap-2 text-left md:hidden">
                         {buttons.map((button, index) => (
                             <NavLink
