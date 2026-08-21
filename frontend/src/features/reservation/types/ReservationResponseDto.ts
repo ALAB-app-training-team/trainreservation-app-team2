@@ -13,4 +13,5 @@ export type ReservationResponseDto = {
     rideDate: string;
     isDeleted: boolean;
     reservedSeats: ReservedSeatDto[];
+    isReserverMatched: boolean;
 };

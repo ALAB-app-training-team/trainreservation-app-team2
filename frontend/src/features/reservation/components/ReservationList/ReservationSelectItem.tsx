@@ -7,6 +7,10 @@ import { LuTicket } from 'react-icons/lu';
 import { useNavigate } from 'react-router-dom';
 
 import { ReservedSeats } from '@/features/reservation/components/ReservedSeats';
+import {
+    RESERVEDTICKET_MODE,
+    RESERVEDTICKET_ROLE,
+} from '@/features/reservation/constants/ReservedTicketState';
 import type { ReservationResponseDto } from '@/features/reservation/types/ReservationResponseDto';
 
 type ReservationSelectItemProps = {
@@ -35,8 +39,8 @@ export function ReservationSelectItem({
         navigate('/reservedTicket', {
             state: {
                 reservationId: details.reservationId,
-                isBack: true,
-                guestLogin: false,
+                role: RESERVEDTICKET_ROLE.account,
+                mode: RESERVEDTICKET_MODE.detail,
             },
         });
         window.scrollTo(0, 0);

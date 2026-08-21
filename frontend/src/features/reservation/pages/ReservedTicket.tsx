@@ -16,6 +16,7 @@ import { ReservedTicketQrCode } from '@/features/reservation/components/Reserved
 import { ReservedTicketQrCodeSkeleton } from '@/features/reservation/components/ReservedTicketQrCode/ReservedTicketQrCodeSkeleton';
 import { TicketShare } from '@/features/reservation/components/TicketShare';
 import { useChangeModal } from '@/features/reservation/hooks/useChangeModal';
+import { useReservedTicketConfig } from '@/features/reservation/hooks/useReservedTicketConfig';
 import { useReservedTickets } from '@/features/reservation/hooks/useReservedTickets';
 import type { ReservedSeatUpdateDto } from '@/features/reservation/types/ReservedSeatUpdateDto';
 import { CustomModal } from '@/shared/components/CustomModal';
@@ -29,13 +30,22 @@ export function ReservedTicket() {
     const location = useLocation();
     const navigate = useNavigate();
     const [isSubmitting, setIsSubmitting] = useState<boolean>(false);
-    const { reservationId, isBack, guestLogin, isUpdated } = location.state;
+    const { reservationId, mode, role } = location.state;
     const {
         reservedTickets,
         updateCompanions,
         isUpdating,
         handleRefundReservation,
     } = useReservedTickets(reservationId);
+    const {
+        isBack,
+        title,
+        isCanceled,
+        canCancelReservation,
+        canUpdateReservation,
+        canUpdateCompanions,
+        canShareLink,
+    } = useReservedTicketConfig(reservedTickets, mode, role);
     const {
         isOpen: isCompanionsModalOpen,
         handleModalOpen: handleCompanionsModalOpen,
@@ -141,23 +151,13 @@ export function ReservedTicket() {
                 )}
                 <div className="w-full text-left">
                     <h1 data-testid="reserve-title" className="m-0! text-3xl!">
-                        {reservedTickets.isDeleted
-                            ? 'キャンセル済み'
-                            : !isBack
-                              ? isUpdated
-                                  ? '予約変更完了'
-                                  : guestLogin
-                                    ? '予約詳細'
-                                    : '予約完了'
-                              : null}
+                        {title}
                     </h1>
                 </div>
-                {reservedTickets.isDeleted ? (
-                    <>
-                        <Suspense fallback={<ReservedTicketInfoSkeleton />}>
-                            <ReservedTicketInfo ticketInfo={reservedTickets} />
-                        </Suspense>
-                    </>
+                {isCanceled ? (
+                    <Suspense fallback={<ReservedTicketInfoSkeleton />}>
+                        <ReservedTicketInfo ticketInfo={reservedTickets} />
+                    </Suspense>
                 ) : (
                     <>
                         <Suspense fallback={<ReservedTicketQrCodeSkeleton />}>
@@ -169,37 +169,40 @@ export function ReservedTicket() {
                         <Suspense fallback={<ReservedTicketInfoSkeleton />}>
                             <ReservedTicketInfo ticketInfo={reservedTickets} />
                         </Suspense>
-                        <div className="flex w-full flex-col gap-4 md:flex-row">
-                            <button
-                                onClick={handleRefundConfirmModalOpen}
-                                disabled={isSubmitting}
-                                className="border-primary text-primary flex w-full items-center justify-center gap-2 rounded-xl border-2 p-2 text-sm"
-                            >
-                                <IoTrashOutline className="h-4 w-4" />
-                                キャンセル
-                            </button>
-                            {accountInfo !== null && (
-                                <button
-                                    data-testid="change-button"
-                                    onClick={handleChangeConfirmModalOpen}
-                                    disabled={isSubmitting}
-                                    className="border-primary text-primary flex w-full items-center justify-center gap-2 rounded-xl border-2 p-2 text-sm"
-                                >
-                                    <FaEdit className="h-4 w-4" />
-                                    予約を変更
-                                </button>
-                            )}
-                            <TicketShare shareUrl={shareUrl} />
-                            <button
-                                onClick={handleCompanionsModalOpen}
-                                className="bg-primary flex w-full items-center justify-center gap-2 rounded-xl p-2 text-sm text-white"
-                            >
-                                <RiGroupLine className="h-4 w-4" />
-                                <div>同行者に割り当て</div>
-                            </button>
-                        </div>
                     </>
                 )}
+                <div className="flex w-full flex-col gap-4 md:flex-row">
+                    {canCancelReservation && (
+                        <button
+                            onClick={handleRefundConfirmModalOpen}
+                            disabled={isSubmitting}
+                            className="border-primary text-primary flex w-full items-center justify-center gap-2 rounded-xl border-2 p-2 text-sm"
+                        >
+                            <IoTrashOutline className="h-4 w-4" />
+                            キャンセル
+                        </button>
+                    )}
+                    {canUpdateReservation && (
+                        <button
+                            onClick={handleChangeConfirmModalOpen}
+                            disabled={isSubmitting}
+                            className="border-primary text-primary flex w-full items-center justify-center gap-2 rounded-xl border-2 p-2 text-sm"
+                        >
+                            <FaEdit className="h-4 w-4" />
+                            予約を変更
+                        </button>
+                    )}
+                    {canShareLink && <TicketShare shareUrl={shareUrl} />}
+                    {canUpdateCompanions && (
+                        <button
+                            onClick={handleCompanionsModalOpen}
+                            className="bg-primary flex w-full items-center justify-center gap-2 rounded-xl p-2 text-sm text-white"
+                        >
+                            <RiGroupLine className="h-4 w-4" />
+                            同行者に割り当て
+                        </button>
+                    )}
+                </div>
             </div>
             <CustomModal
                 isOpen={isCompanionsModalOpen}
