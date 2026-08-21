@@ -115,7 +115,8 @@ public class ReservedSeatService {
                 reservationId,
                 releaseSeats,
                 departureTime,
-                arrivalTime
+                arrivalTime,
+                reservation.getReserverName()
             ));
         }
         if (!setSeats.isEmpty()) {
@@ -123,7 +124,8 @@ public class ReservedSeatService {
                 reservationId,
                 setSeats,
                 departureTime,
-                arrivalTime
+                arrivalTime,
+                reservation.getReserverName()
             ));
         }
     }
