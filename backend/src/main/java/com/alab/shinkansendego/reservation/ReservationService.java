@@ -532,7 +532,7 @@ public class ReservationService {
             departureTime,
             arrivalTime,
             oldTotalAmount,
-            reservation.get().getReserverName(),
+            account.getName(),
             assignedReservedSeats
         ));
 
@@ -619,7 +619,7 @@ public class ReservationService {
             departureTime,
             arrivalTime,
             oldTotalAmount,
-            reservation.get().getReserverName(),
+            account.getName(),
             assignedReservedSeats
         ));
 
