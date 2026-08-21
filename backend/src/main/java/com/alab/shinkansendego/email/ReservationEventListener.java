@@ -4,7 +4,9 @@ import com.alab.shinkansendego.reservation.ReservationCanceledEvent;
 import com.alab.shinkansendego.reservation.ReservationCreatedEvent;
 import com.alab.shinkansendego.reservation.ReserveRequestDto;
 import com.alab.shinkansendego.reservedseat.ReservedSeatEntity;
+import com.alab.shinkansendego.reservedseat.ReservedSeatReleaseEvent;
 import com.alab.shinkansendego.reservedseat.ReservedSeatRepository;
+import com.alab.shinkansendego.reservedseat.ReservedSeatSetEvent;
 import com.alab.shinkansendego.schedule.ScheduleEntity;
 import com.alab.shinkansendego.schedule.ScheduleRepository;
 import com.alab.shinkansendego.seat.SeatEntity;
@@ -73,6 +75,22 @@ public class ReservationEventListener {
                 emailService.sendReleaseCompanion(emailDto);
             }
         }
+    }
+
+    @Async
+    @TransactionalEventListener(phase = TransactionPhase.AFTER_COMMIT)
+    public void handleReservedSetReleased(ReservedSeatSetEvent event) {
+
+        EmailRequestDto emailDto = setEmailRequestDto(event.reservationId(), event.request(), event.departureTime(), event.arrivalTime());
+        emailService.sendSetCompanion(emailDto);
+    }
+
+    @Async
+    @TransactionalEventListener(phase = TransactionPhase.AFTER_COMMIT)
+    public void handleReservedSeatReleased(ReservedSeatReleaseEvent event) {
+
+        EmailRequestDto emailDto = setEmailRequestDto(event.reservationId(), event.request(), event.departureTime(), event.arrivalTime());
+        emailService.sendReleaseCompanion(emailDto);
     }
 
     private EmailRequestDto setEmailRequestDto(UUID reservationId,

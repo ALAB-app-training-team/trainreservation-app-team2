@@ -14,8 +14,10 @@ public final class EmailUtils {
     }
 
     public static final String LOGIN_PATH = "/login";
+    public static final String TICKET_PATH = "/reservationGuestLogin?reservationId=";
     public static final String SUBJECT = "[予約完了] 予約内容のご案内";
     public static final String CANCEL_SUBJECT = "[予約キャンセル] 予約キャンセル内容のご案内";
+    public static final String SET_SUBJECT = "[割り当て] 同行者割り当て内容のご案内";
     public static final String RELEASE_SUBJECT = "[割り当て解除] 同行者割り当て解除内容のご案内";
     public static final String SENDER_NAME = "新幹線でGO！";
     public static final Integer REFUND_FEE = 320;
@@ -35,6 +37,24 @@ public final class EmailUtils {
         払戻金額：%,d 円
 
         ■アプリログインURL
+        %s
+
+        またのご利用をお待ちしております。
+        """;
+    public static final String SET_BODY = """
+        %s さま
+
+        「新幹線でGO!」アプリをご利用いただきありがとうございます。
+        以下チケットに同行者として割り当てられましたのでご確認ください。
+
+        ■割り当て詳細
+        乗車日：%s
+        区間：%s（%s発）　→　%s（%s着）
+        列車名：%s
+        座席：%s
+        金額：%,d 円
+
+        ■チケットURL
         %s
 
         またのご利用をお待ちしております。

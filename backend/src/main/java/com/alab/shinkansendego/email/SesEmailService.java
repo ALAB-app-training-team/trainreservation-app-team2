@@ -156,6 +156,56 @@ public class SesEmailService implements EmailService {
 
     @Async
     @Override
+    public void sendSetCompanion(EmailRequestDto dto) {
+        try {
+            String formatterRideDate = "";
+            if (dto.getRideDate() != null) {
+                formatterRideDate = EmailUtils.rideDateFormatter(dto.getRideDate());
+            }
+
+            String seatDetail = "";
+            Integer seatFare = 0;
+            if (dto.getSeats() != null && dto.getSeats().size() == 1) {
+                seatDetail = EmailUtils.seatFormatter(dto.getSeats());
+                seatFare = dto.getSeats().getFirst().getSeatFare();
+            }
+
+            String ticketUrl = EmailUtils.TICKET_PATH + dto.getReservationId();
+
+            String body = String.format(EmailUtils.SET_BODY,
+                dto.getReserverName() != null ? dto.getReserverName() : "ユーザー",
+                formatterRideDate,
+                dto.getDepartureStationName(),
+                dto.getDepartureTime(),
+                dto.getArrivalStationName(),
+                dto.getArrivalTime(),
+                dto.getTrainTypeName(),
+                seatDetail,
+                seatFare,
+                ticketUrl
+            );
+
+            SendEmailRequest request = SendEmailRequest.builder()
+                .fromEmailAddress(String.format("%s <%s>", EmailUtils.SENDER_NAME, mailFrom))
+                .destination(Destination.builder().toAddresses(dto.getReserverMail()).build())
+                .content(EmailContent.builder()
+                    .simple(msg -> msg
+                        .subject(Content.builder().data(EmailUtils.SET_SUBJECT).charset("UTF-8").build())
+                        .body(Body.builder().text(Content.builder().data(body).charset("UTF-8").build()).build())
+                    )
+                    .build()
+                )
+                .build();
+
+            sesV2Client.sendEmail(request);
+            log.info("割り当て完了メールを正常に送信しました。 To： {}", dto.getReserverMail());
+        } catch (Exception e) {
+            log.error("割り当て完了メール送信中にエラーが発生しました。 To： {}", dto.getReserverMail(), e);
+        }
+    }
+
+    @Async
+    @Override
     public void sendReleaseCompanion(EmailRequestDto dto) {
         try {
             String formatterRideDate = "";

@@ -1,12 +1,15 @@
 package com.alab.shinkansendego.reservedseat;
 
+import com.alab.shinkansendego.departurearrivaltime.DepartureArrivalTimeRepository;
 import com.alab.shinkansendego.reservation.ReservationEntity;
 import com.alab.shinkansendego.reservation.ReservationRepository;
+import com.alab.shinkansendego.traincar.TrainCarRepository;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
+import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.security.access.AccessDeniedException;
 
 import java.util.List;
@@ -24,6 +27,12 @@ public class ReservedSeatServiceTest {
     private ReservationRepository reservationRepo;
     @Mock
     private ReservedSeatRepository reservedSeatRepo;
+    @Mock
+    private DepartureArrivalTimeRepository departureArrivalTimeRepository;
+    @Mock
+    private TrainCarRepository trainCarRepository;
+    @Mock
+    private ApplicationEventPublisher eventPublisher;
     private ReservedSeatService service;
     private final UUID reservationId = UUID.randomUUID();
     private final UUID accountId = UUID.randomUUID();
@@ -39,7 +48,7 @@ public class ReservedSeatServiceTest {
     @BeforeEach
     void setUp() {
         MockitoAnnotations.openMocks(this);
-        this.service = new ReservedSeatService(reservationRepo, reservedSeatRepo);
+        this.service = new ReservedSeatService(reservationRepo, reservedSeatRepo, departureArrivalTimeRepository, trainCarRepository, eventPublisher);
 
         reservedSeatUpdateDto1 = new ReservedSeatUpdateDto(reservedSeat1Id, "一般次郎",
             "test2-common@test.com");
