@@ -27,6 +27,7 @@ public class EmailRequestDto {
     private String arrivalStationName;
     private LocalTime arrivalTime;
     private Integer totalAmount;
+    private Integer oldAmount;
     private List<SelectedSeatDto> seats;
 
     @Data
