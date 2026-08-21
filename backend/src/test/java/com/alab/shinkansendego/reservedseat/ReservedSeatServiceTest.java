@@ -113,13 +113,13 @@ public class ReservedSeatServiceTest {
         seatType.setTrainCarTypeCd("CAR01");
         trainCar.setSeatType(seatType);
         when(reservationRepo.findById(reservationId)).thenReturn(Optional.of(reservation));
-        when(reservedSeatRepo.findByIdAndReservationIdAndIsDeleted(reservedSeat1Id, reservationId, false)).thenReturn(Optional.of(reservedSeat1));
-        when(reservedSeatRepo.findByIdAndReservationIdAndIsDeleted(reservedSeat2Id, reservationId, false)).thenReturn(Optional.of(reservedSeat2));
-        when(trainCarRepo.findByTrainCarCd(any())).thenReturn(Optional.of(trainCar));
         when(departureArrivalTimeRepo.findByScheduleCd(any())).thenReturn(List.of(
             buildSchedule(LocalTime.of(6, 0, 0), "THK01", "東京", LocalTime.of(6, 30, 0), "THK02", "上野"),
             buildSchedule(LocalTime.of(7, 0, 0), "THK02", "上野", LocalTime.of(7, 30, 0), "CMN01", "大宮"),
             buildSchedule(LocalTime.of(8, 0, 0), "CMN01", "大宮", LocalTime.of(8, 30, 0), "THK09", "仙台")));
+        when(reservedSeatRepo.findByIdAndReservationIdAndIsDeleted(reservedSeat1Id, reservationId, false)).thenReturn(Optional.of(reservedSeat1));
+        when(reservedSeatRepo.findByIdAndReservationIdAndIsDeleted(reservedSeat2Id, reservationId, false)).thenReturn(Optional.of(reservedSeat2));
+        when(trainCarRepo.findByTrainCarCd(any())).thenReturn(Optional.of(trainCar));
 
         service.updateReservedSeats(reservationId, updateRequest, accountId, null, null);
         assertEquals("一般次郎", reservedSeat1.getName());
@@ -141,13 +141,13 @@ public class ReservedSeatServiceTest {
         trainCar.setSeatType(seatType);
         reservation.setAccountId(null);
         when(reservationRepo.findById(reservationId)).thenReturn(Optional.of(reservation));
-        when(reservedSeatRepo.findByIdAndReservationIdAndIsDeleted(reservedSeat1Id, reservationId, false)).thenReturn(Optional.of(reservedSeat1));
-        when(reservedSeatRepo.findByIdAndReservationIdAndIsDeleted(reservedSeat2Id, reservationId, false)).thenReturn(Optional.of(reservedSeat2));
-        when(trainCarRepo.findByTrainCarCd(any())).thenReturn(Optional.of(trainCar));
         when(departureArrivalTimeRepo.findByScheduleCd(any())).thenReturn(List.of(
             buildSchedule(LocalTime.of(6, 0, 0), "THK01", "東京", LocalTime.of(6, 30, 0), "THK02", "上野"),
             buildSchedule(LocalTime.of(7, 0, 0), "THK02", "上野", LocalTime.of(7, 30, 0), "CMN01", "大宮"),
             buildSchedule(LocalTime.of(8, 0, 0), "CMN01", "大宮", LocalTime.of(8, 30, 0), "THK09", "仙台")));
+        when(reservedSeatRepo.findByIdAndReservationIdAndIsDeleted(reservedSeat1Id, reservationId, false)).thenReturn(Optional.of(reservedSeat1));
+        when(reservedSeatRepo.findByIdAndReservationIdAndIsDeleted(reservedSeat2Id, reservationId, false)).thenReturn(Optional.of(reservedSeat2));
+        when(trainCarRepo.findByTrainCarCd(any())).thenReturn(Optional.of(trainCar));
 
         service.updateReservedSeats(reservationId, updateRequest, null, "一般太郎", "test-common@test.com");
         assertEquals("一般次郎", reservedSeat1.getName());
@@ -229,16 +229,65 @@ public class ReservedSeatServiceTest {
         trainCar.setSeatType(seatType);
         when(reservationRepo.findById(reservationId)).thenReturn(Optional.of(reservation));
         when(reservedSeatRepo.findByIdAndReservationIdAndIsDeleted(reservedSeat1Id, reservationId, false)).thenReturn(Optional.of(reservedSeat1));
-        when(trainCarRepo.findByTrainCarCd(any())).thenReturn(Optional.of(trainCar));
         when(departureArrivalTimeRepo.findByScheduleCd(any())).thenReturn(List.of(
             buildSchedule(LocalTime.of(6, 0, 0), "THK01", "東京", LocalTime.of(6, 30, 0), "THK02", "上野"),
             buildSchedule(LocalTime.of(7, 0, 0), "THK02", "上野", LocalTime.of(7, 30, 0), "CMN01", "大宮"),
             buildSchedule(LocalTime.of(8, 0, 0), "CMN01", "大宮", LocalTime.of(8, 30, 0), "THK09", "仙台")));
         when(reservedSeatRepo.findByIdAndReservationIdAndIsDeleted(reservedSeat2Id, reservationId, false)).thenReturn(Optional.empty());
+        when(trainCarRepo.findByTrainCarCd(any())).thenReturn(Optional.of(trainCar));
 
         IllegalArgumentException exception = assertThrows(IllegalArgumentException.class, () -> {
             service.updateReservedSeats(reservationId, updateRequest, accountId, null, null);
         });
         assertEquals("ReservedSeat is Not found", exception.getMessage());
+    }
+
+    @Test
+    @DisplayName("出発駅に該当する時刻情報が存在しない場合、IllegalArgumentExceptionを投げる")
+    void updateReservedSeats_withNotExistingDepartureTime() {
+        when(reservationRepo.findById(reservationId)).thenReturn(Optional.of(reservation));
+        when(reservedSeatRepo.findByIdAndReservationIdAndIsDeleted(reservedSeat1Id, reservationId, false)).thenReturn(Optional.of(reservedSeat1));
+        when(departureArrivalTimeRepo.findByScheduleCd(any())).thenReturn(List.of(
+            buildSchedule(LocalTime.of(7, 0, 0), "THK02", "上野", LocalTime.of(7, 30, 0), "CMN01", "大宮"),
+            buildSchedule(LocalTime.of(8, 0, 0), "CMN01", "大宮", LocalTime.of(8, 30, 0), "THK09", "仙台")));
+
+        IllegalArgumentException exception = assertThrows(IllegalArgumentException.class, () -> {
+            service.updateReservedSeats(reservationId, updateRequest, accountId, null, null);
+        });
+        assertEquals("DepartureTime is Not found", exception.getMessage());
+    }
+
+    @Test
+    @DisplayName("到着駅に該当する時刻情報が存在しない場合、IllegalArgumentExceptionを投げる")
+    void updateReservedSeats_withNotExistingArrivalTime() {
+        when(reservationRepo.findById(reservationId)).thenReturn(Optional.of(reservation));
+        when(reservedSeatRepo.findByIdAndReservationIdAndIsDeleted(reservedSeat1Id, reservationId, false)).thenReturn(Optional.of(reservedSeat1));
+        when(departureArrivalTimeRepo.findByScheduleCd(any())).thenReturn(List.of(
+            buildSchedule(LocalTime.of(7, 0, 0), "THK01", "東京", LocalTime.of(7, 30, 0), "CMN01", "大宮"),
+            buildSchedule(LocalTime.of(8, 0, 0), "CMN01", "大宮", LocalTime.of(8, 30, 0), "THK09", "仙台")));
+
+        IllegalArgumentException exception = assertThrows(IllegalArgumentException.class, () -> {
+            service.updateReservedSeats(reservationId, updateRequest, accountId, null, null);
+        });
+        assertEquals("ArrivalTime is Not found", exception.getMessage());
+    }
+
+    @Test
+    @DisplayName("座席に紐づく号車情報が存在しない場合、IllegalArgumentExceptionを投げる")
+    void updateReservedSeats_withNotExistingTrainCar() {
+        when(reservationRepo.findById(reservationId)).thenReturn(Optional.of(reservation));
+        when(reservedSeatRepo.findByIdAndReservationIdAndIsDeleted(reservedSeat1Id, reservationId, false)).thenReturn(Optional.of(reservedSeat1));
+        when(departureArrivalTimeRepo.findByScheduleCd(any())).thenReturn(List.of(
+            buildSchedule(LocalTime.of(6, 0, 0), "THK01", "東京", LocalTime.of(6, 30, 0), "THK02", "上野"),
+            buildSchedule(LocalTime.of(7, 0, 0), "THK02", "上野", LocalTime.of(7, 30, 0), "CMN01", "大宮"),
+            buildSchedule(LocalTime.of(8, 0, 0), "CMN01", "大宮", LocalTime.of(8, 30, 0), "THK09", "仙台")));
+        when(reservedSeatRepo.findByIdAndReservationIdAndIsDeleted(reservedSeat1Id, reservationId, false)).thenReturn(Optional.of(reservedSeat1));
+        when(reservedSeatRepo.findByIdAndReservationIdAndIsDeleted(reservedSeat2Id, reservationId, false)).thenReturn(Optional.of(reservedSeat2));
+        when(trainCarRepo.findByTrainCarCd(any())).thenReturn(Optional.empty());
+
+        IllegalArgumentException exception = assertThrows(IllegalArgumentException.class, () -> {
+            service.updateReservedSeats(reservationId, updateRequest, accountId, null, null);
+        });
+        assertEquals("TrainCar is Not found", exception.getMessage());
     }
 }

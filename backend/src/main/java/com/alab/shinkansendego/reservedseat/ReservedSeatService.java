@@ -77,12 +77,12 @@ public class ReservedSeatService {
         LocalTime departureTime = schedules.stream()
             .filter(schedule -> schedule.getSectionKm().getStartStationCd().equals(reservation.getDepartureStationCd()))
             .findFirst()
-            .orElseThrow(() -> new IllegalArgumentException("DepartureTime is not found"))
+            .orElseThrow(() -> new IllegalArgumentException("DepartureTime is Not found"))
             .getDepartureTime();
         LocalTime arrivalTime = schedules.stream()
             .filter(schedule -> schedule.getSectionKm().getGoalStationCd().equals(reservation.getArrivalStationCd()))
             .findFirst()
-            .orElseThrow(() -> new IllegalArgumentException("ArrivalTime is not found"))
+            .orElseThrow(() -> new IllegalArgumentException("ArrivalTime is Not found"))
             .getArrivalTime();
 
         List<ReserveRequestDto> releaseSeats = new ArrayList<>();
@@ -145,7 +145,7 @@ public class ReservedSeatService {
             reservation.getPaymentTrackingId(),
             List.of(new ReserveRequestDto.SelectedSeatDto(
                 reservedSeatEntity.getTrainCarCd(),
-                trainCarRepository.findByTrainCarCd(reservedSeatEntity.getTrainCarCd()).orElseThrow(() -> new IllegalArgumentException("TrainCar is not found")).getSeatType().getTrainCarTypeCd(),
+                trainCarRepository.findByTrainCarCd(reservedSeatEntity.getTrainCarCd()).orElseThrow(() -> new IllegalArgumentException("TrainCar is Not found")).getSeatType().getTrainCarTypeCd(),
                 reservedSeatEntity.getSeatCd(),
                 reservedSeatEntity.getSeatFare()
             ))
