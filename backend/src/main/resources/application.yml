@@ -36,7 +36,6 @@ springdoc:
 server:
   servlet:
     forward-headers-strategy: framework
-    context-path: /api
     session:
       timeout: 30m
       cookie:
