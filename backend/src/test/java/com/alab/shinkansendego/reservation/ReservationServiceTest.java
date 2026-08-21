@@ -906,6 +906,7 @@ public class ReservationServiceTest {
         sectionKm.setStartStationCd(request.getDepartureStationCd());
         sectionKm.setGoalStationCd(request.getArrivalStationCd());
         departureArrivalTime.setSectionKm(sectionKm);
+        when(accountRepo.findById(any())).thenReturn(Optional.of(account));
         when(reservationRepo.findByIdAndIsDeleted(reservationId1, false)).thenReturn(reservation);
         when(sectionKmRepo.findByStartStationCd(request.getDepartureStationCd())).thenReturn(List.of(sectionKm));
         when(sectionKmRepo.findByGoalStationCd(request.getArrivalStationCd())).thenReturn(List.of(sectionKm));
@@ -1012,6 +1013,7 @@ public class ReservationServiceTest {
         sectionKm.setStartStationCd("NotExistStation");
         sectionKm.setGoalStationCd(request.getArrivalStationCd());
         departureArrivalTime.setSectionKm(sectionKm);
+        when(accountRepo.findById(any())).thenReturn(Optional.of(account));
         when(reservationRepo.findByIdAndIsDeleted(reservationId1, false)).thenReturn(reservation);
         when(sectionKmRepo.findByStartStationCd(request.getDepartureStationCd())).thenReturn(List.of(sectionKm));
         when(sectionKmRepo.findByGoalStationCd(request.getArrivalStationCd())).thenReturn(List.of(sectionKm));
@@ -1046,6 +1048,7 @@ public class ReservationServiceTest {
         sectionKm.setStartStationCd(request.getDepartureStationCd());
         sectionKm.setGoalStationCd("NotExistStation");
         departureArrivalTime.setSectionKm(sectionKm);
+        when(accountRepo.findById(any())).thenReturn(Optional.of(account));
         when(reservationRepo.findByIdAndIsDeleted(reservationId1, false)).thenReturn(reservation);
         when(sectionKmRepo.findByStartStationCd(request.getDepartureStationCd())).thenReturn(List.of(sectionKm));
         when(sectionKmRepo.findByGoalStationCd(request.getArrivalStationCd())).thenReturn(List.of(sectionKm));
@@ -1080,6 +1083,7 @@ public class ReservationServiceTest {
         sectionKm.setStartStationCd(request.getDepartureStationCd());
         sectionKm.setGoalStationCd(request.getArrivalStationCd());
         departureArrivalTime.setSectionKm(sectionKm);
+        when(accountRepo.findById(any())).thenReturn(Optional.of(account));
         when(reservationRepo.findByIdAndIsDeleted(reservationId1, false)).thenReturn(reservation);
         when(sectionKmRepo.findByStartStationCd(request.getDepartureStationCd())).thenReturn(List.of(sectionKm));
         when(sectionKmRepo.findByGoalStationCd(request.getArrivalStationCd())).thenReturn(List.of(sectionKm));
