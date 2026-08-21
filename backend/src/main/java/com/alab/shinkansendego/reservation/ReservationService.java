@@ -459,6 +459,12 @@ public class ReservationService {
     @Transactional
     public UUID putReservation(UUID reservationId, ReserveRequestDto changedReservation, AccountSessionDto session) {
         Optional<ReservationEntity> reservation = putError(reservationId, changedReservation, session);
+
+        Integer oldTotalAmount = reservation.get().getReservedSeat().stream()
+            .filter(seat -> seat.getSeatFare() != null)
+            .mapToInt(ReservedSeatEntity::getSeatFare)
+            .sum();
+
         reservation.get().setRideDate(changedReservation.getRideDate());
         reservation.get().setScheduleCd(changedReservation.getScheduleCd());
         reservation.get().setDepartureStationCd(changedReservation.getDepartureStationCd());
@@ -472,13 +478,15 @@ public class ReservationService {
         List<ReservedSeatSectionEntity> deleteSeatSections = reservedSeats.stream()
             .flatMap(seat -> seat.getReservedSeatSection().stream())
             .toList();
+        List<ReservedSeatEntity> assignedReservedSeats = reservedSeats.stream().filter(seat -> org.springframework.util.StringUtils.hasLength(seat.getMail()) && org.springframework.util.StringUtils.hasLength(seat.getName())).toList();
         reservedSeatRepository.deleteAll(reservedSeats);
         reservedSeatSectionRepository.deleteAll(deleteSeatSections);
 
         entityManager.flush();
         entityManager.clear();
 
-        List<String> sectionCds = getSectionCdList(changedReservation.getScheduleCd(),
+        List<String> sectionCds = getSectionCdList(
+            changedReservation.getScheduleCd(),
             changedReservation.getDepartureStationCd(),
             changedReservation.getArrivalStationCd());
 
@@ -486,7 +494,39 @@ public class ReservationService {
             reservationId,
             changedReservation.getSeats(), sectionCds,
             changedReservation.getRideDate(),
-            changedReservation.getScheduleCd());
+            changedReservation.getScheduleCd()
+        );
+
+        List<DepartureArrivalTimeEntity> schedules = departureArrivalTimeRepository.findByScheduleCd(changedReservation.getScheduleCd());
+
+        LocalTime departureTime = schedules.stream()
+            .filter(schedule -> schedule.getSectionKm().getStartStationCd().equals(changedReservation.getDepartureStationCd()))
+            .findFirst()
+            .orElseThrow(() -> new IllegalArgumentException("DepartureTime is not found"))
+            .getDepartureTime();
+
+        LocalTime arrivalTime = schedules.stream()
+            .filter(schedule -> schedule.getSectionKm().getGoalStationCd().equals(changedReservation.getArrivalStationCd()))
+            .findFirst()
+            .orElseThrow(() -> new IllegalArgumentException("ArrivalTime is not found"))
+            .getArrivalTime();
+
+        if (changedReservation.getReserverMail() == null || changedReservation.getReserverMail().isBlank()) {
+            changedReservation.setReserverMail(reservation.get().getReserverMail());
+        }
+
+        if (changedReservation.getReserverName() == null || changedReservation.getReserverName().isBlank()) {
+            changedReservation.setReserverName(reservation.get().getReserverName());
+        }
+
+        eventPublisher.publishEvent(new ReservationChangedEvent(
+            reservationId,
+            changedReservation,
+            departureTime,
+            arrivalTime,
+            oldTotalAmount,
+            assignedReservedSeats
+        ));
 
         return reservationId;
     }
@@ -504,11 +544,16 @@ public class ReservationService {
         Optional<ReservationEntity> reservation = putError(reservationId, changedReservation, session);
         Set<ReservedSeatEntity> reservedSeats = reservation.get().getReservedSeat();
 
+        Integer oldTotalAmount = reservation.get().getReservedSeat().stream()
+            .filter(seat -> seat.getSeatFare() != null)
+            .mapToInt(ReservedSeatEntity::getSeatFare)
+            .sum();
+
         // 削除対象座席Entityを抽出
         List<ReservedSeatEntity> deleteSeats = reservedSeats.stream()
             .filter(reserved -> changedReservation.getSeats().stream().noneMatch(changed -> isSame(changed, reserved)))
             .toList();
-
+        List<ReservedSeatEntity> assignedReservedSeats = deleteSeats.stream().filter(seat -> org.springframework.util.StringUtils.hasLength(seat.getMail()) && org.springframework.util.StringUtils.hasLength(seat.getName())).toList();
         // 追加対象座席リクエストを抽出
         List<ReserveRequestDto.SelectedSeatDto> postSeats = changedReservation.getSeats().stream()
             .filter(changed -> reservedSeats.stream().noneMatch(reserved -> isSame(changed, reserved)))
@@ -535,6 +580,37 @@ public class ReservationService {
             reservedSeatRepository.deleteAll(deleteSeats);
             reservedSeatSectionRepository.deleteAll(deleteSeatSections);
         }
+
+        List<DepartureArrivalTimeEntity> schedules = departureArrivalTimeRepository.findByScheduleCd(changedReservation.getScheduleCd());
+
+        LocalTime departureTime = schedules.stream()
+            .filter(schedule -> schedule.getSectionKm().getStartStationCd().equals(changedReservation.getDepartureStationCd()))
+            .findFirst()
+            .orElseThrow(() -> new IllegalArgumentException("DepartureTime is not found"))
+            .getDepartureTime();
+
+        LocalTime arrivalTime = schedules.stream()
+            .filter(schedule -> schedule.getSectionKm().getGoalStationCd().equals(changedReservation.getArrivalStationCd()))
+            .findFirst()
+            .orElseThrow(() -> new IllegalArgumentException("ArrivalTime is not found"))
+            .getArrivalTime();
+
+        if (changedReservation.getReserverMail() == null || changedReservation.getReserverMail().isBlank()) {
+            changedReservation.setReserverMail(reservation.get().getReserverMail());
+        }
+
+        if (changedReservation.getReserverName() == null || changedReservation.getReserverName().isBlank()) {
+            changedReservation.setReserverName(reservation.get().getReserverName());
+        }
+
+        eventPublisher.publishEvent(new ReservationChangedEvent(
+            reservationId,
+            changedReservation,
+            departureTime,
+            arrivalTime,
+            oldTotalAmount,
+            assignedReservedSeats
+        ));
 
         return reservationId;
     }

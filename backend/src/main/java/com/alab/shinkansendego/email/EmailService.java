@@ -8,4 +8,6 @@ public interface EmailService {
     void sendSetCompanion(EmailRequestDto dto);
 
     void sendReleaseCompanion(EmailRequestDto dto);
+
+    void sendReservationChange(EmailRequestDto dto);
 }

@@ -13,6 +13,7 @@ import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
 
 import static com.alab.shinkansendego.utils.EmailUtils.REFUND_FEE;
+import static com.alab.shinkansendego.utils.EmailUtils.differenceFormatter;
 
 @Service
 @Profile({"local", "test"})
@@ -34,7 +35,7 @@ public class LocalEmailService implements EmailService {
             MimeMessage mimeMessage = mailSender.createMimeMessage();
             MimeMessageHelper helper = new MimeMessageHelper(mimeMessage, "UTF-8");
 
-            helper.setFrom("thashimoto@jeisryokai.onmicrosoft.com", EmailUtils.SENDER_NAME);
+            helper.setFrom(EmailUtils.FROM_ADDRESS, EmailUtils.SENDER_NAME);
             helper.setTo(dto.getReserverMail());
             helper.setSubject(EmailUtils.SUBJECT);
 
@@ -48,27 +49,10 @@ public class LocalEmailService implements EmailService {
                 seatDetail = EmailUtils.seatFormatter(dto.getSeats());
             }
 
-            String loginurl = baseUrl + EmailUtils.LOGIN_PATH;
+            String loginUrl = baseUrl + EmailUtils.LOGIN_PATH;
 
-            String body = String.format("""
-                    %s さま
-
-                    「新幹線でGO!」アプリでチケットのご予約が完了いたしました。
-                    以下に予約詳細をお知らせいたします。
-
-                    ■予約詳細
-                    予約ID：%s
-                    乗車日：%s
-                    区間：%s（%s発）　→　%s（%s着）
-                    列車名：%s
-                    座席：%s
-                    お支払い合計：%,d 円
-
-                    ■アプリログインURL
-                    %s
-
-                    またのご利用をお待ちしております。
-                    """,
+            String body = String.format(
+                EmailUtils.CONFIRMATION_BODY,
                 dto.getReserverName() != null ? dto.getReserverName() : "ユーザー",
                 dto.getReservationId(),
                 formatterRideDate,
@@ -79,14 +63,60 @@ public class LocalEmailService implements EmailService {
                 dto.getTrainTypeName(),
                 seatDetail,
                 dto.getTotalAmount(),
-                loginurl
+                loginUrl
             );
 
             helper.setText(body);
             mailSender.send(mimeMessage);
             log.info("予約完了メールを正常に送信しました。 To： {}", dto.getReserverMail());
         } catch (Exception e) {
-            log.error("メール送信中にエラーが発生しました。 To： {}", dto.getReserverMail(), e);
+            log.error("予約完了メール送信中にエラーが発生しました。 To： {}", dto.getReserverMail(), e);
+        }
+    }
+
+    @Async
+    @Override
+    public void sendReservationChange(EmailRequestDto dto) {
+        try {
+            MimeMessage mimeMessage = mailSender.createMimeMessage();
+            MimeMessageHelper helper = new MimeMessageHelper(mimeMessage, "UTF-8");
+
+            helper.setFrom(EmailUtils.FROM_ADDRESS, EmailUtils.SENDER_NAME);
+            helper.setTo(dto.getReserverMail());
+            helper.setSubject(EmailUtils.CHANGE_SUBJECT);
+
+            String formatterRideDate = "";
+            if (dto.getRideDate() != null) {
+                formatterRideDate = EmailUtils.rideDateFormatter(dto.getRideDate());
+            }
+
+            String seatDetail = "";
+            if (dto.getSeats() != null && !dto.getSeats().isEmpty()) {
+                seatDetail = EmailUtils.seatFormatter(dto.getSeats());
+            }
+
+            String loginUrl = baseUrl + EmailUtils.LOGIN_PATH;
+
+            String body = String.format(
+                EmailUtils.CHANGE_BODY,
+                dto.getReserverName() != null ? dto.getReserverName() : "ユーザー",
+                dto.getReservationId(),
+                formatterRideDate,
+                dto.getDepartureStationName(),
+                dto.getDepartureTime(),
+                dto.getArrivalStationName(),
+                dto.getArrivalTime(),
+                dto.getTrainTypeName(),
+                seatDetail,
+                differenceFormatter(dto.getTotalAmount(), dto.getOldAmount()),
+                loginUrl
+            );
+
+            helper.setText(body);
+            mailSender.send(mimeMessage);
+            log.info("予約変更完了メールを正常に送信しました。 To： {}", dto.getReserverMail());
+        } catch (Exception e) {
+            log.error("予約変更完了メール送信中にエラーが発生しました。 To： {}", dto.getReserverMail(), e);
         }
     }
 
@@ -97,7 +127,7 @@ public class LocalEmailService implements EmailService {
             MimeMessage mimeMessage = mailSender.createMimeMessage();
             MimeMessageHelper helper = new MimeMessageHelper(mimeMessage, "UTF-8");
 
-            helper.setFrom("thashimoto@jeisryokai.onmicrosoft.com", EmailUtils.SENDER_NAME);
+            helper.setFrom(EmailUtils.FROM_ADDRESS, EmailUtils.SENDER_NAME);
             helper.setTo(dto.getReserverMail());
             helper.setSubject(EmailUtils.CANCEL_SUBJECT);
 
@@ -115,7 +145,7 @@ public class LocalEmailService implements EmailService {
 
             Integer total = dto.getTotalAmount() - refund;
 
-            String loginurl = baseUrl + EmailUtils.LOGIN_PATH;
+            String loginUrl = baseUrl + EmailUtils.LOGIN_PATH;
 
             String body = String.format(EmailUtils.CANCEL_BODY,
                 dto.getReserverName() != null ? dto.getReserverName() : "ユーザー",
@@ -129,7 +159,7 @@ public class LocalEmailService implements EmailService {
                 seatDetail,
                 refund,
                 total,
-                loginurl
+                loginUrl
             );
 
             helper.setText(body);
@@ -193,7 +223,7 @@ public class LocalEmailService implements EmailService {
             MimeMessage mimeMessage = mailSender.createMimeMessage();
             MimeMessageHelper helper = new MimeMessageHelper(mimeMessage, "UTF-8");
 
-            helper.setFrom("thashimoto@jeisryokai.onmicrosoft.com", EmailUtils.SENDER_NAME);
+            helper.setFrom(EmailUtils.FROM_ADDRESS, EmailUtils.SENDER_NAME);
             helper.setTo(dto.getReserverMail());
             helper.setSubject(EmailUtils.RELEASE_SUBJECT);
 
