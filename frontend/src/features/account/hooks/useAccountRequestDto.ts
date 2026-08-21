@@ -13,7 +13,7 @@ import { checkMailRegex } from '@/shared/utils/CheckMailRegex';
 import { checkPasswordRegex } from '@/shared/utils/CheckPasswordRegex';
 import { removeWhiteSpace } from '@/shared/utils/RemoveWhiteSpace';
 
-export function useAccountRequestDto() {
+export function useAccountRequestDto(isPasswordUpdateForAdmin: boolean) {
     const navigate = useNavigate();
     const [isSubmitting, setIsSubmitting] = useState<boolean>(false);
     const [accountForm, setAccountForm] = useState<AccountForm>({
@@ -52,6 +52,9 @@ export function useAccountRequestDto() {
         return removeWhiteSpace(value) === '';
     };
     const isMailInvalid = (value: string) => {
+        if (isPasswordUpdateForAdmin === true) {
+            return false;
+        }
         return checkMailRegex(value);
     };
     const isMailMaxLength = (value: string) => {
@@ -157,6 +160,15 @@ export function useAccountRequestDto() {
 
     const isDisable = checkDisable(accountForm, policy);
 
+    const handleClear = () => {
+        setAccountForm({
+            name: '',
+            mail: '',
+            password: '',
+            passwordCheck: '',
+        });
+    };
+
     const handleAccount = async () => {
         if (isSubmitting) return;
         setIsSubmitting(true);
@@ -175,18 +187,46 @@ export function useAccountRequestDto() {
                 axios.isAxiosError(error) &&
                 error.response?.status === HttpStatusCode.Conflict
             ) {
-                toast.error(ERROR_MESSAGE.ACCOUNT_ALREADY,{
-                    duration:Infinity,
+                toast.error(ERROR_MESSAGE.ACCOUNT_ALREADY, {
+                    duration: Infinity,
                     action: {
                         label: 'OK',
-                        onClick: () => {}
+                        onClick: () => {},
                     },
                     classNames: {
-                        title : 'text-left whitespace-pre-line',
-                        actionButton: "!px-4 !py-2 !text-base !h-auto",
-                }
+                        title: 'text-left whitespace-pre-line',
+                        actionButton: '!px-4 !py-2 !text-base !h-auto',
+                    },
                 });
             }
+        } finally {
+            setIsSubmitting(false);
+        }
+    };
+
+    const handleUpdate = async () => {
+        if (isSubmitting) return;
+        setIsSubmitting(true);
+        try {
+            await apiClient.put<void>(ENDPOINTS.ADMIN_UPDATE(), {
+                name: removeWhiteSpace(accountForm.name),
+                mail: removeWhiteSpace(accountForm.mail),
+                password: accountForm.password,
+            });
+            handleClear();
+            toast.success('変更が完了しました');
+        } catch {
+            toast.error(ERROR_MESSAGE.ADMIN_UPDATE_ERROR, {
+                duration: Infinity,
+                action: {
+                    label: 'OK',
+                    onClick: () => {},
+                },
+                classNames: {
+                    title: 'text-left whitespace-pre-line',
+                    actionButton: '!px-4 !py-2 !text-base !h-auto',
+                },
+            });
         } finally {
             setIsSubmitting(false);
         }
@@ -201,5 +241,6 @@ export function useAccountRequestDto() {
         isDisable,
         handleAccount,
         isSubmitting,
+        handleUpdate,
     };
 }

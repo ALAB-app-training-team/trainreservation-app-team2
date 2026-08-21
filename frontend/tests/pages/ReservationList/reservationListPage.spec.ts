@@ -5,12 +5,12 @@ import { ReservationListPage } from '@tests/pages/ReservationList/ReservationLis
 test('お支払い合計が正しく表示されていること', async ({
     page,
     createReservation,
-    login,
+    commonLogin,
     logout,
 }) => {
     const reservationListPage = new ReservationListPage(page);
 
-    await login();
+    await commonLogin();
     await expect(page).toHaveURL('/scheduleSearch');
     await createReservation();
     await reservationListPage.goto();
@@ -26,14 +26,14 @@ test('お支払い合計が正しく表示されていること', async ({
 test('有効タブは本日または未来の日付であること', async ({
     page,
     createReservation,
-    login,
+    commonLogin,
     logout,
 }) => {
     const reservationListPage = new ReservationListPage(page);
     const today = new Date();
     today.setHours(0, 0, 0, 0);
 
-    await login();
+    await commonLogin();
     await expect(page).toHaveURL('/scheduleSearch');
     await createReservation();
     await reservationListPage.goto();
@@ -56,7 +56,7 @@ test('有効タブは本日または未来の日付であること', async ({
 test('過去タブは過去の日付であること', async ({
     page,
     createReservation,
-    login,
+    commonLogin,
     logout,
 }) => {
     const reservationListPage = new ReservationListPage(page);
@@ -64,7 +64,7 @@ test('過去タブは過去の日付であること', async ({
     const today = new Date();
     today.setHours(0, 0, 0, 0);
 
-    await login();
+    await commonLogin();
     await expect(page).toHaveURL('/scheduleSearch');
     await createReservation();
     await reservationListPage.goto();
@@ -87,13 +87,13 @@ test('過去タブは過去の日付であること', async ({
 test('削除すると予約が1件削除されること', async ({
     page,
     createGuestReservation,
-    login,
+    commonLogin,
     logout,
 }) => {
     const reservationListPage = new ReservationListPage(page);
 
     await createGuestReservation();
-    await login();
+    await commonLogin();
     await expect(page).toHaveURL('/scheduleSearch');
     await reservationListPage.goto();
     await expect(page).toHaveURL('/reservationList');
@@ -116,12 +116,12 @@ test('削除すると予約が1件削除されること', async ({
 test('予約キャンセル：キャンセルすることで予約一覧(有効)から予約の数が一個減っていること', async ({
     page,
     createReservation,
-    login,
+    commonLogin,
     logout,
 }) => {
     const reservationListPage = new ReservationListPage(page);
 
-    await login();
+    await commonLogin();
     await expect(page).toHaveURL('/scheduleSearch');
     await createReservation();
     await reservationListPage.goto();
