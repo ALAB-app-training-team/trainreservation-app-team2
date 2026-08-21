@@ -19,7 +19,7 @@ export function AccountCreate() {
         isDisable,
         handleAccount,
         isSubmitting,
-    } = useAccountRequestDto();
+    } = useAccountRequestDto(false);
     const [passwordType, setPasswordType] = useState('password');
     useToastForRedirect();
     useEffect(() => {

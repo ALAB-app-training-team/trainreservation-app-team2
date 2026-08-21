@@ -5,6 +5,7 @@ import { toast } from 'sonner';
 import apiClient from '@/api/apiClient';
 import { ENDPOINTS } from '@/api/routes';
 import type { LoginRequestDto } from '@/features/account/types/LoginRequestDto';
+import type { LoginResponseDto } from '@/features/account/types/LoginResponseDto';
 import { ERROR_MESSAGE } from '@/shared/constants/ErrorMessages';
 
 export function useLoginRequestDto() {
@@ -29,27 +30,30 @@ export function useLoginRequestDto() {
         if (isSubmitting) return;
         setIsSubmitting(true);
         try {
-            const response = await apiClient.post<string>(
+            const response = await apiClient.post<LoginResponseDto>(
                 ENDPOINTS.LOGIN(),
                 loginRequestDto,
             );
-            localStorage.setItem('name', response.data);
-            if (!prevPath) {
+            localStorage.setItem('name', response.data.name);
+            localStorage.setItem('role', response.data.role);
+            if (response.data.role === 'ROLE_ADMIN') {
+                navigate('/admin/password', { replace: true });
+            } else if (!prevPath) {
                 navigate('/scheduleSearch', { replace: true });
             } else {
                 navigate(prevPath, { state: prevData, replace: true });
             }
         } catch {
-            toast.error(ERROR_MESSAGE.LOGIN_RETRY,{
-                duration:Infinity,
+            toast.error(ERROR_MESSAGE.LOGIN_RETRY, {
+                duration: Infinity,
                 action: {
                     label: 'OK',
-                    onClick: () => {}
+                    onClick: () => {},
                 },
                 classNames: {
-                    title : 'text-left whitespace-pre-line',
-                    actionButton: "!px-4 !py-2 !text-base !h-auto",
-                }
+                    title: 'text-left whitespace-pre-line',
+                    actionButton: '!px-4 !py-2 !text-base !h-auto',
+                },
             });
         } finally {
             setIsSubmitting(false);

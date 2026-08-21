@@ -38,7 +38,7 @@ public class AccountServiceTest {
     @Test
     @DisplayName("ログインできること")
     void login_withReserverNameAndEmail_returnGetReservationListSuccess() {
-        AccountEntity account = new AccountEntity(UUID.randomUUID(), "Tarou", "a@a.com", hashedPassword);
+        AccountEntity account = new AccountEntity(UUID.randomUUID(), "Tarou", "a@a.com", hashedPassword, "ROLE_USER");
 
         when(accountRepository.findByMail(mail)).thenReturn(Optional.of(account));
         when(passwordEncoder.matches(rawPassword, hashedPassword)).thenReturn(true);
@@ -58,7 +58,7 @@ public class AccountServiceTest {
     @Test
     @DisplayName("入力されたパスワードとDB内のパスワードが合致しないとBadCredentialsExceptionが発生する")
     void login_withNotMatchPassword_throwsBadCredentialsException() {
-        AccountEntity account = new AccountEntity(UUID.randomUUID(), "Tarou", mail, notMatchHashedPassword);
+        AccountEntity account = new AccountEntity(UUID.randomUUID(), "Tarou", mail, notMatchHashedPassword, "ROLE_USER");
 
         when(accountRepository.findByMail(mail)).thenReturn(Optional.of(account));
         when(passwordEncoder.matches(rawPassword, notMatchHashedPassword)).thenReturn(false);
@@ -72,7 +72,7 @@ public class AccountServiceTest {
     void insertAccount_withAccountRequestDto_returnAccountInsertAccountSuccess() {
         AccountRequestDto request = new AccountRequestDto("太郎", mail, rawPassword);
         Optional<AccountEntity> account = Optional.empty();
-        AccountEntity savedAccount = new AccountEntity(UUID.randomUUID(), "太郎", mail, hashedPassword);
+        AccountEntity savedAccount = new AccountEntity(UUID.randomUUID(), "太郎", mail, hashedPassword, "ROLE_USER");
 
         when(accountRepository.findByMail(mail)).thenReturn(account);
         when(passwordEncoder.encode(rawPassword)).thenReturn(hashedPassword);
@@ -86,11 +86,36 @@ public class AccountServiceTest {
     @DisplayName("登録済メールアドレスがリクエストされた場合、CONFLICTを発生させる")
     void insertAccount_withExistMail_return409() {
         AccountRequestDto request = new AccountRequestDto("太郎", mail, rawPassword);
-        Optional<AccountEntity> account = Optional.of(new AccountEntity(UUID.randomUUID(), "太郎", mail, hashedPassword));
+        Optional<AccountEntity> account = Optional.of(new AccountEntity(UUID.randomUUID(), "太郎", mail, hashedPassword, "ROLE_USER"));
 
         when(accountRepository.findByMail(mail)).thenReturn(account);
 
         ConflictException exception = assertThrows(ConflictException.class, () -> service.insertAccount(request));
         assertEquals(mail + " is Duplicate", exception.getReason());
+    }
+
+    @Test
+    @DisplayName("管理者が他アカウントのパスワードを変更できること")
+    void updatePasswordByAdmin_withDto_returnSuccess() {
+        PasswordUpdateByAdminDto request = new PasswordUpdateByAdminDto("太郎", mail, rawPassword);
+        Optional<AccountEntity> account = Optional.of(new AccountEntity(UUID.randomUUID(), "太郎", mail, hashedPassword, "ROLE_USER"));
+
+        when(accountRepository.findByNameAndMail(request.getName(), request.getMail())).thenReturn(account);
+        when(passwordEncoder.encode(rawPassword)).thenReturn("newHashedPassword");
+
+        service.updatePasswordByAdmin(request);
+        assertEquals("newHashedPassword", account.get().getPassword());
+        verify(accountRepository).save(any());
+    }
+
+    @Test
+    @DisplayName("対象のアカウントが存在しない場合、IllegalArgumentExceptionを投げること")
+    void updatePasswordByAdmin_withNotExistAccount_throwIllegalArgumentException() {
+        PasswordUpdateByAdminDto request = new PasswordUpdateByAdminDto("太郎", mail, rawPassword);
+        Optional<AccountEntity> account = Optional.of(new AccountEntity(UUID.randomUUID(), "太郎", mail, hashedPassword, "ROLE_USER"));
+        when(accountRepository.findByNameAndMail(request.getName(), request.getMail())).thenReturn(Optional.empty());
+
+        Exception ex = assertThrows(IllegalArgumentException.class, () -> service.updatePasswordByAdmin(request));
+        assertEquals("Account not Found", ex.getMessage());
     }
 }

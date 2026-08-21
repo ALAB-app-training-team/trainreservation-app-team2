@@ -4,10 +4,11 @@ export class Header {
     readonly page: Page;
     readonly systemName: Locator;
     readonly scheduleSearchLink: Locator;
-    readonly reservationListLink: Locator;
     readonly loginLink: Locator;
+    readonly passwordUpdateForAdminButton: Locator;
+    readonly reservationListButton: Locator;
     readonly logoutButton: Locator;
-    readonly commonUser: Locator;
+    readonly userName: Locator;
 
     constructor(page: Page) {
         this.page = page;
@@ -15,14 +16,17 @@ export class Header {
         this.scheduleSearchLink = page.getByRole('link', {
             name: '新幹線を探す',
         });
-        this.reservationListLink = page.getByRole('link', {
-            name: '予約確認',
-        });
         this.loginLink = page.getByRole('link', {
             name: 'ログイン',
         });
+        this.passwordUpdateForAdminButton = page.getByRole('button', {
+            name: 'ユーザー管理',
+        });
+        this.reservationListButton = page.getByRole('button', {
+            name: '予約一覧',
+        });
         this.logoutButton = page.getByRole('button', { name: 'ログアウト' });
-        this.commonUser = page.getByTestId('user-name').first();
+        this.userName = page.getByTestId('user-name');
     }
 
     async goToSchduleSearchBySystemName() {
@@ -33,19 +37,23 @@ export class Header {
         await this.scheduleSearchLink.first().click();
     }
 
-    async goToReservationList() {
-        await this.reservationListLink.first().click();
-    }
-
     async goToLogin() {
         await this.loginLink.first().click();
+    }
+
+    async goToPasswordUpdateForAdmin() {
+        await this.passwordUpdateForAdminButton.first().click();
+    }
+
+    async goToReservationList() {
+        await this.reservationListButton.first().click();
     }
 
     async goToLogout() {
         await this.logoutButton.first().click();
     }
 
-    async clickCommonUser() {
-        await this.commonUser.first().click();
+    async clickUserName() {
+        await this.userName.first().click();
     }
 }
