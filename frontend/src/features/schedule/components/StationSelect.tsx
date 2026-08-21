@@ -36,8 +36,16 @@ export function StationSelect({
                     onChange={(option) => {
                         if (option) setValue(option.value);
                     }}
-                    // className="focus:border-primary w-full cursor-pointer rounded-xl border-2 border-transparent bg-white p-2 outline-none"
                     className="w-full text-left"
+                    classNames={{
+                        control: ({ isFocused }) =>
+                            'rounded-xl bg-white p-2 ' +
+                            `${isFocused ? 'border-primary border-2' : 'border-transparent'}`,
+                        menu: () => 'bg-white p-2',
+                        option: ({ isFocused, isSelected }) =>
+                            `${isSelected ? 'bg-primary text-white' : isFocused ? 'bg-primary-light' : 'text-gray-700'}`,
+                    }}
+                    unstyled
                     options={options}
                     noOptionsMessage={() => '該当する駅が見つかりません'}
                 />
