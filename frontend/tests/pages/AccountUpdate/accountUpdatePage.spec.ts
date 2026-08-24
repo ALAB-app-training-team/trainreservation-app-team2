@@ -6,12 +6,13 @@ test('各項目の未入力メッセージが表示されること', async ({ pa
     const accountUpdatePage = new AccountUpdatePage(page);
     await accountUpdatePage.goto();
     await expect(page).toHaveURL('/accountUpdate');
-    await accountUpdatePage.fillName('');await page.goto('http://localhost:5173/accountUpdate');
+    await accountUpdatePage.fillName('');
     await accountUpdatePage.fillMailAddress('');
+    await expect(page.getByText('氏名を入力してください')).toBeVisible();
+    await accountUpdatePage.fillPassword('');
     await expect(
         page.getByText('メールアドレスを入力してください'),
     ).toBeVisible();
-    await accountUpdatePage.fillPassword('');
     await accountUpdatePage.fillName('');
     await expect(page.getByText('パスワードを入力してください')).toBeVisible();
 });

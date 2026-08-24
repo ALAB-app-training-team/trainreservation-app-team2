@@ -144,19 +144,19 @@ export function Header() {
                             >
                                 予約一覧
                             </button>
-                            <NavLink
-                                to={'/accountUpdate'}
+                            <button
+                                onClick={() => navigate('/accountUpdate')}
                                 className="w-full text-left hover:bg-gray-100"
                             >
                                 氏名・メールアドレス変更
-                            </NavLink>
+                            </button>
 
-                            <NavLink
-                                to={'/passwordUpdate'}
+                            <button
+                                onClick={() => navigate('/passwordUpdate')}
                                 className="w-full text-left hover:bg-gray-100"
                             >
                                 パスワード変更
-                            </NavLink>
+                            </button>
                             <button
                                 onClick={handleLogout}
                                 className="w-full text-left hover:bg-gray-100"
