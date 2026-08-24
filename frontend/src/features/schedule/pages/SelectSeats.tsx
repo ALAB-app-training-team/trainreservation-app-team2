@@ -8,6 +8,7 @@ import { toast } from 'sonner';
 
 import apiClient from '@/api/apiClient';
 import { ENDPOINTS } from '@/api/routes';
+import type { LoginResponseDto } from '@/features/account/types/LoginResponseDto';
 import {
     RESERVEDTICKET_MODE,
     RESERVEDTICKET_ROLE,
@@ -60,6 +61,7 @@ export function SelectSeats() {
         handleSelectedSeats,
         handleClear,
         checkReservedSeats,
+        setAlertConflictAccount,
     } = useSelectedSeats(initialSelectedSeats);
     const {
         reserveUser,
@@ -139,6 +141,27 @@ export function SelectSeats() {
             paymentToken: paymentToken ? paymentToken : '',
         };
 
+        if (isAccountCreate) {
+            await apiClient.post(ENDPOINTS.ACCOUNT(), {
+                name: reserveUser.reserverName,
+                mail: reserveUser.reserverMail,
+                password: reserveUser.password,
+            });
+            const response = await apiClient.post<LoginResponseDto>(
+                ENDPOINTS.LOGIN(),
+                {
+                    mail: reserveUser.reserverMail,
+                    password: reserveUser.password,
+                },
+            );
+            localStorage.setItem('name', response.data.name);
+            localStorage.setItem('role', response.data.role);
+            reserveUser.reserverMail = '';
+            reserveUser.reserverName = '';
+            reserveRequestDto.reserverMail = '';
+            reserveRequestDto.reserverName = '';
+        }
+
         if (reservedSeats && reservationId) {
             const response = await apiClient.put(
                 ENDPOINTS.RESERVATION_SEAT_UPDATE(reservationId),
@@ -203,6 +226,14 @@ export function SelectSeats() {
                 },
             });
         } catch (error) {
+            if (
+                isAccountCreate &&
+                axios.isAxiosError(error) &&
+                error.response?.status === HttpStatusCode.Conflict
+            ) {
+                setAlertConflictAccount();
+                return;
+            }
             if (
                 axios.isAxiosError(error) &&
                 error.response?.status === HttpStatusCode.Conflict &&
