@@ -61,7 +61,6 @@ export function ReservationSelectItem({
 
     dayjs.extend(customParseFormat);
 
-    console.log(details);
     return (
         <div className="border-primary-light flex flex-col gap-2 rounded-2xl border-2 p-8">
             <div className="flex-col">
