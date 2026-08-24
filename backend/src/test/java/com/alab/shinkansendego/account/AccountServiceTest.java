@@ -95,6 +95,109 @@ public class AccountServiceTest {
     }
 
     @Test
+    @DisplayName("一般ユーザーがアカウント情報を変更できること")
+    void putAccount_withDto_returnSuccess() {
+        UUID uuid = UUID.randomUUID();
+        AccountUpdateDto dto = new AccountUpdateDto("太郎", "b@b.com", rawPassword);
+        Optional<AccountEntity> account = Optional.of(new AccountEntity(uuid, "元太郎", mail, hashedPassword, "ROLE_USER"));
+
+        when(accountRepository.findById(uuid)).thenReturn(account);
+        when(passwordEncoder.matches(rawPassword, hashedPassword)).thenReturn(true);
+        when(accountRepository.findByMail("b@b.com")).thenReturn(Optional.empty());
+        when(accountRepository.save(any(AccountEntity.class))).thenReturn(account.get());
+
+        assertEquals(uuid, service.putAccount(uuid, dto));
+        verify(accountRepository).save(any());
+    }
+
+    @Test
+    @DisplayName("一般ユーザーのアカウントが存在しないときIllegalArgumentExceptionを投げること")
+    void putAccount_withNoExistAccount_throwIllegalArgumentException() {
+        UUID uuid = UUID.randomUUID();
+        AccountUpdateDto dto = new AccountUpdateDto("太郎", mail, rawPassword);
+
+        when(accountRepository.findById(uuid)).thenReturn(Optional.empty());
+
+        Exception ex = assertThrows(IllegalArgumentException.class, () -> service.putAccount(uuid, dto));
+        assertEquals("Account is not found", ex.getMessage());
+    }
+
+    @Test
+    @DisplayName("一般ユーザーのアカウント情報変更で認証パスワードが誤っているときIllegalArgumentExceptionを投げること")
+    void putAccount_withIncorrectPassword_throwIllegalArgumentException() {
+        UUID uuid = UUID.randomUUID();
+        AccountUpdateDto dto = new AccountUpdateDto("太郎", "b@b.com", rawPassword);
+        Optional<AccountEntity> account = Optional.of(new AccountEntity(uuid, "元太郎", mail, hashedPassword, "ROLE_USER"));
+
+        when(accountRepository.findById(uuid)).thenReturn(account);
+        when(passwordEncoder.matches(rawPassword, hashedPassword)).thenReturn(false);
+
+        Exception ex = assertThrows(IllegalArgumentException.class, () -> service.putAccount(uuid, dto));
+        assertEquals("Password does not match", ex.getMessage());
+    }
+
+    @Test
+    @DisplayName("一般ユーザーのアカウント情報変更で変更先のメールアドレスが既に登録済みのときConflictExceptionを投げること")
+    void putAccount_withConflict_throwConflictException() {
+        UUID uuid = UUID.randomUUID();
+        String newMail = "b@b.com";
+        AccountUpdateDto dto = new AccountUpdateDto("太郎", newMail, rawPassword);
+        Optional<AccountEntity> account = Optional.of(new AccountEntity(uuid, "元太郎", mail, hashedPassword, "ROLE_USER"));
+        Optional<AccountEntity> otherAccount = Optional.of(new AccountEntity(UUID.randomUUID(), "別太郎", newMail, hashedPassword, "ROLE_USER"));
+
+        when(accountRepository.findById(uuid)).thenReturn(account);
+        when(passwordEncoder.matches(rawPassword, hashedPassword)).thenReturn(true);
+        when(accountRepository.findByMail(newMail)).thenReturn(otherAccount);
+
+        ConflictException ex = assertThrows(ConflictException.class, () -> service.putAccount(uuid, dto));
+        assertEquals(newMail + " is Duplicate", ex.getReason());
+    }
+
+    @Test
+    @DisplayName("一般ユーザーのパスワード変更ができること")
+    void putPassword_withDto_returnSuccess() {
+        UUID uuid = UUID.randomUUID();
+        String newPassword = "Password_12/";
+        PasswordUpdateDto dto = new PasswordUpdateDto(rawPassword, newPassword);
+        Optional<AccountEntity> account = Optional.of(new AccountEntity(uuid, "太郎", mail, hashedPassword, "ROLE_USER"));
+
+        when(accountRepository.findById(uuid)).thenReturn(account);
+        when(passwordEncoder.matches(rawPassword, hashedPassword)).thenReturn(true);
+        when(passwordEncoder.encode(newPassword)).thenReturn("newHashedPassword");
+        when(accountRepository.save(any(AccountEntity.class))).thenReturn(account.get());
+
+        assertEquals(uuid, service.putPassword(uuid, dto));
+    }
+
+    @Test
+    @DisplayName("一般ユーザーのパスワード変更でアカウントが存在しないときIllegalArgumentExceptionを投げること")
+    void putPassword_withNoExistAccount_throwIllegalArgumentException() {
+        UUID uuid = UUID.randomUUID();
+        String newPassword = "Password_12/";
+        PasswordUpdateDto dto = new PasswordUpdateDto(rawPassword, newPassword);
+
+        when(accountRepository.findById(uuid)).thenReturn(Optional.empty());
+
+        Exception ex = assertThrows(IllegalArgumentException.class, () -> service.putPassword(uuid, dto));
+        assertEquals("Account is not found", ex.getMessage());
+    }
+
+    @Test
+    @DisplayName("一般ユーザーのパスワード変更で認証パスワードが誤っているときIllegalArgumentExceptionを投げること")
+    void putPassword_withIncorrectPassword_throwIllegalArgumentException() {
+        UUID uuid = UUID.randomUUID();
+        String newPassword = "Password_12/";
+        PasswordUpdateDto dto = new PasswordUpdateDto(rawPassword, newPassword);
+        Optional<AccountEntity> account = Optional.of(new AccountEntity(uuid, "太郎", mail, hashedPassword, "ROLE_USER"));
+
+        when(accountRepository.findById(uuid)).thenReturn(account);
+        when(passwordEncoder.matches(rawPassword, hashedPassword)).thenReturn(false);
+
+        Exception ex = assertThrows(IllegalArgumentException.class, () -> service.putPassword(uuid, dto));
+        assertEquals("Password does not match", ex.getMessage());
+    }
+
+    @Test
     @DisplayName("管理者が他アカウントのパスワードを変更できること")
     void updatePasswordByAdmin_withDto_returnSuccess() {
         PasswordUpdateByAdminDto request = new PasswordUpdateByAdminDto("太郎", mail, rawPassword);
