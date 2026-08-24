@@ -116,7 +116,7 @@ test('駅を検索できる', async ({ page }) => {
     await scheduleSearchPage.goto();
     await expect(page).toHaveURL('/scheduleSearch');
 
-    // 検索しても選択中の駅が変わらない
+    // 検索して駅を絞り込める
     await scheduleSearchPage.openDepartureStationDropdown();
     await scheduleSearchPage.departureStation.fill('新');
     await expect(page.getByRole('option')).toHaveText([
@@ -126,12 +126,14 @@ test('駅を検索できる', async ({ page }) => {
         '新庄',
         '新潟',
     ]);
+    
+    // 検索しても選択中の駅が変わらない
     await page.keyboard.press('Escape');
     await expect(page.getByTestId('departureStation-select')).toContainText(
         '東京',
     );
 
-    // 検索して絞り込み&選択できる
+    // 検索した駅を選択できる
     await scheduleSearchPage.openDepartureStationDropdown();
     await scheduleSearchPage.departureStation.fill('新');
     await page.getByRole('option', { name: '新青森' }).click();
