@@ -195,7 +195,7 @@ public class LocalEmailService implements EmailService {
 
             String ticketUrl = baseUrl + EmailUtils.TICKET_PATH + dto.getReservationId();
 
-            String body = String.format(EmailUtils.SET_BODY,
+            String body = String.format(EmailUtils.SET_COMPANION_BODY,
                 dto.getReserverName() != null ? dto.getReserverName() : "ユーザー",
                 dto.getRepresentativeName(),
                 formatterRideDate,
@@ -240,7 +240,7 @@ public class LocalEmailService implements EmailService {
                 seatFare = dto.getSeats().getFirst().getSeatFare();
             }
 
-            String body = String.format(EmailUtils.RELEASE_BODY,
+            String body = String.format(EmailUtils.RELEASE_COMPANION_BODY,
                 dto.getReserverName() != null ? dto.getReserverName() : "ユーザー",
                 dto.getRepresentativeName(),
                 formatterRideDate,

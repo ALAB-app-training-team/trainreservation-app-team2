@@ -81,7 +81,7 @@ public final class EmailUtils {
 
         またのご利用をお待ちしております。
         """;
-    public static final String SET_BODY = """
+    public static final String SET_COMPANION_BODY = """
         %s さま
 
         「新幹線でGO!」アプリをご利用いただきありがとうございます。
@@ -99,7 +99,7 @@ public final class EmailUtils {
 
         またのご利用をお待ちしております。
         """;
-    public static final String RELEASE_BODY = """
+    public static final String RELEASE_COMPANION_BODY = """
         %s さま
 
         「新幹線でGO!」アプリをご利用いただきありがとうございます。
