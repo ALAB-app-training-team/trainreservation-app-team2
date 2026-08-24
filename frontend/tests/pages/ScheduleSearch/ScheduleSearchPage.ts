@@ -1,4 +1,4 @@
-import { expect, type Locator, type Page } from '@playwright/test';
+import { type Locator, type Page } from '@playwright/test';
 import { Header } from '@tests/pages/shared/Header';
 
 export class ScheduleSearchPage {

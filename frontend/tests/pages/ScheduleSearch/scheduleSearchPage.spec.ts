@@ -2,10 +2,10 @@ import { test, expect } from '@playwright/test';
 import { ScheduleSearchPage } from '@tests/pages/ScheduleSearch/ScheduleSearchPage';
 import dayjs from 'dayjs';
 
-test('駅の初期表示', async ({ page }) => {
+test('駅の初期表示・初回選択肢', async ({ page }) => {
     const scheduleSearchPage = new ScheduleSearchPage(page);
 
-    scheduleSearchPage.goto();
+    await scheduleSearchPage.goto();
     await expect(page).toHaveURL('/scheduleSearch');
     await expect(page.getByTestId('departureStation-select')).toContainText(
         '東京',
@@ -13,13 +13,6 @@ test('駅の初期表示', async ({ page }) => {
     await expect(page.getByTestId('arrivalStation-select')).toContainText(
         '上野',
     );
-});
-
-test('駅の初回選択肢', async ({ page }) => {
-    const scheduleSearchPage = new ScheduleSearchPage(page);
-
-    scheduleSearchPage.goto();
-    await expect(page).toHaveURL('/scheduleSearch');
     await scheduleSearchPage.openDepartureStationDropdown();
     await expect(page.getByRole('option')).toHaveText([
         `東京`,
@@ -82,7 +75,7 @@ test('駅の初回選択肢', async ({ page }) => {
 test('駅を選択すると、その路線の駅のみ選択肢に表示される', async ({ page }) => {
     const scheduleSearchPage = new ScheduleSearchPage(page);
 
-    scheduleSearchPage.goto();
+    await scheduleSearchPage.goto();
     await expect(page).toHaveURL('/scheduleSearch');
     await scheduleSearchPage.selectDepartureStation('仙台');
     await scheduleSearchPage.openArrivalStationDropdown();
@@ -117,10 +110,130 @@ test('駅を選択すると、その路線の駅のみ選択肢に表示され�
     ]);
 });
 
+test('駅を検索できる', async ({ page }) => {
+    const scheduleSearchPage = new ScheduleSearchPage(page);
+
+    await scheduleSearchPage.goto();
+    await expect(page).toHaveURL('/scheduleSearch');
+
+    // 検索しても選択中の駅が変わらない
+    await scheduleSearchPage.openDepartureStationDropdown();
+    await scheduleSearchPage.departureStation.fill('新');
+    await expect(page.getByRole('option')).toHaveText([
+        '新白河',
+        '新花巻',
+        '新青森',
+        '新庄',
+        '新潟',
+    ]);
+    await page.keyboard.press('Escape');
+    await expect(page.getByTestId('departureStation-select')).toContainText(
+        '東京',
+    );
+
+    // 検索して絞り込み&選択できる
+    await scheduleSearchPage.openDepartureStationDropdown();
+    await scheduleSearchPage.departureStation.fill('新');
+    await page.getByRole('option', { name: '新青森' }).click();
+    await expect(page.getByTestId('departureStation-select')).toContainText(
+        '新青森',
+    );
+
+    // 存在しない駅で検索しても、選択中の駅が変わらない
+    await scheduleSearchPage.openDepartureStationDropdown();
+    await scheduleSearchPage.departureStation.fill('存在しない駅');
+    await expect(page.getByText('該当する駅が見つかりません')).toBeVisible();
+    await expect(page.getByRole('option')).toHaveCount(0);
+    await page.keyboard.press('Escape');
+    await expect(page.getByTestId('departureStation-select')).toContainText(
+        '新青森',
+    );
+
+    // 検索文字列を消すとすべて表示される
+    await scheduleSearchPage.openDepartureStationDropdown();
+    await scheduleSearchPage.departureStation.fill('新');
+    await expect(page.getByRole('option')).toHaveText([
+        '新白河',
+        '新花巻',
+        '新青森',
+        '新庄',
+        '新潟',
+    ]);
+    await scheduleSearchPage.departureStation.clear();
+    await expect(page.getByRole('option')).toHaveText([
+        `東京`,
+        `大宮`,
+        '小山',
+        '宇都宮',
+        '那須高原',
+        '新白河',
+        '郡山',
+        '福島',
+        '白石蔵王',
+        '仙台',
+        '古川',
+        'くりこま高原',
+        '一ノ関',
+        '水沢江刺',
+        '北上',
+        '新花巻',
+        '盛岡',
+        'いわて沼宮内',
+        '二戸',
+        '八戸',
+        '七戸十和田',
+        '新青森',
+        '米沢',
+        '高畠',
+        '赤湯',
+        'かみのやま温泉',
+        '山形',
+        '天童',
+        'さくらんぼ東根',
+        '村山',
+        '大石田',
+        '新庄',
+        '雫石',
+        '田沢湖',
+        '角館',
+        '大曲',
+        '秋田',
+        '熊谷',
+        '本庄早稲田',
+        '高崎',
+        '上毛高原',
+        '越後湯沢',
+        'ガーラ湯沢',
+        '浦佐',
+        '長岡',
+        '燕三条',
+        '新潟',
+        '安中榛名',
+        '軽井沢',
+        '佐久平',
+        '上田',
+        '長野',
+        '飯山',
+        '上越妙高',
+    ]);
+
+    // 出発駅で絞り込まれた到着駅に対して駅名検索できる
+    await scheduleSearchPage.selectDepartureStation('仙台');
+    await scheduleSearchPage.openArrivalStationDropdown();
+    await scheduleSearchPage.arrivalStation.fill('新');
+    await expect(page.getByRole('option')).toHaveText([
+        '新白河',
+        '新花巻',
+        '新青森',
+    ]);
+    await expect(page.getByRole('option', { name: '新庄' })).toHaveCount(0);
+    await expect(page.getByRole('option', { name: '新潟' })).toHaveCount(0);
+});
+
 test('乗車日の初期は本日の日付、時刻の初期は現在の時刻', async ({ page }) => {
     const scheduleSearchPage = new ScheduleSearchPage(page);
 
-    scheduleSearchPage.goto();
+    await scheduleSearchPage.goto();
     await expect(scheduleSearchPage.date).toHaveValue(
         dayjs().format('YYYY-MM-DD'),
     );
@@ -130,7 +243,7 @@ test('乗車日の初期は本日の日付、時刻の初期は現在の時刻',
 test('乗車日は本日から一か月後まで選択できる', async ({ page }) => {
     const scheduleSearchPage = new ScheduleSearchPage(page);
 
-    scheduleSearchPage.goto();
+    await scheduleSearchPage.goto();
     await expect(scheduleSearchPage.date).toHaveAttribute(
         'min',
         dayjs().format('YYYY-MM-DD'),
@@ -144,7 +257,7 @@ test('乗車日は本日から一か月後まで選択できる', async ({ page 
 test('出発駅・到着駅の入れ替えができること', async ({ page }) => {
     const scheduleSearchPage = new ScheduleSearchPage(page);
 
-    scheduleSearchPage.goto();
+    await scheduleSearchPage.goto();
     await expect(page).toHaveURL('/scheduleSearch');
     await expect(page.getByTestId('departureStation-select')).toContainText(
         '東京',
@@ -152,7 +265,7 @@ test('出発駅・到着駅の入れ替えができること', async ({ page }) 
     await expect(page.getByTestId('arrivalStation-select')).toContainText(
         '上野',
     );
-    scheduleSearchPage.clickSwitchStationButton();
+    await scheduleSearchPage.clickSwitchStationButton();
     await expect(page.getByTestId('departureStation-select')).toContainText(
         '上野',
     );
@@ -166,7 +279,7 @@ test('出発時刻・到着時刻の切り替えができること、空席表�
 }) => {
     const scheduleSearchPage = new ScheduleSearchPage(page);
 
-    scheduleSearchPage.goto();
+    await scheduleSearchPage.goto();
     await expect(page).toHaveURL('/scheduleSearch');
     await expect(scheduleSearchPage.departureTimeButton).toBeChecked();
     await expect(scheduleSearchPage.availableTrainCheckBox).toBeChecked();
