@@ -1,8 +1,12 @@
 import 'react-credit-cards-2/dist/es/styles-compiled.css';
 
+import type { SetStateAction } from 'react';
+import { useState } from 'react';
 import Cards, { type Focused } from 'react-credit-cards-2';
 import { IoCardOutline, IoMailOutline, IoPersonOutline } from 'react-icons/io5';
 
+import { PasswordInput } from '@/features/account/components/PasswordInput';
+import type { PasswordCheck } from '@/features/account/types/PasswordCheck';
 import { ReserveUserInfoInput } from '@/features/schedule/components/ReserveUserInfoInput';
 import type { ReserveUser } from '@/features/schedule/types/ReserveUser';
 
@@ -13,6 +17,9 @@ type ReserveUserInfoProps = {
     handleInputFocus: (e: React.ChangeEvent<HTMLInputElement>) => void;
     handleInputBlur: (e: React.ChangeEvent<HTMLInputElement>) => void;
     getFieldError?: (field: string) => string;
+    isAccountCreate: boolean;
+    setIsAccountCreate: React.Dispatch<SetStateAction<boolean>>;
+    policy: PasswordCheck;
 };
 
 export function ReserveUserInfo({
@@ -22,8 +29,12 @@ export function ReserveUserInfo({
     handleInputFocus,
     handleInputBlur,
     getFieldError,
+    isAccountCreate,
+    setIsAccountCreate,
+    policy,
 }: ReserveUserInfoProps) {
     const isLoggedIn = !!localStorage.getItem('name');
+    const [passwordType, setPasswordType] = useState('password');
     return (
         <>
             <div className="border-primary/20 flex flex-col items-start gap-8 border-b-2 py-4">
@@ -56,6 +67,48 @@ export function ReserveUserInfo({
                             icon={IoMailOutline}
                             getFieldError={getFieldError}
                         />
+                        <div className="flex gap-2 bg-transparent text-left">
+                            <input
+                                type="checkbox"
+                                id="isAccountCreate"
+                                checked={isAccountCreate}
+                                onChange={(e) =>
+                                    setIsAccountCreate(e.target.checked)
+                                }
+                                className="accent-primary"
+                            />
+                            <label htmlFor="isAccountCreate">
+                                このメールアドレスでアカウントを作成する
+                            </label>
+                        </div>
+                        {isAccountCreate && (
+                            <>
+                                <PasswordInput
+                                    id={'password'}
+                                    label={'パスワード'}
+                                    type={passwordType}
+                                    value={reserveUser.password}
+                                    placeHolder={'パスワードを入力'}
+                                    autoComplete={'new-password'}
+                                    onChange={handleInputChange}
+                                    onBlur={handleInputBlur}
+                                    policy={policy}
+                                    setPasswordType={setPasswordType}
+                                />
+                                <PasswordInput
+                                    id={'passwordCheck'}
+                                    label={'パスワード再入力'}
+                                    type={passwordType}
+                                    value={reserveUser.passwordCheck}
+                                    placeHolder={'パスワードを再入力'}
+                                    autoComplete={'new-password'}
+                                    onChange={handleInputChange}
+                                    onBlur={handleInputBlur}
+                                    getFieldError={getFieldError}
+                                    setPasswordType={setPasswordType}
+                                />
+                            </>
+                        )}
                     </div>
                 )}
                 <div className="flex w-full flex-col gap-4">

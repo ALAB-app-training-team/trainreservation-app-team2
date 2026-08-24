@@ -69,6 +69,9 @@ export function SelectSeats() {
         handleInputBlur,
         isInvalid,
         getFieldError,
+        isAccountCreate,
+        setIsAccountCreate,
+        policy,
     } = useReserveUser();
     const {
         isOpen: isReserveConfirmModalOpen,
@@ -458,6 +461,9 @@ export function SelectSeats() {
                                         handleInputFocus={handleInputFocus}
                                         getFieldError={getFieldError}
                                         handleInputBlur={handleInputBlur}
+                                        isAccountCreate={isAccountCreate}
+                                        setIsAccountCreate={setIsAccountCreate}
+                                        policy={policy}
                                     />
                                 )}
                                 <TotalSeatsFare

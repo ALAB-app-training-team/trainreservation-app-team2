@@ -1,20 +1,25 @@
 import { useState } from 'react';
 import type { Focused } from 'react-credit-cards-2';
 
+import type { PasswordCheck } from '@/features/account/types/PasswordCheck';
 import type { ReserveUser } from '@/features/schedule/types/ReserveUser';
 import { VALIDATION_MESSAGE } from '@/shared/constants/ValidationMessages';
 import { checkMailRegex } from '@/shared/utils/CheckMailRegex';
+import { checkPasswordRegex } from '@/shared/utils/CheckPasswordRegex';
 import { removeWhiteSpace } from '@/shared/utils/RemoveWhiteSpace';
 
 export function useReserveUser() {
     const [reserveUser, setReserveUser] = useState<ReserveUser>({
         reserverName: '',
         reserverMail: '',
+        password: '',
+        passwordCheck: '',
         cardNumber: '',
         cardName: '',
         expiry: '',
         cvc: '',
     });
+    const [isAccountCreate, setIsAccountCreate] = useState(false);
     const [focus, setFocus] = useState<Focused>('');
     type InvalidMessage = {
         field: keyof ReserveUser;
@@ -24,6 +29,16 @@ export function useReserveUser() {
         [],
     );
     const isLoggedIn = !!localStorage.getItem('name');
+
+    const policy: PasswordCheck = {
+        isBetweenLength:
+            reserveUser.password.length >= 8 &&
+            reserveUser.password.length <= 64,
+        hasNumber: /[0-9]/.test(reserveUser.password),
+        hasUppercase: /[A-Z]/.test(reserveUser.password),
+        hasLowercase: /[a-z]/.test(reserveUser.password),
+        isValid: checkPasswordRegex(reserveUser.password),
+    };
 
     const isNameEmpty = (value: string) => {
         return removeWhiteSpace(value) === '';
@@ -202,5 +217,8 @@ export function useReserveUser() {
         handleInputBlur,
         isInvalid,
         getFieldError,
+        isAccountCreate,
+        setIsAccountCreate,
+        policy,
     };
 }
