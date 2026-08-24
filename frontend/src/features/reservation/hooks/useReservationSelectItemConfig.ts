@@ -16,11 +16,11 @@ export function useReservationSelectItemConfig(
     const canUpdateReservation = !isCanceled && isEabled;
     const canCheckReservation = !isCanceled && isEabled;
     const canSearchReturinTrip = !isCanceled;
+    const showThreeDotsMenu = canCancelReservation || canUpdateReservation;
 
     return {
-        canCancelReservation,
-        canUpdateReservation,
         canCheckReservation,
         canSearchReturinTrip,
+        showThreeDotsMenu,
     };
 }
