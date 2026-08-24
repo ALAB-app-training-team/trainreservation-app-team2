@@ -22,6 +22,7 @@ import org.springframework.transaction.event.TransactionalEventListener;
 import org.springframework.util.CollectionUtils;
 
 import java.time.LocalTime;
+import java.util.Comparator;
 import java.util.List;
 import java.util.UUID;
 
@@ -63,16 +64,22 @@ public class ReservationEventListener {
             for (ReservedSeatEntity assignedSeat : event.assignedReservedSeats()) {
                 String trainCarCd = trainCarRepository.findByTrainCarCd(assignedSeat.getTrainCarCd())
                     .orElseThrow(() -> new IllegalArgumentException("TrainCar is not found")).getSeatType().getTrainCarTypeCd();
-                EmailRequestDto companion = setEmailRequestDto(event.reservationId(), event.request(), event.departureTime(), event.arrivalTime(), event.oldTotalAmount(), event.representativeName());
-                companion.setReserverMail(assignedSeat.getMail());
-                companion.setReserverName(assignedSeat.getName());
-                emailDto.setSeats(
-                    setDisplaySeats(List.of(new ReserveRequestDto.SelectedSeatDto(
+                ReserveRequestDto companionDto = new ReserveRequestDto(
+                    event.oldReservation().getScheduleCd(),
+                    event.oldReservation().getRideDate(),
+                    event.oldReservation().getDepartureStationCd(),
+                    event.oldReservation().getArrivalStationCd(),
+                    assignedSeat.getName(),
+                    assignedSeat.getMail(),
+                    event.oldReservation().getPaymentTrackingId(),
+                    List.of(new ReserveRequestDto.SelectedSeatDto(
                         assignedSeat.getTrainCarCd(),
                         trainCarCd,
                         assignedSeat.getSeatCd(),
-                        assignedSeat.getSeatFare()))));
-                emailService.sendReleaseCompanion(emailDto);
+                        assignedSeat.getSeatFare()))
+                );
+                EmailRequestDto companionEmailDto = setEmailRequestDto(event.reservationId(), companionDto, event.departureTime(), event.arrivalTime(), event.oldTotalAmount(), event.representativeName());
+                emailService.sendReleaseCompanion(companionEmailDto);
             }
         }
     }
@@ -181,7 +188,7 @@ public class ReservationEventListener {
     private List<EmailRequestDto.SelectedSeatDto> setDisplaySeats(List<ReserveRequestDto.SelectedSeatDto> seats) {
         List<SeatEntity> seatEntities = seatRepository.findAllById(
             seats.stream().map(ReserveRequestDto.SelectedSeatDto::getSeatCd).toList()
-        );
+        ).stream().sorted(Comparator.comparing(SeatEntity::getSeatNumber).thenComparing(SeatEntity::getSeatColumn)).toList();
 
         return seats.stream()
             .map(seat -> {
