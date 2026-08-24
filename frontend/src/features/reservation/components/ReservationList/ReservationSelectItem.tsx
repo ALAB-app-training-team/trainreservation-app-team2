@@ -1,7 +1,7 @@
 import dayjs from 'dayjs';
 import customParseFormat from 'dayjs/plugin/customParseFormat';
 import { BsQrCode } from 'react-icons/bs';
-import { FaClock, FaEdit } from 'react-icons/fa';
+import { FaClock, FaEdit, FaSearch } from 'react-icons/fa';
 import { IoTrashOutline } from 'react-icons/io5';
 import { LuTicket } from 'react-icons/lu';
 import { useNavigate } from 'react-router-dom';
@@ -12,6 +12,7 @@ import {
     RESERVEDTICKET_ROLE,
 } from '@/features/reservation/constants/ReservedTicketState';
 import type { ReservationResponseDto } from '@/features/reservation/types/ReservationResponseDto';
+import type { SearchRequestDto } from '@/features/schedule/types/SearchRequestDto';
 
 type ReservationSelectItemProps = {
     details: ReservationResponseDto;
@@ -46,8 +47,21 @@ export function ReservationSelectItem({
         window.scrollTo(0, 0);
     };
 
+    const handleSearchReturnTrip = () => {
+        const searchRequestDto: SearchRequestDto = {
+            departureStationCd: details.arrivalStationCd,
+            arrivalStationCd: details.departureStationCd,
+        };
+        navigate('/scheduleSearch', {
+            state: {
+                searchRequestDto: searchRequestDto,
+            },
+        });
+    };
+
     dayjs.extend(customParseFormat);
 
+    console.log(details);
     return (
         <div className="border-primary-light flex flex-col gap-2 rounded-2xl border-2 p-8">
             <div className="flex-col">
@@ -56,19 +70,6 @@ export function ReservationSelectItem({
                         <LuTicket />
                         <label>{details.trainTypeName}</label>
                     </div>
-                    {details.isDeleted ? (
-                        <div className="text-primary border-primary right-0 flex items-center justify-center rounded-xl border-1 bg-white px-3 text-sm">
-                            キャンセル
-                        </div>
-                    ) : departureDate >= now ? (
-                        <div className="bg-primary right-0 flex items-center justify-center rounded-xl px-3 text-sm text-white">
-                            有効
-                        </div>
-                    ) : (
-                        <div className="text-primary right-0 flex items-center justify-center rounded-xl bg-green-100 px-3 text-sm">
-                            完了
-                        </div>
-                    )}
                 </div>
                 <div className="flex py-2 text-xl font-bold">
                     <label>
@@ -113,33 +114,44 @@ export function ReservationSelectItem({
                         ￥{totalFare.toLocaleString()}
                     </div>
                 </div>
-                {!details.isDeleted && departureDate >= now && (
-                    <div className="flex justify-end gap-2">
+                <div className="flex justify-end gap-2">
+                    {!details.isDeleted && departureDate >= now && (
+                        <>
+                            <button
+                                onClick={() => onRefundClicked(details)}
+                                className="text-primary flex items-center justify-center gap-2 rounded-xl px-3 text-sm"
+                                data-testid={'refund-button'}
+                            >
+                                <IoTrashOutline />
+                                キャンセル
+                            </button>
+                            <button
+                                onClick={() => onChangeClicked(details)}
+                                className="border-primary text-primary flex items-center justify-center gap-2 rounded-md border-1 px-4 py-2 text-sm"
+                                data-testid={'change-button'}
+                            >
+                                <FaEdit />
+                                予約を変更
+                            </button>
+                            <button
+                                onClick={handleReservationDetail}
+                                className="bg-primary flex items-center justify-center gap-4 rounded-md px-4 py-2 text-sm text-white"
+                            >
+                                <BsQrCode />
+                                チケットを表示
+                            </button>
+                        </>
+                    )}
+                    {!details.isDeleted && (
                         <button
-                            onClick={() => onRefundClicked(details)}
-                            className="text-primary flex items-center justify-center gap-2 rounded-xl px-3 text-sm"
-                            data-testid={'refund-button'}
-                        >
-                            <IoTrashOutline />
-                            キャンセル
-                        </button>
-                        <button
-                            onClick={() => onChangeClicked(details)}
-                            className="border-primary text-primary flex items-center justify-center gap-2 rounded-md border-1 px-4 py-2 text-sm"
-                            data-testid={'change-button'}
-                        >
-                            <FaEdit />
-                            予約を変更
-                        </button>
-                        <button
-                            onClick={handleReservationDetail}
+                            onClick={handleSearchReturnTrip}
                             className="bg-primary flex items-center justify-center gap-4 rounded-md px-4 py-2 text-sm text-white"
                         >
-                            <BsQrCode />
-                            チケットを表示
+                            <FaSearch />
+                            復路で検索
                         </button>
-                    </div>
-                )}
+                    )}
+                </div>
             </div>
         </div>
     );
