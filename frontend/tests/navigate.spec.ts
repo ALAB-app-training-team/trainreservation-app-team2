@@ -454,3 +454,27 @@ test('navigate-一般ログイン状態でadmin/passwordのパスを入力する
     await passwordUpdateForAdminPage.goto();
     await expect(page).toHaveURL('/scheduleSearch');
 });
+
+test('navigate-未ログイン状態でaccountUpdate/のパスを入力するとログイン画面に遷移', async ({
+    page,
+}) => {
+    const scheduleSearchPage = new ScheduleSearchPage(page);
+    const accountUpdatePage = new AccountUpdatePage(page);
+
+    await scheduleSearchPage.goto();
+    await expect(page).toHaveURL('/scheduleSearch');
+    await accountUpdatePage.goto();
+    await expect(page).toHaveURL('/login');
+});
+
+test('navigate-未ログイン状態でpasswordUpdate/のパスを入力するとログイン画面に遷移', async ({
+    page,
+}) => {
+    const scheduleSearchPage = new ScheduleSearchPage(page);
+    const passwordUpdatePage = new PasswordUpdatePage(page);
+
+    await scheduleSearchPage.goto();
+    await expect(page).toHaveURL('/scheduleSearch');
+    await passwordUpdatePage.goto();
+    await expect(page).toHaveURL('/login');
+});

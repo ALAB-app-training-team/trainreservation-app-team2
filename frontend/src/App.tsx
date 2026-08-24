@@ -21,7 +21,7 @@ import { Layout } from '@/Layout';
 import { ERROR_MESSAGE } from '@/shared/constants/ErrorMessages';
 import { Error } from '@/shared/pages/Error';
 
-const reservationListLoader = () => {
+const requiredLoginLoader = () => {
     const info = localStorage.getItem('name');
     if (info === null) {
         sessionStorage.setItem('message', ERROR_MESSAGE.LOGIN_ERROR);
@@ -108,12 +108,15 @@ const router = createBrowserRouter([
             },
             {
                 path: '/accountUpdate',
+                loader: () => requiredLoginLoader(),
                 element: <AccountUpdate />,
                 errorElement: <Error />,
             },
             {
                 path: '/passwordUpdate',
+                loader: () => requiredLoginLoader(),
                 element: <PasswordUpdate />,
+                errorElement: <Error />,
             },
             {
                 path: '/admin/password',
@@ -139,7 +142,7 @@ const router = createBrowserRouter([
             },
             {
                 path: '/reservationList',
-                loader: () => reservationListLoader(),
+                loader: () => requiredLoginLoader(),
                 element: <ReservationList />,
                 errorElement: <Error />,
             },
