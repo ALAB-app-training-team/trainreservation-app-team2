@@ -71,6 +71,7 @@ export function AccountUpdate() {
                             autoComplete={'new-password'}
                             onChange={handleChange}
                             onBlur={handleBlur}
+                            getFieldError={getFieldError}
                             setPasswordType={setPasswordType}
                         />
                     </div>
