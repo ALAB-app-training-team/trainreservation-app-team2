@@ -108,8 +108,8 @@ export class SelectSeatPage {
     }
 
     async inputResererInfo() {
-        await this.fillName('田中太郎');
-        await this.fillMailAddress('tanaka@taro.jp');
+        await this.fillName('ゲスト太郎');
+        await this.fillMailAddress('guest@test.com');
     }
 
     async inputCardInfo() {

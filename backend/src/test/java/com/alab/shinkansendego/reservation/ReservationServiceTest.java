@@ -112,7 +112,7 @@ public class ReservationServiceTest {
     @Autowired
     private RestClient.Builder restClientBuilder;
 
-    private @NonNull ReservationResponseDto getExpectReservationResponseDto(UUID reservationId) {
+    private @NonNull ReservationResponseDto getExpectReservationResponseDto(UUID reservationId, boolean isReserverMatched) {
         List<ReservedSeatDto> reservedSeatList = Arrays.asList(seat1, seat2, seat3);
         return new ReservationResponseDto(
             reservationId,
@@ -126,7 +126,8 @@ public class ReservationServiceTest {
             LocalTime.of(7, 58, 0),
             LocalDate.of(2026, 6, 1),
             false,
-            reservedSeatList);
+            reservedSeatList,
+            isReserverMatched);
     }
 
     /**
@@ -385,7 +386,7 @@ public class ReservationServiceTest {
     @DisplayName("ゲストログインとして予約情報IDと予約者氏名とメールアドレスから予約チケット情報が取得できる")
     void getGuestReservation_withReservationIdAndReserverNameAndReserverMail_returnGetGuestReservationSuccess() {
         when(reservationRepo.findById(reservationId1)).thenReturn(reservation);
-        ReservationResponseDto expect = getExpectReservationResponseDto(reservationId1);
+        ReservationResponseDto expect = getExpectReservationResponseDto(reservationId1, true);
         ReservationResponseDto actual = service.getGuestReservation(reservationId1, "山田太郎", "email@sample.com");
         assertEquals(expect, actual);
     }
@@ -411,7 +412,7 @@ public class ReservationServiceTest {
     @DisplayName("同行者として予約情報IDと同行者者氏名とメールアドレスから予約チケット情報が取得できる")
     void getGuestReservation_withReservationIdAndCompanionNameAndCompanionMail_returnIllegalArgumentException() {
         when(reservationRepo.findById(reservationId1)).thenReturn(reservation);
-        ReservationResponseDto expect = getExpectReservationResponseDto(reservationId1);
+        ReservationResponseDto expect = getExpectReservationResponseDto(reservationId1, false);
         ReservationResponseDto actual = service.getGuestReservation(reservationId1, "一般次郎", "test2-common@test.com");
         assertEquals(expect, actual);
     }
@@ -428,7 +429,7 @@ public class ReservationServiceTest {
     @DisplayName("予約情報IDとアカウントログイン情報から予約チケット情報が取得できる")
     void getAccountReservation_withReservationIdAndSession_returnGetAccountReservationSuccess() {
         when(reservationRepo.findWithEntityGraphByIdAndAccountId(reservationId1, accountId)).thenReturn(reservation);
-        ReservationResponseDto expect = getExpectReservationResponseDto(reservationId1);
+        ReservationResponseDto expect = getExpectReservationResponseDto(reservationId1, true);
         ReservationResponseDto actual = service.getAccountReservation(reservationId1, accountId);
         assertEquals(expect, actual);
     }
@@ -902,6 +903,9 @@ public class ReservationServiceTest {
         departureArrivalTime.setSectionCd("THK01");
         SectionKmEntity sectionKm = new SectionKmEntity();
         sectionKm.setSectionCd(departureArrivalTime.getSectionCd());
+        sectionKm.setStartStationCd(request.getDepartureStationCd());
+        sectionKm.setGoalStationCd(request.getArrivalStationCd());
+        departureArrivalTime.setSectionKm(sectionKm);
         when(reservationRepo.findByIdAndIsDeleted(reservationId1, false)).thenReturn(reservation);
         when(sectionKmRepo.findByStartStationCd(request.getDepartureStationCd())).thenReturn(List.of(sectionKm));
         when(sectionKmRepo.findByGoalStationCd(request.getArrivalStationCd())).thenReturn(List.of(sectionKm));
@@ -912,6 +916,9 @@ public class ReservationServiceTest {
         when(seatRepo.findById(any())).thenReturn(Optional.of(new SeatEntity()));
         when(reservedSeatSectionRepo.findByRideDateAndScheduleCdAndTrainCarCdInAndReservedSectionCdIn(any(), any(), any(), any())).thenReturn(Collections.emptyList());
         when(reservedSeatSectionRepo.saveAll(any())).thenReturn(Stream.generate(ReservedSeatSectionEntity::new).limit((2)).collect(Collectors.toList()));
+        when(reservationRepo.findByIdAndIsDeleted(reservationId1, false)).thenReturn(reservation);
+        when(departureArrivalTimeRepo.findByScheduleCd(request.getScheduleCd()))
+            .thenReturn(List.of(departureArrivalTime));
 
         UUID result = service.putReservation(reservationId1, request, session);
         assertNotNull(result);
@@ -975,6 +982,74 @@ public class ReservationServiceTest {
     }
 
     @Test
+    @DisplayName("予約情報の持つ出発駅と同じスケジュールがない場合、IllegalArgumentExceptionが発生する")
+    void putReservation_withoutDepartureTime_throwsIllegalArgumentException() {
+        ReserveRequestDto request = new ReserveRequestDto("THK02", LocalDate.now(), "THK01", "THK02", "", "", "", List.of(new ReserveRequestDto.SelectedSeatDto("E5SER01", "CAR01", "SEAT01001", 5000), new ReserveRequestDto.SelectedSeatDto("E5SER01", "CAR01", "SEAT01010", 5000)));
+        Optional<ReservationEntity> reservation = Optional.of(buildReservation(reservationId1));
+        reservation.get().setAccountId(accountId);
+        DepartureArrivalTimeEntity departureArrivalTime = new DepartureArrivalTimeEntity();
+        departureArrivalTime.setTimeCd("Test1");
+        departureArrivalTime.setScheduleCd(request.getScheduleCd());
+        departureArrivalTime.setDepartureTime(LocalTime.of(6, 4));
+        departureArrivalTime.setArrivalTime(LocalTime.of(6, 9));
+        departureArrivalTime.setSectionCd("THK01");
+        SectionKmEntity sectionKm = new SectionKmEntity();
+        sectionKm.setSectionCd(departureArrivalTime.getSectionCd());
+        sectionKm.setStartStationCd("NotExistStation");
+        sectionKm.setGoalStationCd(request.getArrivalStationCd());
+        departureArrivalTime.setSectionKm(sectionKm);
+        when(reservationRepo.findByIdAndIsDeleted(reservationId1, false)).thenReturn(reservation);
+        when(sectionKmRepo.findByStartStationCd(request.getDepartureStationCd())).thenReturn(List.of(sectionKm));
+        when(sectionKmRepo.findByGoalStationCd(request.getArrivalStationCd())).thenReturn(List.of(sectionKm));
+        when(departureArrivalTimeRepo.findByScheduleCdAndSectionCdIn(request.getScheduleCd(), List.of(departureArrivalTime.getSectionCd()))).thenReturn(departureArrivalTime);
+        when(departureArrivalTimeRepo.findByScheduleCdAndDepartureTimeGreaterThanEqualAndArrivalTimeLessThanEqual(request.getScheduleCd(), departureArrivalTime.getDepartureTime(), departureArrivalTime.getArrivalTime())).thenReturn(List.of(departureArrivalTime));
+        when(reservedSeatRepo.saveAll(any())).thenReturn(Stream.generate(ReservedSeatEntity::new).limit(2).collect(Collectors.toList()));
+        when(trainCarRepo.findById(any())).thenReturn(Optional.of(new TrainCarEntity()));
+        when(seatRepo.findById(any())).thenReturn(Optional.of(new SeatEntity()));
+        when(reservedSeatSectionRepo.findByRideDateAndScheduleCdAndTrainCarCdInAndReservedSectionCdIn(any(), any(), any(), any())).thenReturn(Collections.emptyList());
+        when(reservedSeatSectionRepo.saveAll(any())).thenReturn(Stream.generate(ReservedSeatSectionEntity::new).limit((2)).collect(Collectors.toList()));
+        when(reservationRepo.findByIdAndIsDeleted(reservationId1, false)).thenReturn(reservation);
+        when(departureArrivalTimeRepo.findByScheduleCd(request.getScheduleCd()))
+            .thenReturn(List.of(departureArrivalTime));
+        Exception ex = assertThrows(IllegalArgumentException.class, () -> service.putReservation(reservationId1, request, session));
+        assertEquals("DepartureTime is not found", ex.getMessage());
+    }
+
+    @Test
+    @DisplayName("予約情報の持つ到着駅と同じスケジュールがない場合、IllegalArgumentExceptionが発生する")
+    void putReservation_withouArrivalTime_throwsIllegalArgumentException() {
+        ReserveRequestDto request = new ReserveRequestDto("THK02", LocalDate.now(), "THK01", "THK02", "", "", "", List.of(new ReserveRequestDto.SelectedSeatDto("E5SER01", "CAR01", "SEAT01001", 5000), new ReserveRequestDto.SelectedSeatDto("E5SER01", "CAR01", "SEAT01010", 5000)));
+        Optional<ReservationEntity> reservation = Optional.of(buildReservation(reservationId1));
+        reservation.get().setAccountId(accountId);
+        DepartureArrivalTimeEntity departureArrivalTime = new DepartureArrivalTimeEntity();
+        departureArrivalTime.setTimeCd("Test1");
+        departureArrivalTime.setScheduleCd(request.getScheduleCd());
+        departureArrivalTime.setDepartureTime(LocalTime.of(6, 4));
+        departureArrivalTime.setArrivalTime(LocalTime.of(6, 9));
+        departureArrivalTime.setSectionCd("THK01");
+        SectionKmEntity sectionKm = new SectionKmEntity();
+        sectionKm.setSectionCd(departureArrivalTime.getSectionCd());
+        sectionKm.setStartStationCd(request.getDepartureStationCd());
+        sectionKm.setGoalStationCd("NotExistStation");
+        departureArrivalTime.setSectionKm(sectionKm);
+        when(reservationRepo.findByIdAndIsDeleted(reservationId1, false)).thenReturn(reservation);
+        when(sectionKmRepo.findByStartStationCd(request.getDepartureStationCd())).thenReturn(List.of(sectionKm));
+        when(sectionKmRepo.findByGoalStationCd(request.getArrivalStationCd())).thenReturn(List.of(sectionKm));
+        when(departureArrivalTimeRepo.findByScheduleCdAndSectionCdIn(request.getScheduleCd(), List.of(departureArrivalTime.getSectionCd()))).thenReturn(departureArrivalTime);
+        when(departureArrivalTimeRepo.findByScheduleCdAndDepartureTimeGreaterThanEqualAndArrivalTimeLessThanEqual(request.getScheduleCd(), departureArrivalTime.getDepartureTime(), departureArrivalTime.getArrivalTime())).thenReturn(List.of(departureArrivalTime));
+        when(reservedSeatRepo.saveAll(any())).thenReturn(Stream.generate(ReservedSeatEntity::new).limit(2).collect(Collectors.toList()));
+        when(trainCarRepo.findById(any())).thenReturn(Optional.of(new TrainCarEntity()));
+        when(seatRepo.findById(any())).thenReturn(Optional.of(new SeatEntity()));
+        when(reservedSeatSectionRepo.findByRideDateAndScheduleCdAndTrainCarCdInAndReservedSectionCdIn(any(), any(), any(), any())).thenReturn(Collections.emptyList());
+        when(reservedSeatSectionRepo.saveAll(any())).thenReturn(Stream.generate(ReservedSeatSectionEntity::new).limit((2)).collect(Collectors.toList()));
+        when(reservationRepo.findByIdAndIsDeleted(reservationId1, false)).thenReturn(reservation);
+        when(departureArrivalTimeRepo.findByScheduleCd(request.getScheduleCd()))
+            .thenReturn(List.of(departureArrivalTime));
+        Exception ex = assertThrows(IllegalArgumentException.class, () -> service.putReservation(reservationId1, request, session));
+        assertEquals("ArrivalTime is not found", ex.getMessage());
+    }
+
+    @Test
     @DisplayName("ログイン状態で人数・座席を変更できる")
     void putReservedSeat_withReservationIdAndLoginAndValidReserveRequestDto_returnPutReservationId() {
         ReserveRequestDto request = new ReserveRequestDto("THK01", LocalDate.of(2026, 6, 1), "THK01", "THK09", "", "", "", List.of(new ReserveRequestDto.SelectedSeatDto("E5SER01", "CAR01", "SEAT01001", 5000), new ReserveRequestDto.SelectedSeatDto("E5SER01", "CAR01", "SEAT01002", 5000)));
@@ -988,6 +1063,9 @@ public class ReservationServiceTest {
         departureArrivalTime.setSectionCd("Test1");
         SectionKmEntity sectionKm = new SectionKmEntity();
         sectionKm.setSectionCd(departureArrivalTime.getSectionCd());
+        sectionKm.setStartStationCd(request.getDepartureStationCd());
+        sectionKm.setGoalStationCd(request.getArrivalStationCd());
+        departureArrivalTime.setSectionKm(sectionKm);
         when(reservationRepo.findByIdAndIsDeleted(reservationId1, false)).thenReturn(reservation);
         when(sectionKmRepo.findByStartStationCd(request.getDepartureStationCd())).thenReturn(List.of(sectionKm));
         when(sectionKmRepo.findByGoalStationCd(request.getArrivalStationCd())).thenReturn(List.of(sectionKm));
@@ -998,6 +1076,9 @@ public class ReservationServiceTest {
         when(seatRepo.findById(any())).thenReturn(Optional.of(new SeatEntity()));
         when(reservedSeatSectionRepo.findByRideDateAndScheduleCdAndTrainCarCdInAndReservedSectionCdIn(any(), any(), any(), any())).thenReturn(Collections.emptyList());
         when(reservedSeatSectionRepo.saveAll(any())).thenReturn(Stream.generate(ReservedSeatSectionEntity::new).limit((1)).collect(Collectors.toList()));
+        when(reservationRepo.findByIdAndIsDeleted(reservationId1, false)).thenReturn(reservation);
+        when(departureArrivalTimeRepo.findByScheduleCd(request.getScheduleCd()))
+            .thenReturn(List.of(departureArrivalTime));
 
         UUID result = service.putReservedSeat(reservationId1, request, session);
         assertNotNull(result);

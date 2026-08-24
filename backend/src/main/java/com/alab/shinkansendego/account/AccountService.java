@@ -57,12 +57,15 @@ public class AccountService {
             UUID.randomUUID(),
             removeSpaces(request.getName()),
             removeSpaces(request.getMail()),
-            passwordEncoder.encode(request.getPassword()));
+            passwordEncoder.encode(request.getPassword()),
+            "ROLE_USER"
+        );
 
         accountRepository.save(postAccount);
     }
 
     /**
+<<<<<<< HEAD
      * アカウント情報変更メソッド
      *
      * @param request 変更するアカウント情報
@@ -106,5 +109,17 @@ public class AccountService {
 
         AccountEntity updatedAccount = accountRepository.save(account);
         return updatedAccount.getId();
+=======
+     * 管理者が一般アカウントのパスワード変更を行うメソッド
+     *
+     * @param request アカウント情報と新しいパスワード
+     */
+    @Transactional
+    public void updatePasswordByAdmin(PasswordUpdateByAdminDto request) {
+        AccountEntity account = accountRepository.findByNameAndMail(request.getName(), request.getMail())
+            .orElseThrow(() -> new IllegalArgumentException("Account not Found"));
+        account.setPassword(passwordEncoder.encode(request.getPassword()));
+        accountRepository.save(account);
+>>>>>>> b3a690b4c5174ee8ccff8da1bd84414226ce0d19
     }
 }

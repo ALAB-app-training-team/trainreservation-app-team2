@@ -27,8 +27,14 @@ export const ERROR_MESSAGE = {
     LOGIN_RETRY: 'ログインに失敗しました',
     LOGIN_ERROR: 'ログインしてください',
     LOGIN_ALREADY: 'すでにログインしています',
+    LOGIN_ROLE_ERROR: '権限がありません',
     ACCOUNT_ALREADY: '登録済のメールアドレスです。ログインしてください。',
+<<<<<<< HEAD
     PASSWORD_NOT_MATCH: 'パスワードが正しくありません',
     ACCOUNT_CHANGE_RETRY: 'アカウント情報の変更に失敗しました',
     PASSWORD_CHANGE_RETRY: 'パスワードの変更に失敗しました',
+=======
+    ADMIN_UPDATE_ERROR:
+        'パスワードの変更が失敗しました。お手数ですが、再度お試しください。',
+>>>>>>> b3a690b4c5174ee8ccff8da1bd84414226ce0d19
 } as const;

@@ -6,4 +6,6 @@ public interface EmailService {
     void sendReservationCancel(EmailRequestDto dto);
 
     void sendReleaseCompanion(EmailRequestDto dto);
+
+    void sendReservationChange(EmailRequestDto dto);
 }
