@@ -30,45 +30,36 @@ export class AccountCreatePage {
         });
         this.ramdomMail = 'random' + Math.random() + '@test.co.jp';
     }
-
     async goto() {
         await this.page.goto('/accountCreate');
     }
-
     async fillName(name: string) {
         await this.name.fill(name);
     }
-
     async fillMailAddress(address: string) {
         await this.mailAddress.fill(address);
     }
-
     async fillPassword(password: string) {
         await this.password.fill(password);
     }
-
     async fillPasswordCheck(passwordCheck: string) {
         await this.passwordCheck.fill(passwordCheck);
     }
-
     async clickCreateButton() {
         await this.createButton.click();
     }
-
     async inputCreateFirstAccountInfo() {
         await this.fillName('山田 太郎');
         await this.fillMailAddress('first@test.co.jp');
         await this.fillPassword('Password1');
         await this.fillPasswordCheck('Password1');
     }
-
     async inputCreateSecondAccountInfo() {
         await this.fillName('山田 次郎');
         await this.fillMailAddress('second@test.co.jp');
         await this.fillPassword('Password2');
         await this.fillPasswordCheck('Password2');
     }
-
     async inputCreateRamdomAccountInfo() {
         await this.fillName('ランダム 太郎');
         await this.fillMailAddress(this.ramdomMail);
