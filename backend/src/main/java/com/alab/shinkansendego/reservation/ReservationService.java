@@ -465,7 +465,7 @@ public class ReservationService {
     public UUID putReservation(UUID reservationId, ReserveRequestDto changedReservation, AccountSessionDto session) {
         Optional<ReservationEntity> reservation = putError(reservationId, changedReservation, session);
 
-        AccountEntity account = accountRepository.findById(session.getId()).orElseThrow(() -> new BadCredentialsException("認証に失敗しました"));
+        AccountEntity account = accountRepository.findById(session.getId()).orElseThrow(() -> new IllegalArgumentException("Account is not found"));
 
         Integer oldTotalAmount = reservation.get().getReservedSeat().stream()
             .filter(seat -> seat.getSeatFare() != null)
@@ -552,7 +552,7 @@ public class ReservationService {
         Optional<ReservationEntity> reservation = putError(reservationId, changedReservation, session);
         Set<ReservedSeatEntity> reservedSeats = reservation.get().getReservedSeat();
 
-        AccountEntity account = accountRepository.findById(session.getId()).orElseThrow(() -> new BadCredentialsException("認証に失敗しました"));
+        AccountEntity account = accountRepository.findById(session.getId()).orElseThrow(() -> new IllegalArgumentException("Account is not found"));
 
         Integer oldTotalAmount = reservation.get().getReservedSeat().stream()
             .filter(seat -> seat.getSeatFare() != null)
