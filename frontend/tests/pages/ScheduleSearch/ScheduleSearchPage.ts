@@ -19,8 +19,8 @@ export class ScheduleSearchPage {
         this.page = page;
         this.header = new Header(page);
         this.detailButton = page.getByRole('button', { name: '詳細を見る' });
-        this.departureStation = page.getByLabel('乗車駅');
-        this.arrivalStation = page.getByLabel('降車駅');
+        this.departureStation = page.getByRole('combobox', { name: '乗車駅' });
+        this.arrivalStation = page.getByRole('combobox', { name: '降車駅' });
         this.date = page.getByRole('textbox', { name: '乗車日' });
         this.time = page.getByRole('textbox', { name: '時刻' });
         this.departureTimeButton = page.getByText('出発');
@@ -45,12 +45,23 @@ export class ScheduleSearchPage {
     async clickSecondDetailButton() {
         await this.detailButton.nth(1).click();
     }
+
     async openDepartureStationDropdown() {
         await this.departureStation.first().click();
     }
 
     async openArrivalStationDropdown() {
         await this.arrivalStation.first().click();
+    }
+
+    async selectDepartureStation(stationName: string) {
+        await this.openDepartureStationDropdown();
+        await this.page.getByRole('option', { name: stationName }).click();
+    }
+
+    async selectArrivalStation(stationName: string) {
+        await this.openArrivalStationDropdown();
+        await this.page.getByRole('option', { name: stationName }).click();
     }
 
     async clickSwitchStationButton() {
