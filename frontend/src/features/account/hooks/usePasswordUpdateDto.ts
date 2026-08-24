@@ -54,7 +54,7 @@ export function usePasswordUpdateDto() {
             if (isCheckPasswordEmpty(value)) {
                 messages.push({
                     field: 'password',
-                    message: VALIDATION_MESSAGE.EMPTY_PASSWORD,
+                    message: VALIDATION_MESSAGE.EMPTY_CURRENT_PASSWORD,
                 });
             }
         }
@@ -62,7 +62,7 @@ export function usePasswordUpdateDto() {
             if (isCheckPasswordEmpty(value)) {
                 messages.push({
                     field: 'newPasswordCheck',
-                    message: VALIDATION_MESSAGE.EMPTY_PASSWORD_CHECK,
+                    message: VALIDATION_MESSAGE.EMPTY_NEW_PASSWORD_CHECK,
                 });
             } else if (isNotMatchNewPassword(value)) {
                 messages.push({

@@ -19,4 +19,6 @@ export const VALIDATION_MESSAGE = {
     EMPTY_PASSWORD: 'パスワードを入力してください',
     EMPTY_PASSWORD_CHECK: 'パスワードを再入力してください',
     PASSWORD_NOT_MATCH: 'パスワードが一致しません',
+    EMPTY_CURRENT_PASSWORD: '現在のパスワードを入力してください',
+    EMPTY_NEW_PASSWORD_CHECK: '新しいパスワードを再入力してください',
 } as const;
