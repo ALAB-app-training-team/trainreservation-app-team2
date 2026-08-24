@@ -11,6 +11,7 @@ import {
     RESERVEDTICKET_MODE,
     RESERVEDTICKET_ROLE,
 } from '@/features/reservation/constants/ReservedTicketState';
+import { useReservationSelectItemConfig } from '@/features/reservation/hooks/useReservationSelectItemConfig';
 import type { ReservationResponseDto } from '@/features/reservation/types/ReservationResponseDto';
 import type { SearchRequestDto } from '@/features/schedule/types/SearchRequestDto';
 
@@ -26,10 +27,12 @@ export function ReservationSelectItem({
     onChangeClicked,
 }: ReservationSelectItemProps) {
     const navigate = useNavigate();
-
-    const departureDate = new Date(details.rideDate);
-    const now = new Date();
-    now.setHours(0, 0, 0, 0);
+    const {
+        canCancelReservation,
+        canUpdateReservation,
+        canCheckReservation,
+        canSearchReturinTrip,
+    } = useReservationSelectItemConfig(details);
 
     const totalFare = details.reservedSeats.reduce(
         (sum, seat) => sum + (seat.seatFare || 0),
@@ -114,40 +117,42 @@ export function ReservationSelectItem({
                     </div>
                 </div>
                 <div className="flex justify-end gap-2">
-                    {!details.isDeleted && departureDate >= now && (
-                        <>
-                            <button
-                                onClick={() => onRefundClicked(details)}
-                                className="text-primary flex items-center justify-center gap-2 rounded-xl px-3 text-sm"
-                                data-testid={'refund-button'}
-                            >
-                                <IoTrashOutline />
-                                キャンセル
-                            </button>
-                            <button
-                                onClick={() => onChangeClicked(details)}
-                                className="border-primary text-primary flex items-center justify-center gap-2 rounded-md border-1 px-4 py-2 text-sm"
-                                data-testid={'change-button'}
-                            >
-                                <FaEdit />
-                                予約を変更
-                            </button>
-                            <button
-                                onClick={handleReservationDetail}
-                                className="bg-primary flex items-center justify-center gap-4 rounded-md px-4 py-2 text-sm text-white"
-                            >
-                                <BsQrCode />
-                                チケットを表示
-                            </button>
-                        </>
+                    {canCancelReservation && (
+                        <button
+                            onClick={() => onRefundClicked(details)}
+                            className="flex items-center justify-center gap-2 rounded-xl px-3 text-sm text-gray-600"
+                            data-testid={'refund-button'}
+                        >
+                            <IoTrashOutline />
+                            キャンセル
+                        </button>
                     )}
-                    {!details.isDeleted && (
+                    {canUpdateReservation && (
+                        <button
+                            onClick={() => onChangeClicked(details)}
+                            className="flex items-center justify-center gap-2 rounded-xl px-3 text-sm text-gray-600"
+                            data-testid={'change-button'}
+                        >
+                            <FaEdit />
+                            予約を変更
+                        </button>
+                    )}
+                    {canSearchReturinTrip && (
                         <button
                             onClick={handleSearchReturnTrip}
-                            className="bg-primary flex items-center justify-center gap-4 rounded-md px-4 py-2 text-sm text-white"
+                            className="border-primary text-primary flex items-center justify-center gap-2 rounded-md border px-4 py-2 text-sm"
                         >
                             <FaSearch />
                             復路で検索
+                        </button>
+                    )}
+                    {canCheckReservation && (
+                        <button
+                            onClick={handleReservationDetail}
+                            className="bg-primary flex items-center justify-center gap-4 rounded-md px-4 py-2 text-sm text-white"
+                        >
+                            <BsQrCode />
+                            チケットを表示
                         </button>
                     )}
                 </div>
