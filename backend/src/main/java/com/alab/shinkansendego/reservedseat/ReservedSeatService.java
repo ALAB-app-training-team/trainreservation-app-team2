@@ -61,7 +61,6 @@ public class ReservedSeatService {
     @Transactional
     public void updateReservedSeats(UUID reservationId, List<ReservedSeatUpdateDto> reservedSeats, UUID accountId, String name, String mail) {
         String reserverName;
-        String reserverMail;
         ReservationEntity reservation = reservationRepository.findById(reservationId)
             .orElseThrow(() -> new IllegalArgumentException("Reservation is Not found"));
         if (reservation.getIsDeleted()) {
@@ -72,7 +71,7 @@ public class ReservedSeatService {
             if (!accountId.equals(reservation.getAccountId())) {
                 throw new AccessDeniedException("Forbidden");
             }
-            AccountEntity account = accountRepository.findById(accountId).orElseThrow(() -> new IllegalArgumentException("Account is not found"));
+            AccountEntity account = accountRepository.findById(accountId).orElseThrow(() -> new IllegalArgumentException("Account is Not found"));
             reserverName = account.getName();
         } else {
             if (reservation.getAccountId() != null) {
