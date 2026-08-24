@@ -48,7 +48,7 @@ export function ReservationSelectItem({
     };
 
     const handleSearchReturnTrip = () => {
-        const searchRequestDto: SearchRequestDto = {
+        const searchRequestDto: Partial<SearchRequestDto> = {
             departureStationCd: details.arrivalStationCd,
             arrivalStationCd: details.departureStationCd,
         };
