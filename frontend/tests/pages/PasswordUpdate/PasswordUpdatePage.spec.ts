@@ -1,9 +1,17 @@
-import { test, expect } from '@playwright/test';
+import { expect } from '@playwright/test';
+import { test } from '@tests/fixtures';
 
 import { PasswordUpdatePage } from '@tests/pages/PasswordUpdate/PasswordUpdatePage';
 
-test('各項目の未入力メッセージが表示されること', async ({ page }) => {
+test('各項目の未入力メッセージが表示されること', async ({
+    page,
+    commonLogin,
+    logout,
+}) => {
     const passwordUpdatePage = new PasswordUpdatePage(page);
+
+    await commonLogin();
+    await expect(page).toHaveURL('/scheduleSearch');
     await passwordUpdatePage.goto();
     await expect(page).toHaveURL('/passwordUpdate');
     await passwordUpdatePage.fillCurrentPassword('');
@@ -19,10 +27,19 @@ test('各項目の未入力メッセージが表示されること', async ({ pa
     await expect(
         page.getByText('新しいパスワードを再入力してください'),
     ).toBeVisible();
+    await logout();
+    await expect(page).toHaveURL('/login');
 });
 
-test('各項目のバリデーションメッセージが表示されること', async ({ page }) => {
+test('各項目のバリデーションメッセージが表示されること', async ({
+    page,
+    commonLogin,
+    logout,
+}) => {
     const passwordUpdatePage = new PasswordUpdatePage(page);
+
+    await commonLogin();
+    await expect(page).toHaveURL('/scheduleSearch');
     await passwordUpdatePage.goto();
     await expect(page).toHaveURL('/passwordUpdate');
     await passwordUpdatePage.fillCurrentPassword('Password1');
@@ -30,4 +47,6 @@ test('各項目のバリデーションメッセージが表示されること',
     await passwordUpdatePage.fillNewPasswordCheck('Password3');
     await passwordUpdatePage.fillCurrentPassword('Password1');
     await expect(page.getByText('パスワードが一致しません')).toBeVisible();
+    await logout();
+    await expect(page).toHaveURL('/login');
 });

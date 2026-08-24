@@ -318,6 +318,18 @@ public class AccountControllerTest {
     }
 
     @Test
+    @DisplayName("氏名・メールアドレスの変更できること")
+    void updatePassword_return204() throws Exception {
+        PasswordUpdateDto request = new PasswordUpdateDto("太郎", "a@a.com", rawPassword);
+
+        mockMvc.perform(MockMvcRequestBuilders.put(baseUrl + "admin/password")
+                .with(SecurityMockMvcRequestPostProcessors.authentication(adminAuth))
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(objectMapper.writeValueAsString(request)))
+            .andExpect(status().isNoContent());
+    }
+
+    @Test
     @DisplayName("管理者が他アカウントのパスワードを変更できること")
     void updatePasswordByAdmin_return204() throws Exception {
         PasswordUpdateByAdminDto request = new PasswordUpdateByAdminDto("太郎", "a@a.com", rawPassword);
