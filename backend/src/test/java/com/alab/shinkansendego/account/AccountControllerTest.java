@@ -319,14 +319,17 @@ public class AccountControllerTest {
 
     @Test
     @DisplayName("氏名・メールアドレスの変更できること")
-    void updatePassword_return204() throws Exception {
-        PasswordUpdateDto request = new PasswordUpdateDto("太郎", "a@a.com", rawPassword);
+    void updateAccount_return200() throws Exception {
+        MockHttpSession session = new MockHttpSession();
+        session.setAttribute("LOGIN_ID", "login_id");
 
-        mockMvc.perform(MockMvcRequestBuilders.put(baseUrl + "admin/password")
-                .with(SecurityMockMvcRequestPostProcessors.authentication(adminAuth))
+        AccountUpdateDto request = new AccountUpdateDto("太郎", "a@a.com", rawPassword);
+
+        mockMvc.perform(MockMvcRequestBuilders.put(baseUrl + "account")
                 .contentType(MediaType.APPLICATION_JSON)
-                .content(objectMapper.writeValueAsString(request)))
-            .andExpect(status().isNoContent());
+                .content(objectMapper.writeValueAsString(request))
+                .session(session))
+            .andExpect(status().isOk());
     }
 
     @Test
