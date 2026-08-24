@@ -9,6 +9,7 @@ export class ReservationListPage {
     readonly modalCloseButton: Locator;
     readonly totalFareElement: Locator;
     readonly activeButton: Locator;
+    readonly threeDotsButton: Locator;
     readonly refundButton: Locator;
     readonly changeButton: Locator;
     readonly pastButton: Locator;
@@ -32,6 +33,7 @@ export class ReservationListPage {
         this.changeSeatConfirmButton = page.getByTestId('change-seat-button');
         this.changeTrainConfirmButton = page.getByTestId('change-train-button');
         this.modalCloseButton = page.getByTestId('modal-close-button');
+        this.threeDotsButton = page.getByTestId('three-dots-button');
     }
 
     async goto() {
@@ -57,11 +59,17 @@ export class ReservationListPage {
         await this.pastButton.first().click();
     }
 
+    async clickThreeDotsButton() {
+        await this.threeDotsButton.first().click();
+    }
+
     async clickRefundButton() {
+        await this.clickThreeDotsButton();
         await this.refundButton.first().click();
     }
 
     async clickChangeButton() {
+        await this.clickThreeDotsButton();
         await this.changeButton.first().click();
     }
 

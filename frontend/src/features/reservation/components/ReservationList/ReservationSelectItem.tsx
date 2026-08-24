@@ -147,6 +147,7 @@ export function ReservationSelectItem({
                             <button
                                 onClick={handleMenuOpen}
                                 className="text-primary py-2"
+                                data-testid="three-dots-button"
                             >
                                 <MdMoreVert />
                             </button>
