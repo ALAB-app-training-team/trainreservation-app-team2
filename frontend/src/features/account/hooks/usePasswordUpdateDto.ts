@@ -50,6 +50,14 @@ export function usePasswordUpdateDto() {
         const messages: InvalidMessage[] = invalidMessages.filter(
             (item) => item.field !== field,
         );
+        if (field === 'password') {
+            if (isCheckPasswordEmpty(value)) {
+                messages.push({
+                    field: 'password',
+                    message: VALIDATION_MESSAGE.EMPTY_PASSWORD,
+                });
+            }
+        }
         if (field === 'newPasswordCheck') {
             if (isCheckPasswordEmpty(value)) {
                 messages.push({

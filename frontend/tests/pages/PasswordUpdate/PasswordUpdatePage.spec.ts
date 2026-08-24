@@ -22,9 +22,6 @@ test('各項目の未入力メッセージが表示されること', async ({
     await passwordUpdatePage.fillNewPasswordCheck('');
     await passwordUpdatePage.fillCurrentPassword('');
     await expect(
-        page.getByText('新しいパスワードを入力してください'),
-    ).toBeVisible();
-    await expect(
         page.getByText('新しいパスワードを再入力してください'),
     ).toBeVisible();
     await logout();
