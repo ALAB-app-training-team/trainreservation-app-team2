@@ -187,8 +187,11 @@ public class ReservationEventListener {
 
     private List<EmailRequestDto.SelectedSeatDto> setDisplaySeats(List<ReserveRequestDto.SelectedSeatDto> seats) {
         List<SeatEntity> seatEntities = seatRepository.findAllById(
-            seats.stream().map(ReserveRequestDto.SelectedSeatDto::getSeatCd).toList()
-        ).stream().sorted(Comparator.comparing(SeatEntity::getSeatNumber).thenComparing(SeatEntity::getSeatColumn)).toList();
+            seats.stream()
+                .sorted(Comparator.comparing(ReserveRequestDto.SelectedSeatDto::getTrainCarCd)
+                    .thenComparing(ReserveRequestDto.SelectedSeatDto::getSeatCd))
+                .map(ReserveRequestDto.SelectedSeatDto::getSeatCd).toList()
+        );
 
         return seats.stream()
             .map(seat -> {
