@@ -172,6 +172,53 @@ public class LocalEmailService implements EmailService {
 
     @Async
     @Override
+    public void sendSetCompanion(EmailRequestDto dto) {
+        try {
+            MimeMessage mimeMessage = mailSender.createMimeMessage();
+            MimeMessageHelper helper = new MimeMessageHelper(mimeMessage, "UTF-8");
+
+            helper.setFrom(EmailUtils.FROM_ADDRESS, EmailUtils.SENDER_NAME);
+            helper.setTo(dto.getReserverMail());
+            helper.setSubject(EmailUtils.SET_SUBJECT);
+
+            String formatterRideDate = "";
+            if (dto.getRideDate() != null) {
+                formatterRideDate = EmailUtils.rideDateFormatter(dto.getRideDate());
+            }
+
+            String seatDetail = "";
+            Integer seatFare = 0;
+            if (dto.getSeats() != null && dto.getSeats().size() == 1) {
+                seatDetail = EmailUtils.seatFormatter(dto.getSeats());
+                seatFare = dto.getSeats().getFirst().getSeatFare();
+            }
+
+            String ticketUrl = baseUrl + EmailUtils.TICKET_PATH + dto.getReservationId();
+
+            String body = String.format(EmailUtils.SET_COMPANION_BODY,
+                dto.getReserverName() != null ? dto.getReserverName() : "ユーザー",
+                dto.getRepresentativeName(),
+                formatterRideDate,
+                dto.getDepartureStationName(),
+                dto.getDepartureTime(),
+                dto.getArrivalStationName(),
+                dto.getArrivalTime(),
+                dto.getTrainTypeName(),
+                seatDetail,
+                seatFare,
+                ticketUrl
+            );
+
+            helper.setText(body);
+            mailSender.send(mimeMessage);
+            log.info("割り当て完了メールを正常に送信しました。 To： {}", dto.getReserverMail());
+        } catch (Exception e) {
+            log.error("割り当て完了メール送信中にエラーが発生しました。 To： {}", dto.getReserverMail(), e);
+        }
+    }
+
+    @Async
+    @Override
     public void sendReleaseCompanion(EmailRequestDto dto) {
         try {
             MimeMessage mimeMessage = mailSender.createMimeMessage();
@@ -193,8 +240,9 @@ public class LocalEmailService implements EmailService {
                 seatFare = dto.getSeats().getFirst().getSeatFare();
             }
 
-            String body = String.format(EmailUtils.RELEASE_BODY,
+            String body = String.format(EmailUtils.RELEASE_COMPANION_BODY,
                 dto.getReserverName() != null ? dto.getReserverName() : "ユーザー",
+                dto.getRepresentativeName(),
                 formatterRideDate,
                 dto.getDepartureStationName(),
                 dto.getDepartureTime(),
