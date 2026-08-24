@@ -320,15 +320,12 @@ public class AccountControllerTest {
     @Test
     @DisplayName("氏名・メールアドレスの変更できること")
     void updateAccount_return200() throws Exception {
-        MockHttpSession session = new MockHttpSession();
-        session.setAttribute("LOGIN_ID", "login_id");
-
         AccountUpdateDto request = new AccountUpdateDto("太郎", "a@a.com", rawPassword);
 
         mockMvc.perform(MockMvcRequestBuilders.put(baseUrl + "account")
+                .with(SecurityMockMvcRequestPostProcessors.authentication(commonAuth))
                 .contentType(MediaType.APPLICATION_JSON)
-                .content(objectMapper.writeValueAsString(request))
-                .session(session))
+                .content(objectMapper.writeValueAsString(request)))
             .andExpect(status().isOk());
     }
 
