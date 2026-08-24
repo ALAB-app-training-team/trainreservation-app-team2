@@ -28,7 +28,10 @@ export function StationSelect({
 
     return (
         <>
-            <div className="flex w-full flex-col items-start gap-2">
+            <div
+                data-testid={`${id}-select`}
+                className="flex w-full flex-col items-start gap-2"
+            >
                 <label htmlFor={id}>{label}</label>
                 <Select
                     inputId={id}

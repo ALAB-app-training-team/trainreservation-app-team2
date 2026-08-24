@@ -7,8 +7,12 @@ test('駅の初期表示', async ({ page }) => {
 
     scheduleSearchPage.goto();
     await expect(page).toHaveURL('/scheduleSearch');
-    await expect(scheduleSearchPage.departureStation).toHaveValue('THK01');
-    await expect(scheduleSearchPage.arrivalStation).toHaveValue('THK02');
+    await expect(page.getByTestId('departureStation-select')).toContainText(
+        '東京',
+    );
+    await expect(page.getByTestId('arrivalStation-select')).toContainText(
+        '上野',
+    );
 });
 
 test('駅の初回選択肢', async ({ page }) => {
@@ -16,9 +20,8 @@ test('駅の初回選択肢', async ({ page }) => {
 
     scheduleSearchPage.goto();
     await expect(page).toHaveURL('/scheduleSearch');
-    await expect(
-        scheduleSearchPage.departureStation.locator('option'),
-    ).toHaveText([
+    await scheduleSearchPage.openDepartureStationDropdown();
+    await expect(page.getByRole('option')).toHaveText([
         `東京`,
         `大宮`,
         '小山',
@@ -81,10 +84,9 @@ test('駅を選択すると、その路線の駅のみ選択肢に表示され�
 
     scheduleSearchPage.goto();
     await expect(page).toHaveURL('/scheduleSearch');
-    scheduleSearchPage.departureStation.selectOption('THK09');
-    await expect(
-        scheduleSearchPage.arrivalStation.locator('option'),
-    ).toHaveText([
+    await scheduleSearchPage.selectDepartureStation('仙台');
+    await scheduleSearchPage.openArrivalStationDropdown();
+    await expect(page.getByRole('option')).toHaveText([
         `東京`,
         `上野`,
         `大宮`,
@@ -144,11 +146,19 @@ test('出発駅・到着駅の入れ替えができること', async ({ page }) 
 
     scheduleSearchPage.goto();
     await expect(page).toHaveURL('/scheduleSearch');
-    await expect(scheduleSearchPage.departureStation).toHaveValue('THK01');
-    await expect(scheduleSearchPage.arrivalStation).toHaveValue('THK02');
+    await expect(page.getByTestId('departureStation-select')).toContainText(
+        '東京',
+    );
+    await expect(page.getByTestId('arrivalStation-select')).toContainText(
+        '上野',
+    );
     scheduleSearchPage.clickSwitchStationButton();
-    await expect(scheduleSearchPage.departureStation).toHaveValue('THK02');
-    await expect(scheduleSearchPage.arrivalStation).toHaveValue('THK01');
+    await expect(page.getByTestId('departureStation-select')).toContainText(
+        '上野',
+    );
+    await expect(page.getByTestId('arrivalStation-select')).toContainText(
+        '東京',
+    );
 });
 
 test('出発時刻・到着時刻の切り替えができること、空席表示チェックボックスにチェックが入っていると満席がないこと、チェックをはずすと満席が0以上であること', async ({
