@@ -32,6 +32,7 @@ type ScheduleListProps = {
     preChangeScheduleInfo: ScheduleInfoDto | null;
     isChanging: boolean | undefined;
     isBack: boolean | undefined;
+    handleNextDate: () => void;
 };
 
 export function ScheduleList({
@@ -47,6 +48,7 @@ export function ScheduleList({
     preChangeScheduleInfo,
     isChanging,
     isBack,
+    handleNextDate,
 }: ScheduleListProps) {
     const { schedules } = useSchedules(searchRequestDto, isInvalid);
 
@@ -147,9 +149,20 @@ export function ScheduleList({
                                     : ERROR_MESSAGE.NO_SCHEDULE}
                             </div>
                             <div className="text-base">
-                                {isInvalid
-                                    ? VALIDATION_MESSAGE.FIX_SEARCH_FORM
-                                    : ERROR_MESSAGE.NO_SPECIFIED_DATETIME_SCHEDULE}
+                                {isInvalid ? (
+                                    VALIDATION_MESSAGE.FIX_SEARCH_FORM
+                                ) : (
+                                    <button
+                                        type="button"
+                                        onClick={() => {
+                                            handleNextDate();
+                                        }}
+                                        disabled={false}
+                                        className="bg-primary order-2 rounded-lg p-2 text-white md:order-3"
+                                    >
+                                        翌日の始発を検索
+                                    </button>
+                                )}
                             </div>
                         </div>
                     </div>
