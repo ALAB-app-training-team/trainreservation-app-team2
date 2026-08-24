@@ -47,7 +47,7 @@ export function StationSelect({
                         input: () => 'cursor-pointer',
                         menu: () => 'bg-white p-2',
                         option: ({ isFocused, isSelected }) =>
-                            `!cursor-pointer ${isSelected ? 'bg-primary text-white' : isFocused ? 'bg-primary-light' : 'text-gray-700'}`,
+                            `!cursor-pointer ${isSelected ? 'bg-primary text-white' : isFocused && 'bg-primary-light'}`,
                     }}
                     unstyled
                     options={options}
