@@ -31,4 +31,3 @@ test('各項目のバリデーションメッセージが表示されること',
     await passwordUpdatePage.fillCurrentPassword('Password1');
     await expect(page.getByText('パスワードが一致しません')).toBeVisible();
 });
-await page.goto('http://localhost:5173/accountUpdate');
