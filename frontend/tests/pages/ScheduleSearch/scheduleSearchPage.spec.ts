@@ -126,7 +126,7 @@ test('駅を検索できる', async ({ page }) => {
         '新庄',
         '新潟',
     ]);
-    
+
     // 検索しても選択中の駅が変わらない
     await page.keyboard.press('Escape');
     await expect(page.getByTestId('departureStation-select')).toContainText(
@@ -358,4 +358,28 @@ test('出発時刻・到着時刻の切り替えができること、空席表�
     expect(arrivalTimesWithUnavailableTrain).toEqual(
         sortedArrivalTimesWithUnavailableTrain,
     );
+});
+
+test('列車が見つからない場合、翌日の始発で検索できる', async ({ page }) => {
+    const scheduleSearchPage = new ScheduleSearchPage(page);
+    await scheduleSearchPage.goto();
+
+    const currentDate = await scheduleSearchPage.date.inputValue();
+    const expectedNextDate = dayjs(currentDate)
+        .add(1, 'day')
+        .format('YYYY-MM-DD');
+
+    // 時刻が00:00になること
+    await scheduleSearchPage.time.fill('23:59');
+    await expect(scheduleSearchPage.searchNextDayButton).toBeVisible();
+    await scheduleSearchPage.clickSearchNextDayButton();
+    await expect(scheduleSearchPage.date).toHaveValue(expectedNextDate);
+    await expect(scheduleSearchPage.time).toHaveValue('00:00');
+    await expect(scheduleSearchPage.departureTimeButton).toBeChecked();
+
+    // 出発時刻で検索されること
+    await scheduleSearchPage.clickArrivalTimeButton();
+    await expect(scheduleSearchPage.searchNextDayButton).toBeVisible();
+    await scheduleSearchPage.clickSearchNextDayButton();
+    await expect(scheduleSearchPage.departureTimeButton).toBeChecked();
 });
