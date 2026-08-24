@@ -12,6 +12,7 @@ public record ReservationChangedEvent(
     LocalTime departureTime,
     LocalTime arrivalTime,
     Integer oldTotalAmount,
+    String representativeName,
     List<ReservedSeatEntity> assignedReservedSeats
 ) {
 }
