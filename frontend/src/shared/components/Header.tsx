@@ -105,14 +105,10 @@ export function Header() {
                 </div>
             </div>
             {isMenuOpen && (
-<<<<<<< HEAD
-                <div className="absolute top-full right-0 z-50 flex w-[180px] flex-col gap-2 rounded-md bg-white p-2 py-2 text-sm font-bold shadow-md">
-=======
                 <div
-                    className="absolute top-full right-4 z-50 flex w-[160px] flex-col gap-2 rounded-md bg-white p-2 py-2 text-sm font-bold shadow-md"
+                    className="absolute top-full right-4 z-50 flex w-[180px] flex-col gap-2 rounded-md bg-white p-2 py-2 text-sm font-bold shadow-md"
                     onClick={() => setIsMenuOpen(false)}
                 >
->>>>>>> b3a690b4c5174ee8ccff8da1bd84414226ce0d19
                     <div className="flex w-full flex-col gap-2 text-left md:hidden">
                         {buttons.map((button, index) => (
                             <NavLink
@@ -131,16 +127,23 @@ export function Header() {
                             </NavLink>
                         ))}
                     </div>
-<<<<<<< HEAD
+
+                    {role === 'ROLE_ADMIN' && (
+                        <button
+                            onClick={() => navigate('/admin/password')}
+                            className="w-full text-left hover:bg-gray-100"
+                        >
+                            ユーザー管理
+                        </button>
+                    )}
                     {name && (
                         <>
                             <button
-                                onClick={handleLogout}
+                                onClick={() => navigate('/reservationList')}
                                 className="w-full text-left hover:bg-gray-100"
                             >
-                                ログアウト
+                                予約一覧
                             </button>
-
                             <NavLink
                                 to={'/accountUpdate'}
                                 className="w-full text-left hover:bg-gray-100"
@@ -154,25 +157,6 @@ export function Header() {
                             >
                                 パスワード変更
                             </NavLink>
-                        </>
-=======
-                    {role === 'ROLE_ADMIN' && (
-                        <button
-                            onClick={() => navigate('/admin/password')}
-                            className="w-full text-left hover:bg-gray-100"
-                        >
-                            ユーザー管理
-                        </button>
->>>>>>> b3a690b4c5174ee8ccff8da1bd84414226ce0d19
-                    )}
-                    {name && (
-                        <>
-                            <button
-                                onClick={() => navigate('/reservationList')}
-                                className="w-full text-left hover:bg-gray-100"
-                            >
-                                予約一覧
-                            </button>
                             <button
                                 onClick={handleLogout}
                                 className="w-full text-left hover:bg-gray-100"

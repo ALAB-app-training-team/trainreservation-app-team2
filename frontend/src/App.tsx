@@ -10,11 +10,8 @@ import { AuthProvider } from '@/context/AuthContext';
 import { AccountCreate } from '@/features/account/pages/AccountCreate';
 import { AccountUpdate } from '@/features/account/pages/AccountUpdate';
 import { Login } from '@/features/account/pages/Login';
-<<<<<<< HEAD
 import { PasswordUpdate } from '@/features/account/pages/PasswordUpdate';
-=======
 import { PasswordUpdateForAdmin } from '@/features/account/pages/PasswordUpdateForAdmin';
->>>>>>> b3a690b4c5174ee8ccff8da1bd84414226ce0d19
 import { ReservationGuestLogin } from '@/features/reservation/pages/ReservationGuestLogin';
 import { ReservationList } from '@/features/reservation/pages/ReservationList';
 import { ReservedTicket } from '@/features/reservation/pages/ReservedTicket';
@@ -110,7 +107,6 @@ const router = createBrowserRouter([
                 errorElement: <Error />,
             },
             {
-<<<<<<< HEAD
                 path: '/accountUpdate',
                 element: <AccountUpdate />,
                 errorElement: <Error />,
@@ -118,11 +114,11 @@ const router = createBrowserRouter([
             {
                 path: '/passwordUpdate',
                 element: <PasswordUpdate />,
-=======
+            },
+            {
                 path: '/admin/password',
                 loader: () => adminLoader(),
                 element: <PasswordUpdateForAdmin />,
->>>>>>> b3a690b4c5174ee8ccff8da1bd84414226ce0d19
                 errorElement: <Error />,
             },
             {
