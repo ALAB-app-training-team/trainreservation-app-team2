@@ -97,16 +97,16 @@ test('削除すると予約が1件削除されること', async ({
     await expect(page).toHaveURL('/scheduleSearch');
     await reservationListPage.goto();
     await expect(page).toHaveURL('/reservationList');
-    await reservationListPage.refundButton
+    await reservationListPage.threeDotsButton
         .first()
         .waitFor({ state: 'visible' });
     const beforeReservationCount: number =
-        await reservationListPage.refundButton.count();
+        await reservationListPage.threeDotsButton.count();
 
     await reservationListPage.clickRefundButton();
     await reservationListPage.clickCancelConfirmButton();
 
-    await expect(reservationListPage.refundButton).toHaveCount(
+    await expect(reservationListPage.threeDotsButton).toHaveCount(
         beforeReservationCount - 1,
     );
     await logout();
