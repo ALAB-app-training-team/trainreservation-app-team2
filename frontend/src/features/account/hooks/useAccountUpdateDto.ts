@@ -66,7 +66,8 @@ export function useAccountUpdateDto() {
                     message: VALIDATION_MESSAGE.MAX_LENGTH_NAME,
                 });
             }
-        } else if (field === 'mail') {
+        }
+        if (field === 'mail') {
             if (isMailEmpty(value)) {
                 messages.push({
                     field: 'mail',
@@ -83,7 +84,8 @@ export function useAccountUpdateDto() {
                     message: VALIDATION_MESSAGE.MAX_LENGTH_MAIL,
                 });
             }
-        } else if (field === 'password') {
+        }
+        if (field === 'password') {
             if (isPasswordEmpty(value)) {
                 messages.push({
                     field: 'password',

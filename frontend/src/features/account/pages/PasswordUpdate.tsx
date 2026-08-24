@@ -49,6 +49,7 @@ export function PasswordUpdate() {
                             onChange={handleChange}
                             onBlur={handleBlur}
                             setPasswordType={setPasswordType}
+                            getFieldError={getFieldError}
                         />
 
                         <PasswordInput

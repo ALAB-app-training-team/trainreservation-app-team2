@@ -906,6 +906,7 @@ public class ReservationServiceTest {
         sectionKm.setStartStationCd(request.getDepartureStationCd());
         sectionKm.setGoalStationCd(request.getArrivalStationCd());
         departureArrivalTime.setSectionKm(sectionKm);
+        when(accountRepo.findById(any())).thenReturn(Optional.of(account));
         when(reservationRepo.findByIdAndIsDeleted(reservationId1, false)).thenReturn(reservation);
         when(sectionKmRepo.findByStartStationCd(request.getDepartureStationCd())).thenReturn(List.of(sectionKm));
         when(sectionKmRepo.findByGoalStationCd(request.getArrivalStationCd())).thenReturn(List.of(sectionKm));
@@ -982,6 +983,20 @@ public class ReservationServiceTest {
     }
 
     @Test
+    @DisplayName("DBに存在しないアカウントからのリクエストの場合IllegalArgumentExceptionが発生する")
+    void putReservation_withNotExistAccount_throwsIllegalArgumentException() {
+        ReserveRequestDto request = new ReserveRequestDto("THK02", LocalDate.now(), "THK01", "THK02", "", "", "", List.of(new ReserveRequestDto.SelectedSeatDto("E5SER01", "CAR01", "SEAT01001", 5000), new ReserveRequestDto.SelectedSeatDto("E5SER01", "CAR01", "SEAT01010", 5000)));
+        Optional<ReservationEntity> reservation = Optional.of(buildReservation(reservationId1));
+        reservation.get().setAccountId(accountId);
+        session.setId(noReservationAccountId);
+        when(reservationRepo.findByIdAndIsDeleted(reservationId1, false)).thenReturn(reservation);
+        when(accountRepo.findById(any())).thenReturn(Optional.empty());
+
+        Exception ex = assertThrows(IllegalArgumentException.class, () -> service.putReservation(reservationId1, request, session));
+        assertEquals("Account is not found", ex.getMessage());
+    }
+
+    @Test
     @DisplayName("予約情報の持つ出発駅と同じスケジュールがない場合、IllegalArgumentExceptionが発生する")
     void putReservation_withoutDepartureTime_throwsIllegalArgumentException() {
         ReserveRequestDto request = new ReserveRequestDto("THK02", LocalDate.now(), "THK01", "THK02", "", "", "", List.of(new ReserveRequestDto.SelectedSeatDto("E5SER01", "CAR01", "SEAT01001", 5000), new ReserveRequestDto.SelectedSeatDto("E5SER01", "CAR01", "SEAT01010", 5000)));
@@ -998,6 +1013,7 @@ public class ReservationServiceTest {
         sectionKm.setStartStationCd("NotExistStation");
         sectionKm.setGoalStationCd(request.getArrivalStationCd());
         departureArrivalTime.setSectionKm(sectionKm);
+        when(accountRepo.findById(any())).thenReturn(Optional.of(account));
         when(reservationRepo.findByIdAndIsDeleted(reservationId1, false)).thenReturn(reservation);
         when(sectionKmRepo.findByStartStationCd(request.getDepartureStationCd())).thenReturn(List.of(sectionKm));
         when(sectionKmRepo.findByGoalStationCd(request.getArrivalStationCd())).thenReturn(List.of(sectionKm));
@@ -1032,6 +1048,7 @@ public class ReservationServiceTest {
         sectionKm.setStartStationCd(request.getDepartureStationCd());
         sectionKm.setGoalStationCd("NotExistStation");
         departureArrivalTime.setSectionKm(sectionKm);
+        when(accountRepo.findById(any())).thenReturn(Optional.of(account));
         when(reservationRepo.findByIdAndIsDeleted(reservationId1, false)).thenReturn(reservation);
         when(sectionKmRepo.findByStartStationCd(request.getDepartureStationCd())).thenReturn(List.of(sectionKm));
         when(sectionKmRepo.findByGoalStationCd(request.getArrivalStationCd())).thenReturn(List.of(sectionKm));
@@ -1066,6 +1083,7 @@ public class ReservationServiceTest {
         sectionKm.setStartStationCd(request.getDepartureStationCd());
         sectionKm.setGoalStationCd(request.getArrivalStationCd());
         departureArrivalTime.setSectionKm(sectionKm);
+        when(accountRepo.findById(any())).thenReturn(Optional.of(account));
         when(reservationRepo.findByIdAndIsDeleted(reservationId1, false)).thenReturn(reservation);
         when(sectionKmRepo.findByStartStationCd(request.getDepartureStationCd())).thenReturn(List.of(sectionKm));
         when(sectionKmRepo.findByGoalStationCd(request.getArrivalStationCd())).thenReturn(List.of(sectionKm));
@@ -1138,6 +1156,20 @@ public class ReservationServiceTest {
         when(reservationRepo.findByIdAndIsDeleted(reservationId1, false)).thenReturn(reservation);
         Exception ex = assertThrows(IllegalArgumentException.class, () -> service.putReservedSeat(reservationId1, request, session));
         assertEquals("Reserved Seats is Not found", ex.getMessage());
+    }
+
+    @Test
+    @DisplayName("DBに存在しないアカウントからのリクエストの場合IllegalArgumentExceptionが発生する")
+    void putReservedSeat_withNotExistAccount_throwsIllegalArgumentException() {
+        ReserveRequestDto request = new ReserveRequestDto("THK01", LocalDate.of(2026, 6, 1), "THK01", "THK09", "", "", "", List.of(new ReserveRequestDto.SelectedSeatDto("E5SER01", "CAR01", "SEAT01001", 5000), new ReserveRequestDto.SelectedSeatDto("E5SER01", "CAR01", "SEAT01002", 5000)));
+        Optional<ReservationEntity> reservation = Optional.of(buildReservation(reservationId1));
+        reservation.get().setAccountId(accountId);
+        session.setId(noReservationAccountId);
+        when(reservationRepo.findByIdAndIsDeleted(reservationId1, false)).thenReturn(reservation);
+        when(accountRepo.findById(any())).thenReturn(Optional.empty());
+
+        Exception ex = assertThrows(IllegalArgumentException.class, () -> service.putReservedSeat(reservationId1, request, session));
+        assertEquals("Account is not found", ex.getMessage());
     }
 
     @Test
