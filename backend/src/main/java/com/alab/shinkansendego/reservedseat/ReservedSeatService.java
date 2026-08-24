@@ -1,5 +1,7 @@
 package com.alab.shinkansendego.reservedseat;
 
+import com.alab.shinkansendego.account.AccountEntity;
+import com.alab.shinkansendego.account.AccountRepository;
 import com.alab.shinkansendego.departurearrivaltime.DepartureArrivalTimeEntity;
 import com.alab.shinkansendego.departurearrivaltime.DepartureArrivalTimeRepository;
 import com.alab.shinkansendego.reservation.ReservationEntity;
@@ -27,6 +29,7 @@ public class ReservedSeatService {
     private final ReservedSeatRepository reservedSeatRepository;
     private final DepartureArrivalTimeRepository departureArrivalTimeRepository;
     private final TrainCarRepository trainCarRepository;
+    private final AccountRepository accountRepository;
     private final ApplicationEventPublisher eventPublisher;
 
     @Autowired
@@ -35,12 +38,14 @@ public class ReservedSeatService {
         ReservedSeatRepository reservedSeatRepository,
         DepartureArrivalTimeRepository departureArrivalTimeRepository,
         TrainCarRepository trainCarRepository,
+        AccountRepository accountRepository,
         ApplicationEventPublisher eventPublisher
     ) {
         this.reservationRepository = reservationRepository;
         this.reservedSeatRepository = reservedSeatRepository;
         this.departureArrivalTimeRepository = departureArrivalTimeRepository;
         this.trainCarRepository = trainCarRepository;
+        this.accountRepository = accountRepository;
         this.eventPublisher = eventPublisher;
     }
 
@@ -55,6 +60,8 @@ public class ReservedSeatService {
      */
     @Transactional
     public void updateReservedSeats(UUID reservationId, List<ReservedSeatUpdateDto> reservedSeats, UUID accountId, String name, String mail) {
+        String reserverName;
+        String reserverMail;
         ReservationEntity reservation = reservationRepository.findById(reservationId)
             .orElseThrow(() -> new IllegalArgumentException("Reservation is Not found"));
         if (reservation.getIsDeleted()) {
@@ -65,6 +72,8 @@ public class ReservedSeatService {
             if (!accountId.equals(reservation.getAccountId())) {
                 throw new AccessDeniedException("Forbidden");
             }
+            AccountEntity account = accountRepository.findById(accountId).orElseThrow(() -> new IllegalArgumentException("Account is not found"));
+            reserverName = account.getName();
         } else {
             if (reservation.getAccountId() != null) {
                 throw new AccessDeniedException("Login Required");
@@ -73,6 +82,7 @@ public class ReservedSeatService {
             if (!name.equals(reservation.getReserverName()) || !mail.equals(reservation.getReserverMail())) {
                 throw new AccessDeniedException("Forbidden");
             }
+            reserverName = name;
         }
 
         List<DepartureArrivalTimeEntity> schedules = departureArrivalTimeRepository.findByScheduleCd(reservation.getScheduleCd());
@@ -116,7 +126,7 @@ public class ReservedSeatService {
                 releaseSeats,
                 departureTime,
                 arrivalTime,
-                reservation.getReserverName()
+                reserverName
             ));
         }
         if (!setSeats.isEmpty()) {
@@ -125,7 +135,7 @@ public class ReservedSeatService {
                 setSeats,
                 departureTime,
                 arrivalTime,
-                reservation.getReserverName()
+                reserverName
             ));
         }
     }

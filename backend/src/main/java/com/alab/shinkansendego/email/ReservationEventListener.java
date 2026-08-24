@@ -91,10 +91,18 @@ public class ReservationEventListener {
                 .findFirst()
                 .orElseThrow(() -> new IllegalArgumentException("CompanionInfo is Not Found"));
             if (info.getMail() != null && !info.getMail().isEmpty()) {
-                emailDto.setReserverMail(info.getMail());
-                emailDto.setReserverName(info.getName());
-                emailDto.setSeats(setDisplaySeats(List.of(new ReserveRequestDto.SelectedSeatDto(info.getTrainCarCd(), seat.getTrainCarTypeCd(), info.getSeatCd(), info.getSeatFare()))));
-                emailService.sendReleaseCompanion(emailDto);
+                ReserveRequestDto companionDto = new ReserveRequestDto(
+                    event.request().getScheduleCd(),
+                    event.request().getRideDate(),
+                    event.request().getDepartureStationCd(),
+                    event.request().getArrivalStationCd(),
+                    info.getName(),
+                    info.getMail(),
+                    event.request().getPaymentToken(),
+                    List.of(new ReserveRequestDto.SelectedSeatDto(info.getTrainCarCd(), seat.getTrainCarTypeCd(), info.getSeatCd(), info.getSeatFare()))
+                );
+                EmailRequestDto companionEmailDto = setEmailRequestDto(event.reservationId(), companionDto, event.departureTime(), event.arrivalTime(), null, event.representativeName());
+                emailService.sendReleaseCompanion(companionEmailDto);
             }
         }
     }

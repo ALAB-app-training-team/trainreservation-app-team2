@@ -728,7 +728,7 @@ public class ReservationService {
             reserveRequestDto,
             departureTime,
             arrivalTime,
-            reservation.getReserverName(),
+            reserverName,
             reservedSeats
         ));
     }
