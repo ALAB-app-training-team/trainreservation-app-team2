@@ -8,12 +8,9 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
-<<<<<<< HEAD
-import org.springframework.security.core.annotation.AuthenticationPrincipal;
-=======
 import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
->>>>>>> b3a690b4c5174ee8ccff8da1bd84414226ce0d19
 import org.springframework.security.core.context.SecurityContext;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.web.context.HttpSessionSecurityContextRepository;
@@ -23,12 +20,8 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-<<<<<<< HEAD
-import java.util.Collections;
-import java.util.UUID;
-=======
 import java.util.List;
->>>>>>> b3a690b4c5174ee8ccff8da1bd84414226ce0d19
+import java.util.UUID;
 
 @RestController
 @RequestMapping(path = "api")
@@ -87,7 +80,6 @@ public class AccountController {
     }
 
     /**
-<<<<<<< HEAD
      * アカウント情報変更メソッド
      *
      * @param request 変更するアカウント情報
@@ -117,7 +109,9 @@ public class AccountController {
     ) {
         UUID response = accountService.putPassword(session.getId(), request);
         return ResponseEntity.status(HttpStatus.OK).body(response);
-=======
+    }
+
+    /**
      * 管理者が一般アカウントのパスワード変更を行うメソッド
      *
      * @param request アカウント情報と新しいパスワード
@@ -128,6 +122,5 @@ public class AccountController {
     public ResponseEntity<Void> updatePasswordByAdmin(@Valid @RequestBody PasswordUpdateByAdminDto request) {
         accountService.updatePasswordByAdmin(request);
         return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
->>>>>>> b3a690b4c5174ee8ccff8da1bd84414226ce0d19
     }
 }
