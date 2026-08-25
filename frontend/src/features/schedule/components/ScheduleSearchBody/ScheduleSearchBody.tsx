@@ -135,6 +135,7 @@ export function ScheduleSearchBody() {
                             isChanging={isChanging}
                             isBack={isBack}
                             handleNextDate={handleNextDate}
+                            maxDate={maxDate}
                         />
                     </Suspense>
                 </div>

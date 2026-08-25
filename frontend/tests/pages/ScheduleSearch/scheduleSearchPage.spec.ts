@@ -382,4 +382,14 @@ test('列車が見つからない場合、翌日の始発で検索できる', as
     await expect(scheduleSearchPage.searchNextDayButton).toBeVisible();
     await scheduleSearchPage.clickSearchNextDayButton();
     await expect(scheduleSearchPage.departureTimeButton).toBeChecked();
+
+    // 検索可能期間の上限日の場合、翌日の始発検索ボタンが非活性になること
+    await scheduleSearchPage.date.fill(
+        dayjs().add(1, 'month').format('YYYY-MM-DD'),
+    );
+    await scheduleSearchPage.time.fill('23:59');
+    await expect(scheduleSearchPage.searchNextDayButton).toBeDisabled();
+    await expect(
+        page.getByText('予約可能期間を超えるため、翌日は検索できません'),
+    ).toBeVisible();
 });

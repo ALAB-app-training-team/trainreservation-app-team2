@@ -1,5 +1,6 @@
 import 'tailwindcss';
 
+import dayjs from 'dayjs';
 import { useState } from 'react';
 import { AiOutlineExclamationCircle } from 'react-icons/ai';
 import type { ReactPaginateProps } from 'react-paginate';
@@ -33,6 +34,7 @@ type ScheduleListProps = {
     isChanging: boolean | undefined;
     isBack: boolean | undefined;
     handleNextDate: () => void;
+    maxDate: Date;
 };
 
 export function ScheduleList({
@@ -49,6 +51,7 @@ export function ScheduleList({
     isChanging,
     isBack,
     handleNextDate,
+    maxDate,
 }: ScheduleListProps) {
     const { schedules } = useSchedules(searchRequestDto, isInvalid);
 
@@ -152,16 +155,33 @@ export function ScheduleList({
                                 {isInvalid ? (
                                     VALIDATION_MESSAGE.FIX_SEARCH_FORM
                                 ) : (
-                                    <button
-                                        type="button"
-                                        onClick={() => {
-                                            handleNextDate();
-                                        }}
-                                        disabled={false}
-                                        className="bg-primary order-2 rounded-lg p-2 text-white md:order-3"
-                                    >
-                                        翌日の始発を検索
-                                    </button>
+                                    <>
+                                        <button
+                                            type="button"
+                                            onClick={() => {
+                                                handleNextDate();
+                                            }}
+                                            disabled={
+                                                !dayjs(
+                                                    searchRequestDto.date,
+                                                ).isBefore(
+                                                    dayjs(maxDate),
+                                                    'day',
+                                                )
+                                            }
+                                            className="bg-primary order-2 rounded-lg p-2 text-white md:order-3"
+                                        >
+                                            翌日の始発を検索
+                                        </button>
+                                        {!dayjs(searchRequestDto.date).isBefore(
+                                            dayjs(maxDate),
+                                            'day',
+                                        ) && (
+                                            <div className="text-sm text-gray-500">
+                                                予約可能期間を超えるため、翌日は検索できません
+                                            </div>
+                                        )}
+                                    </>
                                 )}
                             </div>
                         </div>
