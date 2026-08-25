@@ -98,6 +98,8 @@ public class SesEmailService implements EmailService {
                 seatDetail = EmailUtils.seatFormatter(dto.getSeats());
             }
 
+            String formatterDifference = differenceFormatter(dto.getTotalAmount(), dto.getOldAmount());
+
             String loginUrl = baseUrl + EmailUtils.LOGIN_PATH;
 
             String body = String.format(
@@ -111,7 +113,7 @@ public class SesEmailService implements EmailService {
                 dto.getArrivalTime(),
                 dto.getTrainTypeName(),
                 seatDetail,
-                differenceFormatter(dto.getTotalAmount(), dto.getOldAmount()),
+                formatterDifference,
                 loginUrl
             );
 
