@@ -25,12 +25,10 @@ import java.util.UUID;
 @RequestMapping(path = "api/reservations")
 public class ReservationController {
     private final ReservationService reservationService;
-    private final EmailService emailService;
 
     @Autowired
     public ReservationController(ReservationService reservationService, EmailService emailService) {
         this.reservationService = reservationService;
-        this.emailService = emailService;
     }
 
     @GetMapping
