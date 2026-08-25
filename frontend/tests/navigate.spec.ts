@@ -211,7 +211,7 @@ test('navigate-アカウントログイン全機能', async ({
     await expect(page).toHaveURL('/reservationList');
     await reservationListPage.clickThreeDotsButton();
     await reservationListPage.clickRefundButton();
-    await reservationListPage.clickCancelConfirmButton();
+    await reservationListPage.clickRefundConfirmButton();
     await expect(page).toHaveURL('/reservationList');
 
     // キャンセル(予約詳細)
