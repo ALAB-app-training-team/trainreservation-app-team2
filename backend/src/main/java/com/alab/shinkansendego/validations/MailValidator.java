@@ -33,6 +33,9 @@ public class MailValidator
         if (!mail.matches(MAIL_PATTERN)) {
             return SetValidErrorMessage.setErrorMessage(context, "Mail is InValid");
         }
+        if (mail.length() > 255 || mail.length() == 0) {
+            return SetValidErrorMessage.setErrorMessage(context, "Mail is Over Limit Size");
+        }
         return true;
     }
 }
