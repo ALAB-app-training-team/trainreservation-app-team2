@@ -268,12 +268,17 @@ public class ReservationService {
     @Transactional
     public UUID insertReservation(ReserveRequestDto reserveRequestDto, AccountSessionDto session) {
         AccountEntity account = null;
+        String reserverName = null;
+        String reserverMail = null;
         if (session != null) {
             account = accountRepository.findById(session.getId()).orElseThrow(() -> new BadCredentialsException("認証に失敗しました"));
-            reserveRequestDto.setReserverName(session.getName());
-            reserveRequestDto.setReserverMail(session.getMail());
+            reserverName = account.getName();
+            reserverMail = account.getMail();
         } else if (reserveRequestDto.getReserverName().isBlank() || reserveRequestDto.getReserverMail().isBlank()) {
             throw new IllegalArgumentException("氏名とメールアドレスがありません");
+        } else {
+            reserverName = reserveRequestDto.getReserverName();
+            reserverMail = reserveRequestDto.getReserverMail();
         }
 
         if (reserveRequestDto.getSeats() == null || reserveRequestDto.getSeats().isEmpty()) {
@@ -327,8 +332,8 @@ public class ReservationService {
         DepartureArrivalTimeEntity departureArrivalTimeOfGoal = departureArrivalTimeRepository
             .findByScheduleCdAndSectionCdIn(reserveRequestDto.getScheduleCd(), List.of(sectionCdList.get(sectionCdList.size() - 1)));
 
-        reserveRequestDto.setReserverName(StringUtils.removeSpaces(reserveRequestDto.getReserverName()));
-        reserveRequestDto.setReserverMail(StringUtils.removeSpaces(reserveRequestDto.getReserverMail()));
+        reserveRequestDto.setReserverName(StringUtils.removeSpaces(reserverName));
+        reserveRequestDto.setReserverMail(StringUtils.removeSpaces(reserverMail));
 
         eventPublisher.publishEvent(new ReservationCreatedEvent(
             reservationId,
@@ -460,6 +465,8 @@ public class ReservationService {
     public UUID putReservation(UUID reservationId, ReserveRequestDto changedReservation, AccountSessionDto session) {
         Optional<ReservationEntity> reservation = putError(reservationId, changedReservation, session);
 
+        AccountEntity account = accountRepository.findById(session.getId()).orElseThrow(() -> new IllegalArgumentException("Account is not found"));
+
         Integer oldTotalAmount = reservation.get().getReservedSeat().stream()
             .filter(seat -> seat.getSeatFare() != null)
             .mapToInt(ReservedSeatEntity::getSeatFare)
@@ -512,11 +519,11 @@ public class ReservationService {
             .getArrivalTime();
 
         if (changedReservation.getReserverMail() == null || changedReservation.getReserverMail().isBlank()) {
-            changedReservation.setReserverMail(reservation.get().getReserverMail());
+            changedReservation.setReserverMail(account.getMail());
         }
 
         if (changedReservation.getReserverName() == null || changedReservation.getReserverName().isBlank()) {
-            changedReservation.setReserverName(reservation.get().getReserverName());
+            changedReservation.setReserverName(account.getName());
         }
 
         eventPublisher.publishEvent(new ReservationChangedEvent(
@@ -525,6 +532,7 @@ public class ReservationService {
             departureTime,
             arrivalTime,
             oldTotalAmount,
+            account.getName(),
             assignedReservedSeats
         ));
 
@@ -543,6 +551,8 @@ public class ReservationService {
     public UUID putReservedSeat(UUID reservationId, ReserveRequestDto changedReservation, AccountSessionDto session) {
         Optional<ReservationEntity> reservation = putError(reservationId, changedReservation, session);
         Set<ReservedSeatEntity> reservedSeats = reservation.get().getReservedSeat();
+
+        AccountEntity account = accountRepository.findById(session.getId()).orElseThrow(() -> new IllegalArgumentException("Account is not found"));
 
         Integer oldTotalAmount = reservation.get().getReservedSeat().stream()
             .filter(seat -> seat.getSeatFare() != null)
@@ -596,11 +606,11 @@ public class ReservationService {
             .getArrivalTime();
 
         if (changedReservation.getReserverMail() == null || changedReservation.getReserverMail().isBlank()) {
-            changedReservation.setReserverMail(reservation.get().getReserverMail());
+            changedReservation.setReserverMail(account.getMail());
         }
 
         if (changedReservation.getReserverName() == null || changedReservation.getReserverName().isBlank()) {
-            changedReservation.setReserverName(reservation.get().getReserverName());
+            changedReservation.setReserverName(account.getName());
         }
 
         eventPublisher.publishEvent(new ReservationChangedEvent(
@@ -609,6 +619,7 @@ public class ReservationService {
             departureTime,
             arrivalTime,
             oldTotalAmount,
+            account.getName(),
             assignedReservedSeats
         ));
 
@@ -710,11 +721,15 @@ public class ReservationService {
             .orElseThrow(() -> new IllegalArgumentException("ArrivalTime is not found"))
             .getArrivalTime();
 
+        List<ReservedSeatEntity> reservedSeats = reservedSeatRepository.findByReservationId(reservationId);
+
         eventPublisher.publishEvent(new ReservationCanceledEvent(
             reservationId,
             reserveRequestDto,
             departureTime,
-            arrivalTime
+            arrivalTime,
+            reservation.getReserverName(),
+            reservedSeats
         ));
     }
 
