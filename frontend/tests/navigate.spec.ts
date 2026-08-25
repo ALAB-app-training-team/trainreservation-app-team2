@@ -110,12 +110,14 @@ test('navigate-アカウントログイン全機能', async ({
     await reservedTicketPage.clickBackButton();
     await expect(page).toHaveURL('/reservationList');
     // 予約変更（座席変更）
+    await reservationListPage.clickThreeDotsButton();
     await reservationListPage.clickChangeButton();
     await reservationListPage.clickChangeSeatConfirmButton();
     await expect(page).toHaveURL('/selectSeat');
     await expect(page.getByText('座席が選択されていません')).not.toBeVisible();
     await selectSeatPage.clickBackButton();
     await expect(page).toHaveURL('/reservationList');
+    await reservationListPage.clickThreeDotsButton();
     await reservationListPage.clickChangeButton();
     await reservationListPage.clickChangeSeatConfirmButton();
     await expect(page).toHaveURL('/selectSeat');
@@ -129,6 +131,7 @@ test('navigate-アカウントログイン全機能', async ({
     await reservedTicketPage.header.clickUserName();
     await reservedTicketPage.header.goToReservationList();
     await expect(page).toHaveURL('/reservationList');
+    await reservationListPage.clickThreeDotsButton();
     await reservationListPage.clickChangeButton();
     await reservationListPage.clickChangeTrainConfirmButton();
     await expect(page).toHaveURL('/scheduleSearch');
@@ -139,6 +142,7 @@ test('navigate-アカウントログイン全機能', async ({
     await expect(page).toHaveURL('/scheduleSearch');
     await scheduleSearchPage.clickBackButton();
     await expect(page).toHaveURL('/reservationList');
+    await reservationListPage.clickThreeDotsButton();
     await reservationListPage.clickChangeButton();
     await reservationListPage.clickChangeTrainConfirmButton();
     await expect(page).toHaveURL('/scheduleSearch');
@@ -201,11 +205,13 @@ test('navigate-アカウントログイン全機能', async ({
     await reservedTicketPage.header.clickUserName();
     await reservedTicketPage.header.goToReservationList();
     await expect(page).toHaveURL('/reservationList');
+    await reservationListPage.clickThreeDotsButton();
     await reservationListPage.clickRefundButton();
     await reservationListPage.clickModalCloseButton();
     await expect(page).toHaveURL('/reservationList');
+    await reservationListPage.clickThreeDotsButton();
     await reservationListPage.clickRefundButton();
-    await reservationListPage.clickCancelConfirmButton();
+    await reservationListPage.clickRefundConfirmButton();
     await expect(page).toHaveURL('/reservationList');
 
     // キャンセル(予約詳細)
