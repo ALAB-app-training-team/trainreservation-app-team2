@@ -30,7 +30,7 @@ export function useReservedTicketConfig(
     return {
         isBack,
         title,
-        isCanceled: isDeleted,
+        isDeleted,
         canCancelReservation,
         canUpdateReservation,
         canUpdateCompanions,
