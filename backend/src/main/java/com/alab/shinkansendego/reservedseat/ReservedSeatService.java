@@ -60,7 +60,7 @@ public class ReservedSeatService {
      */
     @Transactional
     public void updateReservedSeats(UUID reservationId, List<ReservedSeatUpdateDto> reservedSeats, UUID accountId, String name, String mail) {
-        String reserverName;
+        String representativeName;
         ReservationEntity reservation = reservationRepository.findById(reservationId)
             .orElseThrow(() -> new IllegalArgumentException("Reservation is Not found"));
         if (reservation.getIsDeleted()) {
@@ -72,7 +72,7 @@ public class ReservedSeatService {
                 throw new AccessDeniedException("Forbidden");
             }
             AccountEntity account = accountRepository.findById(accountId).orElseThrow(() -> new IllegalArgumentException("Account is Not found"));
-            reserverName = account.getName();
+            representativeName = account.getName();
         } else {
             if (reservation.getAccountId() != null) {
                 throw new AccessDeniedException("Login Required");
@@ -81,7 +81,7 @@ public class ReservedSeatService {
             if (!name.equals(reservation.getReserverName()) || !mail.equals(reservation.getReserverMail())) {
                 throw new AccessDeniedException("Forbidden");
             }
-            reserverName = name;
+            representativeName = name;
         }
 
         List<DepartureArrivalTimeEntity> schedules = departureArrivalTimeRepository.findByScheduleCd(reservation.getScheduleCd());
@@ -125,7 +125,7 @@ public class ReservedSeatService {
                 releaseSeats,
                 departureTime,
                 arrivalTime,
-                reserverName
+                representativeName
             ));
         }
         if (!setSeats.isEmpty()) {
@@ -134,7 +134,7 @@ public class ReservedSeatService {
                 setSeats,
                 departureTime,
                 arrivalTime,
-                reserverName
+                representativeName
             ));
         }
     }
