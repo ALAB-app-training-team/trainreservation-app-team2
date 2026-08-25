@@ -1,5 +1,7 @@
 package com.alab.shinkansendego.reservedseat;
 
+import com.alab.shinkansendego.account.AccountEntity;
+import com.alab.shinkansendego.account.AccountRepository;
 import com.alab.shinkansendego.departurearrivaltime.DepartureArrivalTimeEntity;
 import com.alab.shinkansendego.departurearrivaltime.DepartureArrivalTimeRepository;
 import com.alab.shinkansendego.reservation.ReservationEntity;
@@ -40,6 +42,8 @@ public class ReservedSeatServiceTest {
     @Mock
     private TrainCarRepository trainCarRepo;
     @Mock
+    private AccountRepository accountRepo;
+    @Mock
     private ApplicationEventPublisher eventPublisher;
     private ReservedSeatService service;
     private final UUID reservationId = UUID.randomUUID();
@@ -50,6 +54,7 @@ public class ReservedSeatServiceTest {
     private ReservedSeatUpdateDto reservedSeatUpdateDto2;
     private List<ReservedSeatUpdateDto> updateRequest;
     private ReservationEntity reservation;
+    private final AccountEntity account = new AccountEntity();
     private ReservedSeatEntity reservedSeat1;
     private ReservedSeatEntity reservedSeat2;
 
@@ -76,7 +81,7 @@ public class ReservedSeatServiceTest {
     @BeforeEach
     void setUp() {
         MockitoAnnotations.openMocks(this);
-        this.service = new ReservedSeatService(reservationRepo, reservedSeatRepo, departureArrivalTimeRepo, trainCarRepo, eventPublisher);
+        this.service = new ReservedSeatService(reservationRepo, reservedSeatRepo, departureArrivalTimeRepo, trainCarRepo, accountRepo, eventPublisher);
 
         reservedSeatUpdateDto1 = new ReservedSeatUpdateDto(reservedSeat1Id, "一般次郎",
             "test2-common@test.com");
@@ -89,8 +94,13 @@ public class ReservedSeatServiceTest {
         reservation.setDepartureStationCd("THK01");
         reservation.setArrivalStationCd("THK02");
         reservation.setIsDeleted(false);
-        reservation.setReserverName("一般太郎");
-        reservation.setReserverMail("test-common@test.com");
+        reservation.setReserverName(null);
+        reservation.setReserverMail(null);
+        account.setId(accountId);
+        account.setName("一般太郎");
+        account.setMail("test-common@test.com");
+        account.setPassword("$2a$10$6gZt4xt3F2RnCytRMfqSSumEmrLtqVRpqvVhGAQfgUaxZXeUUWJ4C");
+        account.setRole("ROLE_USER");
         reservedSeat1 = new ReservedSeatEntity();
         reservedSeat1.setId(reservedSeat1Id);
         reservedSeat1.setReservationId(reservationId);
@@ -113,6 +123,7 @@ public class ReservedSeatServiceTest {
         seatType.setTrainCarTypeCd("CAR01");
         trainCar.setSeatType(seatType);
         when(reservationRepo.findById(reservationId)).thenReturn(Optional.of(reservation));
+        when(accountRepo.findById(any())).thenReturn(Optional.of(account));
         when(departureArrivalTimeRepo.findByScheduleCd(any())).thenReturn(List.of(
             buildSchedule(LocalTime.of(6, 0, 0), "THK01", "東京", LocalTime.of(6, 30, 0), "THK02", "上野"),
             buildSchedule(LocalTime.of(7, 0, 0), "THK02", "上野", LocalTime.of(7, 30, 0), "CMN01", "大宮"),
@@ -140,6 +151,8 @@ public class ReservedSeatServiceTest {
         seatType.setTrainCarTypeCd("CAR01");
         trainCar.setSeatType(seatType);
         reservation.setAccountId(null);
+        reservation.setReserverName("一般太郎");
+        reservation.setReserverMail("test-common@test.com");
         when(reservationRepo.findById(reservationId)).thenReturn(Optional.of(reservation));
         when(departureArrivalTimeRepo.findByScheduleCd(any())).thenReturn(List.of(
             buildSchedule(LocalTime.of(6, 0, 0), "THK01", "東京", LocalTime.of(6, 30, 0), "THK02", "上野"),
@@ -221,6 +234,17 @@ public class ReservedSeatServiceTest {
     }
 
     @Test
+    @DisplayName("Accountが見つからなかった場合、IllegalArgumentExceptionを投げる")
+    void updateReservedSeats_withNotExistAccount() {
+        when(reservationRepo.findById(reservationId)).thenReturn(Optional.of(reservation));
+
+        IllegalArgumentException exception = assertThrows(IllegalArgumentException.class, () -> {
+            service.updateReservedSeats(reservationId, updateRequest, accountId, null, null);
+        });
+        assertEquals("Account is Not found", exception.getMessage());
+    }
+
+    @Test
     @DisplayName("ReservationSeatが見つからなかった場合、IllegalArgumentExceptionを投げる")
     void updateReservedSeats_withDeletedReservedSeat() {
         TrainCarEntity trainCar = new TrainCarEntity();
@@ -228,6 +252,7 @@ public class ReservedSeatServiceTest {
         seatType.setTrainCarTypeCd("CAR01");
         trainCar.setSeatType(seatType);
         when(reservationRepo.findById(reservationId)).thenReturn(Optional.of(reservation));
+        when(accountRepo.findById(any())).thenReturn(Optional.of(account));
         when(reservedSeatRepo.findByIdAndReservationIdAndIsDeleted(reservedSeat1Id, reservationId, false)).thenReturn(Optional.of(reservedSeat1));
         when(departureArrivalTimeRepo.findByScheduleCd(any())).thenReturn(List.of(
             buildSchedule(LocalTime.of(6, 0, 0), "THK01", "東京", LocalTime.of(6, 30, 0), "THK02", "上野"),
@@ -246,6 +271,7 @@ public class ReservedSeatServiceTest {
     @DisplayName("出発駅に該当する時刻情報が存在しない場合、IllegalArgumentExceptionを投げる")
     void updateReservedSeats_withNotExistingDepartureTime() {
         when(reservationRepo.findById(reservationId)).thenReturn(Optional.of(reservation));
+        when(accountRepo.findById(any())).thenReturn(Optional.of(account));
         when(reservedSeatRepo.findByIdAndReservationIdAndIsDeleted(reservedSeat1Id, reservationId, false)).thenReturn(Optional.of(reservedSeat1));
         when(departureArrivalTimeRepo.findByScheduleCd(any())).thenReturn(List.of(
             buildSchedule(LocalTime.of(7, 0, 0), "THK02", "上野", LocalTime.of(7, 30, 0), "CMN01", "大宮"),
@@ -261,6 +287,7 @@ public class ReservedSeatServiceTest {
     @DisplayName("到着駅に該当する時刻情報が存在しない場合、IllegalArgumentExceptionを投げる")
     void updateReservedSeats_withNotExistingArrivalTime() {
         when(reservationRepo.findById(reservationId)).thenReturn(Optional.of(reservation));
+        when(accountRepo.findById(any())).thenReturn(Optional.of(account));
         when(reservedSeatRepo.findByIdAndReservationIdAndIsDeleted(reservedSeat1Id, reservationId, false)).thenReturn(Optional.of(reservedSeat1));
         when(departureArrivalTimeRepo.findByScheduleCd(any())).thenReturn(List.of(
             buildSchedule(LocalTime.of(7, 0, 0), "THK01", "東京", LocalTime.of(7, 30, 0), "CMN01", "大宮"),
@@ -276,6 +303,7 @@ public class ReservedSeatServiceTest {
     @DisplayName("座席に紐づく号車情報が存在しない場合、IllegalArgumentExceptionを投げる")
     void updateReservedSeats_withNotExistingTrainCar() {
         when(reservationRepo.findById(reservationId)).thenReturn(Optional.of(reservation));
+        when(accountRepo.findById(any())).thenReturn(Optional.of(account));
         when(reservedSeatRepo.findByIdAndReservationIdAndIsDeleted(reservedSeat1Id, reservationId, false)).thenReturn(Optional.of(reservedSeat1));
         when(departureArrivalTimeRepo.findByScheduleCd(any())).thenReturn(List.of(
             buildSchedule(LocalTime.of(6, 0, 0), "THK01", "東京", LocalTime.of(6, 30, 0), "THK02", "上野"),

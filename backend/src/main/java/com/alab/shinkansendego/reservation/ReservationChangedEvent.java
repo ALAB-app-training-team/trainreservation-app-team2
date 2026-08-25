@@ -13,6 +13,7 @@ public record ReservationChangedEvent(
     LocalTime arrivalTime,
     Integer oldTotalAmount,
     String representativeName,
+    ReservationEntity oldReservation,
     List<ReservedSeatEntity> assignedReservedSeats
 ) {
 }

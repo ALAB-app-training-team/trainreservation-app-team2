@@ -22,6 +22,7 @@ import org.springframework.transaction.event.TransactionalEventListener;
 import org.springframework.util.CollectionUtils;
 
 import java.time.LocalTime;
+import java.util.Comparator;
 import java.util.List;
 import java.util.UUID;
 
@@ -63,16 +64,22 @@ public class ReservationEventListener {
             for (ReservedSeatEntity assignedSeat : event.assignedReservedSeats()) {
                 String trainCarCd = trainCarRepository.findByTrainCarCd(assignedSeat.getTrainCarCd())
                     .orElseThrow(() -> new IllegalArgumentException("TrainCar is not found")).getSeatType().getTrainCarTypeCd();
-                EmailRequestDto companion = setEmailRequestDto(event.reservationId(), event.request(), event.departureTime(), event.arrivalTime(), event.oldTotalAmount(), event.representativeName());
-                companion.setReserverMail(assignedSeat.getMail());
-                companion.setReserverName(assignedSeat.getName());
-                emailDto.setSeats(
-                    setDisplaySeats(List.of(new ReserveRequestDto.SelectedSeatDto(
+                ReserveRequestDto companionDto = new ReserveRequestDto(
+                    event.oldReservation().getScheduleCd(),
+                    event.oldReservation().getRideDate(),
+                    event.oldReservation().getDepartureStationCd(),
+                    event.oldReservation().getArrivalStationCd(),
+                    assignedSeat.getName(),
+                    assignedSeat.getMail(),
+                    event.oldReservation().getPaymentTrackingId(),
+                    List.of(new ReserveRequestDto.SelectedSeatDto(
                         assignedSeat.getTrainCarCd(),
                         trainCarCd,
                         assignedSeat.getSeatCd(),
-                        assignedSeat.getSeatFare()))));
-                emailService.sendReleaseCompanion(emailDto);
+                        assignedSeat.getSeatFare()))
+                );
+                EmailRequestDto companionEmailDto = setEmailRequestDto(event.reservationId(), companionDto, event.departureTime(), event.arrivalTime(), event.oldTotalAmount(), event.representativeName());
+                emailService.sendReleaseCompanion(companionEmailDto);
             }
         }
     }
@@ -91,10 +98,18 @@ public class ReservationEventListener {
                 .findFirst()
                 .orElseThrow(() -> new IllegalArgumentException("CompanionInfo is Not Found"));
             if (info.getMail() != null && !info.getMail().isEmpty()) {
-                emailDto.setReserverMail(info.getMail());
-                emailDto.setReserverName(info.getName());
-                emailDto.setSeats(setDisplaySeats(List.of(new ReserveRequestDto.SelectedSeatDto(info.getTrainCarCd(), seat.getTrainCarTypeCd(), info.getSeatCd(), info.getSeatFare()))));
-                emailService.sendReleaseCompanion(emailDto);
+                ReserveRequestDto companionDto = new ReserveRequestDto(
+                    event.request().getScheduleCd(),
+                    event.request().getRideDate(),
+                    event.request().getDepartureStationCd(),
+                    event.request().getArrivalStationCd(),
+                    info.getName(),
+                    info.getMail(),
+                    event.request().getPaymentToken(),
+                    List.of(new ReserveRequestDto.SelectedSeatDto(info.getTrainCarCd(), seat.getTrainCarTypeCd(), info.getSeatCd(), info.getSeatFare()))
+                );
+                EmailRequestDto companionEmailDto = setEmailRequestDto(event.reservationId(), companionDto, event.departureTime(), event.arrivalTime(), null, event.representativeName());
+                emailService.sendReleaseCompanion(companionEmailDto);
             }
         }
     }
@@ -190,6 +205,8 @@ public class ReservationEventListener {
                     seat.getSeatFare()
                 );
             })
+            .sorted(Comparator.comparing(EmailRequestDto.SelectedSeatDto::getTrainCarCd)
+                .thenComparing(EmailRequestDto.SelectedSeatDto::getSeatCd))
             .toList();
     }
 }
