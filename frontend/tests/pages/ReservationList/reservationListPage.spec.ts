@@ -166,8 +166,8 @@ test('チケットを表示ボタン、三点ボタンの表示有無：有効�
     await expect(page).toHaveURL('/reservationList');
 
     // 有効：表示あり
-    await expect(reservationListPage.ticketButton).toBeVisible();
-    await expect(reservationListPage.threeDotsButton).toBeVisible();
+    await expect(reservationListPage.ticketButton.first()).toBeVisible();
+    await expect(reservationListPage.threeDotsButton.first()).toBeVisible();
 
     // 過去：表示なし
     await reservationListPage.clickPastButton();
@@ -198,7 +198,9 @@ test('復路で検索の表示有無：有効・過去では表示あり、キ�
     await expect(page).toHaveURL('/reservationList');
 
     // 有効：表示あり
-    await expect(reservationListPage.searchReturnTripButton).toBeVisible();
+    await expect(
+        reservationListPage.searchReturnTripButton.first(),
+    ).toBeVisible();
 
     // 過去：1件以上あったら、表示あり
     if (
@@ -207,7 +209,9 @@ test('復路で検索の表示有無：有効・過去では表示あり、キ�
             .isVisible()
             .catch(() => false)
     ) {
-        await expect(reservationListPage.searchReturnTripButton).toBeVisible();
+        await expect(
+            reservationListPage.searchReturnTripButton.first(),
+        ).toBeVisible();
     }
 
     // キャンセル：表示なし
