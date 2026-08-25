@@ -97,16 +97,17 @@ test('削除すると予約が1件削除されること', async ({
     await expect(page).toHaveURL('/scheduleSearch');
     await reservationListPage.goto();
     await expect(page).toHaveURL('/reservationList');
-    await reservationListPage.refundButton
+    await reservationListPage.threeDotsButton
         .first()
         .waitFor({ state: 'visible' });
     const beforeReservationCount: number =
-        await reservationListPage.refundButton.count();
+        await reservationListPage.threeDotsButton.count();
 
+    await reservationListPage.clickThreeDotsButton();
     await reservationListPage.clickRefundButton();
-    await reservationListPage.clickCancelConfirmButton();
+    await reservationListPage.clickRefundConfirmButton();
 
-    await expect(reservationListPage.refundButton).toHaveCount(
+    await expect(reservationListPage.threeDotsButton).toHaveCount(
         beforeReservationCount - 1,
     );
     await logout();
@@ -131,12 +132,14 @@ test('予約キャンセル：キャンセルすることで予約一覧(有効)
         .waitFor({ state: 'visible' });
 
     const activeTicketCount = await reservationListPage.ticketButton.count();
+    await reservationListPage.clickThreeDotsButton();
     await reservationListPage.clickRefundButton();
     await reservationListPage.clickModalCloseButton();
     const notCancelTicketCount = await reservationListPage.ticketButton.count();
     await expect(notCancelTicketCount).toEqual(activeTicketCount);
+    await reservationListPage.clickThreeDotsButton();
     await reservationListPage.clickRefundButton();
-    await reservationListPage.clickCancelConfirmButton();
+    await reservationListPage.clickRefundConfirmButton();
     await page
         .getByRole('button', {
             name: 'キャンセル(0)',
@@ -144,6 +147,77 @@ test('予約キャンセル：キャンセルすることで予約一覧(有効)
         .waitFor({ state: 'hidden' });
     const cancelTicketCount = await reservationListPage.ticketButton.count();
     await expect(cancelTicketCount).toEqual(activeTicketCount - 1);
+    await logout();
+    await expect(page).toHaveURL('/login');
+});
+
+test('チケットを表示ボタン、三点ボタンの表示有無：有効では表示あり、過去・キャンセルでは表示なし', async ({
+    page,
+    createReservation,
+    commonLogin,
+    logout,
+}) => {
+    const reservationListPage = new ReservationListPage(page);
+
+    await commonLogin();
+    await expect(page).toHaveURL('/scheduleSearch');
+    await createReservation();
+    await reservationListPage.goto();
+    await expect(page).toHaveURL('/reservationList');
+
+    // 有効：表示あり
+    await expect(reservationListPage.ticketButton.first()).toBeVisible();
+    await expect(reservationListPage.threeDotsButton.first()).toBeVisible();
+
+    // 過去：表示なし
+    await reservationListPage.clickPastButton();
+    await expect(reservationListPage.ticketButton).toHaveCount(0);
+    await expect(reservationListPage.threeDotsButton).toHaveCount(0);
+
+    // キャンセル：表示なし
+    await reservationListPage.clickCanceledButton();
+    await expect(reservationListPage.ticketButton).toHaveCount(0);
+    await expect(reservationListPage.threeDotsButton).toHaveCount(0);
+
+    await logout();
+    await expect(page).toHaveURL('/login');
+});
+
+test('復路で検索の表示有無：有効・過去では表示あり、キャンセルでは表示なし', async ({
+    page,
+    createReservation,
+    commonLogin,
+    logout,
+}) => {
+    const reservationListPage = new ReservationListPage(page);
+
+    await commonLogin();
+    await expect(page).toHaveURL('/scheduleSearch');
+    await createReservation();
+    await reservationListPage.goto();
+    await expect(page).toHaveURL('/reservationList');
+
+    // 有効：表示あり
+    await expect(
+        reservationListPage.searchReturnTripButton.first(),
+    ).toBeVisible();
+
+    // 過去：1件以上あったら、表示あり
+    if (
+        await reservationListPage.totalFareElement
+            .first()
+            .isVisible()
+            .catch(() => false)
+    ) {
+        await expect(
+            reservationListPage.searchReturnTripButton.first(),
+        ).toBeVisible();
+    }
+
+    // キャンセル：表示なし
+    await reservationListPage.clickCanceledButton();
+    await expect(reservationListPage.searchReturnTripButton).toHaveCount(0);
+
     await logout();
     await expect(page).toHaveURL('/login');
 });

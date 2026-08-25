@@ -1,9 +1,11 @@
 import dayjs from 'dayjs';
 import customParseFormat from 'dayjs/plugin/customParseFormat';
+import { useState } from 'react';
 import { BsQrCode } from 'react-icons/bs';
-import { FaClock, FaEdit } from 'react-icons/fa';
+import { FaClock, FaEdit, FaSearch } from 'react-icons/fa';
 import { IoTrashOutline } from 'react-icons/io5';
 import { LuTicket } from 'react-icons/lu';
+import { MdMoreVert } from 'react-icons/md';
 import { useNavigate } from 'react-router-dom';
 
 import { ReservedSeats } from '@/features/reservation/components/ReservedSeats';
@@ -11,7 +13,10 @@ import {
     RESERVEDTICKET_MODE,
     RESERVEDTICKET_ROLE,
 } from '@/features/reservation/constants/ReservedTicketState';
+import { useReservationSelectItemConfig } from '@/features/reservation/hooks/useReservationSelectItemConfig';
 import type { ReservationResponseDto } from '@/features/reservation/types/ReservationResponseDto';
+import type { SearchRequestDto } from '@/features/schedule/types/SearchRequestDto';
+import { useOutsideClick } from '@/shared/hooks/useOutsideClick';
 
 type ReservationSelectItemProps = {
     details: ReservationResponseDto;
@@ -25,10 +30,21 @@ export function ReservationSelectItem({
     onChangeClicked,
 }: ReservationSelectItemProps) {
     const navigate = useNavigate();
-
-    const departureDate = new Date(details.rideDate);
-    const now = new Date();
-    now.setHours(0, 0, 0, 0);
+    const {
+        canCancelReservation,
+        canUpdateReservation,
+        canCheckReservation,
+        canSearchReturinTrip,
+        showThreeDotsMenu,
+    } = useReservationSelectItemConfig(details);
+    const [isMenuOpen, setIsMenuOpen] = useState(false);
+    const { ref: menuRef } = useOutsideClick(
+        () => setIsMenuOpen(false),
+        isMenuOpen,
+    );
+    const handleMenuOpen = () => {
+        setIsMenuOpen(!isMenuOpen);
+    };
 
     const totalFare = details.reservedSeats.reduce(
         (sum, seat) => sum + (seat.seatFare || 0),
@@ -46,6 +62,18 @@ export function ReservationSelectItem({
         window.scrollTo(0, 0);
     };
 
+    const handleSearchReturnTrip = () => {
+        const searchRequestDto: Partial<SearchRequestDto> = {
+            departureStationCd: details.arrivalStationCd,
+            arrivalStationCd: details.departureStationCd,
+        };
+        navigate('/scheduleSearch', {
+            state: {
+                searchRequestDto: searchRequestDto,
+            },
+        });
+    };
+
     dayjs.extend(customParseFormat);
 
     return (
@@ -56,19 +84,6 @@ export function ReservationSelectItem({
                         <LuTicket />
                         <label>{details.trainTypeName}</label>
                     </div>
-                    {details.isDeleted ? (
-                        <div className="text-primary border-primary right-0 flex items-center justify-center rounded-xl border-1 bg-white px-3 text-sm">
-                            キャンセル
-                        </div>
-                    ) : departureDate >= now ? (
-                        <div className="bg-primary right-0 flex items-center justify-center rounded-xl px-3 text-sm text-white">
-                            有効
-                        </div>
-                    ) : (
-                        <div className="text-primary right-0 flex items-center justify-center rounded-xl bg-green-100 px-3 text-sm">
-                            完了
-                        </div>
-                    )}
                 </div>
                 <div className="flex py-2 text-xl font-bold">
                     <label>
@@ -113,24 +128,17 @@ export function ReservationSelectItem({
                         ￥{totalFare.toLocaleString()}
                     </div>
                 </div>
-                {!details.isDeleted && departureDate >= now && (
-                    <div className="flex justify-end gap-2">
+                <div className="flex justify-end gap-2">
+                    {canSearchReturinTrip && (
                         <button
-                            onClick={() => onRefundClicked(details)}
-                            className="text-primary flex items-center justify-center gap-2 rounded-xl px-3 text-sm"
-                            data-testid={'refund-button'}
+                            onClick={handleSearchReturnTrip}
+                            className="border-primary text-primary flex items-center justify-center gap-2 rounded-md border px-4 py-2 text-sm"
                         >
-                            <IoTrashOutline />
-                            キャンセル
+                            <FaSearch />
+                            復路で検索
                         </button>
-                        <button
-                            onClick={() => onChangeClicked(details)}
-                            className="border-primary text-primary flex items-center justify-center gap-2 rounded-md border-1 px-4 py-2 text-sm"
-                            data-testid={'change-button'}
-                        >
-                            <FaEdit />
-                            予約を変更
-                        </button>
+                    )}
+                    {canCheckReservation && (
                         <button
                             onClick={handleReservationDetail}
                             className="bg-primary flex items-center justify-center gap-4 rounded-md px-4 py-2 text-sm text-white"
@@ -138,8 +146,49 @@ export function ReservationSelectItem({
                             <BsQrCode />
                             チケットを表示
                         </button>
-                    </div>
-                )}
+                    )}
+                    {showThreeDotsMenu && (
+                        <div className="relative" ref={menuRef}>
+                            <button
+                                onClick={handleMenuOpen}
+                                className="text-primary py-2"
+                                data-testid="three-dots-button"
+                            >
+                                <MdMoreVert />
+                            </button>
+                            {isMenuOpen && (
+                                <div className="absolute top-full right-1 z-50 flex w-40 flex-col gap-2 rounded-md bg-white p-2 text-sm font-bold shadow-md">
+                                    <div className="flex w-full flex-col gap-2 text-left">
+                                        {canCancelReservation && (
+                                            <button
+                                                onClick={() =>
+                                                    onRefundClicked(details)
+                                                }
+                                                className="flex w-full items-center gap-4 px-4 py-2 hover:bg-gray-100"
+                                                data-testid={'refund-button'}
+                                            >
+                                                <IoTrashOutline />
+                                                キャンセル
+                                            </button>
+                                        )}
+                                        {canUpdateReservation && (
+                                            <button
+                                                onClick={() =>
+                                                    onChangeClicked(details)
+                                                }
+                                                className="flex w-full items-center gap-4 px-4 py-2 hover:bg-gray-100"
+                                                data-testid={'change-button'}
+                                            >
+                                                <FaEdit />
+                                                予約を変更
+                                            </button>
+                                        )}
+                                    </div>
+                                </div>
+                            )}
+                        </div>
+                    )}
+                </div>
             </div>
         </div>
     );

@@ -42,7 +42,7 @@ public final class EmailUtils {
 
         またのご利用をお待ちしております。
         """;
-    public static final String CHANGE_BODY = """
+    public static final String CHANGE_PLUS_DIFF_BODY = """
          %s さま
 
         「新幹線でGO!」アプリでチケットの変更が完了いたしました。
@@ -54,7 +54,64 @@ public final class EmailUtils {
         区間：%s（%s発）　→　%s（%s着）
         列車名：%s
         座席：%s
-        お支払い合計：%s
+        お支払い合計：%,d 円（変更差額　+%,d円）
+
+        ■アプリログインURL
+        %s
+
+        またのご利用をお待ちしております。
+        """;
+    public static final String CHANGE_MINUS_DIFF_BODY = """
+         %s さま
+
+        「新幹線でGO!」アプリでチケットの変更が完了いたしました。
+         以下に予約変更詳細をお知らせいたします。
+
+        ■変更後予約詳細
+        予約ID：%s
+        乗車日：%s
+        区間：%s（%s発）　→　%s（%s着）
+        列車名：%s
+        座席：%s
+        お支払い合計：%,d 円（変更差額　%,d円）
+
+        ■アプリログインURL
+        %s
+
+        またのご利用をお待ちしております。
+        """;
+    public static final String CHANGE_NO_DIFF_BODY = """
+         %s さま
+
+        「新幹線でGO!」アプリでチケットの変更が完了いたしました。
+         以下に予約変更詳細をお知らせいたします。
+
+        ■変更後予約詳細
+        予約ID：%s
+        乗車日：%s
+        区間：%s（%s発）　→　%s（%s着）
+        列車名：%s
+        座席：%s
+        お支払い合計：%,d 円（変更差額なし）
+
+        ■アプリログインURL
+        %s
+
+        またのご利用をお待ちしております。
+        """;
+    public static final String CHANGE_NO_OLD_AMOUNT_BODY = """
+         %s さま
+
+        「新幹線でGO!」アプリでチケットの変更が完了いたしました。
+         以下に予約変更詳細をお知らせいたします。
+
+        ■変更後予約詳細
+        予約ID：%s
+        乗車日：%s
+        区間：%s（%s発）　→　%s（%s着）
+        列車名：%s
+        座席：%s
+        お支払い合計：%,d 円
 
         ■アプリログインURL
         %s
@@ -136,22 +193,5 @@ public final class EmailUtils {
                     seat.getSeatCd());
             })
             .collect(Collectors.joining("\n　　　"));
-    }
-
-    public static String differenceFormatter(int newAmount, Integer oldAmount) {
-        if (oldAmount == null) {
-            return String.format("%,d円", newAmount);
-        }
-
-        int diff = newAmount - oldAmount;
-        String diffStr;
-        if (diff > 0) {
-            diffStr = String.format("変更差額　+%,d円", diff);
-        } else if (diff < 0) {
-            diffStr = String.format("変更差額　%,d円", diff);
-        } else {
-            diffStr = "変更差額なし";
-        }
-        return String.format("%,d円 (%s)", newAmount, diffStr);
     }
 }

@@ -13,7 +13,6 @@ import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
 
 import static com.alab.shinkansendego.utils.EmailUtils.REFUND_FEE;
-import static com.alab.shinkansendego.utils.EmailUtils.differenceFormatter;
 
 @Service
 @Profile({"local", "test"})
@@ -97,21 +96,73 @@ public class LocalEmailService implements EmailService {
 
             String loginUrl = baseUrl + EmailUtils.LOGIN_PATH;
 
-            String body = String.format(
-                EmailUtils.CHANGE_BODY,
-                dto.getReserverName() != null ? dto.getReserverName() : "ユーザー",
-                dto.getReservationId(),
-                formatterRideDate,
-                dto.getDepartureStationName(),
-                dto.getDepartureTime(),
-                dto.getArrivalStationName(),
-                dto.getArrivalTime(),
-                dto.getTrainTypeName(),
-                seatDetail,
-                differenceFormatter(dto.getTotalAmount(), dto.getOldAmount()),
-                loginUrl
-            );
-
+            String body;
+            if (dto.getOldAmount() != null) {
+                int diff = dto.getTotalAmount() - dto.getOldAmount();
+                if (diff > 0) {
+                    body = String.format(
+                        EmailUtils.CHANGE_PLUS_DIFF_BODY,
+                        dto.getReserverName() != null ? dto.getReserverName() : "ユーザー",
+                        dto.getReservationId(),
+                        formatterRideDate,
+                        dto.getDepartureStationName(),
+                        dto.getDepartureTime(),
+                        dto.getArrivalStationName(),
+                        dto.getArrivalTime(),
+                        dto.getTrainTypeName(),
+                        seatDetail,
+                        dto.getTotalAmount(),
+                        diff,
+                        loginUrl
+                    );
+                } else if (diff < 0) {
+                    body = String.format(
+                        EmailUtils.CHANGE_MINUS_DIFF_BODY,
+                        dto.getReserverName() != null ? dto.getReserverName() : "ユーザー",
+                        dto.getReservationId(),
+                        formatterRideDate,
+                        dto.getDepartureStationName(),
+                        dto.getDepartureTime(),
+                        dto.getArrivalStationName(),
+                        dto.getArrivalTime(),
+                        dto.getTrainTypeName(),
+                        seatDetail,
+                        dto.getTotalAmount(),
+                        diff,
+                        loginUrl
+                    );
+                } else {
+                    body = String.format(
+                        EmailUtils.CHANGE_NO_DIFF_BODY,
+                        dto.getReserverName() != null ? dto.getReserverName() : "ユーザー",
+                        dto.getReservationId(),
+                        formatterRideDate,
+                        dto.getDepartureStationName(),
+                        dto.getDepartureTime(),
+                        dto.getArrivalStationName(),
+                        dto.getArrivalTime(),
+                        dto.getTrainTypeName(),
+                        seatDetail,
+                        dto.getTotalAmount(),
+                        loginUrl
+                    );
+                }
+            } else {
+                body = String.format(
+                    EmailUtils.CHANGE_NO_OLD_AMOUNT_BODY,
+                    dto.getReserverName() != null ? dto.getReserverName() : "ユーザー",
+                    dto.getReservationId(),
+                    formatterRideDate,
+                    dto.getDepartureStationName(),
+                    dto.getDepartureTime(),
+                    dto.getArrivalStationName(),
+                    dto.getArrivalTime(),
+                    dto.getTrainTypeName(),
+                    seatDetail,
+                    dto.getTotalAmount(),
+                    loginUrl
+                );
+            }
             helper.setText(body);
             mailSender.send(mimeMessage);
             log.info("予約変更完了メールを正常に送信しました。 To： {}", dto.getReserverMail());
