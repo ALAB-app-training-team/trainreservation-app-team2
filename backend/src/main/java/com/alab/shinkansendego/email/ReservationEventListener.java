@@ -187,10 +187,7 @@ public class ReservationEventListener {
 
     private List<EmailRequestDto.SelectedSeatDto> setDisplaySeats(List<ReserveRequestDto.SelectedSeatDto> seats) {
         List<SeatEntity> seatEntities = seatRepository.findAllById(
-            seats.stream()
-                .sorted(Comparator.comparing(ReserveRequestDto.SelectedSeatDto::getTrainCarCd)
-                    .thenComparing(ReserveRequestDto.SelectedSeatDto::getSeatCd))
-                .map(ReserveRequestDto.SelectedSeatDto::getSeatCd).toList()
+            seats.stream().map(ReserveRequestDto.SelectedSeatDto::getSeatCd).toList()
         );
 
         return seats.stream()
@@ -208,6 +205,8 @@ public class ReservationEventListener {
                     seat.getSeatFare()
                 );
             })
+            .sorted(Comparator.comparing(EmailRequestDto.SelectedSeatDto::getTrainCarCd)
+                .thenComparing(EmailRequestDto.SelectedSeatDto::getSeatCd))
             .toList();
     }
 }
