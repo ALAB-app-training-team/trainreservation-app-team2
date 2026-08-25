@@ -30,8 +30,13 @@ export function ReservationSelectItem({
     onChangeClicked,
 }: ReservationSelectItemProps) {
     const navigate = useNavigate();
-    const { canCheckReservation, canSearchReturinTrip, showThreeDotsMenu } =
-        useReservationSelectItemConfig(details);
+    const {
+        canCancelReservation,
+        canUpdateReservation,
+        canCheckReservation,
+        canSearchReturinTrip,
+        showThreeDotsMenu,
+    } = useReservationSelectItemConfig(details);
     const [isMenuOpen, setIsMenuOpen] = useState(false);
     const { ref: menuRef } = useOutsideClick(
         () => setIsMenuOpen(false),
@@ -154,26 +159,30 @@ export function ReservationSelectItem({
                             {isMenuOpen && (
                                 <div className="absolute top-full right-1 z-50 flex w-40 flex-col gap-2 rounded-md bg-white p-2 text-sm font-bold shadow-md">
                                     <div className="flex w-full flex-col gap-2 text-left">
-                                        <button
-                                            onClick={() =>
-                                                onRefundClicked(details)
-                                            }
-                                            className="flex w-full items-center gap-4 px-4 py-2 hover:bg-gray-100"
-                                            data-testid={'refund-button'}
-                                        >
-                                            <IoTrashOutline />
-                                            キャンセル
-                                        </button>
-                                        <button
-                                            onClick={() =>
-                                                onChangeClicked(details)
-                                            }
-                                            className="flex w-full items-center gap-4 px-4 py-2 hover:bg-gray-100"
-                                            data-testid={'change-button'}
-                                        >
-                                            <FaEdit />
-                                            予約を変更
-                                        </button>
+                                        {canCancelReservation && (
+                                            <button
+                                                onClick={() =>
+                                                    onRefundClicked(details)
+                                                }
+                                                className="flex w-full items-center gap-4 px-4 py-2 hover:bg-gray-100"
+                                                data-testid={'refund-button'}
+                                            >
+                                                <IoTrashOutline />
+                                                キャンセル
+                                            </button>
+                                        )}
+                                        {canUpdateReservation && (
+                                            <button
+                                                onClick={() =>
+                                                    onChangeClicked(details)
+                                                }
+                                                className="flex w-full items-center gap-4 px-4 py-2 hover:bg-gray-100"
+                                                data-testid={'change-button'}
+                                            >
+                                                <FaEdit />
+                                                予約を変更
+                                            </button>
+                                        )}
                                     </div>
                                 </div>
                             )}

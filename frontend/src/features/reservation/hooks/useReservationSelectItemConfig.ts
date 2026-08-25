@@ -19,6 +19,8 @@ export function useReservationSelectItemConfig(
     const showThreeDotsMenu = canCancelReservation || canUpdateReservation;
 
     return {
+        canCancelReservation,
+        canUpdateReservation,
         canCheckReservation,
         canSearchReturinTrip,
         showThreeDotsMenu,
