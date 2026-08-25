@@ -13,24 +13,24 @@ export function useReservedTicketConfig(
         mode == RESERVEDTICKET_MODE.detail &&
         role == RESERVEDTICKET_ROLE.account;
     const isReserver = reservedTickets.isReserverMatched;
-    const isCanceled = reservedTickets.isDeleted;
-    const title = isCanceled
+    const isDeleted = reservedTickets.isDeleted;
+    const title = isDeleted
         ? RESERVEDTICKET_MODE.canceled
         : mode == RESERVEDTICKET_MODE.detail &&
             role == RESERVEDTICKET_ROLE.account
           ? null
           : mode;
 
-    const canCancelReservation = !isCanceled && isReserver;
+    const canCancelReservation = !isDeleted && isReserver;
     const canUpdateReservation =
-        !isCanceled && role == RESERVEDTICKET_ROLE.account && isReserver;
-    const canUpdateCompanions = !isCanceled && isReserver;
-    const canShareLink = !isCanceled;
+        !isDeleted && role == RESERVEDTICKET_ROLE.account && isReserver;
+    const canUpdateCompanions = !isDeleted && isReserver;
+    const canShareLink = !isDeleted;
 
     return {
         isBack,
         title,
-        isCanceled,
+        isCanceled: isDeleted,
         canCancelReservation,
         canUpdateReservation,
         canUpdateCompanions,

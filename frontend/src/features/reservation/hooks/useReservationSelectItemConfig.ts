@@ -8,14 +8,14 @@ export function useReservationSelectItemConfig(
     now.setHours(0, 0, 0, 0);
 
     // キャンセル
-    const isCanceled = details.isDeleted;
+    const isDeleted = details.isDeleted;
     // 有効
-    const isEabled = departureDate >= now;
+    const isEnabled = departureDate >= now;
 
-    const canCancelReservation = !isCanceled && isEabled;
-    const canUpdateReservation = !isCanceled && isEabled;
-    const canCheckReservation = !isCanceled && isEabled;
-    const canSearchReturinTrip = !isCanceled;
+    const canCancelReservation = !isDeleted && isEnabled;
+    const canUpdateReservation = !isDeleted && isEnabled;
+    const canCheckReservation = !isDeleted && isEnabled;
+    const canSearchReturinTrip = !isDeleted;
     const showThreeDotsMenu = canCancelReservation || canUpdateReservation;
 
     return {
