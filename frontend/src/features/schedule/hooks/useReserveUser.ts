@@ -223,10 +223,16 @@ export function useReserveUser() {
         }
         setReserveUser((prev) => ({ ...prev, [e.target.id]: value }));
         editValidateMessage(e.target.id, value);
+        if (reserveUser.passwordCheck !== '' && e.target.id === 'password') {
+            editValidateMessage('passwordCheck', reserveUser.passwordCheck);
+        }
     };
 
     const handleInputBlur = (e: React.ChangeEvent<HTMLInputElement>) => {
         editValidateMessage(e.target.id, e.target.value);
+        if (reserveUser.passwordCheck !== '' && e.target.id === 'password') {
+            editValidateMessage('passwordCheck', reserveUser.passwordCheck);
+        }
     };
 
     return {
