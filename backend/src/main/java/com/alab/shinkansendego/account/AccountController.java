@@ -14,6 +14,7 @@ import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.context.SecurityContext;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.web.context.HttpSessionSecurityContextRepository;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -77,6 +78,20 @@ public class AccountController {
     public ResponseEntity<Void> insertAccount(@Valid @RequestBody AccountRequestDto request) {
         accountService.insertAccount(request);
         return ResponseEntity.status(HttpStatus.CREATED).build();
+    }
+
+    /**
+     * ログイン中のアカウント情報取得メソッド
+     *
+     * @param session ログインセッション
+     * @return ログイン中のアカウント情報
+     */
+    @GetMapping("account")
+    @PreAuthorize("isAuthenticated()")
+    public ResponseEntity<AccountSessionDto> getAccount(
+        @AuthenticationPrincipal AccountSessionDto session
+    ) {
+        return ResponseEntity.status(HttpStatus.OK).body(session);
     }
 
     /**

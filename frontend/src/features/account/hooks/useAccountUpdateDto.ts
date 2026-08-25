@@ -1,5 +1,5 @@
 import axios, { HttpStatusCode } from 'axios';
-import { type ChangeEvent, useState } from 'react';
+import { type ChangeEvent, useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { toast } from 'sonner';
 
@@ -16,7 +16,7 @@ export function useAccountUpdateDto() {
     const [isSubmitting, setIsSubmitting] = useState<boolean>(false);
     const [accountUpdateForm, setAccountUpdateForm] =
         useState<AccountUpdateForm>({
-            name: localStorage.getItem('name') ?? '',
+            name: '',
             mail: '',
             password: '',
         });
@@ -28,6 +28,35 @@ export function useAccountUpdateDto() {
     const [invalidMessages, setInvalidMessages] = useState<InvalidMessage[]>(
         [],
     );
+
+    useEffect(() => {
+        const fetchAccount = async () => {
+            try {
+                const response = await apiClient.get(ENDPOINTS.ACCOUNT());
+
+                setAccountUpdateForm((prev) => ({
+                    ...prev,
+                    name: response.data.name,
+                    mail: response.data.mail,
+                    password: '',
+                }));
+            } catch {
+                toast.error(ERROR_MESSAGE.ACCOUNT_CHANGE_RETRY, {
+                    duration: Infinity,
+                    action: {
+                        label: 'OK',
+                        onClick: () => {},
+                    },
+                    classNames: {
+                        title: 'text-left whitespace-pre-line',
+                        actionButton: '!px-4 !py-2 !text-base !h-auto',
+                    },
+                });
+            }
+        };
+
+        fetchAccount();
+    }, []);
 
     const isNameEmpty = (value: string) => {
         return removeWhiteSpace(value) === '';

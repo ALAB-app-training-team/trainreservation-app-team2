@@ -318,6 +318,18 @@ public class AccountControllerTest {
     }
 
     @Test
+    @DisplayName("ログイン中のアカウント情報を取得できること")
+    void getAccount_return200AndAccount() throws Exception {
+        mockMvc.perform(MockMvcRequestBuilders.get(baseUrl + "account")
+                .with(SecurityMockMvcRequestPostProcessors.authentication(commonAuth))
+                .contentType(MediaType.APPLICATION_JSON))
+            .andExpect(status().isOk())
+            .andExpect(jsonPath("$.id").value("f79d8bbc-fcba-b538-b132-2f726ce0120c"))
+            .andExpect(jsonPath("$.mail").value("test-common@test.com"))
+            .andExpect(jsonPath("$.name").value("一般太郎"));
+    }
+
+    @Test
     @DisplayName("氏名・メールアドレスの変更できること")
     void updateAccount_return200() throws Exception {
         AccountUpdateDto request = new AccountUpdateDto("太郎", "a@a.com", rawPassword);
