@@ -464,6 +464,12 @@ public class ReservationService {
     @Transactional
     public UUID putReservation(UUID reservationId, ReserveRequestDto changedReservation, AccountSessionDto session) {
         Optional<ReservationEntity> reservation = putError(reservationId, changedReservation, session);
+        ReservationEntity oldReservation = new ReservationEntity();
+        oldReservation.setScheduleCd(reservation.get().getScheduleCd());
+        oldReservation.setRideDate(reservation.get().getRideDate());
+        oldReservation.setDepartureStationCd(reservation.get().getDepartureStationCd());
+        oldReservation.setArrivalStationCd(reservation.get().getArrivalStationCd());
+        oldReservation.setPaymentTrackingId(reservation.get().getPaymentTrackingId());
 
         AccountEntity account = accountRepository.findById(session.getId()).orElseThrow(() -> new IllegalArgumentException("Account is not found"));
 
@@ -533,6 +539,7 @@ public class ReservationService {
             arrivalTime,
             oldTotalAmount,
             account.getName(),
+            oldReservation,
             assignedReservedSeats
         ));
 
@@ -551,6 +558,13 @@ public class ReservationService {
     public UUID putReservedSeat(UUID reservationId, ReserveRequestDto changedReservation, AccountSessionDto session) {
         Optional<ReservationEntity> reservation = putError(reservationId, changedReservation, session);
         Set<ReservedSeatEntity> reservedSeats = reservation.get().getReservedSeat();
+
+        ReservationEntity oldReservation = new ReservationEntity();
+        oldReservation.setScheduleCd(reservation.get().getScheduleCd());
+        oldReservation.setRideDate(reservation.get().getRideDate());
+        oldReservation.setDepartureStationCd(reservation.get().getDepartureStationCd());
+        oldReservation.setArrivalStationCd(reservation.get().getArrivalStationCd());
+        oldReservation.setPaymentTrackingId(reservation.get().getPaymentTrackingId());
 
         AccountEntity account = accountRepository.findById(session.getId()).orElseThrow(() -> new IllegalArgumentException("Account is not found"));
 
@@ -620,6 +634,7 @@ public class ReservationService {
             arrivalTime,
             oldTotalAmount,
             account.getName(),
+            oldReservation,
             assignedReservedSeats
         ));
 
@@ -728,7 +743,7 @@ public class ReservationService {
             reserveRequestDto,
             departureTime,
             arrivalTime,
-            reservation.getReserverName(),
+            reserverName,
             reservedSeats
         ));
     }
