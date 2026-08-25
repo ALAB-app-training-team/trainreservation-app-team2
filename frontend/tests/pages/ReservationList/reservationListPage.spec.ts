@@ -103,6 +103,7 @@ test('削除すると予約が1件削除されること', async ({
     const beforeReservationCount: number =
         await reservationListPage.threeDotsButton.count();
 
+    await reservationListPage.clickThreeDotsButton();
     await reservationListPage.clickRefundButton();
     await reservationListPage.clickCancelConfirmButton();
 
@@ -131,10 +132,12 @@ test('予約キャンセル：キャンセルすることで予約一覧(有効)
         .waitFor({ state: 'visible' });
 
     const activeTicketCount = await reservationListPage.ticketButton.count();
+    await reservationListPage.clickThreeDotsButton();
     await reservationListPage.clickRefundButton();
     await reservationListPage.clickModalCloseButton();
     const notCancelTicketCount = await reservationListPage.ticketButton.count();
     await expect(notCancelTicketCount).toEqual(activeTicketCount);
+    await reservationListPage.clickThreeDotsButton();
     await reservationListPage.clickRefundButton();
     await reservationListPage.clickCancelConfirmButton();
     await page

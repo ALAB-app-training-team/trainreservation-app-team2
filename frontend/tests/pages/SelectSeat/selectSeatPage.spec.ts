@@ -337,6 +337,7 @@ test('座席変更の際はクレカ入力欄が表示されないこと', async
     await createReservation();
     await reservationListPage.goto();
     await expect(page).toHaveURL('/reservationList');
+    await reservationListPage.clickThreeDotsButton();
     await reservationListPage.clickChangeButton();
     await reservationListPage.clickChangeSeatConfirmButton();
     await expect(page).toHaveURL('/selectSeat');
@@ -361,6 +362,7 @@ test('座席変更の際は座席選択済みの状態であること', async ({
     await createReservation();
     await reservationListPage.goto();
     await expect(page).toHaveURL('/reservationList');
+    await reservationListPage.clickThreeDotsButton();
     await reservationListPage.clickChangeButton();
     await reservationListPage.clickChangeSeatConfirmButton();
     await expect(page).toHaveURL('/selectSeat');
@@ -384,6 +386,7 @@ test('日時電車変更の際はクレカ入力欄が表示されないこと',
     await createReservation();
     await reservationListPage.goto();
     await expect(page).toHaveURL('/reservationList');
+    await reservationListPage.clickThreeDotsButton();
     await reservationListPage.clickChangeButton();
     await reservationListPage.clickChangeTrainConfirmButton();
     await expect(page).toHaveURL('/scheduleSearch');
@@ -412,6 +415,7 @@ test('日時電車変更で新しい電車を選ぶと座席未選択,同じ電�
     await createReservation();
     await reservationListPage.goto();
     await expect(page).toHaveURL('/reservationList');
+    await reservationListPage.clickThreeDotsButton();
     await reservationListPage.clickChangeButton();
     await reservationListPage.clickChangeTrainConfirmButton();
     await expect(page).toHaveURL('/scheduleSearch');

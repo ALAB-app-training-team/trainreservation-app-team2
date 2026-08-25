@@ -64,12 +64,10 @@ export class ReservationListPage {
     }
 
     async clickRefundButton() {
-        await this.clickThreeDotsButton();
         await this.refundButton.first().click();
     }
 
     async clickChangeButton() {
-        await this.clickThreeDotsButton();
         await this.changeButton.first().click();
     }
 
