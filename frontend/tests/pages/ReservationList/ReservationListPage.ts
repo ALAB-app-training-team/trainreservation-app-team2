@@ -4,34 +4,46 @@ import { Header } from '@tests/pages/shared/Header';
 export class ReservationListPage {
     readonly page: Page;
     readonly header: Header;
-    readonly ticketButton: Locator;
-    readonly cancelConfirmButton: Locator;
-    readonly modalCloseButton: Locator;
     readonly totalFareElement: Locator;
-    readonly activeButton: Locator;
+    // ボタン系
+    readonly ticketButton: Locator;
+    readonly searchReturnTripButton;
+    readonly threeDotsButton: Locator;
     readonly refundButton: Locator;
+    readonly refundConfirmButton: Locator;
     readonly changeButton: Locator;
-    readonly pastButton: Locator;
     readonly changeSeatConfirmButton: Locator;
     readonly changeTrainConfirmButton: Locator;
+    readonly modalCloseButton: Locator;
+    // ヘッダー
+    readonly activeButton: Locator;
+    readonly pastButton: Locator;
+    readonly canceledButton: Locator;
 
     constructor(page: Page) {
         this.page = page;
         this.header = new Header(page);
+        this.totalFareElement = page.getByTestId('total-fare');
+        // ボタン
         this.ticketButton = page.getByRole('button', {
             name: 'チケットを表示',
         });
-        this.cancelConfirmButton = page.getByRole('button', {
+        this.searchReturnTripButton = page.getByRole('button', {
+            name: '復路で検索',
+        });
+        this.threeDotsButton = page.getByTestId('three-dots-button');
+        this.refundButton = page.getByTestId('refund-button');
+        this.refundConfirmButton = page.getByRole('button', {
             name: '予約を取り消す',
         });
-        this.totalFareElement = page.getByTestId('total-fare');
-        this.activeButton = page.getByTestId('active-button');
-        this.refundButton = page.getByTestId('refund-button');
         this.changeButton = page.getByTestId('change-button');
-        this.pastButton = page.getByTestId('past-button');
         this.changeSeatConfirmButton = page.getByTestId('change-seat-button');
         this.changeTrainConfirmButton = page.getByTestId('change-train-button');
         this.modalCloseButton = page.getByTestId('modal-close-button');
+        // ヘッダー
+        this.activeButton = page.getByTestId('active-button');
+        this.pastButton = page.getByTestId('past-button');
+        this.canceledButton = page.getByTestId('canceled-button');
     }
 
     async goto() {
@@ -42,19 +54,20 @@ export class ReservationListPage {
         await this.ticketButton.first().click();
     }
 
-    async clickCancelConfirmButton() {
-        await this.cancelConfirmButton.first().click();
+    async clickSearchReturnTripButton() {
+        await this.searchReturnTripButton.first().click();
+    }
+
+    async clickRefundConfirmButton() {
+        await this.refundConfirmButton.first().click();
     }
 
     async clickModalCloseButton() {
         await this.modalCloseButton.first().click();
     }
 
-    async clickActiveButton() {
-        await this.activeButton.first().click();
-    }
-    async clickPastButton() {
-        await this.pastButton.first().click();
+    async clickThreeDotsButton() {
+        await this.threeDotsButton.first().click();
     }
 
     async clickRefundButton() {
@@ -71,5 +84,17 @@ export class ReservationListPage {
 
     async clickChangeTrainConfirmButton() {
         await this.changeTrainConfirmButton.first().click();
+    }
+
+    async clickActiveButton() {
+        await this.activeButton.first().click();
+    }
+
+    async clickPastButton() {
+        await this.pastButton.first().click();
+    }
+
+    async clickCanceledButton() {
+        await this.canceledButton.first().click();
     }
 }

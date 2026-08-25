@@ -40,7 +40,7 @@ export function ReservedTicket() {
     const {
         isBack,
         title,
-        isCanceled,
+        isDeleted,
         canCancelReservation,
         canUpdateReservation,
         canUpdateCompanions,
@@ -154,7 +154,7 @@ export function ReservedTicket() {
                         {title}
                     </h1>
                 </div>
-                {isCanceled ? (
+                {isDeleted ? (
                     <Suspense fallback={<ReservedTicketInfoSkeleton />}>
                         <ReservedTicketInfo ticketInfo={reservedTickets} />
                     </Suspense>
