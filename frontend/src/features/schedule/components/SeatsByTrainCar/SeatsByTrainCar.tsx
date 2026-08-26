@@ -3,11 +3,13 @@ import { Fragment, useEffect, useMemo } from 'react';
 import type { ReservedSeatDto } from '@/features/reservation/types/ReservedSeatDto';
 import { Seat } from '@/features/schedule/components/Seat';
 import { useSeatsByTrainCar } from '@/features/schedule/hooks/useSeatsByTrainCar';
+import type { ScheduleInfoDto } from '@/features/schedule/types/ScheduleInfoDto';
 import type { SeatResponseDto } from '@/features/schedule/types/SeatResponseDto';
 import type { SeatsRequestDto } from '@/features/schedule/types/SeatsRequestDto';
 import { LIMIT } from '@/shared/constants/Limit';
 
 type SeatsByTrainCarProps = {
+    scheduleInfoDto: ScheduleInfoDto;
     seatsRequestDto: SeatsRequestDto;
     selectedSeats: SeatResponseDto[];
     handleSelectedSeats: (seat: SeatResponseDto) => void;
@@ -16,6 +18,7 @@ type SeatsByTrainCarProps = {
 };
 
 export function SeatsByTrainCar({
+    scheduleInfoDto,
     seatsRequestDto,
     selectedSeats,
     reservedSeats,
@@ -69,67 +72,79 @@ export function SeatsByTrainCar({
         <>
             <div className="flex w-full flex-col items-start justify-center gap-4">
                 <h2 className="text-left">{seats[0].trainCarNumber}号車</h2>
-                <span>a</span>
-                <div
-                    className={`grid gap-2`}
-                    style={{
-                        gridTemplateColumns: `repeat(${layoutColumns.length + 1}, minmax(0, 1fr))`,
-                    }}
-                >
-                    {rows.map((row) => (
-                        <Fragment key={row}>
-                            <div className="flex items-center justify-center">
-                                {row}
-                            </div>
-                            {layoutColumns.map((column, colIndex) => {
-                                if (column === '') {
-                                    return (
-                                        <div key={`aisle-${colIndex}-${row}`} />
+                <div className="flex flex-col items-center gap-2">
+                    <span>
+                        {scheduleInfoDto.direction === 'UP'
+                            ? `↑ ${scheduleInfoDto.arrivalStationName}駅方面（進行方向）`
+                            : `${scheduleInfoDto.departureStationName}駅方面`}
+                    </span>
+                    <div
+                        className={`grid gap-2`}
+                        style={{
+                            gridTemplateColumns: `repeat(${layoutColumns.length + 1}, minmax(0, 1fr))`,
+                        }}
+                    >
+                        {rows.map((row) => (
+                            <Fragment key={row}>
+                                <div className="flex items-center justify-center">
+                                    {row}
+                                </div>
+                                {layoutColumns.map((column, colIndex) => {
+                                    if (column === '') {
+                                        return (
+                                            <div
+                                                key={`aisle-${colIndex}-${row}`}
+                                            />
+                                        );
+                                    }
+                                    const seat = displaySeats.find(
+                                        (seat) =>
+                                            seat.seatColumn === column &&
+                                            seat.seatNumber === row,
                                     );
-                                }
-                                const seat = displaySeats.find(
-                                    (seat) =>
-                                        seat.seatColumn === column &&
-                                        seat.seatNumber === row,
-                                );
-                                if (!seat) {
-                                    return <div key={column + row} />;
-                                }
+                                    if (!seat) {
+                                        return <div key={column + row} />;
+                                    }
 
-                                const isSelected = selectedSeats.some(
-                                    (selectedSeat) =>
-                                        selectedSeat.seatCd === seat.seatCd &&
-                                        selectedSeat.trainCarCd ===
-                                            seatsRequestDto.trainCarCd,
-                                );
-                                const isMaxSelected =
-                                    selectedSeats.length >= LIMIT.SEATS;
-                                return (
-                                    <Seat
-                                        key={seat.seatCd}
-                                        seat={seat}
-                                        onClick={handleSelectedSeats}
-                                        disabled={
-                                            seat.isReserved ||
-                                            (isMaxSelected && !isSelected)
-                                        }
-                                        type={
-                                            seat.isReserved
-                                                ? 'unreservable'
-                                                : isSelected
-                                                  ? 'isSelected'
-                                                  : isMaxSelected
+                                    const isSelected = selectedSeats.some(
+                                        (selectedSeat) =>
+                                            selectedSeat.seatCd ===
+                                                seat.seatCd &&
+                                            selectedSeat.trainCarCd ===
+                                                seatsRequestDto.trainCarCd,
+                                    );
+                                    const isMaxSelected =
+                                        selectedSeats.length >= LIMIT.SEATS;
+                                    return (
+                                        <Seat
+                                            key={seat.seatCd}
+                                            seat={seat}
+                                            onClick={handleSelectedSeats}
+                                            disabled={
+                                                seat.isReserved ||
+                                                (isMaxSelected && !isSelected)
+                                            }
+                                            type={
+                                                seat.isReserved
                                                     ? 'unreservable'
-                                                    : 'reservable'
-                                        }
-                                    />
-                                );
-                            })}
-                        </Fragment>
-                    ))}
+                                                    : isSelected
+                                                      ? 'isSelected'
+                                                      : isMaxSelected
+                                                        ? 'unreservable'
+                                                        : 'reservable'
+                                            }
+                                        />
+                                    );
+                                })}
+                            </Fragment>
+                        ))}
+                    </div>
+                    <span>
+                        {scheduleInfoDto.direction === 'UP'
+                            ? `${scheduleInfoDto.departureStationName}駅方面`
+                            : `↓ ${scheduleInfoDto.arrivalStationName}駅方面（進行方向）`}
+                    </span>
                 </div>
-                <span>a</span>
-
                 <div className="flex gap-4">
                     <div className="flex items-center gap-1">
                         <Seat type="reservable" />
