@@ -198,7 +198,7 @@ export function SelectSeats() {
         try {
             const paymentToken = await getPaymentToken();
             const reservationId = await submitOrderWithToken(paymentToken);
-            if (!isLoggedIn) {
+            if (!isLoggedIn && !isAccountCreate) {
                 sessionStorage.setItem(
                     'guestLoginInfo',
                     JSON.stringify({
@@ -221,9 +221,10 @@ export function SelectSeats() {
                 state: {
                     reservationId: reservationId,
                     mode: RESERVEDTICKET_MODE.created,
-                    role: isLoggedIn
-                        ? RESERVEDTICKET_ROLE.account
-                        : RESERVEDTICKET_ROLE.guest,
+                    role:
+                        isLoggedIn || isAccountCreate
+                            ? RESERVEDTICKET_ROLE.account
+                            : RESERVEDTICKET_ROLE.guest,
                 },
             });
         } catch (error) {
