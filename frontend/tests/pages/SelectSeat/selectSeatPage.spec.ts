@@ -373,6 +373,43 @@ test('パスワードがエラーの場合、予約するボタンが非活性',
     await expect(selectSeatPage.reserveButton).toBeEnabled();
 });
 
+test('登録済メールアドレスでアカウント作成できない', async ({
+    page,
+    logout,
+}) => {
+    const scheduleSearchPage = new ScheduleSearchPage(page);
+    const selectSeatPage = new SelectSeatPage(page);
+    await scheduleSearchPage.goto();
+    await expect(page).toHaveURL('/scheduleSearch');
+    await scheduleSearchPage.clickDetailButton();
+    await expect(page).toHaveURL('/selectSeat');
+    await selectSeatPage.selectSeat();
+    await selectSeatPage.inputCreatedAccountInfo();
+    await selectSeatPage.clickAccountCreateCheckBox();
+    await selectSeatPage.inputPasswordInfo();
+    await selectSeatPage.inputCardInfo();
+    await selectSeatPage.clickReseveButton();
+    await selectSeatPage.clickReserveConfirmButton();
+    await expect(page).toHaveURL('/reservedTicket');
+    await logout();
+
+    await scheduleSearchPage.goto();
+    await expect(page).toHaveURL('/scheduleSearch');
+    await scheduleSearchPage.clickDetailButton();
+    await expect(page).toHaveURL('/selectSeat');
+    await selectSeatPage.selectSeat();
+    await selectSeatPage.inputCreatedAccountInfo();
+    await selectSeatPage.clickAccountCreateCheckBox();
+    await selectSeatPage.inputPasswordInfo();
+    await selectSeatPage.inputCardInfo();
+    await selectSeatPage.clickReseveButton();
+    await selectSeatPage.clickReserveConfirmButton();
+    await expect(page).toHaveURL('/selectSeat');
+    await expect(
+        page.getByText('登録済のメールアドレスです。ログインしてください。'),
+    ).toBeVisible();
+});
+
 test('ログイン中は氏名・メールアドレス入力欄・アカウント作成ボタン・ログインボタンが表示されない', async ({
     page,
     commonLogin,

@@ -152,6 +152,11 @@ export class SelectSeatPage {
         await this.fillMailAddress('guest@test.com');
     }
 
+    async inputCreatedAccountInfo() {
+        await this.fillName('作成済太郎');
+        await this.fillMailAddress('created@test.com');
+    }
+
     async inputCardInfo() {
         await this.fillCardNumber('1234567890123456');
         await this.fillCardHolderName('TARO TANAKA');
