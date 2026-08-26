@@ -1,4 +1,5 @@
 import { Fragment, useEffect, useMemo } from 'react';
+import { FiArrowDown, FiArrowUp } from 'react-icons/fi';
 
 import type { ReservedSeatDto } from '@/features/reservation/types/ReservedSeatDto';
 import { Seat } from '@/features/schedule/components/Seat';
@@ -73,11 +74,16 @@ export function SeatsByTrainCar({
             <div className="flex w-full flex-col items-start justify-center gap-4">
                 <h2 className="text-left">{seats[0].trainCarNumber}号車</h2>
                 <div className="flex flex-col items-center gap-2">
-                    <span>
-                        {scheduleInfoDto.direction === 'UP'
-                            ? `↑ ${scheduleInfoDto.arrivalStationName}駅方面（進行方向）`
-                            : `${scheduleInfoDto.departureStationName}駅方面`}
-                    </span>
+                    <div className="bg-primary-light flex items-center gap-2 rounded-full px-4 py-1 text-sm">
+                        {scheduleInfoDto.direction === 'UP' ? (
+                            <>
+                                <FiArrowUp />
+                                {`${scheduleInfoDto.arrivalStationName}駅方面（進行方向）`}
+                            </>
+                        ) : (
+                            `${scheduleInfoDto.departureStationName}駅方面`
+                        )}
+                    </div>
                     <div
                         className={`grid gap-2`}
                         style={{
@@ -139,11 +145,21 @@ export function SeatsByTrainCar({
                             </Fragment>
                         ))}
                     </div>
-                    <span>
-                        {scheduleInfoDto.direction === 'UP'
-                            ? `${scheduleInfoDto.departureStationName}駅方面`
-                            : `↓ ${scheduleInfoDto.arrivalStationName}駅方面（進行方向）`}
-                    </span>
+                    <div className="bg-primary-light flex items-center gap-2 rounded-full px-4 py-1 text-sm">
+                        {scheduleInfoDto.direction === 'UP' ? (
+                            <span>
+                                {scheduleInfoDto.departureStationName}駅方面
+                            </span>
+                        ) : (
+                            <>
+                                <FiArrowDown />
+                                <span>
+                                    {scheduleInfoDto.arrivalStationName}
+                                    駅方面（進行方向）
+                                </span>
+                            </>
+                        )}
+                    </div>
                 </div>
                 <div className="flex gap-4">
                     <div className="flex items-center gap-1">
