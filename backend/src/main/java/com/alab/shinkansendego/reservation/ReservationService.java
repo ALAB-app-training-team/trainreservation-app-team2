@@ -148,7 +148,7 @@ public class ReservationService {
             dto.setRideDate(reservation.getRideDate());
             dto.setIsDeleted(reservation.getIsDeleted());
             dto.setReservedSeats(reservedSeatDtos);
-
+            // TODO: dtoにdirectionを追加する
             reservationList.add(dto);
         }
 
@@ -255,7 +255,7 @@ public class ReservationService {
         dto.setIsDeleted(reservationEntity.getIsDeleted());
         dto.setReservedSeats(reservedSeatList);
         dto.setIsReserverMatched(isReserverMatched);
-
+        // TODO: Dtoにdirectionを追加する
         return dto;
     }
 
