@@ -8,6 +8,7 @@ export const ERROR_MESSAGE = {
     GUESTLOGIN_ERROR: '無効なURLです',
     EXIST_ACCOUNT: 'すでにログインしています。予約確認からご確認ください。',
     NO_SCHEDULE: '指定日時の列車はありません',
+    SEARCH_NEXTDAY_ERROR: '予約可能期間を超えるため、翌日は検索できません',
     NO_TRAIN: '該当する列車がありません',
     NO_SELECTED_SEAT: '座席が選択されていません',
     LIMIT_SELECTED_SEAT: `一度に予約できる座席は${LIMIT.SEATS}席までです`,

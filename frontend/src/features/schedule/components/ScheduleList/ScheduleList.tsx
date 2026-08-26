@@ -156,7 +156,7 @@ export function ScheduleList({
                                 {isInvalid ? (
                                     VALIDATION_MESSAGE.FIX_SEARCH_FORM
                                 ) : (
-                                    <>
+                                    <div className="flex flex-col items-center">
                                         <button
                                             type="button"
                                             onClick={() => {
@@ -170,7 +170,7 @@ export function ScheduleList({
                                                     'day',
                                                 )
                                             }
-                                            className="bg-primary order-2 flex items-center gap-2 rounded-lg px-4 py-2 text-white md:order-3"
+                                            className="bg-primary flex w-fit items-center gap-2 rounded-lg px-4 py-2 text-white"
                                         >
                                             <FaArrowTrendUp />
                                             翌日の始発を検索
@@ -180,10 +180,12 @@ export function ScheduleList({
                                             'day',
                                         ) && (
                                             <div className="text-sm text-gray-500">
-                                                予約可能期間を超えるため、翌日は検索できません
+                                                {
+                                                    ERROR_MESSAGE.SEARCH_NEXTDAY_ERROR
+                                                }
                                             </div>
                                         )}
-                                    </>
+                                    </div>
                                 )}
                             </div>
                         </div>
