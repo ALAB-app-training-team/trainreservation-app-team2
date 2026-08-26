@@ -244,6 +244,33 @@ test('購入者情報バリデーションチェック', async ({ page }) => {
     await selectSeatPage.fillSecureCode('123');
 });
 
+test('アカウント作成時のパスワード再入力バリデーションチェック', async ({
+    page,
+}) => {
+    const scheduleSearchPage = new ScheduleSearchPage(page);
+    const selectSeatPage = new SelectSeatPage(page);
+
+    await scheduleSearchPage.goto();
+    await expect(page).toHaveURL('/scheduleSearch');
+    await scheduleSearchPage.clickDetailButton();
+    await selectSeatPage.selectSeat();
+    await expect(selectSeatPage.reserveButton).toBeDisabled();
+
+    // パスワード再入力 -未入力
+    await selectSeatPage.clickAccountCreateCheckBox();
+    await selectSeatPage.passwordCheck.click();
+    await selectSeatPage.password.click();
+    await expect(
+        page.getByText('パスワードを再入力してください'),
+    ).toBeVisible();
+
+    // パスワード再入力 -不一致
+    await selectSeatPage.fillPassword('Password1');
+    await selectSeatPage.fillpasswordCheck('NotMatch');
+    await selectSeatPage.password.click();
+    await expect(page.getByText('パスワードが一致しません')).toBeVisible();
+});
+
 test('予約確定', async ({ page }) => {
     const scheduleSearchPage = new ScheduleSearchPage(page);
     const selectSeatPage = new SelectSeatPage(page);
