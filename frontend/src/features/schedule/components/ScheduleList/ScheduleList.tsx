@@ -1,7 +1,9 @@
 import 'tailwindcss';
 
+import dayjs from 'dayjs';
 import { useState } from 'react';
 import { AiOutlineExclamationCircle } from 'react-icons/ai';
+import { FaArrowTrendUp } from 'react-icons/fa6';
 import type { ReactPaginateProps } from 'react-paginate';
 import _ReactPaginate from 'react-paginate';
 
@@ -32,6 +34,8 @@ type ScheduleListProps = {
     preChangeScheduleInfo: ScheduleInfoDto | null;
     isChanging: boolean | undefined;
     isBack: boolean | undefined;
+    handleNextDate: () => void;
+    maxDate: Date;
 };
 
 export function ScheduleList({
@@ -47,6 +51,8 @@ export function ScheduleList({
     preChangeScheduleInfo,
     isChanging,
     isBack,
+    handleNextDate,
+    maxDate,
 }: ScheduleListProps) {
     const { schedules } = useSchedules(searchRequestDto, isInvalid);
 
@@ -147,9 +153,49 @@ export function ScheduleList({
                                     : ERROR_MESSAGE.NO_SCHEDULE}
                             </div>
                             <div className="text-base">
-                                {isInvalid
-                                    ? VALIDATION_MESSAGE.FIX_SEARCH_FORM
-                                    : ERROR_MESSAGE.NO_SPECIFIED_DATETIME_SCHEDULE}
+                                {isInvalid ? (
+                                    VALIDATION_MESSAGE.FIX_SEARCH_FORM
+                                ) : (
+                                    <div className="flex flex-col items-center gap-2">
+                                        <div>
+                                            {
+                                                ERROR_MESSAGE.NO_SPECIFIED_DATETIME_SCHEDULE
+                                            }
+                                        </div>
+                                        <div className="flex flex-col items-center">
+                                            <button
+                                                type="button"
+                                                onClick={() => {
+                                                    handleNextDate();
+                                                }}
+                                                disabled={
+                                                    !dayjs(
+                                                        searchRequestDto.date,
+                                                    ).isBefore(
+                                                        dayjs(maxDate),
+                                                        'day',
+                                                    )
+                                                }
+                                                className="bg-primary flex w-fit items-center gap-2 rounded-lg px-4 py-2 text-white"
+                                            >
+                                                <FaArrowTrendUp />
+                                                翌日の始発を検索
+                                            </button>
+                                            {!dayjs(
+                                                searchRequestDto.date,
+                                            ).isBefore(
+                                                dayjs(maxDate),
+                                                'day',
+                                            ) && (
+                                                <div className="text-sm text-gray-500">
+                                                    {
+                                                        ERROR_MESSAGE.SEARCH_NEXTDAY_ERROR
+                                                    }
+                                                </div>
+                                            )}
+                                        </div>
+                                    </div>
+                                )}
                             </div>
                         </div>
                     </div>

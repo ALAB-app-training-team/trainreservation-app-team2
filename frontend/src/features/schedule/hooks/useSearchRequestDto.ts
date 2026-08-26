@@ -98,6 +98,14 @@ export function useSearchRequestDto({
         );
     };
 
+    const handleNextDate = () => {
+        setDate((currentDate) =>
+            dayjs(currentDate).add(1, 'day').format('YYYY-MM-DD'),
+        );
+        handleTime('');
+        setIsArrivalTime(false);
+    };
+
     return {
         setTime: handleTime,
         setDate,
@@ -110,5 +118,6 @@ export function useSearchRequestDto({
         getFieldError,
         maxDate,
         minDate,
+        handleNextDate,
     };
 }

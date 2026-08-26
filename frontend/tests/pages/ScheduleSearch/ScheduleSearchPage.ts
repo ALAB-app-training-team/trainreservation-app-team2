@@ -13,6 +13,7 @@ export class ScheduleSearchPage {
     readonly departureTimeButton: Locator;
     readonly switchStationButton: Locator;
     readonly availableTrainCheckBox: Locator;
+    readonly searchNextDayButton: Locator;
     readonly backButton: Locator;
 
     constructor(page: Page) {
@@ -30,6 +31,9 @@ export class ScheduleSearchPage {
             .filter({ hasText: /^$/ });
         this.availableTrainCheckBox = page.getByRole('checkbox', {
             name: '空席がある列車のみ表示する',
+        });
+        this.searchNextDayButton = page.getByRole('button', {
+            name: '翌日の始発を検索',
         });
         this.backButton = page.getByTestId('back-button-in-scheduleSearch');
     }
@@ -78,6 +82,10 @@ export class ScheduleSearchPage {
 
     async clickAvailableTrainCheckBox() {
         await this.availableTrainCheckBox.click();
+    }
+
+    async clickSearchNextDayButton() {
+        await this.searchNextDayButton.click();
     }
 
     async clickBackButton() {
