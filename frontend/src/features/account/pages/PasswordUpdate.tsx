@@ -29,9 +29,9 @@ export function PasswordUpdate() {
                         <FiUser />
                         パスワード変更
                     </h1>
-                    <div className="text-gray-500">
+                    <p className="text-gray-500">
                         変更するパスワードを入力してください
-                    </div>
+                    </p>
                 </div>
 
                 <form

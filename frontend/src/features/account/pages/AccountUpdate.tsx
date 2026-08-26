@@ -26,9 +26,9 @@ export function AccountUpdate() {
                         <FiUser />
                         氏名・メールアドレス変更
                     </h1>
-                    <div className="text-gray-500">
+                    <p className="text-gray-500">
                         変更するアカウント情報を入力してください
-                    </div>
+                    </p>
                 </div>
 
                 <form

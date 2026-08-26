@@ -34,9 +34,9 @@ export function AccountCreate() {
                         <FiUserPlus />
                         新規登録
                     </h1>
-                    <div className="text-gray-500">
+                    <p className="text-gray-500">
                         登録するアカウント情報を入力してください
-                    </div>
+                    </p>
                 </div>
 
                 <form
