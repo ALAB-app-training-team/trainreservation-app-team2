@@ -16,6 +16,7 @@ import software.amazon.awssdk.services.sesv2.model.EmailContent;
 import software.amazon.awssdk.services.sesv2.model.SendEmailRequest;
 
 import static com.alab.shinkansendego.utils.EmailUtils.REFUND_FEE;
+import static com.alab.shinkansendego.utils.EmailUtils.differenceFormatter;
 
 @Service
 @Profile("prod")
@@ -98,89 +99,29 @@ public class SesEmailService implements EmailService {
             }
 
             String loginUrl = baseUrl + EmailUtils.LOGIN_PATH;
-            String body;
-            String subject;
 
-            if (dto.getOldAmount() != null) {
-                int diff = dto.getTotalAmount() - dto.getOldAmount();
-                if (diff > 0) {
-                    subject = EmailUtils.CHANGE_PLUS_DIFF_BODY;
-                    body = String.format(
-                        EmailUtils.CHANGE_PLUS_DIFF_BODY,
-                        dto.getReserverName() != null ? dto.getReserverName() : "ユーザー",
-                        dto.getReservationId(),
-                        formatterRideDate,
-                        dto.getDepartureStationName(),
-                        dto.getDepartureTime(),
-                        dto.getArrivalStationName(),
-                        dto.getArrivalTime(),
-                        dto.getTrainTypeName(),
-                        seatDetail,
-                        dto.getTotalAmount(),
-                        diff,
-                        loginUrl
-                    );
-                } else if (diff < 0) {
-                    subject = EmailUtils.CHANGE_MINUS_DIFF_BODY;
-                    body = String.format(
-                        EmailUtils.CHANGE_MINUS_DIFF_BODY,
-                        dto.getReserverName() != null ? dto.getReserverName() : "ユーザー",
-                        dto.getReservationId(),
-                        formatterRideDate,
-                        dto.getDepartureStationName(),
-                        dto.getDepartureTime(),
-                        dto.getArrivalStationName(),
-                        dto.getArrivalTime(),
-                        dto.getTrainTypeName(),
-                        seatDetail,
-                        dto.getTotalAmount(),
-                        diff,
-                        loginUrl
-                    );
-                } else {
-                    subject = EmailUtils.CHANGE_NO_DIFF_BODY;
-                    body = String.format(
-                        EmailUtils.CHANGE_NO_DIFF_BODY,
-                        dto.getReserverName() != null ? dto.getReserverName() : "ユーザー",
-                        dto.getReservationId(),
-                        formatterRideDate,
-                        dto.getDepartureStationName(),
-                        dto.getDepartureTime(),
-                        dto.getArrivalStationName(),
-                        dto.getArrivalTime(),
-                        dto.getTrainTypeName(),
-                        seatDetail,
-                        dto.getTotalAmount(),
-                        loginUrl
-                    );
-                }
-            } else {
-                subject = EmailUtils.CHANGE_NO_OLD_AMOUNT_BODY;
-                body = String.format(
-                    EmailUtils.CHANGE_NO_OLD_AMOUNT_BODY,
-                    dto.getReserverName() != null ? dto.getReserverName() : "ユーザー",
-                    dto.getReservationId(),
-                    formatterRideDate,
-                    dto.getDepartureStationName(),
-                    dto.getDepartureTime(),
-                    dto.getArrivalStationName(),
-                    dto.getArrivalTime(),
-                    dto.getTrainTypeName(),
-                    seatDetail,
-                    dto.getTotalAmount(),
-                    loginUrl
-                );
-            }
+            String body = String.format(
+                EmailUtils.CHANGE_BODY,
+                dto.getReserverName() != null ? dto.getReserverName() : "ユーザー",
+                dto.getReservationId(),
+                formatterRideDate,
+                dto.getDepartureStationName(),
+                dto.getDepartureTime(),
+                dto.getArrivalStationName(),
+                dto.getArrivalTime(),
+                dto.getTrainTypeName(),
+                seatDetail,
+                differenceFormatter(dto.getTotalAmount(), dto.getOldAmount()),
+                loginUrl
+            );
 
-            String finalSubject = subject;
-            String finalBody = body;
             SendEmailRequest request = SendEmailRequest.builder()
                 .fromEmailAddress(String.format("%s <%s>", EmailUtils.SENDER_NAME, mailFrom))
                 .destination(Destination.builder().toAddresses(dto.getReserverMail()).build())
                 .content(EmailContent.builder()
                     .simple(msg -> msg
-                        .subject(Content.builder().data(finalSubject).charset("UTF-8").build())
-                        .body(Body.builder().text(Content.builder().data(finalBody).charset("UTF-8").build()).build())
+                        .subject(Content.builder().data(EmailUtils.CHANGE_SUBJECT).charset("UTF-8").build())
+                        .body(Body.builder().text(Content.builder().data(body).charset("UTF-8").build()).build())
                     )
                     .build()
                 )
