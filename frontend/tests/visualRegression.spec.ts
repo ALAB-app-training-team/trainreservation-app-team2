@@ -82,13 +82,19 @@ test('visual-selectSeat-accountCreate', async ({ page }) => {
     });
 });
 
-test('visual-selectSeat-account', async ({ page, commonLogin }) => {
+test('visual-selectSeat-account', async ({ page }) => {
     const scheduleSearchPage = new ScheduleSearchPage(page);
     const selectSeatPage = new SelectSeatPage(page);
+    const loginPage = new LoginPage(page);
 
-    await commonLogin();
     await scheduleSearchPage.goto();
     await scheduleSearchPage.clickDetailButton();
+    await expect(page).toHaveURL('/selectSeat');
+    await selectSeatPage.clickLoginButton();
+    await expect(page).toHaveURL('/login');
+    await loginPage.fillMailAddress('test-common@test.com');
+    await loginPage.fillPassword('Password1');
+    await loginPage.clickLoginButton();
     await expect(page).toHaveURL('/selectSeat');
     await selectSeatPage.emptySeat.first().waitFor({ state: 'visible' });
     await page.evaluate(() => document.fonts.ready);
