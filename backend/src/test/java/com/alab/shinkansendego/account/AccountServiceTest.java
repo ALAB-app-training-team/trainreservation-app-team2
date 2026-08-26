@@ -143,7 +143,7 @@ public class AccountServiceTest {
         when(accountRepository.findById(uuid)).thenReturn(account);
         when(passwordEncoder.matches(rawPassword, hashedPassword)).thenReturn(true);
         when(accountRepository.findByMail("b@b.com")).thenReturn(Optional.empty());
-        when(accountRepository.save(any(AccountEntity.class))).thenReturn(account.get());
+        when(accountRepository.save(any())).thenReturn(account.get());
 
         assertEquals(uuid, service.putAccount(uuid, dto));
         verify(accountRepository).save(any());
@@ -177,7 +177,7 @@ public class AccountServiceTest {
 
     @Test
     @DisplayName("一般ユーザーのアカウント情報変更で変更先のメールアドレスが既に登録済みのときConflictExceptionを投げること")
-    void putAccount_withConflict_throwConflictException() {
+    void putAccount_ExistSameMailAddress_throwConflictException() {
         UUID uuid = UUID.randomUUID();
         String newMail = "b@b.com";
         AccountUpdateDto dto = new AccountUpdateDto("太郎", newMail, rawPassword);
@@ -203,7 +203,7 @@ public class AccountServiceTest {
         when(accountRepository.findById(uuid)).thenReturn(account);
         when(passwordEncoder.matches(rawPassword, hashedPassword)).thenReturn(true);
         when(passwordEncoder.encode(newPassword)).thenReturn("newHashedPassword");
-        when(accountRepository.save(any(AccountEntity.class))).thenReturn(account.get());
+        when(accountRepository.save(any())).thenReturn(account.get());
 
         assertEquals(uuid, service.putPassword(uuid, dto));
     }

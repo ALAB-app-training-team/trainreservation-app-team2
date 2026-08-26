@@ -103,7 +103,7 @@ public class AccountControllerTest {
             .andExpect(status().isNoContent());
         assertTrue(session.isInvalid(), "セッションが破棄されていること");
     }
-    
+
     @Test
     @DisplayName("ログイン中のアカウント情報をDBの最新情報で取得できること")
     void getAccount_return200AndAccount() throws Exception {
@@ -124,6 +124,14 @@ public class AccountControllerTest {
             .andExpect(jsonPath("$.id").value("f79d8bbc-fcba-b538-b132-2f726ce0120c"))
             .andExpect(jsonPath("$.mail").value("updated-common@test.com"))
             .andExpect(jsonPath("$.name").value("更新後太郎"));
+    }
+
+    @Test
+    @DisplayName("未ログインの場合、ログイン中のアカウント情報を取得できないこと")
+    void getAccount_withoutLogin_return401() throws Exception {
+        mockMvc.perform(MockMvcRequestBuilders.get(baseUrl + "account")
+                .contentType(MediaType.APPLICATION_JSON))
+            .andExpect(status().isUnauthorized());
     }
 
     @Test
@@ -353,6 +361,17 @@ public class AccountControllerTest {
     }
 
     @Test
+    @DisplayName("未ログインの場合、氏名・メールアドレスを変更できないこと")
+    void updateAccount_withoutLogin_return401() throws Exception {
+        AccountUpdateDto request = new AccountUpdateDto("太郎", "a@a.com", rawPassword);
+
+        mockMvc.perform(MockMvcRequestBuilders.put(baseUrl + "account")
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(objectMapper.writeValueAsString(request)))
+            .andExpect(status().isUnauthorized());
+    }
+
+    @Test
     @DisplayName("リクエストの氏名がNullの場合、バリデーションエラー発生")
     void updateAccount_withNameIsNull_returnValidationError() throws Exception {
         AccountRequestDto request = new AccountRequestDto(null, "a@a.com", rawPassword);
@@ -506,6 +525,29 @@ public class AccountControllerTest {
                 .content(objectMapper.writeValueAsString(request)))
             .andExpect(status().isBadRequest())
             .andExpect(content().string("Mail is InValid"));
+    }
+
+    @Test
+    @DisplayName("パスワードを変更できること")
+    void updatePassword_return200() throws Exception {
+        PasswordUpdateDto request = new PasswordUpdateDto(rawPassword, "NewPassword1/");
+
+        mockMvc.perform(MockMvcRequestBuilders.put(baseUrl + "password")
+                .with(SecurityMockMvcRequestPostProcessors.authentication(commonAuth))
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(objectMapper.writeValueAsString(request)))
+            .andExpect(status().isOk());
+    }
+
+    @Test
+    @DisplayName("未ログインの場合、パスワードを変更できないこと")
+    void updatePassword_withoutLogin_return401() throws Exception {
+        PasswordUpdateDto request = new PasswordUpdateDto(rawPassword, "NewPassword1/");
+
+        mockMvc.perform(MockMvcRequestBuilders.put(baseUrl + "password")
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(objectMapper.writeValueAsString(request)))
+            .andExpect(status().isUnauthorized());
     }
 
     @Test
