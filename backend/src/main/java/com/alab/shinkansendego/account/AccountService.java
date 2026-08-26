@@ -97,7 +97,10 @@ public class AccountService {
         }
 
         String newMail = StringUtils.removeSpaces(request.getMail());
-        if (!account.getMail().equals(newMail) && accountRepository.findByMail(newMail).isPresent()) {
+        Optional<AccountEntity> duplicateAccount = accountRepository.findByMail(newMail);
+
+        if (duplicateAccount.isPresent()
+            && !duplicateAccount.get().getId().equals(currentUserId)) {
             throw new ConflictException(newMail + " is Duplicate");
         }
 
