@@ -9,6 +9,9 @@ export class SelectSeatPage {
     readonly emptySeat: Locator;
     readonly name: Locator;
     readonly mailAddress: Locator;
+    readonly accountCreateCheckBox: Locator;
+    readonly password: Locator;
+    readonly passwordCheck: Locator;
     readonly cardNumber: Locator;
     readonly cardHolderName: Locator;
     readonly cardExpiry: Locator;
@@ -30,6 +33,16 @@ export class SelectSeatPage {
         this.name = page.getByRole('textbox', { name: '予約者氏名' });
         this.mailAddress = page.getByRole('textbox', {
             name: 'メールアドレス',
+        });
+        this.accountCreateCheckBox = page.getByRole('checkbox', {
+            name: 'このメールアドレスでアカウントを作成する',
+        });
+        this.password = page.getByRole('textbox', {
+            name: 'パスワード',
+            exact: true,
+        });
+        this.passwordCheck = page.getByRole('textbox', {
+            name: 'パスワード再入力',
         });
         this.cardNumber = page.getByRole('textbox', { name: 'カード番号' });
         this.cardHolderName = page.getByRole('textbox', {
@@ -68,8 +81,25 @@ export class SelectSeatPage {
         await this.name.fill(name);
     }
 
+    async clickAccountCreateCheckBox() {
+        await this.accountCreateCheckBox.click();
+    }
+
     async fillMailAddress(mailAddress: string) {
         await this.mailAddress.fill(mailAddress);
+    }
+
+    async fillPassword(password: string) {
+        await this.password.fill(password);
+    }
+
+    async fillpasswordCheck(passwordCheck: string) {
+        await this.passwordCheck.fill(passwordCheck);
+    }
+
+    async inputPassword() {
+        await this.fillPassword('Password1');
+        await this.fillpasswordCheck('Password1');
     }
 
     async fillCardNumber(cardNumber: string) {
