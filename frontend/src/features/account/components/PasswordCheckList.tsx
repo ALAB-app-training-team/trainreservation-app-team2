@@ -16,7 +16,7 @@ export function PasswordCheckList({ policy }: PasswordCheckListProps) {
         <ul className="apace-y-1 mt-3 text-sm">
             <li className="text-left">
                 使用できる文字は半角数字・半角英大文字・半角英小文字・記号（'-!"#$%&(),./:;?@[]^_`
-                {}~+&lt;=&gt;*）です
+                &#123;&#125;~+&lt;=&gt;*）です
             </li>
             <li
                 className={

@@ -11,6 +11,11 @@ export class SelectSeatPage {
     readonly mailAddress: Locator;
     readonly accountCreateCheckBox: Locator;
     readonly password: Locator;
+    readonly lengthPolicy: Locator;
+    readonly numberPolicy: Locator;
+    readonly uppercasePolicy: Locator;
+    readonly lowercasePolicy: Locator;
+    readonly validPolicy: Locator;
     readonly passwordCheck: Locator;
     readonly cardNumber: Locator;
     readonly cardHolderName: Locator;
@@ -41,6 +46,11 @@ export class SelectSeatPage {
             name: 'パスワード',
             exact: true,
         });
+        this.lengthPolicy = page.getByText('文字以上64文字以下');
+        this.numberPolicy = page.getByText('半角数字を含む');
+        this.uppercasePolicy = page.getByText('半角英大文字を含む');
+        this.lowercasePolicy = page.getByText('半角英小文字を含む');
+        this.validPolicy = page.getByText('使用できる文字のみで構成されている');
         this.passwordCheck = page.getByRole('textbox', {
             name: 'パスワード再入力',
         });

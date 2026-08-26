@@ -244,9 +244,7 @@ test('購入者情報バリデーションチェック', async ({ page }) => {
     await selectSeatPage.fillSecureCode('123');
 });
 
-test('アカウント作成時のパスワード再入力バリデーションチェック', async ({
-    page,
-}) => {
+test('アカウント作成時のパスワードバリデーションチェック', async ({ page }) => {
     const scheduleSearchPage = new ScheduleSearchPage(page);
     const selectSeatPage = new SelectSeatPage(page);
 
@@ -255,9 +253,60 @@ test('アカウント作成時のパスワード再入力バリデーション�
     await scheduleSearchPage.clickDetailButton();
     await selectSeatPage.selectSeat();
     await expect(selectSeatPage.reserveButton).toBeDisabled();
+    await selectSeatPage.clickAccountCreateCheckBox();
+    await selectSeatPage.fillPassword('Password1');
+
+    // パスワード -8文字以下
+    await selectSeatPage.fillPassword('Pass1');
+    await expect(
+        await selectSeatPage.lengthPolicy.evaluate((el) =>
+            window.getComputedStyle(el).getPropertyValue('color'),
+        ),
+    ).toBe('oklch(0.704 0.191 22.216)');
+
+    // パスワード -64文字以上
+    await selectSeatPage.fillPassword(
+        'Password1Password2Password3Password4Password5Password6Password7Password8',
+    );
+    await expect(
+        await selectSeatPage.lengthPolicy.evaluate((el) =>
+            window.getComputedStyle(el).getPropertyValue('color'),
+        ),
+    ).toBe('oklch(0.704 0.191 22.216)');
+
+    // パスワード -半角英数字を含まない
+    await selectSeatPage.fillPassword('Password');
+    await expect(
+        await selectSeatPage.numberPolicy.evaluate((el) =>
+            window.getComputedStyle(el).getPropertyValue('color'),
+        ),
+    ).toBe('oklch(0.704 0.191 22.216)');
+
+    // パスワード -半角英大文字を含まない
+    await selectSeatPage.fillPassword('password1');
+    await expect(
+        await selectSeatPage.uppercasePolicy.evaluate((el) =>
+            window.getComputedStyle(el).getPropertyValue('color'),
+        ),
+    ).toBe('oklch(0.704 0.191 22.216)');
+
+    // パスワード -半角英小文字を含まない
+    await selectSeatPage.fillPassword('PASSWORD1');
+    await expect(
+        await selectSeatPage.lowercasePolicy.evaluate((el) =>
+            window.getComputedStyle(el).getPropertyValue('color'),
+        ),
+    ).toBe('oklch(0.704 0.191 22.216)');
+
+    // パスワード -使用できない文字が含まれている
+    await selectSeatPage.fillPassword('Password1|');
+    await expect(
+        await selectSeatPage.validPolicy.evaluate((el) =>
+            window.getComputedStyle(el).getPropertyValue('color'),
+        ),
+    ).toBe('oklch(0.704 0.191 22.216)');
 
     // パスワード再入力 -未入力
-    await selectSeatPage.clickAccountCreateCheckBox();
     await selectSeatPage.passwordCheck.click();
     await selectSeatPage.password.click();
     await expect(
@@ -266,7 +315,7 @@ test('アカウント作成時のパスワード再入力バリデーション�
 
     // パスワード再入力 -不一致
     await selectSeatPage.fillPassword('Password1');
-    await selectSeatPage.fillpasswordCheck('NotMatch');
+    await selectSeatPage.fillpasswordCheck('not-match');
     await selectSeatPage.password.click();
     await expect(page.getByText('パスワードが一致しません')).toBeVisible();
 });
@@ -293,7 +342,38 @@ test('予約確定', async ({ page }) => {
     ).toBeHidden();
 });
 
-test('ログイン中は氏名・メールアドレス入力欄とログインボタンが表示されない', async ({
+test('パスワードがエラーの場合、予約するボタンが非活性', async ({ page }) => {
+    const scheduleSearchPage = new ScheduleSearchPage(page);
+    const selectSeatPage = new SelectSeatPage(page);
+    await scheduleSearchPage.goto();
+    await expect(page).toHaveURL('/scheduleSearch');
+    await scheduleSearchPage.clickDetailButton();
+    await expect(page).toHaveURL('/selectSeat');
+    await selectSeatPage.selectSeat();
+    await selectSeatPage.inputReserverInfo();
+    await selectSeatPage.inputCardInfo();
+    await selectSeatPage.clickAccountCreateCheckBox();
+
+    // パスワードポリシー -不一致
+    await selectSeatPage.fillPassword('not-policy');
+    await selectSeatPage.fillpasswordCheck('not-policy');
+    await expect(selectSeatPage.reserveButton).toBeDisabled();
+
+    // パスワード再入力 -未入力
+    await selectSeatPage.fillpasswordCheck('');
+    await expect(selectSeatPage.reserveButton).toBeDisabled();
+
+    // パスワード再入力 -不一致
+    await selectSeatPage.fillPassword('Password1');
+    await selectSeatPage.fillpasswordCheck('not-match');
+    await expect(selectSeatPage.reserveButton).toBeDisabled();
+
+    // 正しいパスワード入力
+    await selectSeatPage.inputPasswordInfo();
+    await expect(selectSeatPage.reserveButton).toBeEnabled();
+});
+
+test('ログイン中は氏名・メールアドレス入力欄・アカウント作成ボタン・ログインボタンが表示されない', async ({
     page,
     commonLogin,
     logout,
@@ -307,12 +387,13 @@ test('ログイン中は氏名・メールアドレス入力欄とログイン�
 
     await selectSeatPagePage.name.isHidden();
     await selectSeatPagePage.mailAddress.isHidden();
+    await selectSeatPagePage.accountCreateCheckBox.isHidden();
     await selectSeatPagePage.loginButton.isHidden();
     await logout();
     await expect(page).toHaveURL('/login');
 });
 
-test('未ログイン時は氏名・メールアドレス入力欄とログインボタンが表示される', async ({
+test('未ログイン時は氏名・メールアドレス入力欄・アカウント作成ボタン・ログインボタンが表示される', async ({
     page,
 }) => {
     const scheduleSearchPage = new ScheduleSearchPage(page);
@@ -324,6 +405,7 @@ test('未ログイン時は氏名・メールアドレス入力欄とログイ�
 
     await selectSeatPagePage.name.isEditable();
     await selectSeatPagePage.mailAddress.isEditable();
+    await selectSeatPagePage.accountCreateCheckBox.isVisible();
     await selectSeatPagePage.loginButton.isEnabled();
 });
 
