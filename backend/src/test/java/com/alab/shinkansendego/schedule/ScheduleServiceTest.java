@@ -230,7 +230,7 @@ public class ScheduleServiceTest {
             IllegalArgumentException.class,
             () -> service.getSearchedScheduleByStation(request)
         );
-        assertEquals("SectionCD is Not found", ex.getMessage());
+        assertEquals("Section is Not found", ex.getMessage());
     }
 
     @Test
@@ -242,7 +242,7 @@ public class ScheduleServiceTest {
             IllegalArgumentException.class,
             () -> service.getSearchedScheduleByStation(request)
         );
-        assertEquals("SectionCD is Not found", ex.getMessage());
+        assertEquals("Section is Not found", ex.getMessage());
     }
 
     @Test
