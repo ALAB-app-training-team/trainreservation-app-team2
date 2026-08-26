@@ -252,7 +252,7 @@ test('予約確定', async ({ page }) => {
     await scheduleSearchPage.clickDetailButton();
     await expect(page).toHaveURL('/selectSeat');
     await selectSeatPage.selectSeat();
-    await selectSeatPage.inputResererInfo();
+    await selectSeatPage.inputReserverInfo();
     await selectSeatPage.inputCardInfo();
     await expect(page.getByText('座席数合計：1席')).toBeVisible();
     await expect(page.getByText('お支払い合計：￥2,600')).toBeVisible();

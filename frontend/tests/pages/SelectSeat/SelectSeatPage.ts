@@ -97,7 +97,7 @@ export class SelectSeatPage {
         await this.passwordCheck.fill(passwordCheck);
     }
 
-    async inputPassword() {
+    async inputPasswordInfo() {
         await this.fillPassword('Password1');
         await this.fillpasswordCheck('Password1');
     }
@@ -137,7 +137,7 @@ export class SelectSeatPage {
         await this.updateConfirmButton.click();
     }
 
-    async inputResererInfo() {
+    async inputReserverInfo() {
         await this.fillName('ゲスト太郎');
         await this.fillMailAddress('guest@test.com');
     }

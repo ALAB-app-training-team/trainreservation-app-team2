@@ -26,7 +26,7 @@ test('navigate-ゲストログイン全機能', async ({ page, context }) => {
     await scheduleSearchPage.clickDetailButton();
     await expect(page).toHaveURL('/selectSeat');
     await selectSeatPage.selectSeat();
-    await selectSeatPage.inputResererInfo();
+    await selectSeatPage.inputReserverInfo();
     await selectSeatPage.inputCardInfo();
     await selectSeatPage.clickReseveButton();
     await selectSeatPage.clickCancelButton();
@@ -58,6 +58,26 @@ test('navigate-ゲストログイン全機能', async ({ page, context }) => {
             'エラーが発生しました。しばらくしてから再度お試しください。',
         ),
     ).toBeHidden();
+
+    // 検索～アカウント作成して予約
+    await scheduleSearchPage.goto();
+    await expect(page).toHaveURL('/scheduleSearch');
+    await scheduleSearchPage.clickDetailButton();
+    await expect(page).toHaveURL('/selectSeat');
+    await selectSeatPage.clickBackButton();
+    await expect(page).toHaveURL('/scheduleSearch');
+    await scheduleSearchPage.clickDetailButton();
+    await expect(page).toHaveURL('/selectSeat');
+    await selectSeatPage.selectSeat();
+    await selectSeatPage.inputReserverInfo();
+    await selectSeatPage.clickAccountCreateCheckBox();
+    await selectSeatPage.inputPasswordInfo();
+    await selectSeatPage.inputCardInfo();
+    await selectSeatPage.clickReseveButton();
+    await selectSeatPage.clickCancelButton();
+    await selectSeatPage.clickReseveButton();
+    await selectSeatPage.clickReserveConfirmButton();
+    await expect(page).toHaveURL('/reservedTicket');
 });
 
 test('navigate-アカウントログイン全機能', async ({
