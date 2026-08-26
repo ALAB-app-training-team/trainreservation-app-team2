@@ -295,7 +295,7 @@ export function SelectSeats() {
 
                 return;
             }
-            toast.error(ERROR_MESSAGE.UPDATE_RETRY, {
+            toast.error(ERROR_MESSAGE.RESERVATION_UPDATE_RETRY, {
                 duration: Infinity,
                 action: {
                     label: 'OK',
