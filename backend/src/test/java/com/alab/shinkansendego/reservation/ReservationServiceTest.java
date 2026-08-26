@@ -127,7 +127,8 @@ public class ReservationServiceTest {
             LocalDate.of(2026, 6, 1),
             false,
             reservedSeatList,
-            isReserverMatched);
+            isReserverMatched,
+            "UP");
     }
 
     /**
@@ -139,6 +140,7 @@ public class ReservationServiceTest {
         StationEntity startStation = new StationEntity(departureStationCd, departureStationName);
         StationEntity goalStation = new StationEntity(arrivalStationCd, arrivalStationName);
         SectionKmEntity sectionKm = new SectionKmEntity();
+        sectionKm.setDirection("UP");
         sectionKm.setStartStationCd(departureStationCd);
         sectionKm.setGoalStationCd(arrivalStationCd);
         sectionKm.setStartStation(startStation);

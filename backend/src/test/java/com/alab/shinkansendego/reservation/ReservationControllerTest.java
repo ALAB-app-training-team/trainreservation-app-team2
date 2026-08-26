@@ -77,7 +77,8 @@ public class ReservationControllerTest {
             LocalDate.of(2026, 6, 1),
             false,
             reservedSeatList,
-            true);
+            true,
+            "UP");
     }
 
     @BeforeEach
