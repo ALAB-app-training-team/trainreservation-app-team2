@@ -89,9 +89,9 @@ public class AccountController {
     @GetMapping("account")
     @PreAuthorize("isAuthenticated()")
     public ResponseEntity<AccountSessionDto> getAccount(
-        @AuthenticationPrincipal AccountSessionDto session
-    ) {
-        return ResponseEntity.status(HttpStatus.OK).body(session);
+        @AuthenticationPrincipal AccountSessionDto session) {
+        AccountSessionDto account = accountService.getAccount(session.getId());
+        return ResponseEntity.ok(account);
     }
 
     /**

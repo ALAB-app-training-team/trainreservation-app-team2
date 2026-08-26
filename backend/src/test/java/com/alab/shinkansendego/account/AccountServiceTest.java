@@ -68,6 +68,45 @@ public class AccountServiceTest {
     }
 
     @Test
+    @DisplayName("ログイン中のアカウント情報を取得できること")
+    void getAccount_withCurrentUserId_returnAccountSessionDto() {
+        UUID uuid = UUID.randomUUID();
+
+        Optional<AccountEntity> account = Optional.of(
+            new AccountEntity(
+                uuid,
+                "太郎",
+                mail,
+                hashedPassword,
+                "ROLE_USER"
+            )
+        );
+
+        when(accountRepository.findById(uuid)).thenReturn(account);
+
+        AccountSessionDto result = service.getAccount(uuid);
+
+        assertEquals(uuid, result.getId());
+        assertEquals(mail, result.getMail());
+        assertEquals("太郎", result.getName());
+    }
+
+    @Test
+    @DisplayName("ログイン中のアカウントが存在しない場合、IllegalArgumentExceptionを投げること")
+    void getAccount_withNoExistAccount_throwIllegalArgumentException() {
+        UUID uuid = UUID.randomUUID();
+
+        when(accountRepository.findById(uuid)).thenReturn(Optional.empty());
+
+        Exception ex = assertThrows(
+            IllegalArgumentException.class,
+            () -> service.getAccount(uuid)
+        );
+
+        assertEquals("Account is not found", ex.getMessage());
+    }
+
+    @Test
     @DisplayName("アカウント作成できること")
     void insertAccount_withAccountRequestDto_returnAccountInsertAccountSuccess() {
         AccountRequestDto request = new AccountRequestDto("太郎", mail, rawPassword);

@@ -65,6 +65,24 @@ public class AccountService {
     }
 
     /**
+     * ログイン中のアカウント情報取得メソッド
+     *
+     * @param currentUserId ログイン中のアカウントID
+     * @return ログイン中のアカウント情報
+     */
+    @Transactional(readOnly = true)
+    public AccountSessionDto getAccount(UUID currentUserId) {
+        AccountEntity account = accountRepository.findById(currentUserId)
+            .orElseThrow(() -> new IllegalArgumentException("Account is not found"));
+
+        return new AccountSessionDto(
+            account.getId(),
+            account.getMail(),
+            account.getName()
+        );
+    }
+
+    /**
      * アカウント情報変更メソッド
      *
      * @param request 変更するアカウント情報

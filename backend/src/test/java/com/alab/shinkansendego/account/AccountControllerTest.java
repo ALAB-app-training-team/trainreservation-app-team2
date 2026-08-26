@@ -7,6 +7,7 @@ import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
+import org.mockito.Mockito;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.webmvc.test.autoconfigure.WebMvcTest;
 import org.springframework.context.annotation.Import;
@@ -101,6 +102,28 @@ public class AccountControllerTest {
                 .session(session))
             .andExpect(status().isNoContent());
         assertTrue(session.isInvalid(), "セッションが破棄されていること");
+    }
+    
+    @Test
+    @DisplayName("ログイン中のアカウント情報をDBの最新情報で取得できること")
+    void getAccount_return200AndAccount() throws Exception {
+        UUID currentUserId = UUID.fromString("f79d8bbc-fcba-b538-b132-2f726ce0120c");
+
+        AccountSessionDto expectAccount = new AccountSessionDto(
+            currentUserId,
+            "updated-common@test.com",
+            "更新後太郎"
+        );
+
+        Mockito.when(service.getAccount(currentUserId)).thenReturn(expectAccount);
+
+        mockMvc.perform(MockMvcRequestBuilders.get(baseUrl + "account")
+                .with(SecurityMockMvcRequestPostProcessors.authentication(commonAuth))
+                .contentType(MediaType.APPLICATION_JSON))
+            .andExpect(status().isOk())
+            .andExpect(jsonPath("$.id").value("f79d8bbc-fcba-b538-b132-2f726ce0120c"))
+            .andExpect(jsonPath("$.mail").value("updated-common@test.com"))
+            .andExpect(jsonPath("$.name").value("更新後太郎"));
     }
 
     @Test
@@ -315,18 +338,6 @@ public class AccountControllerTest {
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(objectMapper.writeValueAsString(null)))
             .andExpect(status().isBadRequest());
-    }
-
-    @Test
-    @DisplayName("ログイン中のアカウント情報を取得できること")
-    void getAccount_return200AndAccount() throws Exception {
-        mockMvc.perform(MockMvcRequestBuilders.get(baseUrl + "account")
-                .with(SecurityMockMvcRequestPostProcessors.authentication(commonAuth))
-                .contentType(MediaType.APPLICATION_JSON))
-            .andExpect(status().isOk())
-            .andExpect(jsonPath("$.id").value("f79d8bbc-fcba-b538-b132-2f726ce0120c"))
-            .andExpect(jsonPath("$.mail").value("test-common@test.com"))
-            .andExpect(jsonPath("$.name").value("一般太郎"));
     }
 
     @Test
