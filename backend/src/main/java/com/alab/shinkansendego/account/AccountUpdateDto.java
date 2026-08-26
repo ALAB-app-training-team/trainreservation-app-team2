@@ -12,7 +12,7 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 public class AccountUpdateDto {
     @NotBlank(message = "Name is Blank")
-    @Size(min = 1, max = 255, message = "Name is Over Limit Size")
+    @Size(max = 255, message = "Name is Over Limit Size")
     private String name;
     @ValidMail
     private String mail;
