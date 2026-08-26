@@ -109,10 +109,10 @@ public class ScheduleService {
                         throw new IllegalArgumentException("AvailableSeats is Not found");
                     }
 
-                    SectionKmEntity sectionKm = departureSectionKmList.stream()
-                        .filter(departureSectionKm -> Objects.equals(departureSectionKm.getSectionCd(), arrival.getSectionCd()))
+                    SectionKmEntity sectionKm = arrivalSectionKmList.stream()
+                        .filter(arrivalSectionKm -> Objects.equals(arrivalSectionKm.getSectionCd(), arrival.getSectionCd()))
                         .findFirst()
-                        .orElseThrow(() -> new IllegalArgumentException("sectionKm is failed"));
+                        .orElseThrow(() -> new IllegalArgumentException("sectionKm is Not found"));
                     String direction = sectionKm.getDirection();
 
                     ScheduleResponseDto data = new ScheduleResponseDto();

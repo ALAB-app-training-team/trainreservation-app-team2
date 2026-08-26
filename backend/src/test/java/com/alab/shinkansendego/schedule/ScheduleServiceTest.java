@@ -65,10 +65,10 @@ public class ScheduleServiceTest {
     private ScheduleService service;
 
     private static @NonNull List<ScheduleResponseDto> getExpectScheduleResponseDtosList() {
-        ScheduleResponseDto expect01 = new ScheduleResponseDto("TIME02", "やまびこ2号", LocalTime.of(11, 0, 0), LocalTime.of(16, 10, 0), 797, 58, 17);
-        ScheduleResponseDto expect02 = new ScheduleResponseDto("TIME03", "やまびこ3号", LocalTime.of(12, 0, 0), LocalTime.of(12, 30, 0), 797, 58, 17);
-        ScheduleResponseDto expect03 = new ScheduleResponseDto("TIME04", "やまびこ4号", LocalTime.of(13, 0, 0), LocalTime.of(13, 40, 0), 797, 58, 17);
-        ScheduleResponseDto expect04 = new ScheduleResponseDto("TIME06", "やまびこ6号", LocalTime.of(15, 0, 0), LocalTime.of(16, 0, 0), 797, 58, 17);
+        ScheduleResponseDto expect01 = new ScheduleResponseDto("TIME02", "やまびこ2号", LocalTime.of(11, 0, 0), LocalTime.of(16, 10, 0), 797, 58, 17, "UP");
+        ScheduleResponseDto expect02 = new ScheduleResponseDto("TIME03", "やまびこ3号", LocalTime.of(12, 0, 0), LocalTime.of(12, 30, 0), 797, 58, 17, "UP");
+        ScheduleResponseDto expect03 = new ScheduleResponseDto("TIME04", "やまびこ4号", LocalTime.of(13, 0, 0), LocalTime.of(13, 40, 0), 797, 58, 17, "UP");
+        ScheduleResponseDto expect04 = new ScheduleResponseDto("TIME06", "やまびこ6号", LocalTime.of(15, 0, 0), LocalTime.of(16, 0, 0), 797, 58, 17, "UP");
         return Arrays.asList(expect01, expect02, expect03, expect04);
     }
 
@@ -125,10 +125,13 @@ public class ScheduleServiceTest {
         reservedSeatSecList.clear();
         SectionKmEntity sec01 = new SectionKmEntity();
         sec01.setSectionCd("SEC01");
+        sec01.setDirection("UP");
         SectionKmEntity sec02 = new SectionKmEntity();
         sec02.setSectionCd("SEC02");
+        sec02.setDirection("UP");
         SectionKmEntity sec03 = new SectionKmEntity();
         sec03.setSectionCd("SEC03");
+        sec03.setDirection("UP");
         depatureSectionList.addAll(Arrays.asList(sec01, sec02));
         arrivalSectionList.addAll(Arrays.asList(sec02, sec03));
         DepartureArrivalTimeEntity data01 = new DepartureArrivalTimeEntity();
