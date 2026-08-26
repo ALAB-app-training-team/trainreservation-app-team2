@@ -9,6 +9,7 @@ export class PasswordUpdatePage {
     readonly newPassword: Locator;
     readonly newPasswordCheck: Locator;
     readonly updateButton: Locator;
+
     constructor(page: Page) {
         this.page = page;
         this.header = new Header(page);
@@ -28,6 +29,7 @@ export class PasswordUpdatePage {
             name: '変更',
         });
     }
+
     async goto() {
         await this.page.goto('/passwordUpdate');
     }

@@ -8,11 +8,8 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 @Data
-
 @NoArgsConstructor
-
 @AllArgsConstructor
-
 public class AccountUpdateDto {
     @NotBlank(message = "Name is Blank")
     @Size(min = 1, max = 255, message = "Name is Over Limit Size")

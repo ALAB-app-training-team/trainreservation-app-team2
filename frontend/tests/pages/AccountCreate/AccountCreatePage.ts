@@ -30,6 +30,7 @@ export class AccountCreatePage {
         });
         this.ramdomMail = 'random' + Math.random() + '@test.co.jp';
     }
+
     async goto() {
         await this.page.goto('/accountCreate');
     }

@@ -497,7 +497,6 @@ public class AccountControllerTest {
             .andExpect(content().string("Mail is InValid"));
     }
 
-    //    ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
     @Test
     @DisplayName("現在のパスワードがNullの場合、バリデーションエラー発生")
     void updatePassword_withCurrentPasswordIsNull_returnValidationError() throws Exception {

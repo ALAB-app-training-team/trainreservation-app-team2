@@ -7,11 +7,8 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 @Data
-
 @NoArgsConstructor
-
 @AllArgsConstructor
-
 public class PasswordUpdateDto {
     @NotBlank(message = "Password is Blank")
     private String password;

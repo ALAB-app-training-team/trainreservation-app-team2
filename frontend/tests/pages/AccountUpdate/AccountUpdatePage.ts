@@ -4,15 +4,10 @@ import { Header } from '@tests/pages/shared/Header';
 
 export class AccountUpdatePage {
     readonly page: Page;
-
     readonly header: Header;
-
     readonly name: Locator;
-
     readonly mailAddress: Locator;
-
     readonly password: Locator;
-
     readonly updateButton: Locator;
 
     constructor(page: Page) {
@@ -34,19 +29,15 @@ export class AccountUpdatePage {
     async goto() {
         await this.page.goto('/accountUpdate');
     }
-
     async fillName(name: string) {
         await this.name.fill(name);
     }
-
     async fillMailAddress(address: string) {
         await this.mailAddress.fill(address);
     }
-
     async fillPassword(password: string) {
         await this.password.fill(password);
     }
-
     async clickUpdateButton() {
         await this.updateButton.click();
     }
