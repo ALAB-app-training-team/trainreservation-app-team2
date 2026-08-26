@@ -8,4 +8,5 @@ export type ScheduleInfoDto = {
     arrivalStationCd: string;
     departureStationName: string;
     arrivalStationName: string;
+    direction: string;
 };

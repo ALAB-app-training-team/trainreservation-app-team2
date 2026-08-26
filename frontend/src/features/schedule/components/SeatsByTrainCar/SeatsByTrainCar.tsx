@@ -69,6 +69,7 @@ export function SeatsByTrainCar({
         <>
             <div className="flex w-full flex-col items-start justify-center gap-4">
                 <h2 className="text-left">{seats[0].trainCarNumber}号車</h2>
+                <span>a</span>
                 <div
                     className={`grid gap-2`}
                     style={{
@@ -127,6 +128,8 @@ export function SeatsByTrainCar({
                         </Fragment>
                     ))}
                 </div>
+                <span>a</span>
+
                 <div className="flex gap-4">
                     <div className="flex items-center gap-1">
                         <Seat type="reservable" />

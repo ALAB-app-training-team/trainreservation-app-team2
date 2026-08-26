@@ -6,4 +6,5 @@ export type SearchResponseDto = {
     reservedSeats: number;
     greenSeats: number;
     gcSeats: number;
+    direction: string;
 };
