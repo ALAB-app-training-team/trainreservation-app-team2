@@ -156,8 +156,6 @@ export function SelectSeats() {
             );
             localStorage.setItem('name', response.data.name);
             localStorage.setItem('role', response.data.role);
-            reserveUser.reserverMail = '';
-            reserveUser.reserverName = '';
             reserveRequestDto.reserverMail = '';
             reserveRequestDto.reserverName = '';
         }
@@ -176,7 +174,10 @@ export function SelectSeats() {
             );
             return response.data;
         }
-        if (!reserveUser.reserverMail && !reserveUser.reserverName) {
+        if (
+            isAccountCreate ||
+            (!reserveUser.reserverMail && !reserveUser.reserverName)
+        ) {
             const response = await apiClient.post(
                 ENDPOINTS.RESERVATION(),
                 reserveRequestDto,
