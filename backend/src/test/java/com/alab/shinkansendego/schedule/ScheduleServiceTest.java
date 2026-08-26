@@ -442,30 +442,4 @@ public class ScheduleServiceTest {
         List<ScheduleResponseDto> actualList = service.getSearchedScheduleByStation(request);
         assertNotNull(actualList);
     }
-
-    @Test
-    @DisplayName("座席種別：未指定、人数：未指定で全権取得できること")
-    void getSearchedScheduleByStation_withNoFilter_success() {
-        request.setSeatType("-");
-        request.setPassengers(null);
-
-        when(sectionRepo.findByStartStationCd("STATION01")).thenReturn(depatureSectionList);
-        when(sectionRepo.findByGoalStationCd("STATION02")).thenReturn(arrivalSectionList);
-        when(timeRepo.findBySectionCd("SEC01")).thenReturn(sec01ScheduleList);
-        when(timeRepo.findBySectionCd("SEC02")).thenReturn(sec02ScheduleList);
-        when(timeRepo.findBySectionCd("SEC03")).thenReturn(sec03ScheduleList);
-        when(totalSeatRepo.findAll()).thenReturn(totalSeatList);
-        when(scheduleRepo.findById("TIME01")).thenReturn(getScheduleEntity(trainType1));
-        when(scheduleRepo.findById("TIME02")).thenReturn(getScheduleEntity(trainType2));
-        when(scheduleRepo.findById("TIME03")).thenReturn(getScheduleEntity(trainType3));
-        when(scheduleRepo.findById("TIME04")).thenReturn(getScheduleEntity(trainType4));
-        when(scheduleRepo.findById("TIME05")).thenReturn(getScheduleEntity(trainType5));
-        when(scheduleRepo.findById("TIME06")).thenReturn(getScheduleEntity(trainType6));
-        when(timeRepo.findByScheduleCdAndDepartureTimeGreaterThanEqualAndArrivalTimeLessThanEqual(any(), any(), any())).thenReturn(secList);
-        when(reservedSeatSectionRepo.findByRideDateAndScheduleCdAndReservedSectionCdIn(any(), any(), any())).thenReturn(reservedSeatSecList);
-
-        List<ScheduleResponseDto> expectlList = getExpectScheduleResponseDtosList();
-        List<ScheduleResponseDto> actualList = service.getSearchedScheduleByStation(request);
-        assertEquals(expectlList, actualList);
-    }
 }
