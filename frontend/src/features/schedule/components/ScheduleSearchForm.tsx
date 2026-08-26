@@ -71,7 +71,7 @@ export function ScheduleSearchForm({
                             <div className="w-full text-center md:w-fit">
                                 <button
                                     onClick={switchDepartureAndArrivalStation}
-                                    className="w-fit rounded-full border-1 bg-white p-1 text-xl md:mt-8"
+                                    className="border-primary w-fit rounded-full border-1 bg-white p-1 text-xl md:mt-8"
                                 >
                                     <HiOutlineSwitchHorizontal className="hidden md:block" />
                                     <HiOutlineSwitchVertical className="block md:hidden" />
@@ -107,6 +107,7 @@ export function ScheduleSearchForm({
                                 children={
                                     <div className="border-primary inline-flex items-center overflow-hidden rounded border">
                                         <label
+                                            tabIndex={0}
                                             className={`cursor-pointer p-1 text-sm ${!searchRequestDto.isArrivalTime ? 'bg-primary text-white' : 'bg-gray-50'}`}
                                         >
                                             <input
@@ -118,10 +119,12 @@ export function ScheduleSearchForm({
                                                     setIsArrivalTime(false)
                                                 }
                                                 className="sr-only"
+                                                tabIndex={-1}
                                             />
                                             出発
                                         </label>
                                         <label
+                                            tabIndex={0}
                                             className={`cursor-pointer p-1 text-sm ${searchRequestDto.isArrivalTime ? 'bg-primary text-white' : 'bg-gray-50'}`}
                                         >
                                             <input
@@ -133,6 +136,7 @@ export function ScheduleSearchForm({
                                                     setIsArrivalTime(true)
                                                 }
                                                 className="sr-only"
+                                                tabIndex={-1}
                                             />
                                             到着
                                         </label>

@@ -41,6 +41,7 @@ export function ScheduleSearchBody() {
         getFieldError,
         maxDate,
         minDate,
+        handleNextDate,
     } = useSearchRequestDto({ stations, initialDto });
     const departureDtos = stationResponseDtos;
     const arrivalDtos = stationResponseDtos;
@@ -133,6 +134,8 @@ export function ScheduleSearchBody() {
                             }
                             isChanging={isChanging}
                             isBack={isBack}
+                            handleNextDate={handleNextDate}
+                            maxDate={maxDate}
                         />
                     </Suspense>
                 </div>
