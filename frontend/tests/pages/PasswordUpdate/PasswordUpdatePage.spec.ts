@@ -28,7 +28,7 @@ test('各項目の未入力メッセージが表示されること', async ({
     await expect(page).toHaveURL('/login');
 });
 
-test('各項目のバリデーションメッセージが表示されること', async ({
+test('パスワードが一致しないときにバリデーションメッセージが表示されること', async ({
     page,
     commonLogin,
     logout,
