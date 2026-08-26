@@ -25,6 +25,24 @@ public class AccountService {
     }
 
     /**
+     * ログイン中のアカウント情報取得メソッド
+     *
+     * @param currentUserId ログイン中のアカウントID
+     * @return ログイン中のアカウント情報
+     */
+    @Transactional(readOnly = true)
+    public AccountSessionDto getAccount(UUID currentUserId) {
+        AccountEntity account = accountRepository.findById(currentUserId)
+            .orElseThrow(() -> new IllegalArgumentException("Account is not found"));
+
+        return new AccountSessionDto(
+            account.getId(),
+            account.getMail(),
+            account.getName()
+        );
+    }
+
+    /**
      * アカウントログインを行うメソッド
      *
      * @param mail     リクエストされたメールアドレス
@@ -62,24 +80,6 @@ public class AccountService {
         );
 
         accountRepository.save(postAccount);
-    }
-
-    /**
-     * ログイン中のアカウント情報取得メソッド
-     *
-     * @param currentUserId ログイン中のアカウントID
-     * @return ログイン中のアカウント情報
-     */
-    @Transactional(readOnly = true)
-    public AccountSessionDto getAccount(UUID currentUserId) {
-        AccountEntity account = accountRepository.findById(currentUserId)
-            .orElseThrow(() -> new IllegalArgumentException("Account is not found"));
-
-        return new AccountSessionDto(
-            account.getId(),
-            account.getMail(),
-            account.getName()
-        );
     }
 
     /**
