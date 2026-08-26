@@ -129,7 +129,7 @@ export function usePasswordUpdateDto() {
         } catch (error) {
             if (axios.isAxiosError(error)) {
                 if (error.response?.status === HttpStatusCode.Conflict) {
-                    toast.error(ERROR_MESSAGE.PASSWORD_CHANGE_RETRY, {
+                    toast.error(ERROR_MESSAGE.PASSWORD_UPDATE_RETRY, {
                         duration: Infinity,
                         action: {
                             label: 'OK',
@@ -143,7 +143,7 @@ export function usePasswordUpdateDto() {
                 } else if (
                     error.response?.status === HttpStatusCode.BadRequest
                 ) {
-                    toast.error(ERROR_MESSAGE.PASSWORD_NOT_MATCH, {
+                    toast.error(ERROR_MESSAGE.PASSWORD_INCORRECT, {
                         duration: Infinity,
                         action: {
                             label: 'OK',

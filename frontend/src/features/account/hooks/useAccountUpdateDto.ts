@@ -41,7 +41,7 @@ export function useAccountUpdateDto() {
                     password: '',
                 }));
             } catch {
-                toast.error(ERROR_MESSAGE.ACCOUNT_CHANGE_RETRY, {
+                toast.error(ERROR_MESSAGE.ACCOUNT_UPDATE_RETRY, {
                     duration: Infinity,
                     action: {
                         label: 'OK',
@@ -180,7 +180,7 @@ export function useAccountUpdateDto() {
         } catch (error) {
             if (axios.isAxiosError(error)) {
                 if (error.response?.status === HttpStatusCode.Conflict) {
-                    toast.error(ERROR_MESSAGE.ACCOUNT_CHANGE_RETRY, {
+                    toast.error(ERROR_MESSAGE.ACCOUNT_UPDATE_RETRY, {
                         duration: Infinity,
                         action: {
                             label: 'OK',
@@ -194,7 +194,7 @@ export function useAccountUpdateDto() {
                 } else if (
                     error.response?.status === HttpStatusCode.BadRequest
                 ) {
-                    toast.error(ERROR_MESSAGE.PASSWORD_NOT_MATCH, {
+                    toast.error(ERROR_MESSAGE.PASSWORD_INCORRECT, {
                         duration: Infinity,
                         action: {
                             label: 'OK',
@@ -206,7 +206,7 @@ export function useAccountUpdateDto() {
                         },
                     });
                 } else {
-                    toast.error(ERROR_MESSAGE.ACCOUNT_CHANGE_RETRY, {
+                    toast.error(ERROR_MESSAGE.ACCOUNT_UPDATE_RETRY, {
                         duration: Infinity,
                         action: {
                             label: 'OK',
