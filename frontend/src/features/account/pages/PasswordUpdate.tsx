@@ -17,6 +17,9 @@ export function PasswordUpdate() {
     } = usePasswordUpdateDto();
 
     const [passwordType, setPasswordType] = useState('password');
+    const [newPasswordType, setNewPasswordType] = useState('password');
+    const [newPasswordCheckType, setNewPasswordCheckType] =
+        useState('password');
 
     return (
         <div className="flex justify-center">
@@ -55,26 +58,26 @@ export function PasswordUpdate() {
                         <PasswordInput
                             id={'newPassword'}
                             label={'新しいパスワード'}
-                            type={passwordType}
+                            type={newPasswordType}
                             value={passwordUpdateForm.newPassword}
                             placeHolder={'新しいパスワードを入力'}
                             autoComplete={'new-password'}
                             onChange={handleChange}
                             onBlur={handleBlur}
                             policy={policy}
-                            setPasswordType={setPasswordType}
+                            setPasswordType={setNewPasswordType}
                         />
                         <PasswordInput
                             id={'newPasswordCheck'}
                             label={'新しいパスワード再入力'}
-                            type={passwordType}
+                            type={newPasswordCheckType}
                             value={passwordUpdateForm.newPasswordCheck}
                             placeHolder={'新しいパスワードを再入力'}
                             autoComplete={'new-password'}
                             onChange={handleChange}
                             onBlur={handleBlur}
                             getFieldError={getFieldError}
-                            setPasswordType={setPasswordType}
+                            setPasswordType={setNewPasswordCheckType}
                         />
                     </div>
                     <button

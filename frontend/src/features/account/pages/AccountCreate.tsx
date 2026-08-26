@@ -21,6 +21,7 @@ export function AccountCreate() {
         isSubmitting,
     } = useAccountRequestDto(false);
     const [passwordType, setPasswordType] = useState('password');
+    const [passwordCheckType, setPasswordCheckType] = useState('password');
     useToastForRedirect();
     useEffect(() => {
         removeGuestReservation(queryClient);
@@ -83,14 +84,14 @@ export function AccountCreate() {
                         <PasswordInput
                             id={'passwordCheck'}
                             label={'パスワード再入力'}
-                            type={passwordType}
+                            type={passwordCheckType}
                             value={accountForm.passwordCheck}
                             placeHolder={'パスワードを再入力'}
                             autoComplete={'new-password'}
                             onChange={handleChange}
                             onBlur={handleBlur}
                             getFieldError={getFieldError}
-                            setPasswordType={setPasswordType}
+                            setPasswordType={setPasswordCheckType}
                         />
                     </div>
                     <button
