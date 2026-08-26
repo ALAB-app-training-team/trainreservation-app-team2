@@ -374,7 +374,7 @@ public class AccountControllerTest {
     @Test
     @DisplayName("リクエストの氏名がNullの場合、バリデーションエラー発生")
     void updateAccount_withNameIsNull_returnValidationError() throws Exception {
-        AccountRequestDto request = new AccountRequestDto(null, "a@a.com", rawPassword);
+        AccountUpdateDto request = new AccountUpdateDto(null, "a@a.com", rawPassword);
 
         mockMvc.perform(MockMvcRequestBuilders.put(baseUrl + "account")
                 .with(SecurityMockMvcRequestPostProcessors.authentication(adminAuth))
@@ -387,7 +387,7 @@ public class AccountControllerTest {
     @Test
     @DisplayName("リクエストのメールアドレスがNullの場合、バリデーションエラー発生")
     void updateAccount_withMailIsNull_returnValidationError() throws Exception {
-        AccountRequestDto request = new AccountRequestDto("太郎", null, rawPassword);
+        AccountUpdateDto request = new AccountUpdateDto("太郎", null, rawPassword);
 
         mockMvc.perform(MockMvcRequestBuilders.put(baseUrl + "account")
                 .with(SecurityMockMvcRequestPostProcessors.authentication(adminAuth))
@@ -400,7 +400,7 @@ public class AccountControllerTest {
     @Test
     @DisplayName("リクエストのパスワードがNullの場合、バリデーションエラー発生")
     void updateAccount_withPasswordIsNull_returnValidationError() throws Exception {
-        AccountRequestDto request = new AccountRequestDto("太郎", "a@a.com", null);
+        AccountUpdateDto request = new AccountUpdateDto("太郎", "a@a.com", null);
 
         mockMvc.perform(MockMvcRequestBuilders.put(baseUrl + "account")
                 .with(SecurityMockMvcRequestPostProcessors.authentication(adminAuth))
@@ -413,7 +413,7 @@ public class AccountControllerTest {
     @Test
     @DisplayName("リクエストの氏名が空文字の場合、バリデーションエラー発生")
     void updateAccount_withNameIsEmpty_returnValidationError() throws Exception {
-        PasswordUpdateByAdminDto request = new PasswordUpdateByAdminDto("", "a@a.com", rawPassword);
+        AccountUpdateDto request = new AccountUpdateDto("", "a@a.com", rawPassword);
 
         mockMvc.perform(MockMvcRequestBuilders.put(baseUrl + "account")
                 .with(SecurityMockMvcRequestPostProcessors.authentication(adminAuth))
@@ -426,7 +426,7 @@ public class AccountControllerTest {
     @Test
     @DisplayName("リクエストのメールアドレスが空文字の場合、バリデーションエラー発生")
     void updateAccount_withMailIsEmpty_returnValidationError() throws Exception {
-        PasswordUpdateByAdminDto request = new PasswordUpdateByAdminDto("太郎", "", rawPassword);
+        AccountUpdateDto request = new AccountUpdateDto("太郎", "", rawPassword);
 
         mockMvc.perform(MockMvcRequestBuilders.put(baseUrl + "account")
                 .with(SecurityMockMvcRequestPostProcessors.authentication(adminAuth))
@@ -439,7 +439,7 @@ public class AccountControllerTest {
     @Test
     @DisplayName("リクエストのパスワードが空文字の場合、バリデーションエラー発生")
     void updateAccount_withPasswordIsEmpty_returnValidationError() throws Exception {
-        PasswordUpdateByAdminDto request = new PasswordUpdateByAdminDto("太郎", "a@a.com", "");
+        AccountUpdateDto request = new AccountUpdateDto("太郎", "a@a.com", "");
 
         mockMvc.perform(MockMvcRequestBuilders.put(baseUrl + "account")
                 .with(SecurityMockMvcRequestPostProcessors.authentication(adminAuth))
@@ -452,7 +452,7 @@ public class AccountControllerTest {
     @Test
     @DisplayName("リクエストの氏名が空白文字の場合、バリデーションエラー発生")
     void updateAccount_withNameIsBlank_returnValidationError() throws Exception {
-        PasswordUpdateByAdminDto request = new PasswordUpdateByAdminDto(" ", "a@a.com", rawPassword);
+        AccountUpdateDto request = new AccountUpdateDto(" ", "a@a.com", rawPassword);
 
         mockMvc.perform(MockMvcRequestBuilders.put(baseUrl + "account")
                 .with(SecurityMockMvcRequestPostProcessors.authentication(adminAuth))
@@ -465,7 +465,7 @@ public class AccountControllerTest {
     @Test
     @DisplayName("リクエストのメールアドレスが空白文字の場合、バリデーションエラー発生")
     void updateAccount_withMailIsBlank_returnValidationError() throws Exception {
-        PasswordUpdateByAdminDto request = new PasswordUpdateByAdminDto("太郎", " ", rawPassword);
+        AccountUpdateDto request = new AccountUpdateDto("太郎", " ", rawPassword);
 
         mockMvc.perform(MockMvcRequestBuilders.put(baseUrl + "account")
                 .with(SecurityMockMvcRequestPostProcessors.authentication(adminAuth))
@@ -478,7 +478,7 @@ public class AccountControllerTest {
     @Test
     @DisplayName("リクエストのパスワードが空白文字の場合、バリデーションエラー発生")
     void updateAccount_withPasswordIsBlank_returnValidationError() throws Exception {
-        PasswordUpdateByAdminDto request = new PasswordUpdateByAdminDto("太郎", "a@a.com", " ");
+        AccountUpdateDto request = new AccountUpdateDto("太郎", "a@a.com", " ");
 
         mockMvc.perform(MockMvcRequestBuilders.put(baseUrl + "account")
                 .with(SecurityMockMvcRequestPostProcessors.authentication(adminAuth))
@@ -491,7 +491,7 @@ public class AccountControllerTest {
     @Test
     @DisplayName("リクエストの氏名が255文字より多いの場合、バリデーションエラー発生")
     void updateAccount_withNameIsMoreThan255_returnValidationError() throws Exception {
-        PasswordUpdateByAdminDto request = new PasswordUpdateByAdminDto("a".repeat(256), "a@a.com", rawPassword);
+        AccountUpdateDto request = new AccountUpdateDto("a".repeat(256), "a@a.com", rawPassword);
 
         mockMvc.perform(MockMvcRequestBuilders.put(baseUrl + "account")
                 .with(SecurityMockMvcRequestPostProcessors.authentication(adminAuth))
@@ -504,7 +504,7 @@ public class AccountControllerTest {
     @Test
     @DisplayName("リクエストのメールアドレスが255文字より多いの場合、バリデーションエラー発生")
     void updateAccount_withMailIsMoreThan255_returnValidationError() throws Exception {
-        PasswordUpdateByAdminDto request = new PasswordUpdateByAdminDto("太郎", "a".repeat(247) + "@test.com", rawPassword);
+        AccountUpdateDto request = new AccountUpdateDto("太郎", "a".repeat(247) + "@test.com", rawPassword);
 
         mockMvc.perform(MockMvcRequestBuilders.put(baseUrl + "account")
                 .with(SecurityMockMvcRequestPostProcessors.authentication(adminAuth))
@@ -517,7 +517,7 @@ public class AccountControllerTest {
     @Test
     @DisplayName("リクエストのメールアドレスの形式（~~@~~.~~）ではない場合、バリデーションエラー発生")
     void updateAccount_withInValidMail_returnValidationError() throws Exception {
-        PasswordUpdateByAdminDto request = new PasswordUpdateByAdminDto("太郎", "aa@aa", rawPassword);
+        AccountUpdateDto request = new AccountUpdateDto("太郎", "aa@aa", rawPassword);
 
         mockMvc.perform(MockMvcRequestBuilders.put(baseUrl + "account")
                 .with(SecurityMockMvcRequestPostProcessors.authentication(adminAuth))
