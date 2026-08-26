@@ -48,7 +48,7 @@ export function PasswordUpdate() {
                             type={passwordType}
                             value={passwordUpdateForm.password}
                             placeHolder={'現在のパスワードを入力'}
-                            autoComplete={'new-password'}
+                            autoComplete={'current-password'}
                             onChange={handleChange}
                             onBlur={handleBlur}
                             setPasswordType={setPasswordType}
