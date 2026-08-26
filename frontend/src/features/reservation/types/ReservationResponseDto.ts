@@ -14,4 +14,5 @@ export type ReservationResponseDto = {
     isDeleted: boolean;
     reservedSeats: ReservedSeatDto[];
     isReserverMatched: boolean;
+    direction: string;
 };
