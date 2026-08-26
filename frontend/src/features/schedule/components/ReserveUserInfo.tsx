@@ -35,6 +35,7 @@ export function ReserveUserInfo({
 }: ReserveUserInfoProps) {
     const isLoggedIn = !!localStorage.getItem('name');
     const [passwordType, setPasswordType] = useState('password');
+    const [passwordCheckType, setPasswordCheckType] = useState('password');
     return (
         <>
             <div className="border-primary/20 flex flex-col items-start gap-8 border-b-2 py-4">
@@ -98,14 +99,14 @@ export function ReserveUserInfo({
                                 <PasswordInput
                                     id={'passwordCheck'}
                                     label={'パスワード再入力'}
-                                    type={passwordType}
+                                    type={passwordCheckType}
                                     value={reserveUser.passwordCheck}
                                     placeHolder={'パスワードを再入力'}
                                     autoComplete={'new-password'}
                                     onChange={handleInputChange}
                                     onBlur={handleInputBlur}
                                     getFieldError={getFieldError}
-                                    setPasswordType={setPasswordType}
+                                    setPasswordType={setPasswordCheckType}
                                 />
                             </>
                         )}
