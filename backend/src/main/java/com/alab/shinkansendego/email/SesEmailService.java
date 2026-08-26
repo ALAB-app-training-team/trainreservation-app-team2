@@ -120,7 +120,7 @@ public class SesEmailService implements EmailService {
                 .destination(Destination.builder().toAddresses(dto.getReserverMail()).build())
                 .content(EmailContent.builder()
                     .simple(msg -> msg
-                        .subject(Content.builder().data(EmailUtils.CHANGE_BODY).charset("UTF-8").build())
+                        .subject(Content.builder().data(EmailUtils.CHANGE_SUBJECT).charset("UTF-8").build())
                         .body(Body.builder().text(Content.builder().data(body).charset("UTF-8").build()).build())
                     )
                     .build()

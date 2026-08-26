@@ -66,6 +66,7 @@ test('タイトル表示：予約完了時は予約完了、予約確認のゲ�
     // 予約変更時に「予約変更完了」と表示されること
     await reservedTicketPage.header.clickUserName();
     await reservedTicketPage.header.goToReservationList();
+    await reservationListPage.clickThreeDotsButton();
     await reservationListPage.clickChangeButton();
     await reservationListPage.clickChangeSeatConfirmButton();
     await expect(page).toHaveURL('/selectSeat');
@@ -129,6 +130,7 @@ test('戻るボタン表示有無：予約確認のアカウントログイン�
     // 予約変更時は戻るボタンがないこと
     await reservedTicketPage.header.clickUserName();
     await reservedTicketPage.header.goToReservationList();
+    await reservationListPage.clickThreeDotsButton();
     await reservationListPage.clickChangeButton();
     await reservationListPage.clickChangeSeatConfirmButton();
     await expect(page).toHaveURL('/selectSeat');
