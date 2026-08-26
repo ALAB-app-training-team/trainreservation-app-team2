@@ -3,6 +3,7 @@ import 'tailwindcss';
 import dayjs from 'dayjs';
 import { useState } from 'react';
 import { AiOutlineExclamationCircle } from 'react-icons/ai';
+import { FaArrowTrendUp } from 'react-icons/fa6';
 import type { ReactPaginateProps } from 'react-paginate';
 import _ReactPaginate from 'react-paginate';
 
@@ -169,8 +170,9 @@ export function ScheduleList({
                                                     'day',
                                                 )
                                             }
-                                            className="bg-primary order-2 rounded-lg p-2 text-white md:order-3"
+                                            className="bg-primary order-2 flex items-center gap-2 rounded-lg px-4 py-2 text-white md:order-3"
                                         >
+                                            <FaArrowTrendUp />
                                             翌日の始発を検索
                                         </button>
                                         {!dayjs(searchRequestDto.date).isBefore(
