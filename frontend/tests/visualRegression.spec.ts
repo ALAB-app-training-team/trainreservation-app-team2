@@ -5,9 +5,11 @@ import { ReservedTicketPage } from '@tests/pages/ReservedTicket/ReservedTicketPa
 import { ReservationListPage } from '@tests/pages/ReservationList/ReservationListPage';
 import { ScheduleSearchPage } from '@tests/pages/ScheduleSearch/ScheduleSearchPage';
 import { SelectSeatPage } from '@tests/pages/SelectSeat/SelectSeatPage';
-import { LoginPage } from './pages/Login/LoginPage';
-import { AccountCreatePage } from './pages/AccountCreate/AccountCreatePage';
-import { PasswordUpdateForAdminPage } from './pages/PasswordUpdateForAdmin/PasswordUpdateForAdminPage';
+import { LoginPage } from '@tests/pages/Login/LoginPage';
+import { AccountCreatePage } from '@tests/pages/AccountCreate/AccountCreatePage';
+import { AccountUpdatePage } from '@tests/pages/AccountUpdate/AccountUpdatePage';
+import { PasswordUpdatePage } from '@tests/pages/PasswordUpdate/PasswordUpdatePage';
+import { PasswordUpdateForAdminPage } from '@tests/pages/PasswordUpdateForAdmin/PasswordUpdateForAdminPage';
 
 test('visual-scheduleSearch', async ({ page }) => {
     const scheduleSearchPage = new ScheduleSearchPage(page);
@@ -159,6 +161,54 @@ test('visual-accountCreate', async ({ page }) => {
     await loginPage.clickCreateButton();
     await expect(page).toHaveURL('/accountCreate');
     await accountCreatePage.createButton.waitFor({ state: 'visible' });
+    await page.evaluate(() => document.fonts.ready);
+
+    await expect(page).toHaveScreenshot({
+        maxDiffPixelRatio: 0.05,
+        fullPage: true,
+        animations: 'disabled',
+        mask: [
+            // テストに含めたくない要素をマスク(無視)する
+        ],
+        maskColor: '#ffffff',
+    });
+});
+
+test('visual-accountUpdate', async ({ page, commonLogin }) => {
+    const accountUpdatePage = new AccountUpdatePage(page);
+    const loginPage = new LoginPage(page);
+
+    await loginPage.goto();
+    await loginPage.fillMailAddress('test-common@test.com');
+    await loginPage.fillPassword('Password1');
+    await loginPage.clickLoginButton();
+    await accountUpdatePage.goto();
+    await expect(page).toHaveURL('/accountUpdate');
+    await accountUpdatePage.updateButton.waitFor({ state: 'visible' });
+    await page.evaluate(() => document.fonts.ready);
+
+    await expect(page).toHaveScreenshot({
+        maxDiffPixelRatio: 0.05,
+        fullPage: true,
+        animations: 'disabled',
+        mask: [
+            // テストに含めたくない要素をマスク(無視)する
+        ],
+        maskColor: '#ffffff',
+    });
+});
+
+test('visual-passwordUpdate', async ({ page, commonLogin }) => {
+    const passwordUpdatePage = new PasswordUpdatePage(page);
+    const loginPage = new LoginPage(page);
+
+    await loginPage.goto();
+    await loginPage.fillMailAddress('test-common@test.com');
+    await loginPage.fillPassword('Password1');
+    await loginPage.clickLoginButton();
+    await passwordUpdatePage.goto();
+    await expect(page).toHaveURL('/passwordUpdate');
+    await passwordUpdatePage.updateButton.waitFor({ state: 'visible' });
     await page.evaluate(() => document.fonts.ready);
 
     await expect(page).toHaveScreenshot({
