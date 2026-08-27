@@ -104,9 +104,31 @@ public class AccountController {
     @PreAuthorize("isAuthenticated()")
     public ResponseEntity<UUID> putAccount(
         @Valid @RequestBody AccountUpdateDto request,
-        @AuthenticationPrincipal AccountSessionDto session
+        @AuthenticationPrincipal AccountSessionDto session,
+        HttpSession httpSession
     ) {
         UUID response = accountService.putAccount(session.getId(), request);
+        // セッション変更
+        AccountSessionDto updatedSession = new AccountSessionDto(
+            session.getId(),
+            request.getMail(),
+            request.getName()
+        );
+        Authentication currentAuthentication =
+            SecurityContextHolder.getContext().getAuthentication();
+        Authentication authentication = new UsernamePasswordAuthenticationToken(
+            updatedSession,
+            null,
+            currentAuthentication.getAuthorities()
+        );
+        SecurityContext context = SecurityContextHolder.createEmptyContext();
+        context.setAuthentication(authentication);
+        SecurityContextHolder.setContext(context);
+        httpSession.setAttribute(
+            HttpSessionSecurityContextRepository.SPRING_SECURITY_CONTEXT_KEY,
+            context
+        );
+
         return ResponseEntity.status(HttpStatus.OK).body(response);
     }
 
