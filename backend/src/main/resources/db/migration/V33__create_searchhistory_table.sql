@@ -8,4 +8,4 @@ CREATE TABLE T_SearchHistory
     arrival_station_cd      VARCHAR(5)  NOT NULL,
     is_arrival_time         BOOLEAN     NOT NULL,
     insert_timestamp        timestamp   NOT NULL,
-)
+);
