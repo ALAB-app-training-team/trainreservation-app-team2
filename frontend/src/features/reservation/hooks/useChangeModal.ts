@@ -60,6 +60,7 @@ export function useChangeModal(
             arrivalStationCd: detail.arrivalStationCd,
             departureStationName: detail.departureStationName,
             arrivalStationName: detail.arrivalStationName,
+            direction: detail.direction,
         };
         const searchRequestDto: SearchRequestDto | null = null;
         navigate('/selectSeat', {

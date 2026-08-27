@@ -127,7 +127,8 @@ public class ReservationServiceTest {
             LocalDate.of(2026, 6, 1),
             false,
             reservedSeatList,
-            isReserverMatched);
+            isReserverMatched,
+            "DOWN");
     }
 
     /**
@@ -135,10 +136,11 @@ public class ReservationServiceTest {
      *
      * @return DepartureArrivalTimeEntity
      */
-    private @NonNull DepartureArrivalTimeEntity buildSchedule(LocalTime departureTime, String departureStationCd, String departureStationName, LocalTime arrivalTime, String arrivalStationCd, String arrivalStationName) {
+    private @NonNull DepartureArrivalTimeEntity buildSchedule(LocalTime departureTime, String departureStationCd, String departureStationName, LocalTime arrivalTime, String arrivalStationCd, String arrivalStationName, String direction) {
         StationEntity startStation = new StationEntity(departureStationCd, departureStationName);
         StationEntity goalStation = new StationEntity(arrivalStationCd, arrivalStationName);
         SectionKmEntity sectionKm = new SectionKmEntity();
+        sectionKm.setDirection(direction);
         sectionKm.setStartStationCd(departureStationCd);
         sectionKm.setGoalStationCd(arrivalStationCd);
         sectionKm.setStartStation(startStation);
@@ -217,9 +219,9 @@ public class ReservationServiceTest {
         ScheduleEntity schedule = new ScheduleEntity();
         schedule.setTrainType(trainType);
 
-        DepartureArrivalTimeEntity departure = buildSchedule(LocalTime.of(6, 4, 0), "THK01", "東京", LocalTime.of(6, 9, 0), "THK02", "上野");
-        DepartureArrivalTimeEntity dummy = buildSchedule(LocalTime.of(6, 29, 0), "CMN01", "大宮", LocalTime.of(7, 23, 0), "THK04", "宇都宮");
-        DepartureArrivalTimeEntity arrival = buildSchedule(LocalTime.of(7, 38, 0), "CMN02", "福島", LocalTime.of(7, 58, 0), "THK09", "仙台");
+        DepartureArrivalTimeEntity departure = buildSchedule(LocalTime.of(6, 4, 0), "THK01", "東京", LocalTime.of(6, 9, 0), "THK02", "上野", "DOWN");
+        DepartureArrivalTimeEntity dummy = buildSchedule(LocalTime.of(6, 29, 0), "CMN01", "大宮", LocalTime.of(7, 23, 0), "THK04", "宇都宮", "DOWN");
+        DepartureArrivalTimeEntity arrival = buildSchedule(LocalTime.of(7, 38, 0), "CMN02", "福島", LocalTime.of(7, 58, 0), "THK09", "仙台", "DOWN");
 
         LocalDate rideDate = LocalDate.of(2026, 6, 1);
         String scheduleCd = "THK01";
@@ -307,13 +309,13 @@ public class ReservationServiceTest {
             reservationRepo, reservedSeatRepo, sectionKmRepo, departureArrivalTimeRepo, reservedSeatSectionRepo, trainCarRepo, seatRepo, accountRepo, restClientBuilder, entityManager, eventPublisher
         );
 
-        DepartureArrivalTimeEntity departureArrivalTime1 = buildSchedule(LocalTime.of(6, 4, 0), "THK01", "東京", LocalTime.of(6, 9, 0), "THK02", "上野");
-        DepartureArrivalTimeEntity departureArrivalTime2 = buildSchedule(LocalTime.of(6, 10, 0), "THK02", "上野", LocalTime.of(6, 28, 0), "CMN01", "大宮");
-        DepartureArrivalTimeEntity departureArrivalTime3 = buildSchedule(LocalTime.of(6, 29, 0), "CMN01", "大宮", LocalTime.of(6, 52, 0), "THK04", "宇都宮");
-        DepartureArrivalTimeEntity departureArrivalTime4 = buildSchedule(LocalTime.of(6, 53, 0), "THK04", "宇都宮", LocalTime.of(7, 23, 0), "THK07", "郡山");
-        DepartureArrivalTimeEntity departureArrivalTime5 = buildSchedule(LocalTime.of(7, 24, 0), "THK07", "郡山", LocalTime.of(7, 37, 0), "CMN02", "福島");
-        DepartureArrivalTimeEntity departureArrivalTime6 = buildSchedule(LocalTime.of(7, 38, 0), "CMN02", "福島", LocalTime.of(7, 58, 0), "THK09", "仙台");
-        DepartureArrivalTimeEntity departureArrivalTime7 = buildSchedule(LocalTime.of(8, 0, 0), "THK09", "仙台", LocalTime.of(8, 12, 0), "THK10", "古川");
+        DepartureArrivalTimeEntity departureArrivalTime1 = buildSchedule(LocalTime.of(6, 4, 0), "THK01", "東京", LocalTime.of(6, 9, 0), "THK02", "上野", "DOWN");
+        DepartureArrivalTimeEntity departureArrivalTime2 = buildSchedule(LocalTime.of(6, 10, 0), "THK02", "上野", LocalTime.of(6, 28, 0), "CMN01", "大宮", "DOWN");
+        DepartureArrivalTimeEntity departureArrivalTime3 = buildSchedule(LocalTime.of(6, 29, 0), "CMN01", "大宮", LocalTime.of(6, 52, 0), "THK04", "宇都宮", "DOWN");
+        DepartureArrivalTimeEntity departureArrivalTime4 = buildSchedule(LocalTime.of(6, 53, 0), "THK04", "宇都宮", LocalTime.of(7, 23, 0), "THK07", "郡山", "DOWN");
+        DepartureArrivalTimeEntity departureArrivalTime5 = buildSchedule(LocalTime.of(7, 24, 0), "THK07", "郡山", LocalTime.of(7, 37, 0), "CMN02", "福島", "DOWN");
+        DepartureArrivalTimeEntity departureArrivalTime6 = buildSchedule(LocalTime.of(7, 38, 0), "CMN02", "福島", LocalTime.of(7, 58, 0), "THK09", "仙台", "DOWN");
+        DepartureArrivalTimeEntity departureArrivalTime7 = buildSchedule(LocalTime.of(8, 0, 0), "THK09", "仙台", LocalTime.of(8, 12, 0), "THK10", "古川", "DOWN");
 
         LocalDate rideDate = LocalDate.of(2026, 6, 1);
         String scheduleCd = "Test01";
@@ -1190,9 +1192,9 @@ public class ReservationServiceTest {
         when(accountRepo.findById(accountId)).thenReturn(Optional.of(account));
         when(trainCarRepo.findByTrainCarCd(any())).thenReturn(Optional.of(trainCar));
         when(departureArrivalTimeRepo.findByScheduleCd(any())).thenReturn(List.of(
-            buildSchedule(LocalTime.of(6, 0, 0), "THK01", "東京", LocalTime.of(6, 30, 0), "THK02", "上野"),
-            buildSchedule(LocalTime.of(7, 0, 0), "THK02", "上野", LocalTime.of(7, 30, 0), "CMN01", "大宮"),
-            buildSchedule(LocalTime.of(8, 0, 0), "CMN01", "大宮", LocalTime.of(8, 30, 0), "THK09", "仙台")));
+            buildSchedule(LocalTime.of(6, 0, 0), "THK01", "東京", LocalTime.of(6, 30, 0), "THK02", "上野", "DOWN"),
+            buildSchedule(LocalTime.of(7, 0, 0), "THK02", "上野", LocalTime.of(7, 30, 0), "CMN01", "大宮", "DOWN"),
+            buildSchedule(LocalTime.of(8, 0, 0), "CMN01", "大宮", LocalTime.of(8, 30, 0), "THK09", "仙台", "DOWN")));
 
         service.deleteReservation(reservationId, accountId, null, null);
         assertTrue(deletedReservation.getIsDeleted());
@@ -1222,9 +1224,9 @@ public class ReservationServiceTest {
         when(reservedSeatSectionRepo.findByReservationId(reservationId)).thenReturn(deletedSections);
         when(trainCarRepo.findByTrainCarCd(any())).thenReturn(Optional.of(trainCar));
         when(departureArrivalTimeRepo.findByScheduleCd(any())).thenReturn(List.of(
-            buildSchedule(LocalTime.of(6, 0, 0), "THK01", "東京", LocalTime.of(6, 30, 0), "THK02", "上野"),
-            buildSchedule(LocalTime.of(7, 0, 0), "THK02", "上野", LocalTime.of(7, 30, 0), "CMN01", "大宮"),
-            buildSchedule(LocalTime.of(8, 0, 0), "CMN01", "大宮", LocalTime.of(8, 30, 0), "THK09", "仙台")));
+            buildSchedule(LocalTime.of(6, 0, 0), "THK01", "東京", LocalTime.of(6, 30, 0), "THK02", "上野", "DOWN"),
+            buildSchedule(LocalTime.of(7, 0, 0), "THK02", "上野", LocalTime.of(7, 30, 0), "CMN01", "大宮", "DOWN"),
+            buildSchedule(LocalTime.of(8, 0, 0), "CMN01", "大宮", LocalTime.of(8, 30, 0), "THK09", "仙台", "DOWN")));
 
         service.deleteReservation(reservationId, null, name, mail);
         assertTrue(deletedReservation.getIsDeleted());
@@ -1338,8 +1340,8 @@ public class ReservationServiceTest {
         when(accountRepo.findById(accountId)).thenReturn(Optional.of(account));
         when(trainCarRepo.findByTrainCarCd(any())).thenReturn(Optional.of(trainCar));
         when(departureArrivalTimeRepo.findByScheduleCd(any())).thenReturn(List.of(
-            buildSchedule(LocalTime.of(7, 0, 0), "THK02", "上野", LocalTime.of(7, 30, 0), "CMN01", "大宮"),
-            buildSchedule(LocalTime.of(8, 0, 0), "CMN01", "大宮", LocalTime.of(8, 30, 0), "THK09", "仙台")));
+            buildSchedule(LocalTime.of(7, 0, 0), "THK02", "上野", LocalTime.of(7, 30, 0), "CMN01", "大宮", "DOWN"),
+            buildSchedule(LocalTime.of(8, 0, 0), "CMN01", "大宮", LocalTime.of(8, 30, 0), "THK09", "仙台", "DOWN")));
 
         Exception ex = assertThrows(IllegalArgumentException.class, () -> service.deleteReservation(reservationId, accountId, null, null));
         assertEquals("DepartureTime is not found", ex.getMessage());
@@ -1363,8 +1365,8 @@ public class ReservationServiceTest {
         when(accountRepo.findById(accountId)).thenReturn(Optional.of(account));
         when(trainCarRepo.findByTrainCarCd(any())).thenReturn(Optional.of(trainCar));
         when(departureArrivalTimeRepo.findByScheduleCd(any())).thenReturn(List.of(
-            buildSchedule(LocalTime.of(7, 0, 0), "THK01", "東京", LocalTime.of(7, 30, 0), "CMN01", "大宮"),
-            buildSchedule(LocalTime.of(8, 0, 0), "CMN01", "大宮", LocalTime.of(8, 30, 0), "THK09", "仙台")));
+            buildSchedule(LocalTime.of(7, 0, 0), "THK01", "東京", LocalTime.of(7, 30, 0), "CMN01", "大宮", "DOWN"),
+            buildSchedule(LocalTime.of(8, 0, 0), "CMN01", "大宮", LocalTime.of(8, 30, 0), "THK09", "仙台", "DOWN")));
 
         Exception ex = assertThrows(IllegalArgumentException.class, () -> service.deleteReservation(reservationId, accountId, null, null));
         assertEquals("ArrivalTime is not found", ex.getMessage());

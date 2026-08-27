@@ -30,4 +30,5 @@ public class ReservationResponseDto {
     private Boolean isDeleted;
     private List<ReservedSeatDto> reservedSeats;
     private Boolean isReserverMatched;
+    private String direction;
 }
