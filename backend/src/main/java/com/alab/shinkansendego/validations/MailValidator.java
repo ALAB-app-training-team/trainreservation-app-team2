@@ -31,7 +31,7 @@ public class MailValidator
             return SetValidErrorMessage.setErrorMessage(context, "Mail is Blank");
         }
         if (!mail.matches(MAIL_PATTERN)) {
-            return SetValidErrorMessage.setErrorMessage(context, "Mail is InValid");
+            return SetValidErrorMessage.setErrorMessage(context, "Mail is Invalid");
         }
         if (mail.length() > 255 || mail.length() == 0) {
             return SetValidErrorMessage.setErrorMessage(context, "Mail is Over Limit Size");

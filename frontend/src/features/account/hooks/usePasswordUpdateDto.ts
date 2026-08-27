@@ -9,10 +9,11 @@ import type { PasswordCheck } from '@/features/account/types/PasswordCheck';
 import type { PasswordUpdateForm } from '@/features/account/types/PasswordUpdateForm';
 import { ERROR_MESSAGE } from '@/shared/constants/ErrorMessages';
 import { VALIDATION_MESSAGE } from '@/shared/constants/ValidationMessages';
-import { checkPasswordRegex } from '@/shared/utils/CheckPasswordRegex';
+import { usePasswordPolicy } from '@/shared/hooks/usePasswordPolicy';
 
 export function usePasswordUpdateDto() {
     const navigate = useNavigate();
+    const { getPasswordPolicy } = usePasswordPolicy();
     const [isSubmitting, setIsSubmitting] = useState<boolean>(false);
     const [passwordUpdateForm, setPasswordUpdateForm] =
         useState<PasswordUpdateForm>({
@@ -21,15 +22,9 @@ export function usePasswordUpdateDto() {
             newPasswordCheck: '',
         });
 
-    const policy: PasswordCheck = {
-        isBetweenLength:
-            passwordUpdateForm.newPassword.length >= 8 &&
-            passwordUpdateForm.newPassword.length <= 64,
-        hasNumber: /[0-9]/.test(passwordUpdateForm.newPassword),
-        hasUppercase: /[A-Z]/.test(passwordUpdateForm.newPassword),
-        hasLowercase: /[a-z]/.test(passwordUpdateForm.newPassword),
-        isValid: checkPasswordRegex(passwordUpdateForm.newPassword),
-    };
+    const policy: PasswordCheck = getPasswordPolicy(
+        passwordUpdateForm.newPassword,
+    );
 
     type InvalidMessage = {
         field: keyof PasswordUpdateForm;
