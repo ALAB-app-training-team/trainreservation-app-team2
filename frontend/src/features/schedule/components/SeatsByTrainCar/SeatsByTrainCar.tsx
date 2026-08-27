@@ -147,7 +147,7 @@ export function SeatsByTrainCar({
                         ))}
                     </div>
                     <div className="bg-primary-light flex items-center gap-2 rounded-full px-4 py-1 text-sm">
-                        {scheduleInfoDto.direction === 'UP' ? (
+                        {scheduleInfoDto.direction === TRAIN_DIRECTION.UP ? (
                             <span>
                                 {scheduleInfoDto.departureStationName}駅方面
                             </span>
