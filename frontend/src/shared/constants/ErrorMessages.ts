@@ -33,6 +33,8 @@ export const ERROR_MESSAGE = {
     PASSWORD_INCORRECT: 'パスワードが正しくありません',
     ACCOUNT_UPDATE_RETRY:
         'アカウント情報の変更に失敗しました。お手数ですが、再度お試しください。',
+    MAILADDRESS_ALREADY:
+        '登録済のメールアドレスです。別のメールアドレスで登録してください。',
     PASSWORD_UPDATE_RETRY:
         'パスワードの変更に失敗しました。お手数ですが、再度お試しください。',
     ADMIN_UPDATE_ERROR:
