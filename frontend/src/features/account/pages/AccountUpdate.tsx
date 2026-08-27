@@ -1,5 +1,6 @@
 import { useState } from 'react';
 import { FiUser } from 'react-icons/fi';
+import { RiLockPasswordFill } from 'react-icons/ri';
 
 import { AccountInput } from '@/features/account/components/AccountInput';
 import { PasswordInput } from '@/features/account/components/PasswordInput';
@@ -23,7 +24,7 @@ export function AccountUpdate() {
             <div className="flex w-1/2 flex-col items-center justify-center gap-4 p-8 md:w-4/10">
                 <div className="flex flex-col items-center justify-center gap-1">
                     <h1 className="!text-primary !m-0 flex items-center justify-center !text-3xl">
-                        <FiUser />
+                        <RiLockPasswordFill />
                         氏名・メールアドレス変更
                     </h1>
                     <p className="text-gray-500">
@@ -67,7 +68,7 @@ export function AccountUpdate() {
                             label={'パスワード'}
                             type={passwordType}
                             value={accountUpdateForm.password}
-                            placeHolder={'パスワードを入力'}
+                            placeHolder={'現在のパスワードを入力'}
                             autoComplete={'new-password'}
                             onChange={handleChange}
                             onBlur={handleBlur}
