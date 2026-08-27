@@ -78,7 +78,7 @@ public class ReservationControllerTest {
             false,
             reservedSeatList,
             true,
-            "UP");
+            "DOWN");
     }
 
     @BeforeEach

@@ -112,8 +112,7 @@ public class ScheduleService {
                     SectionKmEntity sectionKm = arrivalSectionKmList.stream()
                         .filter(arrivalSectionKm -> Objects.equals(arrivalSectionKm.getSectionCd(), arrival.getSectionCd()))
                         .findFirst()
-                        .orElseThrow(() -> new IllegalArgumentException("sectionKm is Not found"));
-                    String direction = sectionKm.getDirection();
+                        .orElseThrow(() -> new IllegalArgumentException("SectionKm is Not found"));
 
                     ScheduleResponseDto data = new ScheduleResponseDto();
                     data.setScheduleCd(departure.getScheduleCd());
@@ -123,7 +122,7 @@ public class ScheduleService {
                     data.setReservedSeats(calcReservedSeats);
                     data.setGreenSeats(calcGreenSeats);
                     data.setGcSeats(calcGcSeats);
-                    data.setDirection(direction);
+                    data.setDirection(sectionKm.getDirection());
                     responseList.add(data);
                 }
             }
