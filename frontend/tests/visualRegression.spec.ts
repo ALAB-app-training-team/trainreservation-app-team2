@@ -174,7 +174,7 @@ test('visual-accountCreate', async ({ page }) => {
     });
 });
 
-test('visual-accountUpdate', async ({ page, commonLogin }) => {
+test('visual-accountUpdate', async ({ page }) => {
     const accountUpdatePage = new AccountUpdatePage(page);
     const loginPage = new LoginPage(page);
 
@@ -198,7 +198,7 @@ test('visual-accountUpdate', async ({ page, commonLogin }) => {
     });
 });
 
-test('visual-passwordUpdate', async ({ page, commonLogin }) => {
+test('visual-passwordUpdate', async ({ page }) => {
     const passwordUpdatePage = new PasswordUpdatePage(page);
     const loginPage = new LoginPage(page);
 
