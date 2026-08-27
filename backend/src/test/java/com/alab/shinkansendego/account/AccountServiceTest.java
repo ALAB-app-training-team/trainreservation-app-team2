@@ -177,7 +177,7 @@ public class AccountServiceTest {
 
     @Test
     @DisplayName("一般ユーザーのアカウント情報変更で変更先のメールアドレスが既に登録済みのときConflictExceptionを投げること")
-    void putAccount_ExistSameMailAddress_throwConflictException() {
+    void putAccount_withExistSameMailAddress_throwConflictException() {
         UUID uuid = UUID.randomUUID();
         String newMail = "b@b.com";
         AccountUpdateDto dto = new AccountUpdateDto("太郎", newMail, rawPassword);
