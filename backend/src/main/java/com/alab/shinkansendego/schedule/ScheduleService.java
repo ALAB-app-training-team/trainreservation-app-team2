@@ -69,6 +69,10 @@ public class ScheduleService {
         List<TotalSeatEntity> totalSeatEntities = totalSeatRepository.findAll();
 
         for (DepartureArrivalTimeEntity departure : departureScheduleList) {
+            if (request.getPassengers() != null && request.getPassengers() <= 0) {
+                throw new IllegalArgumentException("Passengers must be greater than 0");
+            }
+            
             for (DepartureArrivalTimeEntity arrival : arrivalScheduleList) {
                 if (Objects.equals(departure.getScheduleCd(), arrival.getScheduleCd()) &&
                     departure.getDepartureTime().isBefore(arrival.getArrivalTime())) {

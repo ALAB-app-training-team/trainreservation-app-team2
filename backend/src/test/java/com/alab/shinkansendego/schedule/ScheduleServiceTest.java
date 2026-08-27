@@ -30,8 +30,10 @@ import java.util.Optional;
 import java.util.UUID;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.when;
 
@@ -391,6 +393,8 @@ public class ScheduleServiceTest {
 
         List<ScheduleResponseDto> actualList = service.getSearchedScheduleByStation(request);
         assertNotNull(actualList);
+        assertFalse(actualList.isEmpty(), "検索結果が空でないこと");
+        assertEquals(4, actualList.size(), "指定席の空席が3席以上ある列車のみ取得できる");
     }
 
     @Test
@@ -441,5 +445,81 @@ public class ScheduleServiceTest {
 
         List<ScheduleResponseDto> actualList = service.getSearchedScheduleByStation(request);
         assertNotNull(actualList);
+    }
+
+    @Test
+    @DisplayName("無効な座席種別が指定された場合に検索結果が0件になること")
+    void getSearchedScheduleByStation_withInvalidSeatType_returnEmptyList() {
+        request.setSeatType("無効な座席");
+        request.setPassengers(1);
+
+        when(sectionRepo.findByStartStationCd("STATION01")).thenReturn(depatureSectionList);
+        when(sectionRepo.findByGoalStationCd("STATION02")).thenReturn(arrivalSectionList);
+        when(timeRepo.findBySectionCd("SEC01")).thenReturn(sec01ScheduleList);
+        when(timeRepo.findBySectionCd("SEC02")).thenReturn(sec02ScheduleList);
+        when(timeRepo.findBySectionCd("SEC03")).thenReturn(sec03ScheduleList);
+        when(totalSeatRepo.findAll()).thenReturn(totalSeatList);
+        when(scheduleRepo.findById("TIME01")).thenReturn(getScheduleEntity(trainType1));
+        when(scheduleRepo.findById("TIME02")).thenReturn(getScheduleEntity(trainType2));
+        when(scheduleRepo.findById("TIME03")).thenReturn(getScheduleEntity(trainType3));
+        when(scheduleRepo.findById("TIME04")).thenReturn(getScheduleEntity(trainType4));
+        when(scheduleRepo.findById("TIME05")).thenReturn(getScheduleEntity(trainType5));
+        when(scheduleRepo.findById("TIME06")).thenReturn(getScheduleEntity(trainType6));
+        when(timeRepo.findByScheduleCdAndDepartureTimeGreaterThanEqualAndArrivalTimeLessThanEqual(any(), any(), any())).thenReturn(secList);
+        when(reservedSeatSectionRepo.findByRideDateAndScheduleCdAndReservedSectionCdIn(any(), any(), any())).thenReturn(reservedSeatSecList);
+
+        List<ScheduleResponseDto> actualList = service.getSearchedScheduleByStation(request);
+        assertTrue(actualList.isEmpty());
+    }
+
+    @Test
+    @DisplayName("人数指定に対して残席数が不足している場合に該当列車が検索結果に含まれないこと")
+    void getSearchedScheduleByStation_withInsufficientSeats_returnEmptyList() {
+        request.setSeatType("指定席");
+        request.setPassengers(999);
+
+        when(sectionRepo.findByStartStationCd("STATION01")).thenReturn(depatureSectionList);
+        when(sectionRepo.findByGoalStationCd("STATION02")).thenReturn(arrivalSectionList);
+        when(timeRepo.findBySectionCd("SEC01")).thenReturn(sec01ScheduleList);
+        when(timeRepo.findBySectionCd("SEC02")).thenReturn(sec02ScheduleList);
+        when(timeRepo.findBySectionCd("SEC03")).thenReturn(sec03ScheduleList);
+        when(totalSeatRepo.findAll()).thenReturn(totalSeatList);
+        when(scheduleRepo.findById("TIME01")).thenReturn(getScheduleEntity(trainType1));
+        when(scheduleRepo.findById("TIME02")).thenReturn(getScheduleEntity(trainType2));
+        when(scheduleRepo.findById("TIME03")).thenReturn(getScheduleEntity(trainType3));
+        when(scheduleRepo.findById("TIME04")).thenReturn(getScheduleEntity(trainType4));
+        when(scheduleRepo.findById("TIME05")).thenReturn(getScheduleEntity(trainType5));
+        when(scheduleRepo.findById("TIME06")).thenReturn(getScheduleEntity(trainType6));
+        when(timeRepo.findByScheduleCdAndDepartureTimeGreaterThanEqualAndArrivalTimeLessThanEqual(any(), any(), any())).thenReturn(secList);
+        when(reservedSeatSectionRepo.findByRideDateAndScheduleCdAndReservedSectionCdIn(any(), any(), any())).thenReturn(reservedSeatSecList);
+
+        List<ScheduleResponseDto> actualList = service.getSearchedScheduleByStation(request);
+        assertTrue(actualList.isEmpty());
+    }
+
+    @Test
+    @DisplayName("人数指定に0人以下が指定された場合に例外が発生すること")
+    void getSearchedScheduleByStation_withZeroOrNegativePassengers() {
+        request.setSeatType("指定席");
+        request.setPassengers(0);
+
+        when(sectionRepo.findByStartStationCd("STATION01")).thenReturn(depatureSectionList);
+        when(sectionRepo.findByGoalStationCd("STATION02")).thenReturn(arrivalSectionList);
+        when(timeRepo.findBySectionCd("SEC01")).thenReturn(sec01ScheduleList);
+        when(timeRepo.findBySectionCd("SEC02")).thenReturn(sec02ScheduleList);
+        when(timeRepo.findBySectionCd("SEC03")).thenReturn(sec03ScheduleList);
+        when(totalSeatRepo.findAll()).thenReturn(totalSeatList);
+        when(scheduleRepo.findById("TIME01")).thenReturn(getScheduleEntity(trainType1));
+        when(scheduleRepo.findById("TIME02")).thenReturn(getScheduleEntity(trainType2));
+        when(scheduleRepo.findById("TIME03")).thenReturn(getScheduleEntity(trainType3));
+        when(scheduleRepo.findById("TIME04")).thenReturn(getScheduleEntity(trainType4));
+        when(scheduleRepo.findById("TIME05")).thenReturn(getScheduleEntity(trainType5));
+        when(scheduleRepo.findById("TIME06")).thenReturn(getScheduleEntity(trainType6));
+        when(timeRepo.findByScheduleCdAndDepartureTimeGreaterThanEqualAndArrivalTimeLessThanEqual(any(), any(), any())).thenReturn(secList);
+        when(reservedSeatSectionRepo.findByRideDateAndScheduleCdAndReservedSectionCdIn(any(), any(), any())).thenReturn(reservedSeatSecList);
+
+        assertThrows(IllegalArgumentException.class, () -> {
+            service.getSearchedScheduleByStation(request);
+        });
     }
 }
