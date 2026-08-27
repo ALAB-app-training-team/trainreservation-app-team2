@@ -210,7 +210,7 @@ public class AccountControllerTest {
 
     @Test
     @DisplayName("リクエストのメールアドレスが不正形式の場合、バリデーションエラー発生")
-    void insertAccount_withInValidMail_returnValidationError() throws Exception {
+    void insertAccount_withInvalidMail_returnValidationError() throws Exception {
 
         AccountRequestDto request = new AccountRequestDto("太郎", "aa@aa", rawPassword);
 
@@ -218,7 +218,7 @@ public class AccountControllerTest {
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(objectMapper.writeValueAsString(request)))
             .andExpect(status().isBadRequest())
-            .andExpect(content().string("Mail is InValid"));
+            .andExpect(content().string("Mail is Invalid"));
     }
 
     @Test
@@ -516,7 +516,7 @@ public class AccountControllerTest {
 
     @Test
     @DisplayName("リクエストのメールアドレスの形式（~~@~~.~~）ではない場合、バリデーションエラー発生")
-    void updateAccount_withInValidMail_returnValidationError() throws Exception {
+    void updateAccount_withInvalidMail_returnValidationError() throws Exception {
         AccountUpdateDto request = new AccountUpdateDto("太郎", "aa@aa", rawPassword);
 
         mockMvc.perform(MockMvcRequestBuilders.put(baseUrl + "account")
@@ -524,7 +524,7 @@ public class AccountControllerTest {
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(objectMapper.writeValueAsString(request)))
             .andExpect(status().isBadRequest())
-            .andExpect(content().string("Mail is InValid"));
+            .andExpect(content().string("Mail is Invalid"));
     }
 
     @Test
