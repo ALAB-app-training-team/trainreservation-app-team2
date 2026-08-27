@@ -10,11 +10,12 @@ import { test } from '@tests/fixtures';
 import { AccountCreatePage } from '@tests/pages/AccountCreate/AccountCreatePage';
 import { PasswordUpdateForAdminPage } from './pages/PasswordUpdateForAdmin/PasswordUpdateForAdminPage';
 
-test('navigate-ゲストログイン全機能', async ({ page, context }) => {
+test('navigate-ゲストログイン全機能', async ({ page, context, logout }) => {
     const scheduleSearchPage = new ScheduleSearchPage(page);
     const selectSeatPage = new SelectSeatPage(page);
     const reservationGuestLoginPage = new ReservationGuestLoginPage(page);
     const reservedTicketPage = new ReservedTicketPage(page);
+    const loginPage = new LoginPage(page);
 
     // 検索～予約
     await scheduleSearchPage.goto();
@@ -26,7 +27,7 @@ test('navigate-ゲストログイン全機能', async ({ page, context }) => {
     await scheduleSearchPage.clickDetailButton();
     await expect(page).toHaveURL('/selectSeat');
     await selectSeatPage.selectSeat();
-    await selectSeatPage.inputResererInfo();
+    await selectSeatPage.inputReserverInfo();
     await selectSeatPage.inputCardInfo();
     await selectSeatPage.clickReseveButton();
     await selectSeatPage.clickCancelButton();
@@ -58,6 +59,33 @@ test('navigate-ゲストログイン全機能', async ({ page, context }) => {
             'エラーが発生しました。しばらくしてから再度お試しください。',
         ),
     ).toBeHidden();
+
+    // 検索～アカウント作成して予約
+    await scheduleSearchPage.goto();
+    await expect(page).toHaveURL('/scheduleSearch');
+    await scheduleSearchPage.clickDetailButton();
+    await expect(page).toHaveURL('/selectSeat');
+    await selectSeatPage.clickBackButton();
+    await expect(page).toHaveURL('/scheduleSearch');
+    await scheduleSearchPage.clickDetailButton();
+    await expect(page).toHaveURL('/selectSeat');
+    await selectSeatPage.selectSeat();
+    await selectSeatPage.inputReserverInfo();
+    await selectSeatPage.clickAccountCreateCheckBox();
+    await selectSeatPage.inputPasswordInfo();
+    await selectSeatPage.inputCardInfo();
+    await selectSeatPage.clickReseveButton();
+    await selectSeatPage.clickCancelButton();
+    await selectSeatPage.clickReseveButton();
+    await selectSeatPage.clickReserveConfirmButton();
+    await expect(page).toHaveURL('/reservedTicket');
+
+    // 作成したアカウントでログイン
+    await logout();
+    await loginPage.goto();
+    await loginPage.inputCreatedAccountLoginInfo();
+    await loginPage.clickLoginButton();
+    await expect(page).toHaveURL('/scheduleSearch');
 });
 
 test('navigate-アカウントログイン全機能', async ({

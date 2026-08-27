@@ -10,7 +10,13 @@ export function useSelectedSeats(initialSeats: SeatResponseDto[] = []) {
         useState<SeatResponseDto[]>(initialSeats);
 
     const handleSelectedSeats = (seat: SeatResponseDto) => {
-        if (selectedSeats.some(selectedSeat => selectedSeat.seatCd === seat.seatCd && selectedSeat.trainCarCd === seat.trainCarCd)) {
+        if (
+            selectedSeats.some(
+                (selectedSeat) =>
+                    selectedSeat.seatCd === seat.seatCd &&
+                    selectedSeat.trainCarCd === seat.trainCarCd,
+            )
+        ) {
             setSelectedSeats((prevSeats) =>
                 prevSeats.filter(
                     (selectedSeat) =>
@@ -49,28 +55,45 @@ export function useSelectedSeats(initialSeats: SeatResponseDto[] = []) {
                 ),
             );
 
-            toast.error(`${ERROR_MESSAGE.RELEASE_SEAT}\n` +
-                reservedSeatsInSelectedSeats
-                    .map(
-                        (seat: SeatResponseDto) =>
-                            '・' +
-                            seat.trainCarNumber +
-                            '号車' +
-                            seat.seatNumber +
-                            seat.seatColumn,
-                    )
-                    .join('\n'),{
-                duration:Infinity,
-                action: {
-                    label: 'OK',
-                    onClick: () => {}
+            toast.error(
+                `${ERROR_MESSAGE.RELEASE_SEAT}\n` +
+                    reservedSeatsInSelectedSeats
+                        .map(
+                            (seat: SeatResponseDto) =>
+                                '・' +
+                                seat.trainCarNumber +
+                                '号車' +
+                                seat.seatNumber +
+                                seat.seatColumn,
+                        )
+                        .join('\n'),
+                {
+                    duration: Infinity,
+                    action: {
+                        label: 'OK',
+                        onClick: () => {},
+                    },
+                    classNames: {
+                        title: 'text-left whitespace-pre-line',
+                        actionButton: '!px-4 !py-2 !text-base !h-auto',
+                    },
                 },
-                classNames: {
-                    title : 'text-left whitespace-pre-line',
-                    actionButton: "!px-4 !py-2 !text-base !h-auto",
-                }
-            });
+            );
         }
+    };
+
+    const setAlertConflictAccount = () => {
+        toast.error(ERROR_MESSAGE.ACCOUNT_ALREADY, {
+            duration: Infinity,
+            action: {
+                label: 'OK',
+                onClick: () => {},
+            },
+            classNames: {
+                title: 'text-left whitespace-pre-line',
+                actionButton: '!px-4 !py-2 !text-base !h-auto',
+            },
+        });
     };
 
     return {
@@ -78,5 +101,6 @@ export function useSelectedSeats(initialSeats: SeatResponseDto[] = []) {
         handleSelectedSeats,
         handleClear,
         checkReservedSeats,
+        setAlertConflictAccount,
     };
 }
