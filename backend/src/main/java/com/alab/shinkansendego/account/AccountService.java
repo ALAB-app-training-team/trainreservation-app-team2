@@ -44,12 +44,12 @@ public class AccountService {
     /**
      * ログイン中のアカウント情報取得メソッド
      *
-     * @param currentUserId ログイン中のアカウントID
+     * @param userId ログイン中のアカウントID
      * @return ログイン中のアカウント情報
      */
     @Transactional(readOnly = true)
-    public AccountSessionDto getAccount(UUID currentUserId) {
-        AccountEntity account = accountRepository.findById(currentUserId)
+    public AccountSessionDto getAccount(UUID userId) {
+        AccountEntity account = accountRepository.findById(userId)
             .orElseThrow(() -> new IllegalArgumentException("Account is not found"));
 
         return new AccountSessionDto(
@@ -117,8 +117,8 @@ public class AccountService {
      * @param request 変更する新しいパスワードと現在のパスワード情報
      */
     @Transactional
-    public UUID putPassword(UUID currentUserId, PasswordUpdateDto request) {
-        AccountEntity account = accountRepository.findById(currentUserId)
+    public UUID putPassword(UUID userId, PasswordUpdateDto request) {
+        AccountEntity account = accountRepository.findById(userId)
             .orElseThrow(() -> new IllegalArgumentException("Account is not found"));
 
         if (!passwordEncoder.matches(request.getPassword(), account.getPassword())) {
