@@ -174,14 +174,11 @@ test('visual-accountCreate', async ({ page }) => {
     });
 });
 
-test('visual-accountUpdate', async ({ page }) => {
+test('visual-accountUpdate', async ({ page, commonLogin }) => {
     const accountUpdatePage = new AccountUpdatePage(page);
-    const loginPage = new LoginPage(page);
 
-    await loginPage.goto();
-    await loginPage.fillMailAddress('test-common@test.com');
-    await loginPage.fillPassword('Password1');
-    await loginPage.clickLoginButton();
+    await commonLogin();
+    await expect(page).toHaveURL('/scheduleSearch');
     await accountUpdatePage.goto();
     await expect(page).toHaveURL('/accountUpdate');
     await accountUpdatePage.updateButton.waitFor({ state: 'visible' });
@@ -198,14 +195,11 @@ test('visual-accountUpdate', async ({ page }) => {
     });
 });
 
-test('visual-passwordUpdate', async ({ page }) => {
+test('visual-passwordUpdate', async ({ page, commonLogin }) => {
     const passwordUpdatePage = new PasswordUpdatePage(page);
-    const loginPage = new LoginPage(page);
 
-    await loginPage.goto();
-    await loginPage.fillMailAddress('test-common@test.com');
-    await loginPage.fillPassword('Password1');
-    await loginPage.clickLoginButton();
+    await commonLogin();
+    await expect(page).toHaveURL('/scheduleSearch');
     await passwordUpdatePage.goto();
     await expect(page).toHaveURL('/passwordUpdate');
     await passwordUpdatePage.updateButton.waitFor({ state: 'visible' });
