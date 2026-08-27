@@ -37,12 +37,64 @@ test('visual-scheduleSearch', async ({ page }) => {
     });
 });
 
-test('visual-selectSeat', async ({ page }) => {
+test('visual-selectSeat-guest', async ({ page }) => {
     const scheduleSearchPage = new ScheduleSearchPage(page);
     const selectSeatPage = new SelectSeatPage(page);
 
     await scheduleSearchPage.goto();
     await scheduleSearchPage.clickDetailButton();
+    await expect(page).toHaveURL('/selectSeat');
+    await selectSeatPage.emptySeat.first().waitFor({ state: 'visible' });
+    await page.evaluate(() => document.fonts.ready);
+
+    await expect(page).toHaveScreenshot({
+        maxDiffPixelRatio: 0.05,
+        fullPage: true,
+        animations: 'disabled',
+        mask: [
+            // テストに含めたくない要素をマスク(無視)する
+            // 例 page.locator('.hoge'),
+        ],
+        maskColor: '#ffffff',
+    });
+});
+
+test('visual-selectSeat-accountCreate', async ({ page }) => {
+    const scheduleSearchPage = new ScheduleSearchPage(page);
+    const selectSeatPage = new SelectSeatPage(page);
+
+    await scheduleSearchPage.goto();
+    await scheduleSearchPage.clickDetailButton();
+    await expect(page).toHaveURL('/selectSeat');
+    await selectSeatPage.emptySeat.first().waitFor({ state: 'visible' });
+    await selectSeatPage.clickAccountCreateCheckBox();
+    await page.evaluate(() => document.fonts.ready);
+
+    await expect(page).toHaveScreenshot({
+        maxDiffPixelRatio: 0.05,
+        fullPage: true,
+        animations: 'disabled',
+        mask: [
+            // テストに含めたくない要素をマスク(無視)する
+            // 例 page.locator('.hoge'),
+        ],
+        maskColor: '#ffffff',
+    });
+});
+
+test('visual-selectSeat-account', async ({ page }) => {
+    const scheduleSearchPage = new ScheduleSearchPage(page);
+    const selectSeatPage = new SelectSeatPage(page);
+    const loginPage = new LoginPage(page);
+
+    await scheduleSearchPage.goto();
+    await scheduleSearchPage.clickDetailButton();
+    await expect(page).toHaveURL('/selectSeat');
+    await selectSeatPage.clickLoginButton();
+    await expect(page).toHaveURL('/login');
+    await loginPage.fillMailAddress('test-common@test.com');
+    await loginPage.fillPassword('Password1');
+    await loginPage.clickLoginButton();
     await expect(page).toHaveURL('/selectSeat');
     await selectSeatPage.emptySeat.first().waitFor({ state: 'visible' });
     await page.evaluate(() => document.fonts.ready);

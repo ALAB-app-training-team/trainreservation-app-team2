@@ -7,6 +7,11 @@ export class AccountCreatePage {
     readonly name: Locator;
     readonly mailAddress: Locator;
     readonly password: Locator;
+    readonly lengthPolicy: Locator;
+    readonly numberPolicy: Locator;
+    readonly uppercasePolicy: Locator;
+    readonly lowercasePolicy: Locator;
+    readonly validPolicy: Locator;
     readonly passwordCheck: Locator;
     readonly createButton: Locator;
     readonly ramdomMail: string;
@@ -22,6 +27,11 @@ export class AccountCreatePage {
             name: 'パスワード',
             exact: true,
         });
+        this.lengthPolicy = page.getByText('文字以上64文字以下');
+        this.numberPolicy = page.getByText('半角数字を含む');
+        this.uppercasePolicy = page.getByText('半角英大文字を含む');
+        this.lowercasePolicy = page.getByText('半角英小文字を含む');
+        this.validPolicy = page.getByText('使用できる文字のみで構成されている');
         this.passwordCheck = page.getByRole('textbox', {
             name: 'パスワード再入力',
         });

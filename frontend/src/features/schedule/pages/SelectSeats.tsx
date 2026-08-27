@@ -8,6 +8,7 @@ import { toast } from 'sonner';
 
 import apiClient from '@/api/apiClient';
 import { ENDPOINTS } from '@/api/routes';
+import type { LoginResponseDto } from '@/features/account/types/LoginResponseDto';
 import {
     RESERVEDTICKET_MODE,
     RESERVEDTICKET_ROLE,
@@ -60,6 +61,7 @@ export function SelectSeats() {
         handleSelectedSeats,
         handleClear,
         checkReservedSeats,
+        setAlertConflictAccount,
     } = useSelectedSeats(initialSelectedSeats);
     const {
         reserveUser,
@@ -69,6 +71,9 @@ export function SelectSeats() {
         handleInputBlur,
         isInvalid,
         getFieldError,
+        isAccountCreate,
+        setIsAccountCreate,
+        policy,
     } = useReserveUser();
     const {
         isOpen: isReserveConfirmModalOpen,
@@ -136,6 +141,25 @@ export function SelectSeats() {
             paymentToken: paymentToken ? paymentToken : '',
         };
 
+        if (isAccountCreate) {
+            await apiClient.post(ENDPOINTS.ACCOUNT(), {
+                name: reserveUser.reserverName,
+                mail: reserveUser.reserverMail,
+                password: reserveUser.password,
+            });
+            const response = await apiClient.post<LoginResponseDto>(
+                ENDPOINTS.LOGIN(),
+                {
+                    mail: reserveUser.reserverMail,
+                    password: reserveUser.password,
+                },
+            );
+            localStorage.setItem('name', response.data.name);
+            localStorage.setItem('role', response.data.role);
+            reserveRequestDto.reserverMail = '';
+            reserveRequestDto.reserverName = '';
+        }
+
         if (reservedSeats && reservationId) {
             const response = await apiClient.put(
                 ENDPOINTS.RESERVATION_SEAT_UPDATE(reservationId),
@@ -150,7 +174,10 @@ export function SelectSeats() {
             );
             return response.data;
         }
-        if (!reserveUser.reserverMail && !reserveUser.reserverName) {
+        if (
+            isAccountCreate ||
+            (!reserveUser.reserverMail && !reserveUser.reserverName)
+        ) {
             const response = await apiClient.post(
                 ENDPOINTS.RESERVATION(),
                 reserveRequestDto,
@@ -171,7 +198,7 @@ export function SelectSeats() {
         try {
             const paymentToken = await getPaymentToken();
             const reservationId = await submitOrderWithToken(paymentToken);
-            if (!isLoggedIn) {
+            if (!isLoggedIn && !isAccountCreate) {
                 sessionStorage.setItem(
                     'guestLoginInfo',
                     JSON.stringify({
@@ -194,12 +221,21 @@ export function SelectSeats() {
                 state: {
                     reservationId: reservationId,
                     mode: RESERVEDTICKET_MODE.created,
-                    role: isLoggedIn
-                        ? RESERVEDTICKET_ROLE.account
-                        : RESERVEDTICKET_ROLE.guest,
+                    role:
+                        isLoggedIn || isAccountCreate
+                            ? RESERVEDTICKET_ROLE.account
+                            : RESERVEDTICKET_ROLE.guest,
                 },
             });
         } catch (error) {
+            if (
+                isAccountCreate &&
+                axios.isAxiosError(error) &&
+                error.response?.status === HttpStatusCode.Conflict
+            ) {
+                setAlertConflictAccount();
+                return;
+            }
             if (
                 axios.isAxiosError(error) &&
                 error.response?.status === HttpStatusCode.Conflict &&
@@ -458,6 +494,9 @@ export function SelectSeats() {
                                         handleInputFocus={handleInputFocus}
                                         getFieldError={getFieldError}
                                         handleInputBlur={handleInputBlur}
+                                        isAccountCreate={isAccountCreate}
+                                        setIsAccountCreate={setIsAccountCreate}
+                                        policy={policy}
                                     />
                                 )}
                                 <TotalSeatsFare

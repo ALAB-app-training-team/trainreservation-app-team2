@@ -9,12 +9,13 @@ import type { AccountForm } from '@/features/account/types/AccountForm';
 import type { PasswordCheck } from '@/features/account/types/PasswordCheck';
 import { ERROR_MESSAGE } from '@/shared/constants/ErrorMessages';
 import { VALIDATION_MESSAGE } from '@/shared/constants/ValidationMessages';
+import { usePasswordPolicy } from '@/shared/hooks/usePasswordPolicy';
 import { checkMailRegex } from '@/shared/utils/CheckMailRegex';
-import { checkPasswordRegex } from '@/shared/utils/CheckPasswordRegex';
 import { removeWhiteSpace } from '@/shared/utils/RemoveWhiteSpace';
 
 export function useAccountRequestDto(isPasswordUpdateForAdmin: boolean) {
     const navigate = useNavigate();
+    const { getPasswordPolicy } = usePasswordPolicy();
     const [isSubmitting, setIsSubmitting] = useState<boolean>(false);
     const [accountForm, setAccountForm] = useState<AccountForm>({
         name: '',
@@ -23,15 +24,7 @@ export function useAccountRequestDto(isPasswordUpdateForAdmin: boolean) {
         passwordCheck: '',
     });
 
-    const policy: PasswordCheck = {
-        isBetweenLength:
-            accountForm.password.length >= 8 &&
-            accountForm.password.length <= 64,
-        hasNumber: /[0-9]/.test(accountForm.password),
-        hasUppercase: /[A-Z]/.test(accountForm.password),
-        hasLowercase: /[a-z]/.test(accountForm.password),
-        isValid: checkPasswordRegex(accountForm.password),
-    };
+    const policy: PasswordCheck = getPasswordPolicy(accountForm.password);
 
     type InvalidMessage = {
         field: keyof AccountForm;
