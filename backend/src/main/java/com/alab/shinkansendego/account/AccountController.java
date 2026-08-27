@@ -21,6 +21,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import java.util.Collection;
 import java.util.List;
 import java.util.UUID;
 
@@ -44,14 +45,10 @@ public class AccountController {
     @PostMapping("login")
     public ResponseEntity<LoginResponseDto> login(@Valid @RequestBody LoginRequestDto request, HttpSession session) {
         AccountEntity account = accountService.login(request.getMail(), request.getPassword());
-        // セッション作成
-        AccountSessionDto res = new AccountSessionDto(account.getId(), account.getMail(), account.getName());
+
+        AccountSessionDto accountSession = new AccountSessionDto(account.getId(), account.getMail(), account.getName());
         List<GrantedAuthority> authorities = List.of(new SimpleGrantedAuthority(account.getRole()));
-        Authentication authentication = new UsernamePasswordAuthenticationToken(res, null, authorities);
-        SecurityContext context = SecurityContextHolder.createEmptyContext();
-        context.setAuthentication(authentication);
-        SecurityContextHolder.setContext(context);
-        session.setAttribute(HttpSessionSecurityContextRepository.SPRING_SECURITY_CONTEXT_KEY, context);
+        saveAccountToSession(session, accountSession, authorities);
 
         return ResponseEntity.ok(new LoginResponseDto(account.getName(), account.getRole()));
     }
@@ -108,25 +105,20 @@ public class AccountController {
         HttpSession httpSession
     ) {
         UUID response = accountService.putAccount(session.getId(), request);
-        // セッション変更
+
         AccountSessionDto updatedSession = new AccountSessionDto(
             session.getId(),
             request.getMail(),
             request.getName()
         );
+
         Authentication currentAuthentication =
             SecurityContextHolder.getContext().getAuthentication();
-        Authentication authentication = new UsernamePasswordAuthenticationToken(
+
+        saveAccountToSession(
+            httpSession,
             updatedSession,
-            null,
             currentAuthentication.getAuthorities()
-        );
-        SecurityContext context = SecurityContextHolder.createEmptyContext();
-        context.setAuthentication(authentication);
-        SecurityContextHolder.setContext(context);
-        httpSession.setAttribute(
-            HttpSessionSecurityContextRepository.SPRING_SECURITY_CONTEXT_KEY,
-            context
         );
 
         return ResponseEntity.status(HttpStatus.OK).body(response);
@@ -159,5 +151,33 @@ public class AccountController {
     public ResponseEntity<Void> updatePasswordByAdmin(@Valid @RequestBody PasswordUpdateByAdminDto request) {
         accountService.updatePasswordByAdmin(request);
         return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
+    }
+
+    /**
+     * セッションにアカウント情報を保存するメソッド
+     *
+     * @param session        HTTPセッション
+     * @param accountSession セッションに保存するアカウント情報
+     * @param authorities    権限情報
+     */
+    private void saveAccountToSession(
+        HttpSession session,
+        AccountSessionDto accountSession,
+        Collection<? extends GrantedAuthority> authorities
+    ) {
+        Authentication authentication = new UsernamePasswordAuthenticationToken(
+            accountSession,
+            null,
+            authorities
+        );
+
+        SecurityContext context = SecurityContextHolder.createEmptyContext();
+        context.setAuthentication(authentication);
+        SecurityContextHolder.setContext(context);
+
+        session.setAttribute(
+            HttpSessionSecurityContextRepository.SPRING_SECURITY_CONTEXT_KEY,
+            context
+        );
     }
 }
