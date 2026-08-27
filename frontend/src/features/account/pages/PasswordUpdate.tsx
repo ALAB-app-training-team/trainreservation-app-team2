@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { FiUser } from 'react-icons/fi';
+import { RiLockPasswordFill } from 'react-icons/ri';
 
 import { PasswordInput } from '@/features/account/components/PasswordInput';
 import { usePasswordUpdateDto } from '@/features/account/hooks/usePasswordUpdateDto';
@@ -26,7 +26,7 @@ export function PasswordUpdate() {
             <div className="flex w-1/2 flex-col items-center justify-center gap-4 p-8 md:w-4/10">
                 <div className="flex flex-col items-center justify-center gap-1">
                     <h1 className="!text-primary !m-0 flex items-center justify-center !text-3xl">
-                        <FiUser />
+                        <RiLockPasswordFill />
                         パスワード変更
                     </h1>
                     <p className="text-gray-500">
@@ -85,7 +85,7 @@ export function PasswordUpdate() {
                         disabled={isSubmitting || isDisable}
                         className="bg-primary flex w-full items-center justify-center gap-2 rounded-lg p-2 text-white"
                     >
-                        <FiUser />
+                        <RiLockPasswordFill />
                         変更
                     </button>
                 </form>
