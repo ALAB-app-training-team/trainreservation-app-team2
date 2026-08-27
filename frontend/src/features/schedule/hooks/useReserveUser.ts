@@ -1,8 +1,10 @@
 import { useState } from 'react';
 import type { Focused } from 'react-credit-cards-2';
 
+import type { PasswordCheck } from '@/features/account/types/PasswordCheck';
 import type { ReserveUser } from '@/features/schedule/types/ReserveUser';
 import { VALIDATION_MESSAGE } from '@/shared/constants/ValidationMessages';
+import { usePasswordPolicy } from '@/shared/hooks/usePasswordPolicy';
 import { checkMailRegex } from '@/shared/utils/CheckMailRegex';
 import { removeWhiteSpace } from '@/shared/utils/RemoveWhiteSpace';
 
@@ -10,11 +12,15 @@ export function useReserveUser() {
     const [reserveUser, setReserveUser] = useState<ReserveUser>({
         reserverName: '',
         reserverMail: '',
+        password: '',
+        passwordCheck: '',
         cardNumber: '',
         cardName: '',
         expiry: '',
         cvc: '',
     });
+    const { getPasswordPolicy } = usePasswordPolicy();
+    const [isAccountCreate, setIsAccountCreate] = useState(false);
     const [focus, setFocus] = useState<Focused>('');
     type InvalidMessage = {
         field: keyof ReserveUser;
@@ -24,6 +30,8 @@ export function useReserveUser() {
         [],
     );
     const isLoggedIn = !!localStorage.getItem('name');
+
+    const policy: PasswordCheck = getPasswordPolicy(reserveUser.password);
 
     const isNameEmpty = (value: string) => {
         return removeWhiteSpace(value) === '';
@@ -39,6 +47,12 @@ export function useReserveUser() {
     };
     const isMailMaxLength = (value: string) => {
         return value.length > 255;
+    };
+    const isPasswordCheckEmpty = (value: string) => {
+        return value === '';
+    };
+    const isNotMatchPassword = (value: string) => {
+        return reserveUser.password !== value;
     };
     const isCardNumberInvalid = (value: string) => {
         return value === '' || !/^\d{14,16}$/.test(value);
@@ -64,6 +78,14 @@ export function useReserveUser() {
                     isMailEmpty(reserveUser.reserverMail) ||
                     isMailInvalid(reserveUser.reserverMail) ||
                     isMailMaxLength(reserveUser.reserverMail))) ||
+            (isAccountCreate &&
+                (!policy.isBetweenLength ||
+                    !policy.hasNumber ||
+                    !policy.hasUppercase ||
+                    !policy.hasLowercase ||
+                    !policy.isValid ||
+                    isPasswordCheckEmpty(reserveUser.passwordCheck) ||
+                    isNotMatchPassword(reserveUser.passwordCheck))) ||
             isCardNumberInvalid(reserveUser.cardNumber) ||
             isCardNameEmpty(reserveUser.cardName) ||
             isCardNameInvalid(reserveUser.cardName) ||
@@ -108,6 +130,19 @@ export function useReserveUser() {
                 messages.push({
                     field: 'reserverMail',
                     message: VALIDATION_MESSAGE.INVALID_MAIL,
+                });
+            }
+        } else if (field === 'passwordCheck') {
+            if (isPasswordCheckEmpty(value)) {
+                messages.push({
+                    field: 'passwordCheck',
+                    message: VALIDATION_MESSAGE.EMPTY_PASSWORD_CHECK,
+                });
+            }
+            if (isNotMatchPassword(value)) {
+                messages.push({
+                    field: 'passwordCheck',
+                    message: VALIDATION_MESSAGE.PASSWORD_NOT_MATCH,
                 });
             }
         } else if (field === 'cardNumber') {
@@ -188,10 +223,16 @@ export function useReserveUser() {
         }
         setReserveUser((prev) => ({ ...prev, [e.target.id]: value }));
         editValidateMessage(e.target.id, value);
+        if (reserveUser.passwordCheck !== '' && e.target.id === 'password') {
+            editValidateMessage('passwordCheck', reserveUser.passwordCheck);
+        }
     };
 
     const handleInputBlur = (e: React.ChangeEvent<HTMLInputElement>) => {
         editValidateMessage(e.target.id, e.target.value);
+        if (reserveUser.passwordCheck !== '' && e.target.id === 'password') {
+            editValidateMessage('passwordCheck', reserveUser.passwordCheck);
+        }
     };
 
     return {
@@ -202,5 +243,8 @@ export function useReserveUser() {
         handleInputBlur,
         isInvalid,
         getFieldError,
+        isAccountCreate,
+        setIsAccountCreate,
+        policy,
     };
 }
