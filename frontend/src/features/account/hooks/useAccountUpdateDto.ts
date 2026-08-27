@@ -180,7 +180,7 @@ export function useAccountUpdateDto() {
         } catch (error) {
             if (axios.isAxiosError(error)) {
                 if (error.response?.status === HttpStatusCode.Conflict) {
-                    toast.error(ERROR_MESSAGE.ACCOUNT_UPDATE_RETRY, {
+                    toast.error(ERROR_MESSAGE.MAILADDRESS_ALREADY, {
                         duration: Infinity,
                         action: {
                             label: 'OK',
