@@ -35,20 +35,6 @@ public class AccountController {
     }
 
     /**
-     * ログイン中のアカウント情報取得メソッド
-     *
-     * @param session ログインセッション
-     * @return ログイン中のアカウント情報
-     */
-    @GetMapping("account")
-    @PreAuthorize("isAuthenticated()")
-    public ResponseEntity<AccountSessionDto> getAccount(
-        @AuthenticationPrincipal AccountSessionDto session) {
-        AccountSessionDto account = accountService.getAccount(session.getId());
-        return ResponseEntity.ok(account);
-    }
-
-    /**
      * アカウントログインを行うメソッド
      *
      * @param request リクエストされたログイン情報
@@ -80,6 +66,20 @@ public class AccountController {
     public ResponseEntity<Void> logout(HttpSession session) {
         session.invalidate();
         return ResponseEntity.noContent().build();
+    }
+
+    /**
+     * ログイン中のアカウント情報取得メソッド
+     *
+     * @param session ログインセッション
+     * @return ログイン中のアカウント情報
+     */
+    @GetMapping("account")
+    @PreAuthorize("isAuthenticated()")
+    public ResponseEntity<AccountSessionDto> getAccount(
+        @AuthenticationPrincipal AccountSessionDto session) {
+        AccountSessionDto account = accountService.getAccount(session.getId());
+        return ResponseEntity.ok(account);
     }
 
     /**

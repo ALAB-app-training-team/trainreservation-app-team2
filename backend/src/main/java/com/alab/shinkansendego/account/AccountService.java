@@ -25,6 +25,23 @@ public class AccountService {
     }
 
     /**
+     * アカウントログインを行うメソッド
+     *
+     * @param mail     リクエストされたメールアドレス
+     * @param password リクエストされたパスワード
+     * @return アカウント情報
+     */
+    public AccountEntity login(String mail, String password) {
+        AccountEntity account = accountRepository.findByMail(mail).orElseThrow(() -> new BadCredentialsException("login is failed"));
+
+        boolean matches = passwordEncoder.matches(password, account.getPassword());
+        if (!matches) {
+            throw new BadCredentialsException("login is failed");
+        }
+        return account;
+    }
+
+    /**
      * ログイン中のアカウント情報取得メソッド
      *
      * @param currentUserId ログイン中のアカウントID
@@ -40,23 +57,6 @@ public class AccountService {
             account.getMail(),
             account.getName()
         );
-    }
-
-    /**
-     * アカウントログインを行うメソッド
-     *
-     * @param mail     リクエストされたメールアドレス
-     * @param password リクエストされたパスワード
-     * @return アカウント情報
-     */
-    public AccountEntity login(String mail, String password) {
-        AccountEntity account = accountRepository.findByMail(mail).orElseThrow(() -> new BadCredentialsException("login is failed"));
-
-        boolean matches = passwordEncoder.matches(password, account.getPassword());
-        if (!matches) {
-            throw new BadCredentialsException("login is failed");
-        }
-        return account;
     }
 
     /**
