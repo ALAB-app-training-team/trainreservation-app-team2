@@ -1,3 +1,5 @@
+import type { TrainDirection } from '@/features/schedule/types/TrainDirection';
+
 export type ScheduleInfoDto = {
     scheduleCd: string;
     date: string;
@@ -8,4 +10,5 @@ export type ScheduleInfoDto = {
     arrivalStationCd: string;
     departureStationName: string;
     arrivalStationName: string;
+    direction: TrainDirection;
 };
