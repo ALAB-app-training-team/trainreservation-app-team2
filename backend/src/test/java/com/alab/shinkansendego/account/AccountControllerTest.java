@@ -577,6 +577,19 @@ public class AccountControllerTest {
     }
 
     @Test
+    @DisplayName("現在のパスワードが空白文字の場合、バリデーションエラー発生")
+    void updatePassword_withCurrentPasswordIsBlank_returnValidationError() throws Exception {
+        PasswordUpdateDto request = new PasswordUpdateDto(" ", "NewPassword1/");
+
+        mockMvc.perform(MockMvcRequestBuilders.put(baseUrl + "password")
+                .with(SecurityMockMvcRequestPostProcessors.authentication(commonAuth))
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(objectMapper.writeValueAsString(request)))
+            .andExpect(status().isBadRequest())
+            .andExpect(content().string("Password is Blank"));
+    }
+
+    @Test
     @DisplayName("新しいパスワードがNullの場合、バリデーションエラー発生")
     void updatePassword_withNewPasswordIsNull_returnValidationError() throws Exception {
         PasswordUpdateDto request = new PasswordUpdateDto(rawPassword, null);
@@ -606,19 +619,6 @@ public class AccountControllerTest {
     @DisplayName("新しいパスワードが空白文字の場合、バリデーションエラー発生")
     void updatePassword_withNewPasswordIsBlank_returnValidationError() throws Exception {
         PasswordUpdateDto request = new PasswordUpdateDto(rawPassword, " ");
-
-        mockMvc.perform(MockMvcRequestBuilders.put(baseUrl + "password")
-                .with(SecurityMockMvcRequestPostProcessors.authentication(commonAuth))
-                .contentType(MediaType.APPLICATION_JSON)
-                .content(objectMapper.writeValueAsString(request)))
-            .andExpect(status().isBadRequest())
-            .andExpect(content().string("Password is Blank"));
-    }
-
-    @Test
-    @DisplayName("現在のパスワードが空白文字の場合、バリデーションエラー発生")
-    void updatePassword_withCurrentPasswordIsBlank_returnValidationError() throws Exception {
-        PasswordUpdateDto request = new PasswordUpdateDto(" ", "NewPassword1/");
 
         mockMvc.perform(MockMvcRequestBuilders.put(baseUrl + "password")
                 .with(SecurityMockMvcRequestPostProcessors.authentication(commonAuth))
