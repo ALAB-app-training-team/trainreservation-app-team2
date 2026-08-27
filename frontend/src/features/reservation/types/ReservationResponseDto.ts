@@ -1,4 +1,5 @@
 import type { ReservedSeatDto } from '@/features/reservation/types/ReservedSeatDto';
+import type { TrainDirection } from '@/features/schedule/types/TrainDirection';
 
 export type ReservationResponseDto = {
     reservationId: string;
@@ -14,5 +15,5 @@ export type ReservationResponseDto = {
     isDeleted: boolean;
     reservedSeats: ReservedSeatDto[];
     isReserverMatched: boolean;
-    direction: string;
+    direction: TrainDirection;
 };

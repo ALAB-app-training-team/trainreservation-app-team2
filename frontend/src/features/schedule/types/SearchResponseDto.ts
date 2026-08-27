@@ -1,3 +1,5 @@
+import type { TrainDirection } from '@/features/schedule/types/TrainDirection';
+
 export type SearchResponseDto = {
     scheduleCd: string;
     trainTypeName: string;
@@ -6,5 +8,5 @@ export type SearchResponseDto = {
     reservedSeats: number;
     greenSeats: number;
     gcSeats: number;
-    direction: string;
+    direction: TrainDirection;
 };

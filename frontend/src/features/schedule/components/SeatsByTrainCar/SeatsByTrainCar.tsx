@@ -3,6 +3,7 @@ import { FiArrowDown, FiArrowUp } from 'react-icons/fi';
 
 import type { ReservedSeatDto } from '@/features/reservation/types/ReservedSeatDto';
 import { Seat } from '@/features/schedule/components/Seat';
+import { TRAIN_DIRECTION } from '@/features/schedule/constants/TrainDirection';
 import { useSeatsByTrainCar } from '@/features/schedule/hooks/useSeatsByTrainCar';
 import type { ScheduleInfoDto } from '@/features/schedule/types/ScheduleInfoDto';
 import type { SeatResponseDto } from '@/features/schedule/types/SeatResponseDto';
@@ -75,7 +76,7 @@ export function SeatsByTrainCar({
                 <h2 className="text-left">{seats[0].trainCarNumber}号車</h2>
                 <div className="flex flex-col items-center gap-2">
                     <div className="bg-primary-light flex items-center gap-2 rounded-full px-4 py-1 text-sm">
-                        {scheduleInfoDto.direction === 'UP' ? (
+                        {scheduleInfoDto.direction === TRAIN_DIRECTION.UP ? (
                             <>
                                 <FiArrowUp />
                                 {`${scheduleInfoDto.arrivalStationName}駅方面（進行方向）`}
