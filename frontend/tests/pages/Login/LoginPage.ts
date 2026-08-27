@@ -46,9 +46,14 @@ export class LoginPage {
         await this.fillMailAddress('test-common@test.com');
         await this.fillPassword('Password1');
     }
-    
+
     async inputAdminLoginInfo() {
         await this.fillMailAddress('test-admin@test.com');
+        await this.fillPassword('Password1');
+    }
+
+    async inputCreatedAccountLoginInfo() {
+        await this.fillMailAddress('guest@test.com');
         await this.fillPassword('Password1');
     }
 }
