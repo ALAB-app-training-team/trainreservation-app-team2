@@ -88,8 +88,8 @@ public class AccountService {
      * @param request 変更するアカウント情報
      */
     @Transactional
-    public UUID putAccount(UUID currentUserId, AccountUpdateDto request) {
-        AccountEntity account = accountRepository.findById(currentUserId)
+    public UUID putAccount(UUID userId, AccountUpdateDto request) {
+        AccountEntity account = accountRepository.findById(userId)
             .orElseThrow(() -> new IllegalArgumentException("Account is not found"));
 
         if (!passwordEncoder.matches(request.getPassword(), account.getPassword())) {
@@ -100,7 +100,7 @@ public class AccountService {
         Optional<AccountEntity> duplicateAccount = accountRepository.findByMail(newMail);
 
         if (duplicateAccount.isPresent()
-            && !duplicateAccount.get().getId().equals(currentUserId)) {
+            && !duplicateAccount.get().getId().equals(userId)) {
             throw new ConflictException(newMail + " is Duplicate");
         }
 
