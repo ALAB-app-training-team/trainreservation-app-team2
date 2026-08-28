@@ -41,6 +41,8 @@ export function SeatTypeAndPassengersSelect({
                 <label htmlFor="seatType">座席種別</label>
                 <Select
                     inputId="seatType"
+                    data-testid="seatType-select"
+                    aria-label="座席種別"
                     value={selectedSeatType}
                     onChange={(option) => {
                         if (option) onSeatTypeChange(option.value);
@@ -63,6 +65,8 @@ export function SeatTypeAndPassengersSelect({
                 <label htmlFor="passengers">人数</label>
                 <Select
                     inputId="passengers"
+                    data-testid="passengers-select"
+                    aria-label="人数"
                     value={selectedPassengers}
                     onChange={(option) => {
                         if (option) onPassengersChange(option.value);

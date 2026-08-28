@@ -15,6 +15,9 @@ export class ScheduleSearchPage {
     readonly availableTrainCheckBox: Locator;
     readonly searchNextDayButton: Locator;
     readonly backButton: Locator;
+    readonly seatTypeSelect: Locator;
+    readonly passengersSelect: Locator;
+    readonly isOnlyAvailableHint: Locator;
 
     constructor(page: Page) {
         this.page = page;
@@ -36,6 +39,9 @@ export class ScheduleSearchPage {
             name: '翌日の始発を検索',
         });
         this.backButton = page.getByTestId('back-button-in-scheduleSearch');
+        this.seatTypeSelect = page.getByTestId('seatType-select');
+        this.passengersSelect = page.getByTestId('passengers-select');
+        this.isOnlyAvailableHint = page.getByTestId('isOnlyAvailable-hint');
     }
 
     async goto() {
@@ -78,6 +84,18 @@ export class ScheduleSearchPage {
 
     async clickArrivalTimeButton() {
         await this.arrivalTimeButton.click();
+    }
+
+    async selectSeatType(value: string) {
+        await this.seatTypeSelect.selectOption(value);
+    }
+
+    async selectPassengers(value: string) {
+        await this.passengersSelect.selectOption(value);
+    }
+
+    async unCheckAvailableTrainCheckBox() {
+        await this.availableTrainCheckBox.uncheck;
     }
 
     async clickAvailableTrainCheckBox() {

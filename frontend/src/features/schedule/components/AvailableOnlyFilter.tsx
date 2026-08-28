@@ -15,6 +15,7 @@ export function AvailableOnlyFilter({
                 <input
                     type="checkbox"
                     id="isOnlyAvailable"
+                    data-testid="isOnlyAvailable-checkbox"
                     checked={isChecked}
                     disabled={isDisabled}
                     onChange={(e) => onChange(e.target.checked)}
@@ -32,7 +33,10 @@ export function AvailableOnlyFilter({
                 </label>
             </div>
             {isDisabled && (
-                <p className="text-xs text-gray-500">
+                <p
+                    data-testid="isOnlyAvailable-hint"
+                    className="text-xs text-gray-500"
+                >
                     （座席種別を指定中は自動で空席がある列車のみ表示されます）
                 </p>
             )}
