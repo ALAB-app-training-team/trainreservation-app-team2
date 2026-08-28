@@ -4,7 +4,9 @@ import {
     HiOutlineSwitchVertical,
 } from 'react-icons/hi';
 
+import { AvailableOnlyFilter } from '@/features/schedule/components/AvailableOnlyFilter';
 import { DepartureDateAndTimePicker } from '@/features/schedule/components/DepartureDateAndTimePicker';
+import { SeatTypeAndPassengersSelect } from '@/features/schedule/components/SeatTypeAndPassengersSelect';
 import { StationSelect } from '@/features/schedule/components/StationSelect';
 import { useStationFilter } from '@/features/schedule/hooks/useStationFilter';
 import type { SearchRequestDto } from '@/features/schedule/types/SearchRequestDto';
@@ -27,6 +29,10 @@ type ScheduleSearchFormProps = {
     minDate: Date;
     isOnlyAvailable: boolean;
     setIsOnlyAvailable: React.Dispatch<React.SetStateAction<boolean>>;
+    passengers: string;
+    isSeatTypeSpecified: boolean;
+    setSeatType: React.Dispatch<SetStateAction<string>>;
+    setPassengers: React.Dispatch<SetStateAction<string>>;
 };
 
 export function ScheduleSearchForm({
@@ -45,6 +51,10 @@ export function ScheduleSearchForm({
     minDate,
     isOnlyAvailable,
     setIsOnlyAvailable,
+    passengers,
+    isSeatTypeSpecified,
+    setSeatType,
+    setPassengers,
 }: ScheduleSearchFormProps) {
     const { availableDepartureStations, availableArrivalStations } =
         useStationFilter(
@@ -71,7 +81,7 @@ export function ScheduleSearchForm({
                             <div className="w-full text-center md:w-fit">
                                 <button
                                     onClick={switchDepartureAndArrivalStation}
-                                    className="border-primary w-fit rounded-full border-1 bg-white p-1 text-xl md:mt-8"
+                                    className="border-primary w-fit rounded-full border bg-white p-1 text-xl md:mt-8"
                                 >
                                     <HiOutlineSwitchHorizontal className="hidden md:block" />
                                     <HiOutlineSwitchVertical className="block md:hidden" />
@@ -144,19 +154,26 @@ export function ScheduleSearchForm({
                                 }
                             />
                         </div>
-                        <div className="flex gap-2 bg-transparent text-left">
-                            <input
-                                type="checkbox"
-                                id="isOnlyAvailable"
-                                checked={isOnlyAvailable}
-                                onChange={(e) =>
-                                    setIsOnlyAvailable(e.target.checked)
-                                }
-                                className="accent-primary"
-                            />
-                            <label htmlFor="isOnlyAvailable">
-                                空席がある列車のみ表示する
-                            </label>
+                        <div className="flex flex-col gap-4">
+                            <div className="flex w-full flex-col justify-between md:flex-row">
+                                <SeatTypeAndPassengersSelect
+                                    seatType={searchRequestDto.seatType}
+                                    passengers={passengers}
+                                    onSeatTypeChange={setSeatType}
+                                    onPassengersChange={setPassengers}
+                                />
+                            </div>
+                            <div className="flex w-full justify-start md:w-1/2">
+                                <AvailableOnlyFilter
+                                    isChecked={
+                                        isSeatTypeSpecified
+                                            ? true
+                                            : isOnlyAvailable
+                                    }
+                                    isDisabled={isSeatTypeSpecified}
+                                    onChange={setIsOnlyAvailable}
+                                />
+                            </div>
                         </div>
                     </div>
                 </div>

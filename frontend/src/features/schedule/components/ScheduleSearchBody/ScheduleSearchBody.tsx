@@ -42,6 +42,10 @@ export function ScheduleSearchBody() {
         maxDate,
         minDate,
         handleNextDate,
+        passengers,
+        isSeatTypeSpecified,
+        setSeatType,
+        setPassengers,
     } = useSearchRequestDto({ stations, initialDto });
     const departureDtos = stationResponseDtos;
     const arrivalDtos = stationResponseDtos;
@@ -102,6 +106,10 @@ export function ScheduleSearchBody() {
                         minDate={minDate}
                         isOnlyAvailable={isOnlyAvailable}
                         setIsOnlyAvailable={setIsOnlyAvailable}
+                        passengers={passengers}
+                        isSeatTypeSpecified={isSeatTypeSpecified}
+                        setSeatType={setSeatType}
+                        setPassengers={setPassengers}
                     />
                     <Suspense fallback={<ScheduleListSkeleton />}>
                         <ScheduleList
