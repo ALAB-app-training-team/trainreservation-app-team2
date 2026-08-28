@@ -2,9 +2,11 @@ package com.alab.shinkansendego.searchhistory;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Id;
+import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import lombok.NonNull;
+import lombok.RequiredArgsConstructor;
 
 import java.sql.Time;
 import java.sql.Timestamp;
@@ -13,6 +15,8 @@ import java.util.UUID;
 
 @Data
 @NoArgsConstructor
+@RequiredArgsConstructor
+@AllArgsConstructor
 public class SearchHistoryEntity {
     @Id
     @Column(name = "id")
@@ -36,6 +40,6 @@ public class SearchHistoryEntity {
     @Column(name = "is_arrival_time")
     private Boolean isArrivalTime;
     @NonNull
-    @Column(name = "insert_timestamp")
-    private Timestamp insertTimeStamp;
+    @Column(name = "create_at")
+    private Timestamp createAt;
 }

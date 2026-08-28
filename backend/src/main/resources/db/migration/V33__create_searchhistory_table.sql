@@ -7,5 +7,5 @@ CREATE TABLE T_SearchHistory
     departure_station_cd    VARCHAR(5)  NOT NULL,
     arrival_station_cd      VARCHAR(5)  NOT NULL,
     is_arrival_time         BOOLEAN     NOT NULL,
-    insert_timestamp        timestamp   NOT NULL
+    create_at               TIMESTAMP   NOT NULL
 );
