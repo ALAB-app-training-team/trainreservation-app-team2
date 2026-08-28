@@ -27,7 +27,9 @@ export function useSearchRequestDto({
         initialDto?.arrivalStationCd || stations[1].stationCd,
     );
     const [isArrivalTime, setIsArrivalTime] = useState<boolean>(false);
-    const [seatType, setSeatType] = useState<string>('-');
+    const [seatType, setSeatType] = useState<string>(
+        initialDto?.seatType ?? '-',
+    );
     const [passengers, setPassengers] = useState<string>(
         initialDto?.passengers != null ? String(initialDto.passengers) : '-',
     );
