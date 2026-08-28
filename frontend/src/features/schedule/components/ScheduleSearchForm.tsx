@@ -27,12 +27,12 @@ type ScheduleSearchFormProps = {
     getFieldError: (field: string) => string;
     maxDate: Date;
     minDate: Date;
-    isOnlyAvailable: boolean;
-    setIsOnlyAvailable: React.Dispatch<React.SetStateAction<boolean>>;
     passengers: string;
     isSeatTypeSpecified: boolean;
     setSeatType: React.Dispatch<SetStateAction<string>>;
     setPassengers: React.Dispatch<SetStateAction<string>>;
+    isOnlyAvailable: boolean;
+    setIsOnlyAvailable: (value: boolean) => void;
 };
 
 export function ScheduleSearchForm({

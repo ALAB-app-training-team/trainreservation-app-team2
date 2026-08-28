@@ -1,4 +1,4 @@
-import { Suspense, useState } from 'react';
+import { Suspense } from 'react';
 import { LuArrowLeft } from 'react-icons/lu';
 import { useLocation, useNavigate } from 'react-router-dom';
 
@@ -46,10 +46,11 @@ export function ScheduleSearchBody() {
         isSeatTypeSpecified,
         setSeatType,
         setPassengers,
+        isOnlyAvailable,
+        setIsOnlyAvailable,
     } = useSearchRequestDto({ stations, initialDto });
     const departureDtos = stationResponseDtos;
     const arrivalDtos = stationResponseDtos;
-    const [isOnlyAvailable, setIsOnlyAvailable] = useState<boolean>(true);
 
     return (
         <>
