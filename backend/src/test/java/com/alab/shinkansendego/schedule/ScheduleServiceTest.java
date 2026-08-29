@@ -52,7 +52,7 @@ public class ScheduleServiceTest {
     private final List<TotalSeatEntity> totalSeatList = new ArrayList<>();
     private final List<DepartureArrivalTimeEntity> secList = new ArrayList<>();
     private final List<ReservedSeatSectionEntity> reservedSeatSecList = new ArrayList<>();
-    private final ScheduleRequestDto request = new ScheduleRequestDto(LocalDate.of(2026, 6, 1), "東京", "上野", "-", null);
+    private final ScheduleRequestDto request = new ScheduleRequestDto(LocalDate.of(2026, 6, 1), "東京", "上野", "-", null, true);
     private final List<SectionKmEntity> emptySectionCdList = new ArrayList<>();
     @Mock
     private SectionKmRepository sectionRepo;
