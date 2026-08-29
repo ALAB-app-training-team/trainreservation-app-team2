@@ -124,12 +124,6 @@ public class ScheduleService {
                     int requiredSeats = isPassengersSpecified ? passengers : 1;
                     boolean isMatch;
 
-                    System.out.println("seatType=" + seatType);
-                    System.out.println("isSeatTypeSpecified=" + isSeatTypeSpecified);
-                    System.out.println("passengers=" + passengers);
-                    System.out.println("requiredSeats=" + requiredSeats);
-                    System.out.println("calcGcSeats=" + calcGcSeats);
-
                     if (isSeatTypeSpecified) {
                         isMatch = switch (seatType) {
                             case "指定席" -> (calcReservedSeats >= requiredSeats);
@@ -153,8 +147,6 @@ public class ScheduleService {
                     if (!isMatch) {
                         continue;
                     }
-
-                    System.out.println("isMatch=" + isMatch);
 
                     ScheduleResponseDto data = new ScheduleResponseDto();
                     data.setScheduleCd(departure.getScheduleCd());
