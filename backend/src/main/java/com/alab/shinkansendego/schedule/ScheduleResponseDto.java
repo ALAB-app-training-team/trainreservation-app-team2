@@ -17,4 +17,5 @@ public class ScheduleResponseDto {
     private Integer reservedSeats;
     private Integer greenSeats;
     private Integer gcSeats;
+    private String direction;
 }

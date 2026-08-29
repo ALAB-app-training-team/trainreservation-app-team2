@@ -72,6 +72,7 @@ export function ScheduleItem({
             arrivalStationCd,
             departureStationName,
             arrivalStationName,
+            direction: schedule.direction,
         };
         const isScheduleCdUnchanged =
             preChangeScheduleInfo?.scheduleCd &&

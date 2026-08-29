@@ -76,8 +76,8 @@ public class TrainCarServiceTest {
         request.setDepartureTime(LocalTime.of(12, 0, 0));
         request.setArrivalTime(LocalTime.of(13, 0, 0));
         request.setTrainCarCd("Test001");
-        sectionKmEntities.add(new SectionKmEntity("Test1", "Teststart01", "Testend01", 10.0));
-        sectionKmEntities.add(new SectionKmEntity("Test2", "Teststart02", "Testend02", 10.0));
+        sectionKmEntities.add(new SectionKmEntity("Test1", "Teststart01", "Testend01", 10.0, "UP"));
+        sectionKmEntities.add(new SectionKmEntity("Test2", "Teststart02", "Testend02", 10.0, "UP"));
         reservedSeatSectionEntities.add(new ReservedSeatSectionEntity(UUID.randomUUID(), UUID.randomUUID(), LocalDate.of(2026, 6, 1), "Test01",
             "Test001", "TestSeat2", "Test1", "CAR01"));
         reservedSeatSectionEntities.add(new ReservedSeatSectionEntity(UUID.randomUUID(), UUID.randomUUID(), LocalDate.of(2026, 6, 1), "Test01",

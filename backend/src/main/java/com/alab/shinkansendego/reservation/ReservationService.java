@@ -101,17 +101,17 @@ public class ReservationService {
         for (ReservationEntity reservation : reservationEntityList) {
             ReservationResponseDto dto = new ReservationResponseDto();
 
-            Set<DepartureArrivalTimeEntity> scheduleList = reservation.getDepartureArrivalTime();
+            Set<DepartureArrivalTimeEntity> departureArrivalTimeList = reservation.getDepartureArrivalTime();
 
-            DepartureArrivalTimeEntity departureSchedule = scheduleList.stream().filter(
-                    schedule -> Objects.equals(
-                        schedule.getSectionKm().getStartStationCd(),
+            DepartureArrivalTimeEntity departureSchedule = departureArrivalTimeList.stream().filter(
+                    departureArrivalTime -> Objects.equals(
+                        departureArrivalTime.getSectionKm().getStartStationCd(),
                         reservation.getDepartureStationCd())
                 )
                 .min(Comparator.comparing(DepartureArrivalTimeEntity::getDepartureTime))
                 .orElseThrow(() -> new IllegalStateException("DepartureSchedule is NOT found"));
 
-            DepartureArrivalTimeEntity arrivalSchedule = scheduleList.stream().filter(
+            DepartureArrivalTimeEntity arrivalSchedule = departureArrivalTimeList.stream().filter(
                     schedule -> Objects.equals(
                         schedule.getSectionKm().getGoalStationCd(),
                         reservation.getArrivalStationCd())
@@ -148,7 +148,7 @@ public class ReservationService {
             dto.setRideDate(reservation.getRideDate());
             dto.setIsDeleted(reservation.getIsDeleted());
             dto.setReservedSeats(reservedSeatDtos);
-
+            dto.setDirection(departureSchedule.getSectionKm().getDirection());
             reservationList.add(dto);
         }
 
@@ -255,7 +255,7 @@ public class ReservationService {
         dto.setIsDeleted(reservationEntity.getIsDeleted());
         dto.setReservedSeats(reservedSeatList);
         dto.setIsReserverMatched(isReserverMatched);
-
+        dto.setDirection(reservationEntity.getDepartureArrivalTime().stream().findFirst().get().getSectionKm().getDirection());
         return dto;
     }
 
