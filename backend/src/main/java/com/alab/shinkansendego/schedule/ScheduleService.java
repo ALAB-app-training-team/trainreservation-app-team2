@@ -41,6 +41,10 @@ public class ScheduleService {
 
     public List<ScheduleResponseDto> getSearchedScheduleByStation(ScheduleRequestDto request) {
 
+        if (request.getPassengers() != null && request.getPassengers() <= 0) {
+            throw new IllegalArgumentException("Passengers must be greater than 0");
+        }
+
         List<ScheduleResponseDto> responseList = new ArrayList<>();
 
         List<String> departureSectionCdList = sectionKmRepository.findByStartStationCd(request.getDepartureStationCd())
@@ -69,10 +73,6 @@ public class ScheduleService {
         List<TotalSeatEntity> totalSeatEntities = totalSeatRepository.findAll();
 
         for (DepartureArrivalTimeEntity departure : departureScheduleList) {
-            if (request.getPassengers() != null && request.getPassengers() <= 0) {
-                throw new IllegalArgumentException("Passengers must be greater than 0");
-            }
-            
             for (DepartureArrivalTimeEntity arrival : arrivalScheduleList) {
                 if (Objects.equals(departure.getScheduleCd(), arrival.getScheduleCd()) &&
                     departure.getDepartureTime().isBefore(arrival.getArrivalTime())) {
@@ -124,6 +124,12 @@ public class ScheduleService {
                     int requiredSeats = isPassengersSpecified ? passengers : 1;
                     boolean isMatch;
 
+                    System.out.println("seatType=" + seatType);
+                    System.out.println("isSeatTypeSpecified=" + isSeatTypeSpecified);
+                    System.out.println("passengers=" + passengers);
+                    System.out.println("requiredSeats=" + requiredSeats);
+                    System.out.println("calcGcSeats=" + calcGcSeats);
+
                     if (isSeatTypeSpecified) {
                         isMatch = switch (seatType) {
                             case "指定席" -> (calcReservedSeats >= requiredSeats);
@@ -135,12 +141,20 @@ public class ScheduleService {
                         isMatch = (
                             calcReservedSeats >= requiredSeats || calcGreenSeats >= requiredSeats || calcGcSeats >= requiredSeats);
                     } else {
-                        isMatch = true;
+                        boolean isOnlyAvailable = Boolean.TRUE.equals(request.getIsOnlyAvailable());
+
+                        if (isOnlyAvailable) {
+                            isMatch = calcReservedSeats > 0 || calcGreenSeats > 0 || calcGcSeats > 0;
+                        } else {
+                            isMatch = true;
+                        }
                     }
 
                     if (!isMatch) {
                         continue;
                     }
+
+                    System.out.println("isMatch=" + isMatch);
 
                     ScheduleResponseDto data = new ScheduleResponseDto();
                     data.setScheduleCd(departure.getScheduleCd());

@@ -19,4 +19,5 @@ public class ScheduleRequestDto {
     private String arrivalStationCd;
     private String seatType;
     private Integer passengers;
+    private Boolean isOnlyAvailable;
 }
