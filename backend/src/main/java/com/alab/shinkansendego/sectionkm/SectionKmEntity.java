@@ -34,6 +34,9 @@ public class SectionKmEntity {
     @NonNull
     @Column(name = "distance_km")
     private Double distanceKm;
+    @NonNull
+    @Column(name = "direction")
+    private String direction;
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "start_station_cd", referencedColumnName = "station_cd", insertable = false, updatable = false)
     private StationEntity startStation;

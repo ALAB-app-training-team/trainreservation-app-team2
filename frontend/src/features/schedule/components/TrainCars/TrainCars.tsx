@@ -85,6 +85,7 @@ export function TrainCars({
                     </div>
                     <Suspense fallback={<SeatsByTrainCarSkeleton />}>
                         <SeatsByTrainCar
+                            scheduleInfoDto={scheduleInfoDto}
                             seatsRequestDto={seatsRequestDto}
                             selectedSeats={selectedSeats}
                             handleSelectedSeats={handleSelectedSeats}

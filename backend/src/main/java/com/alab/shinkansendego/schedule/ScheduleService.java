@@ -47,26 +47,22 @@ public class ScheduleService {
 
         List<ScheduleResponseDto> responseList = new ArrayList<>();
 
-        List<String> departureSectionCdList = sectionKmRepository.findByStartStationCd(request.getDepartureStationCd())
-            .stream().map(SectionKmEntity::getSectionCd)
-            .toList();
-        List<String> arrivalSectionCdList = sectionKmRepository.findByGoalStationCd(request.getArrivalStationCd())
-            .stream().map(SectionKmEntity::getSectionCd)
-            .toList();
+        List<SectionKmEntity> departureSectionKmList = sectionKmRepository.findByStartStationCd(request.getDepartureStationCd());
+        List<SectionKmEntity> arrivalSectionKmList = sectionKmRepository.findByGoalStationCd(request.getArrivalStationCd());
 
-        if (departureSectionCdList.isEmpty() || arrivalSectionCdList.isEmpty()) {
-            throw new IllegalArgumentException("SectionCD is Not found");
+        if (departureSectionKmList.isEmpty() || arrivalSectionKmList.isEmpty()) {
+            throw new IllegalArgumentException("Section is Not found");
         }
 
         List<DepartureArrivalTimeEntity> departureScheduleList = new ArrayList<>();
         List<DepartureArrivalTimeEntity> arrivalScheduleList = new ArrayList<>();
 
-        for (String cd : departureSectionCdList) {
-            List<DepartureArrivalTimeEntity> list = departureArrivalTimeRepository.findBySectionCd(cd);
+        for (SectionKmEntity departureSectionKm : departureSectionKmList) {
+            List<DepartureArrivalTimeEntity> list = departureArrivalTimeRepository.findBySectionCd(departureSectionKm.getSectionCd());
             departureScheduleList.addAll(list);
         }
-        for (String cd : arrivalSectionCdList) {
-            List<DepartureArrivalTimeEntity> list = departureArrivalTimeRepository.findBySectionCd(cd);
+        for (SectionKmEntity arrivalSectionKm : arrivalSectionKmList) {
+            List<DepartureArrivalTimeEntity> list = departureArrivalTimeRepository.findBySectionCd(arrivalSectionKm.getSectionCd());
             arrivalScheduleList.addAll(list);
         }
 
@@ -147,6 +143,10 @@ public class ScheduleService {
                     if (!isMatch) {
                         continue;
                     }
+                    SectionKmEntity sectionKm = arrivalSectionKmList.stream()
+                        .filter(arrivalSectionKm -> Objects.equals(arrivalSectionKm.getSectionCd(), arrival.getSectionCd()))
+                        .findFirst()
+                        .orElseThrow(() -> new IllegalArgumentException("SectionKm is Not found"));
 
                     ScheduleResponseDto data = new ScheduleResponseDto();
                     data.setScheduleCd(departure.getScheduleCd());
@@ -156,6 +156,7 @@ public class ScheduleService {
                     data.setReservedSeats(calcReservedSeats);
                     data.setGreenSeats(calcGreenSeats);
                     data.setGcSeats(calcGcSeats);
+                    data.setDirection(sectionKm.getDirection());
                     responseList.add(data);
                 }
             }
