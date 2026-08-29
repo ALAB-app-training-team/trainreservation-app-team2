@@ -39,8 +39,8 @@ export class ScheduleSearchPage {
             name: '翌日の始発を検索',
         });
         this.backButton = page.getByTestId('back-button-in-scheduleSearch');
-        this.seatTypeSelect = page.getByTestId('seatType-select');
-        this.passengersSelect = page.getByTestId('passengers-select');
+        this.seatTypeSelect = page.getByRole('combobox', { name: '座席種別' });
+        this.passengersSelect = page.getByRole('combobox', { name: '人数' });
         this.isOnlyAvailableHint = page.getByTestId('isOnlyAvailable-hint');
     }
 
@@ -86,12 +86,14 @@ export class ScheduleSearchPage {
         await this.arrivalTimeButton.click();
     }
 
-    async selectSeatType(value: string) {
-        await this.seatTypeSelect.selectOption(value);
+    async selectSeatType(seatTypeName: string) {
+        await this.seatTypeSelect.click();
+        await this.page.getByRole('option', { name: seatTypeName }).click();
     }
 
-    async selectPassengers(value: string) {
-        await this.passengersSelect.selectOption(value);
+    async selectPassengers(passengerLabel: string) {
+        await this.passengersSelect.click();
+        await this.page.getByRole('option', { name: passengerLabel }).click();
     }
 
     async unCheckAvailableTrainCheckBox() {
