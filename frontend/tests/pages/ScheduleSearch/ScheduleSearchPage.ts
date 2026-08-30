@@ -97,7 +97,7 @@ export class ScheduleSearchPage {
     }
 
     async unCheckAvailableTrainCheckBox() {
-        await this.availableTrainCheckBox.uncheck;
+        await this.availableTrainCheckBox.click();
     }
 
     async clickAvailableTrainCheckBox() {
