@@ -403,8 +403,12 @@ test('座席種別と人数のドロップダウンが表示され、初期値�
     await expect(scheduleSearchPage.seatTypeSelect).toBeVisible();
     await expect(scheduleSearchPage.passengersSelect).toBeVisible();
 
-    await expect(scheduleSearchPage.seatTypeSelect).toHaveText('-');
-    await expect(scheduleSearchPage.passengersSelect).toHaveText('-');
+    await expect(
+        page.locator('#seatType').locator('..').locator('..'),
+    ).toContainText('-');
+    await expect(
+        page.locator('#passengers').locator('..').locator('..'),
+    ).toContainText('-');
 });
 
 test('座席種別を指定すると、空席チェックがONかつ無効化され補足テキストが表示される', async ({
