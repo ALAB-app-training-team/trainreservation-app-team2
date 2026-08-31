@@ -191,15 +191,14 @@ export function ScheduleSearchForm({
                                                         s.stationCd ==
                                                         dto.departureStationCd,
                                                 )?.name;
-                                            const 到着か出発か =
-                                                dto.isArrivalTime
-                                                    ? '到着'
-                                                    : '出発';
+
                                             return (
                                                 <button>
                                                     {arrivalStationName}
                                                     {departureStationName}
-                                                    {到着か出発か}
+                                                    {dto.isArrivalTime
+                                                        ? '到着'
+                                                        : '出発'}
                                                     {dto.time}
                                                 </button>
                                             );

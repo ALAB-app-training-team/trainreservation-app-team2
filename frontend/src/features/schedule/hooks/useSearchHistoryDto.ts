@@ -13,8 +13,7 @@ export function useSearchHistoryDto(searchRequestDto: SearchRequestDto) {
     const [isSubmitting, setIsSubmitting] = useState<boolean>(false);
 
     const { data: searchHistoryDtos = [] } = useQuery({
-        // TODO: queryKeyを検討する
-        queryKey: ['searchHistory', searchRequestDto],
+        queryKey: ['searchHistory', isSubmitting],
         queryFn: async () => {
             const response = await apiClient.get<SearchHistoryDto[]>(
                 ENDPOINTS.HISTORY(),
@@ -22,7 +21,7 @@ export function useSearchHistoryDto(searchRequestDto: SearchRequestDto) {
 
             return response.data;
         },
-        enabled: !!info,
+        enabled: !!info && !isSubmitting,
     });
 
     const handleSaveHistory = async () => {
