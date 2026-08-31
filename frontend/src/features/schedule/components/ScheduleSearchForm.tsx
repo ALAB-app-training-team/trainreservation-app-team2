@@ -8,6 +8,7 @@ import { DepartureDateAndTimePicker } from '@/features/schedule/components/Depar
 import { StationSelect } from '@/features/schedule/components/StationSelect';
 import { useSearchHistoryDto } from '@/features/schedule/hooks/useSearchHistoryDto';
 import { useStationFilter } from '@/features/schedule/hooks/useStationFilter';
+import type { SearchHistoryDto } from '@/features/schedule/types/SearchHistoryDto';
 import type { SearchRequestDto } from '@/features/schedule/types/SearchRequestDto';
 import type { Station } from '@/features/schedule/types/Station';
 import type { StationResponseDto } from '@/features/schedule/types/StationResponseDto';
@@ -59,7 +60,8 @@ export function ScheduleSearchForm({
             searchRequestDto.arrivalStationCd,
         );
 
-    const { searchHistoryDtos } = useSearchHistoryDto(searchRequestDto);
+    const { searchHistoryDtos, handleSaveHistory } =
+        useSearchHistoryDto(searchRequestDto);
 
     return (
         <>
@@ -175,9 +177,13 @@ export function ScheduleSearchForm({
                                 </button>
                                 <CustomAccordion
                                     title="お気に入り経路"
-                                    children={searchHistoryDtos.map((dto) => (
-                                        <div>とりあえずdate表示{dto.date}</div>
-                                    ))}
+                                    children={searchHistoryDtos.map(
+                                        (dto: SearchHistoryDto) => (
+                                            <div>
+                                                とりあえずdate表示{dto.date}
+                                            </div>
+                                        ),
+                                    )}
                                 />
                             </div>
                         )}

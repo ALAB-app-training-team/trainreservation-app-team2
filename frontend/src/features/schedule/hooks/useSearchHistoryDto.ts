@@ -9,7 +9,7 @@ export function useSearchHistoryDto(searchRequestDto: SearchRequestDto) {
     const info = localStorage.getItem('name');
 
     if (!info) {
-        return { searchHistoryDtos: [] };
+        return;
     }
 
     const { data: searchHistoryDtos } = useSuspenseQuery({
@@ -25,5 +25,19 @@ export function useSearchHistoryDto(searchRequestDto: SearchRequestDto) {
         },
     });
 
-    return { searchHistoryDtos };
+    const handleSaveHistory = async () => {
+        const searchHistoryDto: SearchHistoryDto = {
+            id: '',
+            date: searchRequestDto.date,
+            time: searchRequestDto.time,
+            departureStationCd: searchRequestDto.departureStationCd,
+            arrivalStationCd: searchRequestDto.arrivalStationCd,
+            isArrivalTime: searchRequestDto.isArrivalTime,
+            createdAt: '',
+        };
+        await apiClient.post(ENDPOINTS.HISTORY(), searchHistoryDto);
+        return;
+    };
+
+    return { searchHistoryDtos, handleSaveHistory };
 }
