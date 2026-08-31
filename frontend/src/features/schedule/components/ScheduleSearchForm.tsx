@@ -60,7 +60,7 @@ export function ScheduleSearchForm({
             searchRequestDto.arrivalStationCd,
         );
 
-    const { searchHistoryDtos, handleSaveHistory } =
+    const { searchHistoryDtos, handleSaveHistory, isSubmitting } =
         useSearchHistoryDto(searchRequestDto);
 
     return (
@@ -169,8 +169,8 @@ export function ScheduleSearchForm({
                         {info && (
                             <div className="flex flex-col gap-1">
                                 <button
-                                    // onClick={() => onChangeSeatClick(detail)}
-                                    // disabled={isSubmitting}
+                                    onClick={() => handleSaveHistory()}
+                                    disabled={isSubmitting}
                                     className="bg-primary flex w-fit items-center rounded-lg px-4 py-2 text-white"
                                 >
                                     検索経路をお気に入り登録する

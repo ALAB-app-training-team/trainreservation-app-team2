@@ -1,4 +1,5 @@
 import { useQuery } from '@tanstack/react-query';
+import { useState } from 'react';
 
 import apiClient from '@/api/apiClient';
 import { ENDPOINTS } from '@/api/routes';
@@ -7,6 +8,7 @@ import type { SearchRequestDto } from '@/features/schedule/types/SearchRequestDt
 
 export function useSearchHistoryDto(searchRequestDto: SearchRequestDto) {
     const info = localStorage.getItem('name');
+    const [isSubmitting, setIsSubmitting] = useState<boolean>(false);
 
     const { data: searchHistoryDtos = [] } = useQuery({
         // TODO: queryKeyを検討する
@@ -28,6 +30,8 @@ export function useSearchHistoryDto(searchRequestDto: SearchRequestDto) {
         if (!info) {
             return null;
         }
+        if (isSubmitting) return;
+        setIsSubmitting(true);
         const searchHistoryDto: SearchHistoryDto = {
             id: '',
             date: searchRequestDto.date,
@@ -38,8 +42,9 @@ export function useSearchHistoryDto(searchRequestDto: SearchRequestDto) {
             createdAt: '',
         };
         await apiClient.post(ENDPOINTS.HISTORY(), searchHistoryDto);
+        setIsSubmitting(false);
         return;
     };
 
-    return { searchHistoryDtos, handleSaveHistory };
+    return { searchHistoryDtos, handleSaveHistory, isSubmitting };
 }
