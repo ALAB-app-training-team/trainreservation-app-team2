@@ -4,6 +4,7 @@ import { FiUser } from 'react-icons/fi';
 import { AccountInput } from '@/features/account/components/AccountInput';
 import { PasswordInput } from '@/features/account/components/PasswordInput';
 import { useAccountUpdateDto } from '@/features/account/hooks/useAccountUpdateDto';
+import { CustomModal } from '@/shared/components/CustomModal';
 
 export function AccountUpdate() {
     const {
@@ -13,10 +14,12 @@ export function AccountUpdate() {
         handleBlur,
         isDisable,
         handleAccount,
+        handleAccountDelete,
         isSubmitting,
     } = useAccountUpdateDto();
 
     const [passwordType, setPasswordType] = useState('password');
+    const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false);
 
     return (
         <div className="flex justify-center">
@@ -83,7 +86,47 @@ export function AccountUpdate() {
                         <FiUser />
                         変更
                     </button>
+                    <button
+                        type="button"
+                        onClick={() => setIsDeleteModalOpen(true)}
+                        className="mt-2 text-sm text-gray-500 underline"
+                    >
+                        退会はこちら
+                    </button>
                 </form>
+
+                <CustomModal
+                    isOpen={isDeleteModalOpen}
+                    onRequestClose={() => setIsDeleteModalOpen(false)}
+                >
+                    <div className="flex flex-col items-center gap-6">
+                        <div className="flex flex-col items-center gap-2">
+                            <h2 className="text-xl font-bold text-red-500">
+                                本当に退会しますか？
+                            </h2>
+                            <p className="text-sm text-gray-500">
+                                退会するとアカウント情報は削除され、元に戻せません。
+                            </p>
+                        </div>
+
+                        <div className="flex w-full gap-3">
+                            <button
+                                type="button"
+                                onClick={() => setIsDeleteModalOpen(false)}
+                                className="w-full rounded-lg border border-gray-300 p-2 text-gray-600"
+                            >
+                                キャンセル
+                            </button>
+                            <button
+                                type="button"
+                                onClick={handleAccountDelete}
+                                className="w-full rounded-lg bg-red-500 p-2 text-white"
+                            >
+                                はい
+                            </button>
+                        </div>
+                    </div>
+                </CustomModal>
             </div>
         </div>
     );

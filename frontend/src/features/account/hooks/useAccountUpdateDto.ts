@@ -224,6 +224,33 @@ export function useAccountUpdateDto() {
         }
     };
 
+    const handleAccountDelete = async () => {
+        if (isSubmitting) return;
+        setIsSubmitting(true);
+
+        try {
+            await apiClient.delete(ENDPOINTS.ACCOUNT());
+            localStorage.removeItem('name');
+            toast.success('退会が完了しました。');
+            navigate('/login', { replace: true });
+        } catch {
+            //エラー内容の分岐を書くべき
+            toast.error(ERROR_MESSAGE.ACCOUNT_NOT_DELETE, {
+                duration: Infinity,
+                action: {
+                    label: 'OK',
+                    onClick: () => {},
+                },
+                classNames: {
+                    title: 'text-left whitespace-pre-line',
+                    actionButton: '!px-4 !py-2 !text-base !h-auto',
+                },
+            });
+        } finally {
+            setIsSubmitting(false);
+        }
+    };
+
     return {
         accountUpdateForm,
         handleChange,
@@ -231,6 +258,7 @@ export function useAccountUpdateDto() {
         getFieldError,
         isDisable,
         handleAccount,
+        handleAccountDelete,
         isSubmitting,
     };
 }
