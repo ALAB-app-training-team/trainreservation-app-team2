@@ -1,4 +1,4 @@
-import { useSuspenseQuery } from '@tanstack/react-query';
+import { useQuery } from '@tanstack/react-query';
 
 import apiClient from '@/api/apiClient';
 import { ENDPOINTS } from '@/api/routes';
@@ -8,11 +8,8 @@ import type { SearchRequestDto } from '@/features/schedule/types/SearchRequestDt
 export function useSearchHistoryDto(searchRequestDto: SearchRequestDto) {
     const info = localStorage.getItem('name');
 
-    if (!info) {
-        return;
-    }
-
-    const { data: searchHistoryDtos } = useSuspenseQuery({
+    const { data: searchHistoryDtos = [] } = useQuery({
+        // TODO: queryKeyを検討する
         queryKey: ['searchHistory', searchRequestDto],
         queryFn: async () => {
             const response = await apiClient.get<SearchHistoryDto[]>(
@@ -21,11 +18,16 @@ export function useSearchHistoryDto(searchRequestDto: SearchRequestDto) {
                     params: searchRequestDto,
                 },
             );
+
             return response.data;
         },
+        enabled: !!info,
     });
 
     const handleSaveHistory = async () => {
+        if (!info) {
+            return null;
+        }
         const searchHistoryDto: SearchHistoryDto = {
             id: '',
             date: searchRequestDto.date,
