@@ -158,6 +158,10 @@ export function ScheduleSearchForm({
                                 空席がある列車のみ表示する
                             </label>
                         </div>
+                        <div>ここにボタン（検索条件をお気に入り登録する）</div>
+                        <div>
+                            ここにお気に入り経路を表示（トグルとかだと嬉しい（わたしが））
+                        </div>
                     </div>
                 </div>
             </div>
