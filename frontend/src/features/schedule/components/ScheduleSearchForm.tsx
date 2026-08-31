@@ -158,7 +158,13 @@ export function ScheduleSearchForm({
                                 空席がある列車のみ表示する
                             </label>
                         </div>
-                        <div>ここにボタン（検索条件をお気に入り登録する）</div>
+                        <button
+                            // onClick={() => onChangeSeatClick(detail)}
+                            // disabled={isSubmitting}
+                            className="bg-primary flex w-fit items-center rounded-lg p-2 text-white"
+                        >
+                            検索条件をお気に入り登録する
+                        </button>
                         <div>
                             ここにお気に入り経路を表示（トグルとかだと嬉しい（わたしが））
                         </div>
