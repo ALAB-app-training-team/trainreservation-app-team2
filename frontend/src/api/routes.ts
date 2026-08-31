@@ -3,6 +3,7 @@ const BASE_URL = `${apiBaseUrl}/api`;
 const LOGIN = `${BASE_URL}/login`;
 const LOGOUT = `${BASE_URL}/logout`;
 const ACCOUNT = `${BASE_URL}/account`;
+const HISTORY = `${BASE_URL}/searchhistory`;
 const PAYMENT = `${BASE_URL}/payments`;
 const RESERVATION = `${BASE_URL}/reservations`;
 const RESERVEDSEAT = `${BASE_URL}/reservedseats`;
@@ -21,6 +22,7 @@ export const ENDPOINTS = {
     RESERVATION_SEAT_UPDATE: (id: string) => `${RESERVATION}/seat/${id}`,
     GUESTRESERVATION: (id?: string) =>
         id ? `${RESERVATION}/guest/${id}` : `${RESERVATION}/guest`,
+    HISTORY: () => HISTORY,
     RESERVEDSEAT: (id?: string) => `${RESERVEDSEAT}/${id}`,
     SCHEDULES_SEARCH: () => SCHEDULES,
     SEATS_SELECT: () => `${TRAINCARS}/seats`,
