@@ -6,6 +6,7 @@ import {
 
 import { DepartureDateAndTimePicker } from '@/features/schedule/components/DepartureDateAndTimePicker';
 import { StationSelect } from '@/features/schedule/components/StationSelect';
+import { useSearchHistoryDto } from '@/features/schedule/hooks/useSearchHistoryDto';
 import { useStationFilter } from '@/features/schedule/hooks/useStationFilter';
 import type { SearchRequestDto } from '@/features/schedule/types/SearchRequestDto';
 import type { Station } from '@/features/schedule/types/Station';
@@ -47,6 +48,8 @@ export function ScheduleSearchForm({
     isOnlyAvailable,
     setIsOnlyAvailable,
 }: ScheduleSearchFormProps) {
+    const info = localStorage.getItem('name');
+
     const { availableDepartureStations, availableArrivalStations } =
         useStationFilter(
             stations,
@@ -55,6 +58,8 @@ export function ScheduleSearchForm({
             searchRequestDto.departureStationCd,
             searchRequestDto.arrivalStationCd,
         );
+
+    const { searchHistoryDtos } = useSearchHistoryDto(searchRequestDto);
 
     return (
         <>
@@ -159,19 +164,23 @@ export function ScheduleSearchForm({
                                 空席がある列車のみ表示する
                             </label>
                         </div>
-                        <div className="flex flex-col gap-1">
-                            <button
-                                // onClick={() => onChangeSeatClick(detail)}
-                                // disabled={isSubmitting}
-                                className="bg-primary flex w-fit items-center rounded-lg px-4 py-2 text-white"
-                            >
-                                検索経路をお気に入り登録する
-                            </button>
-                            <CustomAccordion
-                                title="お気に入り経路"
-                                children={<div>こんにちは</div>}
-                            />
-                        </div>
+                        {info && (
+                            <div className="flex flex-col gap-1">
+                                <button
+                                    // onClick={() => onChangeSeatClick(detail)}
+                                    // disabled={isSubmitting}
+                                    className="bg-primary flex w-fit items-center rounded-lg px-4 py-2 text-white"
+                                >
+                                    検索経路をお気に入り登録する
+                                </button>
+                                <CustomAccordion
+                                    title="お気に入り経路"
+                                    children={searchHistoryDtos.map((dto) => (
+                                        <div>とりあえずdate表示{dto.date}</div>
+                                    ))}
+                                />
+                            </div>
+                        )}
                     </div>
                 </div>
             </div>
