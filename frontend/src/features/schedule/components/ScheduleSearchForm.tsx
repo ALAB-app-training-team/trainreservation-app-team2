@@ -178,11 +178,32 @@ export function ScheduleSearchForm({
                                 <CustomAccordion
                                     title="お気に入り経路"
                                     children={searchHistoryDtos.map(
-                                        (dto: SearchHistoryDto) => (
-                                            <div>
-                                                とりあえずdate表示{dto.date}
-                                            </div>
-                                        ),
+                                        (dto: SearchHistoryDto) => {
+                                            const arrivalStationName =
+                                                stations.find(
+                                                    (s) =>
+                                                        s.stationCd ==
+                                                        dto.arrivalStationCd,
+                                                )?.name;
+                                            const departureStationName =
+                                                stations.find(
+                                                    (s) =>
+                                                        s.stationCd ==
+                                                        dto.departureStationCd,
+                                                )?.name;
+                                            const 到着か出発か =
+                                                dto.isArrivalTime
+                                                    ? '到着'
+                                                    : '出発';
+                                            return (
+                                                <button>
+                                                    {arrivalStationName}
+                                                    {departureStationName}
+                                                    {到着か出発か}
+                                                    {dto.time}
+                                                </button>
+                                            );
+                                        },
                                     )}
                                 />
                             </div>
