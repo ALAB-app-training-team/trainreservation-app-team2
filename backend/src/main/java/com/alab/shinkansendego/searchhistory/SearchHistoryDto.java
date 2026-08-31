@@ -1,9 +1,9 @@
 package com.alab.shinkansendego.searchhistory;
 
+import jakarta.validation.constraints.NotNull;
 import lombok.AllArgsConstructor;
 import lombok.Data;
-import lombok.NonNull;
-import lombok.RequiredArgsConstructor;
+import lombok.NoArgsConstructor;
 
 import java.sql.Timestamp;
 import java.time.LocalDate;
@@ -11,20 +11,19 @@ import java.time.LocalTime;
 import java.util.UUID;
 
 @Data
-@NonNull
+@NoArgsConstructor
 @AllArgsConstructor
-@RequiredArgsConstructor
 public class SearchHistoryDto {
     private UUID id;
-    @NonNull
+    @NotNull
     private LocalDate date;
-    @NonNull
+    @NotNull
     private LocalTime time;
-    @NonNull
+    @NotNull
     private String departureStationCd;
-    @NonNull
+    @NotNull
     private String arrivalStationCd;
-    @NonNull
+    @NotNull
     private Boolean isArrivalTime;
     private Timestamp createdAt;
 }

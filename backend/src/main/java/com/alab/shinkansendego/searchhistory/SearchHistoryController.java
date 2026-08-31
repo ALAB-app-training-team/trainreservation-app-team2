@@ -7,6 +7,7 @@ import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -32,7 +33,7 @@ public class SearchHistoryController {
 
     @PostMapping
     @PreAuthorize("isAuthenticated()")
-    public ResponseEntity<UUID> recordSearchHistory(@AuthenticationPrincipal AccountSessionDto session, SearchHistoryDto searchHistory) {
+    public ResponseEntity<UUID> recordSearchHistory(@AuthenticationPrincipal AccountSessionDto session, @RequestBody SearchHistoryDto searchHistory) {
         UUID historyId = searchHistoryService.recordSearchHistory(searchHistory, session.getId());
         return ResponseEntity.ok(historyId);
     }

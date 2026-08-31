@@ -52,6 +52,7 @@ public class SearchHistoryService {
         if (histories.size() >= 5) {
             searchHistoryRepository.delete(histories.getLast());
         }
+        System.out.println("aaaaaaaaaaaaaaaaa" + history);
         SearchHistoryEntity target = new SearchHistoryEntity(
             UUID.randomUUID(),
             accountId,
