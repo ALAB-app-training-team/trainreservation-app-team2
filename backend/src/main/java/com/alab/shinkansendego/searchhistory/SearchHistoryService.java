@@ -1,6 +1,7 @@
 package com.alab.shinkansendego.searchhistory;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
 import org.springframework.util.CollectionUtils;
 
 import java.sql.Timestamp;
@@ -8,6 +9,7 @@ import java.time.Instant;
 import java.util.List;
 import java.util.UUID;
 
+@Service
 public class SearchHistoryService {
     private final SearchHistoryRepository searchHistoryRepository;
 
@@ -22,7 +24,7 @@ public class SearchHistoryService {
      * @return アカウントに紐づくList<SearchHistoryEntity> (無ければ空のリスト)
      */
     public List<SearchHistoryDto> getSearchHistory(UUID accountId) {
-        List<SearchHistoryEntity> histories = searchHistoryRepository.findById(accountId).map(List::of).orElseGet(List::of);
+        List<SearchHistoryEntity> histories = searchHistoryRepository.findByAccountIdOrderByCreatedAtDesc(accountId);
         if (CollectionUtils.isEmpty(histories)) {
             return List.of();
         }
@@ -34,7 +36,7 @@ public class SearchHistoryService {
                 history.getDepartureStationCd(),
                 history.getArrivalStationCd(),
                 history.getIsArrivalTime(),
-                history.getCreateAt()
+                history.getCreatedAt()
             )
         ).toList();
     }
@@ -45,6 +47,11 @@ public class SearchHistoryService {
      * @return 検索履歴UUID
      */
     public UUID recordSearchHistory(SearchHistoryDto history, UUID accountId) {
+
+        List<SearchHistoryEntity> histories = searchHistoryRepository.findByAccountId(accountId);
+        if (histories.size() >= 5) {
+            searchHistoryRepository.delete(histories.getLast());
+        }
         SearchHistoryEntity target = new SearchHistoryEntity(
             UUID.randomUUID(),
             accountId,

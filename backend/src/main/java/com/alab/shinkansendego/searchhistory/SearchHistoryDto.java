@@ -2,20 +2,28 @@ package com.alab.shinkansendego.searchhistory;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;
+import lombok.NonNull;
+import lombok.RequiredArgsConstructor;
 
-import java.sql.Time;
 import java.sql.Timestamp;
-import java.util.Date;
+import java.time.LocalDate;
+import java.time.LocalTime;
 import java.util.UUID;
 
 @Data
 @AllArgsConstructor
+@RequiredArgsConstructor
 public class SearchHistoryDto {
     private UUID id;
-    private Date date;
-    private Time time;
+    @NonNull
+    private LocalDate date;
+    @NonNull
+    private LocalTime time;
+    @NonNull
     private String departureStationCd;
+    @NonNull
     private String arrivalStationCd;
+    @NonNull
     private Boolean isArrivalTime;
-    private Timestamp create_at;
+    private Timestamp createdAt;
 }

@@ -1,6 +1,7 @@
 package com.alab.shinkansendego.searchhistory;
 
 import jakarta.persistence.Column;
+import jakarta.persistence.Entity;
 import jakarta.persistence.Id;
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -8,12 +9,13 @@ import lombok.NoArgsConstructor;
 import lombok.NonNull;
 import lombok.RequiredArgsConstructor;
 
-import java.sql.Time;
 import java.sql.Timestamp;
-import java.util.Date;
+import java.time.LocalDate;
+import java.time.LocalTime;
 import java.util.UUID;
 
 @Data
+@Entity
 @NoArgsConstructor
 @RequiredArgsConstructor
 @AllArgsConstructor
@@ -26,10 +28,10 @@ public class SearchHistoryEntity {
     private UUID accountId;
     @NonNull
     @Column(name = "date")
-    private Date date;
+    private LocalDate date;
     @NonNull
     @Column(name = "time")
-    private Time time;
+    private LocalTime time;
     @NonNull
     @Column(name = "departure_station_cd")
     private String departureStationCd;
@@ -40,6 +42,6 @@ public class SearchHistoryEntity {
     @Column(name = "is_arrival_time")
     private Boolean isArrivalTime;
     @NonNull
-    @Column(name = "create_at")
-    private Timestamp createAt;
+    @Column(name = "created_at")
+    private Timestamp createdAt;
 }
