@@ -87,7 +87,7 @@ public class AccountService {
         accountRepository.save(postAccount);
 
         eventPublisher.publishEvent(new AccountCreatedEvent(
-            new AccountRequestDto(postAccount.getName(), postAccount.getPassword(), null)
+            new AccountRequestDto(postAccount.getName(), postAccount.getMail(), null)
         ));
     }
 
