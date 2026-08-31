@@ -1,6 +1,7 @@
 package com.alab.shinkansendego.account;
 
 import com.alab.shinkansendego.exception.ConflictException;
+import com.alab.shinkansendego.reservation.ReservationEntity;
 import com.alab.shinkansendego.reservation.ReservationRepository;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
@@ -10,12 +11,15 @@ import org.mockito.MockitoAnnotations;
 import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 
+import java.time.LocalDate;
+import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.Mockito.never;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
@@ -36,6 +40,19 @@ public class AccountServiceTest {
     void setUp() {
         MockitoAnnotations.openMocks(this);
         this.service = new AccountService(accountRepository, reservationRepository, passwordEncoder);
+    }
+
+    private ReservationEntity createReservation(
+        UUID accountId,
+        boolean isDeleted,
+        LocalDate rideDate
+    ) {
+        ReservationEntity reservation = new ReservationEntity();
+        reservation.setId(UUID.randomUUID());
+        reservation.setAccountId(accountId);
+        reservation.setIsDeleted(isDeleted);
+        reservation.setRideDate(rideDate);
+        return reservation;
     }
 
     @Test
@@ -262,5 +279,84 @@ public class AccountServiceTest {
 
         Exception ex = assertThrows(IllegalArgumentException.class, () -> service.updatePasswordByAdmin(request));
         assertEquals("Account not Found", ex.getMessage());
+    }
+
+    @Test
+    @DisplayName("予約がない場合、アカウント削除できること")
+    void deleteAccount_withNoReservation_returnSuccess() {
+        UUID accountId = UUID.randomUUID();
+
+        when(reservationRepository.findByAccountId(accountId))
+            .thenReturn(List.of());
+
+        service.deleteAccount(accountId);
+
+        verify(reservationRepository).findByAccountId(accountId);
+        verify(accountRepository).deleteById(accountId);
+    }
+
+    @Test
+    @DisplayName("キャンセル済み予約だけの場合、アカウント削除できること")
+    void deleteAccount_withOnlyCanceledReservation_returnSuccess() {
+        UUID accountId = UUID.randomUUID();
+
+        ReservationEntity canceledFutureReservation = createReservation(
+            accountId,
+            true,
+            LocalDate.now().plusDays(1)
+        );
+
+        when(reservationRepository.findByAccountId(accountId))
+            .thenReturn(List.of(canceledFutureReservation));
+
+        service.deleteAccount(accountId);
+
+        verify(reservationRepository).findByAccountId(accountId);
+        verify(accountRepository).deleteById(accountId);
+    }
+
+    @Test
+    @DisplayName("過去予約だけの場合、アカウント削除できること")
+    void deleteAccount_withOnlyPastReservation_returnSuccess() {
+        UUID accountId = UUID.randomUUID();
+
+        ReservationEntity pastReservation = createReservation(
+            accountId,
+            false,
+            LocalDate.now().minusDays(1)
+        );
+
+        when(reservationRepository.findByAccountId(accountId))
+            .thenReturn(List.of(pastReservation));
+
+        service.deleteAccount(accountId);
+
+        verify(reservationRepository).findByAccountId(accountId);
+        verify(accountRepository).deleteById(accountId);
+    }
+
+    @Test
+    @DisplayName("未キャンセルかつ今日以降の予約がある場合、ConflictExceptionを投げること")
+    void deleteAccount_withActiveReservation_throwConflictException() {
+        UUID accountId = UUID.randomUUID();
+
+        ReservationEntity activeReservation = createReservation(
+            accountId,
+            false,
+            LocalDate.now()
+        );
+
+        when(reservationRepository.findByAccountId(accountId))
+            .thenReturn(List.of(activeReservation));
+
+        ConflictException exception = assertThrows(
+            ConflictException.class,
+            () -> service.deleteAccount(accountId)
+        );
+
+        assertEquals("予約中のきっぷがあるため、退会できません。", exception.getReason());
+
+        verify(reservationRepository).findByAccountId(accountId);
+        verify(accountRepository, never()).deleteById(accountId);
     }
 }

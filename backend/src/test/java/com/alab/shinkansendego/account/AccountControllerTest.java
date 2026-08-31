@@ -1,6 +1,7 @@
 package com.alab.shinkansendego.account;
 
 import com.alab.shinkansendego.SecurityConfig;
+import com.alab.shinkansendego.exception.ConflictException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.SerializationFeature;
 import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
@@ -929,5 +930,39 @@ public class AccountControllerTest {
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(objectMapper.writeValueAsString(request)))
             .andExpect(status().isForbidden());
+    }
+
+    @Test
+    @DisplayName("ログイン中のアカウントを削除できること")
+    void deleteAccount_return204() throws Exception {
+        mockMvc.perform(MockMvcRequestBuilders.delete(baseUrl + "account")
+                .with(SecurityMockMvcRequestPostProcessors.authentication(commonAuth))
+                .contentType(MediaType.APPLICATION_JSON))
+            .andExpect(status().isNoContent());
+    }
+
+    @Test
+    @DisplayName("未ログインの場合、アカウントを削除できないこと")
+    void deleteAccount_withoutLogin_return401() throws Exception {
+        mockMvc.perform(MockMvcRequestBuilders.delete(baseUrl + "account")
+                .contentType(MediaType.APPLICATION_JSON))
+            .andExpect(status().isUnauthorized());
+    }
+
+    @Test
+    @DisplayName("有効な予約がある場合、アカウントを削除できないこと")
+    void deleteAccount_withActiveReservation_return409() throws Exception {
+        UUID currentUserId =
+            UUID.fromString("f79d8bbc-fcba-b538-b132-2f726ce0120c");
+
+        Mockito.doThrow(new ConflictException("予約中のきっぷがあるため、退会できません。"))
+            .when(service)
+            .deleteAccount(currentUserId);
+
+        mockMvc.perform(MockMvcRequestBuilders.delete(baseUrl + "account")
+                .with(SecurityMockMvcRequestPostProcessors.authentication(commonAuth))
+                .contentType(MediaType.APPLICATION_JSON))
+            .andExpect(status().isConflict())
+            .andExpect(content().string("予約中のきっぷがあるため、退会できません。"));
     }
 }
