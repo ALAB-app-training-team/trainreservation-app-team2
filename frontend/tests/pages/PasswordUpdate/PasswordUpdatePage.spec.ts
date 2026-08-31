@@ -42,7 +42,6 @@ test('パスワードが一致しないときにバリデーションメッセ�
     await passwordUpdatePage.fillCurrentPassword('Password1');
     await passwordUpdatePage.fillNewPassword('Password2');
     await passwordUpdatePage.fillNewPasswordCheck('Password3');
-    await passwordUpdatePage.fillCurrentPassword('Password1');
     await expect(page.getByText('パスワードが一致しません')).toBeVisible();
     await logout();
     await expect(page).toHaveURL('/login');
