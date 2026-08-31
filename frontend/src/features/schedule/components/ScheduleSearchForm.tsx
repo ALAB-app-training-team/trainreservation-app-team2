@@ -178,7 +178,7 @@ export function ScheduleSearchForm({
                                 <CustomAccordion
                                     title="お気に入り経路"
                                     children={searchHistoryDtos.map(
-                                        (dto: SearchHistoryDto) => {
+                                        (dto: SearchHistoryDto, index) => {
                                             const arrivalStationName =
                                                 stations.find(
                                                     (s) =>
@@ -193,7 +193,7 @@ export function ScheduleSearchForm({
                                                 )?.name;
 
                                             return (
-                                                <button>
+                                                <button key={index}>
                                                     {arrivalStationName}
                                                     {departureStationName}
                                                     {dto.isArrivalTime

@@ -41,6 +41,9 @@ export class ScheduleSearchPage {
         this.historySaveButton = page.getByRole('button', {
             name: '検索経路をお気に入り登録する',
         });
+        this.historyDetailAccordionButton = page.getByRole('button', {
+            name: 'お気に入り経路',
+        });
     }
 
     async goto() {
