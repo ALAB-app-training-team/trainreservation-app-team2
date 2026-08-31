@@ -20,6 +20,7 @@ public final class EmailUtils {
     public static final String CANCEL_SUBJECT = "[予約キャンセル] 予約キャンセル内容のご案内";
     public static final String SET_SUBJECT = "[割り当て] 同行者割り当てのご案内";
     public static final String RELEASE_SUBJECT = "[割り当て解除] 同行者割り当て解除のご案内";
+    public static final String ACCOUNT_CREATED_SUBJECT = "[登録] アカウント登録内容のご案内";
     public static final String SENDER_NAME = "新幹線でGO！";
     public static final Integer REFUND_FEE = 320;
     public static final String FROM_ADDRESS = "thashimoto@jeisryokai.onmicrosoft.com";
@@ -111,6 +112,21 @@ public final class EmailUtils {
         列車名：%s
         座席：%s
         金額：%,d 円
+
+        またのご利用をお待ちしております。
+        """;
+    public static final String ACCOUNT_CREATED_BODY = """
+        %s さま
+
+        「新幹線でGO!」アプリをご利用いただきありがとうございます。
+        アカウント登録が完了しましたので以下よりご確認ください。
+
+        ■登録されたアカウント情報
+        メールアドレス：%s
+        パスワード：お客様がご自身で設定したパスワード
+
+        ■アプリログインURL
+        %s
 
         またのご利用をお待ちしております。
         """;

@@ -3,6 +3,7 @@ package com.alab.shinkansendego.account;
 import com.alab.shinkansendego.exception.ConflictException;
 import com.alab.shinkansendego.utils.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
@@ -17,11 +18,15 @@ import static com.alab.shinkansendego.utils.StringUtils.removeSpaces;
 public class AccountService {
     private final AccountRepository accountRepository;
     private final PasswordEncoder passwordEncoder;
+    private final ApplicationEventPublisher eventPublisher;
 
     @Autowired
-    public AccountService(AccountRepository accountRepository, PasswordEncoder passwordEncoder) {
+    public AccountService(AccountRepository accountRepository,
+                          PasswordEncoder passwordEncoder,
+                          ApplicationEventPublisher eventPublisher) {
         this.accountRepository = accountRepository;
         this.passwordEncoder = passwordEncoder;
+        this.eventPublisher = eventPublisher;
     }
 
     /**
@@ -80,6 +85,10 @@ public class AccountService {
         );
 
         accountRepository.save(postAccount);
+
+        eventPublisher.publishEvent(new AccountCreatedEvent(
+            new AccountRequestDto(postAccount.getName(), postAccount.getPassword(), null)
+        ));
     }
 
     /**
