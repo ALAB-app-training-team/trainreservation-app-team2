@@ -393,3 +393,10 @@ test('列車が見つからない場合、翌日の始発で検索できる', as
         page.getByText('予約可能期間を超えるため、翌日は検索できません'),
     ).toBeVisible();
 });
+
+test('お気に入り経路を登録し、表示できること', async ({ page }) => {
+    const scheduleSearchPage = new ScheduleSearchPage(page);
+    await scheduleSearchPage.goto();
+
+  
+});

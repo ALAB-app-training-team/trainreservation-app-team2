@@ -15,6 +15,8 @@ export class ScheduleSearchPage {
     readonly availableTrainCheckBox: Locator;
     readonly searchNextDayButton: Locator;
     readonly backButton: Locator;
+    readonly historySaveButton: Locator;
+    readonly historyDetailAccordionButton: Locator;
 
     constructor(page: Page) {
         this.page = page;
@@ -36,6 +38,9 @@ export class ScheduleSearchPage {
             name: '翌日の始発を検索',
         });
         this.backButton = page.getByTestId('back-button-in-scheduleSearch');
+        this.historySaveButton = page.getByRole('button', {
+            name: '検索経路をお気に入り登録する',
+        });
     }
 
     async goto() {
