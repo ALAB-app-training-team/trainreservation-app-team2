@@ -106,7 +106,7 @@ export function Header() {
             </div>
             {isMenuOpen && (
                 <div
-                    className="absolute top-full right-4 z-50 flex w-[160px] flex-col gap-2 rounded-md bg-white p-2 py-2 text-sm font-bold shadow-md"
+                    className="absolute top-full right-4 z-50 flex w-[180px] flex-col gap-2 rounded-md bg-white p-2 py-2 text-sm font-bold shadow-md"
                     onClick={() => setIsMenuOpen(false)}
                 >
                     <div className="flex w-full flex-col gap-2 text-left md:hidden">
@@ -127,6 +127,7 @@ export function Header() {
                             </NavLink>
                         ))}
                     </div>
+
                     {role === 'ROLE_ADMIN' && (
                         <button
                             onClick={() => navigate('/admin/password')}
@@ -142,6 +143,19 @@ export function Header() {
                                 className="w-full text-left hover:bg-gray-100"
                             >
                                 予約一覧
+                            </button>
+                            <button
+                                onClick={() => navigate('/accountUpdate')}
+                                className="w-full text-left hover:bg-gray-100"
+                            >
+                                氏名・メールアドレス変更
+                            </button>
+
+                            <button
+                                onClick={() => navigate('/passwordUpdate')}
+                                className="w-full text-left hover:bg-gray-100"
+                            >
+                                パスワード変更
                             </button>
                             <button
                                 onClick={handleLogout}

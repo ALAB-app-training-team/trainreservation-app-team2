@@ -1,6 +1,7 @@
 package com.alab.shinkansendego.account;
 
 import com.alab.shinkansendego.exception.ConflictException;
+import com.alab.shinkansendego.utils.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -32,11 +33,30 @@ public class AccountService {
      */
     public AccountEntity login(String mail, String password) {
         AccountEntity account = accountRepository.findByMail(mail).orElseThrow(() -> new BadCredentialsException("login is failed"));
+
         boolean matches = passwordEncoder.matches(password, account.getPassword());
         if (!matches) {
             throw new BadCredentialsException("login is failed");
         }
         return account;
+    }
+
+    /**
+     * ログイン中のアカウント情報取得メソッド
+     *
+     * @param userId ログイン中のアカウントID
+     * @return ログイン中のアカウント情報
+     */
+    @Transactional(readOnly = true)
+    public AccountSessionDto getAccount(UUID userId) {
+        AccountEntity account = accountRepository.findById(userId)
+            .orElseThrow(() -> new IllegalArgumentException("Account is not found"));
+
+        return new AccountSessionDto(
+            account.getId(),
+            account.getMail(),
+            account.getName()
+        );
     }
 
     /**
@@ -60,6 +80,55 @@ public class AccountService {
         );
 
         accountRepository.save(postAccount);
+    }
+
+    /**
+     * アカウント情報変更メソッド
+     *
+     * @param request 変更するアカウント情報
+     */
+    @Transactional
+    public UUID putAccount(UUID userId, AccountUpdateDto request) {
+        AccountEntity account = accountRepository.findById(userId)
+            .orElseThrow(() -> new IllegalArgumentException("Account is not found"));
+
+        if (!passwordEncoder.matches(request.getPassword(), account.getPassword())) {
+            throw new IllegalArgumentException("Password does not match");
+        }
+
+        String newMail = StringUtils.removeSpaces(request.getMail());
+        Optional<AccountEntity> duplicateAccount = accountRepository.findByMail(newMail);
+
+        if (duplicateAccount.isPresent()
+            && !duplicateAccount.get().getId().equals(userId)) {
+            throw new ConflictException(newMail + " is Duplicate");
+        }
+
+        account.setName(StringUtils.removeSpaces(request.getName()));
+        account.setMail(newMail);
+
+        AccountEntity updatedAccount = accountRepository.save(account);
+        return updatedAccount.getId();
+    }
+
+    /**
+     * パスワード変更メソッド
+     *
+     * @param request 変更する新しいパスワードと現在のパスワード情報
+     */
+    @Transactional
+    public UUID putPassword(UUID userId, PasswordUpdateDto request) {
+        AccountEntity account = accountRepository.findById(userId)
+            .orElseThrow(() -> new IllegalArgumentException("Account is not found"));
+
+        if (!passwordEncoder.matches(request.getPassword(), account.getPassword())) {
+            throw new IllegalArgumentException("Password does not match");
+        }
+
+        account.setPassword(passwordEncoder.encode(request.getNewPassword()));
+
+        AccountEntity updatedAccount = accountRepository.save(account);
+        return updatedAccount.getId();
     }
 
     /**
