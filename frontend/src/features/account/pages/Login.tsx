@@ -28,9 +28,9 @@ export function Login() {
                     <h1 className="!text-primary !m-0 text-left !text-3xl">
                         新幹線でGO！
                     </h1>
-                    <div className="text-gray-500">
+                    <p className="text-gray-500">
                         アカウントにログインまたは新規登録してください
-                    </div>
+                    </p>
                 </div>
 
                 <form
