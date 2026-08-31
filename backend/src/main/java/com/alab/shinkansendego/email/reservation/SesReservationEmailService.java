@@ -1,4 +1,4 @@
-package com.alab.shinkansendego.email;
+package com.alab.shinkansendego.email.reservation;
 
 import com.alab.shinkansendego.utils.EmailUtils;
 import org.slf4j.Logger;
@@ -20,15 +20,15 @@ import static com.alab.shinkansendego.utils.EmailUtils.differenceFormatter;
 
 @Service
 @Profile("prod")
-public class SesEmailService implements EmailService {
-    private static final Logger log = LoggerFactory.getLogger(SesEmailService.class);
+public class SesReservationEmailService implements ReservationEmailService {
+    private static final Logger log = LoggerFactory.getLogger(SesReservationEmailService.class);
     private final SesV2Client sesV2Client;
     @Value("${app.frontend.base-url}")
     private String baseUrl;
     @Value("${app.mail.from}")
     private String mailFrom;
 
-    public SesEmailService(@Value("${app.mail.region}") String region) {
+    public SesReservationEmailService(@Value("${app.mail.region}") String region) {
         this.sesV2Client = SesV2Client.builder()
             .region(Region.of(region))
             .build();
@@ -36,7 +36,7 @@ public class SesEmailService implements EmailService {
 
     @Async
     @Override
-    public void sendReservationConfirmation(EmailRequestDto dto) {
+    public void sendReservationConfirmation(ReservationEmailRequestDto dto) {
         try {
             String formatterRideDate = "";
             if (dto.getRideDate() != null) {
@@ -86,7 +86,7 @@ public class SesEmailService implements EmailService {
 
     @Async
     @Override
-    public void sendReservationChange(EmailRequestDto dto) {
+    public void sendReservationChange(ReservationEmailRequestDto dto) {
         try {
             String formatterRideDate = "";
             if (dto.getRideDate() != null) {
@@ -136,7 +136,7 @@ public class SesEmailService implements EmailService {
 
     @Async
     @Override
-    public void sendReservationCancel(EmailRequestDto dto) {
+    public void sendReservationCancel(ReservationEmailRequestDto dto) {
         try {
             String formatterRideDate = "";
             if (dto.getRideDate() != null) {
@@ -190,7 +190,7 @@ public class SesEmailService implements EmailService {
 
     @Async
     @Override
-    public void sendSetCompanion(EmailRequestDto dto) {
+    public void sendSetCompanion(ReservationEmailRequestDto dto) {
         try {
             String formatterRideDate = "";
             if (dto.getRideDate() != null) {
@@ -241,7 +241,7 @@ public class SesEmailService implements EmailService {
 
     @Async
     @Override
-    public void sendReleaseCompanion(EmailRequestDto dto) {
+    public void sendReleaseCompanion(ReservationEmailRequestDto dto) {
         try {
             String formatterRideDate = "";
             if (dto.getRideDate() != null) {

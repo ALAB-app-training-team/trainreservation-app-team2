@@ -1,4 +1,4 @@
-package com.alab.shinkansendego.email;
+package com.alab.shinkansendego.email.reservation;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -16,7 +16,7 @@ import java.util.UUID;
 @AllArgsConstructor
 @Getter
 @Setter
-public class EmailRequestDto {
+public class ReservationEmailRequestDto {
     private String reserverMail;
     private String reserverName;
     private UUID reservationId;
