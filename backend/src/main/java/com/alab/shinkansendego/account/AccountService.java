@@ -1,6 +1,7 @@
 package com.alab.shinkansendego.account;
 
 import com.alab.shinkansendego.exception.ConflictException;
+import com.alab.shinkansendego.reservation.ReservationRepository;
 import com.alab.shinkansendego.utils.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.authentication.BadCredentialsException;
@@ -16,11 +17,13 @@ import static com.alab.shinkansendego.utils.StringUtils.removeSpaces;
 @Service
 public class AccountService {
     private final AccountRepository accountRepository;
+    private final ReservationRepository reservationRepository;
     private final PasswordEncoder passwordEncoder;
 
     @Autowired
-    public AccountService(AccountRepository accountRepository, PasswordEncoder passwordEncoder) {
+    public AccountService(AccountRepository accountRepository, ReservationRepository reservationRepository, PasswordEncoder passwordEncoder) {
         this.accountRepository = accountRepository;
+        this.reservationRepository = reservationRepository;
         this.passwordEncoder = passwordEncoder;
     }
 
@@ -142,5 +145,17 @@ public class AccountService {
             .orElseThrow(() -> new IllegalArgumentException("Account not Found"));
         account.setPassword(passwordEncoder.encode(request.getPassword()));
         accountRepository.save(account);
+    }
+
+    @Transactional
+    public void deleteAccount(UUID accountId) {
+        boolean hasActiveReservation =
+            reservationRepository.existsByAccountIdAndIsDeleted(accountId, false);
+        
+        if (hasActiveReservation) {
+            throw new ConflictException("予約中のきっぷがあるため、退会できません。");
+        }
+
+        accountRepository.deleteById(accountId);
     }
 }

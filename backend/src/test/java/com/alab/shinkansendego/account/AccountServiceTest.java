@@ -1,6 +1,7 @@
 package com.alab.shinkansendego.account;
 
 import com.alab.shinkansendego.exception.ConflictException;
+import com.alab.shinkansendego.reservation.ReservationRepository;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -23,6 +24,8 @@ public class AccountServiceTest {
     @Mock
     private AccountRepository accountRepository;
     @Mock
+    private ReservationRepository reservationRepository;
+    @Mock
     private PasswordEncoder passwordEncoder;
     private final String mail = "a@a.com";
     private final String rawPassword = "Password_11/";
@@ -32,7 +35,7 @@ public class AccountServiceTest {
     @BeforeEach
     void setUp() {
         MockitoAnnotations.openMocks(this);
-        this.service = new AccountService(accountRepository, passwordEncoder);
+        this.service = new AccountService(accountRepository, reservationRepository, passwordEncoder);
     }
 
     @Test

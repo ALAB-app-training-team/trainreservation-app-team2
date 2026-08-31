@@ -14,6 +14,7 @@ import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.context.SecurityContext;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.web.context.HttpSessionSecurityContextRepository;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
@@ -151,6 +152,23 @@ public class AccountController {
     public ResponseEntity<Void> updatePasswordByAdmin(@Valid @RequestBody PasswordUpdateByAdminDto request) {
         accountService.updatePasswordByAdmin(request);
         return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
+    }
+
+    /**
+     * アカウント削除メソッド
+     *
+     * @param session ログインセッション
+     * @return NoContent
+     */
+    @DeleteMapping("account")
+    @PreAuthorize("isAuthenticated()")
+    public ResponseEntity<Void> deleteAccount(
+        @AuthenticationPrincipal AccountSessionDto session,
+        HttpSession httpSession
+    ) {
+        accountService.deleteAccount(session.getId());
+        httpSession.invalidate();
+        return ResponseEntity.noContent().build();
     }
 
     /**
