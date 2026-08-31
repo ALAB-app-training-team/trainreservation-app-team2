@@ -1,4 +1,5 @@
 import { type ReactNode, useState } from 'react';
+import { IoCaretDown, IoCaretForward } from 'react-icons/io5';
 
 type AccordionProps = {
     title: string;
@@ -9,23 +10,16 @@ export function CustomAccordion({ title, children }: AccordionProps) {
     const [isOpen, setIsOpen] = useState(false);
 
     return (
-        <details>
+        <div className="text-left">
             <button
                 type="button"
                 onClick={() => setIsOpen((prev) => !prev)}
-                className="flex w-full items-center justify-between px-4 py-3 text-left font-medium text-gray-900"
+                className="flex items-center gap-2"
             >
-                <summary>
-                    <span>{title}</span>
-                    <span aria-hidden="true" />
-                </summary>{' '}
-                <span>{isOpen ? '−' : '+'}</span>
+                {isOpen ? <IoCaretDown /> : <IoCaretForward />}
+                <span>{title}</span>
             </button>
-            {isOpen && (
-                <div className="border-t border-gray-200 px-4 py-3 text-sm text-gray-600">
-                    {children}
-                </div>
-            )}
-        </details>
+            {isOpen && <div>{children}</div>}
+        </div>
     );
 }

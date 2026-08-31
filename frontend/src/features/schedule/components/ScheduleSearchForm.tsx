@@ -10,6 +10,7 @@ import { useStationFilter } from '@/features/schedule/hooks/useStationFilter';
 import type { SearchRequestDto } from '@/features/schedule/types/SearchRequestDto';
 import type { Station } from '@/features/schedule/types/Station';
 import type { StationResponseDto } from '@/features/schedule/types/StationResponseDto';
+import { CustomAccordion } from '@/shared/components/CustomAccordion';
 
 type ScheduleSearchFormProps = {
     stations: Station[];
@@ -158,15 +159,18 @@ export function ScheduleSearchForm({
                                 空席がある列車のみ表示する
                             </label>
                         </div>
-                        <button
-                            // onClick={() => onChangeSeatClick(detail)}
-                            // disabled={isSubmitting}
-                            className="bg-primary flex w-fit items-center rounded-lg p-2 text-white"
-                        >
-                            検索条件をお気に入り登録する
-                        </button>
-                        <div>
-                            ここにお気に入り経路を表示（トグルとかだと嬉しい（わたしが））
+                        <div className="flex flex-col gap-1">
+                            <button
+                                // onClick={() => onChangeSeatClick(detail)}
+                                // disabled={isSubmitting}
+                                className="bg-primary flex w-fit items-center rounded-lg px-4 py-2 text-white"
+                            >
+                                検索経路をお気に入り登録する
+                            </button>
+                            <CustomAccordion
+                                title="お気に入り経路"
+                                children={<div>こんにちは</div>}
+                            />
                         </div>
                     </div>
                 </div>
