@@ -27,7 +27,7 @@ public class LocalAccountEmailService implements AccountEmailService {
 
     @Async
     @Override
-    public void sendAccountConfirmation(AccountEmailRequestDto dto) {
+    public void sendAccountCreate(AccountEmailRequestDto dto) {
         try {
             MimeMessage mimeMessage = mailSender.createMimeMessage();
             MimeMessageHelper helper = new MimeMessageHelper(mimeMessage, "UTF-8");

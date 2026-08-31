@@ -33,7 +33,7 @@ public class SesAccountEmailService implements AccountEmailService {
 
     @Async
     @Override
-    public void sendAccountConfirmation(AccountEmailRequestDto dto) {
+    public void sendAccountCreate(AccountEmailRequestDto dto) {
         try {
             String loginUrl = baseUrl + EmailUtils.LOGIN_PATH;
 
