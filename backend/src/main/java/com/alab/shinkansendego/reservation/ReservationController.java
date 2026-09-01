@@ -1,7 +1,7 @@
 package com.alab.shinkansendego.reservation;
 
 import com.alab.shinkansendego.account.AccountSessionDto;
-import com.alab.shinkansendego.email.EmailService;
+import com.alab.shinkansendego.email.reservation.ReservationEmailService;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -27,7 +27,7 @@ public class ReservationController {
     private final ReservationService reservationService;
 
     @Autowired
-    public ReservationController(ReservationService reservationService, EmailService emailService) {
+    public ReservationController(ReservationService reservationService, ReservationEmailService reservationEmailService) {
         this.reservationService = reservationService;
     }
 
