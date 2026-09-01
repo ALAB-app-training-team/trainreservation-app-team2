@@ -13,7 +13,7 @@ export function useSearchHistoryDto(searchRequestDto: SearchRequestDto) {
     const [isSubmitting, setIsSubmitting] = useState<boolean>(false);
 
     const { data: searchHistoryDtos = [] } = useQuery({
-        queryKey: ['searchHistory', isSubmitting],
+        queryKey: ['searchHistory'],
         queryFn: async () => {
             const response = await apiClient.get<SearchHistoryDto[]>(
                 ENDPOINTS.HISTORY(),
