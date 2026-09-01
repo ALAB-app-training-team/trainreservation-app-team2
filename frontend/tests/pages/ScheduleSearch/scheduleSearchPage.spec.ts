@@ -403,8 +403,12 @@ test('座席種別と人数のドロップダウンが表示され、初期値�
     await expect(scheduleSearchPage.seatTypeSelect).toBeVisible();
     await expect(scheduleSearchPage.passengersSelect).toBeVisible();
 
-    await expect(scheduleSearchPage.seatTypeSelect).toHaveValue('-');
-    await expect(scheduleSearchPage.passengersSelect).toHaveValue('-');
+    await expect(
+        page.locator('#seatType').locator('..').locator('..'),
+    ).toContainText('-');
+    await expect(
+        page.locator('#passengers').locator('..').locator('..'),
+    ).toContainText('-');
 });
 
 test('座席種別を指定すると、空席チェックがONかつ無効化され補足テキストが表示される', async ({
@@ -440,7 +444,11 @@ test('座席種別がハイフンの時に空席チェックをオフにでき�
     const scheduleSearchPage = new ScheduleSearchPage(page);
     await scheduleSearchPage.goto();
 
+    await expect(page.getByText(/\d+件の列車が見つかりました/)).toBeVisible();
+
+    await expect(scheduleSearchPage.availableTrainCheckBox).toBeEnabled();
     await expect(scheduleSearchPage.availableTrainCheckBox).toBeChecked();
+
     await scheduleSearchPage.unCheckAvailableTrainCheckBox();
     await expect(scheduleSearchPage.availableTrainCheckBox).not.toBeChecked();
 });
@@ -451,23 +459,32 @@ test('グランクラスかつ4人指定時に、グランクラス残席が4未
     const scheduleSearchPage = new ScheduleSearchPage(page);
     await scheduleSearchPage.goto();
 
-    const responsePromise = page.waitForResponse((response) => {
-        if (
-            !response.url().includes('/schedules') ||
-            response.status() !== 200
-        ) {
-            return false;
-        }
+    await expect(page.getByText(/\d+件の列車が見つかりました/)).toBeVisible();
+
+    await scheduleSearchPage.selectSeatType('グランクラス');
+    await page.waitForResponse((response) => {
         const url = new URL(response.url());
         return (
+            response.url().includes('/schedules') &&
+            response.status() === 200 &&
+            url.searchParams.get('seatType') === 'グランクラス'
+        );
+    });
+
+    const responsePromise = page.waitForResponse((response) => {
+        const url = new URL(response.url());
+        return (
+            response.url().includes('/schedules') &&
+            response.status() === 200 &&
             url.searchParams.get('seatType') === 'グランクラス' &&
             url.searchParams.get('passengers') === '4'
         );
     });
 
+    await scheduleSearchPage.selectPassengers('4人');
     const response = await responsePromise;
-    const schedules = await response.json();
 
+    const schedules = await response.json();
     for (const schedule of schedules) {
         expect(schedule.gcSeats).toBeGreaterThanOrEqual(4);
     }
