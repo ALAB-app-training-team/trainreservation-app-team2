@@ -11,7 +11,9 @@ export function AvailableOnlyFilter({
 }: AvailableOnlyFilterProps) {
     return (
         <div className="flex flex-col">
-            <div className="flex items-center">
+            <div
+                className={`items-center" flex ${isDisabled ? 'cursor-not-allowed' : ''}`}
+            >
                 <input
                     type="checkbox"
                     id="isOnlyAvailable"
@@ -19,7 +21,7 @@ export function AvailableOnlyFilter({
                     checked={isChecked}
                     disabled={isDisabled}
                     onChange={(e) => onChange(e.target.checked)}
-                    className="accent-primary cursor-pointer disabled:cursor-not-allowed"
+                    className={`accent-primary ${isDisabled ? 'pointer-events-none' : 'cursor-pointer'}`}
                 />
                 <label
                     htmlFor="isOnlyAvailable"
@@ -35,7 +37,7 @@ export function AvailableOnlyFilter({
             {isDisabled && (
                 <p
                     data-testid="isOnlyAvailable-hint"
-                    className="text-xs text-gray-500"
+                    className="cursor-not-allowed text-xs text-gray-500"
                 >
                     （座席種別を指定中は自動で空席がある列車のみ表示されます）
                 </p>
