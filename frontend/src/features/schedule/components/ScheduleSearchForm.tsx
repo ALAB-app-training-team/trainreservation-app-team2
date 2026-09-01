@@ -1,4 +1,5 @@
 import dayjs from 'dayjs';
+import customParseFormat from 'dayjs/plugin/customParseFormat';
 import type { SetStateAction } from 'react';
 import {
     HiOutlineArrowNarrowRight,
@@ -52,6 +53,8 @@ export function ScheduleSearchForm({
     isOnlyAvailable,
     setIsOnlyAvailable,
 }: ScheduleSearchFormProps) {
+    dayjs.extend(customParseFormat);
+
     const info = localStorage.getItem('name');
 
     const { availableDepartureStations, availableArrivalStations } =
@@ -214,7 +217,7 @@ export function ScheduleSearchForm({
                                                                         dto.isArrivalTime,
                                                                     );
                                                                 }}
-                                                                className="border-primary hover:bg-primary-light flex w-fit items-center gap-4 rounded-lg border bg-white px-4 py-1 text-left transition-colors"
+                                                                className="border-primary hover:bg-primary-light flex w-fit items-center gap-4 rounded-lg border bg-white px-4 py-1 text-left"
                                                             >
                                                                 <span className="flex items-center gap-2 font-medium">
                                                                     <span>
@@ -229,7 +232,7 @@ export function ScheduleSearchForm({
                                                                         }
                                                                     </span>
                                                                 </span>
-                                                                <span className="flex items-center gap-1 text-sm text-gray-600">
+                                                                <span className="flex items-center gap-1 text-sm">
                                                                     <span className="bg-primary rounded px-2 py-0.5 text-xs text-white">
                                                                         {dto.isArrivalTime
                                                                             ? '到着'
@@ -254,8 +257,7 @@ export function ScheduleSearchForm({
                                                         handleSaveHistory()
                                                     }
                                                     disabled={isSubmitting}
-                                                    aria-label="現在の検索経路をお気に入りに登録する"
-                                                    className="border-primary hover:bg-primary-light text-primary flex w-fit items-center rounded-lg border bg-white px-3 py-1 transition-colors disabled:opacity-50"
+                                                    className="border-primary hover:bg-primary-light text-primary flex w-fit items-center rounded-lg border bg-white px-2 py-1"
                                                 >
                                                     <HiOutlinePlus className="text-lg" />
                                                 </button>
