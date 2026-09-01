@@ -9,6 +9,4 @@ import java.util.UUID;
 @Repository
 public interface SearchHistoryRepository extends JpaRepository<SearchHistoryEntity, UUID> {
     List<SearchHistoryEntity> findByAccountId(UUID accountId);
-
-    List<SearchHistoryEntity> findByAccountIdOrderByCreatedAtDesc(UUID accountId);
 }

@@ -2,10 +2,12 @@ package com.alab.shinkansendego.searchhistory;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.CollectionUtils;
 
 import java.sql.Timestamp;
 import java.time.Instant;
+import java.util.Comparator;
 import java.util.List;
 import java.util.UUID;
 
@@ -14,7 +16,7 @@ public class SearchHistoryService {
     private final SearchHistoryRepository searchHistoryRepository;
 
     @Autowired
-    private SearchHistoryService(SearchHistoryRepository searchHistoryRepository) {
+    public SearchHistoryService(SearchHistoryRepository searchHistoryRepository) {
         this.searchHistoryRepository = searchHistoryRepository;
     }
 
@@ -24,10 +26,13 @@ public class SearchHistoryService {
      * @return アカウントに紐づくList<SearchHistoryEntity> (無ければ空のリスト)
      */
     public List<SearchHistoryDto> getSearchHistory(UUID accountId) {
-        List<SearchHistoryEntity> histories = searchHistoryRepository.findByAccountIdOrderByCreatedAtDesc(accountId);
+        List<SearchHistoryEntity> histories = searchHistoryRepository.findByAccountId(accountId);
         if (CollectionUtils.isEmpty(histories)) {
             return List.of();
         }
+        histories.sort(
+            Comparator.comparing(SearchHistoryEntity::getCreatedAt)
+                .reversed());
         return histories.stream().map(
             history -> new SearchHistoryDto(
                 history.getId(),
@@ -46,13 +51,18 @@ public class SearchHistoryService {
      * @param history 保存する検索履歴
      * @return 検索履歴UUID
      */
+    @Transactional
     public UUID recordSearchHistory(SearchHistoryDto history, UUID accountId) {
 
         List<SearchHistoryEntity> histories = searchHistoryRepository.findByAccountId(accountId);
+        if (!CollectionUtils.isEmpty(histories)) {
+            histories.sort(
+                Comparator.comparing(SearchHistoryEntity::getCreatedAt)
+                    .reversed());
+        }
         if (histories.size() >= 5) {
             searchHistoryRepository.delete(histories.getLast());
         }
-        System.out.println("aaaaaaaaaaaaaaaaa" + history);
         SearchHistoryEntity target = new SearchHistoryEntity(
             UUID.randomUUID(),
             accountId,

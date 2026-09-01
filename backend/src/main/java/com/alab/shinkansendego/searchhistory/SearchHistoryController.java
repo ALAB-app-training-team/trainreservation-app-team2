@@ -1,6 +1,7 @@
 package com.alab.shinkansendego.searchhistory;
 
 import com.alab.shinkansendego.account.AccountSessionDto;
+import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -33,7 +34,7 @@ public class SearchHistoryController {
 
     @PostMapping
     @PreAuthorize("isAuthenticated()")
-    public ResponseEntity<UUID> recordSearchHistory(@AuthenticationPrincipal AccountSessionDto session, @RequestBody SearchHistoryDto searchHistory) {
+    public ResponseEntity<UUID> recordSearchHistory(@AuthenticationPrincipal AccountSessionDto session, @Valid @RequestBody SearchHistoryDto searchHistory) {
         UUID historyId = searchHistoryService.recordSearchHistory(searchHistory, session.getId());
         return ResponseEntity.ok(historyId);
     }
