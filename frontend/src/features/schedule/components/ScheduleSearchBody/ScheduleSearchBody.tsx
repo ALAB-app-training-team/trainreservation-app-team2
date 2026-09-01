@@ -42,6 +42,7 @@ export function ScheduleSearchBody() {
         maxDate,
         minDate,
         handleNextDate,
+        seatType,
         passengers,
         isSeatTypeSpecified,
         setSeatType,
@@ -107,6 +108,7 @@ export function ScheduleSearchBody() {
                         minDate={minDate}
                         isOnlyAvailable={isOnlyAvailable}
                         setIsOnlyAvailable={setIsOnlyAvailable}
+                        seatType={seatType}
                         passengers={passengers}
                         isSeatTypeSpecified={isSeatTypeSpecified}
                         setSeatType={setSeatType}
@@ -135,6 +137,8 @@ export function ScheduleSearchBody() {
                                         searchRequestDto.arrivalStationCd,
                                 )?.name || ERROR_MESSAGE.ERROR
                             }
+                            seatType={seatType}
+                            passengers={passengers}
                             isOnlyAvailable={isOnlyAvailable}
                             reservationId={reservationId ?? null}
                             reservedSeats={reservedSeats ?? []}

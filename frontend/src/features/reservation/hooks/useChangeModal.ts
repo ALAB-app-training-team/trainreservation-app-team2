@@ -21,9 +21,6 @@ export function useChangeModal(
             departureStationCd: detail.departureStationCd,
             arrivalStationCd: detail.arrivalStationCd,
             isArrivalTime: false,
-            seatType: '-',
-            passengers: null,
-            isOnlyAvailable: true,
         };
         const preChangeScheduleInfo = {
             scheduleCd: detail.scheduleCd,

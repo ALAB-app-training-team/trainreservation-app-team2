@@ -27,6 +27,7 @@ type ScheduleSearchFormProps = {
     getFieldError: (field: string) => string;
     maxDate: Date;
     minDate: Date;
+    seatType: string;
     passengers: string;
     isSeatTypeSpecified: boolean;
     setSeatType: React.Dispatch<SetStateAction<string>>;
@@ -51,6 +52,7 @@ export function ScheduleSearchForm({
     minDate,
     isOnlyAvailable,
     setIsOnlyAvailable,
+    seatType,
     passengers,
     isSeatTypeSpecified,
     setSeatType,
@@ -157,7 +159,7 @@ export function ScheduleSearchForm({
                         <div className="flex flex-col gap-4">
                             <div className="flex w-full flex-col justify-between md:flex-row">
                                 <SeatTypeAndPassengersSelect
-                                    seatType={searchRequestDto.seatType}
+                                    seatType={seatType}
                                     passengers={passengers}
                                     onSeatTypeChange={setSeatType}
                                     onPassengersChange={setPassengers}
