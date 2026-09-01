@@ -4,7 +4,4 @@ export type SearchRequestDto = {
     departureStationCd: string;
     arrivalStationCd: string;
     isArrivalTime: boolean;
-    seatType: string;
-    passengers: number | null;
-    isOnlyAvailable: boolean;
 };
