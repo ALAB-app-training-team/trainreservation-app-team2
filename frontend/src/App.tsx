@@ -8,7 +8,9 @@ import { toast } from 'sonner';
 
 import { AuthProvider } from '@/context/AuthContext';
 import { AccountCreate } from '@/features/account/pages/AccountCreate';
+import { AccountUpdate } from '@/features/account/pages/AccountUpdate';
 import { Login } from '@/features/account/pages/Login';
+import { PasswordUpdate } from '@/features/account/pages/PasswordUpdate';
 import { PasswordUpdateForAdmin } from '@/features/account/pages/PasswordUpdateForAdmin';
 import { ReservationGuestLogin } from '@/features/reservation/pages/ReservationGuestLogin';
 import { ReservationList } from '@/features/reservation/pages/ReservationList';
@@ -19,7 +21,7 @@ import { Layout } from '@/Layout';
 import { ERROR_MESSAGE } from '@/shared/constants/ErrorMessages';
 import { Error } from '@/shared/pages/Error';
 
-const reservationListLoader = () => {
+const requiredLoginLoader = () => {
     const info = localStorage.getItem('name');
     if (info === null) {
         sessionStorage.setItem('message', ERROR_MESSAGE.LOGIN_ERROR);
@@ -105,6 +107,18 @@ const router = createBrowserRouter([
                 errorElement: <Error />,
             },
             {
+                path: '/accountUpdate',
+                loader: () => requiredLoginLoader(),
+                element: <AccountUpdate />,
+                errorElement: <Error />,
+            },
+            {
+                path: '/passwordUpdate',
+                loader: () => requiredLoginLoader(),
+                element: <PasswordUpdate />,
+                errorElement: <Error />,
+            },
+            {
                 path: '/admin/password',
                 loader: () => adminLoader(),
                 element: <PasswordUpdateForAdmin />,
@@ -128,7 +142,7 @@ const router = createBrowserRouter([
             },
             {
                 path: '/reservationList',
-                loader: () => reservationListLoader(),
+                loader: () => requiredLoginLoader(),
                 element: <ReservationList />,
                 errorElement: <Error />,
             },

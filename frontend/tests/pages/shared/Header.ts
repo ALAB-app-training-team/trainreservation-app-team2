@@ -7,6 +7,8 @@ export class Header {
     readonly loginLink: Locator;
     readonly passwordUpdateForAdminButton: Locator;
     readonly reservationListButton: Locator;
+    readonly accountUpdateButton: Locator;
+    readonly passwordUpdateButton: Locator;
     readonly logoutButton: Locator;
     readonly userName: Locator;
 
@@ -24,6 +26,12 @@ export class Header {
         });
         this.reservationListButton = page.getByRole('button', {
             name: '予約一覧',
+        });
+        this.accountUpdateButton = page.getByRole('button', {
+            name: '氏名・メールアドレス変更',
+        });
+        this.passwordUpdateButton = page.getByRole('button', {
+            name: 'パスワード変更',
         });
         this.logoutButton = page.getByRole('button', { name: 'ログアウト' });
         this.userName = page.getByTestId('user-name');
@@ -47,6 +55,14 @@ export class Header {
 
     async goToReservationList() {
         await this.reservationListButton.first().click();
+    }
+
+    async goToAccountUpdate() {
+        await this.accountUpdateButton.first().click();
+    }
+
+    async goToPasswordUpdate() {
+        await this.passwordUpdateButton.first().click();
     }
 
     async goToLogout() {

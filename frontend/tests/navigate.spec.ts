@@ -9,6 +9,8 @@ import { LoginPage } from '@tests/pages/Login/LoginPage';
 import { test } from '@tests/fixtures';
 import { AccountCreatePage } from '@tests/pages/AccountCreate/AccountCreatePage';
 import { PasswordUpdateForAdminPage } from './pages/PasswordUpdateForAdmin/PasswordUpdateForAdminPage';
+import { AccountUpdatePage } from './pages/AccountUpdate/AccountUpdatePage';
+import { PasswordUpdatePage } from './pages/PasswordUpdate/PasswordUpdatePage';
 
 test('navigate-ゲストログイン全機能', async ({ page, context, logout }) => {
     const scheduleSearchPage = new ScheduleSearchPage(page);
@@ -345,6 +347,8 @@ test('navigate-header', async ({ page }) => {
     const scheduleSearchPage = new ScheduleSearchPage(page);
     const passwordUpdateForAdminPage = new PasswordUpdateForAdminPage(page);
     const reservationListPage = new ReservationListPage(page);
+    const accountUpdatePage = new AccountUpdatePage(page);
+    const passwordUpdatePage = new PasswordUpdatePage(page);
     const loginPage = new LoginPage(page);
 
     await scheduleSearchPage.goto();
@@ -360,7 +364,13 @@ test('navigate-header', async ({ page }) => {
     await scheduleSearchPage.header.goToReservationList();
     await expect(page).toHaveURL('/reservationList');
     await reservationListPage.header.clickUserName();
-    await reservationListPage.header.goToLogout();
+    await reservationListPage.header.goToAccountUpdate();
+    await expect(page).toHaveURL('/accountUpdate');
+    await accountUpdatePage.header.clickUserName();
+    await accountUpdatePage.header.goToPasswordUpdate();
+    await expect(page).toHaveURL('/passwordUpdate');
+    await passwordUpdatePage.header.clickUserName();
+    await passwordUpdatePage.header.goToLogout();
     await expect(page).toHaveURL('/login');
     await loginPage.inputAdminLoginInfo();
     await loginPage.clickLoginButton();
@@ -477,4 +487,28 @@ test('navigate-一般ログイン状態でadmin/passwordのパスを入力する
     await expect(page).toHaveURL('/scheduleSearch');
     await passwordUpdateForAdminPage.goto();
     await expect(page).toHaveURL('/scheduleSearch');
+});
+
+test('navigate-未ログイン状態でaccountUpdate/のパスを入力するとログイン画面に遷移', async ({
+    page,
+}) => {
+    const scheduleSearchPage = new ScheduleSearchPage(page);
+    const accountUpdatePage = new AccountUpdatePage(page);
+
+    await scheduleSearchPage.goto();
+    await expect(page).toHaveURL('/scheduleSearch');
+    await accountUpdatePage.goto();
+    await expect(page).toHaveURL('/login');
+});
+
+test('navigate-未ログイン状態でpasswordUpdate/のパスを入力するとログイン画面に遷移', async ({
+    page,
+}) => {
+    const scheduleSearchPage = new ScheduleSearchPage(page);
+    const passwordUpdatePage = new PasswordUpdatePage(page);
+
+    await scheduleSearchPage.goto();
+    await expect(page).toHaveURL('/scheduleSearch');
+    await passwordUpdatePage.goto();
+    await expect(page).toHaveURL('/login');
 });
