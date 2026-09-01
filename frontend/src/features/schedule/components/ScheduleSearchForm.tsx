@@ -2,6 +2,7 @@ import dayjs from 'dayjs';
 import type { SetStateAction } from 'react';
 import {
     HiOutlineArrowNarrowRight,
+    HiOutlinePlus,
     HiOutlineSwitchHorizontal,
     HiOutlineSwitchVertical,
 } from 'react-icons/hi';
@@ -154,38 +155,27 @@ export function ScheduleSearchForm({
                                 }
                             />
                         </div>
-                        <div className="flex gap-2 bg-transparent text-left">
-                            <input
-                                type="checkbox"
-                                id="isOnlyAvailable"
-                                checked={isOnlyAvailable}
-                                onChange={(e) =>
-                                    setIsOnlyAvailable(e.target.checked)
-                                }
-                                className="accent-primary"
-                            />
-                            <label htmlFor="isOnlyAvailable">
-                                空席がある列車のみ表示する
-                            </label>
-                        </div>
-                        {info && (
-                            <div className="flex flex-col gap-1">
-                                <button
-                                    onClick={() => handleSaveHistory()}
-                                    disabled={isSubmitting}
-                                    className="bg-primary flex w-fit items-center rounded-lg px-4 py-2 text-white"
-                                >
-                                    検索経路をお気に入り登録する
-                                </button>
-                                <CustomAccordion
-                                    title="お気に入り経路"
-                                    children={
-                                        searchHistoryDtos.length === 0 ? (
-                                            <p className="mt-2 text-sm text-gray-500">
-                                                登録されたお気に入り経路はありません
-                                            </p>
-                                        ) : (
-                                            <div className="mt-2 flex flex-wrap gap-2">
+                        <div className="flex flex-col items-start gap-1">
+                            <div className="flex gap-2 bg-transparent text-left">
+                                <input
+                                    type="checkbox"
+                                    id="isOnlyAvailable"
+                                    checked={isOnlyAvailable}
+                                    onChange={(e) =>
+                                        setIsOnlyAvailable(e.target.checked)
+                                    }
+                                    className="accent-primary"
+                                />
+                                <label htmlFor="isOnlyAvailable">
+                                    空席がある列車のみ表示する
+                                </label>
+                            </div>
+                            {info && (
+                                <div className="flex flex-col gap-4">
+                                    <CustomAccordion
+                                        title="お気に入り経路"
+                                        children={
+                                            <div className="mt-2 flex flex-wrap items-center gap-2">
                                                 {searchHistoryDtos.map(
                                                     (dto: SearchHistoryDto) => {
                                                         const departureStationName =
@@ -224,7 +214,7 @@ export function ScheduleSearchForm({
                                                                         dto.isArrivalTime,
                                                                     );
                                                                 }}
-                                                                className="border-primary hover:bg-primary-light flex w-fit items-center gap-2 rounded-lg border bg-white px-4 py-1 text-left transition-colors"
+                                                                className="border-primary hover:bg-primary-light flex w-fit items-center gap-4 rounded-lg border bg-white px-4 py-1 text-left transition-colors"
                                                             >
                                                                 <span className="flex items-center gap-2 font-medium">
                                                                     <span>
@@ -239,7 +229,7 @@ export function ScheduleSearchForm({
                                                                         }
                                                                     </span>
                                                                 </span>
-                                                                <span className="flex items-center text-sm text-gray-600">
+                                                                <span className="flex items-center gap-1 text-sm text-gray-600">
                                                                     <span className="bg-primary rounded px-2 py-0.5 text-xs text-white">
                                                                         {dto.isArrivalTime
                                                                             ? '到着'
@@ -258,12 +248,23 @@ export function ScheduleSearchForm({
                                                         );
                                                     },
                                                 )}
+                                                <button
+                                                    type="button"
+                                                    onClick={() =>
+                                                        handleSaveHistory()
+                                                    }
+                                                    disabled={isSubmitting}
+                                                    aria-label="現在の検索経路をお気に入りに登録する"
+                                                    className="border-primary hover:bg-primary-light text-primary flex w-fit items-center rounded-lg border bg-white px-3 py-1 transition-colors disabled:opacity-50"
+                                                >
+                                                    <HiOutlinePlus className="text-lg" />
+                                                </button>
                                             </div>
-                                        )
-                                    }
-                                />
-                            </div>
-                        )}
+                                        }
+                                    />
+                                </div>
+                            )}
+                        </div>
                     </div>
                 </div>
             </div>
