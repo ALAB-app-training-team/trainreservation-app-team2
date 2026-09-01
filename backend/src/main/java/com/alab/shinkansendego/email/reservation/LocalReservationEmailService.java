@@ -1,4 +1,4 @@
-package com.alab.shinkansendego.email;
+package com.alab.shinkansendego.email.reservation;
 
 import com.alab.shinkansendego.utils.EmailUtils;
 import jakarta.mail.internet.MimeMessage;
@@ -17,20 +17,20 @@ import static com.alab.shinkansendego.utils.EmailUtils.differenceFormatter;
 
 @Service
 @Profile({"local", "test"})
-public class LocalEmailService implements EmailService {
-    private static final Logger log = LoggerFactory.getLogger(LocalEmailService.class);
+public class LocalReservationEmailService implements ReservationEmailService {
+    private static final Logger log = LoggerFactory.getLogger(LocalReservationEmailService.class);
     private final JavaMailSender mailSender;
     @Value("${app.frontend.base-url}")
     private String baseUrl;
 
     @Autowired
-    public LocalEmailService(JavaMailSender mailSender) {
+    public LocalReservationEmailService(JavaMailSender mailSender) {
         this.mailSender = mailSender;
     }
 
     @Async
     @Override
-    public void sendReservationConfirmation(EmailRequestDto dto) {
+    public void sendReservationConfirmation(ReservationEmailRequestParams dto) {
         try {
             MimeMessage mimeMessage = mailSender.createMimeMessage();
             MimeMessageHelper helper = new MimeMessageHelper(mimeMessage, "UTF-8");
@@ -76,7 +76,7 @@ public class LocalEmailService implements EmailService {
 
     @Async
     @Override
-    public void sendReservationChange(EmailRequestDto dto) {
+    public void sendReservationChange(ReservationEmailRequestParams dto) {
         try {
             MimeMessage mimeMessage = mailSender.createMimeMessage();
             MimeMessageHelper helper = new MimeMessageHelper(mimeMessage, "UTF-8");
@@ -122,7 +122,7 @@ public class LocalEmailService implements EmailService {
 
     @Async
     @Override
-    public void sendReservationCancel(EmailRequestDto dto) {
+    public void sendReservationCancel(ReservationEmailRequestParams dto) {
         try {
             MimeMessage mimeMessage = mailSender.createMimeMessage();
             MimeMessageHelper helper = new MimeMessageHelper(mimeMessage, "UTF-8");
@@ -172,7 +172,7 @@ public class LocalEmailService implements EmailService {
 
     @Async
     @Override
-    public void sendSetCompanion(EmailRequestDto dto) {
+    public void sendSetCompanion(ReservationEmailRequestParams dto) {
         try {
             MimeMessage mimeMessage = mailSender.createMimeMessage();
             MimeMessageHelper helper = new MimeMessageHelper(mimeMessage, "UTF-8");
@@ -219,7 +219,7 @@ public class LocalEmailService implements EmailService {
 
     @Async
     @Override
-    public void sendReleaseCompanion(EmailRequestDto dto) {
+    public void sendReleaseCompanion(ReservationEmailRequestParams dto) {
         try {
             MimeMessage mimeMessage = mailSender.createMimeMessage();
             MimeMessageHelper helper = new MimeMessageHelper(mimeMessage, "UTF-8");
