@@ -21,6 +21,8 @@ public final class EmailUtils {
     public static final String SET_SUBJECT = "[割り当て] 同行者割り当てのご案内";
     public static final String RELEASE_SUBJECT = "[割り当て解除] 同行者割り当て解除のご案内";
     public static final String ACCOUNT_CREATED_SUBJECT = "[登録] アカウント登録内容のご案内";
+    public static final String ACCOUNT_CHANGED_SUBJECT = "[変更] アカウント情報変更内容のご案内";
+    public static final String PASSWORD_CHANGED_SUBJECT = "[変更] パスワード変更内容のご案内";
     public static final String SENDER_NAME = "新幹線でGO！";
     public static final Integer REFUND_FEE = 320;
     public static final String FROM_ADDRESS = "thashimoto@jeisryokai.onmicrosoft.com";
@@ -128,12 +130,41 @@ public final class EmailUtils {
         ■アプリログインURL
         %s
         """;
+    public static final String ACCOUNT_CHANGED_BODY = """
+        %s さま
+
+        「新幹線でGO!」アプリをご利用いただきありがとうございます。
+        アカウント情報変更が完了しましたので以下よりご確認ください。
+
+        ■変更情報
+        氏名　　　　　：%s
+        メールアドレス：%s
+
+        お心当たりがない方はシステム管理者にお問い合わせください。
+
+        ■アプリログインURL
+        %s
+        """;
+    public static final String PASSWORD_CHANGED_BODY = """
+        %s さま
+
+        「新幹線でGO!」アプリをご利用いただきありがとうございます。
+        パスワード変更が完了しましたので以下よりご確認ください。
+
+        ■変更情報
+        パスワード：お客様がご自身で設定したパスワード
+
+        お心当たりがない方はシステム管理者にお問い合わせください。
+
+        ■アプリログインURL
+        %s
+        """;
 
     public static String rideDateFormatter(LocalDate date) {
         return date.format(DateTimeFormatter.ofPattern("yyyy年MM月dd日"));
     }
 
-    public static String seatFormatter(List<ReservationEmailRequestParams.SelectedSeatDto> seats) {
+    public static String seatFormatter(List<ReservationEmailRequestParams.SelectedSeatParams> seats) {
         if (CollectionUtils.isEmpty(seats)) {
             throw new IllegalArgumentException("メールの座席情報が指定されませんでした");
         }

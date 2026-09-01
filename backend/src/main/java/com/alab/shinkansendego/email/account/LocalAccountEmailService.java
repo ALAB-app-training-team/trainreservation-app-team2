@@ -27,29 +27,85 @@ public class LocalAccountEmailService implements AccountEmailService {
 
     @Async
     @Override
-    public void sendAccountCreate(AccountEmailRequestParams dto) {
+    public void sendAccountCreate(AccountEmailRequestParams params) {
         try {
             MimeMessage mimeMessage = mailSender.createMimeMessage();
             MimeMessageHelper helper = new MimeMessageHelper(mimeMessage, "UTF-8");
 
             helper.setFrom(EmailUtils.FROM_ADDRESS, EmailUtils.SENDER_NAME);
-            helper.setTo(dto.getAccountMail());
+            helper.setTo(params.getAccountMail());
             helper.setSubject(EmailUtils.ACCOUNT_CREATED_SUBJECT);
 
             String loginUrl = baseUrl + EmailUtils.LOGIN_PATH;
 
             String body = String.format(
                 EmailUtils.ACCOUNT_CREATED_BODY,
-                dto.getAccountName(),
-                dto.getAccountMail(),
+                params.getAccountName(),
+                params.getAccountMail(),
                 loginUrl
             );
 
             helper.setText(body);
             mailSender.send(mimeMessage);
-            log.info("アカウント作成完了メールを正常に送信しました。 To： {}", dto.getAccountMail());
+            log.info("アカウント作成完了メールを正常に送信しました。 To： {}", params.getAccountMail());
         } catch (Exception e) {
-            log.error("アカウント作成完了メール送信中にエラーが発生しました。 To： {}", dto.getAccountMail(), e);
+            log.error("アカウント作成完了メール送信中にエラーが発生しました。 To： {}", params.getAccountMail(), e);
+        }
+    }
+
+    @Async
+    @Override
+    public void sendAccountChange(AccountEmailRequestParams params) {
+        try {
+            MimeMessage mimeMessage = mailSender.createMimeMessage();
+            MimeMessageHelper helper = new MimeMessageHelper(mimeMessage, "UTF-8");
+
+            helper.setFrom(EmailUtils.FROM_ADDRESS, EmailUtils.SENDER_NAME);
+            helper.setTo(params.getAccountMail());
+            helper.setSubject(EmailUtils.ACCOUNT_CHANGED_SUBJECT);
+
+            String loginUrl = baseUrl + EmailUtils.LOGIN_PATH;
+
+            String body = String.format(
+                EmailUtils.ACCOUNT_CHANGED_BODY,
+                params.getAccountName(),
+                params.getAccountName(),
+                params.getAccountMail(),
+                loginUrl
+            );
+
+            helper.setText(body);
+            mailSender.send(mimeMessage);
+            log.info("アカウント情報変更完了メールを正常に送信しました。 To： {}", params.getAccountMail());
+        } catch (Exception e) {
+            log.error("アカウント情報変更完了メール送信中にエラーが発生しました。 To： {}", params.getAccountMail(), e);
+        }
+    }
+
+    @Async
+    @Override
+    public void sendPasswordChange(AccountEmailRequestParams params) {
+        try {
+            MimeMessage mimeMessage = mailSender.createMimeMessage();
+            MimeMessageHelper helper = new MimeMessageHelper(mimeMessage, "UTF-8");
+
+            helper.setFrom(EmailUtils.FROM_ADDRESS, EmailUtils.SENDER_NAME);
+            helper.setTo(params.getAccountMail());
+            helper.setSubject(EmailUtils.PASSWORD_CHANGED_SUBJECT);
+
+            String loginUrl = baseUrl + EmailUtils.LOGIN_PATH;
+
+            String body = String.format(
+                EmailUtils.PASSWORD_CHANGED_BODY,
+                params.getAccountName(),
+                loginUrl
+            );
+
+            helper.setText(body);
+            mailSender.send(mimeMessage);
+            log.info("パスワード変更完了メールを正常に送信しました。 To： {}", params.getAccountMail());
+        } catch (Exception e) {
+            log.error("パスワード変更完了メール送信中にエラーが発生しました。 To： {}", params.getAccountMail(), e);
         }
     }
 }

@@ -1,13 +1,13 @@
 package com.alab.shinkansendego.email.reservation;
 
 public interface ReservationEmailService {
-    void sendReservationConfirmation(ReservationEmailRequestParams dto);
+    void sendReservationConfirmation(ReservationEmailRequestParams params);
 
-    void sendReservationChange(ReservationEmailRequestParams dto);
+    void sendReservationChange(ReservationEmailRequestParams params);
 
-    void sendReservationCancel(ReservationEmailRequestParams dto);
+    void sendReservationCancel(ReservationEmailRequestParams params);
 
-    void sendSetCompanion(ReservationEmailRequestParams dto);
+    void sendSetCompanion(ReservationEmailRequestParams params);
 
-    void sendReleaseCompanion(ReservationEmailRequestParams dto);
+    void sendReleaseCompanion(ReservationEmailRequestParams params);
 }
