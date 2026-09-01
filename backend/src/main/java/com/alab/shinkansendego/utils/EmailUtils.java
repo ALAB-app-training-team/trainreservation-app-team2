@@ -1,6 +1,6 @@
 package com.alab.shinkansendego.utils;
 
-import com.alab.shinkansendego.email.EmailRequestDto;
+import com.alab.shinkansendego.email.reservation.ReservationEmailRequestParams;
 import org.springframework.util.CollectionUtils;
 
 import java.time.LocalDate;
@@ -20,6 +20,7 @@ public final class EmailUtils {
     public static final String CANCEL_SUBJECT = "[予約キャンセル] 予約キャンセル内容のご案内";
     public static final String SET_SUBJECT = "[割り当て] 同行者割り当てのご案内";
     public static final String RELEASE_SUBJECT = "[割り当て解除] 同行者割り当て解除のご案内";
+    public static final String ACCOUNT_CREATED_SUBJECT = "[登録] アカウント登録内容のご案内";
     public static final String SENDER_NAME = "新幹線でGO！";
     public static final Integer REFUND_FEE = 320;
     public static final String FROM_ADDRESS = "thashimoto@jeisryokai.onmicrosoft.com";
@@ -114,12 +115,25 @@ public final class EmailUtils {
 
         またのご利用をお待ちしております。
         """;
+    public static final String ACCOUNT_CREATED_BODY = """
+        %s さま
+
+        「新幹線でGO!」アプリをご利用いただきありがとうございます。
+        アカウント登録が完了しましたので以下よりご確認ください。
+
+        ■登録情報
+        メールアドレス：%s
+        パスワード　　：お客様がご自身で設定したパスワード
+
+        ■アプリログインURL
+        %s
+        """;
 
     public static String rideDateFormatter(LocalDate date) {
         return date.format(DateTimeFormatter.ofPattern("yyyy年MM月dd日"));
     }
 
-    public static String seatFormatter(List<EmailRequestDto.SelectedSeatDto> seats) {
+    public static String seatFormatter(List<ReservationEmailRequestParams.SelectedSeatDto> seats) {
         if (CollectionUtils.isEmpty(seats)) {
             throw new IllegalArgumentException("メールの座席情報が指定されませんでした");
         }
