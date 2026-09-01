@@ -72,7 +72,7 @@ export default defineConfig({
             command: 'npm run dev',
             url: 'http://localhost:5173',
             reuseExistingServer: !process.env.CI,
-            stdout: 'pipe',
+            stdout: 'ignore',
             stderr: 'pipe',
         },
         {
@@ -80,7 +80,7 @@ export default defineConfig({
             url: 'http://localhost:8080/api/reservations',
             reuseExistingServer: !process.env.CI,
             timeout: 300 * 1000,
-            stdout: 'pipe',
+            stdout: 'ignore',
             stderr: 'pipe',
         },
     ],
