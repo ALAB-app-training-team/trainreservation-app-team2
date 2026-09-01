@@ -204,6 +204,26 @@ export function ScheduleSearchForm({
                                                         return (
                                                             <button
                                                                 key={dto.id}
+                                                                type="button"
+                                                                onClick={() => {
+                                                                    setDepartureStation(
+                                                                        dto.departureStationCd,
+                                                                    );
+                                                                    setArrivalStation(
+                                                                        dto.arrivalStationCd,
+                                                                    );
+                                                                    setTime(
+                                                                        dayjs(
+                                                                            dto.time,
+                                                                            'HH:mm:ss',
+                                                                        ).format(
+                                                                            'HH:mm',
+                                                                        ),
+                                                                    );
+                                                                    setIsArrivalTime(
+                                                                        dto.isArrivalTime,
+                                                                    );
+                                                                }}
                                                                 className="border-primary hover:bg-primary-light flex w-fit items-center gap-2 rounded-lg border bg-white px-4 py-1 text-left transition-colors"
                                                             >
                                                                 <span className="flex items-center gap-2 font-medium">
