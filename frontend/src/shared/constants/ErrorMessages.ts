@@ -41,4 +41,6 @@ export const ERROR_MESSAGE = {
         'パスワードの変更が失敗しました。お手数ですが、再度お試しください。',
     ACCOUNT_NOT_DELETE:
         '予約中のきっぷがあるため、退会できません。退会するには、予約中のきっぷをすべてキャンセルしてください。',
+    ACCOUNT_DELETE_RETRY:
+        '退会に失敗しました。お手数ですが、再度お試しください。',
 } as const;

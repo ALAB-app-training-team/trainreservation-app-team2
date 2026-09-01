@@ -233,19 +233,35 @@ export function useAccountUpdateDto() {
             localStorage.removeItem('name');
             toast.success('退会が完了しました。');
             navigate('/login', { replace: true });
-        } catch {
-            //エラー内容の分岐を書くべき
-            toast.error(ERROR_MESSAGE.ACCOUNT_NOT_DELETE, {
-                duration: Infinity,
-                action: {
-                    label: 'OK',
-                    onClick: () => {},
-                },
-                classNames: {
-                    title: 'text-left whitespace-pre-line',
-                    actionButton: '!px-4 !py-2 !text-base !h-auto',
-                },
-            });
+        } catch (error) {
+            if (
+                axios.isAxiosError(error) &&
+                error.response?.status === HttpStatusCode.Conflict
+            ) {
+                toast.error(ERROR_MESSAGE.ACCOUNT_NOT_DELETE, {
+                    duration: Infinity,
+                    action: {
+                        label: 'OK',
+                        onClick: () => {},
+                    },
+                    classNames: {
+                        title: 'text-left whitespace-pre-line',
+                        actionButton: '!px-4 !py-2 !text-base !h-auto',
+                    },
+                });
+            } else {
+                toast.error(ERROR_MESSAGE.ACCOUNT_DELETE_RETRY, {
+                    duration: Infinity,
+                    action: {
+                        label: 'OK',
+                        onClick: () => {},
+                    },
+                    classNames: {
+                        title: 'text-left whitespace-pre-line',
+                        actionButton: '!px-4 !py-2 !text-base !h-auto',
+                    },
+                });
+            }
         } finally {
             setIsSubmitting(false);
         }
