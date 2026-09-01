@@ -1,4 +1,5 @@
-import { test, expect } from '@playwright/test';
+import { expect } from '@playwright/test';
+import { test } from '@tests/fixtures';
 import { ScheduleSearchPage } from '@tests/pages/ScheduleSearch/ScheduleSearchPage';
 import dayjs from 'dayjs';
 
@@ -394,9 +395,45 @@ test('列車が見つからない場合、翌日の始発で検索できる', as
     ).toBeVisible();
 });
 
-test('お気に入り経路を登録し、表示できること', async ({ page }) => {
+test('未ログイン状態ではお気に入り経路の登録が表示されないこと、ログイン状態ではお気に入り経路を登録して表示できること', async ({
+    page,
+    commonLogin,
+}) => {
     const scheduleSearchPage = new ScheduleSearchPage(page);
-    await scheduleSearchPage.goto();
 
-  
+    await scheduleSearchPage.goto();
+    await expect(scheduleSearchPage.historySaveButton).toBeHidden();
+    await expect(scheduleSearchPage.historyDetailAccordionButton).toBeHidden();
+
+    await commonLogin();
+    await expect(page).toHaveURL('/scheduleSearch');
+
+    await scheduleSearchPage.selectDepartureStation('仙台');
+    await scheduleSearchPage.selectArrivalStation('白石蔵王');
+    await scheduleSearchPage.time.fill('10:30');
+    await scheduleSearchPage.clickArrivalTimeButton();
+    await scheduleSearchPage.clickHistoryDetailAccordionButton();
+    await scheduleSearchPage.clickHistorySaveButton();
+    const registeredRoute = page.getByRole('button', {
+        name: '仙台 白石蔵王',
+    });
+    await expect(registeredRoute).toBeVisible();
+    await expect(registeredRoute).toContainText('到着');
+    await expect(registeredRoute).toContainText('10:30');
+
+    await scheduleSearchPage.selectDepartureStation('東京');
+    await scheduleSearchPage.selectArrivalStation('上野');
+    await scheduleSearchPage.time.fill('06:00');
+    await scheduleSearchPage.clickDepartureTimeButton();
+    await expect(scheduleSearchPage.departureTimeButton).toBeChecked();
+
+    await registeredRoute.click();
+    await expect(page.getByTestId('departureStation-select')).toContainText(
+        '仙台',
+    );
+    await expect(page.getByTestId('arrivalStation-select')).toContainText(
+        '白石蔵王',
+    );
+    await expect(scheduleSearchPage.time).toHaveValue('10:30');
+    await expect(scheduleSearchPage.arrivalTimeButton).toBeChecked();
 });

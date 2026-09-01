@@ -257,6 +257,7 @@ export function ScheduleSearchForm({
                                                         handleSaveHistory()
                                                     }
                                                     disabled={isSubmitting}
+                                                    data-testid="history-save-button"
                                                     className="border-primary hover:bg-primary-light text-primary flex w-fit items-center rounded-lg border bg-white px-2 py-1"
                                                 >
                                                     <HiOutlinePlus className="text-lg" />
