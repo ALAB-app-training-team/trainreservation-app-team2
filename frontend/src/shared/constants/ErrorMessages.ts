@@ -23,13 +23,20 @@ export const ERROR_MESSAGE = {
     NO_RESERVED_SEAT: '予約済座席が存在しません',
     REFUND_RETRY:
         '予約キャンセル処理中にエラーが発生しました。お手数ですが、再度お試しください。',
-    UPDATE_RETRY:
+    RESERVATION_UPDATE_RETRY:
         '予約変更処理中にエラーが発生しました。お手数ですが、再度お試しください。',
     LOGIN_RETRY: 'ログインに失敗しました',
     LOGIN_ERROR: 'ログインしてください',
     LOGIN_ALREADY: 'すでにログインしています',
     LOGIN_ROLE_ERROR: '権限がありません',
     ACCOUNT_ALREADY: '登録済のメールアドレスです。ログインしてください。',
+    PASSWORD_INCORRECT: 'パスワードが正しくありません',
+    ACCOUNT_UPDATE_RETRY:
+        'アカウント情報の変更に失敗しました。お手数ですが、再度お試しください。',
+    MAILADDRESS_ALREADY:
+        '登録済のメールアドレスです。別のメールアドレスで登録してください。',
+    PASSWORD_UPDATE_RETRY:
+        'パスワードの変更に失敗しました。お手数ですが、再度お試しください。',
     ADMIN_UPDATE_ERROR:
         'パスワードの変更が失敗しました。お手数ですが、再度お試しください。',
 } as const;

@@ -32,9 +32,9 @@ export function PasswordUpdateForAdmin() {
                     <h1 className="!text-primary !m-0 flex items-center justify-center !text-3xl">
                         パスワード変更
                     </h1>
-                    <div className="text-gray-500">
+                    <p className="text-gray-500">
                         パスワードを変更するユーザーの情報を入力してください
-                    </div>
+                    </p>
                     <form
                         onSubmit={(e) => {
                             e.preventDefault();

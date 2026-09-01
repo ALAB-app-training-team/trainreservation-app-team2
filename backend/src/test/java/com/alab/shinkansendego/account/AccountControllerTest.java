@@ -7,6 +7,7 @@ import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
+import org.mockito.Mockito;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.webmvc.test.autoconfigure.WebMvcTest;
 import org.springframework.context.annotation.Import;
@@ -104,6 +105,36 @@ public class AccountControllerTest {
     }
 
     @Test
+    @DisplayName("ログイン中のアカウント情報をDBの最新情報で取得できること")
+    void getAccount_return200AndAccount() throws Exception {
+        UUID currentUserId = UUID.fromString("f79d8bbc-fcba-b538-b132-2f726ce0120c");
+
+        AccountSessionDto expectAccount = new AccountSessionDto(
+            currentUserId,
+            "updated-common@test.com",
+            "更新後太郎"
+        );
+
+        Mockito.when(service.getAccount(currentUserId)).thenReturn(expectAccount);
+
+        mockMvc.perform(MockMvcRequestBuilders.get(baseUrl + "account")
+                .with(SecurityMockMvcRequestPostProcessors.authentication(commonAuth))
+                .contentType(MediaType.APPLICATION_JSON))
+            .andExpect(status().isOk())
+            .andExpect(jsonPath("$.id").value("f79d8bbc-fcba-b538-b132-2f726ce0120c"))
+            .andExpect(jsonPath("$.mail").value("updated-common@test.com"))
+            .andExpect(jsonPath("$.name").value("更新後太郎"));
+    }
+
+    @Test
+    @DisplayName("未ログインの場合、ログイン中のアカウント情報を取得できないこと")
+    void getAccount_withoutLogin_return401() throws Exception {
+        mockMvc.perform(MockMvcRequestBuilders.get(baseUrl + "account")
+                .contentType(MediaType.APPLICATION_JSON))
+            .andExpect(status().isUnauthorized());
+    }
+
+    @Test
     @DisplayName("アカウント作成できること")
     void insertAccount_return201() throws Exception {
         AccountRequestDto request = new AccountRequestDto("太郎", "a@a.com", rawPassword);
@@ -179,7 +210,7 @@ public class AccountControllerTest {
 
     @Test
     @DisplayName("リクエストのメールアドレスが不正形式の場合、バリデーションエラー発生")
-    void insertAccount_withInValidMail_returnValidationError() throws Exception {
+    void insertAccount_withInvalidMail_returnValidationError() throws Exception {
 
         AccountRequestDto request = new AccountRequestDto("太郎", "aa@aa", rawPassword);
 
@@ -187,7 +218,7 @@ public class AccountControllerTest {
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(objectMapper.writeValueAsString(request)))
             .andExpect(status().isBadRequest())
-            .andExpect(content().string("Mail is InValid"));
+            .andExpect(content().string("Mail is Invalid"));
     }
 
     @Test
@@ -315,6 +346,365 @@ public class AccountControllerTest {
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(objectMapper.writeValueAsString(null)))
             .andExpect(status().isBadRequest());
+    }
+
+    @Test
+    @DisplayName("氏名・メールアドレスの変更できること")
+    void updateAccount_return200() throws Exception {
+        AccountUpdateDto request = new AccountUpdateDto("太郎", "a@a.com", rawPassword);
+
+        mockMvc.perform(MockMvcRequestBuilders.put(baseUrl + "account")
+                .with(SecurityMockMvcRequestPostProcessors.authentication(commonAuth))
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(objectMapper.writeValueAsString(request)))
+            .andExpect(status().isOk());
+    }
+
+    @Test
+    @DisplayName("未ログインの場合、氏名・メールアドレスを変更できないこと")
+    void updateAccount_withoutLogin_return401() throws Exception {
+        AccountUpdateDto request = new AccountUpdateDto("太郎", "a@a.com", rawPassword);
+
+        mockMvc.perform(MockMvcRequestBuilders.put(baseUrl + "account")
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(objectMapper.writeValueAsString(request)))
+            .andExpect(status().isUnauthorized());
+    }
+
+    @Test
+    @DisplayName("リクエストの氏名がNullの場合、バリデーションエラー発生")
+    void updateAccount_withNameIsNull_returnValidationError() throws Exception {
+        AccountUpdateDto request = new AccountUpdateDto(null, "a@a.com", rawPassword);
+
+        mockMvc.perform(MockMvcRequestBuilders.put(baseUrl + "account")
+                .with(SecurityMockMvcRequestPostProcessors.authentication(adminAuth))
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(objectMapper.writeValueAsString(request)))
+            .andExpect(status().isBadRequest())
+            .andExpect(content().string("Name is Blank"));
+    }
+
+    @Test
+    @DisplayName("リクエストのメールアドレスがNullの場合、バリデーションエラー発生")
+    void updateAccount_withMailIsNull_returnValidationError() throws Exception {
+        AccountUpdateDto request = new AccountUpdateDto("太郎", null, rawPassword);
+
+        mockMvc.perform(MockMvcRequestBuilders.put(baseUrl + "account")
+                .with(SecurityMockMvcRequestPostProcessors.authentication(adminAuth))
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(objectMapper.writeValueAsString(request)))
+            .andExpect(status().isBadRequest())
+            .andExpect(content().string("Mail is Null"));
+    }
+
+    @Test
+    @DisplayName("リクエストのパスワードがNullの場合、バリデーションエラー発生")
+    void updateAccount_withPasswordIsNull_returnValidationError() throws Exception {
+        AccountUpdateDto request = new AccountUpdateDto("太郎", "a@a.com", null);
+
+        mockMvc.perform(MockMvcRequestBuilders.put(baseUrl + "account")
+                .with(SecurityMockMvcRequestPostProcessors.authentication(adminAuth))
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(objectMapper.writeValueAsString(request)))
+            .andExpect(status().isBadRequest())
+            .andExpect(content().string("Password is Blank"));
+    }
+
+    @Test
+    @DisplayName("リクエストの氏名が空文字の場合、バリデーションエラー発生")
+    void updateAccount_withNameIsEmpty_returnValidationError() throws Exception {
+        AccountUpdateDto request = new AccountUpdateDto("", "a@a.com", rawPassword);
+
+        mockMvc.perform(MockMvcRequestBuilders.put(baseUrl + "account")
+                .with(SecurityMockMvcRequestPostProcessors.authentication(adminAuth))
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(objectMapper.writeValueAsString(request)))
+            .andExpect(status().isBadRequest())
+            .andExpect(content().string("Name is Blank"));
+    }
+
+    @Test
+    @DisplayName("リクエストのメールアドレスが空文字の場合、バリデーションエラー発生")
+    void updateAccount_withMailIsEmpty_returnValidationError() throws Exception {
+        AccountUpdateDto request = new AccountUpdateDto("太郎", "", rawPassword);
+
+        mockMvc.perform(MockMvcRequestBuilders.put(baseUrl + "account")
+                .with(SecurityMockMvcRequestPostProcessors.authentication(adminAuth))
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(objectMapper.writeValueAsString(request)))
+            .andExpect(status().isBadRequest())
+            .andExpect(content().string("Mail is Empty"));
+    }
+
+    @Test
+    @DisplayName("リクエストのパスワードが空文字の場合、バリデーションエラー発生")
+    void updateAccount_withPasswordIsEmpty_returnValidationError() throws Exception {
+        AccountUpdateDto request = new AccountUpdateDto("太郎", "a@a.com", "");
+
+        mockMvc.perform(MockMvcRequestBuilders.put(baseUrl + "account")
+                .with(SecurityMockMvcRequestPostProcessors.authentication(adminAuth))
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(objectMapper.writeValueAsString(request)))
+            .andExpect(status().isBadRequest())
+            .andExpect(content().string("Password is Blank"));
+    }
+
+    @Test
+    @DisplayName("リクエストの氏名が空白文字の場合、バリデーションエラー発生")
+    void updateAccount_withNameIsBlank_returnValidationError() throws Exception {
+        AccountUpdateDto request = new AccountUpdateDto(" ", "a@a.com", rawPassword);
+
+        mockMvc.perform(MockMvcRequestBuilders.put(baseUrl + "account")
+                .with(SecurityMockMvcRequestPostProcessors.authentication(adminAuth))
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(objectMapper.writeValueAsString(request)))
+            .andExpect(status().isBadRequest())
+            .andExpect(content().string("Name is Blank"));
+    }
+
+    @Test
+    @DisplayName("リクエストのメールアドレスが空白文字の場合、バリデーションエラー発生")
+    void updateAccount_withMailIsBlank_returnValidationError() throws Exception {
+        AccountUpdateDto request = new AccountUpdateDto("太郎", " ", rawPassword);
+
+        mockMvc.perform(MockMvcRequestBuilders.put(baseUrl + "account")
+                .with(SecurityMockMvcRequestPostProcessors.authentication(adminAuth))
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(objectMapper.writeValueAsString(request)))
+            .andExpect(status().isBadRequest())
+            .andExpect(content().string("Mail is Blank"));
+    }
+
+    @Test
+    @DisplayName("リクエストのパスワードが空白文字の場合、バリデーションエラー発生")
+    void updateAccount_withPasswordIsBlank_returnValidationError() throws Exception {
+        AccountUpdateDto request = new AccountUpdateDto("太郎", "a@a.com", " ");
+
+        mockMvc.perform(MockMvcRequestBuilders.put(baseUrl + "account")
+                .with(SecurityMockMvcRequestPostProcessors.authentication(adminAuth))
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(objectMapper.writeValueAsString(request)))
+            .andExpect(status().isBadRequest())
+            .andExpect(content().string("Password is Blank"));
+    }
+
+    @Test
+    @DisplayName("リクエストの氏名が255文字より多いの場合、バリデーションエラー発生")
+    void updateAccount_withNameIsMoreThan255_returnValidationError() throws Exception {
+        AccountUpdateDto request = new AccountUpdateDto("a".repeat(256), "a@a.com", rawPassword);
+
+        mockMvc.perform(MockMvcRequestBuilders.put(baseUrl + "account")
+                .with(SecurityMockMvcRequestPostProcessors.authentication(adminAuth))
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(objectMapper.writeValueAsString(request)))
+            .andExpect(status().isBadRequest())
+            .andExpect(content().string("Name is Over Limit Size"));
+    }
+
+    @Test
+    @DisplayName("リクエストのメールアドレスが255文字より多いの場合、バリデーションエラー発生")
+    void updateAccount_withMailIsMoreThan255_returnValidationError() throws Exception {
+        AccountUpdateDto request = new AccountUpdateDto("太郎", "a".repeat(247) + "@test.com", rawPassword);
+
+        mockMvc.perform(MockMvcRequestBuilders.put(baseUrl + "account")
+                .with(SecurityMockMvcRequestPostProcessors.authentication(adminAuth))
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(objectMapper.writeValueAsString(request)))
+            .andExpect(status().isBadRequest())
+            .andExpect(content().string("Mail is Over Limit Size"));
+    }
+
+    @Test
+    @DisplayName("リクエストのメールアドレスの形式（~~@~~.~~）ではない場合、バリデーションエラー発生")
+    void updateAccount_withInvalidMail_returnValidationError() throws Exception {
+        AccountUpdateDto request = new AccountUpdateDto("太郎", "aa@aa", rawPassword);
+
+        mockMvc.perform(MockMvcRequestBuilders.put(baseUrl + "account")
+                .with(SecurityMockMvcRequestPostProcessors.authentication(adminAuth))
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(objectMapper.writeValueAsString(request)))
+            .andExpect(status().isBadRequest())
+            .andExpect(content().string("Mail is Invalid"));
+    }
+
+    @Test
+    @DisplayName("パスワードを変更できること")
+    void updatePassword_return200() throws Exception {
+        PasswordUpdateDto request = new PasswordUpdateDto(rawPassword, "NewPassword1/");
+
+        mockMvc.perform(MockMvcRequestBuilders.put(baseUrl + "password")
+                .with(SecurityMockMvcRequestPostProcessors.authentication(commonAuth))
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(objectMapper.writeValueAsString(request)))
+            .andExpect(status().isOk());
+    }
+
+    @Test
+    @DisplayName("未ログインの場合、パスワードを変更できないこと")
+    void updatePassword_withoutLogin_return401() throws Exception {
+        PasswordUpdateDto request = new PasswordUpdateDto(rawPassword, "NewPassword1/");
+
+        mockMvc.perform(MockMvcRequestBuilders.put(baseUrl + "password")
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(objectMapper.writeValueAsString(request)))
+            .andExpect(status().isUnauthorized());
+    }
+
+    @Test
+    @DisplayName("現在のパスワードがNullの場合、バリデーションエラー発生")
+    void updatePassword_withCurrentPasswordIsNull_returnValidationError() throws Exception {
+        PasswordUpdateDto request = new PasswordUpdateDto(null, "NewPassword1/");
+
+        mockMvc.perform(MockMvcRequestBuilders.put(baseUrl + "password")
+                .with(SecurityMockMvcRequestPostProcessors.authentication(commonAuth))
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(objectMapper.writeValueAsString(request)))
+            .andExpect(status().isBadRequest())
+            .andExpect(content().string("Password is Blank"));
+    }
+
+    @Test
+    @DisplayName("現在のパスワードが空文字の場合、バリデーションエラー発生")
+    void updatePassword_withCurrentPasswordIsEmpty_returnValidationError() throws Exception {
+        PasswordUpdateDto request = new PasswordUpdateDto("", "NewPassword1/");
+
+        mockMvc.perform(MockMvcRequestBuilders.put(baseUrl + "password")
+                .with(SecurityMockMvcRequestPostProcessors.authentication(commonAuth))
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(objectMapper.writeValueAsString(request)))
+            .andExpect(status().isBadRequest())
+            .andExpect(content().string("Password is Blank"));
+    }
+
+    @Test
+    @DisplayName("現在のパスワードが空白文字の場合、バリデーションエラー発生")
+    void updatePassword_withCurrentPasswordIsBlank_returnValidationError() throws Exception {
+        PasswordUpdateDto request = new PasswordUpdateDto(" ", "NewPassword1/");
+
+        mockMvc.perform(MockMvcRequestBuilders.put(baseUrl + "password")
+                .with(SecurityMockMvcRequestPostProcessors.authentication(commonAuth))
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(objectMapper.writeValueAsString(request)))
+            .andExpect(status().isBadRequest())
+            .andExpect(content().string("Password is Blank"));
+    }
+
+    @Test
+    @DisplayName("新しいパスワードがNullの場合、バリデーションエラー発生")
+    void updatePassword_withNewPasswordIsNull_returnValidationError() throws Exception {
+        PasswordUpdateDto request = new PasswordUpdateDto(rawPassword, null);
+
+        mockMvc.perform(MockMvcRequestBuilders.put(baseUrl + "password")
+                .with(SecurityMockMvcRequestPostProcessors.authentication(commonAuth))
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(objectMapper.writeValueAsString(request)))
+            .andExpect(status().isBadRequest())
+            .andExpect(content().string("Password is Null"));
+    }
+
+    @Test
+    @DisplayName("新しいパスワードが空文字の場合、バリデーションエラー発生")
+    void updatePassword_withNewPasswordIsEmpty_returnValidationError() throws Exception {
+        PasswordUpdateDto request = new PasswordUpdateDto(rawPassword, "");
+
+        mockMvc.perform(MockMvcRequestBuilders.put(baseUrl + "password")
+                .with(SecurityMockMvcRequestPostProcessors.authentication(commonAuth))
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(objectMapper.writeValueAsString(request)))
+            .andExpect(status().isBadRequest())
+            .andExpect(content().string("Password is Empty"));
+    }
+
+    @Test
+    @DisplayName("新しいパスワードが空白文字の場合、バリデーションエラー発生")
+    void updatePassword_withNewPasswordIsBlank_returnValidationError() throws Exception {
+        PasswordUpdateDto request = new PasswordUpdateDto(rawPassword, " ");
+
+        mockMvc.perform(MockMvcRequestBuilders.put(baseUrl + "password")
+                .with(SecurityMockMvcRequestPostProcessors.authentication(commonAuth))
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(objectMapper.writeValueAsString(request)))
+            .andExpect(status().isBadRequest())
+            .andExpect(content().string("Password is Blank"));
+    }
+
+    @Test
+    @DisplayName("新しいパスワードが8文字未満の場合、バリデーションエラー発生")
+    void updatePassword_withNewPasswordLessThan8_returnValidationError() throws Exception {
+        PasswordUpdateDto request = new PasswordUpdateDto(rawPassword, "Pass1/");
+
+        mockMvc.perform(MockMvcRequestBuilders.put(baseUrl + "password")
+                .with(SecurityMockMvcRequestPostProcessors.authentication(commonAuth))
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(objectMapper.writeValueAsString(request)))
+            .andExpect(status().isBadRequest())
+            .andExpect(content().string("Password is Less Than 8 Characters"));
+    }
+
+    @Test
+    @DisplayName("新しいパスワードが64文字より多い場合、バリデーションエラー発生")
+    void updatePassword_withNewPasswordMoreThan64_returnValidationError() throws Exception {
+        String longPassword = "Password12345678Password12345678Password12345678Password1234567899/";
+        PasswordUpdateDto request = new PasswordUpdateDto(rawPassword, longPassword);
+
+        mockMvc.perform(MockMvcRequestBuilders.put(baseUrl + "password")
+                .with(SecurityMockMvcRequestPostProcessors.authentication(commonAuth))
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(objectMapper.writeValueAsString(request)))
+            .andExpect(status().isBadRequest())
+            .andExpect(content().string("Password is More Than 64 Characters"));
+    }
+
+    @Test
+    @DisplayName("新しいパスワードに大文字が入っていない場合、バリデーションエラー発生")
+    void updatePassword_withNewPasswordNoContainUppercase_returnValidationError() throws Exception {
+        PasswordUpdateDto request = new PasswordUpdateDto(rawPassword, "password123/");
+
+        mockMvc.perform(MockMvcRequestBuilders.put(baseUrl + "password")
+                .with(SecurityMockMvcRequestPostProcessors.authentication(commonAuth))
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(objectMapper.writeValueAsString(request)))
+            .andExpect(status().isBadRequest())
+            .andExpect(content().string("Password doesn't Contain Uppercase"));
+    }
+
+    @Test
+    @DisplayName("新しいパスワードに小文字が入っていない場合、バリデーションエラー発生")
+    void updatePassword_withNewPasswordNoContainLowercase_returnValidationError() throws Exception {
+        PasswordUpdateDto request = new PasswordUpdateDto(rawPassword, "PASSWORD123/");
+
+        mockMvc.perform(MockMvcRequestBuilders.put(baseUrl + "password")
+                .with(SecurityMockMvcRequestPostProcessors.authentication(commonAuth))
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(objectMapper.writeValueAsString(request)))
+            .andExpect(status().isBadRequest())
+            .andExpect(content().string("Password doesn't Contain Lowercase"));
+    }
+
+    @Test
+    @DisplayName("新しいパスワードに数字が入っていない場合、バリデーションエラー発生")
+    void updatePassword_withNewPasswordNoContainNumber_returnValidationError() throws Exception {
+        PasswordUpdateDto request = new PasswordUpdateDto(rawPassword, "PasswordWord/");
+
+        mockMvc.perform(MockMvcRequestBuilders.put(baseUrl + "password")
+                .with(SecurityMockMvcRequestPostProcessors.authentication(commonAuth))
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(objectMapper.writeValueAsString(request)))
+            .andExpect(status().isBadRequest())
+            .andExpect(content().string("Password doesn't Contain Number"));
+    }
+
+    @Test
+    @DisplayName("新しいパスワードに使えない文字が入っている場合、バリデーションエラー発生")
+    void updatePassword_withNewPasswordContainUselessSymbol_returnValidationError() throws Exception {
+        PasswordUpdateDto request = new PasswordUpdateDto(rawPassword, "Pass|word123");
+
+        mockMvc.perform(MockMvcRequestBuilders.put(baseUrl + "password")
+                .with(SecurityMockMvcRequestPostProcessors.authentication(commonAuth))
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(objectMapper.writeValueAsString(request)))
+            .andExpect(status().isBadRequest())
+            .andExpect(content().string("Password Policy doesn't match"));
     }
 
     @Test

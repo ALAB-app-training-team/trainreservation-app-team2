@@ -16,6 +16,9 @@ export const VALIDATION_MESSAGE = {
     INVALID_CARD_NAME: '半角英大文字・半角スペースで入力してください',
     INVALID_EXPIRY: 'MM/YY（月/年）の形式で入力してください',
     INVALID_CVC: '半角数字3-4桁で入力してください',
+    EMPTY_PASSWORD: 'パスワードを入力してください',
     EMPTY_PASSWORD_CHECK: 'パスワードを再入力してください',
     PASSWORD_NOT_MATCH: 'パスワードが一致しません',
+    EMPTY_CURRENT_PASSWORD: '現在のパスワードを入力してください',
+    EMPTY_NEW_PASSWORD_CHECK: '新しいパスワードを再入力してください',
 } as const;

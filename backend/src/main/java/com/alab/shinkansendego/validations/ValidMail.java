@@ -12,7 +12,7 @@ import java.lang.annotation.Target;
 @Retention(RetentionPolicy.RUNTIME)
 @Constraint(validatedBy = MailValidator.class)
 public @interface ValidMail {
-    String message() default "Mail is InValid";
+    String message() default "Mail is Invalid";
 
     Class<?>[] groups() default {};
 
