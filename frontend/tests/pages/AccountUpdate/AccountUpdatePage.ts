@@ -9,6 +9,10 @@ export class AccountUpdatePage {
     readonly mailAddress: Locator;
     readonly password: Locator;
     readonly updateButton: Locator;
+    readonly deleteButton: Locator;
+    readonly deleteConfirmTitle: Locator;
+    readonly deleteConfirmButton: Locator;
+    readonly deleteCancelButton: Locator;
 
     constructor(page: Page) {
         this.page = page;
@@ -23,6 +27,18 @@ export class AccountUpdatePage {
         });
         this.updateButton = page.getByRole('button', {
             name: '変更',
+        });
+        this.deleteButton = page.getByRole('button', {
+            name: '退会はこちら',
+        });
+        this.deleteConfirmTitle = page.getByRole('heading', {
+            name: '本当に退会しますか？',
+        });
+        this.deleteConfirmButton = page.getByRole('button', {
+            name: 'はい',
+        });
+        this.deleteCancelButton = page.getByRole('button', {
+            name: 'キャンセル',
         });
     }
 
@@ -40,5 +56,14 @@ export class AccountUpdatePage {
     }
     async clickUpdateButton() {
         await this.updateButton.click();
+    }
+    async clickDeleteButton() {
+        await this.deleteButton.click();
+    }
+    async clickDeleteConfirmButton() {
+        await this.deleteConfirmButton.click();
+    }
+    async clickDeleteCancelButton() {
+        await this.deleteCancelButton.click();
     }
 }
