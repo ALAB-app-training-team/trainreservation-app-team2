@@ -1,5 +1,7 @@
+import dayjs from 'dayjs';
 import type { SetStateAction } from 'react';
 import {
+    HiOutlineArrowNarrowRight,
     HiOutlineSwitchHorizontal,
     HiOutlineSwitchVertical,
 } from 'react-icons/hi';
@@ -177,33 +179,68 @@ export function ScheduleSearchForm({
                                 </button>
                                 <CustomAccordion
                                     title="お気に入り経路"
-                                    children={searchHistoryDtos.map(
-                                        (dto: SearchHistoryDto) => {
-                                            const arrivalStationName =
-                                                stations.find(
-                                                    (s) =>
-                                                        s.stationCd ==
-                                                        dto.arrivalStationCd,
-                                                )?.name;
-                                            const departureStationName =
-                                                stations.find(
-                                                    (s) =>
-                                                        s.stationCd ==
-                                                        dto.departureStationCd,
-                                                )?.name;
+                                    children={
+                                        searchHistoryDtos.length === 0 ? (
+                                            <p className="mt-2 text-sm text-gray-500">
+                                                登録されたお気に入り経路はありません
+                                            </p>
+                                        ) : (
+                                            <div className="mt-2 flex flex-wrap gap-2">
+                                                {searchHistoryDtos.map(
+                                                    (dto: SearchHistoryDto) => {
+                                                        const departureStationName =
+                                                            stations.find(
+                                                                (s) =>
+                                                                    s.stationCd ==
+                                                                    dto.departureStationCd,
+                                                            )?.name;
+                                                        const arrivalStationName =
+                                                            stations.find(
+                                                                (s) =>
+                                                                    s.stationCd ==
+                                                                    dto.arrivalStationCd,
+                                                            )?.name;
 
-                                            return (
-                                                <button>
-                                                    {arrivalStationName}
-                                                    {departureStationName}
-                                                    {dto.isArrivalTime
-                                                        ? '到着'
-                                                        : '出発'}
-                                                    {dto.time}
-                                                </button>
-                                            );
-                                        },
-                                    )}
+                                                        return (
+                                                            <button
+                                                                key={dto.id}
+                                                                className="border-primary hover:bg-primary-light flex w-fit items-center gap-2 rounded-lg border bg-white px-4 py-1 text-left transition-colors"
+                                                            >
+                                                                <span className="flex items-center gap-2 font-medium">
+                                                                    <span>
+                                                                        {
+                                                                            departureStationName
+                                                                        }
+                                                                    </span>
+                                                                    <HiOutlineArrowNarrowRight className="text-primary shrink-0" />
+                                                                    <span>
+                                                                        {
+                                                                            arrivalStationName
+                                                                        }
+                                                                    </span>
+                                                                </span>
+                                                                <span className="flex items-center text-sm text-gray-600">
+                                                                    <span className="bg-primary rounded px-2 py-0.5 text-xs text-white">
+                                                                        {dto.isArrivalTime
+                                                                            ? '到着'
+                                                                            : '出発'}
+                                                                    </span>
+                                                                    <span>
+                                                                        {dayjs(
+                                                                            dto.time,
+                                                                            'HH:mm:ss',
+                                                                        ).format(
+                                                                            'HH:mm',
+                                                                        )}
+                                                                    </span>
+                                                                </span>
+                                                            </button>
+                                                        );
+                                                    },
+                                                )}
+                                            </div>
+                                        )
+                                    }
                                 />
                             </div>
                         )}
