@@ -323,6 +323,7 @@ test('アカウント作成時のパスワードバリデーションチェッ�
 test('予約確定', async ({ page }) => {
     const scheduleSearchPage = new ScheduleSearchPage(page);
     const selectSeatPage = new SelectSeatPage(page);
+
     await scheduleSearchPage.goto();
     await expect(page).toHaveURL('/scheduleSearch');
     await scheduleSearchPage.clickDetailButton();
@@ -345,6 +346,7 @@ test('予約確定', async ({ page }) => {
 test('パスワードがエラーの場合、予約するボタンが非活性', async ({ page }) => {
     const scheduleSearchPage = new ScheduleSearchPage(page);
     const selectSeatPage = new SelectSeatPage(page);
+
     await scheduleSearchPage.goto();
     await expect(page).toHaveURL('/scheduleSearch');
     await scheduleSearchPage.clickDetailButton();
@@ -379,6 +381,7 @@ test('登録済メールアドレスでアカウント作成できない', async
 }) => {
     const scheduleSearchPage = new ScheduleSearchPage(page);
     const selectSeatPage = new SelectSeatPage(page);
+
     await scheduleSearchPage.goto();
     await expect(page).toHaveURL('/scheduleSearch');
     await scheduleSearchPage.clickDetailButton();
@@ -436,7 +439,7 @@ test('未ログイン時は氏名・メールアドレス入力欄・アカウ�
     const scheduleSearchPage = new ScheduleSearchPage(page);
     const selectSeatPagePage = new SelectSeatPage(page);
 
-    scheduleSearchPage.goto();
+    await scheduleSearchPage.goto();
     await expect(page).toHaveURL('/scheduleSearch');
     await scheduleSearchPage.clickDetailButton();
 
@@ -478,7 +481,7 @@ test('座席変更の際はクレカ入力欄が表示されないこと', async
     const reservationListPage = new ReservationListPage(page);
 
     // ログイン～予約～座席変更シートマップ
-    commonLogin();
+    await commonLogin();
     await expect(page).toHaveURL('/scheduleSearch');
     await createReservation();
     await reservationListPage.goto();
@@ -491,7 +494,8 @@ test('座席変更の際はクレカ入力欄が表示されないこと', async
     await expect(
         page.getByText('※初回予約時と同じ\nクレジットカードを使用します'),
     ).toBeVisible();
-    logout();
+
+    await logout();
 });
 
 test('座席変更の際は座席選択済みの状態であること', async ({
@@ -503,7 +507,7 @@ test('座席変更の際は座席選択済みの状態であること', async ({
     const reservationListPage = new ReservationListPage(page);
 
     // ログイン～予約～座席変更シートマップ
-    commonLogin();
+    await commonLogin();
     await expect(page).toHaveURL('/scheduleSearch');
     await createReservation();
     await reservationListPage.goto();
@@ -514,7 +518,8 @@ test('座席変更の際は座席選択済みの状態であること', async ({
     await expect(page).toHaveURL('/selectSeat');
     //  確認事項
     await expect(page.getByText('座席が選択されていません')).not.toBeVisible();
-    logout();
+
+    await logout();
 });
 
 test('日時電車変更の際はクレカ入力欄が表示されないこと', async ({
@@ -527,9 +532,10 @@ test('日時電車変更の際はクレカ入力欄が表示されないこと',
     const scheduleSearchPage = new ScheduleSearchPage(page);
 
     // ログイン～予約～座席変更シートマップ
-    commonLogin();
+    await commonLogin();
     await expect(page).toHaveURL('/scheduleSearch');
     await createReservation();
+    await expect(page).toHaveURL('/reservedTicket');
     await reservationListPage.goto();
     await expect(page).toHaveURL('/reservationList');
     await reservationListPage.clickThreeDotsButton();
@@ -542,7 +548,8 @@ test('日時電車変更の際はクレカ入力欄が表示されないこと',
     await expect(
         page.getByText('※初回予約時と同じ\nクレジットカードを使用します'),
     ).toBeVisible();
-    logout();
+
+    await logout();
 });
 
 test('日時電車変更で新しい電車を選ぶと座席未選択,同じ電車を選ぶと選択済みの状態であること', async ({
@@ -556,7 +563,7 @@ test('日時電車変更で新しい電車を選ぶと座席未選択,同じ電�
     const selectSeatPage = new SelectSeatPage(page);
 
     // ログイン～予約～座席変更シートマップ
-    commonLogin();
+    await commonLogin();
     await expect(page).toHaveURL('/scheduleSearch');
     await createReservation();
     await reservationListPage.goto();
@@ -575,5 +582,5 @@ test('日時電車変更で新しい電車を選ぶと座席未選択,同じ電�
     await expect(page).toHaveURL('selectSeat');
     await expect(page.getByText('座席が選択されていません')).toBeVisible();
 
-    logout();
+    await logout();
 });
