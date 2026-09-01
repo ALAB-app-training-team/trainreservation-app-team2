@@ -66,6 +66,8 @@ export function ScheduleSearchForm({
             searchRequestDto.departureStationCd,
             searchRequestDto.arrivalStationCd,
         );
+    const isPassengersSpecified = passengers !== '-' && passengers !== '';
+    const isFilteeForced = isSeatTypeSpecified || isPassengersSpecified;
 
     return (
         <>
@@ -168,11 +170,9 @@ export function ScheduleSearchForm({
                             <div className="flex w-full justify-start md:w-1/2">
                                 <AvailableOnlyFilter
                                     isChecked={
-                                        isSeatTypeSpecified
-                                            ? true
-                                            : isOnlyAvailable
+                                        isFilteeForced ? true : isOnlyAvailable
                                     }
-                                    isDisabled={isSeatTypeSpecified}
+                                    isDisabled={isFilteeForced}
                                     onChange={setIsOnlyAvailable}
                                 />
                             </div>
