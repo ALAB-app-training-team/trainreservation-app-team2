@@ -19,7 +19,7 @@ public class AccountEventListener {
     @Async
     @TransactionalEventListener(phase = TransactionPhase.AFTER_COMMIT)
     public void handleAccountCreated(AccountCreatedEvent event) {
-        AccountEmailRequestDto emailDto = new AccountEmailRequestDto(event.request().getMail(), event.request().getName());
+        AccountEmailRequestParams emailDto = new AccountEmailRequestParams(event.request().getMail(), event.request().getName());
         accountEmailService.sendAccountCreate(emailDto);
     }
 }

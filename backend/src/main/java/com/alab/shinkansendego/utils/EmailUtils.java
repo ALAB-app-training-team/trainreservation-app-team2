@@ -1,6 +1,6 @@
 package com.alab.shinkansendego.utils;
 
-import com.alab.shinkansendego.email.reservation.ReservationEmailRequestDto;
+import com.alab.shinkansendego.email.reservation.ReservationEmailRequestParams;
 import org.springframework.util.CollectionUtils;
 
 import java.time.LocalDate;
@@ -133,7 +133,7 @@ public final class EmailUtils {
         return date.format(DateTimeFormatter.ofPattern("yyyy年MM月dd日"));
     }
 
-    public static String seatFormatter(List<ReservationEmailRequestDto.SelectedSeatDto> seats) {
+    public static String seatFormatter(List<ReservationEmailRequestParams.SelectedSeatDto> seats) {
         if (CollectionUtils.isEmpty(seats)) {
             throw new IllegalArgumentException("メールの座席情報が指定されませんでした");
         }

@@ -16,7 +16,7 @@ import java.util.UUID;
 @AllArgsConstructor
 @Getter
 @Setter
-public class ReservationEmailRequestDto {
+public class ReservationEmailRequestParams {
     private String reserverMail;
     private String reserverName;
     private UUID reservationId;

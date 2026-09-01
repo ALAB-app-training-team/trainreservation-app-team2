@@ -30,7 +30,7 @@ public class LocalReservationEmailService implements ReservationEmailService {
 
     @Async
     @Override
-    public void sendReservationConfirmation(ReservationEmailRequestDto dto) {
+    public void sendReservationConfirmation(ReservationEmailRequestParams dto) {
         try {
             MimeMessage mimeMessage = mailSender.createMimeMessage();
             MimeMessageHelper helper = new MimeMessageHelper(mimeMessage, "UTF-8");
@@ -76,7 +76,7 @@ public class LocalReservationEmailService implements ReservationEmailService {
 
     @Async
     @Override
-    public void sendReservationChange(ReservationEmailRequestDto dto) {
+    public void sendReservationChange(ReservationEmailRequestParams dto) {
         try {
             MimeMessage mimeMessage = mailSender.createMimeMessage();
             MimeMessageHelper helper = new MimeMessageHelper(mimeMessage, "UTF-8");
@@ -122,7 +122,7 @@ public class LocalReservationEmailService implements ReservationEmailService {
 
     @Async
     @Override
-    public void sendReservationCancel(ReservationEmailRequestDto dto) {
+    public void sendReservationCancel(ReservationEmailRequestParams dto) {
         try {
             MimeMessage mimeMessage = mailSender.createMimeMessage();
             MimeMessageHelper helper = new MimeMessageHelper(mimeMessage, "UTF-8");
@@ -172,7 +172,7 @@ public class LocalReservationEmailService implements ReservationEmailService {
 
     @Async
     @Override
-    public void sendSetCompanion(ReservationEmailRequestDto dto) {
+    public void sendSetCompanion(ReservationEmailRequestParams dto) {
         try {
             MimeMessage mimeMessage = mailSender.createMimeMessage();
             MimeMessageHelper helper = new MimeMessageHelper(mimeMessage, "UTF-8");
@@ -219,7 +219,7 @@ public class LocalReservationEmailService implements ReservationEmailService {
 
     @Async
     @Override
-    public void sendReleaseCompanion(ReservationEmailRequestDto dto) {
+    public void sendReleaseCompanion(ReservationEmailRequestParams dto) {
         try {
             MimeMessage mimeMessage = mailSender.createMimeMessage();
             MimeMessageHelper helper = new MimeMessageHelper(mimeMessage, "UTF-8");

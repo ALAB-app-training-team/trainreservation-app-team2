@@ -33,13 +33,13 @@ public class SesAccountEmailService implements AccountEmailService {
 
     @Async
     @Override
-    public void sendAccountCreate(AccountEmailRequestDto dto) {
+    public void sendAccountCreate(AccountEmailRequestParams dto) {
         try {
             String loginUrl = baseUrl + EmailUtils.LOGIN_PATH;
 
             String body = String.format(
                 EmailUtils.ACCOUNT_CREATED_BODY,
-                dto.getAccountName() != null ? dto.getAccountName() : "ユーザー",
+                dto.getAccountName(),
                 dto.getAccountMail(),
                 loginUrl
             );

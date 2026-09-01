@@ -27,7 +27,7 @@ public class LocalAccountEmailService implements AccountEmailService {
 
     @Async
     @Override
-    public void sendAccountCreate(AccountEmailRequestDto dto) {
+    public void sendAccountCreate(AccountEmailRequestParams dto) {
         try {
             MimeMessage mimeMessage = mailSender.createMimeMessage();
             MimeMessageHelper helper = new MimeMessageHelper(mimeMessage, "UTF-8");
@@ -40,7 +40,7 @@ public class LocalAccountEmailService implements AccountEmailService {
 
             String body = String.format(
                 EmailUtils.ACCOUNT_CREATED_BODY,
-                dto.getAccountName() != null ? dto.getAccountName() : "ユーザー",
+                dto.getAccountName(),
                 dto.getAccountMail(),
                 loginUrl
             );
