@@ -41,10 +41,6 @@ public class ScheduleService {
 
     public List<ScheduleResponseDto> getSearchedScheduleByStation(ScheduleRequestDto request) {
 
-        if (request.getPassengers() != null && request.getPassengers() <= 0) {
-            throw new IllegalArgumentException("Passengers must be greater than 0");
-        }
-
         List<ScheduleResponseDto> responseList = new ArrayList<>();
 
         List<SectionKmEntity> departureSectionKmList = sectionKmRepository.findByStartStationCd(request.getDepartureStationCd());
@@ -113,36 +109,6 @@ public class ScheduleService {
                         throw new IllegalArgumentException("AvailableSeats is Not found");
                     }
 
-                    String seatType = request.getSeatType();
-                    Integer passengers = request.getPassengers();
-                    boolean isSeatTypeSpecified = seatType != null && !seatType.isEmpty() && !seatType.equals("-");
-                    boolean isPassengersSpecified = passengers != null && passengers > 0;
-                    int requiredSeats = isPassengersSpecified ? passengers : 1;
-                    boolean isMatch;
-
-                    if (isSeatTypeSpecified) {
-                        isMatch = switch (seatType) {
-                            case "指定席" -> (calcReservedSeats >= requiredSeats);
-                            case "グリーン車" -> (calcGreenSeats >= requiredSeats);
-                            case "グランクラス" -> (calcGcSeats >= requiredSeats);
-                            default -> false;
-                        };
-                    } else if (isPassengersSpecified) {
-                        isMatch = (
-                            calcReservedSeats >= requiredSeats || calcGreenSeats >= requiredSeats || calcGcSeats >= requiredSeats);
-                    } else {
-                        boolean isOnlyAvailable = Boolean.TRUE.equals(request.getIsOnlyAvailable());
-
-                        if (isOnlyAvailable) {
-                            isMatch = calcReservedSeats > 0 || calcGreenSeats > 0 || calcGcSeats > 0;
-                        } else {
-                            isMatch = true;
-                        }
-                    }
-
-                    if (!isMatch) {
-                        continue;
-                    }
                     SectionKmEntity sectionKm = arrivalSectionKmList.stream()
                         .filter(arrivalSectionKm -> Objects.equals(arrivalSectionKm.getSectionCd(), arrival.getSectionCd()))
                         .findFirst()

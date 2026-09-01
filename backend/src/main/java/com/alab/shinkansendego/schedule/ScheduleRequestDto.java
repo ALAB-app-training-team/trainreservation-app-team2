@@ -17,7 +17,4 @@ public class ScheduleRequestDto {
     private String departureStationCd;
     @NotNull(message = "ArrivalStationCd is Null")
     private String arrivalStationCd;
-    private String seatType;
-    private Integer passengers;
-    private Boolean isOnlyAvailable;
 }
