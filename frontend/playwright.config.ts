@@ -13,14 +13,15 @@ import { defineConfig, devices } from '@playwright/test';
  */
 export default defineConfig({
     testDir: './tests',
+    timeout: 10 * 1000,
     snapshotPathTemplate:
         '{testDir}/{testFileDir}/visualRegression.spec.ts-snapshots/{arg}{ext}',
-    fullyParallel: true,
+    fullyParallel: false,
     forbidOnly: !!process.env.CI,
     /* Retry on CI only */
     retries: process.env.CI ? 2 : 0,
     /* Opt out of parallel tests on CI. */
-    workers: process.env.CI ? 1 : undefined,
+    workers: 1,
     reporter: 'html',
     use: {
         baseURL: 'http://localhost:5173',
