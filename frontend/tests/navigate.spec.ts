@@ -88,6 +88,8 @@ test('navigate-ゲストログイン全機能', async ({ page, context, logout }
     await loginPage.inputCreatedAccountLoginInfo();
     await loginPage.clickLoginButton();
     await expect(page).toHaveURL('/scheduleSearch');
+
+    // TODO:アカウント退会させる（ローカルでテストを通すため）
 });
 
 test('navigate-アカウントログイン全機能', async ({
