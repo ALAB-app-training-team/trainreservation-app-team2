@@ -296,6 +296,11 @@ test('visual-reservedTicket', async ({
     await createReservation();
     await expect(page).toHaveURL('/reservedTicket');
     await reservedTicketPage.changeButton.waitFor({ state: 'visible' });
+    await expect(
+        page.getByText(
+            '「チケットを共有」ボタンからリンクの保存をお願いします',
+        ),
+    ).toBeHidden({ timeout: 10000 });
     await page.evaluate(() => document.fonts.ready);
 
     await expect(page).toHaveScreenshot({
