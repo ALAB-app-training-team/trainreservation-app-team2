@@ -51,15 +51,15 @@ public class ReservationEventListener {
     @Async
     @TransactionalEventListener(phase = TransactionPhase.AFTER_COMMIT)
     public void handleReservationCreated(ReservationCreatedEvent event) {
-        ReservationEmailRequestParams emailDto = setEmailRequestDto(event.reservationId(), event.request(), event.departureTime(), event.arrivalTime(), null, null);
-        reservationEmailService.sendReservationConfirmation(emailDto);
+        ReservationEmailRequestParams emailParams = setEmailRequestParams(event.reservationId(), event.request(), event.departureTime(), event.arrivalTime(), null, null);
+        reservationEmailService.sendReservationConfirmation(emailParams);
     }
 
     @Async
     @TransactionalEventListener(phase = TransactionPhase.AFTER_COMMIT)
     public void handleReservationChanged(ReservationChangedEvent event) {
-        ReservationEmailRequestParams emailDto = setEmailRequestDto(event.reservationId(), event.request(), event.departureTime(), event.arrivalTime(), event.oldTotalAmount(), event.representativeName());
-        reservationEmailService.sendReservationChange(emailDto);
+        ReservationEmailRequestParams emailParams = setEmailRequestParams(event.reservationId(), event.request(), event.departureTime(), event.arrivalTime(), event.oldTotalAmount(), event.representativeName());
+        reservationEmailService.sendReservationChange(emailParams);
         if (!CollectionUtils.isEmpty(event.assignedReservedSeats())) {
             for (ReservedSeatEntity assignedSeat : event.assignedReservedSeats()) {
                 String trainCarCd = trainCarRepository.findByTrainCarCd(assignedSeat.getTrainCarCd())
@@ -78,8 +78,8 @@ public class ReservationEventListener {
                         assignedSeat.getSeatCd(),
                         assignedSeat.getSeatFare()))
                 );
-                ReservationEmailRequestParams companionEmailDto = setEmailRequestDto(event.reservationId(), companionDto, event.departureTime(), event.arrivalTime(), event.oldTotalAmount(), event.representativeName());
-                reservationEmailService.sendReleaseCompanion(companionEmailDto);
+                ReservationEmailRequestParams companionEmailParams = setEmailRequestParams(event.reservationId(), companionDto, event.departureTime(), event.arrivalTime(), event.oldTotalAmount(), event.representativeName());
+                reservationEmailService.sendReleaseCompanion(companionEmailParams);
             }
         }
     }
@@ -88,8 +88,8 @@ public class ReservationEventListener {
     @TransactionalEventListener(phase = TransactionPhase.AFTER_COMMIT)
     public void handleReservationCanceled(ReservationCanceledEvent event) {
 
-        ReservationEmailRequestParams emailDto = setEmailRequestDto(event.reservationId(), event.request(), event.departureTime(), event.arrivalTime(), null, event.representativeName());
-        reservationEmailService.sendReservationCancel(emailDto);
+        ReservationEmailRequestParams emailParams = setEmailRequestParams(event.reservationId(), event.request(), event.departureTime(), event.arrivalTime(), null, event.representativeName());
+        reservationEmailService.sendReservationCancel(emailParams);
 
         for (ReserveRequestDto.SelectedSeatDto seat : event.request().getSeats()) {
             ReservedSeatEntity info = event.reservedSeats().stream()
@@ -108,8 +108,8 @@ public class ReservationEventListener {
                     event.request().getPaymentToken(),
                     List.of(new ReserveRequestDto.SelectedSeatDto(info.getTrainCarCd(), seat.getTrainCarTypeCd(), info.getSeatCd(), info.getSeatFare()))
                 );
-                ReservationEmailRequestParams companionEmailDto = setEmailRequestDto(event.reservationId(), companionDto, event.departureTime(), event.arrivalTime(), null, event.representativeName());
-                reservationEmailService.sendReleaseCompanion(companionEmailDto);
+                ReservationEmailRequestParams companionEmailParams = setEmailRequestParams(event.reservationId(), companionDto, event.departureTime(), event.arrivalTime(), null, event.representativeName());
+                reservationEmailService.sendReleaseCompanion(companionEmailParams);
             }
         }
     }
@@ -118,8 +118,8 @@ public class ReservationEventListener {
     @TransactionalEventListener(phase = TransactionPhase.AFTER_COMMIT)
     public void handleReservedSetReleased(ReservedSeatSetEvent event) {
         for (ReserveRequestDto request : event.requests()) {
-            ReservationEmailRequestParams emailDto = setEmailRequestDto(event.reservationId(), request, event.departureTime(), event.arrivalTime(), null, event.representativeName());
-            reservationEmailService.sendSetCompanion(emailDto);
+            ReservationEmailRequestParams emailParams = setEmailRequestParams(event.reservationId(), request, event.departureTime(), event.arrivalTime(), null, event.representativeName());
+            reservationEmailService.sendSetCompanion(emailParams);
         }
     }
 
@@ -127,17 +127,17 @@ public class ReservationEventListener {
     @TransactionalEventListener(phase = TransactionPhase.AFTER_COMMIT)
     public void handleReservedSeatReleased(ReservedSeatReleaseEvent event) {
         for (ReserveRequestDto request : event.requests()) {
-            ReservationEmailRequestParams emailDto = setEmailRequestDto(event.reservationId(), request, event.departureTime(), event.arrivalTime(), null, event.representativeName());
-            reservationEmailService.sendReleaseCompanion(emailDto);
+            ReservationEmailRequestParams emailParams = setEmailRequestParams(event.reservationId(), request, event.departureTime(), event.arrivalTime(), null, event.representativeName());
+            reservationEmailService.sendReleaseCompanion(emailParams);
         }
     }
 
-    private ReservationEmailRequestParams setEmailRequestDto(UUID reservationId,
-                                                             ReserveRequestDto request,
-                                                             LocalTime departureTime,
-                                                             LocalTime arrivalTime,
-                                                             Integer oldTotalAmount,
-                                                             String representativeName) {
+    private ReservationEmailRequestParams setEmailRequestParams(UUID reservationId,
+                                                                ReserveRequestDto request,
+                                                                LocalTime departureTime,
+                                                                LocalTime arrivalTime,
+                                                                Integer oldTotalAmount,
+                                                                String representativeName) {
         String departureStationName = stationRepository.findById(request.getDepartureStationCd())
             .map(StationEntity::getName)
             .orElse(request.getDepartureStationCd());
@@ -151,25 +151,25 @@ public class ReservationEventListener {
             .map(TrainTypeEntity::getName)
             .orElse("");
 
-        ReservationEmailRequestParams emailDto = new ReservationEmailRequestParams();
-        emailDto.setReserverMail(request.getReserverMail());
-        emailDto.setReserverName(request.getReserverName());
-        emailDto.setReservationId(reservationId);
-        emailDto.setRideDate(request.getRideDate());
+        ReservationEmailRequestParams emailParams = new ReservationEmailRequestParams();
+        emailParams.setReserverMail(request.getReserverMail());
+        emailParams.setReserverName(request.getReserverName());
+        emailParams.setReservationId(reservationId);
+        emailParams.setRideDate(request.getRideDate());
 
-        emailDto.setDepartureStationName(departureStationName);
-        emailDto.setDepartureTime(departureTime);
-        emailDto.setArrivalStationName(arrivalStationName);
-        emailDto.setArrivalTime(arrivalTime);
-        emailDto.setTrainTypeName(trainTypeName);
+        emailParams.setDepartureStationName(departureStationName);
+        emailParams.setDepartureTime(departureTime);
+        emailParams.setArrivalStationName(arrivalStationName);
+        emailParams.setArrivalTime(arrivalTime);
+        emailParams.setTrainTypeName(trainTypeName);
 
-        emailDto.setSeats(setDisplaySeats(request.getSeats()));
+        emailParams.setSeats(setDisplaySeats(request.getSeats()));
 
         int totalAmount = request.getSeats().stream()
             .filter(seat -> seat.getSeatFare() != null)
             .mapToInt(ReserveRequestDto.SelectedSeatDto::getSeatFare)
             .sum();
-        emailDto.setTotalAmount(totalAmount);
+        emailParams.setTotalAmount(totalAmount);
 
         int newTotalAmount = 0;
         if (request.getSeats() != null) {
@@ -178,14 +178,14 @@ public class ReservationEventListener {
                 .mapToInt(ReserveRequestDto.SelectedSeatDto::getSeatFare)
                 .sum();
         }
-        emailDto.setTotalAmount(newTotalAmount);
-        emailDto.setOldAmount(oldTotalAmount);
-        emailDto.setRepresentativeName(representativeName);
+        emailParams.setTotalAmount(newTotalAmount);
+        emailParams.setOldAmount(oldTotalAmount);
+        emailParams.setRepresentativeName(representativeName);
 
-        return emailDto;
+        return emailParams;
     }
 
-    private List<ReservationEmailRequestParams.SelectedSeatDto> setDisplaySeats(List<ReserveRequestDto.SelectedSeatDto> seats) {
+    private List<ReservationEmailRequestParams.SelectedSeatParams> setDisplaySeats(List<ReserveRequestDto.SelectedSeatDto> seats) {
         List<SeatEntity> seatEntities = seatRepository.findAllById(
             seats.stream().map(ReserveRequestDto.SelectedSeatDto::getSeatCd).toList()
         );
@@ -198,15 +198,15 @@ public class ReservationEventListener {
                     .map(seatEntity -> seatEntity.getSeatNumber() + "番" + seatEntity.getSeatColumn() + "席")
                     .orElse(seat.getSeatCd());
 
-                return new ReservationEmailRequestParams.SelectedSeatDto(
+                return new ReservationEmailRequestParams.SelectedSeatParams(
                     seat.getTrainCarCd(),
                     seat.getTrainCarTypeCd(),
                     seatDisplay,
                     seat.getSeatFare()
                 );
             })
-            .sorted(Comparator.comparing(ReservationEmailRequestParams.SelectedSeatDto::getTrainCarCd)
-                .thenComparing(ReservationEmailRequestParams.SelectedSeatDto::getSeatCd))
+            .sorted(Comparator.comparing(ReservationEmailRequestParams.SelectedSeatParams::getTrainCarCd)
+                .thenComparing(ReservationEmailRequestParams.SelectedSeatParams::getSeatCd))
             .toList();
     }
 }

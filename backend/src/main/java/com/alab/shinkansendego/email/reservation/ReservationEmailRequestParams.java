@@ -29,12 +29,12 @@ public class ReservationEmailRequestParams {
     private Integer totalAmount;
     private Integer oldAmount;
     private String representativeName;
-    private List<SelectedSeatDto> seats;
+    private List<SelectedSeatParams> seats;
 
     @Data
     @NoArgsConstructor
     @AllArgsConstructor
-    public static class SelectedSeatDto {
+    public static class SelectedSeatParams {
         private String trainCarCd;
         private String trainCarTypeCd;
         private String seatCd;
