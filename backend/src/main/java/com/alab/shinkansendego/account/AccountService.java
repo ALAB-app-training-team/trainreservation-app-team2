@@ -1,7 +1,6 @@
 package com.alab.shinkansendego.account;
 
 import com.alab.shinkansendego.exception.ConflictException;
-import com.alab.shinkansendego.reservation.ReservationEntity;
 import com.alab.shinkansendego.reservation.ReservationRepository;
 import com.alab.shinkansendego.utils.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -11,7 +10,6 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDate;
-import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
 
@@ -152,14 +150,8 @@ public class AccountService {
 
     @Transactional
     public void deleteAccount(UUID accountId) {
-        List<ReservationEntity> reservations =
-            reservationRepository.findByAccountId(accountId);
-
-        boolean hasActiveReservation = reservations.stream()
-            .anyMatch(reservation ->
-                !Boolean.TRUE.equals(reservation.getIsDeleted())
-                    && !reservation.getRideDate().isBefore(LocalDate.now())
-            );
+        boolean hasActiveReservation = reservationRepository
+            .existsByAccountIdAndIsDeletedFalseAndRideDateGreaterThanEqual(accountId, LocalDate.now());
 
         if (hasActiveReservation) {
             throw new ConflictException("予約中のきっぷがあるため、退会できません。");
