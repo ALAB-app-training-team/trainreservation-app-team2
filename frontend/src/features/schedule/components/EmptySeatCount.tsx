@@ -1,4 +1,4 @@
-import { BsCircle, BsTriangle, BsXLg } from 'react-icons/bs';
+import { BsCircle, BsDashLg, BsTriangle, BsXLg } from 'react-icons/bs';
 import { RxPeople } from 'react-icons/rx';
 
 import { FEW_LEFT_SEATS } from '@/features/schedule/constants/FewLeftSeats';
@@ -45,6 +45,8 @@ export function EmptySeatCount({
                     return checkLeftSeats(seat.count, FEW_LEFT_SEATS.GREEN);
                 case SEAT_TYPE_LABELS.SEAT03:
                     return checkLeftSeats(seat.count, FEW_LEFT_SEATS.GRANCLASS);
+                default:
+                    return <BsDashLg />;
             }
         }
     };
