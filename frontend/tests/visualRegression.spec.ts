@@ -283,12 +283,18 @@ test('visual-reservationList', async ({ page, commonLogin, logout }) => {
     await expect(page).toHaveURL('/login');
 });
 
-test('visual-reservedTicket', async ({ page, commonLogin, logout }) => {
+test('visual-reservedTicket', async ({
+    page,
+    commonLogin,
+    logout,
+    createReservation,
+}) => {
     const reservationListPage = new ReservationListPage(page);
     const reservedTicketPage = new ReservedTicketPage(page);
 
     await commonLogin();
     await expect(page).toHaveURL('/scheduleSearch');
+    await createReservation();
     await reservationListPage.goto();
     await expect(page).toHaveURL('/reservationList');
     await reservationListPage.clickTicketButton();
