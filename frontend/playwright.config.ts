@@ -28,7 +28,6 @@ export default defineConfig({
         baseURL: 'http://localhost:5173',
         /* Collect trace when retrying the failed test. See https://playwright.dev/docs/trace-viewer */
         trace: 'on-first-retry',
-        actionTimeout: 5 * 1000, // clickなどのtimeout値を設定
     },
 
     /* Configure projects for major browsers */
@@ -81,7 +80,6 @@ export default defineConfig({
             command: `cd ../backend && chmod +x gradlew && ./gradlew bootRun --args='--spring.profiles.active=local' --stacktrace`,
             url: 'http://localhost:8080/api/reservations',
             reuseExistingServer: !process.env.CI,
-            timeout: 300 * 1000,
             stdout: 'ignore',
             stderr: 'pipe',
         },

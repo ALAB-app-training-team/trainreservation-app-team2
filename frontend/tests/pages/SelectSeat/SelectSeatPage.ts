@@ -84,7 +84,7 @@ export class SelectSeatPage {
     }
 
     async selectSeat() {
-        await this.emptySeat.first().click({ timeout: 15000 });
+        await this.emptySeat.first().click();
     }
 
     async fillName(name: string) {

@@ -131,7 +131,7 @@ test('予約キャンセル：キャンセルすることで予約一覧(有効)
     await expect(page).toHaveURL('/reservationList');
     await reservationListPage.ticketButton
         .first()
-        .waitFor({ state: 'visible', timeout: 15000 });
+        .waitFor({ state: 'visible' });
 
     const activeTicketCount = await reservationListPage.ticketButton.count();
     await reservationListPage.clickThreeDotsButton();
@@ -168,7 +168,7 @@ test('チケットを表示ボタン、三点ボタンの表示有無：有効�
     await expect(page).toHaveURL('/reservationList');
     await reservationListPage.ticketButton
         .first()
-        .waitFor({ state: 'visible', timeout: 30000 });
+        .waitFor({ state: 'visible' });
 
     // 有効：表示あり
     await expect(reservationListPage.ticketButton.first()).toBeVisible();
