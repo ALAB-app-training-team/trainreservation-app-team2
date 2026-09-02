@@ -41,6 +41,8 @@ import java.util.Set;
 import java.util.UUID;
 import java.util.stream.Collectors;
 
+import static org.springframework.util.StringUtils.hasText;
+
 @Service
 public class ReservationService {
     private final RestClient restClient;
@@ -408,7 +410,7 @@ public class ReservationService {
             reservedSeatsToPost.add(reservedSeat);
         }
 
-        if (!StringUtils.isEmpty(reserverName) && !StringUtils.isEmpty(reserverMail)) {
+        if (!hasText(reserverName) && !hasText(reserverMail)) {
             reservedSeatsToPost.stream()
                 .min(Comparator.comparing((ReservedSeatEntity s) -> s.getTrainCar().getTrainCarNumber())
                     .thenComparing(s -> s.getSeat().getSeatNumber())
