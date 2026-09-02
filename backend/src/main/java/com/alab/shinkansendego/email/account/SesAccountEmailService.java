@@ -33,20 +33,20 @@ public class SesAccountEmailService implements AccountEmailService {
 
     @Async
     @Override
-    public void sendAccountCreate(AccountEmailRequestParams dto) {
+    public void sendAccountCreate(AccountEmailRequestParams params) {
         try {
             String loginUrl = baseUrl + EmailUtils.LOGIN_PATH;
 
             String body = String.format(
                 EmailUtils.ACCOUNT_CREATED_BODY,
-                dto.getAccountName(),
-                dto.getAccountMail(),
+                params.getAccountName(),
+                params.getAccountMail(),
                 loginUrl
             );
 
             SendEmailRequest request = SendEmailRequest.builder()
                 .fromEmailAddress(String.format("%s <%s>", EmailUtils.SENDER_NAME, mailFrom))
-                .destination(Destination.builder().toAddresses(dto.getAccountMail()).build())
+                .destination(Destination.builder().toAddresses(params.getAccountMail()).build())
                 .content(EmailContent.builder()
                     .simple(msg -> msg
                         .subject(Content.builder().data(EmailUtils.ACCOUNT_CREATED_SUBJECT).charset("UTF-8").build())
@@ -57,9 +57,73 @@ public class SesAccountEmailService implements AccountEmailService {
                 .build();
 
             sesV2Client.sendEmail(request);
-            log.info("アカウント作成完了メールを正常に送信しました。 To： {}", dto.getAccountMail());
+            log.info("アカウント作成完了メールを正常に送信しました。 To： {}", params.getAccountMail());
         } catch (Exception e) {
-            log.error("アカウント作成完了メール送信中にエラーが発生しました。 To： {}", dto.getAccountMail(), e);
+            log.error("アカウント作成完了メール送信中にエラーが発生しました。 To： {}", params.getAccountMail(), e);
+        }
+    }
+
+    @Async
+    @Override
+    public void sendAccountUpdate(AccountEmailRequestParams newParams, AccountEmailRequestParams oldParams) {
+        try {
+            String loginUrl = baseUrl + EmailUtils.LOGIN_PATH;
+
+            String body = String.format(
+                EmailUtils.ACCOUNT_CHANGED_BODY,
+                oldParams.getAccountName(),
+                newParams.getAccountName(),
+                newParams.getAccountMail(),
+                loginUrl
+            );
+
+            SendEmailRequest request = SendEmailRequest.builder()
+                .fromEmailAddress(String.format("%s <%s>", EmailUtils.SENDER_NAME, mailFrom))
+                .destination(Destination.builder().toAddresses(oldParams.getAccountMail() == null ? newParams.getAccountMail() : oldParams.getAccountMail()).build())
+                .content(EmailContent.builder()
+                    .simple(msg -> msg
+                        .subject(Content.builder().data(EmailUtils.ACCOUNT_CHANGED_SUBJECT).charset("UTF-8").build())
+                        .body(Body.builder().text(Content.builder().data(body).charset("UTF-8").build()).build())
+                    )
+                    .build()
+                )
+                .build();
+
+            sesV2Client.sendEmail(request);
+            log.info("アカウント情報変更完了メールを正常に送信しました。 To： {}", newParams.getAccountMail());
+        } catch (Exception e) {
+            log.error("アカウント情報変更完了メール送信中にエラーが発生しました。 To： {}", newParams.getAccountMail(), e);
+        }
+    }
+
+    @Async
+    @Override
+    public void sendPasswordUpdate(AccountEmailRequestParams params) {
+        try {
+            String loginUrl = baseUrl + EmailUtils.LOGIN_PATH;
+
+            String body = String.format(
+                EmailUtils.PASSWORD_CHANGED_BODY,
+                params.getAccountName(),
+                loginUrl
+            );
+
+            SendEmailRequest request = SendEmailRequest.builder()
+                .fromEmailAddress(String.format("%s <%s>", EmailUtils.SENDER_NAME, mailFrom))
+                .destination(Destination.builder().toAddresses(params.getAccountMail()).build())
+                .content(EmailContent.builder()
+                    .simple(msg -> msg
+                        .subject(Content.builder().data(EmailUtils.ACCOUNT_CHANGED_SUBJECT).charset("UTF-8").build())
+                        .body(Body.builder().text(Content.builder().data(body).charset("UTF-8").build()).build())
+                    )
+                    .build()
+                )
+                .build();
+
+            sesV2Client.sendEmail(request);
+            log.info("パスワード変更完了メールを正常に送信しました。 To： {}", params.getAccountMail());
+        } catch (Exception e) {
+            log.error("パスワード変更完了メール送信中にエラーが発生しました。 To： {}", params.getAccountMail(), e);
         }
     }
 }
