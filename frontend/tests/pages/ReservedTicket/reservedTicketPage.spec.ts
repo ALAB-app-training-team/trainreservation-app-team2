@@ -71,7 +71,9 @@ test('タイトル表示：予約完了時は予約完了、予約確認のゲ�
     await reservationListPage.clickChangeSeatConfirmButton();
     await expect(page).toHaveURL('/selectSeat');
     await expect(page.getByText('座席が選択されていません')).not.toBeVisible();
-    await selectSeatPage.emptySeat.first().waitFor({ state: 'visible' });
+    await selectSeatPage.emptySeat
+        .first()
+        .waitFor({ state: 'visible', timeout: 15000 });
     await selectSeatPage.selectSeat();
     await selectSeatPage.clickUpdateButton();
     await selectSeatPage.clickUpdateConfirmButton();
