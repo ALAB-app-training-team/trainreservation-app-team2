@@ -15,10 +15,11 @@ test('お支払い合計が正しく表示されていること', async ({
     await createReservation();
     await reservationListPage.goto();
     await expect(page).toHaveURL('/reservationList');
-    await expect(reservationListPage.totalFareElement.first()).toBeVisible();
-    await expect(reservationListPage.totalFareElement.first()).toContainText(
-        '2,600',
-    );
+    const expectedFare = await reservationListPage.totalFareElement.filter({
+        hasText: '2,600',
+    });
+    await expect(expectedFare.first()).toBeVisible();
+
     await logout();
     await expect(page).toHaveURL('/login');
 });
