@@ -4,7 +4,8 @@ import {
     HiOutlineSwitchVertical,
 } from 'react-icons/hi';
 
-import { DepartureDateAndTimePicker } from '@/features/schedule/components/DepartureDateAndTimePicker';
+import { CustomDatePicker } from '@/features/schedule/components/CustomDatePicker';
+import { CustomTimePicker } from '@/features/schedule/components/CustomTimePicker';
 import { StationSelect } from '@/features/schedule/components/StationSelect';
 import { useStationFilter } from '@/features/schedule/hooks/useStationFilter';
 import type { SearchRequestDto } from '@/features/schedule/types/SearchRequestDto';
@@ -87,20 +88,18 @@ export function ScheduleSearchForm({
                             />
                         </div>
                         <div className="flex flex-col justify-between gap-4 md:flex-row">
-                            <DepartureDateAndTimePicker
+                            <CustomDatePicker
                                 id="date"
                                 label="乗車日"
-                                type="date"
                                 value={searchRequestDto.date}
                                 setValue={setDate}
                                 getFieldError={getFieldError}
                                 maxDate={maxDate}
                                 minDate={minDate}
                             />
-                            <DepartureDateAndTimePicker
+                            <CustomTimePicker
                                 id="time"
                                 label="時刻"
-                                type="time"
                                 value={searchRequestDto.time}
                                 setValue={setTime}
                                 getFieldError={getFieldError}
