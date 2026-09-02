@@ -313,6 +313,12 @@ test('navigate-管理者ログイン-管理機能', async ({
     await passwordUpdateForAdminPage.clickUpdateButton();
     await expect(page).toHaveURL('/admin/password');
     await logout();
+
+    await loginPage.fillMailAddress('first@test.co.jp');
+    await loginPage.fillPassword('Password1');
+    await loginPage.clickLoginButton();
+    await expect(page).toHaveURL('/scheduleSearch');
+    // TODO:ローカルでテストが成功できるように、山田太郎のアカウントを削除する
 });
 
 test('navigate-座席選択画面からログインして予約', async ({ page, logout }) => {
