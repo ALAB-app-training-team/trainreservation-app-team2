@@ -262,6 +262,9 @@ export function ScheduleSearchForm({
                                                 >
                                                     <HiOutlinePlus className="text-lg" />
                                                 </button>
+                                                <span className="text-sm">
+                                                    ※5件以上の場合、古いものから削除されます
+                                                </span>
                                             </div>
                                         }
                                     />
