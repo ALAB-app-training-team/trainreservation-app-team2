@@ -289,15 +289,11 @@ test('visual-reservedTicket', async ({
     logout,
     createReservation,
 }) => {
-    const reservationListPage = new ReservationListPage(page);
     const reservedTicketPage = new ReservedTicketPage(page);
 
     await commonLogin();
     await expect(page).toHaveURL('/scheduleSearch');
     await createReservation();
-    await reservationListPage.goto();
-    await expect(page).toHaveURL('/reservationList');
-    await reservationListPage.clickTicketButton();
     await expect(page).toHaveURL('/reservedTicket');
     await reservedTicketPage.backButton.waitFor({ state: 'visible' });
     await page.evaluate(() => document.fonts.ready);
