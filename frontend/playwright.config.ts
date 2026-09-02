@@ -13,7 +13,6 @@ import { defineConfig, devices } from '@playwright/test';
  */
 export default defineConfig({
     testDir: './tests',
-    timeout: 10 * 1000,
     snapshotPathTemplate:
         '{testDir}/{testFileDir}/visualRegression.spec.ts-snapshots/{arg}{ext}',
     fullyParallel: false,
@@ -27,6 +26,7 @@ export default defineConfig({
         baseURL: 'http://localhost:5173',
         /* Collect trace when retrying the failed test. See https://playwright.dev/docs/trace-viewer */
         trace: 'on-first-retry',
+        actionTimeout: 5 * 1000, // clickなどのtimeout値を設定
     },
 
     /* Configure projects for major browsers */
