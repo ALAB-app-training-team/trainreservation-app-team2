@@ -16,7 +16,9 @@ export function CustomAccordion({ title, children }: AccordionProps) {
                 onClick={() => setIsOpen((prev) => !prev)}
                 className="flex items-center gap-2"
             >
-                {isOpen ? <IoCaretDown /> : <IoCaretForward />}
+                <span className="size-4">
+                    {isOpen ? <IoCaretDown /> : <IoCaretForward />}
+                </span>
                 <span>{title}</span>
             </button>
             {isOpen && <div>{children}</div>}

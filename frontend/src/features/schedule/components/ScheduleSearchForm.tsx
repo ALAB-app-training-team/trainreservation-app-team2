@@ -159,7 +159,7 @@ export function ScheduleSearchForm({
                             />
                         </div>
                         <div className="flex flex-col items-start gap-1">
-                            <div className="flex gap-2 bg-transparent text-left">
+                            <div className="flex items-center gap-2 bg-transparent text-left">
                                 <input
                                     type="checkbox"
                                     id="isOnlyAvailable"
@@ -167,7 +167,7 @@ export function ScheduleSearchForm({
                                     onChange={(e) =>
                                         setIsOnlyAvailable(e.target.checked)
                                     }
-                                    className="accent-primary"
+                                    className="accent-primary size-4"
                                 />
                                 <label htmlFor="isOnlyAvailable">
                                     空席がある列車のみ表示する
