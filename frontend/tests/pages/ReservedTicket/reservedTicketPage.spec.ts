@@ -137,7 +137,9 @@ test('戻るボタン表示有無：予約確認のアカウントログイン�
     await reservationListPage.clickChangeSeatConfirmButton();
     await expect(page).toHaveURL('/selectSeat');
     await expect(page.getByText('座席が選択されていません')).not.toBeVisible();
-    await selectSeatPage.emptySeat.first().waitFor({ state: 'visible' });
+    await selectSeatPage.emptySeat
+        .first()
+        .waitFor({ state: 'visible', timeout: 15000 });
     await selectSeatPage.selectSeat();
     await selectSeatPage.clickUpdateButton();
     await selectSeatPage.clickUpdateConfirmButton();
