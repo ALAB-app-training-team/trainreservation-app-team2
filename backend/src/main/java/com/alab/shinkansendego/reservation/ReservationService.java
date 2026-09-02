@@ -310,7 +310,7 @@ public class ReservationService {
             throw new RuntimeException("Insert Reservation is failed");
         }
 
-        insertReservedSeatAndReservedSeatSection(reservationResult.getId(), reserveRequestDto.getSeats(), sectionCdList, reserveRequestDto.getRideDate(), reserveRequestDto.getScheduleCd());
+        insertReservedSeatAndReservedSeatSection(reservationResult.getId(), reserveRequestDto.getSeats(), sectionCdList, reserveRequestDto.getRideDate(), reserveRequestDto.getScheduleCd(), reserverName, reserverMail);
 
         String paymentUrl = "http://localhost:8080/api/payments";
         paymentTrackingId = restClient.post()
@@ -387,6 +387,28 @@ public class ReservationService {
         List<String> sectionCdList,
         LocalDate rideDate,
         String scheduleCd) {
+        insertReservedSeatAndReservedSeatSection(reservationId, seatDtos, sectionCdList, rideDate, scheduleCd, null, null);
+    }
+
+    /**
+     * 予約座席情報予約済座席区間を登録するメソッド（予約者を代表座席へ割り当てる場合）
+     *
+     * @param reservationId 予約情報ID
+     * @param seatDtos      登録する座席情報
+     * @param sectionCdList 登録する区間情報
+     * @param rideDate      登録する乗車日付
+     * @param scheduleCd    登録するダイヤCD
+     * @param reserverName  予約者氏名（nullの場合は代表座席への割当を行わない）
+     * @param reserverMail  予約者メールアドレス
+     */
+    private void insertReservedSeatAndReservedSeatSection(
+        UUID reservationId,
+        List<ReserveRequestDto.SelectedSeatDto> seatDtos,
+        List<String> sectionCdList,
+        LocalDate rideDate,
+        String scheduleCd,
+        String reserverName,
+        String reserverMail) {
         List<ReservedSeatEntity> reservedSeatsToPost = new ArrayList<>();
         for (ReserveRequestDto.SelectedSeatDto seatDto : seatDtos) {
             ReservedSeatEntity reservedSeat = new ReservedSeatEntity();
@@ -403,6 +425,18 @@ public class ReservationService {
             reservedSeat.setSeat(seat);
             reservedSeatsToPost.add(reservedSeat);
         }
+
+        if (reserverName != null) {
+            reservedSeatsToPost.stream()
+                .min(Comparator.comparing((ReservedSeatEntity s) -> s.getTrainCar().getTrainCarNumber())
+                    .thenComparing(s -> s.getSeat().getSeatNumber())
+                    .thenComparing(s -> s.getSeat().getSeatColumn()))
+                .ifPresent(seat -> {
+                    seat.setName(StringUtils.removeSpaces(reserverName));
+                    seat.setMail(StringUtils.removeSpaces(reserverMail));
+                });
+        }
+
         List<ReservedSeatEntity> savedReservedSeats = reservedSeatRepository.saveAll(reservedSeatsToPost);
         int reservedSeatResult = savedReservedSeats.size();
         if (reservedSeatResult != seatDtos.size()) {

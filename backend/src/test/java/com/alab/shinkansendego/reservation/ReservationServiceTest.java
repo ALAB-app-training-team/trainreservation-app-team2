@@ -502,8 +502,13 @@ public class ReservationServiceTest {
             setId(UUID.randomUUID());
         }});
         when(reservedSeatRepo.saveAll(any())).thenReturn(Stream.generate(ReservedSeatEntity::new).limit(request.getSeats().size()).collect(Collectors.toList()));
-        when(trainCarRepo.findById(any())).thenReturn(Optional.of(new TrainCarEntity()));
-        when(seatRepo.findById(any())).thenReturn(Optional.of(new SeatEntity()));
+        TrainCarEntity trainCar = new TrainCarEntity();
+        trainCar.setTrainCarNumber(1);
+        SeatEntity seat = new SeatEntity();
+        seat.setSeatNumber(1);
+        seat.setSeatColumn("A");
+        when(trainCarRepo.findById(any())).thenReturn(Optional.of(trainCar));
+        when(seatRepo.findById(any())).thenReturn(Optional.of(seat));
         when(reservedSeatSectionRepo.findByRideDateAndScheduleCdAndTrainCarCdInAndReservedSectionCdIn(any(), any(), any(), any()))
             .thenReturn(Collections.emptyList());
         when(reservedSeatSectionRepo.saveAll(any())).
@@ -550,8 +555,13 @@ public class ReservationServiceTest {
             setId(UUID.randomUUID());
         }});
         when(reservedSeatRepo.saveAll(any())).thenReturn(Stream.generate(ReservedSeatEntity::new).limit(request.getSeats().size()).collect(Collectors.toList()));
-        when(trainCarRepo.findById(any())).thenReturn(Optional.of(new TrainCarEntity()));
-        when(seatRepo.findById(any())).thenReturn(Optional.of(new SeatEntity()));
+        TrainCarEntity trainCar = new TrainCarEntity();
+        trainCar.setTrainCarNumber(1);
+        SeatEntity seat = new SeatEntity();
+        seat.setSeatNumber(1);
+        seat.setSeatColumn("A");
+        when(trainCarRepo.findById(any())).thenReturn(Optional.of(trainCar));
+        when(seatRepo.findById(any())).thenReturn(Optional.of(seat));
         when(reservedSeatSectionRepo.findByRideDateAndScheduleCdAndTrainCarCdInAndReservedSectionCdIn(any(), any(), any(), any()))
             .thenReturn(Collections.emptyList());
         when(reservedSeatSectionRepo.saveAll(any())).
@@ -652,8 +662,13 @@ public class ReservationServiceTest {
         when(reservationRepo.save(any())).thenReturn(new ReservationEntity() {{
             setId(UUID.randomUUID());
         }});
-        when(trainCarRepo.findById(any())).thenReturn(Optional.of(new TrainCarEntity()));
-        when(seatRepo.findById(any())).thenReturn(Optional.of(new SeatEntity()));
+        TrainCarEntity trainCar = new TrainCarEntity();
+        trainCar.setTrainCarNumber(1);
+        SeatEntity seat = new SeatEntity();
+        seat.setSeatNumber(1);
+        seat.setSeatColumn("A");
+        when(trainCarRepo.findById(any())).thenReturn(Optional.of(trainCar));
+        when(seatRepo.findById(any())).thenReturn(Optional.of(seat));
         when(reservedSeatSectionRepo.findByRideDateAndScheduleCdAndTrainCarCdInAndReservedSectionCdIn(any(), any(), any(), any()))
             .thenReturn(Collections.emptyList());
         when(reservedSeatRepo.saveAll(any()).size()).thenThrow(new DuplicateKeyException("UNIQUE制約エラー"));
@@ -793,8 +808,13 @@ public class ReservationServiceTest {
         when(reservationRepo.save(any())).thenReturn(new ReservationEntity() {{
             setId(UUID.randomUUID());
         }});
-        when(trainCarRepo.findById(any())).thenReturn(Optional.of(new TrainCarEntity()));
-        when(seatRepo.findById(any())).thenReturn(Optional.of(new SeatEntity()));
+        TrainCarEntity postedTrainCar = new TrainCarEntity();
+        postedTrainCar.setTrainCarNumber(1);
+        SeatEntity postedSeat = new SeatEntity();
+        postedSeat.setSeatNumber(1);
+        postedSeat.setSeatColumn("A");
+        when(trainCarRepo.findById(any())).thenReturn(Optional.of(postedTrainCar));
+        when(seatRepo.findById(any())).thenReturn(Optional.of(postedSeat));
 
         when(reservedSeatRepo.saveAll(any())).thenReturn(List.of(existingSeat, new ReservedSeatEntity()));
 
@@ -866,8 +886,13 @@ public class ReservationServiceTest {
             setId(UUID.randomUUID());
         }});
         when(reservedSeatRepo.saveAll(any())).thenReturn(Stream.generate(ReservedSeatEntity::new).limit(request.getSeats().size()).collect(Collectors.toList()));
-        when(trainCarRepo.findById(any())).thenReturn(Optional.of(new TrainCarEntity()));
-        when(seatRepo.findById(any())).thenReturn(Optional.of(new SeatEntity()));
+        TrainCarEntity trainCar = new TrainCarEntity();
+        trainCar.setTrainCarNumber(1);
+        SeatEntity seat = new SeatEntity();
+        seat.setSeatNumber(1);
+        seat.setSeatColumn("A");
+        when(trainCarRepo.findById(any())).thenReturn(Optional.of(trainCar));
+        when(seatRepo.findById(any())).thenReturn(Optional.of(seat));
         when(reservedSeatSectionRepo.findByRideDateAndScheduleCdAndTrainCarCdInAndReservedSectionCdIn(any(), any(), any(), any()))
             .thenReturn(Collections.emptyList());
         when(reservedSeatSectionRepo.saveAll(any())).
