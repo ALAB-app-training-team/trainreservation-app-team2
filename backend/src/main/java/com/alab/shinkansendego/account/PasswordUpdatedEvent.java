@@ -1,6 +1,6 @@
 package com.alab.shinkansendego.account;
 
-public record PasswordChangedEvent(
+public record PasswordUpdatedEvent(
     AccountRequestDto request
 ) {
 }

@@ -55,36 +55,36 @@ public class LocalAccountEmailService implements AccountEmailService {
 
     @Async
     @Override
-    public void sendAccountChange(AccountEmailRequestParams params) {
+    public void sendAccountUpdate(AccountEmailRequestParams newParams, AccountEmailRequestParams oldParams) {
         try {
             MimeMessage mimeMessage = mailSender.createMimeMessage();
             MimeMessageHelper helper = new MimeMessageHelper(mimeMessage, "UTF-8");
 
             helper.setFrom(EmailUtils.FROM_ADDRESS, EmailUtils.SENDER_NAME);
-            helper.setTo(params.getAccountMail());
+            helper.setTo(oldParams == null ? newParams.getAccountMail() : oldParams.getAccountMail());
             helper.setSubject(EmailUtils.ACCOUNT_CHANGED_SUBJECT);
 
             String loginUrl = baseUrl + EmailUtils.LOGIN_PATH;
 
             String body = String.format(
                 EmailUtils.ACCOUNT_CHANGED_BODY,
-                params.getAccountName(),
-                params.getAccountName(),
-                params.getAccountMail(),
+                oldParams == null ? newParams.getAccountName() : oldParams.getAccountName(),
+                newParams.getAccountName(),
+                newParams.getAccountMail(),
                 loginUrl
             );
 
             helper.setText(body);
             mailSender.send(mimeMessage);
-            log.info("アカウント情報変更完了メールを正常に送信しました。 To： {}", params.getAccountMail());
+            log.info("アカウント情報変更完了メールを正常に送信しました。 To： {}", newParams.getAccountMail());
         } catch (Exception e) {
-            log.error("アカウント情報変更完了メール送信中にエラーが発生しました。 To： {}", params.getAccountMail(), e);
+            log.error("アカウント情報変更完了メール送信中にエラーが発生しました。 To： {}", newParams.getAccountMail(), e);
         }
     }
 
     @Async
     @Override
-    public void sendPasswordChange(AccountEmailRequestParams params) {
+    public void sendPasswordUpdate(AccountEmailRequestParams params) {
         try {
             MimeMessage mimeMessage = mailSender.createMimeMessage();
             MimeMessageHelper helper = new MimeMessageHelper(mimeMessage, "UTF-8");

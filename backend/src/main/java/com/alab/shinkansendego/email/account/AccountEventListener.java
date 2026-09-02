@@ -1,8 +1,8 @@
 package com.alab.shinkansendego.email.account;
 
-import com.alab.shinkansendego.account.AccountChangedEvent;
 import com.alab.shinkansendego.account.AccountCreatedEvent;
-import com.alab.shinkansendego.account.PasswordChangedEvent;
+import com.alab.shinkansendego.account.AccountUpdatedEvent;
+import com.alab.shinkansendego.account.PasswordUpdatedEvent;
 import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.event.TransactionPhase;
@@ -27,15 +27,23 @@ public class AccountEventListener {
 
     @Async
     @TransactionalEventListener(phase = TransactionPhase.AFTER_COMMIT)
-    public void handleAccountChanged(AccountChangedEvent event) {
-        AccountEmailRequestParams emailParams = new AccountEmailRequestParams(event.request().getMail(), event.request().getName());
-        accountEmailService.sendAccountChange(emailParams);
+    public void handleAccountChanged(AccountUpdatedEvent event) {
+        String oldMail = event.oldAccountInfo().getMail();
+        String newMail = event.newAccountInfo().getMail();
+        AccountEmailRequestParams newParams = new AccountEmailRequestParams(event.newAccountInfo().getMail(), event.newAccountInfo().getName());
+        AccountEmailRequestParams oldParams = new AccountEmailRequestParams(event.oldAccountInfo().getMail(), event.oldAccountInfo().getName());
+        if (oldMail != null && oldMail.equals(newMail)) {
+            accountEmailService.sendAccountUpdate(newParams, null);
+        } else if (oldMail != null && newMail != null) {
+            accountEmailService.sendAccountUpdate(newParams, oldParams);
+            accountEmailService.sendAccountUpdate(newParams, null);
+        }
     }
 
     @Async
     @TransactionalEventListener(phase = TransactionPhase.AFTER_COMMIT)
-    public void handlePasswordChanged(PasswordChangedEvent event) {
+    public void handlePasswordChanged(PasswordUpdatedEvent event) {
         AccountEmailRequestParams emailParams = new AccountEmailRequestParams(event.request().getMail(), event.request().getName());
-        accountEmailService.sendPasswordChange(emailParams);
+        accountEmailService.sendPasswordUpdate(emailParams);
     }
 }
