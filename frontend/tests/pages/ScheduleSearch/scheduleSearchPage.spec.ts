@@ -494,16 +494,25 @@ test('グランクラスかつ4人指定時に、グランクラス残席が4未
     const response = await responsePromise;
     const allSchedules = await response.json();
 
-    await expect(page.getByText(/\d+件の列車が見つかりました/)).toBeVisible();
+    const resultLocator = page.getByText(/\d+件の列車が見つかりました/);
+    await expect(resultLocator).toBeVisible();
+
+    const time = await page.getByRole('textbox', { name: '時刻' }).inputValue();
 
     await scheduleSearchPage.selectSeatType('グランクラス');
     await scheduleSearchPage.selectPassengers('4人');
 
+    await expect(resultLocator).toBeVisible();
+
+    const displayCount = Number(
+        (await resultLocator.textContent())?.match(/(\d+)/)?.[1],
+    );
+
     const expectedCount = allSchedules.filter(
-        (schedule: { gcSeats: number }) => schedule.gcSeats >= 4,
+        (schedule: { gcSeats: number; departureTime: string }) =>
+            schedule.gcSeats >= 4 &&
+            schedule.departureTime.slice(0, 5) >= time.slice(0, 5),
     ).length;
 
-    await expect(
-        page.getByText(`${expectedCount}件の列車が見つかりました`),
-    ).toBeVisible();
+    expect(displayCount).toBe(expectedCount);
 });
