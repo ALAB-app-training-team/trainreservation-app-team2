@@ -61,14 +61,6 @@ export function ScheduleList({
 }: ScheduleListProps) {
     const { schedules } = useSchedules(searchRequestDto, isInvalid);
 
-    const { filteredSchedules: availabilityFilteredSchedules } =
-        useFilteredSchedules({
-            schedules,
-            seatType,
-            passengers,
-            isOnlyAvailable,
-        });
-
     const [offset, setOffset] = useState(0);
     const perPage: number = 10;
     const handlePageChange = (data: { selected: number }) => {
@@ -77,8 +69,13 @@ export function ScheduleList({
         setOffset(pageNumber * perPage);
     };
 
-    const filteredSchedules = availabilityFilteredSchedules
-        .filter((schedule) => {
+    const filteredSchedules = useFilteredSchedules({
+        schedules,
+        seatType,
+        passengers,
+        isOnlyAvailable,
+    })
+        .filteredSchedules.filter((schedule) => {
             const isTimeValid = searchRequestDto.isArrivalTime
                 ? schedule.arrivalTime.slice(0, 5) <=
                   searchRequestDto.time.slice(0, 5)
