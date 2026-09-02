@@ -106,8 +106,7 @@ export function ScheduleSearchForm({
                                 children={
                                     <div className="border-primary inline-flex items-center overflow-hidden rounded border">
                                         <label
-                                            tabIndex={0}
-                                            className={`cursor-pointer p-1 text-sm ${!searchRequestDto.isArrivalTime ? 'bg-primary text-white' : 'bg-gray-50'}`}
+                                            className={`cursor-pointer p-1 text-sm has-[:focus-visible]:ring-2 has-[:focus-visible]:ring-gray-900 has-[:focus-visible]:ring-inset ${!searchRequestDto.isArrivalTime ? 'bg-primary text-white' : 'bg-gray-50'}`}
                                         >
                                             <input
                                                 type="radio"
@@ -118,13 +117,11 @@ export function ScheduleSearchForm({
                                                     setIsArrivalTime(false)
                                                 }
                                                 className="sr-only"
-                                                tabIndex={-1}
                                             />
                                             出発
                                         </label>
                                         <label
-                                            tabIndex={0}
-                                            className={`cursor-pointer p-1 text-sm ${searchRequestDto.isArrivalTime ? 'bg-primary text-white' : 'bg-gray-50'}`}
+                                            className={`cursor-pointer p-1 text-sm has-[:focus-visible]:ring-2 has-[:focus-visible]:ring-gray-900 has-[:focus-visible]:outline-none has-[:focus-visible]:ring-inset ${searchRequestDto.isArrivalTime ? 'bg-primary text-white' : 'bg-gray-50'}`}
                                         >
                                             <input
                                                 type="radio"
@@ -135,7 +132,6 @@ export function ScheduleSearchForm({
                                                     setIsArrivalTime(true)
                                                 }
                                                 className="sr-only"
-                                                tabIndex={-1}
                                             />
                                             到着
                                         </label>
