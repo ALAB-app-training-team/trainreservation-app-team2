@@ -151,7 +151,7 @@ export function ScheduleSearchForm({
                                 onChange={(e) =>
                                     setIsOnlyAvailable(e.target.checked)
                                 }
-                                className="accent-primary"
+                                className="accent-primary focus-visible:ring-primary focus-visible:ring-1"
                             />
                             <label htmlFor="isOnlyAvailable">
                                 空席がある列車のみ表示する
