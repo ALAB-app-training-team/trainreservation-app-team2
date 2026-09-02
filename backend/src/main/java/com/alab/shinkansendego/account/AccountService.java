@@ -25,8 +25,8 @@ public class AccountService {
 
     @Autowired
     public AccountService(AccountRepository accountRepository,
-                          PasswordEncoder passwordEncoder,
                           ReservationRepository reservationRepository,
+                          PasswordEncoder passwordEncoder,
                           ApplicationEventPublisher eventPublisher) {
         this.accountRepository = accountRepository;
         this.reservationRepository = reservationRepository;
