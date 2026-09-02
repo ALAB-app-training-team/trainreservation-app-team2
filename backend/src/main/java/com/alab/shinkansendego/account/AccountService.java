@@ -4,6 +4,7 @@ import com.alab.shinkansendego.exception.ConflictException;
 import com.alab.shinkansendego.reservation.ReservationRepository;
 import com.alab.shinkansendego.utils.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
@@ -20,12 +21,17 @@ public class AccountService {
     private final AccountRepository accountRepository;
     private final ReservationRepository reservationRepository;
     private final PasswordEncoder passwordEncoder;
+    private final ApplicationEventPublisher eventPublisher;
 
     @Autowired
-    public AccountService(AccountRepository accountRepository, ReservationRepository reservationRepository, PasswordEncoder passwordEncoder) {
+    public AccountService(AccountRepository accountRepository,
+                          PasswordEncoder passwordEncoder,
+                          ReservationRepository reservationRepository,
+                          ApplicationEventPublisher eventPublisher) {
         this.accountRepository = accountRepository;
         this.reservationRepository = reservationRepository;
         this.passwordEncoder = passwordEncoder;
+        this.eventPublisher = eventPublisher;
     }
 
     /**
@@ -84,6 +90,10 @@ public class AccountService {
         );
 
         accountRepository.save(postAccount);
+
+        eventPublisher.publishEvent(new AccountCreatedEvent(
+            new AccountRequestDto(postAccount.getName(), postAccount.getMail(), null)
+        ));
     }
 
     /**
