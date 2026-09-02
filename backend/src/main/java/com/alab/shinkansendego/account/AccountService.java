@@ -1,7 +1,6 @@
 package com.alab.shinkansendego.account;
 
 import com.alab.shinkansendego.exception.ConflictException;
-import com.alab.shinkansendego.utils.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.security.authentication.BadCredentialsException;
@@ -105,7 +104,7 @@ public class AccountService {
             throw new IllegalArgumentException("Password does not match");
         }
 
-        String newMail = StringUtils.removeSpaces(request.getMail());
+        String newMail = removeSpaces(request.getMail());
         Optional<AccountEntity> duplicateAccount = accountRepository.findByMail(newMail);
 
         if (duplicateAccount.isPresent()
@@ -115,7 +114,7 @@ public class AccountService {
 
         AccountRequestDto oldAccountInfo = new AccountRequestDto(account.getName(), account.getMail(), null);
 
-        account.setName(StringUtils.removeSpaces(request.getName()));
+        account.setName(removeSpaces(request.getName()));
         account.setMail(newMail);
 
         AccountEntity updatedAccount = accountRepository.save(account);
