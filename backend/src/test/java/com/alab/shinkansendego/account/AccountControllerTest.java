@@ -32,6 +32,9 @@ import java.util.UUID;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.Mockito.never;
+import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
@@ -974,6 +977,6 @@ public class AccountControllerTest {
                 .contentType(MediaType.APPLICATION_JSON))
             .andExpect(status().isForbidden());
 
-        Mockito.verify(service, Mockito.never()).deleteAccount(Mockito.any());
+        verify(service, never()).deleteAccount(any());
     }
 }
