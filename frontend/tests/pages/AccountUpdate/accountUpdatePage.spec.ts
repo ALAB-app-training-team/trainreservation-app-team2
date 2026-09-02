@@ -3,6 +3,7 @@ import { test } from '@tests/fixtures';
 import { AccountUpdatePage } from '@tests/pages/AccountUpdate/AccountUpdatePage';
 import { LoginPage } from '@tests/pages/Login/LoginPage';
 import { AccountCreatePage } from '@tests/pages/AccountCreate/AccountCreatePage';
+import { ReservationListPage } from '@tests/pages/ReservationList/ReservationListPage';
 
 test('各項目の未入力メッセージが表示されること', async ({
     page,
@@ -120,6 +121,7 @@ test('予約中のきっぷがあると退会できないこと', async ({
     const accountUpdatePage = new AccountUpdatePage(page);
     const loginPage = new LoginPage(page);
     const accountCreatePage = new AccountCreatePage(page);
+    const reservationListPage = new ReservationListPage(page);
     // 退会に失敗させるので、共有アカウントではなく専用のアカウントを作成する
     const reservedMail = `reserved${Date.now()}@test.com`;
     const reservedPassword = 'Password1';
@@ -162,4 +164,24 @@ test('予約中のきっぷがあると退会できないこと', async ({
     await loginPage.fillPassword(reservedPassword);
     await loginPage.clickLoginButton();
     await expect(page).toHaveURL('/scheduleSearch');
+
+    // きっぷをキャンセルすれば退会できること（テストデータを残さない後片付けも兼ねる）
+    await reservationListPage.goto();
+    await expect(page).toHaveURL('/reservationList');
+    await reservationListPage.ticketButton
+        .first()
+        .waitFor({ state: 'visible' });
+    await reservationListPage.clickThreeDotsButton();
+    await reservationListPage.clickRefundButton();
+    await reservationListPage.clickRefundConfirmButton();
+    await page
+        .getByRole('button', { name: 'キャンセル(0)' })
+        .waitFor({ state: 'hidden' });
+
+    await accountUpdatePage.goto();
+    await expect(page).toHaveURL('/accountUpdate');
+    await accountUpdatePage.clickDeleteButton();
+    await accountUpdatePage.clickDeleteConfirmButton();
+    await expect(page).toHaveURL('/login');
+    await expect(page.getByText('退会が完了しました。')).toBeVisible();
 });
