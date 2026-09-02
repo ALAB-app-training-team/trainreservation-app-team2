@@ -230,7 +230,7 @@ export function useAccountUpdateDto() {
 
         try {
             await apiClient.delete(ENDPOINTS.ACCOUNT());
-            localStorage.removeItem('name');
+            localStorage.clear();
             toast.success('退会が完了しました。');
             navigate('/login', { replace: true });
         } catch (error) {
