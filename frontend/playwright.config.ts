@@ -23,7 +23,7 @@ export default defineConfig({
     retries: process.env.CI ? 2 : 0,
     /* Opt out of parallel tests on CI. */
     workers: 1,
-    reporter: 'html',
+    reporter: [['list'], ['html']],
     use: {
         baseURL: 'http://localhost:5173',
         /* Collect trace when retrying the failed test. See https://playwright.dev/docs/trace-viewer */
