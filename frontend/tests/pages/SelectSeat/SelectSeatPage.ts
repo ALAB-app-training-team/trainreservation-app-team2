@@ -34,7 +34,7 @@ export class SelectSeatPage {
         this.header = new Header(page);
         this.backButton = page.getByTestId('back-button-in-selectseat');
         this.trainCars = page.getByTestId('train-cars').getByRole('button');
-        this.emptySeat = page.getByTestId('empty-seat'); // TODO:ここ直す
+        this.emptySeat = page.getByTestId('empty-seat');
         this.name = page.getByRole('textbox', { name: '予約者氏名' });
         this.mailAddress = page.getByRole('textbox', {
             name: 'メールアドレス',
