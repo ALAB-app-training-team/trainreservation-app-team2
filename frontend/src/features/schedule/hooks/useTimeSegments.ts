@@ -184,7 +184,6 @@ export function useTimeSegments(
 
     // キーボード入力をしたとき
     const handleKeyDown = (e: KeyboardEvent<HTMLInputElement>) => {
-        if (e.ctrlKey || e.metaKey) return;
         const segment = activeSegment ?? 'hour';
 
         switch (e.key) {
