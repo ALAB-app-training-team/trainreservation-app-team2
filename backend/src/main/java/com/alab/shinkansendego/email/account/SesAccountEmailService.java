@@ -1,0 +1,65 @@
+package com.alab.shinkansendego.email.account;
+
+import com.alab.shinkansendego.utils.EmailUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.context.annotation.Profile;
+import org.springframework.scheduling.annotation.Async;
+import org.springframework.stereotype.Service;
+import software.amazon.awssdk.regions.Region;
+import software.amazon.awssdk.services.sesv2.SesV2Client;
+import software.amazon.awssdk.services.sesv2.model.Body;
+import software.amazon.awssdk.services.sesv2.model.Content;
+import software.amazon.awssdk.services.sesv2.model.Destination;
+import software.amazon.awssdk.services.sesv2.model.EmailContent;
+import software.amazon.awssdk.services.sesv2.model.SendEmailRequest;
+
+@Service
+@Profile("prod")
+public class SesAccountEmailService implements AccountEmailService {
+    private static final Logger log = LoggerFactory.getLogger(SesAccountEmailService.class);
+    private final SesV2Client sesV2Client;
+    @Value("${app.frontend.base-url}")
+    private String baseUrl;
+    @Value("${app.mail.from}")
+    private String mailFrom;
+
+    public SesAccountEmailService(@Value("${app.mail.region}") String region) {
+        this.sesV2Client = SesV2Client.builder()
+            .region(Region.of(region))
+            .build();
+    }
+
+    @Async
+    @Override
+    public void sendAccountCreate(AccountEmailRequestParams dto) {
+        try {
+            String loginUrl = baseUrl + EmailUtils.LOGIN_PATH;
+
+            String body = String.format(
+                EmailUtils.ACCOUNT_CREATED_BODY,
+                dto.getAccountName(),
+                dto.getAccountMail(),
+                loginUrl
+            );
+
+            SendEmailRequest request = SendEmailRequest.builder()
+                .fromEmailAddress(String.format("%s <%s>", EmailUtils.SENDER_NAME, mailFrom))
+                .destination(Destination.builder().toAddresses(dto.getAccountMail()).build())
+                .content(EmailContent.builder()
+                    .simple(msg -> msg
+                        .subject(Content.builder().data(EmailUtils.ACCOUNT_CREATED_SUBJECT).charset("UTF-8").build())
+                        .body(Body.builder().text(Content.builder().data(body).charset("UTF-8").build()).build())
+                    )
+                    .build()
+                )
+                .build();
+
+            sesV2Client.sendEmail(request);
+            log.info("アカウント作成完了メールを正常に送信しました。 To： {}", dto.getAccountMail());
+        } catch (Exception e) {
+            log.error("アカウント作成完了メール送信中にエラーが発生しました。 To： {}", dto.getAccountMail(), e);
+        }
+    }
+}
