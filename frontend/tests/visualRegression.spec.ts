@@ -295,7 +295,7 @@ test('visual-reservedTicket', async ({
     await expect(page).toHaveURL('/scheduleSearch');
     await createReservation();
     await expect(page).toHaveURL('/reservedTicket');
-    await reservedTicketPage.backButton.waitFor({ state: 'visible' });
+    await reservedTicketPage.changeButton.waitFor({ state: 'visible' });
     await page.evaluate(() => document.fonts.ready);
 
     await expect(page).toHaveScreenshot({
