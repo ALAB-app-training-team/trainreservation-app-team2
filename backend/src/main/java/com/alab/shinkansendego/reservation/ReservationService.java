@@ -380,26 +380,8 @@ public class ReservationService {
      * @param sectionCdList 登録する区間情報
      * @param rideDate      登録する乗車日付
      * @param scheduleCd    登録するダイヤCD
-     */
-    private void insertReservedSeatAndReservedSeatSection(
-        UUID reservationId,
-        List<ReserveRequestDto.SelectedSeatDto> seatDtos,
-        List<String> sectionCdList,
-        LocalDate rideDate,
-        String scheduleCd) {
-        insertReservedSeatAndReservedSeatSection(reservationId, seatDtos, sectionCdList, rideDate, scheduleCd, null, null);
-    }
-
-    /**
-     * 予約座席情報予約済座席区間を登録するメソッド（予約者を代表座席へ割り当てる場合）
-     *
-     * @param reservationId 予約情報ID
-     * @param seatDtos      登録する座席情報
-     * @param sectionCdList 登録する区間情報
-     * @param rideDate      登録する乗車日付
-     * @param scheduleCd    登録するダイヤCD
-     * @param reserverName  予約者氏名（nullの場合は代表座席への割当を行わない）
-     * @param reserverMail  予約者メールアドレス
+     * @param reserverName  予約者氏名(号車番号・席番号が最小の座席に設定する。nullの場合は割当を行わない)
+     * @param reserverMail  予約者メールアドレス(reserverNameがnullの場合は使用しない)
      */
     private void insertReservedSeatAndReservedSeatSection(
         UUID reservationId,
@@ -541,7 +523,8 @@ public class ReservationService {
             reservationId,
             changedReservation.getSeats(), sectionCds,
             changedReservation.getRideDate(),
-            changedReservation.getScheduleCd()
+            changedReservation.getScheduleCd(),
+            null, null   // 予約変更時は予約者の初期割当を行わない
         );
 
         List<DepartureArrivalTimeEntity> schedules = departureArrivalTimeRepository.findByScheduleCd(changedReservation.getScheduleCd());
@@ -626,7 +609,8 @@ public class ReservationService {
                 reservationId,
                 postSeats, sectionCds,
                 changedReservation.getRideDate(),
-                changedReservation.getScheduleCd());
+                changedReservation.getScheduleCd(),
+                null, null);   // 予約変更時は予約者の初期割当を行わない
         }
         entityManager.flush();
         entityManager.clear();
