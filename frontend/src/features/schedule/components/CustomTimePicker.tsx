@@ -32,7 +32,7 @@ export function CustomTimePicker({
         handleFocus,
         handleBlur,
         handleContainerBlur,
-        handleIconActivate,
+        handleClickClockIcon,
         handleChange,
         handleClick,
         handleKeyDown,
@@ -67,11 +67,11 @@ export function CustomTimePicker({
                 />
                 <span
                     tabIndex={0}
-                    onClick={handleIconActivate}
+                    onClick={handleClickClockIcon}
                     onKeyDown={(e) => {
                         if (e.key === 'Enter' || e.key === ' ') {
                             e.preventDefault();
-                            handleIconActivate();
+                            handleClickClockIcon();
                         }
                     }}
                     className="focus:ring-primary absolute top-1/2 right-2 -translate-y-1/2 cursor-pointer rounded text-gray-500 outline-none focus:ring-2"

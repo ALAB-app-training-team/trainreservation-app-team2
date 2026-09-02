@@ -247,7 +247,7 @@ export function useTimeSegments(
         handleFocus,
         handleBlur,
         handleContainerBlur,
-        handleIconActivate: handleClickClockIcon,
+        handleClickClockIcon,
         handleChange,
         handleClick,
         handleKeyDown,
