@@ -39,7 +39,7 @@ export function AvailableOnlyFilter({
                     data-testid="isOnlyAvailable-hint"
                     className="cursor-not-allowed text-xs text-gray-500"
                 >
-                    （座席種別を指定中は自動で空席がある列車のみ表示されます）
+                    （座席種別または人数を指定中は自動で空席がある列車のみ表示されます）
                 </p>
             )}
         </div>

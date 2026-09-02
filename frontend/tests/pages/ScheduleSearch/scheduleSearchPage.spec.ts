@@ -423,7 +423,23 @@ test('座席種別を指定すると、空席チェックがONかつ無効化さ
     await expect(scheduleSearchPage.availableTrainCheckBox).toBeDisabled();
     await expect(scheduleSearchPage.isOnlyAvailableHint).toBeVisible();
     await expect(scheduleSearchPage.isOnlyAvailableHint).toHaveText(
-        /座席種別を指定中は自動で空席がある列車のみ表示されます/,
+        /座席種別または人数を指定中は自動で空席がある列車のみ表示されます/,
+    );
+});
+
+test('人数を指定すると、空席チェックがONかつ無効化され補足テキストが表示される', async ({
+    page,
+}) => {
+    const scheduleSearchPage = new ScheduleSearchPage(page);
+    await scheduleSearchPage.goto();
+
+    await scheduleSearchPage.selectPassengers('3人');
+
+    await expect(scheduleSearchPage.availableTrainCheckBox).toBeChecked();
+    await expect(scheduleSearchPage.availableTrainCheckBox).toBeDisabled();
+    await expect(scheduleSearchPage.isOnlyAvailableHint).toBeVisible();
+    await expect(scheduleSearchPage.isOnlyAvailableHint).toHaveText(
+        /座席種別または人数を指定中は自動で空席がある列車のみ表示されます/,
     );
 });
 
@@ -435,6 +451,17 @@ test('座席種別をハイフンに戻すと空席チェックが操作可能�
 
     await scheduleSearchPage.selectSeatType('指定席');
     await scheduleSearchPage.selectSeatType('-');
+
+    await expect(scheduleSearchPage.availableTrainCheckBox).toBeEnabled();
+    await expect(scheduleSearchPage.isOnlyAvailableHint).toBeHidden();
+});
+
+test('人数をハイフンに戻すと空席チェックが操作可能になる', async ({ page }) => {
+    const scheduleSearchPage = new ScheduleSearchPage(page);
+    await scheduleSearchPage.goto();
+
+    await scheduleSearchPage.selectPassengers('3人');
+    await scheduleSearchPage.selectPassengers('-');
 
     await expect(scheduleSearchPage.availableTrainCheckBox).toBeEnabled();
     await expect(scheduleSearchPage.isOnlyAvailableHint).toBeHidden();
@@ -457,35 +484,26 @@ test('グランクラスかつ4人指定時に、グランクラス残席が4未
     page,
 }) => {
     const scheduleSearchPage = new ScheduleSearchPage(page);
+
+    const responsePromise = page.waitForResponse(
+        (response) =>
+            response.url().includes('/schedules') && response.status() === 200,
+    );
+
     await scheduleSearchPage.goto();
+    const response = await responsePromise;
+    const allSchedules = await response.json();
 
     await expect(page.getByText(/\d+件の列車が見つかりました/)).toBeVisible();
 
     await scheduleSearchPage.selectSeatType('グランクラス');
-    await page.waitForResponse((response) => {
-        const url = new URL(response.url());
-        return (
-            response.url().includes('/schedules') &&
-            response.status() === 200 &&
-            url.searchParams.get('seatType') === 'グランクラス'
-        );
-    });
-
-    const responsePromise = page.waitForResponse((response) => {
-        const url = new URL(response.url());
-        return (
-            response.url().includes('/schedules') &&
-            response.status() === 200 &&
-            url.searchParams.get('seatType') === 'グランクラス' &&
-            url.searchParams.get('passengers') === '4'
-        );
-    });
-
     await scheduleSearchPage.selectPassengers('4人');
-    const response = await responsePromise;
 
-    const schedules = await response.json();
-    for (const schedule of schedules) {
-        expect(schedule.gcSeats).toBeGreaterThanOrEqual(4);
-    }
+    const expectedCount = allSchedules.filter(
+        (schedule: { gcSeats: number }) => schedule.gcSeats >= 4,
+    ).length;
+
+    await expect(
+        page.getByText(`${expectedCount}件の列車が見つかりました`),
+    ).toBeVisible();
 });
