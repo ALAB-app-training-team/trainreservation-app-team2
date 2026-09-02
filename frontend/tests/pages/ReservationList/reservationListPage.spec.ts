@@ -47,7 +47,7 @@ test('有効タブは本日または未来の日付であること', async ({
         if (!match) continue;
 
         const [_, year, month, day] = match;
-        const date = new Date(Number(year), Number(month), Number(day));
+        const date = new Date(Number(year), Number(month) - 1, Number(day));
         await expect(date.getTime()).toBeGreaterThanOrEqual(today.getTime());
     }
     await logout();
@@ -78,7 +78,7 @@ test('過去タブは過去の日付であること', async ({
         if (!match) continue;
 
         const [_, year, month, day] = match;
-        const date = new Date(Number(year), Number(month), Number(day));
+        const date = new Date(Number(year), Number(month) - 1, Number(day));
         await expect(date.getTime()).toBeLessThan(today.getTime());
     }
     await logout();
