@@ -333,9 +333,10 @@ test('navigate-座席選択画面からログインして予約', async ({ page,
     await selectSeatPage.clickLoginButton();
     await expect(page).toHaveURL('/login');
     await loginPage.loginButton.waitFor({ state: 'visible' });
-    await loginPage.inputcommonLoginInfo();
+    await loginPage.inputCommonLoginInfo();
     await loginPage.clickLoginButton();
-    await await selectSeatPage.selectSeat();
+    await expect(page).toHaveURL('/selectSeat');
+    await selectSeatPage.selectSeat();
     await expect(page.getByText('座席が選択されていません')).toBeHidden();
     await selectSeatPage.inputCardInfo();
     await selectSeatPage.clickReseveButton();
@@ -365,7 +366,7 @@ test('navigate-header', async ({ page }) => {
     await expect(page).toHaveURL('/scheduleSearch');
     await scheduleSearchPage.header.goToLogin();
     await expect(page).toHaveURL('/login');
-    await loginPage.inputcommonLoginInfo();
+    await loginPage.inputCommonLoginInfo();
     await loginPage.clickLoginButton();
     await expect(page).toHaveURL('/scheduleSearch');
     await scheduleSearchPage.header.clickUserName();

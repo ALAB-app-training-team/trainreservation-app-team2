@@ -78,7 +78,7 @@ export const test = base.extend<Fixture>({
             const login = new LoginPage(page);
 
             await login.goto();
-            await login.inputcommonLoginInfo();
+            await login.inputCommonLoginInfo();
             await login.clickLoginButton();
         };
         await use(login);

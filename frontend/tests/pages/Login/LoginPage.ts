@@ -18,6 +18,7 @@ export class LoginPage {
         this.password = page.getByRole('textbox', { name: 'パスワード' });
         this.loginButton = page.getByRole('button', {
             name: 'ログイン',
+            exact: true,
         });
         this.createButton = page.getByRole('button', { name: '新規登録' });
     }
@@ -42,7 +43,7 @@ export class LoginPage {
         await this.createButton.click();
     }
 
-    async inputcommonLoginInfo() {
+    async inputCommonLoginInfo() {
         await this.fillMailAddress('test-common@test.com');
         await this.fillPassword('Password1');
     }
