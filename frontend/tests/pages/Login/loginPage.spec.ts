@@ -11,6 +11,6 @@ test('未入力の時にバリデーションメッセージが表示される�
     const message = await loginPage.mailAddress.evaluate(
         (el: HTMLInputElement) => el.validationMessage,
     );
-    expect(message).toBe('Please fill out this field.');
+    expect(message).toBe('このフィールドに入力してください。');
     await expect(page).toHaveURL('/login');
 });
