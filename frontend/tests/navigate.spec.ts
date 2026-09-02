@@ -154,7 +154,6 @@ test('navigate-アカウントログイン全機能', async ({
     await reservationListPage.clickChangeSeatConfirmButton();
     await expect(page).toHaveURL('/selectSeat');
     await selectSeatPage.selectSeat();
-    await selectSeatPage.emptySeat.nth(1).click();
     await selectSeatPage.clickUpdateButton();
     await expect(page.getByText('予約変更確認')).toBeVisible();
     await selectSeatPage.clickUpdateConfirmButton();
@@ -182,7 +181,6 @@ test('navigate-アカウントログイン全機能', async ({
     await expect(page).toHaveURL('/selectSeat');
     await expect(page.getByText('座席が選択されていません')).toBeVisible();
     await selectSeatPage.selectSeat();
-    await selectSeatPage.emptySeat.nth(1).click();
     await selectSeatPage.clickUpdateButton();
     await selectSeatPage.clickUpdateConfirmButton();
     await expect(page).toHaveURL('/reservedTicket');
@@ -204,8 +202,6 @@ test('navigate-アカウントログイン全機能', async ({
     await reservedTicketPage.clickChangeSeatConfirmButton();
     await expect(page).toHaveURL('/selectSeat');
     await selectSeatPage.selectSeat();
-    await selectSeatPage.emptySeat.nth(1).click();
-    await selectSeatPage.selectSeat();
     await selectSeatPage.clickUpdateButton();
     await expect(page.getByText('予約変更確認')).toBeVisible();
     await selectSeatPage.clickUpdateConfirmButton();
@@ -228,7 +224,6 @@ test('navigate-アカウントログイン全機能', async ({
     await expect(page).toHaveURL('/selectSeat');
     await expect(page.getByText('座席が選択されていません')).toBeVisible();
     await selectSeatPage.selectSeat();
-    await selectSeatPage.emptySeat.nth(1).click();
     await selectSeatPage.clickUpdateButton();
     await selectSeatPage.clickUpdateConfirmButton();
     await expect(page).toHaveURL('/reservedTicket');
