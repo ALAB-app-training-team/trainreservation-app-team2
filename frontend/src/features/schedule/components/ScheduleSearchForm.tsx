@@ -184,13 +184,13 @@ export function ScheduleSearchForm({
                                                         const departureStationName =
                                                             stations.find(
                                                                 (s) =>
-                                                                    s.stationCd ==
+                                                                    s.stationCd ===
                                                                     dto.departureStationCd,
                                                             )?.name;
                                                         const arrivalStationName =
                                                             stations.find(
                                                                 (s) =>
-                                                                    s.stationCd ==
+                                                                    s.stationCd ===
                                                                     dto.arrivalStationCd,
                                                             )?.name;
 
