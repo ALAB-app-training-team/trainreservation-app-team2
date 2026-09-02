@@ -39,4 +39,6 @@ export const ERROR_MESSAGE = {
         'パスワードの変更に失敗しました。お手数ですが、再度お試しください。',
     ADMIN_UPDATE_ERROR:
         'パスワードの変更が失敗しました。お手数ですが、再度お試しください。',
+    SAVE_HISTORY_ERROR:
+        'お気に入り検索の登録に失敗しました。お手数ですが、再度お試しください。',
 } as const;

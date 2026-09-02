@@ -15,6 +15,8 @@ export class ScheduleSearchPage {
     readonly availableTrainCheckBox: Locator;
     readonly searchNextDayButton: Locator;
     readonly backButton: Locator;
+    readonly historySaveButton: Locator;
+    readonly historyDetailAccordionButton: Locator;
 
     constructor(page: Page) {
         this.page = page;
@@ -24,8 +26,12 @@ export class ScheduleSearchPage {
         this.arrivalStation = page.getByRole('combobox', { name: '降車駅' });
         this.date = page.getByRole('textbox', { name: '乗車日' });
         this.time = page.getByRole('textbox', { name: '時刻' });
-        this.departureTimeButton = page.getByText('出発');
-        this.arrivalTimeButton = page.getByText('到着');
+        this.departureTimeButton = page
+            .locator('label')
+            .filter({ hasText: '出発' });
+        this.arrivalTimeButton = page
+            .locator('label')
+            .filter({ hasText: '到着' });
         this.switchStationButton = page
             .getByRole('button')
             .filter({ hasText: /^$/ });
@@ -36,6 +42,10 @@ export class ScheduleSearchPage {
             name: '翌日の始発を検索',
         });
         this.backButton = page.getByTestId('back-button-in-scheduleSearch');
+        this.historySaveButton = page.getByTestId('history-save-button');
+        this.historyDetailAccordionButton = page.getByRole('button', {
+            name: 'お気に入り経路',
+        });
     }
 
     async goto() {
@@ -90,5 +100,13 @@ export class ScheduleSearchPage {
 
     async clickBackButton() {
         await this.backButton.click();
+    }
+
+    async clickHistorySaveButton() {
+        await this.historySaveButton.click();
+    }
+
+    async clickHistoryDetailAccordionButton() {
+        await this.historyDetailAccordionButton.click();
     }
 }
