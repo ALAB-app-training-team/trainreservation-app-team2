@@ -14,6 +14,7 @@ import java.util.UUID;
 @Service
 public class SearchHistoryService {
     private final SearchHistoryRepository searchHistoryRepository;
+    private static final int MAX_SEARCH_HISTORY_COUNT = 5;
 
     @Autowired
     public SearchHistoryService(SearchHistoryRepository searchHistoryRepository) {
@@ -48,8 +49,9 @@ public class SearchHistoryService {
 
     /**
      *
-     * @param history 保存する検索履歴
-     * @return 検索履歴UUID
+     * @param history   保存する検索履歴
+     * @param accountId 検索履歴を保存するアカウントID
+     * @return 検索履歴ID
      */
     @Transactional
     public UUID recordSearchHistory(SearchHistoryDto history, UUID accountId) {
@@ -60,7 +62,7 @@ public class SearchHistoryService {
                 Comparator.comparing(SearchHistoryEntity::getCreatedAt)
                     .reversed());
         }
-        if (histories.size() >= 5) {
+        if (histories.size() >= MAX_SEARCH_HISTORY_COUNT) {
             searchHistoryRepository.delete(histories.getLast());
         }
         SearchHistoryEntity target = new SearchHistoryEntity(

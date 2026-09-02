@@ -119,7 +119,7 @@ public class SearchHistoryServiceTest {
     @Test
     @DisplayName("アカウントIDに一致する検索履歴が無ければ空のリストを返す")
     void getSearchHistory_withNoSearchHistoryMatch_returnEmptyList() {
-        when(searchHistoryRepository.findByAccountId(any())).thenReturn(List.of());
+        when(searchHistoryRepository.findByAccountId(accountId)).thenReturn(List.of());
 
         List<SearchHistoryDto> result = service.getSearchHistory(accountId);
         assertEquals(0, result.size());
@@ -127,10 +127,10 @@ public class SearchHistoryServiceTest {
 
     @Test
     @DisplayName("既存の履歴が0件で履歴を保存してUUIDを返す")
-    void recordSearchHistory_with3HistoryExist_returnUUID() {
+    void recordSearchHistory_withNoHistoryExist_returnUUID() {
         UUID historyId = UUID.randomUUID();
         SearchHistoryDto dto = createSearchHistoryDto(
-            historyId, LocalDate.of(2026, 9, 10), LocalTime.of(9, 0, 0), "THK01", "THK09", true
+            historyId, LocalDate.of(2026, 9, 10), LocalTime.of(9, 0, 0), "THK01", "THK09", false
         );
 
         SearchHistoryEntity entity = new SearchHistoryEntity(
@@ -144,8 +144,8 @@ public class SearchHistoryServiceTest {
             Timestamp.from(Instant.now())
         );
 
-        when(searchHistoryRepository.findByAccountId(any())).thenReturn(new ArrayList<>(List.of()));
-        when(searchHistoryRepository.save(any())).thenReturn(entity);
+        when(searchHistoryRepository.findByAccountId(accountId)).thenReturn(new ArrayList<>(List.of()));
+        when(searchHistoryRepository.save(any(SearchHistoryEntity.class))).thenReturn(entity);
 
         UUID result = service.recordSearchHistory(dto, accountId);
         assertEquals(historyId, result);
@@ -158,7 +158,7 @@ public class SearchHistoryServiceTest {
     void recordSearchHistory_with4HistoryExist_returnUUID() {
         UUID historyId = UUID.randomUUID();
         SearchHistoryDto dto = createSearchHistoryDto(
-            historyId, LocalDate.of(2026, 9, 10), LocalTime.of(9, 0, 0), "THK01", "THK09", true
+            historyId, LocalDate.of(2026, 9, 10), LocalTime.of(9, 0, 0), "THK01", "THK09", false
         );
 
         SearchHistoryEntity entity = new SearchHistoryEntity(
@@ -172,7 +172,7 @@ public class SearchHistoryServiceTest {
             Timestamp.from(Instant.now())
         );
 
-        when(searchHistoryRepository.findByAccountId(any())).thenReturn(
+        when(searchHistoryRepository.findByAccountId(accountId)).thenReturn(
             new ArrayList<>(List.of
                 (createSearchHistoryEntity(1, "2026-08-03", "08:30:00", "THK01", "THK09", false), // 東京->仙台
                     createSearchHistoryEntity(2, "2026-08-08", "12:00:00", "CMN01", "CMN03", true), // 大宮->盛岡
@@ -181,7 +181,7 @@ public class SearchHistoryServiceTest {
                 )
             )
         );
-        when(searchHistoryRepository.save(any())).thenReturn(entity);
+        when(searchHistoryRepository.save(any(SearchHistoryEntity.class))).thenReturn(entity);
 
         UUID result = service.recordSearchHistory(dto, accountId);
         assertEquals(historyId, result);
@@ -194,7 +194,7 @@ public class SearchHistoryServiceTest {
     void recordSearchHistory_with5HistoryExist_returnUUID() {
         UUID historyId = UUID.randomUUID();
         SearchHistoryDto dto = createSearchHistoryDto(
-            historyId, LocalDate.of(2026, 9, 10), LocalTime.of(9, 0, 0), "THK01", "THK09", true
+            historyId, LocalDate.of(2026, 9, 10), LocalTime.of(9, 0, 0), "THK01", "THK09", false
         );
 
         SearchHistoryEntity entity = new SearchHistoryEntity(
@@ -208,8 +208,8 @@ public class SearchHistoryServiceTest {
             Timestamp.from(Instant.now())
         );
 
-        when(searchHistoryRepository.findByAccountId(any())).thenReturn(new ArrayList<>(mockSearchHistories));
-        when(searchHistoryRepository.save(any())).thenReturn(entity);
+        when(searchHistoryRepository.findByAccountId(accountId)).thenReturn(new ArrayList<>(mockSearchHistories));
+        when(searchHistoryRepository.save(any(SearchHistoryEntity.class))).thenReturn(entity);
 
         UUID result = service.recordSearchHistory(dto, accountId);
         assertEquals(historyId, result);
@@ -217,4 +217,3 @@ public class SearchHistoryServiceTest {
         verify(searchHistoryRepository, times(1)).save(any());
     }
 }
-
