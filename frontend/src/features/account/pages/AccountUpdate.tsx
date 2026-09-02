@@ -1,6 +1,7 @@
 import { useState } from 'react';
 import { FiUser } from 'react-icons/fi';
 
+import { AccountDeleteConfirmModal } from '@/features/account/components/AccountDeleteConfirmModal';
 import { AccountInput } from '@/features/account/components/AccountInput';
 import { PasswordInput } from '@/features/account/components/PasswordInput';
 import { useAccountUpdateDto } from '@/features/account/hooks/useAccountUpdateDto';
@@ -103,33 +104,11 @@ export function AccountUpdate() {
                     isOpen={isDeleteModalOpen}
                     onRequestClose={() => setIsDeleteModalOpen(false)}
                 >
-                    <div className="flex flex-col items-center gap-6">
-                        <div className="flex flex-col items-center gap-2">
-                            <h2 className="text-xl font-bold text-red-500">
-                                本当に退会しますか？
-                            </h2>
-                            <p className="text-sm text-gray-500">
-                                退会するとアカウント情報は削除され、元に戻せません。
-                            </p>
-                        </div>
-
-                        <div className="flex w-full gap-3">
-                            <button
-                                type="button"
-                                onClick={() => setIsDeleteModalOpen(false)}
-                                className="w-full rounded-lg border border-gray-300 p-2 text-gray-600"
-                            >
-                                キャンセル
-                            </button>
-                            <button
-                                type="button"
-                                onClick={handleAccountDelete}
-                                className="w-full rounded-lg bg-red-500 p-2 text-white"
-                            >
-                                はい
-                            </button>
-                        </div>
-                    </div>
+                    <AccountDeleteConfirmModal
+                        onClick={handleAccountDelete}
+                        onRequestClose={() => setIsDeleteModalOpen(false)}
+                        isSubmitting={isSubmitting}
+                    />
                 </CustomModal>
             </div>
         </div>
