@@ -318,7 +318,7 @@ test('navigate-管理者ログイン-管理機能', async ({
     await loginPage.fillPassword('Password1');
     await loginPage.clickLoginButton();
     await expect(page).toHaveURL('/scheduleSearch');
-    // TODO:ローカルでテストが成功できるように、山田太郎のアカウントを削除する
+    // TODO:アカウント退会させる（ローカルでテストを通すため）
 });
 
 test('navigate-座席選択画面からログインして予約', async ({ page, logout }) => {
