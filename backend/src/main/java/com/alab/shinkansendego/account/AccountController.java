@@ -156,12 +156,14 @@ public class AccountController {
 
     /**
      * アカウント削除メソッド
+     * <p>
+     * 管理者アカウントは削除できない。削除すると管理者権限が必要な機能に到達できなくなるため。
      *
      * @param session ログインセッション
      * @return NoContent
      */
     @DeleteMapping("account")
-    @PreAuthorize("isAuthenticated()")
+    @PreAuthorize("hasRole('USER')")
     public ResponseEntity<Void> deleteAccount(
         @AuthenticationPrincipal AccountSessionDto session,
         HttpSession httpSession

@@ -965,4 +965,15 @@ public class AccountControllerTest {
             .andExpect(status().isConflict())
             .andExpect(content().string("予約中のきっぷがあるため、退会できません。"));
     }
+
+    @Test
+    @DisplayName("管理者の場合、アカウントを削除できないこと")
+    void deleteAccount_withAdminRole_return403() throws Exception {
+        mockMvc.perform(MockMvcRequestBuilders.delete(baseUrl + "account")
+                .with(SecurityMockMvcRequestPostProcessors.authentication(adminAuth))
+                .contentType(MediaType.APPLICATION_JSON))
+            .andExpect(status().isForbidden());
+
+        Mockito.verify(service, Mockito.never()).deleteAccount(Mockito.any());
+    }
 }

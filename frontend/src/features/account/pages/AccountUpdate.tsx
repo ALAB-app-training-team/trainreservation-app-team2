@@ -86,6 +86,7 @@ export function AccountUpdate() {
                         <FiUser />
                         変更
                     </button>
+                    {!isAdmin && (
                     <button
                         type="button"
                         onClick={() => setIsDeleteModalOpen(true)}
@@ -93,6 +94,7 @@ export function AccountUpdate() {
                     >
                         退会はこちら
                     </button>
+                    )}
                 </form>
 
                 <CustomModal
