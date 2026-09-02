@@ -71,8 +71,8 @@ test('タイトル表示：予約完了時は予約完了、予約確認のゲ�
     await reservationListPage.clickChangeSeatConfirmButton();
     await expect(page).toHaveURL('/selectSeat');
     await expect(page.getByText('座席が選択されていません')).not.toBeVisible();
+    await selectSeatPage.emptySeat.waitFor({ state: 'visible' });
     await selectSeatPage.selectSeat();
-    await selectSeatPage.emptySeat.nth(1).click();
     await selectSeatPage.clickUpdateButton();
     await selectSeatPage.clickUpdateConfirmButton();
     await expect(page).toHaveURL('/reservedTicket');
@@ -135,8 +135,8 @@ test('戻るボタン表示有無：予約確認のアカウントログイン�
     await reservationListPage.clickChangeSeatConfirmButton();
     await expect(page).toHaveURL('/selectSeat');
     await expect(page.getByText('座席が選択されていません')).not.toBeVisible();
+    await selectSeatPage.emptySeat.waitFor({ state: 'visible' });
     await selectSeatPage.selectSeat();
-    await selectSeatPage.emptySeat.nth(1).click();
     await selectSeatPage.clickUpdateButton();
     await selectSeatPage.clickUpdateConfirmButton();
     await expect(page).toHaveURL('/reservedTicket');
