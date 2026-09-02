@@ -408,7 +408,7 @@ public class ReservationService {
             reservedSeatsToPost.add(reservedSeat);
         }
 
-        if (reserverName != null) {
+        if (!StringUtils.isEmpty(reserverName) && !StringUtils.isEmpty(reserverMail)) {
             reservedSeatsToPost.stream()
                 .min(Comparator.comparing((ReservedSeatEntity s) -> s.getTrainCar().getTrainCarNumber())
                     .thenComparing(s -> s.getSeat().getSeatNumber())
@@ -524,7 +524,7 @@ public class ReservationService {
             changedReservation.getSeats(), sectionCds,
             changedReservation.getRideDate(),
             changedReservation.getScheduleCd(),
-            null, null   // 予約変更時は予約者の初期割当を行わない
+            null, null
         );
 
         List<DepartureArrivalTimeEntity> schedules = departureArrivalTimeRepository.findByScheduleCd(changedReservation.getScheduleCd());
@@ -610,7 +610,8 @@ public class ReservationService {
                 postSeats, sectionCds,
                 changedReservation.getRideDate(),
                 changedReservation.getScheduleCd(),
-                null, null);   // 予約変更時は予約者の初期割当を行わない
+                null, null
+            );
         }
         entityManager.flush();
         entityManager.clear();
