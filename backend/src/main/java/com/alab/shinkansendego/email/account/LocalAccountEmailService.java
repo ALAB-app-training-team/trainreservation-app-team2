@@ -61,14 +61,14 @@ public class LocalAccountEmailService implements AccountEmailService {
             MimeMessageHelper helper = new MimeMessageHelper(mimeMessage, "UTF-8");
 
             helper.setFrom(EmailUtils.FROM_ADDRESS, EmailUtils.SENDER_NAME);
-            helper.setTo(oldParams == null ? newParams.getAccountMail() : oldParams.getAccountMail());
+            helper.setTo(oldParams.getAccountMail() == null ? newParams.getAccountMail() : oldParams.getAccountMail());
             helper.setSubject(EmailUtils.ACCOUNT_CHANGED_SUBJECT);
 
             String loginUrl = baseUrl + EmailUtils.LOGIN_PATH;
 
             String body = String.format(
                 EmailUtils.ACCOUNT_CHANGED_BODY,
-                oldParams == null ? newParams.getAccountName() : oldParams.getAccountName(),
+                oldParams.getAccountName(),
                 newParams.getAccountName(),
                 newParams.getAccountMail(),
                 loginUrl

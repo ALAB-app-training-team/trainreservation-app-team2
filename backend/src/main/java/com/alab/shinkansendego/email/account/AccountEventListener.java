@@ -28,15 +28,15 @@ public class AccountEventListener {
     @Async
     @TransactionalEventListener(phase = TransactionPhase.AFTER_COMMIT)
     public void handleAccountChanged(AccountUpdatedEvent event) {
-        String oldMail = event.oldAccountInfo().getMail();
         String newMail = event.newAccountInfo().getMail();
-        AccountEmailRequestParams newParams = new AccountEmailRequestParams(event.newAccountInfo().getMail(), event.newAccountInfo().getName());
-        AccountEmailRequestParams oldParams = new AccountEmailRequestParams(event.oldAccountInfo().getMail(), event.oldAccountInfo().getName());
+        String oldMail = event.oldAccountInfo().getMail();
+        AccountEmailRequestParams newParams = new AccountEmailRequestParams(newMail, event.newAccountInfo().getName());
+        AccountEmailRequestParams oldParams = new AccountEmailRequestParams(null, event.oldAccountInfo().getName());
         if (oldMail != null && oldMail.equals(newMail)) {
-            accountEmailService.sendAccountUpdate(newParams, null);
+            accountEmailService.sendAccountUpdate(newParams, new AccountEmailRequestParams(null, event.oldAccountInfo().getName()));
         } else if (oldMail != null && newMail != null) {
-            accountEmailService.sendAccountUpdate(newParams, oldParams);
-            accountEmailService.sendAccountUpdate(newParams, null);
+            accountEmailService.sendAccountUpdate(newParams, new AccountEmailRequestParams(null, event.oldAccountInfo().getName()));
+            accountEmailService.sendAccountUpdate(newParams, new AccountEmailRequestParams(oldMail, event.oldAccountInfo().getName()));
         }
     }
 

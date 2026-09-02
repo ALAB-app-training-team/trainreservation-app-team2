@@ -113,7 +113,7 @@ public class AccountService {
             throw new ConflictException(newMail + " is Duplicate");
         }
 
-        AccountRequestDto oldAccountInfo = new AccountRequestDto(account.getMail(), account.getMail(), null);
+        AccountRequestDto oldAccountInfo = new AccountRequestDto(account.getName(), account.getMail(), null);
 
         account.setName(StringUtils.removeSpaces(request.getName()));
         account.setMail(newMail);

@@ -71,7 +71,7 @@ public class SesAccountEmailService implements AccountEmailService {
 
             String body = String.format(
                 EmailUtils.ACCOUNT_CHANGED_BODY,
-                oldParams == null ? newParams.getAccountName() : oldParams.getAccountName(),
+                oldParams.getAccountName(),
                 newParams.getAccountName(),
                 newParams.getAccountMail(),
                 loginUrl
@@ -79,7 +79,7 @@ public class SesAccountEmailService implements AccountEmailService {
 
             SendEmailRequest request = SendEmailRequest.builder()
                 .fromEmailAddress(String.format("%s <%s>", EmailUtils.SENDER_NAME, mailFrom))
-                .destination(Destination.builder().toAddresses(oldParams == null ? newParams.getAccountMail() : oldParams.getAccountMail()).build())
+                .destination(Destination.builder().toAddresses(oldParams.getAccountMail() == null ? newParams.getAccountMail() : oldParams.getAccountMail()).build())
                 .content(EmailContent.builder()
                     .simple(msg -> msg
                         .subject(Content.builder().data(EmailUtils.ACCOUNT_CHANGED_SUBJECT).charset("UTF-8").build())
