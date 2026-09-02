@@ -19,6 +19,8 @@ export function AccountUpdate() {
     } = useAccountUpdateDto();
 
     const [passwordType, setPasswordType] = useState('password');
+    // 管理者が退会すると管理者権限が必要な機能に到達できなくなるため、退会させない
+    const isAdmin = localStorage.getItem('role') === 'ROLE_ADMIN';
     const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false);
 
     return (
@@ -87,13 +89,13 @@ export function AccountUpdate() {
                         変更
                     </button>
                     {!isAdmin && (
-                    <button
-                        type="button"
-                        onClick={() => setIsDeleteModalOpen(true)}
-                        className="mt-2 text-sm text-gray-500 underline"
-                    >
-                        退会はこちら
-                    </button>
+                        <button
+                            type="button"
+                            onClick={() => setIsDeleteModalOpen(true)}
+                            className="mt-2 text-sm text-gray-500 underline"
+                        >
+                            退会はこちら
+                        </button>
                     )}
                 </form>
 
