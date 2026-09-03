@@ -414,9 +414,11 @@ test('未ログイン状態ではお気に入り経路の登録が表示され�
     await scheduleSearchPage.clickArrivalTimeButton();
     await scheduleSearchPage.clickHistoryDetailAccordionButton();
     await scheduleSearchPage.clickHistorySaveButton();
-    const registeredRoute = page.getByRole('button', {
-        name: '仙台 白石蔵王',
-    });
+    const registeredRoute = page
+        .getByRole('button', {
+            name: '仙台 白石蔵王',
+        })
+        .first();
     await expect(registeredRoute).toBeVisible();
     await expect(registeredRoute).toContainText('到着');
     await expect(registeredRoute).toContainText('10:30');

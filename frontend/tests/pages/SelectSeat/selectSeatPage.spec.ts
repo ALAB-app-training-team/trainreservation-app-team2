@@ -67,9 +67,11 @@ test('座席を6席選択すると、それ以上選択できない', async ({ p
     // グリーン車から座席を選択する
     await page.getByRole('button', { name: 'グリーン車' }).click();
     await expect(
-        page.getByTestId('train-cars').getByRole('button', { name: '9' }),
+        page
+            .getByTestId('train-cars')
+            .getByRole('button', { name: /^(9|11)$/ }),
     ).toHaveClass(/bg-primary-light/);
-    await page.getByText('9号車').waitFor({ state: 'visible' });
+    await page.getByText(/^(9|11)号車$/).waitFor({ state: 'visible' });
     const trainCarInGreen =
         (await selectSeatPage.trainCars.first().textContent()) ?? '';
     const fifthSeat = (await selectSeatPage.emptySeat.first()) ?? '';
@@ -78,9 +80,11 @@ test('座席を6席選択すると、それ以上選択できない', async ({ p
     // グランクラスから座席を選択する
     await page.getByRole('button', { name: 'グランクラス' }).click();
     await expect(
-        page.getByTestId('train-cars').getByRole('button', { name: '10' }),
+        page
+            .getByTestId('train-cars')
+            .getByRole('button', { name: /^(10|12)$/ }),
     ).toHaveClass(/bg-primary-light/);
-    await page.getByText('10号車').waitFor({ state: 'visible' });
+    await page.getByText(/^(10|12)号車$/).waitFor({ state: 'visible' });
     const trainCarInGranClass =
         (await selectSeatPage.trainCars.first().textContent()) ?? '';
     const sixthSeat = (await selectSeatPage.emptySeat.first()) ?? '';

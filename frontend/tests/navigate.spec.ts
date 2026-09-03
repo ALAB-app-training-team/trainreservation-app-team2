@@ -19,6 +19,8 @@ test('navigate-ゲストログイン全機能', async ({ page, context, logout }
     const reservationGuestLoginPage = new ReservationGuestLoginPage(page);
     const reservedTicketPage = new ReservedTicketPage(page);
     const loginPage = new LoginPage(page);
+    const accountUpdatePage = new AccountUpdatePage(page);
+    const reservationListPage = new ReservationListPage(page);
 
     // 検索～予約
     await scheduleSearchPage.goto();
@@ -92,8 +94,17 @@ test('navigate-ゲストログイン全機能', async ({ page, context, logout }
     await loginPage.fillPassword('Password1');
     await loginPage.clickLoginButton();
     await expect(page).toHaveURL('/scheduleSearch');
-
-    // TODO:アカウント退会させる（ローカルでテストを通すため）
+    await scheduleSearchPage.header.clickUserName();
+    await scheduleSearchPage.header.goToReservationList();
+    await reservationListPage.clickThreeDotsButton();
+    await reservationListPage.clickRefundButton();
+    await reservationListPage.clickRefundConfirmButton();
+    await scheduleSearchPage.header.clickUserName();
+    await scheduleSearchPage.header.goToAccountUpdate();
+    await expect(page).toHaveURL('/accountUpdate');
+    await accountUpdatePage.clickDeleteButton();
+    await accountUpdatePage.clickDeleteConfirmButton();
+    await expect(page).toHaveURL('/login');
 });
 
 test('navigate-アカウントログイン全機能', async ({
@@ -157,7 +168,9 @@ test('navigate-アカウントログイン全機能', async ({
     await reservationListPage.clickChangeButton();
     await reservationListPage.clickChangeSeatConfirmButton();
     await expect(page).toHaveURL('/selectSeat');
-    await page.getByText('1号車').waitFor({ state: 'visible' });
+    await page
+        .getByRole('heading', { name: '1号車' })
+        .waitFor({ state: 'visible' });
     await selectSeatPage.selectSeat();
     await selectSeatPage.clickUpdateButton();
     await expect(page.getByText('予約変更確認')).toBeVisible();
@@ -273,7 +286,8 @@ test('navigate-管理者ログイン-管理機能', async ({
     const loginPage = new LoginPage(page);
     const passwordUpdateForAdminPage = new PasswordUpdateForAdminPage(page);
     const accountCreatePage = new AccountCreatePage(page);
-    const accountMailAddress = `yamada-${Date.now()}@test.co.jp`;
+    const accountUpdatePage = new AccountUpdatePage(page);
+    const accountMailAddress = `password-${Date.now()}@test.co.jp`;
 
     // 新規登録 Password1
     await loginPage.goto();
@@ -311,7 +325,12 @@ test('navigate-管理者ログイン-管理機能', async ({
     await loginPage.clickLoginButton();
     await expect(page).toHaveURL('/scheduleSearch');
     await expect(scheduleSearchPage.header.userName).toBeVisible();
-    // TODO:アカウント退会させる（ローカルでテストを通すため）
+    await scheduleSearchPage.header.clickUserName();
+    await scheduleSearchPage.header.goToAccountUpdate();
+    await expect(page).toHaveURL('/accountUpdate');
+    await accountUpdatePage.clickDeleteButton();
+    await accountUpdatePage.clickDeleteConfirmButton();
+    await expect(page).toHaveURL('/login');
 });
 
 test('navigate-座席選択画面からログインして予約', async ({ page, logout }) => {
