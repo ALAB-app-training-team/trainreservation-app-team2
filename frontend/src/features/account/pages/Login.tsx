@@ -20,7 +20,7 @@ export function Login() {
     }, []);
     return (
         <div className="flex justify-center">
-            <div className="flex w-full flex-col items-center justify-center gap-4 p-8 sm:w-4/10">
+            <div className="flex w-full flex-col items-center justify-center gap-4 p-8 md:w-4/10">
                 <div className="flex flex-col items-center justify-center gap-1">
                     <div>
                         <img src="/logo.svg" className="h-auto w-16" />

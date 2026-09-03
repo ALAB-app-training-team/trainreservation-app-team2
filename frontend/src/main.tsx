@@ -16,7 +16,7 @@ createRoot(document.getElementById('root')!).render(
                 position="top-center"
                 toastOptions={{
                     classNames: {
-                        toast: 'sm:!w-96 !p-5',
+                        toast: 'md:!w-96 !p-5',
                         title: '!text-base',
                         success:
                             '!bg-primary-light !border-l-4 !border-l-primary',
