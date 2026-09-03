@@ -87,7 +87,8 @@ test('navigate-ゲストログイン全機能', async ({ page, context, logout }
     // 作成したアカウントでログイン
     await logout();
     await loginPage.goto();
-    await loginPage.inputCreatedAccountLoginInfo(createdAccountMail);
+    await loginPage.fillMailAddress(createdAccountMail);
+    await loginPage.fillPassword('Password1');
     await loginPage.clickLoginButton();
     await expect(page).toHaveURL('/scheduleSearch');
 

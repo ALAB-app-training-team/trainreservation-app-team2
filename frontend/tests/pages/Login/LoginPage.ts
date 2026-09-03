@@ -52,9 +52,4 @@ export class LoginPage {
         await this.fillMailAddress('test-admin@test.com');
         await this.fillPassword('Password1');
     }
-
-    async inputCreatedAccountLoginInfo(mailAddress = 'guest@test.com') {
-        await this.fillMailAddress(mailAddress);
-        await this.fillPassword('Password1');
-    }
 }
