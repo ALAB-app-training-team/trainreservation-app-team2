@@ -114,7 +114,7 @@ export function ReservationListBody() {
                                 key={tab.key}
                                 data-testid={tab.testId}
                                 onClick={() => setSelectedTab(tab.key)}
-                                className={`flex w-full cursor-pointer items-center justify-center gap-2 rounded-3xl px-6 py-2 transition ${
+                                className={`flex w-full cursor-pointer flex-col items-center justify-center gap-1 rounded-3xl px-6 py-2 transition sm:flex-row sm:gap-2 ${
                                     selectedTab === tab.key
                                         ? 'bg-white font-bold shadow'
                                         : ''
@@ -127,8 +127,10 @@ export function ReservationListBody() {
                                 ) : (
                                     <LuTicket />
                                 )}
-                                {tab.label}
-                                {`(${tab.key === RESERVATION_TAB[0].key ? activeReservations?.length : tab.key === RESERVATION_TAB[1].key ? pastReservations?.length : canceledReservations?.length})`}
+                                <span className="flex flex-col items-center whitespace-nowrap sm:flex-row">
+                                    <span>{tab.label}</span>
+                                    <span>{`(${tab.key === RESERVATION_TAB[0].key ? activeReservations?.length : tab.key === RESERVATION_TAB[1].key ? pastReservations?.length : canceledReservations?.length})`}</span>
+                                </span>
                             </button>
                         ))}
                     </div>
