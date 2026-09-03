@@ -16,14 +16,13 @@ createRoot(document.getElementById('root')!).render(
                 position="top-center"
                 toastOptions={{
                     classNames: {
-                        toast: '!w-96 !p-5',
+                        toast: 'sm:!w-96 !p-5',
                         title: '!text-base',
                         success:
                             '!bg-primary-light !border-l-4 !border-l-primary',
                         warning:
                             '!bg-orange-100 !border-l-4 !border-l-orange-400',
-                        error:
-                            '!bg-red-100 !border-l-4 !border-l-red-400',
+                        error: '!bg-red-100 !border-l-4 !border-l-red-400',
                     },
                 }}
             />

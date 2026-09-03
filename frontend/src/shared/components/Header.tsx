@@ -106,7 +106,7 @@ export function Header() {
             </div>
             {isMenuOpen && (
                 <div
-                    className="absolute top-full right-4 z-50 flex w-[180px] flex-col gap-2 rounded-md bg-white p-2 py-2 text-sm font-bold shadow-md"
+                    className="absolute top-full right-4 z-50 flex w-[200px] flex-col gap-2 rounded-md bg-white p-2 py-2 text-base font-bold shadow-md"
                     onClick={() => setIsMenuOpen(false)}
                 >
                     <div className="flex w-full flex-col gap-2 text-left md:hidden">
