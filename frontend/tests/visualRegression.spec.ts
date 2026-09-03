@@ -84,6 +84,7 @@ test('visual-reservationList', async ({
     visualReservationList,
 }) => {
     await commonLogin();
+    await expect(page).toHaveURL('/scheduleSearch');
     await visualReservationList();
     await logout();
     await expect(page).toHaveURL('/login');
