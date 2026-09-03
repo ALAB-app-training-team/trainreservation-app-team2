@@ -21,7 +21,7 @@ export function AvailableOnlyFilter({
                     checked={isChecked}
                     disabled={isDisabled}
                     onChange={(e) => onChange(e.target.checked)}
-                    className={`accent-primary focus-visible:ring-primary size-4 focus-visible:ring-1${isDisabled ? 'pointer-events-none' : 'cursor-pointer'}`}
+                    className={`accent-primary focus-visible:ring-primary size-4 focus-visible:ring-1 focus-visible:ring-offset-2 ${isDisabled ? 'pointer-events-none' : 'cursor-pointer'}`}
                 />
                 <label
                     htmlFor="isOnlyAvailable"
