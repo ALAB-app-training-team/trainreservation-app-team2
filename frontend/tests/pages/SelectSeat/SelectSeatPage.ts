@@ -151,7 +151,7 @@ export class SelectSeatPage {
         await this.updateConfirmButton.click();
     }
 
-    async inputReserverInfo() {
+    async inputGuestReserverInfo() {
         await this.fillName('ゲスト太郎');
         await this.fillMailAddress('guest@test.com');
     }

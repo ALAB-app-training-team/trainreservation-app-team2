@@ -338,7 +338,7 @@ test('予約確定', async ({ page }) => {
     await scheduleSearchPage.clickDetailButton();
     await expect(page).toHaveURL('/selectSeat');
     await selectSeatPage.selectSeat();
-    await selectSeatPage.inputReserverInfo();
+    await selectSeatPage.inputGuestReserverInfo();
     await selectSeatPage.inputCardInfo();
     await expect(page.getByText('座席数合計：1席')).toBeVisible();
     await expect(page.getByText('お支払い合計：￥2,600')).toBeVisible();
@@ -361,7 +361,7 @@ test('パスワードがエラーの場合、予約するボタンが非活性',
     await scheduleSearchPage.clickDetailButton();
     await expect(page).toHaveURL('/selectSeat');
     await selectSeatPage.selectSeat();
-    await selectSeatPage.inputReserverInfo();
+    await selectSeatPage.inputGuestReserverInfo();
     await selectSeatPage.inputCardInfo();
     await selectSeatPage.clickAccountCreateCheckBox();
 

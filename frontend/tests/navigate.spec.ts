@@ -30,7 +30,7 @@ test('navigate-ゲストログイン全機能', async ({ page, context, logout }
     await scheduleSearchPage.clickDetailButton();
     await expect(page).toHaveURL('/selectSeat');
     await selectSeatPage.selectSeat();
-    await selectSeatPage.inputReserverInfo();
+    await selectSeatPage.inputGuestReserverInfo();
     await selectSeatPage.inputCardInfo();
     await selectSeatPage.clickReseveButton();
     await selectSeatPage.clickCancelButton();
