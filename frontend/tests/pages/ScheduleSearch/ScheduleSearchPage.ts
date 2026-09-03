@@ -17,6 +17,9 @@ export class ScheduleSearchPage {
     readonly backButton: Locator;
     readonly historySaveButton: Locator;
     readonly historyDetailAccordionButton: Locator;
+    readonly seatTypeSelect: Locator;
+    readonly passengersSelect: Locator;
+    readonly isOnlyAvailableHint: Locator;
 
     constructor(page: Page) {
         this.page = page;
@@ -46,6 +49,9 @@ export class ScheduleSearchPage {
         this.historyDetailAccordionButton = page.getByRole('button', {
             name: 'お気に入り経路',
         });
+        this.seatTypeSelect = page.getByRole('combobox', { name: '座席種別' });
+        this.passengersSelect = page.getByRole('combobox', { name: '人数' });
+        this.isOnlyAvailableHint = page.getByTestId('isOnlyAvailable-hint');
     }
 
     async goto() {
@@ -88,6 +94,20 @@ export class ScheduleSearchPage {
 
     async clickArrivalTimeButton() {
         await this.arrivalTimeButton.click();
+    }
+
+    async selectSeatType(seatTypeName: string) {
+        await this.seatTypeSelect.click();
+        await this.page.getByRole('option', { name: seatTypeName }).click();
+    }
+
+    async selectPassengers(passengerLabel: string) {
+        await this.passengersSelect.click();
+        await this.page.getByRole('option', { name: passengerLabel }).click();
+    }
+
+    async unCheckAvailableTrainCheckBox() {
+        await this.availableTrainCheckBox.click();
     }
 
     async clickAvailableTrainCheckBox() {
