@@ -33,7 +33,7 @@ export const test = base.extend<Fixture>({
             await scheduleSearchPage.goto();
             await scheduleSearchPage.clickDetailButton();
             await selectSeatPage.selectSeat();
-            await selectSeatPage.inputReserverInfo();
+            await selectSeatPage.inputGuestReserverInfo();
             await selectSeatPage.inputCardInfo();
             await selectSeatPage.clickReseveButton();
             await selectSeatPage.clickReserveConfirmButton();
@@ -78,7 +78,7 @@ export const test = base.extend<Fixture>({
             const login = new LoginPage(page);
 
             await login.goto();
-            await login.inputcommonLoginInfo();
+            await login.inputCommonLoginInfo();
             await login.clickLoginButton();
         };
         await use(login);

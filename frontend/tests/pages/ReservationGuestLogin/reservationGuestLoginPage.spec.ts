@@ -4,7 +4,8 @@ import { ReservationGuestLoginPage } from '@tests/pages/ReservationGuestLogin/Re
 
 test('予約データが存在しない場合', async ({ page }) => {
     const reservationGuestLogin = new ReservationGuestLoginPage(page);
-    reservationGuestLogin.goto();
+
+    await reservationGuestLogin.goto();
     await expect(page).toHaveURL(
         '/reservationGuestLogin?reservationId=1c5289e8-72a7-4cb0-a0cb-fe6da57005eb',
     );
@@ -15,7 +16,8 @@ test('予約データが存在しない場合', async ({ page }) => {
 
 test('予約者氏名の未入力', async ({ page }) => {
     const reservationGuestLogin = new ReservationGuestLoginPage(page);
-    reservationGuestLogin.goto();
+
+    await reservationGuestLogin.goto();
     await expect(page).toHaveURL(
         '/reservationGuestLogin?reservationId=1c5289e8-72a7-4cb0-a0cb-fe6da57005eb',
     );
@@ -26,7 +28,8 @@ test('予約者氏名の未入力', async ({ page }) => {
 
 test('メールアドレスの未入力', async ({ page }) => {
     const reservationGuestLogin = new ReservationGuestLoginPage(page);
-    reservationGuestLogin.goto();
+
+    await reservationGuestLogin.goto();
     await expect(page).toHaveURL(
         '/reservationGuestLogin?reservationId=1c5289e8-72a7-4cb0-a0cb-fe6da57005eb',
     );
@@ -39,7 +42,8 @@ test('メールアドレスの未入力', async ({ page }) => {
 
 test('メールアドレスのバリデーションエラー', async ({ page }) => {
     const reservationGuestLogin = new ReservationGuestLoginPage(page);
-    reservationGuestLogin.goto();
+
+    await reservationGuestLogin.goto();
     await expect(page).toHaveURL(
         '/reservationGuestLogin?reservationId=1c5289e8-72a7-4cb0-a0cb-fe6da57005eb',
     );
