@@ -1,5 +1,6 @@
 import { useState } from 'react';
 import { FiUser } from 'react-icons/fi';
+import { toast } from 'sonner';
 
 import { AccountInput } from '@/features/account/components/AccountInput';
 import { PasswordInput } from '@/features/account/components/PasswordInput';
@@ -18,6 +19,24 @@ export function AccountUpdate() {
 
     const [passwordType, setPasswordType] = useState('password');
 
+    const handleUpdate = async () => {
+        handleAccount();
+        toast.warning(
+            '予約に割り当てられた氏名・メールアドレスは自動で変更されません。\n同行者割り当てから変更してください。',
+            {
+                duration: Infinity,
+                action: {
+                    label: 'OK',
+                    onClick: () => {},
+                },
+                classNames: {
+                    title: 'text-left whitespace-pre-line',
+                    actionButton: '!px-4 !py-2 !text-base !h-auto',
+                },
+            },
+        );
+    };
+
     return (
         <div className="flex justify-center">
             <div className="flex w-1/2 flex-col items-center justify-center gap-4 p-8 md:w-4/10">
@@ -34,7 +53,7 @@ export function AccountUpdate() {
                 <form
                     onSubmit={(e) => {
                         e.preventDefault();
-                        handleAccount();
+                        handleUpdate();
                     }}
                     className="flex w-full flex-col gap-4"
                 >
@@ -74,6 +93,9 @@ export function AccountUpdate() {
                             getFieldError={getFieldError}
                             setPasswordType={setPasswordType}
                         />
+                    </div>
+                    <div className="font-bold">
+                        ※予約に紐づく氏名・メールアドレスは同行者割り当てから変更してください。
                     </div>
                     <button
                         type="submit"
