@@ -56,16 +56,16 @@ export class PasswordUpdateForAdminPage {
         await this.updateButton.click();
     }
 
-    async inputUpdateFirstAccountInfo() {
+    async inputUpdateFirstAccountInfo(mailAddress = 'first@test.co.jp') {
         await this.fillName('山田 太郎');
-        await this.fillMailAddress('first@test.co.jp');
+        await this.fillMailAddress(mailAddress);
         await this.fillPassword('Password2');
         await this.fillPasswordCheck('Password2');
     }
 
-    async inputRevertFirstAccountInfo() {
+    async inputRevertFirstAccountInfo(mailAddress = 'first@test.co.jp') {
         await this.fillName('山田 太郎');
-        await this.fillMailAddress('first@test.co.jp');
+        await this.fillMailAddress(mailAddress);
         await this.fillPassword('Password1');
         await this.fillPasswordCheck('Password1');
     }

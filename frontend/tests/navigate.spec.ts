@@ -271,17 +271,18 @@ test('navigate-管理者ログイン-管理機能', async ({
     const loginPage = new LoginPage(page);
     const passwordUpdateForAdminPage = new PasswordUpdateForAdminPage(page);
     const accountCreatePage = new AccountCreatePage(page);
+    const firstAccountMail = `first-${Date.now()}@test.co.jp`;
 
     // 山田太郎アカウント新規登録
     await loginPage.goto();
     await loginPage.clickCreateButton();
     await expect(page).toHaveURL('/accountCreate');
-    await accountCreatePage.inputCreateFirstAccountInfo();
+    await accountCreatePage.inputCreateFirstAccountInfo(firstAccountMail);
     await accountCreatePage.clickCreateButton();
     await expect(page).toHaveURL('/login');
 
     // 山田太郎ログイン
-    await loginPage.fillMailAddress('first@test.co.jp');
+    await loginPage.fillMailAddress(firstAccountMail);
     await loginPage.fillPassword('Password1');
     await loginPage.clickLoginButton();
     await expect(page).toHaveURL('/scheduleSearch');
@@ -291,13 +292,13 @@ test('navigate-管理者ログイン-管理機能', async ({
     // 山田太郎のパスワード変更
     await adminLogin();
     await expect(page).toHaveURL('/admin/password');
-    await passwordUpdateForAdminPage.inputUpdateFirstAccountInfo();
+    await passwordUpdateForAdminPage.inputUpdateFirstAccountInfo(firstAccountMail);
     await passwordUpdateForAdminPage.clickUpdateButton();
     await expect(page).toHaveURL('/admin/password');
     await logout();
 
     // 山田太郎ログイン
-    await loginPage.fillMailAddress('first@test.co.jp');
+    await loginPage.fillMailAddress(firstAccountMail);
     await loginPage.fillPassword('Password2');
     await loginPage.clickLoginButton();
     await expect(page).toHaveURL('/scheduleSearch');
@@ -307,12 +308,12 @@ test('navigate-管理者ログイン-管理機能', async ({
     // 山田太郎のパスワードを元に戻す
     await adminLogin();
     await expect(page).toHaveURL('/admin/password');
-    await passwordUpdateForAdminPage.inputRevertFirstAccountInfo();
+    await passwordUpdateForAdminPage.inputRevertFirstAccountInfo(firstAccountMail);
     await passwordUpdateForAdminPage.clickUpdateButton();
     await expect(page).toHaveURL('/admin/password');
     await logout();
 
-    await loginPage.fillMailAddress('first@test.co.jp');
+    await loginPage.fillMailAddress(firstAccountMail);
     await loginPage.fillPassword('Password1');
     await loginPage.clickLoginButton();
     await expect(page).toHaveURL('/scheduleSearch');
