@@ -27,6 +27,7 @@ export function AccountDeleteConfirmModal({
             <div className="flex w-full gap-3">
                 <button
                     type="button"
+                    disabled={isSubmitting}
                     onClick={onRequestClose}
                     className="w-full rounded-lg border border-gray-300 p-2 text-gray-600"
                 >
