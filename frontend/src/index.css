@@ -1,12 +1,78 @@
 @import 'tailwindcss';
 
+/*
+ * 配色トークン
+ * =====================================================================
+ * コンポーネントからはリテラルな色（bg-white / text-gray-500 など）を
+ * 直接使わず、ここで「役割」ごとに定義したトークンを使う。
+ *   例) bg-white → bg-surface, text-gray-500 → text-fg-muted
+ *
+ * ライトとダークの値は light-dark() で 1 箇所にまとめている。
+ * トークンの値が両モード分そろっているため、コンポーネント側に
+ * dark: バリアントを書く必要はない。
+ *
+ * ダークモードの有効・無効は下の :root の color-scheme 1 行で切り替わる。
+ *   color-scheme: light       → 常にライト（← 現在の設定）
+ *   color-scheme: light dark  → OS の配色設定に追従
+ *
+ * ダーク側の値は WCAG 2.2 AA（本文 4.5:1 / UI 部品の境界 3:1）を満たす
+ * 明度で選定している。値を変更するときはコントラストを再計測すること。
+ * =====================================================================
+ */
 @theme {
+    /* ---------- ブランド ---------- */
+    /* 塗り。text-white と組み合わせて 4.6:1。ダークでも暗いまま維持する
+       （明るくすると上に載る白文字が AA を落とすため） */
     --color-primary: #008803;
-    --color-primary-light: #e9f5e9;
-    --color-primary-mid-light: #b2d9b2;
-    --color-reserved-seat: #b45309cc;
-    --color-green-seat: #2e9823;
-    --color-gc-seat: #6449ba;
+    /* 面の上に置くブランド色の文字・枠線。ダークでは明度を上げる */
+    --color-primary-ink: light-dark(#008803, #4ec95f);
+    /* 淡いブランド面（検索フォーム・入力欄の地） */
+    --color-primary-light: light-dark(#e9f5e9, #16281a);
+    --color-primary-mid-light: light-dark(#b2d9b2, #4d8a5c);
+
+    /* ---------- 面 ---------- */
+    --color-page: light-dark(#ffffff, #16171d);
+    --color-surface: light-dark(#ffffff, #1f2028);
+    --color-surface-subtle: light-dark(oklch(98.5% 0.002 247.839), #1a1b22);
+    --color-surface-muted: light-dark(oklch(96.7% 0.003 264.542), #2a2b34);
+    --color-surface-inset: light-dark(oklch(92.8% 0.006 264.531), #2e303a);
+    --color-surface-disabled: light-dark(oklch(87.2% 0.01 258.338), #3a3c47);
+
+    /* ---------- 文字 ---------- */
+    --color-heading: light-dark(#08060d, #f3f4f6);
+    /* 明示的な指定がない箇所に継承される既定の本文色 */
+    --color-body: light-dark(#6b6375, #c3c9d4);
+    --color-fg: light-dark(oklch(21% 0.034 264.665), #f3f4f6);
+    --color-fg-secondary: light-dark(oklch(37.3% 0.034 259.733), #d1d5db);
+    --color-fg-muted: light-dark(oklch(55.1% 0.027 264.364), #9ca3af);
+
+    /* ---------- 罫線 ---------- */
+    /* 装飾的な区切り線。状態を示す境界ではないため 3:1 は要求されない */
+    --color-line: light-dark(oklch(92.8% 0.006 264.531), #2e303a);
+    --color-line-strong: light-dark(oklch(87.2% 0.01 258.338), #3f4250);
+
+    /* ---------- 状態 ---------- */
+    --color-danger: light-dark(oklch(57.7% 0.245 27.325), #fca5a5);
+    --color-danger-subtle: light-dark(oklch(93.6% 0.032 17.717), #3f1d1d);
+    --color-warning: light-dark(oklch(70.5% 0.213 47.604), #fdba74);
+    --color-warning-subtle: light-dark(oklch(95.4% 0.038 75.164), #3d2a12);
+    --color-success: light-dark(oklch(62.7% 0.194 149.214), #86efac);
+    --color-success-subtle: light-dark(oklch(96.2% 0.044 156.743), #133a22);
+
+    /* ---------- 席種 ----------
+       バッジの文字色に使うため、両モードで 4.5:1 以上を確保する。
+       ライト側は以前 #b45309cc（不透明度 80%）と #2e9823 で、白地に対して
+       3.54:1 / 3.72:1 しかなかった（WCAG 1.4.3 違反）。
+       指定席は不透明度を外し、グリーン車は明度を下げて対応している。 */
+    /* 白地 5.02:1 / ダーク面 7.6:1 */
+    --color-reserved-seat: light-dark(#b45309, #e8a366);
+    /* 白地 5.01:1 / ダーク面 7.5:1 */
+    --color-green-seat: light-dark(#278019, #5fc653);
+    /* 白地 6.56:1 / ダーク面 6.1:1 */
+    --color-gc-seat: light-dark(#6449ba, #a992e8);
+
+    /* ---------- 列車の識別色 ----------
+       車両アイコンの塗りに使う識別色。文字色には使わない。 */
     /* やまびこ */
     --color-YM: #27ae60;
     /* はやぶさ */
@@ -36,27 +102,30 @@
 }
 
 :root {
-    --text: #6b6375;
-    --text-h: #08060d;
-    --bg: #fff;
-    --border: #e5e4e7;
-    --code-bg: #f4f3ec;
-    --accent: #aa3bff;
-    --accent-bg: rgba(170, 59, 255, 0.1);
-    --accent-border: rgba(170, 59, 255, 0.5);
-    --social-bg: rgba(244, 243, 236, 0.5);
-    --shadow:
-        rgba(0, 0, 0, 0.1) 0 10px 15px -3px, rgba(0, 0, 0, 0.05) 0 4px 6px -2px;
-
     --sans: system-ui, 'Segoe UI', Roboto, sans-serif;
     --heading: system-ui, 'Segoe UI', Roboto, sans-serif;
     --mono: ui-monospace, Consolas, monospace;
 
+    /* ユーティリティを生成しない、ページ装飾専用の色 */
+    --code-bg: light-dark(#f4f3ec, #1f2028);
+
     font: 18px/145% var(--sans);
     letter-spacing: 0.18px;
-    color-scheme: light dark;
-    color: var(--text);
-    background: var(--bg);
+
+    /* ダークモードの切り替えスイッチ。
+       light      : 常にライト配色（トークン移行が完了するまでの暫定設定）
+       light dark : OS の配色設定に追従
+       ------------------------------------------------------------------
+       以前は color-scheme: light dark と @media (prefers-color-scheme: dark)
+       で本文色だけを #9ca3af に差し替えていたが、コンポーネント側の背景が
+       bg-white / bg-primary-light のまま明るかったため、
+       「明るい地に薄いグレー文字」でコントラストが 2.3〜2.5:1 まで落ちていた
+       （WCAG 1.4.3 違反 13 件）。トークン移行が全画面で終わり、ライト／ダーク
+       両方で axe のコントラスト違反が 0 件になったら light dark に戻す。 */
+    color-scheme: light;
+
+    color: var(--color-body);
+    background: var(--color-page);
     font-synthesis: none;
     text-rendering: optimizeLegibility;
     -webkit-font-smoothing: antialiased;
@@ -67,32 +136,11 @@
     }
 }
 
-@media (prefers-color-scheme: dark) {
-    :root {
-        --text: #9ca3af;
-        --text-h: #f3f4f6;
-        --bg: #16171d;
-        --border: #2e303a;
-        --code-bg: #1f2028;
-        --accent: #c084fc;
-        --accent-bg: rgba(192, 132, 252, 0.15);
-        --accent-border: rgba(192, 132, 252, 0.5);
-        --social-bg: rgba(47, 48, 58, 0.5);
-        --shadow:
-            rgba(0, 0, 0, 0.4) 0 10px 15px -3px,
-            rgba(0, 0, 0, 0.25) 0 4px 6px -2px;
-    }
-
-    #social .button-icon {
-        filter: invert(1) brightness(2);
-    }
-}
-
 #root {
     max-width: 100%;
     margin: 0 auto;
     text-align: center;
-    border-inline: 1px solid var(--border);
+    border-inline: 1px solid var(--color-line);
     min-height: 100svh;
     display: flex;
     flex-direction: column;
@@ -107,7 +155,7 @@ h1,
 h2 {
     font-family: var(--heading);
     font-weight: 500;
-    color: var(--text-h);
+    color: var(--color-heading);
 }
 
 h1 {
@@ -137,7 +185,7 @@ code,
     font-family: var(--mono);
     display: inline-flex;
     border-radius: 4px;
-    color: var(--text-h);
+    color: var(--color-heading);
 }
 
 code {
@@ -153,12 +201,12 @@ button {
 
 button:disabled {
     cursor: not-allowed;
-    background-color: var(--color-gray-300);
+    background-color: var(--color-surface-disabled);
 }
 
 input:read-only {
     cursor: not-allowed;
-    background-color: var(--color-gray-200);
+    background-color: var(--color-surface-inset);
 }
 input:read-only:focus {
     border: 0px;

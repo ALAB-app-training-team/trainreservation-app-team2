@@ -64,7 +64,7 @@ export function EmptySeatCount({
     if (reservedSeats === 0 && greenSeats === 0 && gcSeats === 0) {
         return (
             <>
-                <div className="text-red-500">満席</div>
+                <div className="text-danger">満席</div>
             </>
         );
     }

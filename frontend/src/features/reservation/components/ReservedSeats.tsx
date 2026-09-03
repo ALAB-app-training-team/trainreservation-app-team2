@@ -10,11 +10,11 @@ const reservedSeatsStyle = tv({
     base: 'flex items-center gap-1 px-2',
     variants: {
         id: {
-            reservationList: 'rounded-lg border-primary border',
-            updateReservation: 'rounded-lg border-primary border',
+            reservationList: 'rounded-lg border-primary-ink border',
+            updateReservation: 'rounded-lg border-primary-ink border',
             reservationDetail:
-                'rounded-lg border-primary-light text-primary bg-green-100 border-2',
-            reservationChange: 'border-primary border-l-2',
+                'rounded-lg border-primary-light text-primary-ink bg-success-subtle border-2',
+            reservationChange: 'border-primary-ink border-l-2',
         },
     },
     defaultVariants: {
@@ -45,7 +45,7 @@ export function ReservedSeats({
                             <label>座席</label>
                         </div>
                         {seats.some((seat) => !seat.name) && (
-                            <div className="mx-auto w-fit rounded-full px-2 text-orange-500">
+                            <div className="text-warning mx-auto w-fit rounded-full px-2">
                                 同行者が割り当てられていない座席があります
                             </div>
                         )}
@@ -73,9 +73,9 @@ export function ReservedSeats({
                                         }
                                         className={`${reservedSeatsStyle({ id })} flex shrink-0 items-center gap-2`}
                                     >
-                                        <div className="flex items-center gap-2 text-gray-700">
+                                        <div className="text-fg-secondary flex items-center gap-2">
                                             {id === 'reservationDetail' && (
-                                                <BsTrainFreightFrontFill className="text-primary" />
+                                                <BsTrainFreightFrontFill className="text-primary-ink" />
                                             )}
                                             <div>{`${seat.trainCarNumber}号車`}</div>
                                             {id === 'reservationDetail' && (
@@ -91,7 +91,7 @@ export function ReservedSeats({
                                         {id === 'reservationDetail' && (
                                             <>
                                                 <div className="bg-primary h-3.5 w-[1px] self-center" />
-                                                <div className="text-primary flex items-center text-xl font-bold whitespace-nowrap">
+                                                <div className="text-primary-ink flex items-center text-xl font-bold whitespace-nowrap">
                                                     <RiMoneyCnyBoxLine />
                                                     {(
                                                         seat.seatFare || 0
@@ -107,7 +107,7 @@ export function ReservedSeats({
                     )}
                 </div>
                 {getFieldError?.(id) && (
-                    <p className="text-left text-sm text-red-600">
+                    <p className="text-danger text-left text-sm">
                         {getFieldError(id)}
                     </p>
                 )}

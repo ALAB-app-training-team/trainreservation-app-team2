@@ -71,7 +71,7 @@ export function ScheduleSearchForm({
                             <div className="w-full text-center md:w-fit">
                                 <button
                                     onClick={switchDepartureAndArrivalStation}
-                                    className="border-primary w-fit rounded-full border-1 bg-white p-1 text-xl md:mt-8"
+                                    className="border-primary-ink bg-surface w-fit rounded-full border-1 p-1 text-xl md:mt-8"
                                 >
                                     <HiOutlineSwitchHorizontal className="hidden md:block" />
                                     <HiOutlineSwitchVertical className="block md:hidden" />
@@ -105,10 +105,10 @@ export function ScheduleSearchForm({
                                 setValue={setTime}
                                 getFieldError={getFieldError}
                                 children={
-                                    <div className="border-primary inline-flex items-center overflow-hidden rounded border">
+                                    <div className="border-primary-ink inline-flex items-center overflow-hidden rounded border">
                                         <label
                                             tabIndex={0}
-                                            className={`cursor-pointer p-1 text-sm ${!searchRequestDto.isArrivalTime ? 'bg-primary text-white' : 'bg-gray-50'}`}
+                                            className={`cursor-pointer p-1 text-sm ${!searchRequestDto.isArrivalTime ? 'bg-primary text-white' : 'bg-surface-subtle'}`}
                                         >
                                             <input
                                                 type="radio"
@@ -125,7 +125,7 @@ export function ScheduleSearchForm({
                                         </label>
                                         <label
                                             tabIndex={0}
-                                            className={`cursor-pointer p-1 text-sm ${searchRequestDto.isArrivalTime ? 'bg-primary text-white' : 'bg-gray-50'}`}
+                                            className={`cursor-pointer p-1 text-sm ${searchRequestDto.isArrivalTime ? 'bg-primary text-white' : 'bg-surface-subtle'}`}
                                         >
                                             <input
                                                 type="radio"

@@ -64,7 +64,7 @@ export function UpdateConfirmModal({
                 <button
                     onClick={onRequestClose}
                     disabled={isSubmitting}
-                    className="border-primary text-primary rounded-lg border-2 p-2 disabled:border-gray-300 disabled:bg-gray-300 disabled:text-white"
+                    className="border-primary-ink text-primary-ink disabled:border-line-strong disabled:bg-surface-disabled rounded-lg border-2 p-2 disabled:text-white"
                 >
                     キャンセル
                 </button>

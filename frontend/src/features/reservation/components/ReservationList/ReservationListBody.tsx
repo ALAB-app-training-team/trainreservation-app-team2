@@ -116,7 +116,7 @@ export function ReservationListBody() {
                                 onClick={() => setSelectedTab(tab.key)}
                                 className={`flex w-full cursor-pointer items-center justify-center gap-2 rounded-3xl px-6 py-2 transition ${
                                     selectedTab === tab.key
-                                        ? 'bg-white font-bold shadow'
+                                        ? 'bg-surface font-bold shadow'
                                         : ''
                                 } `}
                             >

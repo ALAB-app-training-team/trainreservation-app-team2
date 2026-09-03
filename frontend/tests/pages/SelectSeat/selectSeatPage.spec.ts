@@ -102,7 +102,9 @@ test('座席を6席選択すると、それ以上選択できない', async ({ p
     await expect(
         page.getByText('一度に予約できる座席は6席までです'),
     ).toBeVisible();
-    await expect(page.locator('button.bg-gray-200').first()).toBeDisabled();
+    await expect(
+        page.locator('button.bg-surface-inset').first(),
+    ).toBeDisabled();
 });
 
 test('購入者情報バリデーションチェック', async ({ page }) => {

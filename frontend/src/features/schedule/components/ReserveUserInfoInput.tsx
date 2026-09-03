@@ -33,7 +33,7 @@ export function ReserveUserInfoInput({
         <>
             <div className="flex w-full flex-col items-start gap-2">
                 <label htmlFor={id}>{label}</label>
-                <div className="focus-within:border-primary bg-primary-light flex w-full items-center justify-between gap-4 rounded-lg px-4 py-2 outline-none focus-within:border-2">
+                <div className="focus-within:border-primary-ink bg-primary-light flex w-full items-center justify-between gap-4 rounded-lg px-4 py-2 outline-none focus-within:border-2">
                     {icon && React.createElement(icon)}
                     <input
                         type={type}
@@ -44,13 +44,13 @@ export function ReserveUserInfoInput({
                         onFocus={onFocus}
                         onBlur={onBlur}
                         autoComplete={autoComplete}
-                        className="w-full text-gray-900 outline-none"
+                        className="text-fg w-full outline-none"
                         required
                     />
                 </div>
                 {getFieldError?.(id) && (
                     <p
-                        className="text-left text-sm text-red-600"
+                        className="text-danger text-left text-sm"
                         data-testid="error"
                     >
                         {getFieldError(id)}

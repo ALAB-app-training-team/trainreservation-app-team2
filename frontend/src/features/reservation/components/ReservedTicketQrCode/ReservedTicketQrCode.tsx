@@ -81,11 +81,11 @@ export function ReservedTicketQrCode({
                                             QRコード: {reservedSeat.codeToken}
                                         </div>
                                         {reservedSeat.name ? (
-                                            <div className="bg-primary-light text-primary mx-auto mb-4 w-fit rounded-full px-2">
+                                            <div className="bg-primary-light text-primary-ink mx-auto mb-4 w-fit rounded-full px-2">
                                                 {`${reservedSeat.name} さんに割り当て済み`}
                                             </div>
                                         ) : (
-                                            <div className="mx-auto mb-4 w-fit rounded-full bg-orange-100 px-2 text-orange-500">
+                                            <div className="bg-warning-subtle text-warning mx-auto mb-4 w-fit rounded-full px-2">
                                                 同行者が割り当てられていません
                                             </div>
                                         )}

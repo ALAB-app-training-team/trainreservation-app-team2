@@ -71,7 +71,7 @@ export function ReservationGuestLoginBody() {
         <>
             <div className="flex justify-center">
                 <div className="flex w-full max-w-5xl flex-col gap-4">
-                    <div className="border-primary/20 flex flex-col justify-between gap-4 rounded-2xl border-2 p-4">
+                    <div className="border-primary-ink/20 flex flex-col justify-between gap-4 rounded-2xl border-2 p-4">
                         <div className="flex flex-col gap-4 py-2">
                             <label className="mb-8 flex items-start font-bold">
                                 ゲスト予約の確認
@@ -134,7 +134,7 @@ export function ReservationGuestLoginBody() {
                                     予約を検索
                                 </button>
                                 {requestError !== '' && (
-                                    <p className="text-left text-sm text-red-600">
+                                    <p className="text-danger text-left text-sm">
                                         {requestError}
                                     </p>
                                 )}

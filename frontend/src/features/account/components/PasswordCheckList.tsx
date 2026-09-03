@@ -7,8 +7,8 @@ type PasswordCheckListProps = {
 };
 
 const style = {
-    isValid: 'flex items-center text-green-600',
-    isInvalid: 'flex items-center text-red-400',
+    isValid: 'flex items-center text-success',
+    isInvalid: 'flex items-center text-danger',
 };
 
 export function PasswordCheckList({ policy }: PasswordCheckListProps) {

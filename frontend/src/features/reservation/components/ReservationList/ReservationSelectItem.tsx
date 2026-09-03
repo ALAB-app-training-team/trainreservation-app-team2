@@ -111,7 +111,7 @@ export function ReservationSelectItem({
                     </label>
                 </div>
             </div>
-            <div className="border-primary/20 border-b-2 py-2">
+            <div className="border-primary-ink/20 border-b-2 py-2">
                 <ReservedSeats
                     id="reservationList"
                     title="座席"
@@ -123,7 +123,7 @@ export function ReservationSelectItem({
                     <div>お支払い合計：</div>
                     <div
                         data-testid="total-fare"
-                        className="text-primary text-xl font-bold"
+                        className="text-primary-ink text-xl font-bold"
                     >
                         ￥{totalFare.toLocaleString()}
                     </div>
@@ -132,7 +132,7 @@ export function ReservationSelectItem({
                     {canSearchReturinTrip && (
                         <button
                             onClick={handleSearchReturnTrip}
-                            className="border-primary text-primary flex items-center justify-center gap-2 rounded-md border px-4 py-2 text-sm"
+                            className="border-primary-ink text-primary-ink flex items-center justify-center gap-2 rounded-md border px-4 py-2 text-sm"
                         >
                             <FaSearch />
                             復路で検索
@@ -151,20 +151,20 @@ export function ReservationSelectItem({
                         <div className="relative" ref={menuRef}>
                             <button
                                 onClick={handleMenuOpen}
-                                className="text-primary py-2"
+                                className="text-primary-ink py-2"
                                 data-testid="three-dots-button"
                             >
                                 <MdMoreVert />
                             </button>
                             {isMenuOpen && (
-                                <div className="absolute top-full right-1 z-50 flex w-40 flex-col gap-2 rounded-md bg-white p-2 text-sm font-bold shadow-md">
+                                <div className="bg-surface absolute top-full right-1 z-50 flex w-40 flex-col gap-2 rounded-md p-2 text-sm font-bold shadow-md">
                                     <div className="flex w-full flex-col gap-2 text-left">
                                         {canCancelReservation && (
                                             <button
                                                 onClick={() =>
                                                     onRefundClicked(details)
                                                 }
-                                                className="flex w-full items-center gap-4 px-4 py-2 hover:bg-gray-100"
+                                                className="hover:bg-surface-muted flex w-full items-center gap-4 px-4 py-2"
                                                 data-testid={'refund-button'}
                                             >
                                                 <IoTrashOutline />
@@ -176,7 +176,7 @@ export function ReservationSelectItem({
                                                 onClick={() =>
                                                     onChangeClicked(details)
                                                 }
-                                                className="flex w-full items-center gap-4 px-4 py-2 hover:bg-gray-100"
+                                                className="hover:bg-surface-muted flex w-full items-center gap-4 px-4 py-2"
                                                 data-testid={'change-button'}
                                             >
                                                 <FaEdit />
