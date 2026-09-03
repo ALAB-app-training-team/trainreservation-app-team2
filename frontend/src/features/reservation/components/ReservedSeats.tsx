@@ -37,22 +37,15 @@ export function ReservedSeats({
 }: ReservedSeatsProps) {
     return (
         <>
-            <div className="flex w-full flex-col items-start gap-2">
+            <div className="flex w-full flex-col items-start gap-2 sm:flex-row sm:flex-wrap sm:items-center sm:gap-4">
                 {title && (
-                    <div className="flex items-center gap-4">
-                        <div className="flex items-center gap-2">
-                            <MdAirlineSeatReclineExtra className="mt-0.5" />
-                            <label>座席</label>
-                        </div>
-                        {seats.some((seat) => !seat.name) && (
-                            <div className="mx-auto w-fit rounded-full px-2 text-orange-500">
-                                同行者が割り当てられていない座席があります
-                            </div>
-                        )}
+                    <div className="flex items-center gap-2">
+                        <MdAirlineSeatReclineExtra className="mt-0.5" />
+                        <label>座席</label>
                     </div>
                 )}
                 <div
-                    className="flex flex-wrap gap-2"
+                    className="order-1 flex flex-wrap gap-2 sm:order-2 sm:w-full"
                     data-testid="reserved-seats"
                 >
                     {seats.length !== 0 ? (
@@ -106,8 +99,15 @@ export function ReservedSeats({
                         <div>{ERROR_MESSAGE.NO_RESERVED_SEAT}</div>
                     )}
                 </div>
+                {title && seats.some((seat) => !seat.name) && (
+                    <div className="order-2 w-fit rounded-full px-2 text-left text-orange-500 sm:order-1">
+                        同行者が割り当てられていない座席が
+                        <br className="sm:hidden" />
+                        あります
+                    </div>
+                )}
                 {getFieldError?.(id) && (
-                    <p className="text-left text-sm text-red-600">
+                    <p className="order-4 text-left text-sm text-red-600">
                         {getFieldError(id)}
                     </p>
                 )}
