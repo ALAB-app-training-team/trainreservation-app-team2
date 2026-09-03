@@ -404,7 +404,6 @@ export const test = base.extend<Fixture>({
         const visual = async () => {
             const reservationListPage = new ReservationListPage(page);
 
-            await expect(page).toHaveURL('/scheduleSearch');
             await reservationListPage.goto();
             await expect(page).toHaveURL('/reservationList');
             await reservationListPage.ticketButton

@@ -85,6 +85,7 @@ test('visual-iPhone-reservationList', async ({
     visualReservationList,
 }) => {
     await commonLogin();
+    await expect(page).toHaveURL('/scheduleSearch');
     await createReservation();
     await visualReservationList();
     await logout();
