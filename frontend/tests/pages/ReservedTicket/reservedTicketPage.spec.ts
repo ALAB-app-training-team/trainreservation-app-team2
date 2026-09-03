@@ -74,8 +74,7 @@ test('タイトル表示：予約完了時は予約完了、予約確認のゲ�
     await page
         .getByRole('heading', { name: '1号車' })
         .waitFor({ state: 'visible' });
-    const seatToSelect = await selectSeatPage.emptySeat.first();
-    await seatToSelect.click();
+    await selectSeatPage.selectSeat();
     await selectSeatPage.clickUpdateButton();
     await selectSeatPage.clickUpdateConfirmButton();
     await expect(page).toHaveURL('/reservedTicket');
@@ -141,8 +140,7 @@ test('戻るボタン表示有無：予約確認のアカウントログイン�
     await page
         .getByRole('heading', { name: '1号車' })
         .waitFor({ state: 'visible' });
-    const seatToSelect = await selectSeatPage.emptySeat.first();
-    await seatToSelect.click();
+    await selectSeatPage.selectSeat();
     await selectSeatPage.clickUpdateButton();
     await selectSeatPage.clickUpdateConfirmButton();
     await expect(page).toHaveURL('/reservedTicket');

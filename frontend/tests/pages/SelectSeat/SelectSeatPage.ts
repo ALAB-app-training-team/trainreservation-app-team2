@@ -1,4 +1,4 @@
-import { type Locator, type Page } from '@playwright/test';
+import { expect, type Locator, type Page } from '@playwright/test';
 import { Header } from '@tests/pages/shared/Header';
 
 export class SelectSeatPage {
@@ -84,7 +84,11 @@ export class SelectSeatPage {
     }
 
     async selectSeat() {
-        await this.emptySeat.first().click();
+        await expect(async () => {
+            const seat = this.emptySeat.first();
+            await expect(seat).toBeEnabled({ timeout: 1000 });
+            await seat.click({ timeout: 1000 });
+        }).toPass({ timeout: 15000 });
     }
 
     async fillName(name: string) {
