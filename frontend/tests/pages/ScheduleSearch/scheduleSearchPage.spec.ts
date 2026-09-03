@@ -437,3 +437,126 @@ test('未ログイン状態ではお気に入り経路の登録が表示され�
     await expect(scheduleSearchPage.time).toHaveValue('10:30');
     await expect(scheduleSearchPage.arrivalTimeButton).toBeChecked();
 });
+
+test('座席種別と人数のドロップダウンが表示され、初期値がハイフンであること', async ({
+    page,
+}) => {
+    const scheduleSearchPage = new ScheduleSearchPage(page);
+    await scheduleSearchPage.goto();
+
+    await expect(scheduleSearchPage.seatTypeSelect).toBeVisible();
+    await expect(scheduleSearchPage.passengersSelect).toBeVisible();
+
+    await expect(
+        page.locator('#seatType').locator('..').locator('..'),
+    ).toContainText('-');
+    await expect(
+        page.locator('#passengers').locator('..').locator('..'),
+    ).toContainText('-');
+});
+
+test('座席種別を指定すると、空席チェックがONかつ無効化され補足テキストが表示される', async ({
+    page,
+}) => {
+    const scheduleSearchPage = new ScheduleSearchPage(page);
+    await scheduleSearchPage.goto();
+
+    await scheduleSearchPage.selectSeatType('指定席');
+
+    await expect(scheduleSearchPage.availableTrainCheckBox).toBeChecked();
+    await expect(scheduleSearchPage.availableTrainCheckBox).toBeDisabled();
+    await expect(scheduleSearchPage.isOnlyAvailableHint).toBeVisible();
+    await expect(scheduleSearchPage.isOnlyAvailableHint).toHaveText(
+        /座席種別または人数を指定中は自動で空席がある列車のみ表示されます/,
+    );
+});
+
+test('人数を指定すると、空席チェックがONかつ無効化され補足テキストが表示される', async ({
+    page,
+}) => {
+    const scheduleSearchPage = new ScheduleSearchPage(page);
+    await scheduleSearchPage.goto();
+
+    await scheduleSearchPage.selectPassengers('3人');
+
+    await expect(scheduleSearchPage.availableTrainCheckBox).toBeChecked();
+    await expect(scheduleSearchPage.availableTrainCheckBox).toBeDisabled();
+    await expect(scheduleSearchPage.isOnlyAvailableHint).toBeVisible();
+    await expect(scheduleSearchPage.isOnlyAvailableHint).toHaveText(
+        /座席種別または人数を指定中は自動で空席がある列車のみ表示されます/,
+    );
+});
+
+test('座席種別をハイフンに戻すと空席チェックが操作可能になる', async ({
+    page,
+}) => {
+    const scheduleSearchPage = new ScheduleSearchPage(page);
+    await scheduleSearchPage.goto();
+
+    await scheduleSearchPage.selectSeatType('指定席');
+    await scheduleSearchPage.selectSeatType('-');
+
+    await expect(scheduleSearchPage.availableTrainCheckBox).toBeEnabled();
+    await expect(scheduleSearchPage.isOnlyAvailableHint).toBeHidden();
+});
+
+test('人数をハイフンに戻すと空席チェックが操作可能になる', async ({ page }) => {
+    const scheduleSearchPage = new ScheduleSearchPage(page);
+    await scheduleSearchPage.goto();
+
+    await scheduleSearchPage.selectPassengers('3人');
+    await scheduleSearchPage.selectPassengers('-');
+
+    await expect(scheduleSearchPage.availableTrainCheckBox).toBeEnabled();
+    await expect(scheduleSearchPage.isOnlyAvailableHint).toBeHidden();
+});
+
+test('座席種別がハイフンの時に空席チェックをオフにできる', async ({ page }) => {
+    const scheduleSearchPage = new ScheduleSearchPage(page);
+    await scheduleSearchPage.goto();
+
+    await expect(page.getByText(/\d+件の列車が見つかりました/)).toBeVisible();
+
+    await expect(scheduleSearchPage.availableTrainCheckBox).toBeEnabled();
+    await expect(scheduleSearchPage.availableTrainCheckBox).toBeChecked();
+
+    await scheduleSearchPage.unCheckAvailableTrainCheckBox();
+    await expect(scheduleSearchPage.availableTrainCheckBox).not.toBeChecked();
+});
+
+test('グランクラスかつ4人指定時に、グランクラス残席が4未満の列車は返されない', async ({
+    page,
+}) => {
+    const scheduleSearchPage = new ScheduleSearchPage(page);
+
+    const responsePromise = page.waitForResponse(
+        (response) =>
+            response.url().includes('/schedules') && response.status() === 200,
+    );
+
+    await scheduleSearchPage.goto();
+    const response = await responsePromise;
+    const allSchedules = await response.json();
+
+    const resultLocator = page.getByText(/\d+件の列車が見つかりました/);
+    await expect(resultLocator).toBeVisible();
+
+    const time = await page.getByRole('textbox', { name: '時刻' }).inputValue();
+
+    await scheduleSearchPage.selectSeatType('グランクラス');
+    await scheduleSearchPage.selectPassengers('4人');
+
+    await expect(resultLocator).toBeVisible();
+
+    const displayCount = Number(
+        (await resultLocator.textContent())?.match(/(\d+)/)?.[1],
+    );
+
+    const expectedCount = allSchedules.filter(
+        (schedule: { gcSeats: number; departureTime: string }) =>
+            schedule.gcSeats >= 4 &&
+            schedule.departureTime.slice(0, 5) >= time.slice(0, 5),
+    ).length;
+
+    expect(displayCount).toBe(expectedCount);
+});
