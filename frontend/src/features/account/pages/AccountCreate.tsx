@@ -28,7 +28,7 @@ export function AccountCreate() {
     }, []);
     return (
         <div className="flex justify-center">
-            <div className="flex w-1/2 flex-col items-center justify-center gap-4 p-8 md:w-4/10">
+            <div className="flex w-full flex-col items-center justify-center gap-4 p-8 sm:w-4/10">
                 <div className="flex flex-col items-center justify-center gap-1">
                     <h1 className="!text-primary !m-0 flex items-center justify-center !text-3xl">
                         <FiUserPlus />
