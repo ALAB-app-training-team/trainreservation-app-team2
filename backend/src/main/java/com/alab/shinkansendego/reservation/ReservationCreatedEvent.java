@@ -7,6 +7,7 @@ public record ReservationCreatedEvent(
     UUID reservationId,
     ReserveRequestDto request,
     LocalTime departureTime,
-    LocalTime arrivalTime
+    LocalTime arrivalTime,
+    boolean isGuest
 ) {
 }

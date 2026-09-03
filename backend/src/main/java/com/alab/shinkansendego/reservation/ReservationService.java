@@ -339,7 +339,8 @@ public class ReservationService {
             reservationId,
             reserveRequestDto,
             departureArrivalTimeOfStart.getDepartureTime(),
-            departureArrivalTimeOfGoal.getArrivalTime()
+            departureArrivalTimeOfGoal.getArrivalTime(),
+            session == null
         ));
 
         return reservationId;

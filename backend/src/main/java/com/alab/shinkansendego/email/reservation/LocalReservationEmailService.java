@@ -49,7 +49,10 @@ public class LocalReservationEmailService implements ReservationEmailService {
                 seatDetail = EmailUtils.seatFormatter(dto.getSeats());
             }
 
-            String loginUrl = baseUrl + EmailUtils.LOGIN_PATH;
+            String guestLoginUrl = baseUrl + EmailUtils.GUESTLOGIN_PATH + dto.getReservationId();
+            String loginUrl = Boolean.TRUE.equals(dto.getIsGuest())
+                ? guestLoginUrl
+                : baseUrl + EmailUtils.LOGIN_PATH;
 
             String body = String.format(
                 EmailUtils.CONFIRMATION_BODY,

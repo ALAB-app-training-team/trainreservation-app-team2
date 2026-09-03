@@ -52,6 +52,7 @@ public class ReservationEventListener {
     @TransactionalEventListener(phase = TransactionPhase.AFTER_COMMIT)
     public void handleReservationCreated(ReservationCreatedEvent event) {
         ReservationEmailRequestParams emailDto = setEmailRequestDto(event.reservationId(), event.request(), event.departureTime(), event.arrivalTime(), null, null);
+        emailDto.setIsGuest(event.isGuest());
         reservationEmailService.sendReservationConfirmation(emailDto);
     }
 
