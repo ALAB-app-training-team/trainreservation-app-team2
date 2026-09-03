@@ -410,7 +410,7 @@ public class ReservationService {
             reservedSeatsToPost.add(reservedSeat);
         }
 
-        if (!StringUtils.hasText(reserverName) && !StringUtils.hasText(reserverMail)) {
+        if (StringUtils.hasLength(reserverName) && StringUtils.hasLength(reserverMail)) {
             reservedSeatsToPost.stream()
                 .min(Comparator.comparing((ReservedSeatEntity s) -> s.getTrainCar().getTrainCarNumber())
                     .thenComparing(s -> s.getSeat().getSeatNumber())
