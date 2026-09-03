@@ -10,6 +10,7 @@ import _ReactPaginate from 'react-paginate';
 import type { ReservedSeatDto } from '@/features/reservation/types/ReservedSeatDto';
 import { EmptySeatCount } from '@/features/schedule/components/EmptySeatCount';
 import { ScheduleItem } from '@/features/schedule/components/ScheduleItem';
+import { useFilteredSchedules } from '@/features/schedule/hooks/useFilteredSchedules';
 import { useSchedules } from '@/features/schedule/hooks/useSchedules';
 import type { ScheduleInfoDto } from '@/features/schedule/types/ScheduleInfoDto';
 import type { SearchRequestDto } from '@/features/schedule/types/SearchRequestDto';
@@ -28,6 +29,8 @@ type ScheduleListProps = {
     departureStationName: string;
     arrivalStationCd: string;
     arrivalStationName: string;
+    seatType: string;
+    passengers: string;
     isOnlyAvailable: boolean;
     reservationId: string | null;
     reservedSeats: ReservedSeatDto[];
@@ -45,6 +48,8 @@ export function ScheduleList({
     departureStationName,
     arrivalStationCd,
     arrivalStationName,
+    seatType,
+    passengers,
     isOnlyAvailable,
     reservationId,
     reservedSeats,
@@ -64,20 +69,20 @@ export function ScheduleList({
         setOffset(pageNumber * perPage);
     };
 
-    const filteredSchedules = (schedules || [])
-        .filter((schedule) => {
+    const filteredSchedules = useFilteredSchedules({
+        schedules,
+        seatType,
+        passengers,
+        isOnlyAvailable,
+    })
+        .filteredSchedules.filter((schedule) => {
             const isTimeValid = searchRequestDto.isArrivalTime
                 ? schedule.arrivalTime.slice(0, 5) <=
                   searchRequestDto.time.slice(0, 5)
                 : schedule.departureTime.slice(0, 5) >=
                   searchRequestDto.time.slice(0, 5);
 
-            const hasAvailableSeat =
-                !isOnlyAvailable ||
-                schedule.reservedSeats !== 0 ||
-                schedule.greenSeats !== 0 ||
-                schedule.gcSeats !== 0;
-            return isTimeValid && hasAvailableSeat;
+            return isTimeValid;
         })
         .sort((a, b) => {
             if (searchRequestDto.isArrivalTime) {
