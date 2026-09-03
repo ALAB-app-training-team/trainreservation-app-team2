@@ -1,6 +1,7 @@
 import { expect } from '@playwright/test';
 import { test } from '@tests/fixtures';
 import { ReservationListPage } from '@tests/pages/ReservationList/ReservationListPage';
+import { ReservedTicketPage } from '../ReservedTicket/ReservedTicketPage';
 
 test('お支払い合計が正しく表示されていること', async ({
     page,
@@ -122,13 +123,16 @@ test('予約キャンセル：キャンセルすることで予約一覧(有効)
     logout,
 }) => {
     const reservationListPage = new ReservationListPage(page);
+    const reservedTicketPage = new ReservedTicketPage(page);
 
     await commonLogin();
     await expect(page).toHaveURL('/scheduleSearch');
     await createReservation();
     await expect(page).toHaveURL('/reservedTicket');
-    await reservationListPage.goto();
+    await reservedTicketPage.header.clickUserName();
+    await reservedTicketPage.header.goToReservationList();
     await expect(page).toHaveURL('/reservationList');
+    await reservationListPage.canceledButton.waitFor({ state: 'visible' });
     await reservationListPage.ticketButton
         .first()
         .waitFor({ state: 'visible', timeout: 10000 });
@@ -160,11 +164,14 @@ test('チケットを表示ボタン、三点ボタンの表示有無：有効�
     logout,
 }) => {
     const reservationListPage = new ReservationListPage(page);
+    const reservedTicketPage = new ReservedTicketPage(page);
 
     await commonLogin();
     await expect(page).toHaveURL('/scheduleSearch');
     await createReservation();
-    await reservationListPage.goto();
+    await expect(page).toHaveURL('/reservedTicket');
+    await reservedTicketPage.header.clickUserName();
+    await reservedTicketPage.header.goToReservationList();
     await expect(page).toHaveURL('/reservationList');
     await reservationListPage.canceledButton.waitFor({ state: 'visible' });
     await reservationListPage.ticketButton
@@ -200,6 +207,7 @@ test('復路で検索の表示有無：有効・過去では表示あり、キ�
     await commonLogin();
     await expect(page).toHaveURL('/scheduleSearch');
     await createReservation();
+    await expect(page).toHaveURL('/reservedTicket');
     await reservationListPage.goto();
     await expect(page).toHaveURL('/reservationList');
     await reservationListPage.canceledButton.waitFor({ state: 'visible' });
