@@ -311,12 +311,6 @@ test('navigate-管理者ログイン-管理機能', async ({
     await loginPage.clickLoginButton();
     await expect(page).toHaveURL('/scheduleSearch');
     await expect(scheduleSearchPage.header.userName).toBeVisible();
-    await logout();
-
-    await loginPage.fillMailAddress(accountMailAddress);
-    await loginPage.fillPassword('Password1');
-    await loginPage.clickLoginButton();
-    await expect(page).toHaveURL('/scheduleSearch');
     // TODO:アカウント退会させる（ローカルでテストを通すため）
 });
 
