@@ -272,47 +272,47 @@ test('navigate-管理者ログイン-管理機能', async ({
     const loginPage = new LoginPage(page);
     const passwordUpdateForAdminPage = new PasswordUpdateForAdminPage(page);
     const accountCreatePage = new AccountCreatePage(page);
-    const yamadaAccountMail = `yamada-${Date.now()}@test.co.jp`;
+    const accountMailAddress = `yamada-${Date.now()}@test.co.jp`;
 
-    // 山田太郎アカウント新規登録 Password1
+    // 新規登録 Password1
     await loginPage.goto();
     await loginPage.clickCreateButton();
     await expect(page).toHaveURL('/accountCreate');
-    await accountCreatePage.fillName('山田 太郎');
-    await accountCreatePage.fillMailAddress(yamadaAccountMail);
+    await accountCreatePage.fillName('管理者でパスワード変更太郎');
+    await accountCreatePage.fillMailAddress(accountMailAddress);
     await accountCreatePage.fillPassword('Password1');
     await accountCreatePage.fillPasswordCheck('Password1');
     await accountCreatePage.clickCreateButton();
     await expect(page).toHaveURL('/login');
 
-    // 山田太郎がPassword1でログインできること
-    await loginPage.fillMailAddress(yamadaAccountMail);
+    // ユーザがPassword1でログインできること
+    await loginPage.fillMailAddress(accountMailAddress);
     await loginPage.fillPassword('Password1');
     await loginPage.clickLoginButton();
     await expect(page).toHaveURL('/scheduleSearch');
     await expect(scheduleSearchPage.header.userName).toBeVisible();
     await logout();
 
-    // 管理者で山田太郎のパスワード変更 Password2
+    // 管理者でユーザのパスワード変更 Password2
     await adminLogin();
     await expect(page).toHaveURL('/admin/password');
-    await passwordUpdateForAdminPage.fillName('山田 太郎');
-    await passwordUpdateForAdminPage.fillMailAddress(yamadaAccountMail);
+    await passwordUpdateForAdminPage.fillName('管理者でパスワード変更太郎');
+    await passwordUpdateForAdminPage.fillMailAddress(accountMailAddress);
     await passwordUpdateForAdminPage.fillPassword('Password2');
     await passwordUpdateForAdminPage.fillPasswordCheck('Password2');
     await passwordUpdateForAdminPage.clickUpdateButton();
     await expect(page).toHaveURL('/admin/password');
     await logout();
 
-    // 山田太郎がPassword2でログインできること
-    await loginPage.fillMailAddress(yamadaAccountMail);
+    // ユーザが変更した(Password2)でログインできること
+    await loginPage.fillMailAddress(accountMailAddress);
     await loginPage.fillPassword('Password2');
     await loginPage.clickLoginButton();
     await expect(page).toHaveURL('/scheduleSearch');
     await expect(scheduleSearchPage.header.userName).toBeVisible();
     await logout();
 
-    await loginPage.fillMailAddress(yamadaAccountMail);
+    await loginPage.fillMailAddress(accountMailAddress);
     await loginPage.fillPassword('Password1');
     await loginPage.clickLoginButton();
     await expect(page).toHaveURL('/scheduleSearch');
