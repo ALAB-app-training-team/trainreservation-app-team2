@@ -9,7 +9,6 @@ export class PasswordUpdateForAdminPage {
     readonly password: Locator;
     readonly passwordCheck: Locator;
     readonly updateButton: Locator;
-    // readonly ramdomMail: string;
 
     constructor(page: Page) {
         this.page = page;
@@ -29,7 +28,6 @@ export class PasswordUpdateForAdminPage {
         this.updateButton = page.getByRole('button', {
             name: '変更を確定',
         });
-        // this.ramdomMail = 'random' + Math.random() + '@test.co.jp';
     }
 
     async goto() {
@@ -54,19 +52,5 @@ export class PasswordUpdateForAdminPage {
 
     async clickUpdateButton() {
         await this.updateButton.click();
-    }
-
-    async inputUpdateFirstAccountInfo() {
-        await this.fillName('山田 太郎');
-        await this.fillMailAddress('first@test.co.jp');
-        await this.fillPassword('Password2');
-        await this.fillPasswordCheck('Password2');
-    }
-
-    async inputRevertFirstAccountInfo() {
-        await this.fillName('山田 太郎');
-        await this.fillMailAddress('first@test.co.jp');
-        await this.fillPassword('Password1');
-        await this.fillPasswordCheck('Password1');
     }
 }

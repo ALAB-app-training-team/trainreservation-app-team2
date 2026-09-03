@@ -2,9 +2,11 @@ import { useState } from 'react';
 import { FiUser } from 'react-icons/fi';
 import { toast } from 'sonner';
 
+import { AccountDeleteConfirmModal } from '@/features/account/components/AccountDeleteConfirmModal';
 import { AccountInput } from '@/features/account/components/AccountInput';
 import { PasswordInput } from '@/features/account/components/PasswordInput';
 import { useAccountUpdateDto } from '@/features/account/hooks/useAccountUpdateDto';
+import { CustomModal } from '@/shared/components/CustomModal';
 
 export function AccountUpdate() {
     const {
@@ -14,10 +16,14 @@ export function AccountUpdate() {
         handleBlur,
         isDisable,
         handleAccount,
+        handleAccountDelete,
         isSubmitting,
     } = useAccountUpdateDto();
 
     const [passwordType, setPasswordType] = useState('password');
+    // 管理者が退会すると管理者権限が必要な機能に到達できなくなるため、退会させない
+    const isAdmin = localStorage.getItem('role') === 'ROLE_ADMIN';
+    const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false);
 
     const handleUpdate = async () => {
         handleAccount();
@@ -105,7 +111,27 @@ export function AccountUpdate() {
                         <FiUser />
                         変更
                     </button>
+                    {!isAdmin && (
+                        <button
+                            type="button"
+                            onClick={() => setIsDeleteModalOpen(true)}
+                            className="mt-2 text-sm text-gray-500 underline"
+                        >
+                            退会はこちら
+                        </button>
+                    )}
                 </form>
+
+                <CustomModal
+                    isOpen={isDeleteModalOpen}
+                    onRequestClose={() => setIsDeleteModalOpen(false)}
+                >
+                    <AccountDeleteConfirmModal
+                        onClick={handleAccountDelete}
+                        onRequestClose={() => setIsDeleteModalOpen(false)}
+                        isSubmitting={isSubmitting}
+                    />
+                </CustomModal>
             </div>
         </div>
     );

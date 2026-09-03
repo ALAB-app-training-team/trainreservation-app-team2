@@ -1,6 +1,7 @@
 package com.alab.shinkansendego.account;
 
 import com.alab.shinkansendego.exception.ConflictException;
+import com.alab.shinkansendego.reservation.ReservationRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.security.authentication.BadCredentialsException;
@@ -8,6 +9,7 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.time.LocalDate;
 import java.util.Optional;
 import java.util.UUID;
 
@@ -16,14 +18,17 @@ import static com.alab.shinkansendego.utils.StringUtils.removeSpaces;
 @Service
 public class AccountService {
     private final AccountRepository accountRepository;
+    private final ReservationRepository reservationRepository;
     private final PasswordEncoder passwordEncoder;
     private final ApplicationEventPublisher eventPublisher;
 
     @Autowired
     public AccountService(AccountRepository accountRepository,
+                          ReservationRepository reservationRepository,
                           PasswordEncoder passwordEncoder,
                           ApplicationEventPublisher eventPublisher) {
         this.accountRepository = accountRepository;
+        this.reservationRepository = reservationRepository;
         this.passwordEncoder = passwordEncoder;
         this.eventPublisher = eventPublisher;
     }
@@ -161,5 +166,17 @@ public class AccountService {
             .orElseThrow(() -> new IllegalArgumentException("Account not Found"));
         account.setPassword(passwordEncoder.encode(request.getPassword()));
         accountRepository.save(account);
+    }
+
+    @Transactional
+    public void deleteAccount(UUID accountId) {
+        boolean hasActiveReservation = reservationRepository
+            .existsByAccountIdAndIsDeletedFalseAndRideDateGreaterThanEqual(accountId, LocalDate.now());
+
+        if (hasActiveReservation) {
+            throw new ConflictException("予約中のきっぷがあるため、退会できません。");
+        }
+
+        accountRepository.deleteById(accountId);
     }
 }

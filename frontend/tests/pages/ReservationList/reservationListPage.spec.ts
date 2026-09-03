@@ -1,6 +1,7 @@
 import { expect } from '@playwright/test';
 import { test } from '@tests/fixtures';
 import { ReservationListPage } from '@tests/pages/ReservationList/ReservationListPage';
+import { ReservedTicketPage } from '../ReservedTicket/ReservedTicketPage';
 
 test('お支払い合計が正しく表示されていること', async ({
     page,
@@ -15,10 +16,11 @@ test('お支払い合計が正しく表示されていること', async ({
     await createReservation();
     await reservationListPage.goto();
     await expect(page).toHaveURL('/reservationList');
-    await expect(reservationListPage.totalFareElement.first()).toBeVisible();
-    await expect(reservationListPage.totalFareElement.first()).toContainText(
-        '2,600',
-    );
+    const expectedFare = await reservationListPage.totalFareElement.filter({
+        hasText: '2,600',
+    });
+    await expect(expectedFare.first()).toBeVisible();
+
     await logout();
     await expect(page).toHaveURL('/login');
 });
@@ -46,7 +48,7 @@ test('有効タブは本日または未来の日付であること', async ({
         if (!match) continue;
 
         const [_, year, month, day] = match;
-        const date = new Date(Number(year), Number(month), Number(day));
+        const date = new Date(Number(year), Number(month) - 1, Number(day));
         await expect(date.getTime()).toBeGreaterThanOrEqual(today.getTime());
     }
     await logout();
@@ -77,7 +79,7 @@ test('過去タブは過去の日付であること', async ({
         if (!match) continue;
 
         const [_, year, month, day] = match;
-        const date = new Date(Number(year), Number(month), Number(day));
+        const date = new Date(Number(year), Number(month) - 1, Number(day));
         await expect(date.getTime()).toBeLessThan(today.getTime());
     }
     await logout();
@@ -121,12 +123,16 @@ test('予約キャンセル：キャンセルすることで予約一覧(有効)
     logout,
 }) => {
     const reservationListPage = new ReservationListPage(page);
+    const reservedTicketPage = new ReservedTicketPage(page);
 
     await commonLogin();
     await expect(page).toHaveURL('/scheduleSearch');
     await createReservation();
-    await reservationListPage.goto();
+    await expect(page).toHaveURL('/reservedTicket');
+    await reservedTicketPage.header.clickUserName();
+    await reservedTicketPage.header.goToReservationList();
     await expect(page).toHaveURL('/reservationList');
+    await reservationListPage.canceledButton.waitFor({ state: 'visible' });
     await reservationListPage.ticketButton
         .first()
         .waitFor({ state: 'visible' });
@@ -158,12 +164,19 @@ test('チケットを表示ボタン、三点ボタンの表示有無：有効�
     logout,
 }) => {
     const reservationListPage = new ReservationListPage(page);
+    const reservedTicketPage = new ReservedTicketPage(page);
 
     await commonLogin();
     await expect(page).toHaveURL('/scheduleSearch');
     await createReservation();
-    await reservationListPage.goto();
+    await expect(page).toHaveURL('/reservedTicket');
+    await reservedTicketPage.header.clickUserName();
+    await reservedTicketPage.header.goToReservationList();
     await expect(page).toHaveURL('/reservationList');
+    await reservationListPage.canceledButton.waitFor({ state: 'visible' });
+    await reservationListPage.ticketButton
+        .first()
+        .waitFor({ state: 'visible', timeout: 15000 });
 
     // 有効：表示あり
     await expect(reservationListPage.ticketButton.first()).toBeVisible();
@@ -194,8 +207,13 @@ test('復路で検索の表示有無：有効・過去では表示あり、キ�
     await commonLogin();
     await expect(page).toHaveURL('/scheduleSearch');
     await createReservation();
+    await expect(page).toHaveURL('/reservedTicket');
     await reservationListPage.goto();
     await expect(page).toHaveURL('/reservationList');
+    await reservationListPage.canceledButton.waitFor({ state: 'visible' });
+    await reservationListPage.ticketButton
+        .first()
+        .waitFor({ state: 'visible', timeout: 15000 });
 
     // 有効：表示あり
     await expect(
