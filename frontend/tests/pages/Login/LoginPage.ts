@@ -53,8 +53,8 @@ export class LoginPage {
         await this.fillPassword('Password1');
     }
 
-    async inputCreatedAccountLoginInfo() {
-        await this.fillMailAddress('guest@test.com');
+    async inputCreatedAccountLoginInfo(mailAddress = 'guest@test.com') {
+        await this.fillMailAddress(mailAddress);
         await this.fillPassword('Password1');
     }
 }

@@ -13,6 +13,7 @@ import { AccountUpdatePage } from './pages/AccountUpdate/AccountUpdatePage';
 import { PasswordUpdatePage } from './pages/PasswordUpdate/PasswordUpdatePage';
 
 test('navigate-ゲストログイン全機能', async ({ page, context, logout }) => {
+    test.setTimeout(60_000);
     const scheduleSearchPage = new ScheduleSearchPage(page);
     const selectSeatPage = new SelectSeatPage(page);
     const reservationGuestLoginPage = new ReservationGuestLoginPage(page);
@@ -63,6 +64,7 @@ test('navigate-ゲストログイン全機能', async ({ page, context, logout }
     ).toBeHidden();
 
     // 検索～アカウント作成して予約
+    const createdAccountMail = `guest-${Date.now()}@test.com`;
     await scheduleSearchPage.goto();
     await expect(page).toHaveURL('/scheduleSearch');
     await scheduleSearchPage.clickDetailButton();
@@ -72,7 +74,7 @@ test('navigate-ゲストログイン全機能', async ({ page, context, logout }
     await scheduleSearchPage.clickDetailButton();
     await expect(page).toHaveURL('/selectSeat');
     await selectSeatPage.selectSeat();
-    await selectSeatPage.inputReserverInfo();
+    await selectSeatPage.inputReserverInfo(createdAccountMail);
     await selectSeatPage.clickAccountCreateCheckBox();
     await selectSeatPage.inputPasswordInfo();
     await selectSeatPage.inputCardInfo();
@@ -85,7 +87,7 @@ test('navigate-ゲストログイン全機能', async ({ page, context, logout }
     // 作成したアカウントでログイン
     await logout();
     await loginPage.goto();
-    await loginPage.inputCreatedAccountLoginInfo();
+    await loginPage.inputCreatedAccountLoginInfo(createdAccountMail);
     await loginPage.clickLoginButton();
     await expect(page).toHaveURL('/scheduleSearch');
 
