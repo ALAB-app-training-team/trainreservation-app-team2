@@ -1,4 +1,4 @@
-import { type Locator, type Page } from '@playwright/test';
+import { expect, type Locator, type Page } from '@playwright/test';
 import { Header } from '@tests/pages/shared/Header';
 
 export class SelectSeatPage {
@@ -34,7 +34,7 @@ export class SelectSeatPage {
         this.header = new Header(page);
         this.backButton = page.getByTestId('back-button-in-selectseat');
         this.trainCars = page.getByTestId('train-cars').getByRole('button');
-        this.emptySeat = page.locator('button.w-12.h-12.cursor-pointer');
+        this.emptySeat = page.getByTestId('empty-seat');
         this.name = page.getByRole('textbox', { name: '予約者氏名' });
         this.mailAddress = page.getByRole('textbox', {
             name: 'メールアドレス',
@@ -84,7 +84,11 @@ export class SelectSeatPage {
     }
 
     async selectSeat() {
-        await this.emptySeat.first().click();
+        await expect(async () => {
+            const seat = this.emptySeat.first();
+            await expect(seat).toBeEnabled({ timeout: 1000 });
+            await seat.click({ timeout: 1000 });
+        }).toPass({ timeout: 15000 });
     }
 
     async fillName(name: string) {
@@ -147,14 +151,9 @@ export class SelectSeatPage {
         await this.updateConfirmButton.click();
     }
 
-    async inputReserverInfo() {
+    async inputGuestReserverInfo() {
         await this.fillName('ゲスト太郎');
         await this.fillMailAddress('guest@test.com');
-    }
-
-    async inputCreatedAccountInfo() {
-        await this.fillName('作成済太郎');
-        await this.fillMailAddress('created@test.com');
     }
 
     async inputCardInfo() {

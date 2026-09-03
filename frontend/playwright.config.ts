@@ -13,19 +13,22 @@ import { defineConfig, devices } from '@playwright/test';
  */
 export default defineConfig({
     testDir: './tests',
+    /* ローカル実行時はvisualRegressionを除外し、GitHubActionでのみ実行する */
+    testIgnore: process.env.CI ? [] : ['**/visualRegression.spec.ts'],
     snapshotPathTemplate:
         '{testDir}/{testFileDir}/visualRegression.spec.ts-snapshots/{arg}{ext}',
-    fullyParallel: true,
+    fullyParallel: false,
     forbidOnly: !!process.env.CI,
     /* Retry on CI only */
     retries: process.env.CI ? 2 : 0,
     /* Opt out of parallel tests on CI. */
-    workers: process.env.CI ? 1 : undefined,
-    reporter: 'html',
+    workers: 1,
+    reporter: [['list'], ['html']],
     use: {
         baseURL: 'http://localhost:5173',
         /* Collect trace when retrying the failed test. See https://playwright.dev/docs/trace-viewer */
         trace: 'on-first-retry',
+        actionTimeout: 10 * 1000,
     },
 
     /* Configure projects for major browsers */
@@ -71,16 +74,17 @@ export default defineConfig({
             command: 'npm run dev',
             url: 'http://localhost:5173',
             reuseExistingServer: !process.env.CI,
-            stdout: 'pipe',
+            stdout: 'ignore',
             stderr: 'pipe',
+            timeout: 2 * 60 * 1000,
         },
         {
             command: `cd ../backend && chmod +x gradlew && ./gradlew bootRun --args='--spring.profiles.active=local' --stacktrace`,
             url: 'http://localhost:8080/api/reservations',
             reuseExistingServer: !process.env.CI,
-            timeout: 300 * 1000,
-            stdout: 'pipe',
+            stdout: 'ignore',
             stderr: 'pipe',
+            timeout: 2 * 60 * 1000,
         },
     ],
 });
