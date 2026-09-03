@@ -4,6 +4,7 @@ import { AccountUpdatePage } from '@tests/pages/AccountUpdate/AccountUpdatePage'
 import { LoginPage } from '@tests/pages/Login/LoginPage';
 import { AccountCreatePage } from '@tests/pages/AccountCreate/AccountCreatePage';
 import { ReservationListPage } from '@tests/pages/ReservationList/ReservationListPage';
+import { ReservedTicketPage } from '../ReservedTicket/ReservedTicketPage';
 
 test('各項目の未入力メッセージが表示されること', async ({
     page,
@@ -122,8 +123,9 @@ test('予約中のきっぷがあると退会できないこと', async ({
     const loginPage = new LoginPage(page);
     const accountCreatePage = new AccountCreatePage(page);
     const reservationListPage = new ReservationListPage(page);
+    const reservedTicketPage = new ReservedTicketPage(page);
     // 退会に失敗させるので、共有アカウントではなく専用のアカウントを作成する
-    const reservedMail = `reserved${Date.now()}@test.com`;
+    const reservedMail = `reserved-${Date.now()}@test.com`;
     const reservedPassword = 'Password1';
 
     await loginPage.goto();
@@ -144,9 +146,11 @@ test('予約中のきっぷがあると退会できないこと', async ({
 
     // きっぷを1件予約する
     await createReservation();
+    await expect(page).toHaveURL('/reservedTicket');
 
     // 予約中のきっぷがあるため退会できないこと
-    await accountUpdatePage.goto();
+    await reservedTicketPage.header.clickUserName();
+    await reservedTicketPage.header.goToAccountUpdate();
     await expect(page).toHaveURL('/accountUpdate');
     await accountUpdatePage.clickDeleteButton();
     await expect(accountUpdatePage.deleteConfirmTitle).toBeVisible();
