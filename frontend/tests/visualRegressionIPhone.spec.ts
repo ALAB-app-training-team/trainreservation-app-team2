@@ -80,10 +80,12 @@ test('visual-iPhone-passwordUpdateForAdmin', async ({
 test('visual-iPhone-reservationList', async ({
     page,
     commonLogin,
+    createReservation,
     logout,
     visualReservationList,
 }) => {
     await commonLogin();
+    await createReservation();
     await visualReservationList();
     await logout();
     await expect(page).toHaveURL('/login');
