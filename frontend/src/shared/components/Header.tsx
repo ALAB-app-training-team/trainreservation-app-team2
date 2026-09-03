@@ -70,7 +70,7 @@ export function Header() {
                                 to={button.to}
                                 onClick={() => setIsMenuOpen(false)}
                                 className={({ isActive }) =>
-                                    `rounded-xl px-4 py-2 text-base font-bold ${
+                                    `rounded-xl px-4 py-3 text-base font-bold ${
                                         isActive
                                             ? 'bg-primary cursor-default text-white'
                                             : button.relatedPath.includes(
