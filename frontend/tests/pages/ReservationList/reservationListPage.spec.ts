@@ -135,7 +135,7 @@ test('予約キャンセル：キャンセルすることで予約一覧(有効)
     await reservationListPage.canceledButton.waitFor({ state: 'visible' });
     await reservationListPage.ticketButton
         .first()
-        .waitFor({ state: 'visible', timeout: 10000 });
+        .waitFor({ state: 'visible' });
 
     const activeTicketCount = await reservationListPage.ticketButton.count();
     await reservationListPage.clickThreeDotsButton();

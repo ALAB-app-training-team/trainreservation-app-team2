@@ -298,7 +298,7 @@ test('visual-reservedTicket', async ({
     await reservedTicketPage.changeButton.waitFor({ state: 'visible' });
     await page
         .getByText('「チケットを共有」ボタンからリンクの保存をお願いします')
-        .waitFor({ state: 'hidden', timeout: 10000 });
+        .waitFor({ state: 'hidden' });
     await page.evaluate(() => document.fonts.ready);
 
     await expect(page).toHaveScreenshot({
