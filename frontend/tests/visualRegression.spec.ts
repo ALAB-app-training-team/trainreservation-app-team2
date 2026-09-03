@@ -84,19 +84,13 @@ test('visual-selectSeat-accountCreate', async ({ page }) => {
     });
 });
 
-test('visual-selectSeat-account', async ({ page }) => {
+test('visual-selectSeat-account', async ({ page, commonLogin, logout }) => {
     const scheduleSearchPage = new ScheduleSearchPage(page);
     const selectSeatPage = new SelectSeatPage(page);
-    const loginPage = new LoginPage(page);
 
-    await scheduleSearchPage.goto();
+    await commonLogin();
+    await expect(page).toHaveURL('/scheduleSearch');
     await scheduleSearchPage.clickDetailButton();
-    await expect(page).toHaveURL('/selectSeat');
-    await selectSeatPage.clickLoginButton();
-    await expect(page).toHaveURL('/login');
-    await loginPage.fillMailAddress('test-common@test.com');
-    await loginPage.fillPassword('Password1');
-    await loginPage.clickLoginButton();
     await expect(page).toHaveURL('/selectSeat');
     await selectSeatPage.emptySeat.first().waitFor({ state: 'visible' });
     await page.evaluate(() => document.fonts.ready);
@@ -111,10 +105,13 @@ test('visual-selectSeat-account', async ({ page }) => {
         ],
         maskColor: '#ffffff',
     });
+    await logout();
+    await expect(page).toHaveURL('/login');
 });
 
 test('visual-reservationGuestLogin', async ({ page }) => {
     const reservationGuestLoginPage = new ReservationGuestLoginPage(page);
+
     await reservationGuestLoginPage.goto();
     await expect(page).toHaveURL(
         '/reservationGuestLogin?reservationId=1c5289e8-72a7-4cb0-a0cb-fe6da57005eb',
@@ -136,6 +133,7 @@ test('visual-reservationGuestLogin', async ({ page }) => {
 
 test('visual-login', async ({ page }) => {
     const loginPage = new LoginPage(page);
+
     await loginPage.goto();
     await expect(page).toHaveURL('/login');
     await loginPage.loginButton.waitFor({ state: 'visible' });
@@ -156,6 +154,7 @@ test('visual-login', async ({ page }) => {
 test('visual-accountCreate', async ({ page }) => {
     const accountCreatePage = new AccountCreatePage(page);
     const loginPage = new LoginPage(page);
+
     await loginPage.goto();
     await expect(page).toHaveURL('/login');
     await loginPage.clickCreateButton();
@@ -174,7 +173,7 @@ test('visual-accountCreate', async ({ page }) => {
     });
 });
 
-test('visual-accountUpdate', async ({ page, commonLogin }) => {
+test('visual-accountUpdate', async ({ page, commonLogin, logout }) => {
     const accountUpdatePage = new AccountUpdatePage(page);
 
     await commonLogin();
@@ -193,9 +192,12 @@ test('visual-accountUpdate', async ({ page, commonLogin }) => {
         ],
         maskColor: '#ffffff',
     });
+
+    await logout();
+    await expect(page).toHaveURL('/login');
 });
 
-test('visual-passwordUpdate', async ({ page, commonLogin }) => {
+test('visual-passwordUpdate', async ({ page, commonLogin, logout }) => {
     const passwordUpdatePage = new PasswordUpdatePage(page);
 
     await commonLogin();
@@ -214,9 +216,12 @@ test('visual-passwordUpdate', async ({ page, commonLogin }) => {
         ],
         maskColor: '#ffffff',
     });
+
+    await logout();
+    await expect(page).toHaveURL('/login');
 });
 
-test('visual-passwordUpdateForAdmin', async ({ page, adminLogin }) => {
+test('visual-passwordUpdateForAdmin', async ({ page, adminLogin, logout }) => {
     const passwordUpdateForAdmin = new PasswordUpdateForAdminPage(page);
     await adminLogin();
     await expect(page).toHaveURL('/admin/password');
@@ -232,6 +237,9 @@ test('visual-passwordUpdateForAdmin', async ({ page, adminLogin }) => {
         ],
         maskColor: '#ffffff',
     });
+
+    await logout();
+    await expect(page).toHaveURL('/login');
 });
 
 test('visual-reservationList', async ({ page, commonLogin, logout }) => {
@@ -275,17 +283,22 @@ test('visual-reservationList', async ({ page, commonLogin, logout }) => {
     await expect(page).toHaveURL('/login');
 });
 
-test('visual-reservedTicket', async ({ page, commonLogin, logout }) => {
-    const reservationListPage = new ReservationListPage(page);
+test('visual-reservedTicket', async ({
+    page,
+    commonLogin,
+    logout,
+    createReservation,
+}) => {
     const reservedTicketPage = new ReservedTicketPage(page);
 
     await commonLogin();
     await expect(page).toHaveURL('/scheduleSearch');
-    await reservationListPage.goto();
-    await expect(page).toHaveURL('/reservationList');
-    await reservationListPage.clickTicketButton();
+    await createReservation();
     await expect(page).toHaveURL('/reservedTicket');
-    await reservedTicketPage.backButton.waitFor({ state: 'visible' });
+    await reservedTicketPage.changeButton.waitFor({ state: 'visible' });
+    await page
+        .getByText('「チケットを共有」ボタンからリンクの保存をお願いします')
+        .waitFor({ state: 'hidden' });
     await page.evaluate(() => document.fonts.ready);
 
     await expect(page).toHaveScreenshot({
