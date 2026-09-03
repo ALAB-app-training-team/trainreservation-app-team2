@@ -47,12 +47,12 @@ export function Header() {
 
     return (
         <div ref={menuRef}>
-            <div className="border-primary-light relative flex h-16 items-center justify-start gap-6 border-b-2 px-8 py-2">
+            <div className="border-primary-light relative flex h-16 items-center justify-start gap-3 border-b-2 px-4 py-2 md:gap-6 md:px-8">
                 <NavLink
                     to="/"
                     onClick={() => setIsMenuOpen(false)}
                     className={({ isActive }) =>
-                        `text-primary flex items-center gap-2 px-4 text-lg font-bold ${
+                        `text-primary flex shrink-0 items-center gap-2 px-0 text-lg font-bold md:px-4 ${
                             isActive || location.pathname === '/scheduleSearch'
                                 ? 'cursor-default'
                                 : 'cursor-pointer'
@@ -62,7 +62,7 @@ export function Header() {
                     <BsTrainFreightFrontFill />
                     新幹線でGO！
                 </NavLink>
-                <div className="flex flex-1 justify-end px-2">
+                <div className="flex flex-1 items-center justify-end gap-4 px-2">
                     <div className="hidden items-center gap-4 md:flex">
                         {buttons.map((button, index) => (
                             <NavLink
@@ -70,7 +70,7 @@ export function Header() {
                                 to={button.to}
                                 onClick={() => setIsMenuOpen(false)}
                                 className={({ isActive }) =>
-                                    `rounded-xl px-4 py-3 text-sm font-bold ${
+                                    `rounded-xl px-4 py-2 text-base font-bold ${
                                         isActive
                                             ? 'bg-primary cursor-default text-white'
                                             : button.relatedPath.includes(
@@ -84,24 +84,21 @@ export function Header() {
                                 {button.label}
                             </NavLink>
                         ))}
+                    </div>
+                    <button
+                        type="button"
+                        onClick={handleMenuOpen}
+                        className={`flex min-w-0 items-center gap-2 text-base font-bold ${
+                            name ? '' : 'md:hidden'
+                        }`}
+                    >
                         {name && (
-                            <div className="relative">
-                                <button
-                                    onClick={handleMenuOpen}
-                                    className="flex items-center gap-2 text-sm font-bold"
-                                    data-testid="user-name"
-                                >
-                                    {name}さん
-                                    <FiMenu />
-                                </button>
-                            </div>
+                            <span data-testid="user-name" className="truncate">
+                                {name}さん
+                            </span>
                         )}
-                    </div>
-                    <div className="text-primary md:hidden">
-                        <button type="button" onClick={handleMenuOpen}>
-                            <FiMenu />
-                        </button>
-                    </div>
+                        <FiMenu className="shrink-0" />
+                    </button>
                 </div>
             </div>
             {isMenuOpen && (
@@ -115,13 +112,7 @@ export function Header() {
                                 key={index}
                                 to={button.to}
                                 onClick={handleMenuOpen}
-                                className={({ isActive }) =>
-                                    `w-full rounded text-left ${
-                                        isActive
-                                            ? 'bg-primary text-white'
-                                            : 'text-gray-700 hover:bg-gray-100'
-                                    }`
-                                }
+                                className="w-full rounded text-left text-gray-700 hover:bg-gray-100"
                             >
                                 {button.label}
                             </NavLink>
