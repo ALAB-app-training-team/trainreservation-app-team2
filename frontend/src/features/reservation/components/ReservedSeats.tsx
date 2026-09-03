@@ -107,7 +107,7 @@ export function ReservedSeats({
                     </div>
                 )}
                 {getFieldError?.(id) && (
-                    <p className="order-4 text-left text-sm text-red-600">
+                    <p className="order-3 text-left text-sm text-red-600">
                         {getFieldError(id)}
                     </p>
                 )}
