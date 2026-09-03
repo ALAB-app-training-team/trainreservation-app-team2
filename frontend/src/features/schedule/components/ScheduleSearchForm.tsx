@@ -239,7 +239,7 @@ export function ScheduleSearchForm({
                                                                             dto.isArrivalTime,
                                                                         );
                                                                     }}
-                                                                    className="border-primary hover:bg-primary-light flex w-fit items-center gap-4 rounded-lg border bg-white px-4 py-1 text-left"
+                                                                    className="border-primary-ink hover:bg-primary-light bg-surface flex w-fit items-center gap-4 rounded-lg border px-4 py-1 text-left"
                                                                 >
                                                                     <span className="flex items-center gap-2 font-medium">
                                                                         <span>
@@ -247,7 +247,7 @@ export function ScheduleSearchForm({
                                                                                 departureStationName
                                                                             }
                                                                         </span>
-                                                                        <HiOutlineArrowNarrowRight className="text-primary shrink-0" />
+                                                                        <HiOutlineArrowNarrowRight className="text-primary-ink shrink-0" />
                                                                         <span>
                                                                             {
                                                                                 arrivalStationName
@@ -280,7 +280,7 @@ export function ScheduleSearchForm({
                                                         }
                                                         disabled={isSubmitting}
                                                         data-testid="history-save-button"
-                                                        className="border-primary hover:bg-primary-light text-primary flex w-fit items-center rounded-lg border bg-white px-2 py-1"
+                                                        className="border-primary-ink hover:bg-primary-light text-primary-ink bg-surface flex w-fit items-center rounded-lg border px-2 py-1"
                                                     >
                                                         <HiOutlinePlus className="text-lg" />
                                                     </button>

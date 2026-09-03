@@ -12,8 +12,8 @@
  * dark: バリアントを書く必要はない。
  *
  * ダークモードの有効・無効は下の :root の color-scheme 1 行で切り替わる。
- *   color-scheme: light       → 常にライト（← 現在の設定）
- *   color-scheme: light dark  → OS の配色設定に追従
+ *   color-scheme: light dark  → OS の配色設定に追従（← 現在の設定）
+ *   color-scheme: light       → 常にライト（切り戻し用）
  *
  * ダーク側の値は WCAG 2.2 AA（本文 4.5:1 / UI 部品の境界 3:1）を満たす
  * 明度で選定している。値を変更するときはコントラストを再計測すること。
@@ -113,16 +113,17 @@
     letter-spacing: 0.18px;
 
     /* ダークモードの切り替えスイッチ。
-       light      : 常にライト配色（トークン移行が完了するまでの暫定設定）
        light dark : OS の配色設定に追従
+       light      : 常にライト配色（ダーク配色に問題が出たときの切り戻し先）
        ------------------------------------------------------------------
-       以前は color-scheme: light dark と @media (prefers-color-scheme: dark)
-       で本文色だけを #9ca3af に差し替えていたが、コンポーネント側の背景が
-       bg-white / bg-primary-light のまま明るかったため、
-       「明るい地に薄いグレー文字」でコントラストが 2.3〜2.5:1 まで落ちていた
-       （WCAG 1.4.3 違反 13 件）。トークン移行が全画面で終わり、ライト／ダーク
-       両方で axe のコントラスト違反が 0 件になったら light dark に戻す。 */
-    color-scheme: light;
+       かつては同じ light dark を指定しながら、@media (prefers-color-scheme: dark)
+       で本文色だけを #9ca3af に差し替えていた。コンポーネント側の背景は
+       bg-white / bg-primary-light のまま明るかったため、「明るい地に薄いグレー
+       文字」となりコントラストが 2.3〜2.5:1 まで落ちていた（WCAG 1.4.3 違反）。
+       現在は全トークンが light-dark() で両モード分の値を持ち、ライト／ダーク
+       どちらでも axe のコントラスト違反 0 件を確認済み。
+       トークンを増やす・値を変えるときは、必ず両モードで再計測すること。 */
+    color-scheme: light dark;
 
     color: var(--color-body);
     background: var(--color-page);
