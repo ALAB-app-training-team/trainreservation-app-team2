@@ -446,10 +446,24 @@ export function SelectSeats() {
                 </div>
                 <div className="w-full flex-1">
                     <div className="border-primary-light flex w-full flex-col gap-4 rounded-2xl border-2 p-8 text-left">
-                        <SelectedSeats
-                            selectedSeats={selectedSeats}
-                            handleClear={handleClear}
-                        />
+                        <div className="border-primary/20 flex flex-col gap-6 border-b-2 pb-4">
+                            <SelectedSeats
+                                selectedSeats={selectedSeats}
+                                handleClear={handleClear}
+                            />
+                            <TotalSeatsFare
+                                selectedSeats={selectedSeats}
+                                prevFare={
+                                    preReservedSeats
+                                        ? preReservedSeats.reduce(
+                                              (sum, seat) =>
+                                                  sum + seat.seatFare,
+                                              0,
+                                          )
+                                        : undefined
+                                }
+                            />
+                        </div>
                         {!isLoggedIn && searchRequestDto !== null && (
                             <div className="border-primary-mid-light bg-primary-light flex w-full flex-col gap-4 rounded-2xl border-2 p-4 text-center">
                                 <span>アカウントをお持ちですか？</span>
@@ -499,18 +513,6 @@ export function SelectSeats() {
                                         policy={policy}
                                     />
                                 )}
-                                <TotalSeatsFare
-                                    selectedSeats={selectedSeats}
-                                    prevFare={
-                                        preReservedSeats
-                                            ? preReservedSeats.reduce(
-                                                  (sum, seat) =>
-                                                      sum + seat.seatFare,
-                                                  0,
-                                              )
-                                            : undefined
-                                    }
-                                />
                                 <button
                                     type="submit"
                                     className="bg-primary w-full rounded-lg p-2 text-white"
