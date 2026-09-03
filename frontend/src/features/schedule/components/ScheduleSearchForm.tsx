@@ -9,7 +9,8 @@ import {
 } from 'react-icons/hi';
 
 import { AvailableOnlyFilter } from '@/features/schedule/components/AvailableOnlyFilter';
-import { DepartureDateAndTimePicker } from '@/features/schedule/components/DepartureDateAndTimePicker';
+import { CustomDatePicker } from '@/features/schedule/components/CustomDatePicker';
+import { CustomTimePicker } from '@/features/schedule/components/CustomTimePicker';
 import { SeatTypeAndPassengersSelect } from '@/features/schedule/components/SeatTypeAndPassengersSelect';
 import { StationSelect } from '@/features/schedule/components/StationSelect';
 import { useSearchHistoryDto } from '@/features/schedule/hooks/useSearchHistoryDto';
@@ -115,28 +116,25 @@ export function ScheduleSearchForm({
                             />
                         </div>
                         <div className="flex flex-col justify-between gap-4 md:flex-row">
-                            <DepartureDateAndTimePicker
+                            <CustomDatePicker
                                 id="date"
                                 label="乗車日"
-                                type="date"
                                 value={searchRequestDto.date}
                                 setValue={setDate}
                                 getFieldError={getFieldError}
                                 maxDate={maxDate}
                                 minDate={minDate}
                             />
-                            <DepartureDateAndTimePicker
+                            <CustomTimePicker
                                 id="time"
                                 label="時刻"
-                                type="time"
                                 value={searchRequestDto.time}
                                 setValue={setTime}
                                 getFieldError={getFieldError}
                                 children={
                                     <div className="border-primary inline-flex items-center overflow-hidden rounded border">
                                         <label
-                                            tabIndex={0}
-                                            className={`cursor-pointer p-1 text-sm ${!searchRequestDto.isArrivalTime ? 'bg-primary text-white' : 'bg-gray-50'}`}
+                                            className={`cursor-pointer p-1 text-sm has-[:focus-visible]:ring-2 has-[:focus-visible]:ring-gray-900 has-[:focus-visible]:ring-inset ${!searchRequestDto.isArrivalTime ? 'bg-primary text-white' : 'bg-gray-50'}`}
                                         >
                                             <input
                                                 type="radio"
@@ -147,13 +145,11 @@ export function ScheduleSearchForm({
                                                     setIsArrivalTime(false)
                                                 }
                                                 className="sr-only"
-                                                tabIndex={-1}
                                             />
                                             出発
                                         </label>
                                         <label
-                                            tabIndex={0}
-                                            className={`cursor-pointer p-1 text-sm ${searchRequestDto.isArrivalTime ? 'bg-primary text-white' : 'bg-gray-50'}`}
+                                            className={`cursor-pointer p-1 text-sm has-[:focus-visible]:ring-2 has-[:focus-visible]:ring-gray-900 has-[:focus-visible]:outline-none has-[:focus-visible]:ring-inset ${searchRequestDto.isArrivalTime ? 'bg-primary text-white' : 'bg-gray-50'}`}
                                         >
                                             <input
                                                 type="radio"
@@ -164,7 +160,6 @@ export function ScheduleSearchForm({
                                                     setIsArrivalTime(true)
                                                 }
                                                 className="sr-only"
-                                                tabIndex={-1}
                                             />
                                             到着
                                         </label>
