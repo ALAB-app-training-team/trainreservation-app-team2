@@ -74,7 +74,8 @@ test('navigate-ゲストログイン全機能', async ({ page, context, logout }
     await scheduleSearchPage.clickDetailButton();
     await expect(page).toHaveURL('/selectSeat');
     await selectSeatPage.selectSeat();
-    await selectSeatPage.inputReserverInfo(createdAccountMail);
+    await selectSeatPage.fillName('シートマップ画面で新規登録太郎');
+    await selectSeatPage.fillMailAddress(createdAccountMail);
     await selectSeatPage.clickAccountCreateCheckBox();
     await selectSeatPage.inputPasswordInfo();
     await selectSeatPage.inputCardInfo();
