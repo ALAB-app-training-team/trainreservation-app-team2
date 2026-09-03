@@ -153,7 +153,7 @@ test('navigate-アカウントログイン全機能', async ({
     await reservationListPage.clickChangeButton();
     await reservationListPage.clickChangeSeatConfirmButton();
     await expect(page).toHaveURL('/selectSeat');
-    await selectSeatPage.emptySeat.first().waitFor({ state: 'visible' });
+    await page.getByText('1号車').waitFor({ state: 'visible' });
     await selectSeatPage.selectSeat();
     await selectSeatPage.clickUpdateButton();
     await expect(page.getByText('予約変更確認')).toBeVisible();

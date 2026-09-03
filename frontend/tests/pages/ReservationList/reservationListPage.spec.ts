@@ -166,6 +166,7 @@ test('チケットを表示ボタン、三点ボタンの表示有無：有効�
     await createReservation();
     await reservationListPage.goto();
     await expect(page).toHaveURL('/reservationList');
+    await reservationListPage.canceledButton.waitFor({ state: 'visible' });
     await reservationListPage.ticketButton
         .first()
         .waitFor({ state: 'visible', timeout: 15000 });
@@ -201,6 +202,7 @@ test('復路で検索の表示有無：有効・過去では表示あり、キ�
     await createReservation();
     await reservationListPage.goto();
     await expect(page).toHaveURL('/reservationList');
+    await reservationListPage.canceledButton.waitFor({ state: 'visible' });
     await reservationListPage.ticketButton
         .first()
         .waitFor({ state: 'visible', timeout: 15000 });
