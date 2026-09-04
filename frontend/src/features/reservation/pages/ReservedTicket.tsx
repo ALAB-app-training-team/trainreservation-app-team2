@@ -214,6 +214,7 @@ export function ReservedTicket() {
                     isSubmitting={isUpdating}
                     handleSubmit={handleUpdateCompanions}
                     reservedSeats={reservedTickets.reservedSeats}
+                    onRequestClose={onCompanionsModalRequestClose}
                 />
             </CustomModal>
             <CustomModal
