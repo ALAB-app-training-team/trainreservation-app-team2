@@ -168,7 +168,7 @@ test('戻るボタン表示有無：予約確認のアカウントログイン�
     await expect(reservedTicketPage.backButton).toBeHidden();
 });
 
-test('予約変更ボタン表示有無：アカウントログイン時はあり・ゲストログイン時はなし・同行者はなしであること', async ({
+test('予約変更ボタン表示有無：アカウントログイン時はあり・ゲストログイン時はなし・利用者はなしであること', async ({
     page,
     createReservation,
     createGuestReservation,
@@ -211,7 +211,7 @@ test('予約変更ボタン表示有無：アカウントログイン時はあ�
     await expect(page).toHaveURL('/reservedTicket');
     await expect(reservedTicketPage.changeButton).toBeHidden();
 
-    // 同行者は予約変更ボタンがないこと
+    // 利用者は予約変更ボタンがないこと
     await page.goto(clipboardText);
     await expect(page).toHaveURL(/\/reservationGuestLogin\?.+/);
     await reservationGuestLoginPage.inputCompanionLoginInfo();
@@ -220,7 +220,7 @@ test('予約変更ボタン表示有無：アカウントログイン時はあ�
     await expect(reservedTicketPage.changeButton).toBeHidden();
 });
 
-test('予約キャンセルボタン表示有無：アカウントログイン時はあり・ゲストログイン時はあり・同行者はなしであること', async ({
+test('予約キャンセルボタン表示有無：アカウントログイン時はあり・ゲストログイン時はあり・利用者はなしであること', async ({
     page,
     createReservation,
     createGuestReservation,
@@ -263,7 +263,7 @@ test('予約キャンセルボタン表示有無：アカウントログイン�
     await expect(page).toHaveURL('/reservedTicket');
     await expect(reservedTicketPage.refundButton).toBeVisible();
 
-    // 同行者は予約キャンセルボタンがないこと
+    // 利用者は予約キャンセルボタンがないこと
     await page.goto(clipboardText);
     await expect(page).toHaveURL(/\/reservationGuestLogin\?.+/);
     await reservationGuestLoginPage.inputCompanionLoginInfo();
@@ -272,7 +272,7 @@ test('予約キャンセルボタン表示有無：アカウントログイン�
     await expect(reservedTicketPage.refundButton).toBeHidden();
 });
 
-test('同行者割り当てボタン表示有無：アカウントログイン時はあり・ゲストログイン時はあり・同行者はなしであること', async ({
+test('利用者割り当てボタン表示有無：アカウントログイン時はあり・ゲストログイン時はあり・利用者はなしであること', async ({
     page,
     createReservation,
     createGuestReservation,
@@ -283,14 +283,14 @@ test('同行者割り当てボタン表示有無：アカウントログイン�
     const reservedTicketPage = new ReservedTicketPage(page);
     const reservationGuestLoginPage = new ReservationGuestLoginPage(page);
 
-    // アカウントログイン時は同行者割り当てボタンがあること
+    // アカウントログイン時は利用者割り当てボタンがあること
     await commonLogin();
     await expect(page).toHaveURL('/scheduleSearch');
     await createReservation();
     await expect(page).toHaveURL('/reservedTicket');
     await expect(reservedTicketPage.companionChangeButton).toBeVisible();
 
-    // ゲストログイン時は同行者割り当てボタンがないこと
+    // ゲストログイン時は利用者割り当てボタンがないこと
     await logout();
     await expect(page).toHaveURL('/login');
     await createGuestReservation();
@@ -315,7 +315,7 @@ test('同行者割り当てボタン表示有無：アカウントログイン�
     await expect(page).toHaveURL('/reservedTicket');
     await expect(reservedTicketPage.companionChangeButton).toBeVisible();
 
-    // 同行者は同行者割り当てボタンがないこと
+    // 利用者は利用者割り当てボタンがないこと
     await page.goto(clipboardText);
     await expect(page).toHaveURL(/\/reservationGuestLogin\?.+/);
     await reservationGuestLoginPage.inputCompanionLoginInfo();

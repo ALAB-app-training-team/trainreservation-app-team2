@@ -199,7 +199,7 @@ export function ReservedTicket() {
                             className="bg-primary flex w-full items-center justify-center gap-2 rounded-xl p-2 text-sm text-white"
                         >
                             <RiGroupLine className="h-4 w-4" />
-                            同行者に割り当て
+                            利用者に割り当て
                         </button>
                     )}
                 </div>

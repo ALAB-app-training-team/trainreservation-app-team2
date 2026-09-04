@@ -40,8 +40,8 @@ export function CompanionModal({
     return (
         <div className="flex flex-col gap-2 p-2">
             <div>
-                <h2>同行者に割り当て</h2>
-                <div>同行者の情報を入力してチケットを配布します</div>
+                <h2>利用者に割り当て</h2>
+                <div>利用者の情報を入力してチケットを配布します</div>
             </div>
             {reservedSeats.map((reservedSeat, index) => (
                 <CompanionForm

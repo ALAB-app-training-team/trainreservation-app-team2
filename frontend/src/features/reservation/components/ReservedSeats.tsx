@@ -46,7 +46,7 @@ export function ReservedSeats({
                         </div>
                         {seats.some((seat) => !seat.name) && (
                             <div className="mx-auto w-fit rounded-full px-2 text-orange-500">
-                                同行者が割り当てられていない座席があります
+                                利用者が割り当てられていない座席があります
                             </div>
                         )}
                     </div>

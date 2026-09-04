@@ -181,9 +181,9 @@ export function useAccountUpdateDto() {
                 description: (
                     <>
                         <p>
-                            予約に紐づく予約者情報は
+                            チケットに紐づく予約者の情報は
                             <br />
-                            同行者割り当てから変更してください。
+                            利用者割り当てから変更してください。
                         </p>
                         <button
                             type="button"
@@ -191,9 +191,9 @@ export function useAccountUpdateDto() {
                                 toast.dismiss(successToastId);
                                 navigate('/reservationList');
                             }}
-                            className="underlin text-HT mt-1"
+                            className="text-HT mt-1 underline"
                         >
-                            →予約の予約者情報を更新する
+                            →チケットを更新する
                         </button>
                     </>
                 ),

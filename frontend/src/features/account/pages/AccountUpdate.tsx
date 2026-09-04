@@ -82,7 +82,7 @@ export function AccountUpdate() {
                         />
                     </div>
                     <div className="font-bold">
-                        ※チケットに紐づく氏名・メールアドレスは同行者割り当てから変更してください。
+                        ※チケットに紐づく氏名・メールアドレスは利用者割り当てから変更してください。
                     </div>
                     <button
                         type="submit"
