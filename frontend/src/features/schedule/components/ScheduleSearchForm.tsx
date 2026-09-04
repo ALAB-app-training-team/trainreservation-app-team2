@@ -172,8 +172,17 @@ export function ScheduleSearchForm({
                             />
                         </div>
                         <div className="flex flex-col gap-2">
-                            {isExpanded && (
-                                <>
+                            <div
+                                className={`relative overflow-hidden ${
+                                    isExpanded ? 'h-fit' : 'max-h-12'
+                                }`}
+                            >
+                                {/* 検索オプション項目div */}
+                                <div
+                                    className={`flex flex-col gap-2 ${
+                                        !isExpanded && 'opacity-50'
+                                    }`}
+                                >
                                     <div className="flex w-full flex-col justify-between md:flex-row">
                                         <SeatTypeAndPassengersSelect
                                             seatType={seatType}
@@ -182,7 +191,7 @@ export function ScheduleSearchForm({
                                             onPassengersChange={setPassengers}
                                         />
                                     </div>
-                                    <div className="flex w-full justify-start md:w-1/2">
+                                    <div className="flex w-full justify-start">
                                         <AvailableOnlyFilter
                                             isChecked={
                                                 isFilteeForced
@@ -296,12 +305,16 @@ export function ScheduleSearchForm({
                                             />
                                         </div>
                                     )}
-                                </>
-                            )}
+                                </div>
+                                {/* グラデーションdiv */}
+                                {!isExpanded && (
+                                    <div className="from-primary-light absolute inset-x-0 bottom-0 h-12 bg-gradient-to-t to-transparent" />
+                                )}
+                            </div>
                             <button
                                 type="button"
                                 onClick={() => setIsExpanded((prev) => !prev)}
-                                className="text-primary flex items-center justify-center gap-1 font-medium"
+                                className="text-primary flex items-center gap-1 self-center font-medium"
                             >
                                 {isExpanded ? (
                                     <>
@@ -311,7 +324,7 @@ export function ScheduleSearchForm({
                                 ) : (
                                     <>
                                         <HiOutlinePlusCircle className="text-lg" />
-                                        続きを表示する
+                                        検索オプションを表示する
                                     </>
                                 )}
                             </button>
