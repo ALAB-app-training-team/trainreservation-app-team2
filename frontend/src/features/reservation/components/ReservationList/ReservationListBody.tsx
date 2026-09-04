@@ -147,7 +147,7 @@ export function ReservationListBody() {
                         );
                     })
                 ) : (
-                    <>該当する予約が存在しません</>
+                    <p>該当する予約が存在しません</p>
                 )}
             </div>
             <CustomModal isOpen={isOpen} onRequestClose={onRequestClose}>

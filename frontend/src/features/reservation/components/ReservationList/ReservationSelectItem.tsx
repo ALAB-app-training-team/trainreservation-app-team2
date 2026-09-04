@@ -36,6 +36,7 @@ export function ReservationSelectItem({
         canCheckReservation,
         canSearchReturinTrip,
         showThreeDotsMenu,
+        isOnlyReturnTrip,
     } = useReservationSelectItemConfig(details);
     const [isMenuOpen, setIsMenuOpen] = useState(false);
     const { ref: menuRef } = useOutsideClick(
@@ -102,7 +103,7 @@ export function ReservationSelectItem({
                         data-testid="ride-date"
                         className="text-xl font-bold"
                     >
-                        {dayjs(details.rideDate).format('YYYY年MM月DD日')}{' '}
+                        {dayjs(details.rideDate).format('YYYY年MM月DD日')}
                     </label>
                     <label className="text-xl font-bold">
                         {dayjs(details.departureTime, 'HH:mm:ss').format(
@@ -128,11 +129,13 @@ export function ReservationSelectItem({
                         ￥{totalFare.toLocaleString()}
                     </div>
                 </div>
-                <div className="flex w-full justify-end gap-1 sm:w-auto sm:gap-2">
+                <div className="flex w-full gap-1 sm:w-auto sm:justify-end sm:gap-2">
                     {canSearchReturinTrip && (
                         <button
                             onClick={handleSearchReturnTrip}
-                            className="border-primary text-primary flex items-center justify-center gap-1 rounded-md border px-3 py-1.5 text-sm whitespace-nowrap sm:gap-2 sm:px-4 sm:py-2"
+                            className={`border-primary text-primary flex items-center justify-center gap-1 rounded-md border px-3 py-1.5 text-sm whitespace-nowrap sm:w-auto sm:gap-2 sm:px-4 sm:py-2 ${
+                                isOnlyReturnTrip ? 'w-full' : ''
+                            }`}
                         >
                             <FaSearch />
                             復路で検索
