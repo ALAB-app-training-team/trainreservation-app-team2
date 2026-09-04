@@ -1,6 +1,7 @@
 package com.alab.shinkansendego.account;
 
 import com.alab.shinkansendego.exception.ConflictException;
+import com.alab.shinkansendego.reservation.ReservationRepository;
 import com.alab.shinkansendego.utils.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationEventPublisher;
@@ -9,6 +10,7 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.time.LocalDate;
 import java.util.Optional;
 import java.util.UUID;
 
@@ -17,14 +19,17 @@ import static com.alab.shinkansendego.utils.StringUtils.removeSpaces;
 @Service
 public class AccountService {
     private final AccountRepository accountRepository;
+    private final ReservationRepository reservationRepository;
     private final PasswordEncoder passwordEncoder;
     private final ApplicationEventPublisher eventPublisher;
 
     @Autowired
     public AccountService(AccountRepository accountRepository,
+                          ReservationRepository reservationRepository,
                           PasswordEncoder passwordEncoder,
                           ApplicationEventPublisher eventPublisher) {
         this.accountRepository = accountRepository;
+        this.reservationRepository = reservationRepository;
         this.passwordEncoder = passwordEncoder;
         this.eventPublisher = eventPublisher;
     }
@@ -113,10 +118,17 @@ public class AccountService {
             throw new ConflictException(newMail + " is Duplicate");
         }
 
+        AccountRequestDto oldAccountInfo = new AccountRequestDto(account.getName(), account.getMail(), null);
+
         account.setName(StringUtils.removeSpaces(request.getName()));
         account.setMail(newMail);
 
         AccountEntity updatedAccount = accountRepository.save(account);
+
+        eventPublisher.publishEvent(new AccountUpdatedEvent(
+            new AccountRequestDto(updatedAccount.getName(), updatedAccount.getMail(), null),
+            oldAccountInfo
+        ));
         return updatedAccount.getId();
     }
 
@@ -137,6 +149,10 @@ public class AccountService {
         account.setPassword(passwordEncoder.encode(request.getNewPassword()));
 
         AccountEntity updatedAccount = accountRepository.save(account);
+
+        eventPublisher.publishEvent(new PasswordUpdatedEvent(
+            new AccountRequestDto(updatedAccount.getName(), updatedAccount.getMail(), null)
+        ));
         return updatedAccount.getId();
     }
 
@@ -151,5 +167,17 @@ public class AccountService {
             .orElseThrow(() -> new IllegalArgumentException("Account not Found"));
         account.setPassword(passwordEncoder.encode(request.getPassword()));
         accountRepository.save(account);
+    }
+
+    @Transactional
+    public void deleteAccount(UUID accountId) {
+        boolean hasActiveReservation = reservationRepository
+            .existsByAccountIdAndIsDeletedFalseAndRideDateGreaterThanEqual(accountId, LocalDate.now());
+
+        if (hasActiveReservation) {
+            throw new ConflictException("予約中のきっぷがあるため、退会できません。");
+        }
+
+        accountRepository.deleteById(accountId);
     }
 }

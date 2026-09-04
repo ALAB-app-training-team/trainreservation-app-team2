@@ -35,7 +35,7 @@ public class ReservationEmailRequestParams {
     @Data
     @NoArgsConstructor
     @AllArgsConstructor
-    public static class SelectedSeatDto {
+    public static class SelectedSeatParams {
         private String trainCarCd;
         private String trainCarTypeCd;
         private String seatCd;

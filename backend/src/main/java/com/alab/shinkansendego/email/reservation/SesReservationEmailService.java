@@ -36,16 +36,16 @@ public class SesReservationEmailService implements ReservationEmailService {
 
     @Async
     @Override
-    public void sendReservationConfirmation(ReservationEmailRequestParams dto) {
+    public void sendReservationConfirmation(ReservationEmailRequestParams params) {
         try {
             String formatterRideDate = "";
-            if (dto.getRideDate() != null) {
-                formatterRideDate = EmailUtils.rideDateFormatter(dto.getRideDate());
+            if (params.getRideDate() != null) {
+                formatterRideDate = EmailUtils.rideDateFormatter(params.getRideDate());
             }
 
             String seatDetail = "";
-            if (dto.getSeats() != null && !dto.getSeats().isEmpty()) {
-                seatDetail = EmailUtils.seatFormatter(dto.getSeats());
+            if (params.getSeats() != null && !params.getSeats().isEmpty()) {
+                seatDetail = EmailUtils.seatFormatter(params.getSeats());
             }
 
             String guestLoginUrl = baseUrl + EmailUtils.GUESTLOGIN_PATH + dto.getReservationId();
@@ -55,22 +55,22 @@ public class SesReservationEmailService implements ReservationEmailService {
 
             String body = String.format(
                 EmailUtils.CONFIRMATION_BODY,
-                dto.getReserverName() != null ? dto.getReserverName() : "ユーザー",
-                dto.getReservationId(),
+                params.getReserverName() != null ? params.getReserverName() : "ユーザー",
+                params.getReservationId(),
                 formatterRideDate,
-                dto.getDepartureStationName(),
-                dto.getDepartureTime(),
-                dto.getArrivalStationName(),
-                dto.getArrivalTime(),
-                dto.getTrainTypeName(),
+                params.getDepartureStationName(),
+                params.getDepartureTime(),
+                params.getArrivalStationName(),
+                params.getArrivalTime(),
+                params.getTrainTypeName(),
                 seatDetail,
-                dto.getTotalAmount(),
+                params.getTotalAmount(),
                 loginUrl
             );
 
             SendEmailRequest request = SendEmailRequest.builder()
                 .fromEmailAddress(String.format("%s <%s>", EmailUtils.SENDER_NAME, mailFrom))
-                .destination(Destination.builder().toAddresses(dto.getReserverMail()).build())
+                .destination(Destination.builder().toAddresses(params.getReserverMail()).build())
                 .content(EmailContent.builder()
                     .simple(msg -> msg
                         .subject(Content.builder().data(EmailUtils.SUBJECT).charset("UTF-8").build())
@@ -81,46 +81,46 @@ public class SesReservationEmailService implements ReservationEmailService {
                 .build();
 
             sesV2Client.sendEmail(request);
-            log.info("予約完了メールを正常に送信しました。 To： {}", dto.getReserverMail());
+            log.info("予約完了メールを正常に送信しました。 To： {}", params.getReserverMail());
         } catch (Exception e) {
-            log.error("予約完了メール送信中にエラーが発生しました。 To： {}", dto.getReserverMail(), e);
+            log.error("予約完了メール送信中にエラーが発生しました。 To： {}", params.getReserverMail(), e);
         }
     }
 
     @Async
     @Override
-    public void sendReservationChange(ReservationEmailRequestParams dto) {
+    public void sendReservationChange(ReservationEmailRequestParams params) {
         try {
             String formatterRideDate = "";
-            if (dto.getRideDate() != null) {
-                formatterRideDate = EmailUtils.rideDateFormatter(dto.getRideDate());
+            if (params.getRideDate() != null) {
+                formatterRideDate = EmailUtils.rideDateFormatter(params.getRideDate());
             }
 
             String seatDetail = "";
-            if (dto.getSeats() != null && !dto.getSeats().isEmpty()) {
-                seatDetail = EmailUtils.seatFormatter(dto.getSeats());
+            if (params.getSeats() != null && !params.getSeats().isEmpty()) {
+                seatDetail = EmailUtils.seatFormatter(params.getSeats());
             }
 
             String loginUrl = baseUrl + EmailUtils.LOGIN_PATH;
 
             String body = String.format(
                 EmailUtils.CHANGE_BODY,
-                dto.getReserverName() != null ? dto.getReserverName() : "ユーザー",
-                dto.getReservationId(),
+                params.getReserverName() != null ? params.getReserverName() : "ユーザー",
+                params.getReservationId(),
                 formatterRideDate,
-                dto.getDepartureStationName(),
-                dto.getDepartureTime(),
-                dto.getArrivalStationName(),
-                dto.getArrivalTime(),
-                dto.getTrainTypeName(),
+                params.getDepartureStationName(),
+                params.getDepartureTime(),
+                params.getArrivalStationName(),
+                params.getArrivalTime(),
+                params.getTrainTypeName(),
                 seatDetail,
-                differenceFormatter(dto.getTotalAmount(), dto.getOldAmount()),
+                differenceFormatter(params.getTotalAmount(), params.getOldAmount()),
                 loginUrl
             );
 
             SendEmailRequest request = SendEmailRequest.builder()
                 .fromEmailAddress(String.format("%s <%s>", EmailUtils.SENDER_NAME, mailFrom))
-                .destination(Destination.builder().toAddresses(dto.getReserverMail()).build())
+                .destination(Destination.builder().toAddresses(params.getReserverMail()).build())
                 .content(EmailContent.builder()
                     .simple(msg -> msg
                         .subject(Content.builder().data(EmailUtils.CHANGE_SUBJECT).charset("UTF-8").build())
@@ -131,41 +131,41 @@ public class SesReservationEmailService implements ReservationEmailService {
                 .build();
 
             sesV2Client.sendEmail(request);
-            log.info("予約変更完了メールを正常に送信しました。 To： {}", dto.getReserverMail());
+            log.info("予約変更完了メールを正常に送信しました。 To： {}", params.getReserverMail());
         } catch (Exception e) {
-            log.error("予約変更完了メール送信中にエラーが発生しました。 To： {}", dto.getReserverMail(), e);
+            log.error("予約変更完了メール送信中にエラーが発生しました。 To： {}", params.getReserverMail(), e);
         }
     }
 
     @Async
     @Override
-    public void sendReservationCancel(ReservationEmailRequestParams dto) {
+    public void sendReservationCancel(ReservationEmailRequestParams params) {
         try {
             String formatterRideDate = "";
-            if (dto.getRideDate() != null) {
-                formatterRideDate = EmailUtils.rideDateFormatter(dto.getRideDate());
+            if (params.getRideDate() != null) {
+                formatterRideDate = EmailUtils.rideDateFormatter(params.getRideDate());
             }
 
             String seatDetail = "";
             Integer refund = 0;
-            if (dto.getSeats() != null && !dto.getSeats().isEmpty()) {
-                seatDetail = EmailUtils.seatFormatter(dto.getSeats());
-                refund = dto.getSeats().size() * REFUND_FEE;
+            if (params.getSeats() != null && !params.getSeats().isEmpty()) {
+                seatDetail = EmailUtils.seatFormatter(params.getSeats());
+                refund = params.getSeats().size() * REFUND_FEE;
             }
 
-            Integer total = dto.getTotalAmount() - refund;
+            Integer total = params.getTotalAmount() - refund;
 
             String loginUrl = baseUrl + EmailUtils.LOGIN_PATH;
 
             String body = String.format(EmailUtils.CANCEL_BODY,
-                dto.getReserverName() != null ? dto.getReserverName() : "ユーザー",
-                dto.getReservationId(),
+                params.getReserverName() != null ? params.getReserverName() : "ユーザー",
+                params.getReservationId(),
                 formatterRideDate,
-                dto.getDepartureStationName(),
-                dto.getDepartureTime(),
-                dto.getArrivalStationName(),
-                dto.getArrivalTime(),
-                dto.getTrainTypeName(),
+                params.getDepartureStationName(),
+                params.getDepartureTime(),
+                params.getArrivalStationName(),
+                params.getArrivalTime(),
+                params.getTrainTypeName(),
                 seatDetail,
                 refund,
                 total,
@@ -174,7 +174,7 @@ public class SesReservationEmailService implements ReservationEmailService {
 
             SendEmailRequest request = SendEmailRequest.builder()
                 .fromEmailAddress(String.format("%s <%s>", EmailUtils.SENDER_NAME, mailFrom))
-                .destination(Destination.builder().toAddresses(dto.getReserverMail()).build())
+                .destination(Destination.builder().toAddresses(params.getReserverMail()).build())
                 .content(EmailContent.builder()
                     .simple(msg -> msg
                         .subject(Content.builder().data(EmailUtils.CANCEL_SUBJECT).charset("UTF-8").build())
@@ -185,39 +185,39 @@ public class SesReservationEmailService implements ReservationEmailService {
                 .build();
 
             sesV2Client.sendEmail(request);
-            log.info("予約キャンセルメールを正常に送信しました。 To： {}", dto.getReserverMail());
+            log.info("予約キャンセルメールを正常に送信しました。 To： {}", params.getReserverMail());
         } catch (Exception e) {
-            log.error("予約キャンセルメール送信中にエラーが発生しました。 To： {}", dto.getReserverMail(), e);
+            log.error("予約キャンセルメール送信中にエラーが発生しました。 To： {}", params.getReserverMail(), e);
         }
     }
 
     @Async
     @Override
-    public void sendSetCompanion(ReservationEmailRequestParams dto) {
+    public void sendSetCompanion(ReservationEmailRequestParams params) {
         try {
             String formatterRideDate = "";
-            if (dto.getRideDate() != null) {
-                formatterRideDate = EmailUtils.rideDateFormatter(dto.getRideDate());
+            if (params.getRideDate() != null) {
+                formatterRideDate = EmailUtils.rideDateFormatter(params.getRideDate());
             }
 
             String seatDetail = "";
             Integer seatFare = 0;
-            if (dto.getSeats() != null && dto.getSeats().size() == 1) {
-                seatDetail = EmailUtils.seatFormatter(dto.getSeats());
-                seatFare = dto.getSeats().getFirst().getSeatFare();
+            if (params.getSeats() != null && params.getSeats().size() == 1) {
+                seatDetail = EmailUtils.seatFormatter(params.getSeats());
+                seatFare = params.getSeats().getFirst().getSeatFare();
             }
 
-            String ticketUrl = baseUrl + EmailUtils.TICKET_PATH + dto.getReservationId();
+            String ticketUrl = baseUrl + EmailUtils.TICKET_PATH + params.getReservationId();
 
             String body = String.format(EmailUtils.SET_COMPANION_BODY,
-                dto.getReserverName() != null ? dto.getReserverName() : "ユーザー",
-                dto.getRepresentativeName(),
+                params.getReserverName() != null ? params.getReserverName() : "ユーザー",
+                params.getRepresentativeName(),
                 formatterRideDate,
-                dto.getDepartureStationName(),
-                dto.getDepartureTime(),
-                dto.getArrivalStationName(),
-                dto.getArrivalTime(),
-                dto.getTrainTypeName(),
+                params.getDepartureStationName(),
+                params.getDepartureTime(),
+                params.getArrivalStationName(),
+                params.getArrivalTime(),
+                params.getTrainTypeName(),
                 seatDetail,
                 seatFare,
                 ticketUrl
@@ -225,7 +225,7 @@ public class SesReservationEmailService implements ReservationEmailService {
 
             SendEmailRequest request = SendEmailRequest.builder()
                 .fromEmailAddress(String.format("%s <%s>", EmailUtils.SENDER_NAME, mailFrom))
-                .destination(Destination.builder().toAddresses(dto.getReserverMail()).build())
+                .destination(Destination.builder().toAddresses(params.getReserverMail()).build())
                 .content(EmailContent.builder()
                     .simple(msg -> msg
                         .subject(Content.builder().data(EmailUtils.SET_SUBJECT).charset("UTF-8").build())
@@ -236,44 +236,44 @@ public class SesReservationEmailService implements ReservationEmailService {
                 .build();
 
             sesV2Client.sendEmail(request);
-            log.info("割り当て完了メールを正常に送信しました。 To： {}", dto.getReserverMail());
+            log.info("割り当て完了メールを正常に送信しました。 To： {}", params.getReserverMail());
         } catch (Exception e) {
-            log.error("割り当て完了メール送信中にエラーが発生しました。 To： {}", dto.getReserverMail(), e);
+            log.error("割り当て完了メール送信中にエラーが発生しました。 To： {}", params.getReserverMail(), e);
         }
     }
 
     @Async
     @Override
-    public void sendReleaseCompanion(ReservationEmailRequestParams dto) {
+    public void sendReleaseCompanion(ReservationEmailRequestParams params) {
         try {
             String formatterRideDate = "";
-            if (dto.getRideDate() != null) {
-                formatterRideDate = EmailUtils.rideDateFormatter(dto.getRideDate());
+            if (params.getRideDate() != null) {
+                formatterRideDate = EmailUtils.rideDateFormatter(params.getRideDate());
             }
 
             String seatDetail = "";
             Integer seatFare = 0;
-            if (dto.getSeats() != null && dto.getSeats().size() == 1) {
-                seatDetail = EmailUtils.seatFormatter(dto.getSeats());
-                seatFare = dto.getSeats().getFirst().getSeatFare();
+            if (params.getSeats() != null && params.getSeats().size() == 1) {
+                seatDetail = EmailUtils.seatFormatter(params.getSeats());
+                seatFare = params.getSeats().getFirst().getSeatFare();
             }
 
             String body = String.format(EmailUtils.RELEASE_COMPANION_BODY,
-                dto.getReserverName() != null ? dto.getReserverName() : "ユーザー",
-                dto.getRepresentativeName(),
+                params.getReserverName() != null ? params.getReserverName() : "ユーザー",
+                params.getRepresentativeName(),
                 formatterRideDate,
-                dto.getDepartureStationName(),
-                dto.getDepartureTime(),
-                dto.getArrivalStationName(),
-                dto.getArrivalTime(),
-                dto.getTrainTypeName(),
+                params.getDepartureStationName(),
+                params.getDepartureTime(),
+                params.getArrivalStationName(),
+                params.getArrivalTime(),
+                params.getTrainTypeName(),
                 seatDetail,
                 seatFare
             );
 
             SendEmailRequest request = SendEmailRequest.builder()
                 .fromEmailAddress(String.format("%s <%s>", EmailUtils.SENDER_NAME, mailFrom))
-                .destination(Destination.builder().toAddresses(dto.getReserverMail()).build())
+                .destination(Destination.builder().toAddresses(params.getReserverMail()).build())
                 .content(EmailContent.builder()
                     .simple(msg -> msg
                         .subject(Content.builder().data(EmailUtils.RELEASE_SUBJECT).charset("UTF-8").build())
@@ -284,9 +284,9 @@ public class SesReservationEmailService implements ReservationEmailService {
                 .build();
 
             sesV2Client.sendEmail(request);
-            log.info("割り当て解除メールを正常に送信しました。 To： {}", dto.getReserverMail());
+            log.info("割り当て解除メールを正常に送信しました。 To： {}", params.getReserverMail());
         } catch (Exception e) {
-            log.error("割り当て解除メール送信中にエラーが発生しました。 To： {}", dto.getReserverMail(), e);
+            log.error("割り当て解除メール送信中にエラーが発生しました。 To： {}", params.getReserverMail(), e);
         }
     }
 }

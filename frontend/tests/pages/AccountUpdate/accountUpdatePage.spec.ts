@@ -1,6 +1,10 @@
 import { expect } from '@playwright/test';
 import { test } from '@tests/fixtures';
 import { AccountUpdatePage } from '@tests/pages/AccountUpdate/AccountUpdatePage';
+import { LoginPage } from '@tests/pages/Login/LoginPage';
+import { AccountCreatePage } from '@tests/pages/AccountCreate/AccountCreatePage';
+import { ReservationListPage } from '@tests/pages/ReservationList/ReservationListPage';
+import { ReservedTicketPage } from '../ReservedTicket/ReservedTicketPage';
 
 test('各項目の未入力メッセージが表示されること', async ({
     page,
@@ -56,4 +60,132 @@ test('各項目のバリデーションメッセージが表示されること',
     ).toBeVisible();
     await logout();
     await expect(page).toHaveURL('/login');
+});
+
+test('退会したらログインできないこと', async ({ page }) => {
+    const accountUpdatePage = new AccountUpdatePage(page);
+    const loginPage = new LoginPage(page);
+    const accountCreatePage = new AccountCreatePage(page);
+    // 他のテストとアカウントを共有しないよう、退会用のアカウントを毎回作成する
+    const deleteMail = `delete${Date.now()}@test.com`;
+    const deletePassword = 'Password1';
+
+    await loginPage.goto();
+    await expect(page).toHaveURL('/login');
+    await loginPage.clickCreateButton();
+    await expect(page).toHaveURL('/accountCreate');
+    await accountCreatePage.fillName('削除太郎');
+    await accountCreatePage.fillMailAddress(deleteMail);
+    await accountCreatePage.fillPassword(deletePassword);
+    await accountCreatePage.fillPasswordCheck(deletePassword);
+    await accountCreatePage.clickCreateButton();
+    await expect(page).toHaveURL('/login');
+
+    // 作成したアカウントでログインできること
+    await loginPage.fillMailAddress(deleteMail);
+    await loginPage.fillPassword(deletePassword);
+    await loginPage.clickLoginButton();
+    await expect(page).toHaveURL('/scheduleSearch');
+
+    // 退会できること
+    await accountUpdatePage.goto();
+    await expect(page).toHaveURL('/accountUpdate');
+    await accountUpdatePage.clickDeleteButton();
+    await expect(accountUpdatePage.deleteConfirmTitle).toBeVisible();
+    // キャンセルではモーダルが閉じるだけで退会されないこと
+    await accountUpdatePage.clickDeleteCancelButton();
+    await expect(accountUpdatePage.deleteConfirmTitle).toBeHidden();
+    await expect(page).toHaveURL('/accountUpdate');
+    // 「はい」を押したときだけ退会されること
+    await accountUpdatePage.clickDeleteButton();
+    await accountUpdatePage.clickDeleteConfirmButton();
+    await expect(page).toHaveURL('/login');
+    const deleteSuccessToast = page.getByText('退会が完了しました。');
+    await expect(deleteSuccessToast).toBeVisible();
+    // ログイン前のヘッダーに戻っていること
+    await expect(accountUpdatePage.header.loginLink.first()).toBeVisible();
+
+    // 退会したアカウントではログインできないこと
+    await expect(deleteSuccessToast).toBeHidden({ timeout: 10000 });
+    await loginPage.fillMailAddress(deleteMail);
+    await loginPage.fillPassword(deletePassword);
+    await loginPage.clickLoginButton();
+    await expect(page.getByText('ログインに失敗しました')).toBeVisible();
+    await expect(page).toHaveURL('/login');
+});
+
+test('予約中のきっぷがあると退会できないこと', async ({
+    page,
+    createReservation,
+    logout,
+}) => {
+    const accountUpdatePage = new AccountUpdatePage(page);
+    const loginPage = new LoginPage(page);
+    const accountCreatePage = new AccountCreatePage(page);
+    const reservationListPage = new ReservationListPage(page);
+    const reservedTicketPage = new ReservedTicketPage(page);
+    // 退会に失敗させるので、共有アカウントではなく専用のアカウントを作成する
+    const reservedMail = `reserved-${Date.now()}@test.com`;
+    const reservedPassword = 'Password1';
+
+    await loginPage.goto();
+    await expect(page).toHaveURL('/login');
+    await loginPage.clickCreateButton();
+    await expect(page).toHaveURL('/accountCreate');
+    await accountCreatePage.fillName('予約太郎');
+    await accountCreatePage.fillMailAddress(reservedMail);
+    await accountCreatePage.fillPassword(reservedPassword);
+    await accountCreatePage.fillPasswordCheck(reservedPassword);
+    await accountCreatePage.clickCreateButton();
+    await expect(page).toHaveURL('/login');
+
+    await loginPage.fillMailAddress(reservedMail);
+    await loginPage.fillPassword(reservedPassword);
+    await loginPage.clickLoginButton();
+    await expect(page).toHaveURL('/scheduleSearch');
+
+    // きっぷを1件予約する
+    await createReservation();
+    await expect(page).toHaveURL('/reservedTicket');
+
+    // 予約中のきっぷがあるため退会できないこと
+    await reservedTicketPage.header.clickUserName();
+    await reservedTicketPage.header.goToAccountUpdate();
+    await expect(page).toHaveURL('/accountUpdate');
+    await accountUpdatePage.clickDeleteButton();
+    await expect(accountUpdatePage.deleteConfirmTitle).toBeVisible();
+    await accountUpdatePage.clickDeleteConfirmButton();
+    await expect(
+        page.getByText('予約中のきっぷがあるため、退会できません。'),
+    ).toBeVisible();
+    await expect(page).toHaveURL('/accountUpdate');
+
+    // 退会されておらず、再度ログインできること
+    await accountUpdatePage.clickDeleteCancelButton();
+    await page.getByRole('button', { name: 'OK' }).click();
+    await logout();
+    await loginPage.fillMailAddress(reservedMail);
+    await loginPage.fillPassword(reservedPassword);
+    await loginPage.clickLoginButton();
+    await expect(page).toHaveURL('/scheduleSearch');
+
+    // きっぷをキャンセルすれば退会できること（テストデータを残さない後片付けも兼ねる）
+    await reservationListPage.goto();
+    await expect(page).toHaveURL('/reservationList');
+    await reservationListPage.ticketButton
+        .first()
+        .waitFor({ state: 'visible' });
+    await reservationListPage.clickThreeDotsButton();
+    await reservationListPage.clickRefundButton();
+    await reservationListPage.clickRefundConfirmButton();
+    await page
+        .getByRole('button', { name: 'キャンセル(0)' })
+        .waitFor({ state: 'hidden' });
+
+    await accountUpdatePage.goto();
+    await expect(page).toHaveURL('/accountUpdate');
+    await accountUpdatePage.clickDeleteButton();
+    await accountUpdatePage.clickDeleteConfirmButton();
+    await expect(page).toHaveURL('/login');
+    await expect(page.getByText('退会が完了しました。')).toBeVisible();
 });
