@@ -224,6 +224,49 @@ export function useAccountUpdateDto() {
         }
     };
 
+    const handleAccountDelete = async () => {
+        if (isSubmitting) return;
+        setIsSubmitting(true);
+
+        try {
+            await apiClient.delete(ENDPOINTS.ACCOUNT());
+            localStorage.clear();
+            toast.success('退会が完了しました。');
+            navigate('/login', { replace: true });
+        } catch (error) {
+            if (
+                axios.isAxiosError(error) &&
+                error.response?.status === HttpStatusCode.Conflict
+            ) {
+                toast.error(ERROR_MESSAGE.ACCOUNT_NOT_DELETE, {
+                    duration: Infinity,
+                    action: {
+                        label: 'OK',
+                        onClick: () => {},
+                    },
+                    classNames: {
+                        title: 'text-left whitespace-pre-line',
+                        actionButton: '!px-4 !py-2 !text-base !h-auto',
+                    },
+                });
+            } else {
+                toast.error(ERROR_MESSAGE.ACCOUNT_DELETE_RETRY, {
+                    duration: Infinity,
+                    action: {
+                        label: 'OK',
+                        onClick: () => {},
+                    },
+                    classNames: {
+                        title: 'text-left whitespace-pre-line',
+                        actionButton: '!px-4 !py-2 !text-base !h-auto',
+                    },
+                });
+            }
+        } finally {
+            setIsSubmitting(false);
+        }
+    };
+
     return {
         accountUpdateForm,
         handleChange,
@@ -231,6 +274,7 @@ export function useAccountUpdateDto() {
         getFieldError,
         isDisable,
         handleAccount,
+        handleAccountDelete,
         isSubmitting,
     };
 }

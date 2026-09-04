@@ -70,12 +70,12 @@ export function ReservedSeats({
                                             {id === 'reservationDetail' && (
                                                 <BsTrainFreightFrontFill className="text-primary" />
                                             )}
-                                            <div>{`${seat.trainCarNumber}号車`}</div>
                                             {id === 'reservationDetail' && (
                                                 <div>
                                                     {seat.trainCarTypeName}
                                                 </div>
                                             )}
+                                            <div>{`${seat.trainCarNumber}号車`}</div>
                                             <div>
                                                 {`${seat.seatNumber}番` +
                                                     `${seat.seatColumn}席`}

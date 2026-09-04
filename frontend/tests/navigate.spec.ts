@@ -13,11 +13,14 @@ import { AccountUpdatePage } from './pages/AccountUpdate/AccountUpdatePage';
 import { PasswordUpdatePage } from './pages/PasswordUpdate/PasswordUpdatePage';
 
 test('navigate-ゲストログイン全機能', async ({ page, context, logout }) => {
+    test.setTimeout(60_000);
     const scheduleSearchPage = new ScheduleSearchPage(page);
     const selectSeatPage = new SelectSeatPage(page);
     const reservationGuestLoginPage = new ReservationGuestLoginPage(page);
     const reservedTicketPage = new ReservedTicketPage(page);
     const loginPage = new LoginPage(page);
+    const accountUpdatePage = new AccountUpdatePage(page);
+    const reservationListPage = new ReservationListPage(page);
 
     // 検索～予約
     await scheduleSearchPage.goto();
@@ -29,7 +32,7 @@ test('navigate-ゲストログイン全機能', async ({ page, context, logout }
     await scheduleSearchPage.clickDetailButton();
     await expect(page).toHaveURL('/selectSeat');
     await selectSeatPage.selectSeat();
-    await selectSeatPage.inputReserverInfo();
+    await selectSeatPage.inputGuestReserverInfo();
     await selectSeatPage.inputCardInfo();
     await selectSeatPage.clickReseveButton();
     await selectSeatPage.clickCancelButton();
@@ -63,6 +66,7 @@ test('navigate-ゲストログイン全機能', async ({ page, context, logout }
     ).toBeHidden();
 
     // 検索～アカウント作成して予約
+    const createdAccountMail = `guest-${Date.now()}@test.com`;
     await scheduleSearchPage.goto();
     await expect(page).toHaveURL('/scheduleSearch');
     await scheduleSearchPage.clickDetailButton();
@@ -72,7 +76,8 @@ test('navigate-ゲストログイン全機能', async ({ page, context, logout }
     await scheduleSearchPage.clickDetailButton();
     await expect(page).toHaveURL('/selectSeat');
     await selectSeatPage.selectSeat();
-    await selectSeatPage.inputReserverInfo();
+    await selectSeatPage.fillName('シートマップ画面で新規登録太郎');
+    await selectSeatPage.fillMailAddress(createdAccountMail);
     await selectSeatPage.clickAccountCreateCheckBox();
     await selectSeatPage.inputPasswordInfo();
     await selectSeatPage.inputCardInfo();
@@ -85,9 +90,21 @@ test('navigate-ゲストログイン全機能', async ({ page, context, logout }
     // 作成したアカウントでログイン
     await logout();
     await loginPage.goto();
-    await loginPage.inputCreatedAccountLoginInfo();
+    await loginPage.fillMailAddress(createdAccountMail);
+    await loginPage.fillPassword('Password1');
     await loginPage.clickLoginButton();
     await expect(page).toHaveURL('/scheduleSearch');
+    await scheduleSearchPage.header.clickUserName();
+    await scheduleSearchPage.header.goToReservationList();
+    await reservationListPage.clickThreeDotsButton();
+    await reservationListPage.clickRefundButton();
+    await reservationListPage.clickRefundConfirmButton();
+    await scheduleSearchPage.header.clickUserName();
+    await scheduleSearchPage.header.goToAccountUpdate();
+    await expect(page).toHaveURL('/accountUpdate');
+    await accountUpdatePage.clickDeleteButton();
+    await accountUpdatePage.clickDeleteConfirmButton();
+    await expect(page).toHaveURL('/login');
 });
 
 test('navigate-アカウントログイン全機能', async ({
@@ -151,8 +168,10 @@ test('navigate-アカウントログイン全機能', async ({
     await reservationListPage.clickChangeButton();
     await reservationListPage.clickChangeSeatConfirmButton();
     await expect(page).toHaveURL('/selectSeat');
+    await page
+        .getByRole('heading', { name: '1号車' })
+        .waitFor({ state: 'visible' });
     await selectSeatPage.selectSeat();
-    await selectSeatPage.emptySeat.nth(1).click();
     await selectSeatPage.clickUpdateButton();
     await expect(page.getByText('予約変更確認')).toBeVisible();
     await selectSeatPage.clickUpdateConfirmButton();
@@ -180,7 +199,6 @@ test('navigate-アカウントログイン全機能', async ({
     await expect(page).toHaveURL('/selectSeat');
     await expect(page.getByText('座席が選択されていません')).toBeVisible();
     await selectSeatPage.selectSeat();
-    await selectSeatPage.emptySeat.nth(1).click();
     await selectSeatPage.clickUpdateButton();
     await selectSeatPage.clickUpdateConfirmButton();
     await expect(page).toHaveURL('/reservedTicket');
@@ -202,8 +220,6 @@ test('navigate-アカウントログイン全機能', async ({
     await reservedTicketPage.clickChangeSeatConfirmButton();
     await expect(page).toHaveURL('/selectSeat');
     await selectSeatPage.selectSeat();
-    await selectSeatPage.emptySeat.nth(1).click();
-    await selectSeatPage.selectSeat();
     await selectSeatPage.clickUpdateButton();
     await expect(page.getByText('予約変更確認')).toBeVisible();
     await selectSeatPage.clickUpdateConfirmButton();
@@ -226,7 +242,6 @@ test('navigate-アカウントログイン全機能', async ({
     await expect(page).toHaveURL('/selectSeat');
     await expect(page.getByText('座席が選択されていません')).toBeVisible();
     await selectSeatPage.selectSeat();
-    await selectSeatPage.emptySeat.nth(1).click();
     await selectSeatPage.clickUpdateButton();
     await selectSeatPage.clickUpdateConfirmButton();
     await expect(page).toHaveURL('/reservedTicket');
@@ -271,46 +286,51 @@ test('navigate-管理者ログイン-管理機能', async ({
     const loginPage = new LoginPage(page);
     const passwordUpdateForAdminPage = new PasswordUpdateForAdminPage(page);
     const accountCreatePage = new AccountCreatePage(page);
+    const accountUpdatePage = new AccountUpdatePage(page);
+    const accountMailAddress = `password-${Date.now()}@test.co.jp`;
 
-    // 山田太郎アカウント新規登録
+    // 新規登録 Password1
     await loginPage.goto();
     await loginPage.clickCreateButton();
     await expect(page).toHaveURL('/accountCreate');
-    await accountCreatePage.inputCreateFirstAccountInfo();
+    await accountCreatePage.fillName('管理者でパスワード変更太郎');
+    await accountCreatePage.fillMailAddress(accountMailAddress);
+    await accountCreatePage.fillPassword('Password1');
+    await accountCreatePage.fillPasswordCheck('Password1');
     await accountCreatePage.clickCreateButton();
     await expect(page).toHaveURL('/login');
 
-    // 山田太郎ログイン
-    await loginPage.fillMailAddress('first@test.co.jp');
+    // ユーザがPassword1でログインできること
+    await loginPage.fillMailAddress(accountMailAddress);
     await loginPage.fillPassword('Password1');
     await loginPage.clickLoginButton();
     await expect(page).toHaveURL('/scheduleSearch');
     await expect(scheduleSearchPage.header.userName).toBeVisible();
     await logout();
 
-    // 山田太郎のパスワード変更
+    // 管理者でユーザのパスワード変更 Password2
     await adminLogin();
     await expect(page).toHaveURL('/admin/password');
-    await passwordUpdateForAdminPage.inputUpdateFirstAccountInfo();
+    await passwordUpdateForAdminPage.fillName('管理者でパスワード変更太郎');
+    await passwordUpdateForAdminPage.fillMailAddress(accountMailAddress);
+    await passwordUpdateForAdminPage.fillPassword('Password2');
+    await passwordUpdateForAdminPage.fillPasswordCheck('Password2');
     await passwordUpdateForAdminPage.clickUpdateButton();
     await expect(page).toHaveURL('/admin/password');
     await logout();
 
-    // 山田太郎ログイン
-    await loginPage.fillMailAddress('first@test.co.jp');
+    // ユーザが変更した(Password2)でログインできること
+    await loginPage.fillMailAddress(accountMailAddress);
     await loginPage.fillPassword('Password2');
     await loginPage.clickLoginButton();
     await expect(page).toHaveURL('/scheduleSearch');
     await expect(scheduleSearchPage.header.userName).toBeVisible();
-    await logout();
-
-    // 山田太郎のパスワードを元に戻す
-    await adminLogin();
-    await expect(page).toHaveURL('/admin/password');
-    await passwordUpdateForAdminPage.inputRevertFirstAccountInfo();
-    await passwordUpdateForAdminPage.clickUpdateButton();
-    await expect(page).toHaveURL('/admin/password');
-    await logout();
+    await scheduleSearchPage.header.clickUserName();
+    await scheduleSearchPage.header.goToAccountUpdate();
+    await expect(page).toHaveURL('/accountUpdate');
+    await accountUpdatePage.clickDeleteButton();
+    await accountUpdatePage.clickDeleteConfirmButton();
+    await expect(page).toHaveURL('/login');
 });
 
 test('navigate-座席選択画面からログインして予約', async ({ page, logout }) => {
@@ -325,9 +345,10 @@ test('navigate-座席選択画面からログインして予約', async ({ page,
     await selectSeatPage.clickLoginButton();
     await expect(page).toHaveURL('/login');
     await loginPage.loginButton.waitFor({ state: 'visible' });
-    await loginPage.inputcommonLoginInfo();
+    await loginPage.inputCommonLoginInfo();
     await loginPage.clickLoginButton();
-    await await selectSeatPage.selectSeat();
+    await expect(page).toHaveURL('/selectSeat');
+    await selectSeatPage.selectSeat();
     await expect(page.getByText('座席が選択されていません')).toBeHidden();
     await selectSeatPage.inputCardInfo();
     await selectSeatPage.clickReseveButton();
@@ -357,7 +378,7 @@ test('navigate-header', async ({ page }) => {
     await expect(page).toHaveURL('/scheduleSearch');
     await scheduleSearchPage.header.goToLogin();
     await expect(page).toHaveURL('/login');
-    await loginPage.inputcommonLoginInfo();
+    await loginPage.inputCommonLoginInfo();
     await loginPage.clickLoginButton();
     await expect(page).toHaveURL('/scheduleSearch');
     await scheduleSearchPage.header.clickUserName();

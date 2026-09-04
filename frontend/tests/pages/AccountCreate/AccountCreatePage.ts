@@ -59,12 +59,6 @@ export class AccountCreatePage {
     async clickCreateButton() {
         await this.createButton.click();
     }
-    async inputCreateFirstAccountInfo() {
-        await this.fillName('山田 太郎');
-        await this.fillMailAddress('first@test.co.jp');
-        await this.fillPassword('Password1');
-        await this.fillPasswordCheck('Password1');
-    }
     async inputCreateRamdomAccountInfo() {
         await this.fillName('ランダム 太郎');
         await this.fillMailAddress(this.ramdomMail);
