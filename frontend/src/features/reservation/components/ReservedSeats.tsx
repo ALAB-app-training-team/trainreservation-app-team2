@@ -40,7 +40,7 @@ export function ReservedSeats({
             <div className="flex w-full flex-col items-start gap-2 sm:flex-row sm:flex-wrap sm:items-center sm:gap-4">
                 {title && (
                     <div className="flex items-center gap-2">
-                        <MdAirlineSeatReclineExtra className="mt-0.5" />
+                        <MdAirlineSeatReclineExtra className="text-xl" />
                         <label>座席</label>
                     </div>
                 )}
