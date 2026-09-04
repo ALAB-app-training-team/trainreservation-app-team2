@@ -92,8 +92,8 @@ export function ScheduleSearchForm({
         <>
             <div className="flex justify-center">
                 <div className="flex w-full max-w-5xl flex-col gap-4">
-                    <div className="bg-primary-light flex flex-col justify-between gap-4 rounded-2xl p-8">
-                        <div className="flex flex-col justify-between gap-4 md:flex-row md:items-center">
+                    <div className="bg-primary-light flex flex-col justify-between gap-2 rounded-2xl p-4 md:gap-4 md:p-8">
+                        <div className="flex flex-col justify-between gap-2 md:flex-row md:items-center md:gap-4">
                             <StationSelect
                                 id="departureStation"
                                 label="乗車駅"
@@ -119,7 +119,7 @@ export function ScheduleSearchForm({
                                 getFieldError={getFieldError}
                             />
                         </div>
-                        <div className="flex flex-col justify-between gap-4 md:flex-row">
+                        <div className="flex flex-col justify-between gap-2 md:flex-row md:gap-4">
                             <CustomDatePicker
                                 id="date"
                                 label="乗車日"
