@@ -12,7 +12,7 @@ export function AvailableOnlyFilter({
     return (
         <div className="flex flex-col">
             <div
-                className={`flex items-center gap-2 ${isDisabled && 'cursor-not-allowed'}`}
+                className={`flex items-center gap-2 ${isDisabled ? 'cursor-not-allowed' : ''}`}
             >
                 <input
                     type="checkbox"
