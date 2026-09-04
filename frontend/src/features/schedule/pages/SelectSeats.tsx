@@ -460,7 +460,6 @@ export function SelectSeats() {
                                 (sum, seat) => sum + (seat.seatFare ?? 0),
                                 0,
                             )}
-                            isOpen={isSheetOpen}
                             onToggle={() => setIsSheetOpen((prev) => !prev)}
                         />
                         <div className="flex w-full flex-col gap-4 p-8">
