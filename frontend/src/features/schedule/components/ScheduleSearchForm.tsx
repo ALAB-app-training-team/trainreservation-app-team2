@@ -7,7 +7,6 @@ import {
     HiOutlinePlus,
     HiOutlinePlusCircle,
     HiOutlineSwitchHorizontal,
-    HiOutlineSwitchVertical,
 } from 'react-icons/hi';
 
 import { AvailableOnlyFilter } from '@/features/schedule/components/AvailableOnlyFilter';
@@ -92,8 +91,8 @@ export function ScheduleSearchForm({
         <>
             <div className="flex justify-center">
                 <div className="flex w-full max-w-5xl flex-col gap-4">
-                    <div className="bg-primary-light flex flex-col justify-between gap-2 rounded-2xl p-4 md:gap-4 md:p-8">
-                        <div className="flex flex-col justify-between gap-2 md:flex-row md:items-center md:gap-4">
+                    <div className="bg-primary-light flex flex-col justify-between gap-4 rounded-2xl p-4 md:p-8">
+                        <div className="flex justify-between gap-2 md:gap-4">
                             <StationSelect
                                 id="departureStation"
                                 label="乗車駅"
@@ -101,13 +100,12 @@ export function ScheduleSearchForm({
                                 value={searchRequestDto.departureStationCd}
                                 setValue={setDepartureStation}
                             />
-                            <div className="w-full text-center md:w-fit">
+                            <div className="w-fit text-center">
                                 <button
                                     onClick={switchDepartureAndArrivalStation}
-                                    className="border-primary w-fit rounded-full border bg-white p-1 text-xl md:mt-8"
+                                    className="border-primary mt-8 w-fit rounded-full border bg-white p-1 text-xl"
                                 >
-                                    <HiOutlineSwitchHorizontal className="hidden md:block" />
-                                    <HiOutlineSwitchVertical className="block md:hidden" />
+                                    <HiOutlineSwitchHorizontal />
                                 </button>
                             </div>
                             <StationSelect
@@ -119,7 +117,7 @@ export function ScheduleSearchForm({
                                 getFieldError={getFieldError}
                             />
                         </div>
-                        <div className="flex flex-col justify-between gap-2 md:flex-row md:gap-4">
+                        <div className="flex flex-col justify-between gap-4 md:flex-row">
                             <CustomDatePicker
                                 id="date"
                                 label="乗車日"
