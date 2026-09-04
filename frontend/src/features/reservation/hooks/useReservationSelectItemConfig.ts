@@ -17,8 +17,6 @@ export function useReservationSelectItemConfig(
     const canCheckReservation = !isDeleted && isEnabled;
     const canSearchReturinTrip = !isDeleted;
     const showThreeDotsMenu = canCancelReservation || canUpdateReservation;
-    const isOnlyReturnTrip =
-        canSearchReturinTrip && !canCheckReservation && !showThreeDotsMenu;
 
     return {
         canCancelReservation,
@@ -26,6 +24,5 @@ export function useReservationSelectItemConfig(
         canCheckReservation,
         canSearchReturinTrip,
         showThreeDotsMenu,
-        isOnlyReturnTrip,
     };
 }

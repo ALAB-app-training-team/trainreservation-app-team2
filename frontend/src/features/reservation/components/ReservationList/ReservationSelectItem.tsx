@@ -36,7 +36,6 @@ export function ReservationSelectItem({
         canCheckReservation,
         canSearchReturinTrip,
         showThreeDotsMenu,
-        isOnlyReturnTrip,
     } = useReservationSelectItemConfig(details);
     const [isMenuOpen, setIsMenuOpen] = useState(false);
     const { ref: menuRef } = useOutsideClick(
@@ -119,7 +118,7 @@ export function ReservationSelectItem({
                     seats={details.reservedSeats}
                 />
             </div>
-            <div className="flex flex-col items-start justify-between gap-2 py-2 sm:flex-row sm:items-center">
+            <div className="flex flex-col justify-between gap-2 py-2 sm:flex-row">
                 <div className="flex items-baseline">
                     <div>お支払い合計：</div>
                     <div
@@ -133,9 +132,7 @@ export function ReservationSelectItem({
                     {canSearchReturinTrip && (
                         <button
                             onClick={handleSearchReturnTrip}
-                            className={`border-primary text-primary flex items-center justify-center gap-1 rounded-md border px-3 py-1.5 text-sm whitespace-nowrap sm:w-auto sm:gap-2 sm:px-4 sm:py-2 ${
-                                isOnlyReturnTrip ? 'w-full' : ''
-                            }`}
+                            className={`border-primary text-primary flex w-full items-center justify-center gap-4 rounded-md border px-4 py-2 text-sm whitespace-nowrap sm:w-auto`}
                         >
                             <FaSearch />
                             復路で検索
@@ -144,7 +141,7 @@ export function ReservationSelectItem({
                     {canCheckReservation && (
                         <button
                             onClick={handleReservationDetail}
-                            className="bg-primary flex items-center justify-center gap-1 rounded-md px-3 py-1.5 text-sm whitespace-nowrap text-white sm:gap-4 sm:px-4 sm:py-2"
+                            className="bg-primary flex w-full items-center justify-center gap-4 rounded-md px-4 py-2 text-sm whitespace-nowrap text-white"
                         >
                             <BsQrCode />
                             チケットを表示
@@ -154,7 +151,7 @@ export function ReservationSelectItem({
                         <div className="relative" ref={menuRef}>
                             <button
                                 onClick={handleMenuOpen}
-                                className="text-primary py-1.5 sm:py-2"
+                                className="text-primary py-2"
                                 data-testid="three-dots-button"
                             >
                                 <MdMoreVert />
