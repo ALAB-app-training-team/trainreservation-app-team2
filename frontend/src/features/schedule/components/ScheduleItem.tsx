@@ -117,7 +117,7 @@ export function ScheduleItem({
                         const trainTypeName =
                             schedule.trainTypeName.split(/(\d+)/);
                         return (
-                            <div className="w-full min-w-16 text-left">
+                            <div className="w-full min-w-20 text-left">
                                 <div className="text-lg font-extrabold">
                                     {trainTypeName[0]}
                                 </div>
