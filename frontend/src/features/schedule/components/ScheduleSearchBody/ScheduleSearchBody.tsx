@@ -56,7 +56,7 @@ export function ScheduleSearchBody() {
     return (
         <>
             <div className="flex justify-center">
-                <div className="mx-8 my-4 flex w-full max-w-5xl flex-col gap-4">
+                <div className="mx-4 my-2 flex w-full max-w-5xl flex-col gap-2 md:mx-8 md:my-4 md:gap-4">
                     {isBack ? (
                         <button
                             data-testid={'back-button-in-scheduleSearch'}
