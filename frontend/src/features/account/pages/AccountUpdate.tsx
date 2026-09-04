@@ -1,6 +1,5 @@
 import { useState } from 'react';
 import { FiUser } from 'react-icons/fi';
-import { toast } from 'sonner';
 
 import { AccountDeleteConfirmModal } from '@/features/account/components/AccountDeleteConfirmModal';
 import { AccountInput } from '@/features/account/components/AccountInput';
@@ -25,24 +24,6 @@ export function AccountUpdate() {
     const isAdmin = localStorage.getItem('role') === 'ROLE_ADMIN';
     const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false);
 
-    const handleUpdate = async () => {
-        handleAccount();
-        toast.warning(
-            '予約に割り当てられた氏名・メールアドレスは自動で変更されません。\n同行者割り当てから変更してください。',
-            {
-                duration: Infinity,
-                action: {
-                    label: 'OK',
-                    onClick: () => {},
-                },
-                classNames: {
-                    title: 'text-left whitespace-pre-line',
-                    actionButton: '!px-4 !py-2 !text-base !h-auto',
-                },
-            },
-        );
-    };
-
     return (
         <div className="flex justify-center">
             <div className="flex w-1/2 flex-col items-center justify-center gap-4 p-8 md:w-4/10">
@@ -59,7 +40,7 @@ export function AccountUpdate() {
                 <form
                     onSubmit={(e) => {
                         e.preventDefault();
-                        handleUpdate();
+                        handleAccount();
                     }}
                     className="flex w-full flex-col gap-4"
                 >
@@ -101,7 +82,7 @@ export function AccountUpdate() {
                         />
                     </div>
                     <div className="font-bold">
-                        ※予約に紐づく氏名・メールアドレスは同行者割り当てから変更してください。
+                        ※チケットに紐づく氏名・メールアドレスは同行者割り当てから変更してください。
                     </div>
                     <button
                         type="submit"
