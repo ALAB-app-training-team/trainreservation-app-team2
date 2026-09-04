@@ -209,9 +209,6 @@ export function useReserveUser() {
         if (e.target.id === 'cardNumber') {
             value = e.target.value.replace(/[^0-9]/g, '').slice(0, 22);
         }
-        if (e.target.id === 'cardName') {
-            value = e.target.value.toUpperCase().replace(/[^A-Z\s]/g, '');
-        }
         if (e.target.id === 'cvc') {
             value = e.target.value.replace(/[^0-9]/g, '').slice(0, 4);
         }
