@@ -171,8 +171,10 @@ export function ScheduleSearchForm({
                         </div>
                         <div className="flex flex-col gap-2">
                             <div
-                                className={`relative overflow-hidden ${
-                                    isExpanded ? 'h-fit' : 'max-h-12'
+                                className={`relative ${
+                                    isExpanded
+                                        ? 'h-fit'
+                                        : 'max-h-12 overflow-hidden'
                                 }`}
                             >
                                 {/* 検索オプション項目div */}
