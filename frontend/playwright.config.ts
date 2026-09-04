@@ -14,7 +14,9 @@ import { defineConfig, devices } from '@playwright/test';
 export default defineConfig({
     testDir: './tests',
     /* ローカル実行時はvisualRegressionを除外し、GitHubActionでのみ実行する */
-    testIgnore: process.env.CI ? [] : ['**/visualRegression.spec.ts'],
+    testIgnore: process.env.CI
+        ? []
+        : ['**/visualRegression.spec.ts', '**/visualRegressionIPhone.spec.ts'],
     snapshotPathTemplate:
         '{testDir}/{testFileDir}/visualRegression.spec.ts-snapshots/{arg}{ext}',
     fullyParallel: false,
@@ -63,7 +65,12 @@ export default defineConfig({
         {
             name: 'Microsoft Edge',
             use: { ...devices['Desktop Edge'], channel: 'msedge' },
-            testIgnore: ['**/visualRegressionIPhone.spec.ts'],
+            testIgnore: process.env.CI
+                ? ['**/visualRegressionIPhone.spec.ts']
+                : [
+                      '**/visualRegression.spec.ts',
+                      '**/visualRegressionIPhone.spec.ts',
+                  ],
         },
         // {
         //   name: 'Google Chrome',
