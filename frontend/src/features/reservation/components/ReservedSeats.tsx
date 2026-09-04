@@ -37,15 +37,15 @@ export function ReservedSeats({
 }: ReservedSeatsProps) {
     return (
         <>
-            <div className="flex w-full flex-col gap-2 sm:flex-row sm:flex-wrap">
+            <div className="flex w-full flex-col gap-2 md:flex-row md:flex-wrap">
                 {title && (
                     <div className="flex items-center gap-2">
-                        <MdAirlineSeatReclineExtra className="mt-0.5 text-xl sm:mt-0" />
+                        <MdAirlineSeatReclineExtra className="mt-0.5 text-xl md:mt-0" />
                         <label>座席</label>
                     </div>
                 )}
                 <div
-                    className="order-1 flex flex-wrap gap-2 sm:order-2 sm:w-full"
+                    className="order-1 flex flex-wrap gap-2 md:order-2 md:w-full"
                     data-testid="reserved-seats"
                 >
                     {seats.length !== 0 ? (
@@ -100,9 +100,9 @@ export function ReservedSeats({
                     )}
                 </div>
                 {title && seats.some((seat) => !seat.name) && (
-                    <div className="order-2 w-fit rounded-full px-2 text-left text-orange-500 sm:order-1">
+                    <div className="order-2 w-fit rounded-full px-2 text-left text-orange-500 md:order-1">
                         同行者が割り当てられていない座席が
-                        <br className="sm:hidden" />
+                        <br className="md:hidden" />
                         あります
                     </div>
                 )}

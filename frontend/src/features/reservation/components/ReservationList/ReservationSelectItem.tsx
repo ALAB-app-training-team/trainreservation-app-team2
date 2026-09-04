@@ -95,7 +95,7 @@ export function ReservationSelectItem({
             <div className="flex justify-between">
                 <div className="flex w-full flex-col items-start">
                     <div className="flex items-center gap-2">
-                        <FaClock className="mt-0.5 sm:mt-0" />
+                        <FaClock className="mt-0.5 md:mt-0" />
                         <label>出発</label>
                     </div>
                     <label
@@ -118,7 +118,7 @@ export function ReservationSelectItem({
                     seats={details.reservedSeats}
                 />
             </div>
-            <div className="flex flex-col justify-between gap-2 py-2 sm:flex-row">
+            <div className="flex flex-col justify-between gap-2 py-2 md:flex-row">
                 <div className="flex items-baseline">
                     <div>お支払い合計：</div>
                     <div
@@ -128,11 +128,11 @@ export function ReservationSelectItem({
                         ￥{totalFare.toLocaleString()}
                     </div>
                 </div>
-                <div className="flex w-full gap-2 sm:w-auto sm:justify-end">
+                <div className="flex w-full gap-2 md:w-auto md:justify-end">
                     {canSearchReturinTrip && (
                         <button
                             onClick={handleSearchReturnTrip}
-                            className="border-primary text-primary flex w-full items-center justify-center gap-4 rounded-md border px-4 py-2 text-sm whitespace-nowrap sm:w-auto"
+                            className="border-primary text-primary flex w-full items-center justify-center gap-4 rounded-md border px-4 py-2 text-sm whitespace-nowrap md:w-auto"
                         >
                             <FaSearch />
                             復路で検索
