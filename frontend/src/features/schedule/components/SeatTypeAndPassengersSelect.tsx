@@ -36,7 +36,7 @@ export function SeatTypeAndPassengersSelect({
     );
 
     return (
-        <div className="w-full　items-center flex justify-between gap-4">
+        <div className="flex w-full items-center justify-between gap-4">
             <div className="flex w-full flex-col items-start gap-2">
                 <label htmlFor="seatType">座席種別</label>
                 <Select
