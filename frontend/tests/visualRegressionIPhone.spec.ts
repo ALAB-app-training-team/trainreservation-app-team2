@@ -1,5 +1,4 @@
-import { expect } from '@playwright/test';
-import { test } from '@tests/fixtures';
+import { test } from '@tests/visualFixtures';
 
 test('visual-iPhone-scheduleSearch', async ({ visualScheduleSearch }) => {
     await visualScheduleSearch();
@@ -16,15 +15,9 @@ test('visual-iPhone-selectSeat-accountCreate', async ({
 });
 
 test('visual-iPhone-selectSeat-account', async ({
-    page,
-    commonLogin,
-    logout,
     visualSelectSeatAccount,
 }) => {
-    await commonLogin();
     await visualSelectSeatAccount();
-    await logout();
-    await expect(page).toHaveURL('/login');
 });
 
 test('visual-iPhone-reservationGuestLogin', async ({
@@ -41,68 +34,24 @@ test('visual-iPhone-accountCreate', async ({ visualAccountCreate }) => {
     await visualAccountCreate();
 });
 
-test('visual-iPhone-accountUpdate', async ({
-    page,
-    commonLogin,
-    logout,
-    visualAccountUpdate,
-}) => {
-    await commonLogin();
+test('visual-iPhone-accountUpdate', async ({ visualAccountUpdate }) => {
     await visualAccountUpdate();
-    await logout();
-    await expect(page).toHaveURL('/login');
 });
 
-test('visual-iPhone-passwordUpdate', async ({
-    page,
-    commonLogin,
-    logout,
-    visualPasswordUpdate,
-}) => {
-    await commonLogin();
+test('visual-iPhone-passwordUpdate', async ({ visualPasswordUpdate }) => {
     await visualPasswordUpdate();
-    await logout();
-    await expect(page).toHaveURL('/login');
 });
 
 test('visual-iPhone-passwordUpdateForAdmin', async ({
-    page,
-    adminLogin,
-    logout,
     visualPasswordUpdateForAdmin,
 }) => {
-    await adminLogin();
     await visualPasswordUpdateForAdmin();
-    await logout();
-    await expect(page).toHaveURL('/login');
 });
 
-test('visual-iPhone-reservationList', async ({
-    page,
-    commonLogin,
-    createReservation,
-    logout,
-    visualReservationList,
-}) => {
-    await commonLogin();
-    await expect(page).toHaveURL('/scheduleSearch');
-    await createReservation();
+test('visual-iPhone-reservationList', async ({ visualReservationList }) => {
     await visualReservationList();
-    await logout();
-    await expect(page).toHaveURL('/login');
 });
 
-test('visual-iPhone-reservedTicket', async ({
-    page,
-    commonLogin,
-    logout,
-    createReservation,
-    visualReservedTicket,
-}) => {
-    await commonLogin();
-    await expect(page).toHaveURL('/scheduleSearch');
-    await createReservation();
+test('visual-iPhone-reservedTicket', async ({ visualReservedTicket }) => {
     await visualReservedTicket();
-    await logout();
-    await expect(page).toHaveURL('/login');
 });
