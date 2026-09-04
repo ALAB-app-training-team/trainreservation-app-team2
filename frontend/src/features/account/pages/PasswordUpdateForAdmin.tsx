@@ -22,6 +22,7 @@ export function PasswordUpdateForAdmin() {
     const [passwordType, setPasswordType] = useState('password');
     useToastForRedirect();
     useEffect(() => {
+        window.scroll(0, 0);
         removeGuestReservation(queryClient);
     }, []);
 

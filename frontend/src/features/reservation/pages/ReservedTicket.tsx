@@ -71,6 +71,7 @@ export function ReservedTicket() {
     const queryClient = useQueryClient();
     const accountInfo = localStorage.getItem('name');
     useEffect(() => {
+        window.scroll(0, 0);
         const nv = performance.getEntriesByType(
             'navigation',
         )[0] as PerformanceNavigationTiming;

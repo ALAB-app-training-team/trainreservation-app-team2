@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { FiUser } from 'react-icons/fi';
 
 import { AccountDeleteConfirmModal } from '@/features/account/components/AccountDeleteConfirmModal';
@@ -23,6 +23,10 @@ export function AccountUpdate() {
     // 管理者が退会すると管理者権限が必要な機能に到達できなくなるため、退会させない
     const isAdmin = localStorage.getItem('role') === 'ROLE_ADMIN';
     const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false);
+
+    useEffect(() => {
+        window.scrollTo(0, 0);
+    }, []);
 
     return (
         <div className="flex justify-center">

@@ -24,6 +24,7 @@ export function AccountCreate() {
     const [passwordCheckType, setPasswordCheckType] = useState('password');
     useToastForRedirect();
     useEffect(() => {
+        window.scrollTo(0, 0);
         removeGuestReservation(queryClient);
     }, []);
     return (

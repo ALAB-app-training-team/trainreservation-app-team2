@@ -16,6 +16,7 @@ export function Login() {
     const [passwordType, setPasswordType] = useState('password');
     useToastForRedirect();
     useEffect(() => {
+        window.scrollTo(0, 0);
         removeGuestReservation(queryClient);
     }, []);
     return (

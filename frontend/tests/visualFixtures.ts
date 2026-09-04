@@ -121,6 +121,7 @@ export const test = baseTest.extend<VisualFixture>({
                 .first()
                 .waitFor({ state: 'visible' });
             await selectSeatPage.clickAccountCreateCheckBox();
+            await page.evaluate(() => window.scrollTo(0, 0));
             await page.evaluate(() => document.fonts.ready);
 
             await expect(page).toHaveScreenshot({
