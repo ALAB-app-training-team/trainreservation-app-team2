@@ -22,22 +22,16 @@ export function ReservationSheetHandle({
             <span className="bg-primary-mid-light h-1 w-9 rounded-full" />
             <div className="flex w-full items-center gap-4">
                 <div className="flex flex-col items-start">
-                    <span className="text-xs text-gray-500">座席数</span>
-                    <span className="text-sm font-bold text-gray-900">
-                        {seatCount}席
-                    </span>
+                    <span className="text-xs">座席数</span>
+                    <span className="text-sm font-bold">{seatCount}席</span>
                 </div>
                 <div className="flex flex-1 flex-col items-end">
-                    <span className="text-xs text-gray-500">合計金額</span>
+                    <span className="text-xs">合計金額</span>
                     <span className="text-primary text-lg font-bold">
                         ￥{totalFare.toLocaleString()}
                     </span>
                 </div>
-                {isOpen ? (
-                    <LuChevronDown className="text-xl text-gray-900" />
-                ) : (
-                    <LuChevronUp className="text-xl text-gray-900" />
-                )}
+                {isOpen ? <LuChevronDown /> : <LuChevronUp />}
             </div>
         </button>
     );
