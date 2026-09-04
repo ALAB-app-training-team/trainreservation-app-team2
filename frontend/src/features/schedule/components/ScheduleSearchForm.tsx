@@ -180,7 +180,7 @@ export function ScheduleSearchForm({
                                 {/* 検索オプション項目div */}
                                 <div
                                     className={`flex flex-col gap-2 ${
-                                        !isExpanded && 'opacity-50'
+                                        isExpanded ? '' : 'opacity-50'
                                     }`}
                                 >
                                     <div className="flex w-full flex-col justify-between md:flex-row">
