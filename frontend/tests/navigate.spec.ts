@@ -41,7 +41,10 @@ test('navigate-ゲストログイン全機能', async ({ page, context, logout }
     await expect(page).toHaveURL('/reservedTicket');
     // 利用者割り当て
     await reservedTicketPage.clickCompanionChangeButton();
-    await reservedTicketPage.checkCompanionCheckBox();
+    // 予約時点で予約者が1席目に自動で割り当てられていること
+    await expect(reservedTicketPage.companionCheckBox).toBeChecked();
+    await expect(reservedTicketPage.companionName).toHaveValue('ゲスト太郎');
+    // 予約者の割り当てを利用者で上書きする
     await reservedTicketPage.inputCompanionInfo();
     await reservedTicketPage.clickCompanionChangeConfirmButton();
     await expect(page).toHaveURL('/reservedTicket');

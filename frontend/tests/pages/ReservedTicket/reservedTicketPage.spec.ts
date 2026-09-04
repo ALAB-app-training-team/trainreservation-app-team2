@@ -193,7 +193,10 @@ test('予約変更ボタン表示有無：アカウントログイン時はあ�
     await expect(page).toHaveURL('/reservedTicket');
     await expect(reservedTicketPage.title).toHaveText('予約完了');
     await reservedTicketPage.clickCompanionChangeButton();
-    await reservedTicketPage.checkCompanionCheckBox();
+    // 予約時点で予約者が1席目に自動で割り当てられていること
+    await expect(reservedTicketPage.companionCheckBox).toBeChecked();
+    await expect(reservedTicketPage.companionName).toHaveValue('ゲスト太郎');
+    // 予約者の割り当てを利用者で上書きする
     await reservedTicketPage.inputCompanionInfo();
     await reservedTicketPage.clickCompanionChangeConfirmButton();
     await reservedTicketPage.clickTicketShareButton();
@@ -245,7 +248,10 @@ test('予約キャンセルボタン表示有無：アカウントログイン�
     await expect(page).toHaveURL('/reservedTicket');
     await expect(reservedTicketPage.title).toHaveText('予約完了');
     await reservedTicketPage.clickCompanionChangeButton();
-    await reservedTicketPage.checkCompanionCheckBox();
+    // 予約時点で予約者が1席目に自動で割り当てられていること
+    await expect(reservedTicketPage.companionCheckBox).toBeChecked();
+    await expect(reservedTicketPage.companionName).toHaveValue('ゲスト太郎');
+    // 予約者の割り当てを利用者で上書きする
     await reservedTicketPage.inputCompanionInfo();
     await reservedTicketPage.clickCompanionChangeConfirmButton();
     await reservedTicketPage.clickTicketShareButton();
@@ -297,7 +303,10 @@ test('利用者割り当てボタン表示有無：アカウントログイン�
     await expect(page).toHaveURL('/reservedTicket');
     await expect(reservedTicketPage.title).toHaveText('予約完了');
     await reservedTicketPage.clickCompanionChangeButton();
-    await reservedTicketPage.checkCompanionCheckBox();
+    // 予約時点で予約者が1席目に自動で割り当てられていること
+    await expect(reservedTicketPage.companionCheckBox).toBeChecked();
+    await expect(reservedTicketPage.companionName).toHaveValue('ゲスト太郎');
+    // 予約者の割り当てを利用者で上書きする
     await reservedTicketPage.inputCompanionInfo();
     await reservedTicketPage.clickCompanionChangeConfirmButton();
     await reservedTicketPage.clickTicketShareButton();

@@ -95,7 +95,7 @@ export class ReservedTicketPage {
     }
 
     async checkCompanionCheckBox() {
-        await this.companionCheckBox.first().click();
+        await this.companionCheckBox.first().check();
     }
 
     async fillCompanionName(name: string) {
