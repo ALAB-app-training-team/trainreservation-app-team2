@@ -10,6 +10,7 @@ export function ScheduleSearch() {
     const queryClient = useQueryClient();
     useToastForRedirect();
     useEffect(() => {
+        window.scrollTo(0, 0);
         removeGuestReservation(queryClient);
     }, []);
     return (
