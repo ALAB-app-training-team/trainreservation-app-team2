@@ -29,7 +29,7 @@ export function AccountDeleteConfirmModal({
                     type="button"
                     disabled={isSubmitting}
                     onClick={onRequestClose}
-                    className="text-fg-secondary w-full rounded-lg border border-gray-300 p-2"
+                    className="text-fg-secondary border-line-strong w-full rounded-lg border p-2"
                 >
                     キャンセル
                 </button>
