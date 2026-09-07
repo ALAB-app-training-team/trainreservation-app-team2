@@ -29,11 +29,11 @@ export function TicketShare({ shareUrl = '' }: TicketShareProps) {
         <>
             <button
                 onClick={() => setIsOpen(true)}
-                className="bg-primary flex h-full w-full items-center justify-center gap-2 rounded-xl p-2 text-sm text-white"
+                aria-label="チケットを共有"
+                className="bg-primary flex shrink-0 items-center justify-center rounded-full p-2.5 text-white"
                 data-testid="ticket-share"
             >
-                <BsShare className="h-4 w-4" />
-                <div>チケットを共有</div>
+                <BsShare className="h-5 w-5" />
             </button>
 
             <CustomModal isOpen={isOpen} onRequestClose={handleClose}>

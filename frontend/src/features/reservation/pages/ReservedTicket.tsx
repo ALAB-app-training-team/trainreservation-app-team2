@@ -134,19 +134,24 @@ export function ReservedTicket() {
     return (
         <>
             <div className="mx-auto flex w-full max-w-5xl min-w-90 flex-col items-center gap-2 p-4 md:w-7/10">
-                {isBack && (
-                    <div className="w-full text-left">
-                        <button
-                            type="button"
-                            onClick={() => {
-                                navigate('/reservationList');
-                            }}
-                        >
-                            <div className="flex items-center gap-2">
-                                <LuArrowLeft />
-                                予約一覧へ戻る
-                            </div>
-                        </button>
+                {(isBack || canShareLink) && (
+                    <div className="flex w-full items-center justify-between gap-2 text-left">
+                        {isBack ? (
+                            <button
+                                type="button"
+                                onClick={() => {
+                                    navigate('/reservationList');
+                                }}
+                            >
+                                <div className="flex items-center gap-2">
+                                    <LuArrowLeft />
+                                    予約一覧へ戻る
+                                </div>
+                            </button>
+                        ) : (
+                            <div />
+                        )}
+                        {canShareLink && <TicketShare shareUrl={shareUrl} />}
                     </div>
                 )}
                 <div className="w-full text-left">
@@ -180,11 +185,6 @@ export function ReservedTicket() {
                             <RiGroupLine className="h-4 w-4" />
                             同行者に割り当て
                         </button>
-                    )}
-                    {canShareLink && (
-                        <div className="w-full md:order-3">
-                            <TicketShare shareUrl={shareUrl} />
-                        </div>
                     )}
                     {canUpdateReservation && (
                         <button
