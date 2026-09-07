@@ -60,7 +60,7 @@ export function ReservedTicketQrCode({
                                         </div>
                                         <div className="mb-1 flex justify-center">
                                             <QRCodeSVG
-                                                className="h-auto w-1/4"
+                                                className="h-auto"
                                                 value={reservedSeat.codeToken}
                                                 size={200}
                                                 bgColor={'#ffffff'}
