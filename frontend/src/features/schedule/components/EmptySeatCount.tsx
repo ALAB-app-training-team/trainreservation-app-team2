@@ -75,7 +75,7 @@ export function EmptySeatCount({
                 {seatTypeList.map((seat) => {
                     const seatColorClass =
                         seat.count === 0
-                            ? 'border-gray-400 bg-gray-200'
+                            ? 'border-gray-400 bg-surface-inset'
                             : {
                                   'reserved-seat':
                                       'border-reserved-seat text-reserved-seat',
