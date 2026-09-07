@@ -453,7 +453,7 @@ export function SelectSeats() {
                             : 'translate-y-[calc(100%-80px)]'
                     }`}
                 >
-                    <div className="border-primary-light flex max-h-[85vh] w-full flex-col overflow-y-auto rounded-t-2xl border-2 bg-white text-left md:max-h-none md:overflow-visible md:rounded-2xl">
+                    <div className="border-primary-light bg-surface flex max-h-[85vh] w-full flex-col overflow-y-auto rounded-t-2xl border-2 text-left md:max-h-none md:overflow-visible md:rounded-2xl">
                         <ReservationSheetHandle
                             seatCount={selectedSeats.length}
                             totalFare={selectedSeats.reduce(
@@ -463,7 +463,7 @@ export function SelectSeats() {
                             onToggle={() => setIsSheetOpen((prev) => !prev)}
                         />
                         <div className="flex w-full flex-col gap-4 p-8">
-                            <div className="border-primary/20 flex flex-col gap-6 border-b-2 pb-4">
+                            <div className="border-primary-ink/20 flex flex-col gap-6 border-b-2 pb-4">
                                 <SelectedSeats
                                     selectedSeats={selectedSeats}
                                     handleClear={handleClear}
@@ -496,7 +496,7 @@ export function SelectSeats() {
                                                 },
                                             })
                                         }
-                                        className="border-primary-mid-light flex w-full items-center justify-center gap-4 rounded-2xl border-2 bg-white p-2 text-center font-medium"
+                                        className="border-primary-mid-light bg-surface flex w-full items-center justify-center gap-4 rounded-2xl border-2 p-2 text-center font-medium"
                                     >
                                         <LuLogIn />
                                         ログインして氏名・メールアドレスを省略
@@ -513,7 +513,7 @@ export function SelectSeats() {
                             >
                                 <div className="flex flex-col gap-4">
                                     {preReservedSeats ? (
-                                        <div className="rounded-xl bg-orange-100 px-4 py-2 text-center text-orange-500">
+                                        <div className="bg-warning-subtle text-warning rounded-xl px-4 py-2 text-center">
                                             ※初回予約時と同じ <br />
                                             クレジットカードを使用します
                                         </div>

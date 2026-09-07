@@ -103,7 +103,7 @@ export function ScheduleSearchForm({
                             <div className="w-fit text-center">
                                 <button
                                     onClick={switchDepartureAndArrivalStation}
-                                    className="border-primary mt-8 w-fit rounded-full border bg-white p-1 text-xl"
+                                    className="border-primary-ink bg-surface mt-8 w-fit rounded-full border p-1 text-xl"
                                 >
                                     <HiOutlineSwitchHorizontal />
                                 </button>
@@ -134,9 +134,9 @@ export function ScheduleSearchForm({
                                 setValue={setTime}
                                 getFieldError={getFieldError}
                                 children={
-                                    <div className="border-primary inline-flex items-center overflow-hidden rounded border">
+                                    <div className="border-primary-ink inline-flex items-center overflow-hidden rounded border">
                                         <label
-                                            className={`cursor-pointer p-1 text-sm has-[:focus-visible]:ring-2 has-[:focus-visible]:ring-gray-900 has-[:focus-visible]:ring-inset ${!searchRequestDto.isArrivalTime ? 'bg-primary text-white' : 'bg-gray-50'}`}
+                                            className={`cursor-pointer p-1 text-sm has-[:focus-visible]:ring-2 has-[:focus-visible]:ring-gray-900 has-[:focus-visible]:ring-inset ${!searchRequestDto.isArrivalTime ? 'bg-primary text-white' : 'bg-surface-subtle'}`}
                                         >
                                             <input
                                                 type="radio"
@@ -151,7 +151,7 @@ export function ScheduleSearchForm({
                                             出発
                                         </label>
                                         <label
-                                            className={`cursor-pointer p-1 text-sm has-[:focus-visible]:ring-2 has-[:focus-visible]:ring-gray-900 has-[:focus-visible]:outline-none has-[:focus-visible]:ring-inset ${searchRequestDto.isArrivalTime ? 'bg-primary text-white' : 'bg-gray-50'}`}
+                                            className={`cursor-pointer p-1 text-sm has-[:focus-visible]:ring-2 has-[:focus-visible]:ring-gray-900 has-[:focus-visible]:outline-none has-[:focus-visible]:ring-inset ${searchRequestDto.isArrivalTime ? 'bg-primary text-white' : 'bg-surface-subtle'}`}
                                         >
                                             <input
                                                 type="radio"
@@ -250,7 +250,7 @@ export function ScheduleSearchForm({
                                                                                 dto.isArrivalTime,
                                                                             );
                                                                         }}
-                                                                        className="border-primary hover:bg-primary-light flex w-fit items-center gap-4 rounded-lg border bg-white px-4 py-1 text-left"
+                                                                        className="border-primary-ink hover:bg-primary-light bg-surface flex w-fit items-center gap-4 rounded-lg border px-4 py-1 text-left"
                                                                     >
                                                                         <span className="flex items-center gap-2 font-medium">
                                                                             <span>
@@ -258,7 +258,7 @@ export function ScheduleSearchForm({
                                                                                     departureStationName
                                                                                 }
                                                                             </span>
-                                                                            <HiOutlineArrowNarrowRight className="text-primary shrink-0" />
+                                                                            <HiOutlineArrowNarrowRight className="text-primary-ink shrink-0" />
                                                                             <span>
                                                                                 {
                                                                                     arrivalStationName
@@ -293,7 +293,7 @@ export function ScheduleSearchForm({
                                                                 isSubmitting
                                                             }
                                                             data-testid="history-save-button"
-                                                            className="border-primary hover:bg-primary-light text-primary flex w-fit items-center rounded-lg border bg-white px-2 py-1"
+                                                            className="border-primary-ink hover:bg-primary-light text-primary-ink bg-surface flex w-fit items-center rounded-lg border px-2 py-1"
                                                         >
                                                             <HiOutlinePlus className="text-lg" />
                                                         </button>
@@ -314,7 +314,7 @@ export function ScheduleSearchForm({
                             <button
                                 type="button"
                                 onClick={() => setIsExpanded((prev) => !prev)}
-                                className="text-primary flex items-center gap-1 self-center font-medium"
+                                className="text-primary-ink flex items-center gap-1 self-center font-medium"
                             >
                                 {isExpanded ? (
                                     <>

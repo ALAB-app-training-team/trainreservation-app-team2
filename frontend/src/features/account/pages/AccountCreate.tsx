@@ -30,11 +30,11 @@ export function AccountCreate() {
         <div className="flex justify-center">
             <div className="flex w-1/2 flex-col items-center justify-center gap-4 p-8 md:w-4/10">
                 <div className="flex flex-col items-center justify-center gap-1">
-                    <h1 className="!text-primary !m-0 flex items-center justify-center !text-3xl">
+                    <h1 className="!text-primary-ink !m-0 flex items-center justify-center !text-3xl">
                         <FiUserPlus />
                         新規登録
                     </h1>
-                    <p className="text-gray-500">
+                    <p className="text-fg-muted">
                         登録するアカウント情報を入力してください
                     </p>
                 </div>

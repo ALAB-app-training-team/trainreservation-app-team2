@@ -20,7 +20,7 @@ export function SelectedSeats({
                 <button
                     type="button"
                     onClick={handleClear}
-                    className="border-primary text-primary rounded-lg border-2 p-1"
+                    className="border-primary-ink text-primary-ink rounded-lg border-2 p-1"
                     data-testid="trash-button"
                 >
                     <FaTrashCan />
@@ -57,7 +57,7 @@ export function SelectedSeats({
                     <div>{ERROR_MESSAGE.NO_SELECTED_SEAT}</div>
                 )}
                 {selectedSeats.length >= LIMIT.SEATS && (
-                    <p className="text-left text-sm text-red-600">
+                    <p className="text-danger text-left text-sm">
                         {ERROR_MESSAGE.LIMIT_SELECTED_SEAT}
                     </p>
                 )}

@@ -64,7 +64,7 @@ export function EmptySeatCount({
     if (reservedSeats === 0 && greenSeats === 0 && gcSeats === 0) {
         return (
             <>
-                <div className="text-red-500">満席</div>
+                <div className="text-danger">満席</div>
             </>
         );
     }
@@ -75,7 +75,7 @@ export function EmptySeatCount({
                 {seatTypeList.map((seat) => {
                     const seatColorClass =
                         seat.count === 0
-                            ? 'border-gray-400 bg-gray-200'
+                            ? 'border-gray-400 bg-surface-inset'
                             : {
                                   'reserved-seat':
                                       'border-reserved-seat text-reserved-seat',

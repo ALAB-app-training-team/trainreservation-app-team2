@@ -63,7 +63,7 @@ export function CustomTimePicker({
                     onClick={handleClick}
                     onKeyDown={handleKeyDown}
                     onBlur={handleBlur}
-                    className="focus:border-primary w-full cursor-pointer rounded-xl bg-white p-2 pr-9 outline-none focus:border-2"
+                    className="focus:border-primary-ink bg-surface w-full cursor-pointer rounded-xl p-2 pr-9 outline-none focus:border-2"
                 />
                 <span
                     tabIndex={0}
@@ -74,12 +74,12 @@ export function CustomTimePicker({
                             handleClickClockIcon();
                         }
                     }}
-                    className="focus:ring-primary absolute top-1/2 right-2 -translate-y-1/2 cursor-pointer rounded text-gray-500 outline-none focus:ring-2"
+                    className="focus:ring-primary text-fg-muted absolute top-1/2 right-2 -translate-y-1/2 cursor-pointer rounded outline-none focus:ring-2"
                 >
                     <HiOutlineClock />
                 </span>
                 {isOpen && (
-                    <div className="border-primary absolute z-20 flex w-fit divide-x rounded-xl border bg-white">
+                    <div className="border-primary-ink bg-surface absolute z-20 flex w-fit divide-x rounded-xl border">
                         <TimeSegmentColumn
                             values={HOURS}
                             selectedValue={hour}
@@ -96,7 +96,7 @@ export function CustomTimePicker({
                 )}
             </div>
             {getFieldError?.(id) && (
-                <p className="text-left text-sm text-red-600">
+                <p className="text-danger text-left text-sm">
                     {getFieldError(id)}
                 </p>
             )}

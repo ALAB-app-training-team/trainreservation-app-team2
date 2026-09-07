@@ -141,9 +141,9 @@ export function ScheduleItem({
                         </div>
                         <div>{departureStationName}</div>
                     </div>
-                    <div className="text-primary flex flex-1 items-center gap-2">
+                    <div className="text-primary-ink flex flex-1 items-center gap-2">
                         <div className="border-primary-light relative w-full border-t-4 border-dotted">
-                            <span className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 bg-white px-2">
+                            <span className="bg-surface absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 px-2">
                                 {calculateDuration(
                                     schedule.departureTime,
                                     schedule.arrivalTime,

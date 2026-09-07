@@ -12,7 +12,7 @@ export function Seat({ seat, onClick, disabled, type }: seatProps) {
         reserveModeStyle: 'w-12 h-12 rounded-lg',
         nonReserveModeStyle: 'w-8 h-8 rounded-md !cursor-default',
         unreservable: {
-            visual: ' border-none bg-gray-200',
+            visual: ' border-none bg-surface-inset',
             cursor: '!cursor-not-allowed',
         },
         isSelected: {

@@ -25,10 +25,10 @@ export function Login() {
                     <div>
                         <img src="/logo.svg" className="h-auto w-16" />
                     </div>
-                    <h1 className="!text-primary !m-0 text-left !text-3xl">
+                    <h1 className="!text-primary-ink !m-0 text-left !text-3xl">
                         新幹線でGO！
                     </h1>
-                    <p className="text-gray-500">
+                    <p className="text-fg-muted">
                         アカウントにログインまたは新規登録してください
                     </p>
                 </div>
@@ -43,7 +43,7 @@ export function Login() {
                     <div className="flex w-full flex-col gap-2">
                         <div className="flex flex-col items-start">
                             <label htmlFor="mail">メールアドレス</label>
-                            <div className="focus-within:border-primary bg-primary-light box-border flex w-full items-center justify-between gap-4 rounded-lg px-4 py-2 outline-none focus-within:border-2">
+                            <div className="focus-within:border-primary-ink bg-primary-light box-border flex w-full items-center justify-between gap-4 rounded-lg px-4 py-2 outline-none focus-within:border-2">
                                 <input
                                     id="mail"
                                     type="email"
@@ -59,7 +59,7 @@ export function Login() {
                         </div>
                         <div className="flex flex-col items-start">
                             <label htmlFor="password">パスワード</label>
-                            <div className="focus-within:border-primary bg-primary-light box-border flex w-full items-center justify-between gap-4 rounded-lg px-4 py-2 outline-none focus-within:border-2">
+                            <div className="focus-within:border-primary-ink bg-primary-light box-border flex w-full items-center justify-between gap-4 rounded-lg px-4 py-2 outline-none focus-within:border-2">
                                 <input
                                     id="password"
                                     type={passwordType}
@@ -103,7 +103,7 @@ export function Login() {
                 <button
                     onClick={() => navigate('/accountCreate')}
                     type="button"
-                    className="border-primary-mid-light flex w-full items-center justify-center gap-2 rounded-lg border-2 bg-white p-2 text-center font-medium"
+                    className="border-primary-mid-light bg-surface flex w-full items-center justify-center gap-2 rounded-lg border-2 p-2 text-center font-medium"
                 >
                     <FiUserPlus />
                     新規登録

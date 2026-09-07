@@ -28,7 +28,7 @@ export function DepartureAndArrivalInfo({
                     {station}
                 </label>
                 {getFieldError?.(id) && (
-                    <p className="text-left text-sm text-red-600">
+                    <p className="text-danger text-left text-sm">
                         {getFieldError(id)}
                     </p>
                 )}

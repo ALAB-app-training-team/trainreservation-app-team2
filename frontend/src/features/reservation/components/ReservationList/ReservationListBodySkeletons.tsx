@@ -34,7 +34,7 @@ export function ReservationListBodySkeleton() {
                         </button>
                     </div>
                 </div>
-                <svg className="w-full animate-pulse rounded-2xl bg-gray-300" />
+                <svg className="bg-surface-disabled w-full animate-pulse rounded-2xl" />
             </div>
         </>
     );

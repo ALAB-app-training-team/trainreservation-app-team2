@@ -143,7 +143,7 @@ export function ScheduleList({
                             activeLinkClassName="bg-primary text-white cursor-not-allowed"
                             previousLinkClassName="border-2 border-primary-light rounded-lg px-4 py-2 cursor-pointer"
                             nextLinkClassName="border-2 border-primary-light rounded-lg px-4 py-2 cursor-pointer"
-                            disabledLinkClassName="bg-gray-300 cursor-not-allowed"
+                            disabledLinkClassName="bg-surface-disabled cursor-not-allowed"
                         />
                     </>
                 ) : (
@@ -192,7 +192,7 @@ export function ScheduleList({
                                                 dayjs(maxDate),
                                                 'day',
                                             ) && (
-                                                <div className="text-sm text-gray-500">
+                                                <div className="text-fg-muted text-sm">
                                                     {
                                                         ERROR_MESSAGE.SEARCH_NEXTDAY_ERROR
                                                     }

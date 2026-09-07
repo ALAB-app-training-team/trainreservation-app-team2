@@ -10,11 +10,11 @@ const reservedSeatsStyle = tv({
     base: 'flex items-center gap-1 px-2',
     variants: {
         id: {
-            reservationList: 'rounded-lg border-primary border',
-            updateReservation: 'rounded-lg border-primary border',
+            reservationList: 'rounded-lg border-primary-ink border',
+            updateReservation: 'rounded-lg border-primary-ink border',
             reservationDetail:
-                'rounded-lg border-primary-light text-primary bg-green-100 border-2',
-            reservationChange: 'border-primary border-l-2',
+                'rounded-lg border-primary-light text-primary-ink bg-success-subtle border-2',
+            reservationChange: 'border-primary-ink border-l-2',
         },
     },
     defaultVariants: {
@@ -66,9 +66,9 @@ export function ReservedSeats({
                                         }
                                         className={`${reservedSeatsStyle({ id })} flex shrink-0 items-center gap-2`}
                                     >
-                                        <div className="flex items-center gap-2 text-gray-700">
+                                        <div className="text-fg-secondary flex items-center gap-2">
                                             {id === 'reservationDetail' && (
-                                                <BsTrainFreightFrontFill className="text-primary" />
+                                                <BsTrainFreightFrontFill className="text-primary-ink" />
                                             )}
                                             {id === 'reservationDetail' && (
                                                 <div>
@@ -84,7 +84,7 @@ export function ReservedSeats({
                                         {id === 'reservationDetail' && (
                                             <>
                                                 <div className="bg-primary h-3.5 w-[1px] self-center" />
-                                                <div className="text-primary flex items-center text-xl font-bold whitespace-nowrap">
+                                                <div className="text-primary-ink flex items-center text-xl font-bold whitespace-nowrap">
                                                     <RiMoneyCnyBoxLine />
                                                     {(
                                                         seat.seatFare || 0
@@ -100,14 +100,14 @@ export function ReservedSeats({
                     )}
                 </div>
                 {title && seats.some((seat) => !seat.name) && (
-                    <div className="order-2 w-fit rounded-full px-2 text-left text-orange-500 md:order-1">
+                    <div className="text-warning order-2 w-fit rounded-full px-2 text-left md:order-1">
                         利用者が割り当てられていない座席が
                         <br className="md:hidden" />
                         あります
                     </div>
                 )}
                 {getFieldError?.(id) && (
-                    <p className="order-3 text-left text-sm text-red-600">
+                    <p className="text-danger order-3 text-left text-sm">
                         {getFieldError(id)}
                     </p>
                 )}

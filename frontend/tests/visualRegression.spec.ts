@@ -266,7 +266,7 @@ test('visual-reservationList', async ({ page, commonLogin, logout }) => {
     maskTargets.push(
         page
             .locator(
-                '.flex.items-center.gap-1.rounded-lg.px-2.border-primary.border',
+                '.flex.items-center.gap-1.rounded-lg.px-2.border-primary-ink.border',
             )
             .nth(0),
     );
@@ -315,7 +315,7 @@ test('visual-reservedTicket', async ({
             page.locator('.flex.items-center.gap-2.text-xl.font-bold').nth(0),
             page
                 .locator(
-                    '.flex.items-center.gap-1.rounded-lg.px-2.border-primary-light.text-primary.bg-green-100.border-2',
+                    '.flex.items-center.gap-1.rounded-lg.px-2.border-primary-light.text-primary-ink.bg-success-subtle.border-2',
                 )
                 .nth(0),
         ],
