@@ -2,8 +2,6 @@ package com.alab.shinkansendego.email.account;
 
 import com.alab.shinkansendego.account.AccountCreatedEvent;
 import com.alab.shinkansendego.account.AccountRequestDto;
-import com.alab.shinkansendego.account.AccountUpdatedEvent;
-import com.alab.shinkansendego.account.PasswordUpdatedEvent;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -23,18 +21,21 @@ import java.time.Duration;
 
 import static org.awaitility.Awaitility.await;
 import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.Mockito.never;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 
 /**
- * AccountEventListener の各ハンドラはイベント発行後、トランザクションコミットを待ってから
+ * AccountEventListener はイベント発行後、トランザクションコミットを待ってから
  * (@TransactionalEventListener(AFTER_COMMIT)) 別スレッドで (@Async) メール送信を行う。
  * この非同期・コミット後実行という組み合わせが実機のSpringコンテキスト上で
- * 本当にテスト可能かを、3つのイベント全パターンについて実証するための統合テスト。
+ * 本当にテスト可能かを実証するための統合テスト。
  *
- * 個々の分岐条件(メールアドレス変更あり/なしなど)の網羅は
- * AccountEventListenerTest (Mockitoによる単体テスト) 側の責務とし、
- * ここでは各エントリーポイントにつき非同期実行される代表的なパターンのみを扱う。
+ * どのイベントがどのメール送信メソッドを呼ぶか、という分岐条件の網羅は
+ * AccountEventListenerTest (Mockitoによる単体テスト) 側の責務。
+ * この仕組み自体はアノテーション駆動で全ハンドラに一律にかかるため、
+ * ここでは代表して1つのハンドラについてのみ、コミット時に呼ばれること・
+ * ロールバック時に呼ばれないことの2点を確認する。
  */
 @ActiveProfiles("test")
 @SpringBootTest
@@ -63,10 +64,6 @@ class AccountEventListenerIntegrationTest {
     @MockitoBean
     private AccountEmailService accountEmailService;
 
-    private void publishInCommittedTransaction(Object event) {
-        new TransactionTemplate(transactionManager).executeWithoutResult(status -> eventPublisher.publishEvent(event));
-    }
-
     private AccountRequestDto accountRequest(String name, String mail) {
         return new AccountRequestDto(name, mail, "password");
     }
@@ -74,42 +71,25 @@ class AccountEventListenerIntegrationTest {
     @Test
     @DisplayName("アカウント作成イベントのコミット後、非同期に作成完了メール送信が呼び出される")
     void handleAccountCreated_isInvokedAsynchronouslyAfterTransactionCommit() {
-        publishInCommittedTransaction(new AccountCreatedEvent(accountRequest("山田太郎", "new@example.com")));
+        AccountCreatedEvent event = new AccountCreatedEvent(accountRequest("山田太郎", "new@example.com"));
+
+        new TransactionTemplate(transactionManager).executeWithoutResult(status -> eventPublisher.publishEvent(event));
 
         await().atMost(Duration.ofSeconds(5))
             .untilAsserted(() -> verify(accountEmailService, times(1)).sendAccountCreate(any()));
     }
 
     @Test
-    @DisplayName("メールアドレス変更なしのアカウント変更イベントのコミット後、非同期に変更完了メール送信が1回呼び出される")
-    void handleAccountChanged_withoutMailChange_isInvokedAsynchronouslyAfterTransactionCommit() {
-        publishInCommittedTransaction(new AccountUpdatedEvent(
-            accountRequest("新氏名", "same@example.com"),
-            accountRequest("旧氏名", "same@example.com")
-        ));
+    @DisplayName("トランザクションがロールバックされた場合は作成完了メール送信が呼び出されない")
+    void handleAccountCreated_isNotInvoked_whenTransactionRolledBack() {
+        AccountCreatedEvent event = new AccountCreatedEvent(accountRequest("山田太郎", "new@example.com"));
 
-        await().atMost(Duration.ofSeconds(5))
-            .untilAsserted(() -> verify(accountEmailService, times(1)).sendAccountUpdate(any(), any()));
-    }
+        new TransactionTemplate(transactionManager).executeWithoutResult(status -> {
+            eventPublisher.publishEvent(event);
+            status.setRollbackOnly();
+        });
 
-    @Test
-    @DisplayName("メールアドレス変更ありのアカウント変更イベントのコミット後、非同期に変更完了メール送信が2回呼び出される")
-    void handleAccountChanged_withMailChange_isInvokedAsynchronouslyAfterTransactionCommit() {
-        publishInCommittedTransaction(new AccountUpdatedEvent(
-            accountRequest("新氏名", "new@example.com"),
-            accountRequest("旧氏名", "old@example.com")
-        ));
-
-        await().atMost(Duration.ofSeconds(5))
-            .untilAsserted(() -> verify(accountEmailService, times(2)).sendAccountUpdate(any(), any()));
-    }
-
-    @Test
-    @DisplayName("パスワード変更イベントのコミット後、非同期にパスワード変更完了メール送信が呼び出される")
-    void handlePasswordChanged_isInvokedAsynchronouslyAfterTransactionCommit() {
-        publishInCommittedTransaction(new PasswordUpdatedEvent(accountRequest("山田太郎", "user@example.com")));
-
-        await().atMost(Duration.ofSeconds(5))
-            .untilAsserted(() -> verify(accountEmailService, times(1)).sendPasswordUpdate(any()));
+        await().during(Duration.ofMillis(500)).atMost(Duration.ofSeconds(2))
+            .untilAsserted(() -> verify(accountEmailService, never()).sendAccountCreate(any()));
     }
 }
