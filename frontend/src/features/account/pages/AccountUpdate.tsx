@@ -81,6 +81,9 @@ export function AccountUpdate() {
                             setPasswordType={setPasswordType}
                         />
                     </div>
+                    <div className="font-bold">
+                        ※チケットに紐づく氏名・メールアドレスは利用者割り当てから変更してください。
+                    </div>
                     <button
                         type="submit"
                         disabled={isSubmitting || isDisable}
