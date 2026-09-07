@@ -11,6 +11,7 @@ export function ReservationSheetHandle({
 }: ReservationSheetHandleProps) {
     return (
         <button
+            data-testid="reservation-sheet"
             type="button"
             onClick={onToggle}
             className="border-primary bg-primary-light sticky top-0 z-10 flex w-full flex-col items-center gap-2 rounded-t-2xl border-b-2 px-8 py-3 md:hidden"

@@ -1,5 +1,5 @@
 import { test as base, expect } from '@playwright/test';
-import type { Page } from '@playwright/test';
+import type { Page, TestInfo } from '@playwright/test';
 import { ScheduleSearchPage } from '@tests/pages/ScheduleSearch/ScheduleSearchPage';
 import { SelectSeatPage } from '@tests/pages/SelectSeat/SelectSeatPage';
 import { ReservationGuestLoginPage } from '@tests/pages/ReservationGuestLogin/ReservationGuestLoginPage';
@@ -12,7 +12,7 @@ type GuestLogin = () => Promise<void>;
 type commonLogin = () => Promise<void>;
 type adminLogin = () => Promise<void>;
 type Logout = () => Promise<void>;
-type Fixture = {
+export type Fixture = {
     createGuestReservation: CreateGuestReservation;
     createReservation: CreateReservation;
     guestLogin: GuestLogin;
@@ -20,6 +20,8 @@ type Fixture = {
     adminLogin: adminLogin;
     logout: Logout;
 };
+
+export const iPhoneSEProjectName = 'Mobile Safari (iPhone SE)';
 
 export const test = base.extend<Fixture>({
     createGuestReservation: async (
@@ -43,6 +45,7 @@ export const test = base.extend<Fixture>({
     createReservation: async (
         { page }: { page: Page },
         use: (fn: CreateReservation) => Promise<void>,
+        testInfo: TestInfo,
     ) => {
         const create = async () => {
             const scheduleSearchPage = new ScheduleSearchPage(page);
@@ -51,6 +54,9 @@ export const test = base.extend<Fixture>({
             await scheduleSearchPage.goto();
             await scheduleSearchPage.clickDetailButton();
             await selectSeatPage.selectSeat();
+            if (testInfo.project.name === iPhoneSEProjectName) {
+                await selectSeatPage.clickReservationSheetButton();
+            }
             await selectSeatPage.inputCardInfo();
             await selectSeatPage.clickReseveButton();
             await selectSeatPage.clickReserveConfirmButton();

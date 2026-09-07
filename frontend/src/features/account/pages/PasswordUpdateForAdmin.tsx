@@ -22,13 +22,14 @@ export function PasswordUpdateForAdmin() {
     const [passwordType, setPasswordType] = useState('password');
     useToastForRedirect();
     useEffect(() => {
+        window.scroll(0, 0);
         removeGuestReservation(queryClient);
     }, []);
 
     return (
         <>
             <div className="flex justify-center">
-                <div className="flex w-1/2 flex-col items-center justify-center gap-4 p-8 md:w-4/10">
+                <div className="flex w-full max-w-xl flex-col items-center justify-center gap-4 p-8 md:w-4/10 md:min-w-md">
                     <h1 className="!text-primary !m-0 flex items-center justify-center !text-3xl">
                         パスワード変更
                     </h1>

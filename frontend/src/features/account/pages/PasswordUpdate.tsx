@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { RiLockPasswordFill } from 'react-icons/ri';
 
 import { PasswordInput } from '@/features/account/components/PasswordInput';
@@ -21,9 +21,13 @@ export function PasswordUpdate() {
     const [newPasswordCheckType, setNewPasswordCheckType] =
         useState('password');
 
+    useEffect(() => {
+        window.scrollTo(0, 0);
+    }, []);
+
     return (
         <div className="flex justify-center">
-            <div className="flex w-1/2 flex-col items-center justify-center gap-4 p-8 md:w-4/10">
+            <div className="flex w-full max-w-xl flex-col items-center justify-center gap-4 p-8 md:w-4/10 md:min-w-md">
                 <div className="flex flex-col items-center justify-center gap-1">
                     <h1 className="!text-primary !m-0 flex items-center justify-center !text-3xl">
                         <RiLockPasswordFill />

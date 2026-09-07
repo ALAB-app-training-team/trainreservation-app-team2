@@ -16,11 +16,12 @@ export function Login() {
     const [passwordType, setPasswordType] = useState('password');
     useToastForRedirect();
     useEffect(() => {
+        window.scrollTo(0, 0);
         removeGuestReservation(queryClient);
     }, []);
     return (
         <div className="flex justify-center">
-            <div className="flex w-1/2 flex-col items-center justify-center gap-4 p-8 md:w-4/10">
+            <div className="flex w-full max-w-xl flex-col items-center justify-center gap-4 p-8 md:w-4/10 md:min-w-md">
                 <div className="flex flex-col items-center justify-center gap-1">
                     <div>
                         <img src="/logo.svg" className="h-auto w-16" />

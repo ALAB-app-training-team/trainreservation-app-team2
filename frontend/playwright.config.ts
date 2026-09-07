@@ -14,7 +14,9 @@ import { defineConfig, devices } from '@playwright/test';
 export default defineConfig({
     testDir: './tests',
     /* ローカル実行時はvisualRegressionを除外し、GitHubActionでのみ実行する */
-    testIgnore: process.env.CI ? [] : ['**/visualRegression.spec.ts'],
+    testIgnore: process.env.CI
+        ? []
+        : ['**/visualRegression.spec.ts', '**/visualRegressionIPhone.spec.ts'],
     snapshotPathTemplate:
         '{testDir}/{testFileDir}/visualRegression.spec.ts-snapshots/{arg}{ext}',
     fullyParallel: false,
@@ -53,15 +55,22 @@ export default defineConfig({
         //   name: 'Mobile Chrome',
         //   use: { ...devices['Pixel 5'] },
         // },
-        // {
-        //   name: 'Mobile Safari',
-        //   use: { ...devices['iPhone 12'] },
-        // },
+        {
+            name: 'Mobile Safari (iPhone SE)',
+            use: { ...devices['iPhone SE (3rd gen)'] },
+            testMatch: '**/visualRegressionIPhone.spec.ts',
+        },
 
         /* Test against branded browsers. */
         {
             name: 'Microsoft Edge',
             use: { ...devices['Desktop Edge'], channel: 'msedge' },
+            testIgnore: process.env.CI
+                ? ['**/visualRegressionIPhone.spec.ts']
+                : [
+                      '**/visualRegression.spec.ts',
+                      '**/visualRegressionIPhone.spec.ts',
+                  ],
         },
         // {
         //   name: 'Google Chrome',
