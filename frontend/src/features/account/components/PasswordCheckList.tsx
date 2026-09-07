@@ -23,11 +23,19 @@ export function PasswordCheckList({ policy }: PasswordCheckListProps) {
                     policy.isBetweenLength ? style.isValid : style.isInvalid
                 }
             >
-                {policy.isBetweenLength ? <FaCheck /> : <FaTimes />}
+                {policy.isBetweenLength ? (
+                    <FaCheck data-testid="valid-icon" />
+                ) : (
+                    <FaTimes data-testid="invalid-icon" />
+                )}
                 8文字以上64文字以下
             </li>
             <li className={policy.hasNumber ? style.isValid : style.isInvalid}>
-                {policy.hasNumber ? <FaCheck /> : <FaTimes />}
+                {policy.hasNumber ? (
+                    <FaCheck data-testid="valid-icon" />
+                ) : (
+                    <FaTimes data-testid="invalid-icon" />
+                )}
                 半角数字を含む
             </li>
             <li
@@ -35,7 +43,11 @@ export function PasswordCheckList({ policy }: PasswordCheckListProps) {
                     policy.hasUppercase ? style.isValid : style.isInvalid
                 }
             >
-                {policy.hasUppercase ? <FaCheck /> : <FaTimes />}
+                {policy.hasUppercase ? (
+                    <FaCheck data-testid="valid-icon" />
+                ) : (
+                    <FaTimes data-testid="invalid-icon" />
+                )}
                 半角英大文字を含む
             </li>
             <li
@@ -43,11 +55,19 @@ export function PasswordCheckList({ policy }: PasswordCheckListProps) {
                     policy.hasLowercase ? style.isValid : style.isInvalid
                 }
             >
-                {policy.hasLowercase ? <FaCheck /> : <FaTimes />}
+                {policy.hasLowercase ? (
+                    <FaCheck data-testid="valid-icon" />
+                ) : (
+                    <FaTimes data-testid="invalid-icon" />
+                )}
                 半角英小文字を含む
             </li>
             <li className={policy.isValid ? style.isValid : style.isInvalid}>
-                {policy.isValid ? <FaCheck /> : <FaTimes />}
+                {policy.isValid ? (
+                    <FaCheck data-testid="valid-icon" />
+                ) : (
+                    <FaTimes data-testid="invalid-icon" />
+                )}
                 使用できる文字のみで構成されている
             </li>
         </ul>

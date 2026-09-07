@@ -278,52 +278,40 @@ test('アカウント作成時のパスワードバリデーションチェッ�
     // パスワード -8文字以下
     await selectSeatPage.fillPassword('Pass1');
     await expect(
-        await selectSeatPage.lengthPolicy.evaluate((el) =>
-            window.getComputedStyle(el).getPropertyValue('color'),
-        ),
-    ).toBe('oklch(0.704 0.191 22.216)');
+        selectSeatPage.lengthPolicy.getByTestId('invalid-icon'),
+    ).toBeVisible();
 
     // パスワード -64文字以上
     await selectSeatPage.fillPassword(
         'Password1Password2Password3Password4Password5Password6Password7Password8',
     );
     await expect(
-        await selectSeatPage.lengthPolicy.evaluate((el) =>
-            window.getComputedStyle(el).getPropertyValue('color'),
-        ),
-    ).toBe('oklch(0.704 0.191 22.216)');
+        selectSeatPage.lengthPolicy.getByTestId('invalid-icon'),
+    ).toBeVisible();
 
     // パスワード -半角英数字を含まない
     await selectSeatPage.fillPassword('Password');
     await expect(
-        await selectSeatPage.numberPolicy.evaluate((el) =>
-            window.getComputedStyle(el).getPropertyValue('color'),
-        ),
-    ).toBe('oklch(0.704 0.191 22.216)');
+        selectSeatPage.numberPolicy.getByTestId('invalid-icon'),
+    ).toBeVisible();
 
     // パスワード -半角英大文字を含まない
     await selectSeatPage.fillPassword('password1');
     await expect(
-        await selectSeatPage.uppercasePolicy.evaluate((el) =>
-            window.getComputedStyle(el).getPropertyValue('color'),
-        ),
-    ).toBe('oklch(0.704 0.191 22.216)');
+        selectSeatPage.uppercasePolicy.getByTestId('invalid-icon'),
+    ).toBeVisible();
 
     // パスワード -半角英小文字を含まない
     await selectSeatPage.fillPassword('PASSWORD1');
     await expect(
-        await selectSeatPage.lowercasePolicy.evaluate((el) =>
-            window.getComputedStyle(el).getPropertyValue('color'),
-        ),
-    ).toBe('oklch(0.704 0.191 22.216)');
+        selectSeatPage.lowercasePolicy.getByTestId('invalid-icon'),
+    ).toBeVisible();
 
     // パスワード -使用できない文字が含まれている
     await selectSeatPage.fillPassword('Password1|');
     await expect(
-        await selectSeatPage.validPolicy.evaluate((el) =>
-            window.getComputedStyle(el).getPropertyValue('color'),
-        ),
-    ).toBe('oklch(0.704 0.191 22.216)');
+        selectSeatPage.validPolicy.getByTestId('invalid-icon'),
+    ).toBeVisible();
 
     // パスワード再入力 -未入力
     await selectSeatPage.passwordCheck.click();
