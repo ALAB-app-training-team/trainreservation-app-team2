@@ -30,6 +30,7 @@ public class ReservationEmailRequestParams {
     private Integer oldAmount;
     private String representativeName;
     private List<SelectedSeatParams> seats;
+    private Boolean isGuest;
 
     @Data
     @NoArgsConstructor

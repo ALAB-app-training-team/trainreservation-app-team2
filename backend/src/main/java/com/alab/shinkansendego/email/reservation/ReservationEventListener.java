@@ -52,6 +52,7 @@ public class ReservationEventListener {
     @TransactionalEventListener(phase = TransactionPhase.AFTER_COMMIT)
     public void handleReservationCreated(ReservationCreatedEvent event) {
         ReservationEmailRequestParams emailParams = setEmailRequestParams(event.reservationId(), event.request(), event.departureTime(), event.arrivalTime(), null, null);
+        emailParams.setIsGuest(event.isGuest());
         reservationEmailService.sendReservationConfirmation(emailParams);
     }
 
@@ -59,6 +60,7 @@ public class ReservationEventListener {
     @TransactionalEventListener(phase = TransactionPhase.AFTER_COMMIT)
     public void handleReservationChanged(ReservationChangedEvent event) {
         ReservationEmailRequestParams emailParams = setEmailRequestParams(event.reservationId(), event.request(), event.departureTime(), event.arrivalTime(), event.oldTotalAmount(), event.representativeName());
+        emailParams.setIsGuest(event.isGuest());
         reservationEmailService.sendReservationChange(emailParams);
         if (!CollectionUtils.isEmpty(event.assignedReservedSeats())) {
             for (ReservedSeatEntity assignedSeat : event.assignedReservedSeats()) {
@@ -89,6 +91,7 @@ public class ReservationEventListener {
     public void handleReservationCanceled(ReservationCanceledEvent event) {
 
         ReservationEmailRequestParams emailParams = setEmailRequestParams(event.reservationId(), event.request(), event.departureTime(), event.arrivalTime(), null, event.representativeName());
+        emailParams.setIsGuest(event.isGuest());
         reservationEmailService.sendReservationCancel(emailParams);
 
         for (ReserveRequestDto.SelectedSeatDto seat : event.request().getSeats()) {

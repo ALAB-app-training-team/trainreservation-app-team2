@@ -341,7 +341,8 @@ public class ReservationService {
             reservationId,
             reserveRequestDto,
             departureArrivalTimeOfStart.getDepartureTime(),
-            departureArrivalTimeOfGoal.getArrivalTime()
+            departureArrivalTimeOfGoal.getArrivalTime(),
+            session == null
         ));
 
         return reservationId;
@@ -559,7 +560,9 @@ public class ReservationService {
             oldTotalAmount,
             account.getName(),
             oldReservation,
-            assignedReservedSeats
+            assignedReservedSeats,
+            // 予約変更は認証必須(SecurityConfig)のため、ゲストはここに到達しない
+            false
         ));
 
         return reservationId;
@@ -656,7 +659,9 @@ public class ReservationService {
             oldTotalAmount,
             account.getName(),
             oldReservation,
-            assignedReservedSeats
+            assignedReservedSeats,
+            // 予約変更は認証必須(SecurityConfig)のため、ゲストはここに到達しない
+            false
         ));
 
         return reservationId;
@@ -765,7 +770,8 @@ public class ReservationService {
             departureTime,
             arrivalTime,
             reserverName,
-            reservedSeats
+            reservedSeats,
+            accountId == null
         ));
     }
 
