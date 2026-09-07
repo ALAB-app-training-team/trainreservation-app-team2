@@ -97,6 +97,9 @@ export const test = baseTest.extend<VisualFixture>({
             await selectSeatPage.emptySeat
                 .first()
                 .waitFor({ state: 'visible' });
+            if (testInfo.project.name === iPhoneSEProjectName) {
+                await selectSeatPage.clickReservationSheetButton();
+            }
             await page.evaluate(() => document.fonts.ready);
 
             await expect(page).toHaveScreenshot({
@@ -157,6 +160,9 @@ export const test = baseTest.extend<VisualFixture>({
             await selectSeatPage.emptySeat
                 .first()
                 .waitFor({ state: 'visible' });
+            if (testInfo.project.name === iPhoneSEProjectName) {
+                await selectSeatPage.clickReservationSheetButton();
+            }
             await page.evaluate(() => document.fonts.ready);
 
             await expect(page).toHaveScreenshot({
