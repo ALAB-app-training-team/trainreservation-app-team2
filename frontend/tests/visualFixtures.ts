@@ -1,6 +1,6 @@
 import { expect } from '@playwright/test';
-import type { Page } from '@playwright/test';
-import { test as baseTest } from '@tests/fixtures';
+import type { Page, TestInfo } from '@playwright/test';
+import { test as baseTest, iPhoneSEProjectName } from '@tests/fixtures';
 import type { Fixture as BaseFixture } from '@tests/fixtures';
 import { ScheduleSearchPage } from '@tests/pages/ScheduleSearch/ScheduleSearchPage';
 import { SelectSeatPage } from '@tests/pages/SelectSeat/SelectSeatPage';
@@ -85,6 +85,7 @@ export const test = baseTest.extend<VisualFixture>({
     visualSelectSeatGuest: async (
         { page }: { page: Page },
         use: (fn: VisualSelectSeatGuest) => Promise<void>,
+        testInfo: TestInfo,
     ) => {
         const visual = async () => {
             const scheduleSearchPage = new ScheduleSearchPage(page);
@@ -100,7 +101,7 @@ export const test = baseTest.extend<VisualFixture>({
 
             await expect(page).toHaveScreenshot({
                 ...screenshotOptions,
-                fullPage: true,
+                fullPage: testInfo.project.name !== iPhoneSEProjectName,
                 mask: [],
             });
         };
@@ -109,6 +110,7 @@ export const test = baseTest.extend<VisualFixture>({
     visualSelectSeatAccountCreate: async (
         { page }: { page: Page },
         use: (fn: VisualSelectSeatAccountCreate) => Promise<void>,
+        testInfo: TestInfo,
     ) => {
         const visual = async () => {
             const scheduleSearchPage = new ScheduleSearchPage(page);
@@ -120,13 +122,16 @@ export const test = baseTest.extend<VisualFixture>({
             await selectSeatPage.emptySeat
                 .first()
                 .waitFor({ state: 'visible' });
+            if (testInfo.project.name === iPhoneSEProjectName) {
+                await selectSeatPage.clickReservationSheetButton();
+            }
             await selectSeatPage.clickAccountCreateCheckBox();
             await page.evaluate(() => window.scrollTo(0, 0));
             await page.evaluate(() => document.fonts.ready);
 
             await expect(page).toHaveScreenshot({
                 ...screenshotOptions,
-                fullPage: true,
+                fullPage: testInfo.project.name !== iPhoneSEProjectName,
                 mask: [],
             });
         };
@@ -139,6 +144,7 @@ export const test = baseTest.extend<VisualFixture>({
             logout,
         }: { page: Page } & Pick<BaseFixture, 'commonLogin' | 'logout'>,
         use: (fn: VisualSelectSeatAccount) => Promise<void>,
+        testInfo: TestInfo,
     ) => {
         const visual = async () => {
             const scheduleSearchPage = new ScheduleSearchPage(page);
@@ -155,7 +161,7 @@ export const test = baseTest.extend<VisualFixture>({
 
             await expect(page).toHaveScreenshot({
                 ...screenshotOptions,
-                fullPage: true,
+                fullPage: testInfo.project.name !== iPhoneSEProjectName,
                 mask: [],
             });
 

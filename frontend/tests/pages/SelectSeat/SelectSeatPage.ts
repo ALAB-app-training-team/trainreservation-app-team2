@@ -28,6 +28,7 @@ export class SelectSeatPage {
     readonly updateConfirmButton: Locator;
     readonly loginButton: Locator;
     readonly reservationInfoError: Locator;
+    readonly reservationSheetButton: Locator;
 
     constructor(page: Page) {
         this.page = page;
@@ -77,6 +78,7 @@ export class SelectSeatPage {
         this.loginButton = page.getByRole('button', {
             name: 'ログインして氏名・メールアドレスを省略',
         });
+        this.reservationSheetButton = page.getByTestId('reservation-sheet');
     }
 
     async clickBackButton() {
@@ -165,5 +167,9 @@ export class SelectSeatPage {
 
     async clickLoginButton() {
         await this.loginButton.click();
+    }
+
+    async clickReservationSheetButton() {
+        await this.reservationSheetButton.click();
     }
 }
