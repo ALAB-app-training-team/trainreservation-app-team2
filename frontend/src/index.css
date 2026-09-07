@@ -41,7 +41,7 @@
     /* ---------- 文字 ---------- */
     --color-heading: light-dark(#08060d, #f3f4f6);
     /* 明示的な指定がない箇所に継承される既定の本文色 */
-    --color-body: light-dark(#6b6375, #c3c9d4);
+    --color-body: light-dark(#524c59, #c3c9d4);
     --color-fg: light-dark(oklch(21% 0.034 264.665), #f3f4f6);
     --color-fg-secondary: light-dark(oklch(37.3% 0.034 259.733), #d1d5db);
     --color-fg-muted: light-dark(oklch(55.1% 0.027 264.364), #9ca3af);
