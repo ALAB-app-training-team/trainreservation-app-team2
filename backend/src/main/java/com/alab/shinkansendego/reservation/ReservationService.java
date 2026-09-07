@@ -18,7 +18,6 @@ import com.alab.shinkansendego.sectionkm.SectionKmRepository;
 import com.alab.shinkansendego.traincar.SeatResponseDto;
 import com.alab.shinkansendego.traincar.TrainCarEntity;
 import com.alab.shinkansendego.traincar.TrainCarRepository;
-import com.alab.shinkansendego.utils.StringUtils;
 import jakarta.persistence.EntityManager;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationEventPublisher;
@@ -26,6 +25,7 @@ import org.springframework.http.MediaType;
 import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.util.StringUtils;
 import org.springframework.web.client.RestClient;
 import tools.jackson.databind.ObjectMapper;
 
@@ -40,6 +40,8 @@ import java.util.Optional;
 import java.util.Set;
 import java.util.UUID;
 import java.util.stream.Collectors;
+
+import static com.alab.shinkansendego.utils.StringUtils.removeSpaces;
 
 @Service
 public class ReservationService {
@@ -166,12 +168,12 @@ public class ReservationService {
         if (reservationEntity == null) return null;
 
         boolean isReserverMatched = true;
-        if (Objects.equals(reservationEntity.getReserverName(), StringUtils.removeSpaces(name))
-            && Objects.equals(reservationEntity.getReserverMail(), StringUtils.removeSpaces(email))) {
+        if (Objects.equals(reservationEntity.getReserverName(), removeSpaces(name))
+            && Objects.equals(reservationEntity.getReserverMail(), removeSpaces(email))) {
             if (reservationEntity.getAccountId() != null) return null;
         } else {
             boolean isCompanionMatched = reservationEntity.getReservedSeat().stream()
-                .anyMatch(seat -> Objects.equals(seat.getName(), StringUtils.removeSpaces(name)) && Objects.equals(seat.getMail(), StringUtils.removeSpaces(email)));
+                .anyMatch(seat -> Objects.equals(seat.getName(), removeSpaces(name)) && Objects.equals(seat.getMail(), removeSpaces(email)));
             if (!isCompanionMatched) return null;
             isReserverMatched = false;
         }
@@ -299,8 +301,8 @@ public class ReservationService {
         reservationToPost.setScheduleCd(reserveRequestDto.getScheduleCd());
         reservationToPost.setDepartureStationCd(reserveRequestDto.getDepartureStationCd());
         reservationToPost.setArrivalStationCd(reserveRequestDto.getArrivalStationCd());
-        reservationToPost.setReserverName(StringUtils.removeSpaces(reserveRequestDto.getReserverName()));
-        reservationToPost.setReserverMail(StringUtils.removeSpaces(reserveRequestDto.getReserverMail()));
+        reservationToPost.setReserverName(removeSpaces(reserveRequestDto.getReserverName()));
+        reservationToPost.setReserverMail(removeSpaces(reserveRequestDto.getReserverMail()));
         reservationToPost.setPaymentTrackingId(paymentTrackingId);
         reservationToPost.setIsDeleted(false);
         if (session != null) reservationToPost.setAccountId(account.getId());
@@ -310,7 +312,7 @@ public class ReservationService {
             throw new RuntimeException("Insert Reservation is failed");
         }
 
-        insertReservedSeatAndReservedSeatSection(reservationResult.getId(), reserveRequestDto.getSeats(), sectionCdList, reserveRequestDto.getRideDate(), reserveRequestDto.getScheduleCd());
+        insertReservedSeatAndReservedSeatSection(reservationResult.getId(), reserveRequestDto.getSeats(), sectionCdList, reserveRequestDto.getRideDate(), reserveRequestDto.getScheduleCd(), reserverName, reserverMail);
 
         String paymentUrl = "http://localhost:8080/api/payments";
         paymentTrackingId = restClient.post()
@@ -332,8 +334,8 @@ public class ReservationService {
         DepartureArrivalTimeEntity departureArrivalTimeOfGoal = departureArrivalTimeRepository
             .findByScheduleCdAndSectionCdIn(reserveRequestDto.getScheduleCd(), List.of(sectionCdList.get(sectionCdList.size() - 1)));
 
-        reserveRequestDto.setReserverName(StringUtils.removeSpaces(reserverName));
-        reserveRequestDto.setReserverMail(StringUtils.removeSpaces(reserverMail));
+        reserveRequestDto.setReserverName(removeSpaces(reserverName));
+        reserveRequestDto.setReserverMail(removeSpaces(reserverMail));
 
         eventPublisher.publishEvent(new ReservationCreatedEvent(
             reservationId,
@@ -380,13 +382,17 @@ public class ReservationService {
      * @param sectionCdList 登録する区間情報
      * @param rideDate      登録する乗車日付
      * @param scheduleCd    登録するダイヤCD
+     * @param reserverName  予約者氏名(号車番号・席番号が最小の座席に設定する。nullの場合は割当を行わない)
+     * @param reserverMail  予約者メールアドレス(reserverNameがnullの場合は使用しない)
      */
     private void insertReservedSeatAndReservedSeatSection(
         UUID reservationId,
         List<ReserveRequestDto.SelectedSeatDto> seatDtos,
         List<String> sectionCdList,
         LocalDate rideDate,
-        String scheduleCd) {
+        String scheduleCd,
+        String reserverName,
+        String reserverMail) {
         List<ReservedSeatEntity> reservedSeatsToPost = new ArrayList<>();
         for (ReserveRequestDto.SelectedSeatDto seatDto : seatDtos) {
             ReservedSeatEntity reservedSeat = new ReservedSeatEntity();
@@ -403,6 +409,18 @@ public class ReservationService {
             reservedSeat.setSeat(seat);
             reservedSeatsToPost.add(reservedSeat);
         }
+
+        if (StringUtils.hasLength(reserverName) && StringUtils.hasLength(reserverMail)) {
+            reservedSeatsToPost.stream()
+                .min(Comparator.comparing((ReservedSeatEntity s) -> s.getTrainCar().getTrainCarNumber())
+                    .thenComparing(s -> s.getSeat().getSeatNumber())
+                    .thenComparing(s -> s.getSeat().getSeatColumn()))
+                .ifPresent(seat -> {
+                    seat.setName(removeSpaces(reserverName));
+                    seat.setMail(removeSpaces(reserverMail));
+                });
+        }
+
         List<ReservedSeatEntity> savedReservedSeats = reservedSeatRepository.saveAll(reservedSeatsToPost);
         int reservedSeatResult = savedReservedSeats.size();
         if (reservedSeatResult != seatDtos.size()) {
@@ -491,7 +509,7 @@ public class ReservationService {
         List<ReservedSeatSectionEntity> deleteSeatSections = reservedSeats.stream()
             .flatMap(seat -> seat.getReservedSeatSection().stream())
             .toList();
-        List<ReservedSeatEntity> assignedReservedSeats = reservedSeats.stream().filter(seat -> org.springframework.util.StringUtils.hasLength(seat.getMail()) && org.springframework.util.StringUtils.hasLength(seat.getName())).toList();
+        List<ReservedSeatEntity> assignedReservedSeats = reservedSeats.stream().filter(seat -> StringUtils.hasLength(seat.getMail()) && StringUtils.hasLength(seat.getName())).toList();
         reservedSeatRepository.deleteAll(reservedSeats);
         reservedSeatSectionRepository.deleteAll(deleteSeatSections);
 
@@ -507,7 +525,8 @@ public class ReservationService {
             reservationId,
             changedReservation.getSeats(), sectionCds,
             changedReservation.getRideDate(),
-            changedReservation.getScheduleCd()
+            changedReservation.getScheduleCd(),
+            null, null
         );
 
         List<DepartureArrivalTimeEntity> schedules = departureArrivalTimeRepository.findByScheduleCd(changedReservation.getScheduleCd());
@@ -577,7 +596,7 @@ public class ReservationService {
         List<ReservedSeatEntity> deleteSeats = reservedSeats.stream()
             .filter(reserved -> changedReservation.getSeats().stream().noneMatch(changed -> isSame(changed, reserved)))
             .toList();
-        List<ReservedSeatEntity> assignedReservedSeats = deleteSeats.stream().filter(seat -> org.springframework.util.StringUtils.hasLength(seat.getMail()) && org.springframework.util.StringUtils.hasLength(seat.getName())).toList();
+        List<ReservedSeatEntity> assignedReservedSeats = deleteSeats.stream().filter(seat -> StringUtils.hasLength(seat.getMail()) && StringUtils.hasLength(seat.getName())).toList();
         // 追加対象座席リクエストを抽出
         List<ReserveRequestDto.SelectedSeatDto> postSeats = changedReservation.getSeats().stream()
             .filter(changed -> reservedSeats.stream().noneMatch(reserved -> isSame(changed, reserved)))
@@ -592,7 +611,9 @@ public class ReservationService {
                 reservationId,
                 postSeats, sectionCds,
                 changedReservation.getRideDate(),
-                changedReservation.getScheduleCd());
+                changedReservation.getScheduleCd(),
+                null, null
+            );
         }
         entityManager.flush();
         entityManager.clear();

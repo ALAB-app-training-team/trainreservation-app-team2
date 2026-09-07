@@ -60,7 +60,7 @@ export function ReservedTicketQrCode({
                                         </div>
                                         <div className="mb-1 flex justify-center">
                                             <QRCodeSVG
-                                                className="h-auto w-1/4"
+                                                className="h-auto"
                                                 value={reservedSeat.codeToken}
                                                 size={200}
                                                 bgColor={'#ffffff'}
@@ -86,7 +86,7 @@ export function ReservedTicketQrCode({
                                             </div>
                                         ) : (
                                             <div className="mx-auto mb-4 w-fit rounded-full bg-orange-100 px-2 text-orange-500">
-                                                同行者が割り当てられていません
+                                                利用者が割り当てられていません
                                             </div>
                                         )}
                                     </div>

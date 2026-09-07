@@ -175,7 +175,39 @@ export function useAccountUpdateDto() {
                 'name',
                 removeWhiteSpace(accountUpdateForm.name),
             );
-            toast.success('アカウント情報の変更が完了しました。');
+            const successToastId = 'account-update-success';
+            toast.success('アカウント情報の変更が完了しました。', {
+                id: successToastId,
+                description: (
+                    <>
+                        <p>
+                            チケットに紐づく予約者の情報は
+                            <br />
+                            利用者割り当てから変更してください。
+                        </p>
+                        <button
+                            type="button"
+                            onClick={() => {
+                                toast.dismiss(successToastId);
+                                navigate('/reservationList');
+                            }}
+                            className="text-HT mt-1 underline"
+                        >
+                            →チケットを更新する
+                        </button>
+                    </>
+                ),
+                duration: Infinity,
+                action: {
+                    label: '閉じる',
+                    onClick: () => {},
+                },
+                classNames: {
+                    title: 'text-left',
+                    description: 'text-left !text-base text-black',
+                    actionButton: '!px-3 !py-1 !text-base !h-auto',
+                },
+            });
             navigate('/scheduleSearch', { replace: true });
         } catch (error) {
             if (axios.isAxiosError(error)) {

@@ -216,10 +216,14 @@ test('購入者情報バリデーションチェック', async ({ page }) => {
         'カード名義人を入力してください',
     );
     // カード名義人-形式
-    await selectSeatPage.fillCardHolderName('あああああ');
-    await expect(selectSeatPage.cardHolderName).not.toHaveText('あああああ');
+    await selectSeatPage.fillCardHolderName('あ');
     await expect(selectSeatPage.reservationInfoError).toContainText(
-        'カード名義人を入力してください',
+        '半角英大文字・半角スペースで入力してください',
+    );
+    // カード名義人-形式
+    await selectSeatPage.fillCardHolderName('a');
+    await expect(selectSeatPage.reservationInfoError).toContainText(
+        '半角英大文字・半角スペースで入力してください',
     );
     // カード名義人-正常系
     await selectSeatPage.fillCardHolderName('TARO YAMADA');

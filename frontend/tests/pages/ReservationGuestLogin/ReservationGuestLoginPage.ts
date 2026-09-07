@@ -49,7 +49,7 @@ export class ReservationGuestLoginPage {
     }
 
     async inputCompanionLoginInfo() {
-        await this.fillName('同行者太郎');
+        await this.fillName('利用者太郎');
         await this.fillMailAddress('companion@test.com');
     }
 

@@ -88,14 +88,11 @@ export function SeatsByTrainCar({
                     <div
                         className={`grid gap-2`}
                         style={{
-                            gridTemplateColumns: `repeat(${layoutColumns.length + 1}, minmax(0, 1fr))`,
+                            gridTemplateColumns: `repeat(${layoutColumns.length}, minmax(0, 1fr))`,
                         }}
                     >
                         {rows.map((row) => (
                             <Fragment key={row}>
-                                <div className="flex items-center justify-center">
-                                    {row}
-                                </div>
                                 {layoutColumns.map((column, colIndex) => {
                                     if (column === '') {
                                         return (

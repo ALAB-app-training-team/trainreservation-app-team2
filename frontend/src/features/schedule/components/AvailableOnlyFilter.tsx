@@ -25,10 +25,8 @@ export function AvailableOnlyFilter({
                 />
                 <label
                     htmlFor="isOnlyAvailable"
-                    className={`text-sm ${
-                        isDisabled
-                            ? 'cursor-not-allowed text-gray-500'
-                            : 'cursor-pointer'
+                    className={`${
+                        isDisabled ? 'cursor-not-allowed' : 'cursor-pointer'
                     }`}
                 >
                     空席がある列車のみ表示する
@@ -37,7 +35,7 @@ export function AvailableOnlyFilter({
             {isDisabled && (
                 <p
                     data-testid="isOnlyAvailable-hint"
-                    className="cursor-not-allowed text-xs text-gray-500"
+                    className="cursor-not-allowed text-left text-xs"
                 >
                     （座席種別または人数を指定中は自動で空席がある列車のみ表示されます）
                 </p>
