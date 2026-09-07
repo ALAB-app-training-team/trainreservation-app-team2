@@ -43,7 +43,7 @@ class LocalReservationEmailServiceTest {
     void setUp() {
         service = new LocalReservationEmailService(mailSender);
         ReflectionTestUtils.setField(service, "baseUrl", BASE_URL);
-        when(mailSender.createMimeMessage()).thenReturn(new MimeMessage(Session.getDefaultInstance(new Properties())));
+        when(mailSender.createMimeMessage()).thenAnswer(invocation -> new MimeMessage(Session.getInstance(new Properties())));
     }
 
     private ReservationEmailRequestParams createParams() {

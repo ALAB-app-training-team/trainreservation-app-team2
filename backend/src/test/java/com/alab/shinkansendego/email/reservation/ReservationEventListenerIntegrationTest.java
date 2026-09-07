@@ -31,6 +31,7 @@ import java.util.UUID;
 
 import static org.awaitility.Awaitility.await;
 import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.Mockito.never;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 
@@ -94,6 +95,22 @@ class ReservationEventListenerIntegrationTest {
 
         await().atMost(Duration.ofSeconds(5))
             .untilAsserted(() -> verify(reservationEmailService, times(1)).sendReservationConfirmation(any()));
+    }
+
+    @Test
+    @DisplayName("トランザクションがロールバックされた場合は予約完了メール送信が呼び出されない")
+    void handleReservationCreated_isNotInvoked_whenTransactionRolledBack() {
+        ReserveRequestDto request = createRequest("user@example.com");
+
+        new TransactionTemplate(transactionManager).executeWithoutResult(status -> {
+            eventPublisher.publishEvent(
+                new ReservationCreatedEvent(UUID.randomUUID(), request, LocalTime.of(9, 0), LocalTime.of(10, 30))
+            );
+            status.setRollbackOnly();
+        });
+
+        await().during(Duration.ofMillis(500)).atMost(Duration.ofSeconds(2))
+            .untilAsserted(() -> verify(reservationEmailService, never()).sendReservationConfirmation(any()));
     }
 
     @Test
