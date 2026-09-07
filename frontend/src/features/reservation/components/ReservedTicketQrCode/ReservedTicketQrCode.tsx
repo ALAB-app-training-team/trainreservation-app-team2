@@ -86,7 +86,7 @@ export function ReservedTicketQrCode({
                                             </div>
                                         ) : (
                                             <div className="mx-auto mb-4 w-fit rounded-full bg-orange-100 px-2 text-orange-500">
-                                                同行者が割り当てられていません
+                                                利用者が割り当てられていません
                                             </div>
                                         )}
                                     </div>

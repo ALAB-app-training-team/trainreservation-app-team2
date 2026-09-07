@@ -8,7 +8,6 @@ import com.alab.shinkansendego.reservation.ReservationEntity;
 import com.alab.shinkansendego.reservation.ReservationRepository;
 import com.alab.shinkansendego.reservation.ReserveRequestDto;
 import com.alab.shinkansendego.traincar.TrainCarRepository;
-import com.alab.shinkansendego.utils.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.security.access.AccessDeniedException;
@@ -116,8 +115,8 @@ public class ReservedSeatService {
                 releaseSeats.add(setNameAndMail(reservation, reservedSeatEntity.getName(), reservedSeatEntity.getMail(), reservedSeatEntity));
             }
 
-            reservedSeatEntity.setName(StringUtils.removeSpaces(reservedSeat.getName()));
-            reservedSeatEntity.setMail(StringUtils.removeSpaces(reservedSeat.getMail()));
+            reservedSeatEntity.setName(removeSpaces(reservedSeat.getName()));
+            reservedSeatEntity.setMail(removeSpaces(reservedSeat.getMail()));
         }
         if (!releaseSeats.isEmpty()) {
             eventPublisher.publishEvent(new ReservedSeatReleaseEvent(

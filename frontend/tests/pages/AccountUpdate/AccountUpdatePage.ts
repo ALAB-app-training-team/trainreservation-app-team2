@@ -27,6 +27,7 @@ export class AccountUpdatePage {
         });
         this.updateButton = page.getByRole('button', {
             name: '変更',
+            exact: true,
         });
         this.deleteButton = page.getByRole('button', {
             name: '退会はこちら',

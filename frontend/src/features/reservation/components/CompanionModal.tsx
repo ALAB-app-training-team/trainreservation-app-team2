@@ -44,11 +44,11 @@ export function CompanionModal({
         <div className="flex flex-col gap-2 p-2">
             <div>
                 <CustomModalTitle
-                    title="同行者に割り当て"
+                    title="利用者に割り当て"
                     onRequestClose={onRequestClose}
                     isSubmitting={isSubmitting}
                 />
-                <div>同行者の情報を入力してチケットを配布します</div>
+                <div>利用者の情報を入力してチケットを配布します</div>
             </div>
             {reservedSeats.map((reservedSeat, index) => (
                 <CompanionForm
