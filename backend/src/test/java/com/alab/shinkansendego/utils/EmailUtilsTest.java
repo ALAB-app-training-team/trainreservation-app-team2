@@ -11,9 +11,8 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 
 class EmailUtilsTest {
-
     @Test
-    @DisplayName("乗車日を和暦形式でフォーマットする")
+    @DisplayName("乗車日をフォーマットする")
     void rideDateFormatter_returnsJapaneseFormat() {
         assertEquals("2026年01月05日", EmailUtils.rideDateFormatter(LocalDate.of(2026, 1, 5)));
     }
