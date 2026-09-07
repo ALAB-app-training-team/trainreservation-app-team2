@@ -12,6 +12,7 @@ public record ReservationCanceledEvent(
     LocalTime departureTime,
     LocalTime arrivalTime,
     String representativeName,
-    List<ReservedSeatEntity> reservedSeats
+    List<ReservedSeatEntity> reservedSeats,
+    boolean isGuest
 ) {
 }

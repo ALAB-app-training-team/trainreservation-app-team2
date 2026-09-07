@@ -81,4 +81,46 @@ public class LocalReservationEmailServiceTest {
         assertTrue(body.contains("http://localhost:5173/login"));
         assertFalse(body.contains("/reservationGuestLogin"));
     }
+
+    @Test
+    @DisplayName("ゲスト予約の場合、キャンセルメールにゲストログイン用URLが添付されること")
+    void sendReservationCancel_withGuestReservation_attachGuestLoginUrl() throws Exception {
+        service.sendReservationCancel(createParams(true));
+
+        String body = getSentBody();
+        assertTrue(body.contains(
+            "http://localhost:5173/reservationGuestLogin?reservationId=11111111-1111-1111-1111-111111111111"));
+        assertFalse(body.contains("http://localhost:5173/login"));
+    }
+
+    @Test
+    @DisplayName("アカウント予約の場合、キャンセルメールにログインURLが添付されること")
+    void sendReservationCancel_withAccountReservation_attachLoginUrl() throws Exception {
+        service.sendReservationCancel(createParams(false));
+
+        String body = getSentBody();
+        assertTrue(body.contains("http://localhost:5173/login"));
+        assertFalse(body.contains("/reservationGuestLogin"));
+    }
+
+    @Test
+    @DisplayName("ゲスト予約の場合、変更メールにゲストログイン用URLが添付されること")
+    void sendReservationChange_withGuestReservation_attachGuestLoginUrl() throws Exception {
+        service.sendReservationChange(createParams(true));
+
+        String body = getSentBody();
+        assertTrue(body.contains(
+            "http://localhost:5173/reservationGuestLogin?reservationId=11111111-1111-1111-1111-111111111111"));
+        assertFalse(body.contains("http://localhost:5173/login"));
+    }
+
+    @Test
+    @DisplayName("アカウント予約の場合、変更メールにログインURLが添付されること")
+    void sendReservationChange_withAccountReservation_attachLoginUrl() throws Exception {
+        service.sendReservationChange(createParams(false));
+
+        String body = getSentBody();
+        assertTrue(body.contains("http://localhost:5173/login"));
+        assertFalse(body.contains("/reservationGuestLogin"));
+    }
 }
