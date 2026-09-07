@@ -76,7 +76,7 @@ export const test = baseTest.extend<VisualFixture>({
 
             await expect(page).toHaveScreenshot({
                 ...screenshotOptions,
-                fullPage: false,
+                fullPage: true,
                 mask: maskTargets,
             });
         };
@@ -363,7 +363,7 @@ export const test = baseTest.extend<VisualFixture>({
 
             await expect(page).toHaveScreenshot({
                 ...screenshotOptions,
-                fullPage: false,
+                fullPage: true,
                 mask: maskTargets,
             });
 
