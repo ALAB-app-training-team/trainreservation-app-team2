@@ -6,6 +6,7 @@ import { removeGuestLoginInfo } from '@/shared/utils/RemoveGuestReservation';
 
 export function ReservationGuestLogin() {
     useEffect(() => {
+        window.scrollTo(0, 0);
         removeGuestLoginInfo();
     }, []);
     return (

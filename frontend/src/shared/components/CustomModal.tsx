@@ -23,7 +23,7 @@ export function CustomModal({
                     },
                 }}
                 overlayClassName="fixed inset-0 bg-black/50 flex items-center justify-center backdrop-blur-sm transition-opacity"
-                className="max-h-[80vh] w-full max-w-xl overflow-y-auto rounded-xl bg-white p-6 shadow-2xl transition-all focus:outline-none"
+                className="m-2 max-h-[80vh] w-full max-w-xl overflow-y-auto rounded-xl bg-white p-6 shadow-2xl transition-all focus:outline-none md:m-0"
             >
                 {isOpen && <div className="w-full">{children}</div>}
             </Modal>
