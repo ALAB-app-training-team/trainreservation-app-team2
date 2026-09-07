@@ -11,17 +11,26 @@ export function ReservationListBodySkeleton() {
                 <h1 className="!m-0 text-left !text-3xl">予約確認</h1>
                 <div className="bg-primary/8 flex gap-6 rounded-3xl p-2">
                     <div className="flex w-full items-center">
-                        <button className="flex w-full items-center justify-center gap-2 rounded-3xl px-6 py-2 transition">
+                        <button className="flex w-full flex-col items-center justify-center gap-1 rounded-3xl px-6 py-2 transition md:flex-row md:gap-2">
                             <CiCalendar />
-                            {RESERVATION_TAB[0].label}(0)
+                            <span className="flex flex-col items-center whitespace-nowrap md:flex-row">
+                                <span>{RESERVATION_TAB[0].label}</span>
+                                <span>(0)</span>
+                            </span>
                         </button>
-                        <button className="flex w-full items-center justify-center gap-2 rounded-3xl px-6 py-2 transition">
+                        <button className="flex w-full flex-col items-center justify-center gap-1 rounded-3xl px-6 py-2 transition md:flex-row md:gap-2">
                             <RiGroupLine />
-                            {RESERVATION_TAB[1].label}(0)
+                            <span className="flex flex-col items-center whitespace-nowrap md:flex-row">
+                                <span>{RESERVATION_TAB[1].label}</span>
+                                <span>(0)</span>
+                            </span>
                         </button>
-                        <button className="flex w-full items-center justify-center gap-2 rounded-3xl px-6 py-2 transition">
+                        <button className="flex w-full flex-col items-center justify-center gap-1 rounded-3xl px-6 py-2 transition md:flex-row md:gap-2">
                             <LuTicket />
-                            {RESERVATION_TAB[2].label}(0)
+                            <span className="flex flex-col items-center whitespace-nowrap md:flex-row">
+                                <span>{RESERVATION_TAB[2].label}</span>
+                                <span>(0)</span>
+                            </span>
                         </button>
                     </div>
                 </div>

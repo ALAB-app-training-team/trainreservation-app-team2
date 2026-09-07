@@ -1,43 +1,38 @@
 import dayjs from 'dayjs';
 import type { SetStateAction } from 'react';
 
-type DepartureDateAndTimePickerProps = {
+type CustomDatePickerProps = {
     id: string;
     label: string;
-    type: string;
     value: string;
-    setValue: React.Dispatch<SetStateAction<string>> | ((time: string) => void);
+    setValue: React.Dispatch<SetStateAction<string>>;
     getFieldError?: (field: string) => string;
-    maxDate?: Date;
-    minDate?: Date;
-    children?: React.ReactNode;
+    maxDate: Date;
+    minDate: Date;
 };
 
-export function DepartureDateAndTimePicker({
+export function CustomDatePicker({
     id,
     label,
-    type,
     value,
     setValue,
     getFieldError,
     maxDate,
     minDate,
-    children,
-}: DepartureDateAndTimePickerProps) {
+}: CustomDatePickerProps) {
     return (
         <div className="flex w-full flex-col items-start justify-between gap-2">
             <div className="flex h-full items-center gap-4">
                 <label htmlFor={id}>{label}</label>
-                {children}
             </div>
             <input
                 id={id}
-                type={type}
+                type="date"
                 value={value}
                 onChange={(e) => setValue(e.target.value)}
                 className="focus:border-primary-ink bg-surface w-full cursor-pointer rounded-xl p-2 outline-none focus:border-2"
-                min={minDate ? dayjs(minDate).format('YYYY-MM-DD') : undefined}
-                max={maxDate ? dayjs(maxDate).format('YYYY-MM-DD') : undefined}
+                min={dayjs(minDate).format('YYYY-MM-DD')}
+                max={dayjs(maxDate).format('YYYY-MM-DD')}
             />
             {getFieldError?.(id) && (
                 <p className="text-danger text-left text-sm">

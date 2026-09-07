@@ -34,6 +34,9 @@ export function Seat({ seat, onClick, disabled, type }: seatProps) {
                     }}
                     className={`${styles['reserveModeStyle']} ${styles[type].visual} ${styles[type].cursor}`}
                     disabled={disabled}
+                    data-testid={
+                        type === 'reservable' ? 'empty-seat' : undefined
+                    }
                 >
                     {seat.seatNumber + seat.seatColumn}
                 </button>

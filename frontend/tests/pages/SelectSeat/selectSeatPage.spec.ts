@@ -8,6 +8,7 @@ import { ReservationListPage } from '../ReservationList/ReservationListPage';
 test('ゴミ箱ボタンを押すと、選択した座席が解除される', async ({ page }) => {
     const scheduleSearchPage = new ScheduleSearchPage(page);
     const selectSeatPage = new SelectSeatPage(page);
+
     await scheduleSearchPage.goto();
     await expect(page).toHaveURL('/scheduleSearch');
     await scheduleSearchPage.clickDetailButton();
@@ -17,7 +18,7 @@ test('ゴミ箱ボタンを押すと、選択した座席が解除される', as
     const secondSeat =
         (await selectSeatPage.emptySeat.nth(1).textContent()) ?? '';
     await selectSeatPage.emptySeat.first().click();
-    await selectSeatPage.emptySeat.nth(1).click();
+    await selectSeatPage.emptySeat.first().click();
     await expect(
         page
             .getByTestId('selected-seats')
@@ -44,7 +45,7 @@ test('座席を6席選択すると、それ以上選択できない', async ({ p
     const firstSeat = (await selectSeatPage.emptySeat.first()) ?? '';
     const firstSeatText = await firstSeat.textContent();
     await firstSeat.click();
-    const secondSeat = (await selectSeatPage.emptySeat.nth(1)) ?? '';
+    const secondSeat = (await selectSeatPage.emptySeat.first()) ?? '';
     const secondSeatText = await secondSeat.textContent();
     await secondSeat.click();
     // 2号車から座席を選択する
@@ -60,11 +61,17 @@ test('座席を6席選択すると、それ以上選択できない', async ({ p
     const thirdSeat = (await selectSeatPage.emptySeat.first()) ?? '';
     const thirdSeatText = await thirdSeat.textContent();
     await thirdSeat.click();
-    const fourthSeat = (await selectSeatPage.emptySeat.nth(1)) ?? '';
+    const fourthSeat = (await selectSeatPage.emptySeat.first()) ?? '';
     const fourthSeatText = await fourthSeat.textContent();
     await fourthSeat.click();
     // グリーン車から座席を選択する
     await page.getByRole('button', { name: 'グリーン車' }).click();
+    await expect(
+        page
+            .getByTestId('train-cars')
+            .getByRole('button', { name: /^(9|11)$/ }),
+    ).toHaveClass(/bg-primary-light/);
+    await page.getByText(/^(9|11)号車$/).waitFor({ state: 'visible' });
     const trainCarInGreen =
         (await selectSeatPage.trainCars.first().textContent()) ?? '';
     const fifthSeat = (await selectSeatPage.emptySeat.first()) ?? '';
@@ -72,6 +79,12 @@ test('座席を6席選択すると、それ以上選択できない', async ({ p
     await fifthSeat.click();
     // グランクラスから座席を選択する
     await page.getByRole('button', { name: 'グランクラス' }).click();
+    await expect(
+        page
+            .getByTestId('train-cars')
+            .getByRole('button', { name: /^(10|12)$/ }),
+    ).toHaveClass(/bg-primary-light/);
+    await page.getByText(/^(10|12)号車$/).waitFor({ state: 'visible' });
     const trainCarInGranClass =
         (await selectSeatPage.trainCars.first().textContent()) ?? '';
     const sixthSeat = (await selectSeatPage.emptySeat.first()) ?? '';
@@ -205,10 +218,14 @@ test('購入者情報バリデーションチェック', async ({ page }) => {
         'カード名義人を入力してください',
     );
     // カード名義人-形式
-    await selectSeatPage.fillCardHolderName('あああああ');
-    await expect(selectSeatPage.cardHolderName).not.toHaveText('あああああ');
+    await selectSeatPage.fillCardHolderName('あ');
     await expect(selectSeatPage.reservationInfoError).toContainText(
-        'カード名義人を入力してください',
+        '半角英大文字・半角スペースで入力してください',
+    );
+    // カード名義人-形式
+    await selectSeatPage.fillCardHolderName('a');
+    await expect(selectSeatPage.reservationInfoError).toContainText(
+        '半角英大文字・半角スペースで入力してください',
     );
     // カード名義人-正常系
     await selectSeatPage.fillCardHolderName('TARO YAMADA');
@@ -325,12 +342,13 @@ test('アカウント作成時のパスワードバリデーションチェッ�
 test('予約確定', async ({ page }) => {
     const scheduleSearchPage = new ScheduleSearchPage(page);
     const selectSeatPage = new SelectSeatPage(page);
+
     await scheduleSearchPage.goto();
     await expect(page).toHaveURL('/scheduleSearch');
     await scheduleSearchPage.clickDetailButton();
     await expect(page).toHaveURL('/selectSeat');
     await selectSeatPage.selectSeat();
-    await selectSeatPage.inputReserverInfo();
+    await selectSeatPage.inputGuestReserverInfo();
     await selectSeatPage.inputCardInfo();
     await expect(page.getByText('座席数合計：1席')).toBeVisible();
     await expect(page.getByText('お支払い合計：￥2,600')).toBeVisible();
@@ -347,12 +365,13 @@ test('予約確定', async ({ page }) => {
 test('パスワードがエラーの場合、予約するボタンが非活性', async ({ page }) => {
     const scheduleSearchPage = new ScheduleSearchPage(page);
     const selectSeatPage = new SelectSeatPage(page);
+
     await scheduleSearchPage.goto();
     await expect(page).toHaveURL('/scheduleSearch');
     await scheduleSearchPage.clickDetailButton();
     await expect(page).toHaveURL('/selectSeat');
     await selectSeatPage.selectSeat();
-    await selectSeatPage.inputReserverInfo();
+    await selectSeatPage.inputGuestReserverInfo();
     await selectSeatPage.inputCardInfo();
     await selectSeatPage.clickAccountCreateCheckBox();
 
@@ -375,32 +394,17 @@ test('パスワードがエラーの場合、予約するボタンが非活性',
     await expect(selectSeatPage.reserveButton).toBeEnabled();
 });
 
-test('登録済メールアドレスでアカウント作成できない', async ({
-    page,
-    logout,
-}) => {
+test('登録済メールアドレスでアカウント作成できない', async ({ page }) => {
     const scheduleSearchPage = new ScheduleSearchPage(page);
     const selectSeatPage = new SelectSeatPage(page);
-    await scheduleSearchPage.goto();
-    await expect(page).toHaveURL('/scheduleSearch');
-    await scheduleSearchPage.clickDetailButton();
-    await expect(page).toHaveURL('/selectSeat');
-    await selectSeatPage.selectSeat();
-    await selectSeatPage.inputCreatedAccountInfo();
-    await selectSeatPage.clickAccountCreateCheckBox();
-    await selectSeatPage.inputPasswordInfo();
-    await selectSeatPage.inputCardInfo();
-    await selectSeatPage.clickReseveButton();
-    await selectSeatPage.clickReserveConfirmButton();
-    await expect(page).toHaveURL('/reservedTicket');
-    await logout();
 
     await scheduleSearchPage.goto();
     await expect(page).toHaveURL('/scheduleSearch');
     await scheduleSearchPage.clickDetailButton();
     await expect(page).toHaveURL('/selectSeat');
     await selectSeatPage.selectSeat();
-    await selectSeatPage.inputCreatedAccountInfo();
+    await selectSeatPage.fillName('一般太郎');
+    await selectSeatPage.fillMailAddress('test-common@test.com');
     await selectSeatPage.clickAccountCreateCheckBox();
     await selectSeatPage.inputPasswordInfo();
     await selectSeatPage.inputCardInfo();
@@ -438,7 +442,7 @@ test('未ログイン時は氏名・メールアドレス入力欄・アカウ�
     const scheduleSearchPage = new ScheduleSearchPage(page);
     const selectSeatPagePage = new SelectSeatPage(page);
 
-    scheduleSearchPage.goto();
+    await scheduleSearchPage.goto();
     await expect(page).toHaveURL('/scheduleSearch');
     await scheduleSearchPage.clickDetailButton();
 
@@ -465,7 +469,7 @@ test('シートマップでログインすると選択した座席が保持さ�
     await selectSeatPage.clickLoginButton();
     await expect(page).toHaveURL('/login');
     await loginPage.loginButton.waitFor({ state: 'visible' });
-    await loginPage.inputcommonLoginInfo();
+    await loginPage.inputCommonLoginInfo();
     await loginPage.clickLoginButton();
     await expect(page).toHaveURL('/selectSeat');
     await expect(page.getByText('座席が選択されていません')).toBeHidden();
@@ -480,7 +484,7 @@ test('座席変更の際はクレカ入力欄が表示されないこと', async
     const reservationListPage = new ReservationListPage(page);
 
     // ログイン～予約～座席変更シートマップ
-    commonLogin();
+    await commonLogin();
     await expect(page).toHaveURL('/scheduleSearch');
     await createReservation();
     await reservationListPage.goto();
@@ -493,7 +497,8 @@ test('座席変更の際はクレカ入力欄が表示されないこと', async
     await expect(
         page.getByText('※初回予約時と同じ\nクレジットカードを使用します'),
     ).toBeVisible();
-    logout();
+
+    await logout();
 });
 
 test('座席変更の際は座席選択済みの状態であること', async ({
@@ -505,7 +510,7 @@ test('座席変更の際は座席選択済みの状態であること', async ({
     const reservationListPage = new ReservationListPage(page);
 
     // ログイン～予約～座席変更シートマップ
-    commonLogin();
+    await commonLogin();
     await expect(page).toHaveURL('/scheduleSearch');
     await createReservation();
     await reservationListPage.goto();
@@ -516,7 +521,8 @@ test('座席変更の際は座席選択済みの状態であること', async ({
     await expect(page).toHaveURL('/selectSeat');
     //  確認事項
     await expect(page.getByText('座席が選択されていません')).not.toBeVisible();
-    logout();
+
+    await logout();
 });
 
 test('日時電車変更の際はクレカ入力欄が表示されないこと', async ({
@@ -529,9 +535,10 @@ test('日時電車変更の際はクレカ入力欄が表示されないこと',
     const scheduleSearchPage = new ScheduleSearchPage(page);
 
     // ログイン～予約～座席変更シートマップ
-    commonLogin();
+    await commonLogin();
     await expect(page).toHaveURL('/scheduleSearch');
     await createReservation();
+    await expect(page).toHaveURL('/reservedTicket');
     await reservationListPage.goto();
     await expect(page).toHaveURL('/reservationList');
     await reservationListPage.clickThreeDotsButton();
@@ -544,7 +551,8 @@ test('日時電車変更の際はクレカ入力欄が表示されないこと',
     await expect(
         page.getByText('※初回予約時と同じ\nクレジットカードを使用します'),
     ).toBeVisible();
-    logout();
+
+    await logout();
 });
 
 test('日時電車変更で新しい電車を選ぶと座席未選択,同じ電車を選ぶと選択済みの状態であること', async ({
@@ -558,7 +566,7 @@ test('日時電車変更で新しい電車を選ぶと座席未選択,同じ電�
     const selectSeatPage = new SelectSeatPage(page);
 
     // ログイン～予約～座席変更シートマップ
-    commonLogin();
+    await commonLogin();
     await expect(page).toHaveURL('/scheduleSearch');
     await createReservation();
     await reservationListPage.goto();
@@ -577,5 +585,5 @@ test('日時電車変更で新しい電車を選ぶと座席未選択,同じ電�
     await expect(page).toHaveURL('selectSeat');
     await expect(page.getByText('座席が選択されていません')).toBeVisible();
 
-    logout();
+    await logout();
 });

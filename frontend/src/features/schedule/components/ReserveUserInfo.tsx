@@ -38,7 +38,7 @@ export function ReserveUserInfo({
     const [passwordCheckType, setPasswordCheckType] = useState('password');
     return (
         <>
-            <div className="border-primary-ink/20 flex flex-col items-start gap-8 border-b-2 py-4">
+            <div className="flex flex-col items-start gap-8 py-4">
                 {!isLoggedIn && (
                     <div className="flex w-full flex-col gap-4">
                         <h1 className="!mt-0 !mb-0 !text-lg">予約者情報</h1>

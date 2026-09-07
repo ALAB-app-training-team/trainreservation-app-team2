@@ -3,6 +3,7 @@ import { useState } from 'react';
 import { CompanionForm } from '@/features/reservation/components/CompanionForm';
 import type { ReservedSeatDto } from '@/features/reservation/types/ReservedSeatDto';
 import type { ReservedSeatUpdateDto } from '@/features/reservation/types/ReservedSeatUpdateDto';
+import { CustomModalTitle } from '@/shared/components/CustomModalTitle';
 
 type CompanionModalProps = {
     isInvalid: boolean;
@@ -10,6 +11,7 @@ type CompanionModalProps = {
     isSubmitting: boolean;
     reservedSeats: ReservedSeatDto[];
     handleSubmit: (formValues: ReservedSeatUpdateDto[]) => void;
+    onRequestClose: () => void;
 };
 
 export function CompanionModal({
@@ -18,6 +20,7 @@ export function CompanionModal({
     isSubmitting,
     reservedSeats,
     handleSubmit,
+    onRequestClose,
 }: CompanionModalProps) {
     const [formValues, setFormValues] = useState<ReservedSeatUpdateDto[]>(() =>
         reservedSeats.map((seat) => ({
@@ -40,7 +43,11 @@ export function CompanionModal({
     return (
         <div className="flex flex-col gap-2 p-2">
             <div>
-                <h2>同行者に割り当て</h2>
+                <CustomModalTitle
+                    title="同行者に割り当て"
+                    onRequestClose={onRequestClose}
+                    isSubmitting={isSubmitting}
+                />
                 <div>同行者の情報を入力してチケットを配布します</div>
             </div>
             {reservedSeats.map((reservedSeat, index) => (

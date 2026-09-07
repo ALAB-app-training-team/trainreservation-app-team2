@@ -37,22 +37,15 @@ export function ReservedSeats({
 }: ReservedSeatsProps) {
     return (
         <>
-            <div className="flex w-full flex-col items-start gap-2">
+            <div className="flex w-full flex-col gap-2 md:flex-row md:flex-wrap">
                 {title && (
-                    <div className="flex items-center gap-4">
-                        <div className="flex items-center gap-2">
-                            <MdAirlineSeatReclineExtra className="mt-0.5" />
-                            <label>座席</label>
-                        </div>
-                        {seats.some((seat) => !seat.name) && (
-                            <div className="text-warning mx-auto w-fit rounded-full px-2">
-                                同行者が割り当てられていない座席があります
-                            </div>
-                        )}
+                    <div className="flex items-center gap-2">
+                        <MdAirlineSeatReclineExtra className="mt-0.5 text-xl md:mt-0" />
+                        <label>座席</label>
                     </div>
                 )}
                 <div
-                    className="flex flex-wrap gap-2"
+                    className="order-1 flex flex-wrap gap-2 md:order-2 md:w-full"
                     data-testid="reserved-seats"
                 >
                     {seats.length !== 0 ? (
@@ -77,12 +70,12 @@ export function ReservedSeats({
                                             {id === 'reservationDetail' && (
                                                 <BsTrainFreightFrontFill className="text-primary-ink" />
                                             )}
-                                            <div>{`${seat.trainCarNumber}号車`}</div>
                                             {id === 'reservationDetail' && (
                                                 <div>
                                                     {seat.trainCarTypeName}
                                                 </div>
                                             )}
+                                            <div>{`${seat.trainCarNumber}号車`}</div>
                                             <div>
                                                 {`${seat.seatNumber}番` +
                                                     `${seat.seatColumn}席`}
@@ -106,8 +99,15 @@ export function ReservedSeats({
                         <div>{ERROR_MESSAGE.NO_RESERVED_SEAT}</div>
                     )}
                 </div>
+                {title && seats.some((seat) => !seat.name) && (
+                    <div className="text-warning order-2 w-fit rounded-full px-2 text-left md:order-1">
+                        同行者が割り当てられていない座席が
+                        <br className="md:hidden" />
+                        あります
+                    </div>
+                )}
                 {getFieldError?.(id) && (
-                    <p className="text-danger text-left text-sm">
+                    <p className="text-danger order-3 text-left text-sm">
                         {getFieldError(id)}
                     </p>
                 )}

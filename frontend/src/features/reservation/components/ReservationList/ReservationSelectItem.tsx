@@ -80,7 +80,7 @@ export function ReservationSelectItem({
         <div className="border-primary-light flex flex-col gap-2 rounded-2xl border-2 p-8">
             <div className="flex-col">
                 <div className="flex">
-                    <div className="flex grow-2 items-center gap-2">
+                    <div className="flex items-center gap-2">
                         <LuTicket />
                         <label>{details.trainTypeName}</label>
                     </div>
@@ -94,15 +94,15 @@ export function ReservationSelectItem({
             </div>
             <div className="flex justify-between">
                 <div className="flex w-full flex-col items-start">
-                    <div className="flex grow-2 items-center gap-2">
-                        <FaClock />
+                    <div className="flex items-center gap-2">
+                        <FaClock className="mt-0.5 md:mt-0" />
                         <label>出発</label>
                     </div>
                     <label
                         data-testid="ride-date"
                         className="text-xl font-bold"
                     >
-                        {dayjs(details.rideDate).format('YYYY年MM月DD日')}{' '}
+                        {dayjs(details.rideDate).format('YYYY年MM月DD日')}
                     </label>
                     <label className="text-xl font-bold">
                         {dayjs(details.departureTime, 'HH:mm:ss').format(
@@ -118,7 +118,7 @@ export function ReservationSelectItem({
                     seats={details.reservedSeats}
                 />
             </div>
-            <div className="flex items-center justify-between py-2">
+            <div className="flex flex-col justify-between gap-2 py-2 md:flex-row">
                 <div className="flex items-baseline">
                     <div>お支払い合計：</div>
                     <div
@@ -128,11 +128,11 @@ export function ReservationSelectItem({
                         ￥{totalFare.toLocaleString()}
                     </div>
                 </div>
-                <div className="flex justify-end gap-2">
+                <div className="flex w-full gap-2 md:w-auto md:justify-end">
                     {canSearchReturinTrip && (
                         <button
                             onClick={handleSearchReturnTrip}
-                            className="border-primary-ink text-primary-ink flex items-center justify-center gap-2 rounded-md border px-4 py-2 text-sm"
+                            className="border-primary-ink text-primary-ink flex w-full items-center justify-center gap-4 rounded-md border px-4 py-2 text-sm whitespace-nowrap md:w-auto"
                         >
                             <FaSearch />
                             復路で検索
@@ -141,7 +141,7 @@ export function ReservationSelectItem({
                     {canCheckReservation && (
                         <button
                             onClick={handleReservationDetail}
-                            className="bg-primary flex items-center justify-center gap-4 rounded-md px-4 py-2 text-sm text-white"
+                            className="bg-primary flex w-full items-center justify-center gap-4 rounded-md px-4 py-2 text-sm whitespace-nowrap text-white"
                         >
                             <BsQrCode />
                             チケットを表示
@@ -159,18 +159,6 @@ export function ReservationSelectItem({
                             {isMenuOpen && (
                                 <div className="bg-surface absolute top-full right-1 z-50 flex w-40 flex-col gap-2 rounded-md p-2 text-sm font-bold shadow-md">
                                     <div className="flex w-full flex-col gap-2 text-left">
-                                        {canCancelReservation && (
-                                            <button
-                                                onClick={() =>
-                                                    onRefundClicked(details)
-                                                }
-                                                className="hover:bg-surface-muted flex w-full items-center gap-4 px-4 py-2"
-                                                data-testid={'refund-button'}
-                                            >
-                                                <IoTrashOutline />
-                                                キャンセル
-                                            </button>
-                                        )}
                                         {canUpdateReservation && (
                                             <button
                                                 onClick={() =>
@@ -181,6 +169,18 @@ export function ReservationSelectItem({
                                             >
                                                 <FaEdit />
                                                 予約を変更
+                                            </button>
+                                        )}
+                                        {canCancelReservation && (
+                                            <button
+                                                onClick={() =>
+                                                    onRefundClicked(details)
+                                                }
+                                                className="hover:bg-surface-muted flex w-full items-center gap-4 px-4 py-2"
+                                                data-testid={'refund-button'}
+                                            >
+                                                <IoTrashOutline />
+                                                キャンセル
                                             </button>
                                         )}
                                     </div>

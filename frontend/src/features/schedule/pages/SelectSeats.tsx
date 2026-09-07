@@ -14,6 +14,7 @@ import {
     RESERVEDTICKET_ROLE,
 } from '@/features/reservation/constants/ReservedTicketState';
 import { ReloginConfirmModal } from '@/features/schedule/components/ReloginConfirmModal';
+import { ReservationSheetHandle } from '@/features/schedule/components/ReservationSheetHandle';
 import { ReserveConfirmModal } from '@/features/schedule/components/ReserveConfirmModal';
 import { ReserveUserInfo } from '@/features/schedule/components/ReserveUserInfo';
 import { SelectedSeats } from '@/features/schedule/components/SelectedSeats';
@@ -91,6 +92,7 @@ export function SelectSeats() {
         onRequestClose: onRequestUpdateConfirmModalClose,
     } = useModal();
     const [isSubmitting, setIsSubmitting] = useState<boolean>(false);
+    const [isSheetOpen, setIsSheetOpen] = useState<boolean>(false);
     const isLoggedIn = !!localStorage.getItem('name');
 
     useEffect(() => {
@@ -431,7 +433,7 @@ export function SelectSeats() {
                 )}
             </div>
 
-            <div className="flex w-full flex-col items-start justify-between gap-4 p-4 md:flex-row">
+            <div className="flex w-full flex-col items-start justify-between gap-4 p-4 pb-24 md:flex-row md:pb-4">
                 <div className="w-full md:w-7/10">
                     <TrainInfo scheduleInfoDto={scheduleInfoDto} />
                     <Suspense fallback={<TrainCarsSkeleton />}>
@@ -444,61 +446,28 @@ export function SelectSeats() {
                         />
                     </Suspense>
                 </div>
-                <div className="w-full flex-1">
-                    <div className="border-primary-light flex w-full flex-col gap-4 rounded-2xl border-2 p-8 text-left">
-                        <SelectedSeats
-                            selectedSeats={selectedSeats}
-                            handleClear={handleClear}
+                <div
+                    className={`fixed inset-x-0 bottom-0 z-30 w-full transition-transform duration-300 ease-out md:static md:z-auto md:flex-1 md:translate-y-0 md:transition-none ${
+                        isSheetOpen
+                            ? 'translate-y-0'
+                            : 'translate-y-[calc(100%-80px)]'
+                    }`}
+                >
+                    <div className="border-primary-light flex max-h-[85vh] w-full flex-col overflow-y-auto rounded-t-2xl border-2 bg-white text-left md:max-h-none md:overflow-visible md:rounded-2xl">
+                        <ReservationSheetHandle
+                            seatCount={selectedSeats.length}
+                            totalFare={selectedSeats.reduce(
+                                (sum, seat) => sum + (seat.seatFare ?? 0),
+                                0,
+                            )}
+                            onToggle={() => setIsSheetOpen((prev) => !prev)}
                         />
-                        {!isLoggedIn && searchRequestDto !== null && (
-                            <div className="border-primary-mid-light bg-primary-light flex w-full flex-col gap-4 rounded-2xl border-2 p-4 text-center">
-                                <span>アカウントをお持ちですか？</span>
-                                <button
-                                    onClick={() =>
-                                        navigate('/login', {
-                                            state: {
-                                                prevPath: location.pathname,
-                                                scheduleInfoDto,
-                                                searchRequestDto,
-                                                prevSelectedSeats:
-                                                    selectedSeats,
-                                            },
-                                        })
-                                    }
-                                    className="border-primary-mid-light bg-surface flex w-full items-center justify-center gap-4 rounded-2xl border-2 p-2 text-center font-medium"
-                                >
-                                    <LuLogIn />
-                                    ログインして氏名・メールアドレスを省略
-                                </button>
-                            </div>
-                        )}
-                        <form
-                            onSubmit={(e) => {
-                                e.preventDefault();
-                                (preReservedSeats
-                                    ? handleUpdateConfirmModalOpen
-                                    : handleReserveConfirmModalOpen)();
-                            }}
-                        >
-                            <div className="flex flex-col gap-4">
-                                {preReservedSeats ? (
-                                    <div className="bg-warning-subtle text-warning rounded-xl px-4 py-2 text-center">
-                                        ※初回予約時と同じ <br />
-                                        クレジットカードを使用します
-                                    </div>
-                                ) : (
-                                    <ReserveUserInfo
-                                        reserveUser={reserveUser}
-                                        focus={focus}
-                                        handleInputChange={handleInputChange}
-                                        handleInputFocus={handleInputFocus}
-                                        getFieldError={getFieldError}
-                                        handleInputBlur={handleInputBlur}
-                                        isAccountCreate={isAccountCreate}
-                                        setIsAccountCreate={setIsAccountCreate}
-                                        policy={policy}
-                                    />
-                                )}
+                        <div className="flex w-full flex-col gap-4 p-8">
+                            <div className="border-primary-ink/20 flex flex-col gap-6 border-b-2 pb-4">
+                                <SelectedSeats
+                                    selectedSeats={selectedSeats}
+                                    handleClear={handleClear}
+                                />
                                 <TotalSeatsFare
                                     selectedSeats={selectedSeats}
                                     prevFare={
@@ -511,26 +480,81 @@ export function SelectSeats() {
                                             : undefined
                                     }
                                 />
-                                <button
-                                    type="submit"
-                                    className="bg-primary w-full rounded-lg p-2 text-white"
-                                    disabled={
-                                        (preReservedSeats
-                                            ? isSameSeats
-                                            : isInvalid) ||
-                                        selectedSeats.length === 0 ||
-                                        isSubmitting
-                                    }
-                                >
-                                    <div className="flex items-center justify-center gap-4">
-                                        <IoCardOutline />
-                                        {preReservedSeats
-                                            ? '変更する'
-                                            : '予約する'}
-                                    </div>
-                                </button>
                             </div>
-                        </form>
+                            {!isLoggedIn && searchRequestDto !== null && (
+                                <div className="border-primary-mid-light bg-primary-light flex w-full flex-col gap-4 rounded-2xl border-2 p-4 text-center">
+                                    <span>アカウントをお持ちですか？</span>
+                                    <button
+                                        onClick={() =>
+                                            navigate('/login', {
+                                                state: {
+                                                    prevPath: location.pathname,
+                                                    scheduleInfoDto,
+                                                    searchRequestDto,
+                                                    prevSelectedSeats:
+                                                        selectedSeats,
+                                                },
+                                            })
+                                        }
+                                        className="border-primary-mid-light flex w-full items-center justify-center gap-4 rounded-2xl border-2 bg-white p-2 text-center font-medium"
+                                    >
+                                        <LuLogIn />
+                                        ログインして氏名・メールアドレスを省略
+                                    </button>
+                                </div>
+                            )}
+                            <form
+                                onSubmit={(e) => {
+                                    e.preventDefault();
+                                    (preReservedSeats
+                                        ? handleUpdateConfirmModalOpen
+                                        : handleReserveConfirmModalOpen)();
+                                }}
+                            >
+                                <div className="flex flex-col gap-4">
+                                    {preReservedSeats ? (
+                                        <div className="rounded-xl bg-orange-100 px-4 py-2 text-center text-orange-500">
+                                            ※初回予約時と同じ <br />
+                                            クレジットカードを使用します
+                                        </div>
+                                    ) : (
+                                        <ReserveUserInfo
+                                            reserveUser={reserveUser}
+                                            focus={focus}
+                                            handleInputChange={
+                                                handleInputChange
+                                            }
+                                            handleInputFocus={handleInputFocus}
+                                            getFieldError={getFieldError}
+                                            handleInputBlur={handleInputBlur}
+                                            isAccountCreate={isAccountCreate}
+                                            setIsAccountCreate={
+                                                setIsAccountCreate
+                                            }
+                                            policy={policy}
+                                        />
+                                    )}
+                                    <button
+                                        type="submit"
+                                        className="bg-primary w-full rounded-lg p-2 text-white"
+                                        disabled={
+                                            (preReservedSeats
+                                                ? isSameSeats
+                                                : isInvalid) ||
+                                            selectedSeats.length === 0 ||
+                                            isSubmitting
+                                        }
+                                    >
+                                        <div className="flex items-center justify-center gap-4">
+                                            <IoCardOutline />
+                                            {preReservedSeats
+                                                ? '変更する'
+                                                : '予約する'}
+                                        </div>
+                                    </button>
+                                </div>
+                            </form>
+                        </div>
                     </div>
                 </div>
             </div>
