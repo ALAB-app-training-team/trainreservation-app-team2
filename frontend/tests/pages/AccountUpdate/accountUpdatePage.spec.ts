@@ -5,6 +5,7 @@ import { LoginPage } from '@tests/pages/Login/LoginPage';
 import { AccountCreatePage } from '@tests/pages/AccountCreate/AccountCreatePage';
 import { ReservationListPage } from '@tests/pages/ReservationList/ReservationListPage';
 import { ReservedTicketPage } from '../ReservedTicket/ReservedTicketPage';
+import { ScheduleSearchPage } from '../ScheduleSearch/ScheduleSearchPage';
 
 test('各項目の未入力メッセージが表示されること', async ({
     page,
@@ -188,4 +189,60 @@ test('予約中のきっぷがあると退会できないこと', async ({
     await accountUpdatePage.clickDeleteConfirmButton();
     await expect(page).toHaveURL('/login');
     await expect(page.getByText('退会が完了しました。')).toBeVisible();
+});
+
+test('メールアドレス変更後のモーダルのリンクから予約一覧画面に遷移できること', async ({
+    page,
+    logout,
+}) => {
+    const accountUpdatePage = new AccountUpdatePage(page);
+    const loginPage = new LoginPage(page);
+    const accountCreatePage = new AccountCreatePage(page);
+    const scheduleSearchPage = new ScheduleSearchPage(page);
+    // 共有アカウントのメールアドレスを書き換えると他のテストに影響するため、変更用のアカウントを毎回作成する
+    const timestamp = Date.now();
+    const beforeMail = `before-${timestamp}@test.com`;
+    const afterMail = `after-${timestamp}@test.com`;
+    const password = 'Password1';
+
+    await loginPage.goto();
+    await expect(page).toHaveURL('/login');
+    await loginPage.clickCreateButton();
+    await expect(page).toHaveURL('/accountCreate');
+    await accountCreatePage.fillName('変更太郎');
+    await accountCreatePage.fillMailAddress(beforeMail);
+    await accountCreatePage.fillPassword(password);
+    await accountCreatePage.fillPasswordCheck(password);
+    await accountCreatePage.clickCreateButton();
+    await expect(page).toHaveURL('/login');
+
+    // 作成したアカウントでログインできること
+    await loginPage.fillMailAddress(beforeMail);
+    await loginPage.fillPassword(password);
+    await loginPage.clickLoginButton();
+    await expect(page).toHaveURL('/scheduleSearch');
+
+    // メールアドレスを変更できること
+    await accountUpdatePage.goto();
+    await expect(page).toHaveURL('/accountUpdate');
+    await accountUpdatePage.fillMailAddress(afterMail);
+    await accountUpdatePage.fillPassword(password);
+    await accountUpdatePage.clickUpdateButton();
+
+    // 変更後は検索画面に遷移し、完了モーダルが開くこと
+    await expect(page).toHaveURL('/scheduleSearch');
+    const updateSuccessToast =
+        page.getByText('アカウント情報の変更が完了しました。');
+    await expect(updateSuccessToast).toBeVisible();
+    await expect(
+        page.getByText('チケットに紐づく予約者の情報は'),
+    ).toBeVisible();
+
+    // モーダルのリンクから予約一覧画面に遷移し、モーダルが閉じること
+    await scheduleSearchPage.clickTicketUpdateToastButton();
+    await expect(page).toHaveURL('/reservationList');
+    await expect(updateSuccessToast).toBeHidden();
+
+    await logout();
+    await expect(page).toHaveURL('/login');
 });

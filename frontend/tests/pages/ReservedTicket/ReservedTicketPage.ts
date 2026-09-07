@@ -21,7 +21,7 @@ export class ReservedTicketPage {
     // 予約キャンセル
     readonly refundButton: Locator;
     readonly confirmRefundButton: Locator;
-    // 同行者割り当て
+    // 利用者割り当て
     readonly companionChangeButton: Locator;
     readonly companionCheckBox: Locator;
     readonly companionName: Locator;
@@ -50,9 +50,9 @@ export class ReservedTicketPage {
         // 予約キャンセル
         this.refundButton = page.getByRole('button', { name: 'キャンセル' });
         this.confirmRefundButton = page.getByTestId('refund-confirm-button');
-        // 同行者割り当て
+        // 利用者割り当て
         this.companionChangeButton = page.getByRole('button', {
-            name: '同行者に割り当て',
+            name: '利用者に割り当て',
         });
         this.companionCheckBox = page.locator('#isCompanionUpdated0');
         this.companionName = page.getByRole('textbox', { name: 'お名前' });
@@ -89,13 +89,13 @@ export class ReservedTicketPage {
         await this.changeTrainConfirmButton.first().click();
     }
 
-    // 同行者割り当て
+    // 利用者割り当て
     async clickCompanionChangeButton() {
         await this.companionChangeButton.first().click();
     }
 
     async checkCompanionCheckBox() {
-        await this.companionCheckBox.first().click();
+        await this.companionCheckBox.first().check();
     }
 
     async fillCompanionName(name: string) {
@@ -107,7 +107,7 @@ export class ReservedTicketPage {
     }
 
     async inputCompanionInfo() {
-        await this.fillCompanionName('同行者太郎');
+        await this.fillCompanionName('利用者太郎');
         await this.fillCompanionMailAddress('companion@test.com');
     }
 

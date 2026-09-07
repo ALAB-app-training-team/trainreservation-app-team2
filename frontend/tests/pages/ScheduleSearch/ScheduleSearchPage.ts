@@ -20,6 +20,7 @@ export class ScheduleSearchPage {
     readonly seatTypeSelect: Locator;
     readonly passengersSelect: Locator;
     readonly isOnlyAvailableHint: Locator;
+    readonly ticketUpdateToastButton: Locator;
 
     constructor(page: Page) {
         this.page = page;
@@ -52,6 +53,9 @@ export class ScheduleSearchPage {
         this.seatTypeSelect = page.getByRole('combobox', { name: '座席種別' });
         this.passengersSelect = page.getByRole('combobox', { name: '人数' });
         this.isOnlyAvailableHint = page.getByTestId('isOnlyAvailable-hint');
+        this.ticketUpdateToastButton = page.getByRole('button', {
+            name: '→チケットを更新する',
+        });
     }
 
     async goto() {
@@ -128,5 +132,9 @@ export class ScheduleSearchPage {
 
     async clickHistoryDetailAccordionButton() {
         await this.historyDetailAccordionButton.click();
+    }
+
+    async clickTicketUpdateToastButton() {
+        await this.ticketUpdateToastButton.click();
     }
 }

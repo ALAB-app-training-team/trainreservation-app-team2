@@ -39,13 +39,16 @@ test('navigate-ゲストログイン全機能', async ({ page, context, logout }
     await selectSeatPage.clickReseveButton();
     await selectSeatPage.clickReserveConfirmButton();
     await expect(page).toHaveURL('/reservedTicket');
-    // 同行者割り当て
+    // 利用者割り当て
     await reservedTicketPage.clickCompanionChangeButton();
-    await reservedTicketPage.checkCompanionCheckBox();
+    // 予約時点で予約者が1席目に自動で割り当てられていること
+    await expect(reservedTicketPage.companionCheckBox).toBeChecked();
+    await expect(reservedTicketPage.companionName).toHaveValue('ゲスト太郎');
+    // 予約者の割り当てを利用者で上書きする
     await reservedTicketPage.inputCompanionInfo();
     await reservedTicketPage.clickCompanionChangeConfirmButton();
     await expect(page).toHaveURL('/reservedTicket');
-    // 共有用URLを用いて同行者で予約確認
+    // 共有用URLを用いて利用者で予約確認
     await reservedTicketPage.clickTicketShareButton();
     await reservedTicketPage.linkCopyElement.waitFor({ state: 'visible' });
     await context.grantPermissions(['clipboard-read', 'clipboard-write']);

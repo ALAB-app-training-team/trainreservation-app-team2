@@ -71,6 +71,7 @@ export function ReservedTicket() {
     const queryClient = useQueryClient();
     const accountInfo = localStorage.getItem('name');
     useEffect(() => {
+        window.scrollTo(0, 0);
         const nv = performance.getEntriesByType(
             'navigation',
         )[0] as PerformanceNavigationTiming;
@@ -183,7 +184,7 @@ export function ReservedTicket() {
                             className="bg-primary flex w-full items-center justify-center gap-2 rounded-xl p-2 text-sm text-white md:order-4"
                         >
                             <RiGroupLine className="h-4 w-4" />
-                            同行者に割り当て
+                            利用者に割り当て
                         </button>
                     )}
                     {canUpdateReservation && (

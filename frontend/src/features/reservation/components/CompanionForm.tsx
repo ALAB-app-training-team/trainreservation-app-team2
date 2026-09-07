@@ -102,7 +102,7 @@ export function CompanionForm({
                             className="accent-primary"
                         />
                         <label htmlFor={`isCompanionUpdated${index}`}>
-                            同行者を割り当てる
+                            利用者を割り当てる
                         </label>
                     </div>
                 </div>

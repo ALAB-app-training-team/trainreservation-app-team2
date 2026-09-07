@@ -27,6 +27,7 @@ import org.jspecify.annotations.NonNull;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
+import org.mockito.ArgumentCaptor;
 import org.mockito.ArgumentMatchers;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
@@ -300,6 +301,102 @@ public class ReservationServiceTest {
         return Arrays.asList(section1, section2);
     }
 
+    /**
+     * 予約者割当に関するテストケースのインスタンスを作成するためのメソッド（号車情報）
+     *
+     * @return TrainCarEntity
+     */
+    private @NonNull TrainCarEntity buildTrainCar(String trainCarCd, Integer trainCarNumber) {
+        TrainCarEntity trainCar = new TrainCarEntity();
+        trainCar.setTrainCarCd(trainCarCd);
+        trainCar.setTrainCarNumber(trainCarNumber);
+        return trainCar;
+    }
+
+    /**
+     * 予約者割当に関するテストケースのインスタンスを作成するためのメソッド（座席情報）
+     *
+     * @return SeatEntity
+     */
+    private @NonNull SeatEntity buildSeatEntity(String seatCd, Integer seatNumber, String seatColumn) {
+        SeatEntity seat = new SeatEntity();
+        seat.setSeatCd(seatCd);
+        seat.setSeatNumber(seatNumber);
+        seat.setSeatColumn(seatColumn);
+        return seat;
+    }
+
+    /**
+     * 予約者割当に関するテストケースで予約登録が成功する状態のモックを設定するメソッド
+     * （号車・座席のモックは並び順を検証するためテストケース側で設定する）
+     */
+    private void mockInsertReservationSuccess(ReserveRequestDto request) {
+        DepartureArrivalTimeEntity departureArrivalTime = new DepartureArrivalTimeEntity();
+        departureArrivalTime.setTimeCd("Test1");
+        departureArrivalTime.setScheduleCd(request.getScheduleCd());
+        departureArrivalTime.setDepartureTime(LocalTime.of(6, 4));
+        departureArrivalTime.setArrivalTime(LocalTime.of(6, 9));
+        departureArrivalTime.setSectionCd("Test1");
+        SectionKmEntity sectionKm = new SectionKmEntity();
+        sectionKm.setSectionCd(departureArrivalTime.getSectionCd());
+        when(sectionKmRepo.findByStartStationCd(request.getDepartureStationCd())).thenReturn(List.of(sectionKm));
+        when(sectionKmRepo.findByGoalStationCd(request.getArrivalStationCd())).thenReturn(List.of(sectionKm));
+        when(departureArrivalTimeRepo.findByScheduleCdAndSectionCdIn(request.getScheduleCd(), List.of(departureArrivalTime.getSectionCd()))).thenReturn(departureArrivalTime);
+        when(departureArrivalTimeRepo.findByScheduleCdAndDepartureTimeGreaterThanEqualAndArrivalTimeLessThanEqual(request.getScheduleCd(), departureArrivalTime.getDepartureTime(), departureArrivalTime.getArrivalTime())).thenReturn(List.of(departureArrivalTime));
+        when(reservationRepo.save(any())).thenReturn(new ReservationEntity() {{
+            setId(UUID.randomUUID());
+        }});
+        when(reservedSeatRepo.saveAll(any())).thenAnswer(invocation -> {
+            List<ReservedSeatEntity> reservedSeatsToPost = invocation.getArgument(0);
+            return new ArrayList<>(reservedSeatsToPost);
+        });
+        when(reservedSeatSectionRepo.findByRideDateAndScheduleCdAndTrainCarCdInAndReservedSectionCdIn(any(), any(), any(), any()))
+            .thenReturn(Collections.emptyList());
+        when(reservedSeatSectionRepo.saveAll(any())).thenAnswer(invocation -> {
+            List<ReservedSeatSectionEntity> reservedSeatSectionsToPost = invocation.getArgument(0);
+            return new ArrayList<>(reservedSeatSectionsToPost);
+        });
+        when(accountRepo.findById(any())).thenReturn(Optional.of(account));
+
+        MockHttpServletRequest mockRequest = new MockHttpServletRequest();
+        mockRequest.setRequestURI("/api/reservations");
+        mockRequest.setServerName("localhost");
+        mockRequest.setServerPort(8080);
+        mockRequest.setScheme("http");
+
+        RequestContextHolder.setRequestAttributes(new ServletRequestAttributes(mockRequest));
+
+        this.mockRestServiceServer.expect(requestTo("http://localhost:8080/api/payments"))
+            .andExpect(method(HttpMethod.POST))
+            .andExpect(header("Content-Type", "application/json"))
+            .andRespond(withStatus(HttpStatus.CREATED)
+                .contentType(MediaType.TEXT_PLAIN)
+                .body("paymentTrackingId"));
+    }
+
+    /**
+     * 予約者割当に関するテストケースで登録された予約座席情報を取得するためのメソッド
+     *
+     * @return List<ReservedSeatEntity>
+     */
+    private @NonNull List<ReservedSeatEntity> captureSavedReservedSeats() {
+        ArgumentCaptor<List<ReservedSeatEntity>> reservedSeatCaptor = ArgumentCaptor.captor();
+        verify(reservedSeatRepo).saveAll(reservedSeatCaptor.capture());
+        return reservedSeatCaptor.getValue();
+    }
+
+    /**
+     * 予約者割当に関するテストケースで登録された予約座席情報を座席CDで取得するためのメソッド
+     *
+     * @return ReservedSeatEntity
+     */
+    private @NonNull ReservedSeatEntity findSavedSeat(List<ReservedSeatEntity> reservedSeats, String seatCd) {
+        return reservedSeats.stream()
+            .filter(reservedSeat -> seatCd.equals(reservedSeat.getSeatCd()))
+            .findFirst()
+            .orElseThrow(() -> new AssertionError("ReservedSeat is not found: " + seatCd));
+    }
+
     @BeforeEach
     void setUp() {
         MockitoAnnotations.openMocks(this);
@@ -502,8 +599,13 @@ public class ReservationServiceTest {
             setId(UUID.randomUUID());
         }});
         when(reservedSeatRepo.saveAll(any())).thenReturn(Stream.generate(ReservedSeatEntity::new).limit(request.getSeats().size()).collect(Collectors.toList()));
-        when(trainCarRepo.findById(any())).thenReturn(Optional.of(new TrainCarEntity()));
-        when(seatRepo.findById(any())).thenReturn(Optional.of(new SeatEntity()));
+        TrainCarEntity trainCar = new TrainCarEntity();
+        trainCar.setTrainCarNumber(1);
+        SeatEntity seat = new SeatEntity();
+        seat.setSeatNumber(1);
+        seat.setSeatColumn("A");
+        when(trainCarRepo.findById(any())).thenReturn(Optional.of(trainCar));
+        when(seatRepo.findById(any())).thenReturn(Optional.of(seat));
         when(reservedSeatSectionRepo.findByRideDateAndScheduleCdAndTrainCarCdInAndReservedSectionCdIn(any(), any(), any(), any()))
             .thenReturn(Collections.emptyList());
         when(reservedSeatSectionRepo.saveAll(any())).
@@ -550,8 +652,13 @@ public class ReservationServiceTest {
             setId(UUID.randomUUID());
         }});
         when(reservedSeatRepo.saveAll(any())).thenReturn(Stream.generate(ReservedSeatEntity::new).limit(request.getSeats().size()).collect(Collectors.toList()));
-        when(trainCarRepo.findById(any())).thenReturn(Optional.of(new TrainCarEntity()));
-        when(seatRepo.findById(any())).thenReturn(Optional.of(new SeatEntity()));
+        TrainCarEntity trainCar = new TrainCarEntity();
+        trainCar.setTrainCarNumber(1);
+        SeatEntity seat = new SeatEntity();
+        seat.setSeatNumber(1);
+        seat.setSeatColumn("A");
+        when(trainCarRepo.findById(any())).thenReturn(Optional.of(trainCar));
+        when(seatRepo.findById(any())).thenReturn(Optional.of(seat));
         when(reservedSeatSectionRepo.findByRideDateAndScheduleCdAndTrainCarCdInAndReservedSectionCdIn(any(), any(), any(), any()))
             .thenReturn(Collections.emptyList());
         when(reservedSeatSectionRepo.saveAll(any())).
@@ -652,8 +759,13 @@ public class ReservationServiceTest {
         when(reservationRepo.save(any())).thenReturn(new ReservationEntity() {{
             setId(UUID.randomUUID());
         }});
-        when(trainCarRepo.findById(any())).thenReturn(Optional.of(new TrainCarEntity()));
-        when(seatRepo.findById(any())).thenReturn(Optional.of(new SeatEntity()));
+        TrainCarEntity trainCar = new TrainCarEntity();
+        trainCar.setTrainCarNumber(1);
+        SeatEntity seat = new SeatEntity();
+        seat.setSeatNumber(1);
+        seat.setSeatColumn("A");
+        when(trainCarRepo.findById(any())).thenReturn(Optional.of(trainCar));
+        when(seatRepo.findById(any())).thenReturn(Optional.of(seat));
         when(reservedSeatSectionRepo.findByRideDateAndScheduleCdAndTrainCarCdInAndReservedSectionCdIn(any(), any(), any(), any()))
             .thenReturn(Collections.emptyList());
         when(reservedSeatRepo.saveAll(any()).size()).thenThrow(new DuplicateKeyException("UNIQUE制約エラー"));
@@ -793,8 +905,13 @@ public class ReservationServiceTest {
         when(reservationRepo.save(any())).thenReturn(new ReservationEntity() {{
             setId(UUID.randomUUID());
         }});
-        when(trainCarRepo.findById(any())).thenReturn(Optional.of(new TrainCarEntity()));
-        when(seatRepo.findById(any())).thenReturn(Optional.of(new SeatEntity()));
+        TrainCarEntity postedTrainCar = new TrainCarEntity();
+        postedTrainCar.setTrainCarNumber(1);
+        SeatEntity postedSeat = new SeatEntity();
+        postedSeat.setSeatNumber(1);
+        postedSeat.setSeatColumn("A");
+        when(trainCarRepo.findById(any())).thenReturn(Optional.of(postedTrainCar));
+        when(seatRepo.findById(any())).thenReturn(Optional.of(postedSeat));
 
         when(reservedSeatRepo.saveAll(any())).thenReturn(List.of(existingSeat, new ReservedSeatEntity()));
 
@@ -866,8 +983,13 @@ public class ReservationServiceTest {
             setId(UUID.randomUUID());
         }});
         when(reservedSeatRepo.saveAll(any())).thenReturn(Stream.generate(ReservedSeatEntity::new).limit(request.getSeats().size()).collect(Collectors.toList()));
-        when(trainCarRepo.findById(any())).thenReturn(Optional.of(new TrainCarEntity()));
-        when(seatRepo.findById(any())).thenReturn(Optional.of(new SeatEntity()));
+        TrainCarEntity trainCar = new TrainCarEntity();
+        trainCar.setTrainCarNumber(1);
+        SeatEntity seat = new SeatEntity();
+        seat.setSeatNumber(1);
+        seat.setSeatColumn("A");
+        when(trainCarRepo.findById(any())).thenReturn(Optional.of(trainCar));
+        when(seatRepo.findById(any())).thenReturn(Optional.of(seat));
         when(reservedSeatSectionRepo.findByRideDateAndScheduleCdAndTrainCarCdInAndReservedSectionCdIn(any(), any(), any(), any()))
             .thenReturn(Collections.emptyList());
         when(reservedSeatSectionRepo.saveAll(any())).
@@ -889,6 +1011,109 @@ public class ReservationServiceTest {
 
         assertThrows(RuntimeException.class, () -> service.insertReservation(request, null));
         this.mockRestServiceServer.verify();
+    }
+
+    @Test
+    @DisplayName("複数号車を予約した場合、号車番号が最小の座席に予約者が割り当てられる")
+    void insertReservation_withMultipleTrainCars_assignsReserverToLowestTrainCarNumberSeat() {
+        ReserveRequestDto request = new ReserveRequestDto("Test01", LocalDate.now(), "Test0", "Test1", "", "", "Test2", List.of(new ReserveRequestDto.SelectedSeatDto("E5SER02", "CAR01", "SEAT02001", 2800), new ReserveRequestDto.SelectedSeatDto("E5SER01", "CAR01", "SEAT01001", 2800)));
+        mockInsertReservationSuccess(request);
+        when(trainCarRepo.findById("E5SER01")).thenReturn(Optional.of(buildTrainCar("E5SER01", 1)));
+        when(trainCarRepo.findById("E5SER02")).thenReturn(Optional.of(buildTrainCar("E5SER02", 2)));
+        when(seatRepo.findById("SEAT01001")).thenReturn(Optional.of(buildSeatEntity("SEAT01001", 5, "E")));
+        when(seatRepo.findById("SEAT02001")).thenReturn(Optional.of(buildSeatEntity("SEAT02001", 1, "A")));
+
+        service.insertReservation(request, session);
+
+        List<ReservedSeatEntity> savedSeats = captureSavedReservedSeats();
+        assertAll(
+            () -> assertEquals(account.getName(), findSavedSeat(savedSeats, "SEAT01001").getName()),
+            () -> assertEquals(account.getMail(), findSavedSeat(savedSeats, "SEAT01001").getMail()),
+            () -> assertNull(findSavedSeat(savedSeats, "SEAT02001").getName()),
+            () -> assertNull(findSavedSeat(savedSeats, "SEAT02001").getMail())
+        );
+    }
+
+    @Test
+    @DisplayName("同一号車内で予約した場合、席番号が最小の座席に予約者が割り当てられる")
+    void insertReservation_withSameTrainCar_assignsReserverToLowestSeatNumberSeat() {
+        ReserveRequestDto request = new ReserveRequestDto("Test01", LocalDate.now(), "Test0", "Test1", "", "", "Test2", List.of(new ReserveRequestDto.SelectedSeatDto("E5SER01", "CAR01", "SEAT01001", 2800), new ReserveRequestDto.SelectedSeatDto("E5SER01", "CAR01", "SEAT01002", 2800)));
+        mockInsertReservationSuccess(request);
+        when(trainCarRepo.findById("E5SER01")).thenReturn(Optional.of(buildTrainCar("E5SER01", 1)));
+        when(seatRepo.findById("SEAT01001")).thenReturn(Optional.of(buildSeatEntity("SEAT01001", 2, "A")));
+        when(seatRepo.findById("SEAT01002")).thenReturn(Optional.of(buildSeatEntity("SEAT01002", 1, "D")));
+
+        service.insertReservation(request, session);
+
+        List<ReservedSeatEntity> savedSeats = captureSavedReservedSeats();
+        assertAll(
+            () -> assertEquals(account.getName(), findSavedSeat(savedSeats, "SEAT01002").getName()),
+            () -> assertEquals(account.getMail(), findSavedSeat(savedSeats, "SEAT01002").getMail()),
+            () -> assertNull(findSavedSeat(savedSeats, "SEAT01001").getName()),
+            () -> assertNull(findSavedSeat(savedSeats, "SEAT01001").getMail())
+        );
+    }
+
+    @Test
+    @DisplayName("同一号車・同一席番号で予約した場合、列が最小の座席に予約者が割り当てられる")
+    void insertReservation_withSameSeatNumber_assignsReserverToLowestSeatColumnSeat() {
+        ReserveRequestDto request = new ReserveRequestDto("Test01", LocalDate.now(), "Test0", "Test1", "", "", "Test2", List.of(new ReserveRequestDto.SelectedSeatDto("E5SER01", "CAR01", "SEAT01001", 2800), new ReserveRequestDto.SelectedSeatDto("E5SER01", "CAR01", "SEAT01002", 2800)));
+        mockInsertReservationSuccess(request);
+        when(trainCarRepo.findById("E5SER01")).thenReturn(Optional.of(buildTrainCar("E5SER01", 1)));
+        when(seatRepo.findById("SEAT01001")).thenReturn(Optional.of(buildSeatEntity("SEAT01001", 1, "B")));
+        when(seatRepo.findById("SEAT01002")).thenReturn(Optional.of(buildSeatEntity("SEAT01002", 1, "A")));
+
+        service.insertReservation(request, session);
+
+        List<ReservedSeatEntity> savedSeats = captureSavedReservedSeats();
+        assertAll(
+            () -> assertEquals(account.getName(), findSavedSeat(savedSeats, "SEAT01002").getName()),
+            () -> assertEquals(account.getMail(), findSavedSeat(savedSeats, "SEAT01002").getMail()),
+            () -> assertNull(findSavedSeat(savedSeats, "SEAT01001").getName()),
+            () -> assertNull(findSavedSeat(savedSeats, "SEAT01001").getMail())
+        );
+    }
+
+    @Test
+    @DisplayName("複数座席を予約した場合、予約者が割り当てられるのは1席のみで他の座席は未割当となる")
+    void insertReservation_withMultipleSeats_assignsReserverToOnlyOneSeat() {
+        ReserveRequestDto request = new ReserveRequestDto("Test01", LocalDate.now(), "Test0", "Test1", "", "", "Test2", List.of(new ReserveRequestDto.SelectedSeatDto("E5SER01", "CAR01", "SEAT01001", 2800), new ReserveRequestDto.SelectedSeatDto("E5SER01", "CAR01", "SEAT01002", 2800), new ReserveRequestDto.SelectedSeatDto("E5SER01", "CAR01", "SEAT01003", 2800)));
+        mockInsertReservationSuccess(request);
+        when(trainCarRepo.findById("E5SER01")).thenReturn(Optional.of(buildTrainCar("E5SER01", 1)));
+        when(seatRepo.findById("SEAT01001")).thenReturn(Optional.of(buildSeatEntity("SEAT01001", 1, "A")));
+        when(seatRepo.findById("SEAT01002")).thenReturn(Optional.of(buildSeatEntity("SEAT01002", 1, "B")));
+        when(seatRepo.findById("SEAT01003")).thenReturn(Optional.of(buildSeatEntity("SEAT01003", 2, "A")));
+
+        service.insertReservation(request, session);
+
+        List<ReservedSeatEntity> savedSeats = captureSavedReservedSeats();
+        assertAll(
+            () -> assertEquals(3, savedSeats.size()),
+            () -> assertEquals(1, savedSeats.stream().filter(seat -> seat.getName() != null).count()),
+            () -> assertEquals(1, savedSeats.stream().filter(seat -> seat.getMail() != null).count()),
+            () -> assertEquals(account.getName(), findSavedSeat(savedSeats, "SEAT01001").getName()),
+            () -> assertEquals(account.getMail(), findSavedSeat(savedSeats, "SEAT01001").getMail())
+        );
+    }
+
+    @Test
+    @DisplayName("ゲスト予約の場合、リクエストの予約者氏名・メールアドレスが最小の座席に割り当てられる")
+    void insertReservation_withGuest_assignsRequestReserverToLowestSeat() {
+        ReserveRequestDto request = new ReserveRequestDto("Test01", LocalDate.now(), "Test0", "Test1", "TestTaro", "test@main", "Test2", List.of(new ReserveRequestDto.SelectedSeatDto("E5SER01", "CAR01", "SEAT01001", 2800), new ReserveRequestDto.SelectedSeatDto("E5SER01", "CAR01", "SEAT01002", 2800)));
+        mockInsertReservationSuccess(request);
+        when(trainCarRepo.findById("E5SER01")).thenReturn(Optional.of(buildTrainCar("E5SER01", 1)));
+        when(seatRepo.findById("SEAT01001")).thenReturn(Optional.of(buildSeatEntity("SEAT01001", 2, "A")));
+        when(seatRepo.findById("SEAT01002")).thenReturn(Optional.of(buildSeatEntity("SEAT01002", 1, "A")));
+
+        service.insertReservation(request, null);
+
+        List<ReservedSeatEntity> savedSeats = captureSavedReservedSeats();
+        assertAll(
+            () -> assertEquals(request.getReserverName(), findSavedSeat(savedSeats, "SEAT01002").getName()),
+            () -> assertEquals(request.getReserverMail(), findSavedSeat(savedSeats, "SEAT01002").getMail()),
+            () -> assertNull(findSavedSeat(savedSeats, "SEAT01001").getName()),
+            () -> assertNull(findSavedSeat(savedSeats, "SEAT01001").getMail())
+        );
     }
 
     @Test
@@ -930,6 +1155,51 @@ public class ReservationServiceTest {
         verify(reservedSeatRepo).saveAll(any());
         verify(reservedSeatSectionRepo).saveAll(any());
         verify(reservationRepo).save(any());
+    }
+
+    @Test
+    @DisplayName("日時経路変更時は再登録された座席に予約者が割り当てられない")
+    void putReservation_withReservationIdAndLogin_doesNotAssignReserverToSeat() {
+        ReserveRequestDto request = new ReserveRequestDto("THK02", LocalDate.now(), "THK01", "THK02", "", "", "", List.of(new ReserveRequestDto.SelectedSeatDto("E5SER01", "CAR01", "SEAT01001", 5000), new ReserveRequestDto.SelectedSeatDto("E5SER01", "CAR01", "SEAT01010", 5000)));
+        Optional<ReservationEntity> reservation = Optional.of(buildReservation(reservationId1));
+        reservation.get().setAccountId(accountId);
+        reservation.get().setReservedSeat(Set.of(buildSeat(seat1.getId(), reservationId1, "指定席", 1, 1, "A", UUID.fromString("60a1ab63-a41f-430d-a2d1-10a76368d0f5"), 5000, LocalDate.of(2026, 6, 1), "THK01", "E5SER01", "SEAT01003", "CAR01", seat1.getName(), "test1-common@test.com")));
+        DepartureArrivalTimeEntity departureArrivalTime = new DepartureArrivalTimeEntity();
+        departureArrivalTime.setTimeCd("Test1");
+        departureArrivalTime.setScheduleCd(request.getScheduleCd());
+        departureArrivalTime.setDepartureTime(LocalTime.of(6, 4));
+        departureArrivalTime.setArrivalTime(LocalTime.of(6, 9));
+        departureArrivalTime.setSectionCd("THK01");
+        SectionKmEntity sectionKm = new SectionKmEntity();
+        sectionKm.setSectionCd(departureArrivalTime.getSectionCd());
+        sectionKm.setStartStationCd(request.getDepartureStationCd());
+        sectionKm.setGoalStationCd(request.getArrivalStationCd());
+        departureArrivalTime.setSectionKm(sectionKm);
+        when(accountRepo.findById(any())).thenReturn(Optional.of(account));
+        when(reservationRepo.findByIdAndIsDeleted(reservationId1, false)).thenReturn(reservation);
+        when(sectionKmRepo.findByStartStationCd(request.getDepartureStationCd())).thenReturn(List.of(sectionKm));
+        when(sectionKmRepo.findByGoalStationCd(request.getArrivalStationCd())).thenReturn(List.of(sectionKm));
+        when(departureArrivalTimeRepo.findByScheduleCdAndSectionCdIn(request.getScheduleCd(), List.of(departureArrivalTime.getSectionCd()))).thenReturn(departureArrivalTime);
+        when(departureArrivalTimeRepo.findByScheduleCdAndDepartureTimeGreaterThanEqualAndArrivalTimeLessThanEqual(request.getScheduleCd(), departureArrivalTime.getDepartureTime(), departureArrivalTime.getArrivalTime())).thenReturn(List.of(departureArrivalTime));
+        when(reservedSeatRepo.saveAll(any())).thenReturn(Stream.generate(ReservedSeatEntity::new).limit(2).collect(Collectors.toList()));
+        when(trainCarRepo.findById(any())).thenReturn(Optional.of(new TrainCarEntity()));
+        when(seatRepo.findById(any())).thenReturn(Optional.of(new SeatEntity()));
+        when(reservedSeatSectionRepo.findByRideDateAndScheduleCdAndTrainCarCdInAndReservedSectionCdIn(any(), any(), any(), any())).thenReturn(Collections.emptyList());
+        when(reservedSeatSectionRepo.saveAll(any())).thenReturn(Stream.generate(ReservedSeatSectionEntity::new).limit((2)).collect(Collectors.toList()));
+        when(reservationRepo.findByIdAndIsDeleted(reservationId1, false)).thenReturn(reservation);
+        when(departureArrivalTimeRepo.findByScheduleCd(request.getScheduleCd()))
+            .thenReturn(List.of(departureArrivalTime));
+
+        UUID result = service.putReservation(reservationId1, request, session);
+        assertNotNull(result);
+        List<ReservedSeatEntity> savedSeats = captureSavedReservedSeats();
+        assertAll(
+            () -> assertNull(findSavedSeat(savedSeats, "SEAT01001").getName()),
+            () -> assertNull(findSavedSeat(savedSeats, "SEAT01001").getMail()),
+            () -> assertNull(findSavedSeat(savedSeats, "SEAT01010").getName()),
+            () -> assertNull(findSavedSeat(savedSeats, "SEAT01010").getMail()),
+            () -> assertEquals("ReservedSeat is not found: SEAT01003", assertThrows(AssertionError.class, () -> findSavedSeat(savedSeats, "SEAT01003")).getMessage())
+        );
     }
 
     @Test
@@ -1035,7 +1305,7 @@ public class ReservationServiceTest {
 
     @Test
     @DisplayName("予約情報の持つ到着駅と同じスケジュールがない場合、IllegalArgumentExceptionが発生する")
-    void putReservation_withouArrivalTime_throwsIllegalArgumentException() {
+    void putReservation_withoutArrivalTime_throwsIllegalArgumentException() {
         ReserveRequestDto request = new ReserveRequestDto("THK02", LocalDate.now(), "THK01", "THK02", "", "", "", List.of(new ReserveRequestDto.SelectedSeatDto("E5SER01", "CAR01", "SEAT01001", 5000), new ReserveRequestDto.SelectedSeatDto("E5SER01", "CAR01", "SEAT01010", 5000)));
         Optional<ReservationEntity> reservation = Optional.of(buildReservation(reservationId1));
         reservation.get().setAccountId(accountId);
@@ -1106,6 +1376,51 @@ public class ReservationServiceTest {
         verify(reservedSeatSectionRepo).deleteAll(any());
         verify(reservedSeatRepo).saveAll(any());
         verify(reservedSeatSectionRepo).saveAll(any());
+    }
+
+    @Test
+    @DisplayName("座席変更時は再登録された座席に予約者が割り当てられない")
+    void putReservedSeat_withReservationIdAndLogin_doesNotAssignReserverToSeat() {
+        ReserveRequestDto request = new ReserveRequestDto("THK01", LocalDate.of(2026, 6, 1), "THK01", "THK09", "", "", "", List.of(new ReserveRequestDto.SelectedSeatDto("E5SER01", "CAR01", "SEAT01001", 5000), new ReserveRequestDto.SelectedSeatDto("E5SER01", "CAR01", "SEAT01002", 5000)));
+        Optional<ReservationEntity> reservation = Optional.of(buildReservation(reservationId1));
+        reservation.get().setAccountId(accountId);
+        reservation.get().setReservedSeat(Set.of(buildSeat(seat1.getId(), reservationId1, "指定席", 1, 1, "A", UUID.fromString("60a1ab63-a41f-430d-a2d1-10a76368d0f5"), 5000, LocalDate.of(2026, 6, 1), "THK01", "E5SER01", "SEAT01003", "CAR01", seat1.getName(), "test1-common@test.com")));
+        DepartureArrivalTimeEntity departureArrivalTime = new DepartureArrivalTimeEntity();
+        departureArrivalTime.setTimeCd("Test1");
+        departureArrivalTime.setScheduleCd(request.getScheduleCd());
+        departureArrivalTime.setDepartureTime(LocalTime.of(6, 4));
+        departureArrivalTime.setArrivalTime(LocalTime.of(6, 9));
+        departureArrivalTime.setSectionCd("Test1");
+        SectionKmEntity sectionKm = new SectionKmEntity();
+        sectionKm.setSectionCd(departureArrivalTime.getSectionCd());
+        sectionKm.setStartStationCd(request.getDepartureStationCd());
+        sectionKm.setGoalStationCd(request.getArrivalStationCd());
+        departureArrivalTime.setSectionKm(sectionKm);
+        when(accountRepo.findById(any())).thenReturn(Optional.of(account));
+        when(reservationRepo.findByIdAndIsDeleted(reservationId1, false)).thenReturn(reservation);
+        when(sectionKmRepo.findByStartStationCd(request.getDepartureStationCd())).thenReturn(List.of(sectionKm));
+        when(sectionKmRepo.findByGoalStationCd(request.getArrivalStationCd())).thenReturn(List.of(sectionKm));
+        when(departureArrivalTimeRepo.findByScheduleCdAndSectionCdIn(request.getScheduleCd(), List.of(departureArrivalTime.getSectionCd()))).thenReturn(departureArrivalTime);
+        when(departureArrivalTimeRepo.findByScheduleCdAndDepartureTimeGreaterThanEqualAndArrivalTimeLessThanEqual(request.getScheduleCd(), departureArrivalTime.getDepartureTime(), departureArrivalTime.getArrivalTime())).thenReturn(List.of(departureArrivalTime));
+        when(reservedSeatRepo.saveAll(any())).thenReturn(Stream.generate(ReservedSeatEntity::new).limit(2).collect(Collectors.toList()));
+        when(trainCarRepo.findById(any())).thenReturn(Optional.of(new TrainCarEntity()));
+        when(seatRepo.findById(any())).thenReturn(Optional.of(new SeatEntity()));
+        when(reservedSeatSectionRepo.findByRideDateAndScheduleCdAndTrainCarCdInAndReservedSectionCdIn(any(), any(), any(), any())).thenReturn(Collections.emptyList());
+        when(reservedSeatSectionRepo.saveAll(any())).thenReturn(Stream.generate(ReservedSeatSectionEntity::new).limit((2)).collect(Collectors.toList()));
+        when(reservationRepo.findByIdAndIsDeleted(reservationId1, false)).thenReturn(reservation);
+        when(departureArrivalTimeRepo.findByScheduleCd(request.getScheduleCd()))
+            .thenReturn(List.of(departureArrivalTime));
+
+        UUID result = service.putReservedSeat(reservationId1, request, session);
+        assertNotNull(result);
+        List<ReservedSeatEntity> savedSeats = captureSavedReservedSeats();
+        assertAll(
+            () -> assertNull(findSavedSeat(savedSeats, "SEAT01001").getName()),
+            () -> assertNull(findSavedSeat(savedSeats, "SEAT01001").getMail()),
+            () -> assertNull(findSavedSeat(savedSeats, "SEAT01002").getName()),
+            () -> assertNull(findSavedSeat(savedSeats, "SEAT01002").getMail()),
+            () -> assertEquals("ReservedSeat is not found: SEAT01003", assertThrows(AssertionError.class, () -> findSavedSeat(savedSeats, "SEAT01003")).getMessage())
+        );
     }
 
     @Test
