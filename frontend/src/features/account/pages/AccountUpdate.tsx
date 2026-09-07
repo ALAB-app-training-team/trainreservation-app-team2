@@ -93,7 +93,7 @@ export function AccountUpdate() {
                         <button
                             type="button"
                             onClick={() => setIsDeleteModalOpen(true)}
-                            className="mt-2 text-sm text-gray-500 underline"
+                            className="text-fg-muted mt-2 text-sm underline"
                         >
                             退会はこちら
                         </button>

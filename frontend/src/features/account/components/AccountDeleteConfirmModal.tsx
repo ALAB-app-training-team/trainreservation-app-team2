@@ -19,7 +19,7 @@ export function AccountDeleteConfirmModal({
                     onRequestClose={onRequestClose}
                     isSubmitting={isSubmitting}
                 />
-                <p className="text-sm text-gray-500">
+                <p className="text-sm text-fg-muted">
                     退会するとアカウント情報は削除され、元に戻せません。
                 </p>
             </div>
