@@ -19,7 +19,7 @@ export function CustomAccordion({ title, children }: AccordionProps) {
                 <span className="size-4">
                     {isOpen ? <IoCaretDown /> : <IoCaretForward />}
                 </span>
-                <span>{title}</span>
+                <span className="text-sm">{title}</span>
             </button>
             {isOpen && <div>{children}</div>}
         </div>
