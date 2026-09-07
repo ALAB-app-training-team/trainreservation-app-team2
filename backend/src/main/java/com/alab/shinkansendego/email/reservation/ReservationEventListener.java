@@ -50,9 +50,10 @@ public class ReservationEventListener {
 
     @Async
     @TransactionalEventListener(phase = TransactionPhase.AFTER_COMMIT)
-        ReservationEmailRequestParams emailDto = setEmailRequestDto(event.reservationId(), event.request(), event.departureTime(), event.arrivalTime(), null, null);
-        emailDto.setIsGuest(event.isGuest());
-        reservationEmailService.sendReservationConfirmation(emailDto);
+    public void handleReservationCreated(ReservationCreatedEvent event) {
+        ReservationEmailRequestParams emailParams = setEmailRequestParams(event.reservationId(), event.request(), event.departureTime(), event.arrivalTime(), null, null);
+        emailParams.setIsGuest(event.isGuest());
+        reservationEmailService.sendReservationConfirmation(emailParams);
     }
 
     @Async

@@ -48,8 +48,8 @@ public class SesReservationEmailService implements ReservationEmailService {
                 seatDetail = EmailUtils.seatFormatter(params.getSeats());
             }
 
-            String guestLoginUrl = baseUrl + EmailUtils.GUESTLOGIN_PATH + dto.getReservationId();
-            String loginUrl = Boolean.TRUE.equals(dto.getIsGuest())
+            String guestLoginUrl = baseUrl + EmailUtils.GUESTLOGIN_PATH + params.getReservationId();
+            String loginUrl = Boolean.TRUE.equals(params.getIsGuest())
                 ? guestLoginUrl
                 : baseUrl + EmailUtils.LOGIN_PATH;
 

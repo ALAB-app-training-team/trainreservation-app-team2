@@ -29,7 +29,7 @@ public class ReservationEmailRequestParams {
     private Integer totalAmount;
     private Integer oldAmount;
     private String representativeName;
-    private List<SelectedSeatDto> seats;
+    private List<SelectedSeatParams> seats;
     private Boolean isGuest;
 
     @Data
