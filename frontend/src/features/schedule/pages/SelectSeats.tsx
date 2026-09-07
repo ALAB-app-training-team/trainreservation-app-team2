@@ -214,11 +214,6 @@ export function SelectSeats() {
                 );
             }
 
-            sessionStorage.setItem(
-                'message',
-                '「チケットを共有」ボタンからリンクの保存をお願いします',
-            );
-
             navigate('/reservedTicket', {
                 state: {
                     reservationId: reservationId,
