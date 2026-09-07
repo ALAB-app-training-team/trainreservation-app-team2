@@ -31,7 +31,7 @@ export function ReservedTicketInfo({ ticketInfo }: ReservedTicketInfoProps) {
                         )}
                         <div
                             data-testid="departure-arrival"
-                            className="flex flex-col justify-between gap-4 md:flex-row md:items-center"
+                            className="flex flex-row justify-between gap-4 md:items-center"
                         >
                             <DepartureAndArrivalInfo
                                 id="departureInfo"

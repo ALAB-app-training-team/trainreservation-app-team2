@@ -172,34 +172,38 @@ export function ReservedTicket() {
                     </>
                 )}
                 <div className="flex w-full flex-col gap-4 md:flex-row">
-                    {canCancelReservation && (
+                    {canUpdateCompanions && (
                         <button
-                            onClick={handleRefundConfirmModalOpen}
-                            disabled={isSubmitting}
-                            className="border-primary text-primary flex w-full items-center justify-center gap-2 rounded-xl border-2 p-2 text-sm"
+                            onClick={handleCompanionsModalOpen}
+                            className="bg-primary flex w-full items-center justify-center gap-2 rounded-xl p-2 text-sm text-white md:order-4"
                         >
-                            <IoTrashOutline className="h-4 w-4" />
-                            キャンセル
+                            <RiGroupLine className="h-4 w-4" />
+                            利用者に割り当て
                         </button>
+                    )}
+                    {canShareLink && (
+                        <div className="w-full md:order-3">
+                            <TicketShare shareUrl={shareUrl} />
+                        </div>
                     )}
                     {canUpdateReservation && (
                         <button
                             onClick={handleChangeConfirmModalOpen}
                             disabled={isSubmitting}
-                            className="border-primary text-primary flex w-full items-center justify-center gap-2 rounded-xl border-2 p-2 text-sm"
+                            className="border-primary text-primary flex w-full items-center justify-center gap-2 rounded-xl border-2 p-2 text-sm md:order-2"
                         >
                             <FaEdit className="h-4 w-4" />
                             予約を変更
                         </button>
                     )}
-                    {canShareLink && <TicketShare shareUrl={shareUrl} />}
-                    {canUpdateCompanions && (
+                    {canCancelReservation && (
                         <button
-                            onClick={handleCompanionsModalOpen}
-                            className="bg-primary flex w-full items-center justify-center gap-2 rounded-xl p-2 text-sm text-white"
+                            onClick={handleRefundConfirmModalOpen}
+                            disabled={isSubmitting}
+                            className="border-primary text-primary flex w-full items-center justify-center gap-2 rounded-xl border-2 p-2 text-sm md:order-1"
                         >
-                            <RiGroupLine className="h-4 w-4" />
-                            利用者に割り当て
+                            <IoTrashOutline className="h-4 w-4" />
+                            キャンセル
                         </button>
                     )}
                 </div>
@@ -214,6 +218,7 @@ export function ReservedTicket() {
                     isSubmitting={isUpdating}
                     handleSubmit={handleUpdateCompanions}
                     reservedSeats={reservedTickets.reservedSeats}
+                    onRequestClose={onCompanionsModalRequestClose}
                 />
             </CustomModal>
             <CustomModal
