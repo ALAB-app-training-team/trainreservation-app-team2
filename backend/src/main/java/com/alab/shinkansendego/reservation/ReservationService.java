@@ -542,7 +542,6 @@ public class ReservationService {
             account.getName(),
             oldReservation,
             assignedReservedSeats,
-            // 予約変更は認証必須(SecurityConfig)のため、ゲストはここに到達しない
             false
         ));
 
@@ -639,7 +638,6 @@ public class ReservationService {
             account.getName(),
             oldReservation,
             assignedReservedSeats,
-            // 予約変更は認証必須(SecurityConfig)のため、ゲストはここに到達しない
             false
         ));
 
