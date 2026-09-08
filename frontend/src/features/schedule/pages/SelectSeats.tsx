@@ -370,7 +370,7 @@ export function SelectSeats() {
     const preReservedSeats = reservedSeats ?? preChangeReservedSeats;
 
     return (
-        <>
+        <div className="mx-auto flex w-full max-w-5xl flex-col">
             <div className="flex items-center justify-start p-4 pb-0">
                 {searchRequestDto !== null ? (
                     <button
@@ -434,7 +434,7 @@ export function SelectSeats() {
             </div>
 
             <div className="flex w-full flex-col items-start justify-between gap-4 p-4 pb-24 md:flex-row md:pb-4">
-                <div className="w-full md:w-7/10">
+                <div className="w-full md:w-7/10 md:min-w-0">
                     <TrainInfo scheduleInfoDto={scheduleInfoDto} />
                     <Suspense fallback={<TrainCarsSkeleton />}>
                         <TrainCars
@@ -601,6 +601,6 @@ export function SelectSeats() {
                     />
                 </CustomModal>
             )}
-        </>
+        </div>
     );
 }
