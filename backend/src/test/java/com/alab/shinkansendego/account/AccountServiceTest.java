@@ -19,6 +19,7 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.never;
+import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
@@ -127,6 +128,7 @@ public class AccountServiceTest {
 
         service.insertAccount(request);
         verify(accountRepository).save(any());
+        verify(eventPublisher, times(1)).publishEvent(any(AccountCreatedEvent.class));
     }
 
     @Test
@@ -155,6 +157,7 @@ public class AccountServiceTest {
 
         assertEquals(uuid, service.putAccount(uuid, dto));
         verify(accountRepository).save(any());
+        verify(eventPublisher, times(1)).publishEvent(any(AccountUpdatedEvent.class));
     }
 
     @Test
@@ -214,6 +217,7 @@ public class AccountServiceTest {
         when(accountRepository.save(any())).thenReturn(account.get());
 
         assertEquals(uuid, service.putPassword(uuid, dto));
+        verify(eventPublisher, times(1)).publishEvent(any(PasswordUpdatedEvent.class));
     }
 
     @Test
