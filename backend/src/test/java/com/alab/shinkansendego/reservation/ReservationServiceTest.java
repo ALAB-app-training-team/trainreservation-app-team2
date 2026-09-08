@@ -1555,6 +1555,7 @@ public class ReservationServiceTest {
         assertTrue(deletedSeats.get(1).getIsDeleted());
         verify(reservedSeatRepo).saveAll(deletedSeats);
         verify(reservedSeatSectionRepo).deleteAll(deletedSections);
+        verify(eventPublisher, times(1)).publishEvent(any(ReservationCanceledEvent.class));
     }
 
     @Test

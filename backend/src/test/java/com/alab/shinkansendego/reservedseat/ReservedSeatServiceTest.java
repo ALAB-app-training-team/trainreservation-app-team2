@@ -28,7 +28,6 @@ import java.util.UUID;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.Mockito.never;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
@@ -142,7 +141,7 @@ public class ReservedSeatServiceTest {
         verify(reservationRepo, times(1)).findById(reservationId);
         verify(reservedSeatRepo, times(1)).findByIdAndReservationIdAndIsDeleted(reservedSeat1Id, reservationId, false);
         verify(reservedSeatRepo, times(1)).findByIdAndReservationIdAndIsDeleted(reservedSeat2Id, reservationId, false);
-        verify(eventPublisher).publishEvent(any(ReservedSeatSetEvent.class));
+        verify(eventPublisher, times(1)).publishEvent(any(ReservedSeatSetEvent.class));
     }
 
     @Test
@@ -173,6 +172,7 @@ public class ReservedSeatServiceTest {
         verify(reservationRepo, times(1)).findById(reservationId);
         verify(reservedSeatRepo, times(1)).findByIdAndReservationIdAndIsDeleted(reservedSeat1Id, reservationId, false);
         verify(reservedSeatRepo, times(1)).findByIdAndReservationIdAndIsDeleted(reservedSeat2Id, reservationId, false);
+        verify(eventPublisher, times(1)).publishEvent(any(ReservedSeatSetEvent.class));
     }
 
     @Test
