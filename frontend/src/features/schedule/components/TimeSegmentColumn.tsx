@@ -14,7 +14,11 @@ export function TimeSegmentColumn({
     listRef,
 }: TimeSegmentColumnProps) {
     return (
-        <div ref={listRef} tabIndex={-1} className="max-h-48 overflow-y-auto">
+        <div
+            ref={listRef}
+            tabIndex={-1}
+            className="max-h-[220px] overflow-y-auto md:max-h-48"
+        >
             {values.map((value) => (
                 <button
                     type="button"
@@ -22,7 +26,7 @@ export function TimeSegmentColumn({
                     key={value}
                     data-selected={value === selectedValue}
                     onClick={() => onSelect(value)}
-                    className={`block cursor-pointer p-1 ${
+                    className={`flex size-[44px] cursor-pointer items-center justify-center md:size-auto md:p-1 ${
                         value === selectedValue
                             ? 'bg-primary text-white'
                             : 'hover:bg-primary-light'
