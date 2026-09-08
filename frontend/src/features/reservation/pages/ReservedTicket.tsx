@@ -140,7 +140,7 @@ export function ReservedTicket() {
                 {(isBack || canShareLink) && (
                     <div
                         className={`w-full items-center justify-between gap-2 text-left ${
-                            isCreated ? 'hidden md:flex' : 'flex'
+                            isCreated ? 'hidden' : 'flex'
                         }`}
                     >
                         {isBack ? (
@@ -166,9 +166,7 @@ export function ReservedTicket() {
                         {title}
                     </h1>
                     {canShareLink && isCreated && (
-                        <div className="md:hidden">
-                            <TicketShare shareUrl={shareUrl} />
-                        </div>
+                        <TicketShare shareUrl={shareUrl} />
                     )}
                 </div>
                 {isDeleted ? (
