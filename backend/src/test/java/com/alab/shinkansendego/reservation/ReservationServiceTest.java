@@ -683,6 +683,7 @@ public class ReservationServiceTest {
         UUID result = service.insertReservation(request, null);
         assertNotNull(result);
         this.mockRestServiceServer.verify();
+        verify(eventPublisher).publishEvent(any(ReservationCreatedEvent.class));
     }
 
     @Test
@@ -1155,6 +1156,7 @@ public class ReservationServiceTest {
         verify(reservedSeatRepo).saveAll(any());
         verify(reservedSeatSectionRepo).saveAll(any());
         verify(reservationRepo).save(any());
+        verify(eventPublisher).publishEvent(any(ReservationChangedEvent.class));
     }
 
     @Test
@@ -1376,6 +1378,7 @@ public class ReservationServiceTest {
         verify(reservedSeatSectionRepo).deleteAll(any());
         verify(reservedSeatRepo).saveAll(any());
         verify(reservedSeatSectionRepo).saveAll(any());
+        verify(eventPublisher).publishEvent(any(ReservationChangedEvent.class));
     }
 
     @Test
@@ -1518,6 +1521,7 @@ public class ReservationServiceTest {
         assertTrue(deletedSeats.get(1).getIsDeleted());
         verify(reservedSeatRepo).saveAll(deletedSeats);
         verify(reservedSeatSectionRepo).deleteAll(deletedSections);
+        verify(eventPublisher).publishEvent(any(ReservationCanceledEvent.class));
     }
 
     @Test

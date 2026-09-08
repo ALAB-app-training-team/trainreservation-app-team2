@@ -26,7 +26,7 @@ class AccountEventListenerTest {
     private AccountEventListener listener;
 
     private AccountRequestDto accountRequest(String name, String mail) {
-        return new AccountRequestDto(name, mail, "password");
+        return new AccountRequestDto(name, mail, "Password1");
     }
 
     @Test
