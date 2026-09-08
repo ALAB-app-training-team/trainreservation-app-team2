@@ -60,6 +60,16 @@ class LocalAccountEmailServiceTest {
     }
 
     @Test
+    @DisplayName("メール送信に失敗しても例外を外部に伝播させない")
+    void sendAccountCreate_whenSendFails_doesNotPropagateException() {
+        AccountEmailRequestParams params = new AccountEmailRequestParams("user@example.com", "山田太郎");
+        doThrow(new MailSendException("smtp error")).when(mailSender).send(any(MimeMessage.class));
+
+        assertDoesNotThrow(() -> service.sendAccountCreate(params));
+        verify(mailSender, times(1)).send(any(MimeMessage.class));
+    }
+
+    @Test
     @DisplayName("メールアドレス変更なしの場合は新アドレス宛にアカウント変更完了メールを送信する")
     void sendAccountUpdate_withoutMailChange_sendsMailToNewAddress() throws Exception {
         AccountEmailRequestParams newParams = new AccountEmailRequestParams("same@example.com", "新氏名");
@@ -92,6 +102,17 @@ class LocalAccountEmailServiceTest {
     }
 
     @Test
+    @DisplayName("アカウント変更メール送信に失敗しても例外を外部に伝播させない")
+    void sendAccountUpdate_whenSendFails_doesNotPropagateException() {
+        AccountEmailRequestParams newParams = new AccountEmailRequestParams("new@example.com", "新氏名");
+        AccountEmailRequestParams oldParams = new AccountEmailRequestParams("old@example.com", "旧氏名");
+        doThrow(new MailSendException("smtp error")).when(mailSender).send(any(MimeMessage.class));
+
+        assertDoesNotThrow(() -> service.sendAccountUpdate(newParams, oldParams));
+        verify(mailSender, times(1)).send(any(MimeMessage.class));
+    }
+
+    @Test
     @DisplayName("パスワード変更完了メールを正しい件名で送信する")
     void sendPasswordUpdate_sendsMailWithPasswordSubject() throws Exception {
         AccountEmailRequestParams params = new AccountEmailRequestParams("user@example.com", "山田太郎");
@@ -106,12 +127,12 @@ class LocalAccountEmailServiceTest {
     }
 
     @Test
-    @DisplayName("メール送信に失敗しても例外を外部に伝播させない")
-    void sendAccountCreate_whenSendFails_doesNotPropagateException() {
+    @DisplayName("パスワード変更メール送信に失敗しても例外を外部に伝播させない")
+    void sendPasswordUpdate_whenSendFails_doesNotPropagateException() {
         AccountEmailRequestParams params = new AccountEmailRequestParams("user@example.com", "山田太郎");
         doThrow(new MailSendException("smtp error")).when(mailSender).send(any(MimeMessage.class));
 
-        assertDoesNotThrow(() -> service.sendAccountCreate(params));
+        assertDoesNotThrow(() -> service.sendPasswordUpdate(params));
         verify(mailSender, times(1)).send(any(MimeMessage.class));
     }
 }

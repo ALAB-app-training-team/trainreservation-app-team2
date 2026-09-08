@@ -59,6 +59,17 @@ class SesAccountEmailServiceTest {
     }
 
     @Test
+    @DisplayName("SES送信に失敗しても例外を外部に伝播させない")
+    void sendAccountCreate_whenSendFails_doesNotPropagateException() {
+        AccountEmailRequestParams params = new AccountEmailRequestParams("user@example.com", "山田太郎");
+        doThrow(software.amazon.awssdk.core.exception.SdkException.create("ses error", null))
+            .when(sesV2Client).sendEmail(any(SendEmailRequest.class));
+
+        assertDoesNotThrow(() -> service.sendAccountCreate(params));
+        verify(sesV2Client, times(1)).sendEmail(any(SendEmailRequest.class));
+    }
+
+    @Test
     @DisplayName("メールアドレス変更なしの場合は新アドレス宛にアカウント変更完了メールをSES経由送信する")
     void sendAccountUpdate_withoutMailChange_sendsMailToNewAddress() {
         AccountEmailRequestParams newParams = new AccountEmailRequestParams("same@example.com", "新氏名");
@@ -85,6 +96,18 @@ class SesAccountEmailServiceTest {
     }
 
     @Test
+    @DisplayName("アカウント変更メールのSES送信に失敗しても例外を外部に伝播させない")
+    void sendAccountUpdate_whenSendFails_doesNotPropagateException() {
+        AccountEmailRequestParams newParams = new AccountEmailRequestParams("new@example.com", "新氏名");
+        AccountEmailRequestParams oldParams = new AccountEmailRequestParams("old@example.com", "旧氏名");
+        doThrow(software.amazon.awssdk.core.exception.SdkException.create("ses error", null))
+            .when(sesV2Client).sendEmail(any(SendEmailRequest.class));
+
+        assertDoesNotThrow(() -> service.sendAccountUpdate(newParams, oldParams));
+        verify(sesV2Client, times(1)).sendEmail(any(SendEmailRequest.class));
+    }
+
+    @Test
     @DisplayName("パスワード変更完了メールを正しい件名でSES経由送信する")
     void sendPasswordUpdate_sendsMailWithPasswordSubject() {
         AccountEmailRequestParams params = new AccountEmailRequestParams("user@example.com", "山田太郎");
@@ -99,13 +122,13 @@ class SesAccountEmailServiceTest {
     }
 
     @Test
-    @DisplayName("SES送信に失敗しても例外を外部に伝播させない")
-    void sendAccountCreate_whenSendFails_doesNotPropagateException() {
+    @DisplayName("パスワード変更メールのSES送信に失敗しても例外を外部に伝播させない")
+    void sendPasswordUpdate_whenSendFails_doesNotPropagateException() {
         AccountEmailRequestParams params = new AccountEmailRequestParams("user@example.com", "山田太郎");
         doThrow(software.amazon.awssdk.core.exception.SdkException.create("ses error", null))
             .when(sesV2Client).sendEmail(any(SendEmailRequest.class));
 
-        assertDoesNotThrow(() -> service.sendAccountCreate(params));
+        assertDoesNotThrow(() -> service.sendPasswordUpdate(params));
         verify(sesV2Client, times(1)).sendEmail(any(SendEmailRequest.class));
     }
 }

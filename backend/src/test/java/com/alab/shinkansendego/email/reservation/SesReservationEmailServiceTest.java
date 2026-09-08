@@ -81,6 +81,17 @@ class SesReservationEmailServiceTest {
     }
 
     @Test
+    @DisplayName("SES送信に失敗しても例外を外部に伝播させない")
+    void sendReservationConfirmation_whenSendFails_doesNotPropagateException() {
+        ReservationEmailRequestParams params = createParams();
+        doThrow(software.amazon.awssdk.core.exception.SdkException.create("ses error", null))
+            .when(sesV2Client).sendEmail(any(SendEmailRequest.class));
+
+        assertDoesNotThrow(() -> service.sendReservationConfirmation(params));
+        verify(sesV2Client, times(1)).sendEmail(any(SendEmailRequest.class));
+    }
+
+    @Test
     @DisplayName("予約変更メールに変更差額を反映してSES経由送信する")
     void sendReservationChange_sendsMailWithDifference() {
         ReservationEmailRequestParams params = createParams();
@@ -93,6 +104,17 @@ class SesReservationEmailServiceTest {
         assertEquals(EmailUtils.CHANGE_SUBJECT, sent.content().simple().subject().data());
         String body = sent.content().simple().body().text().data();
         assertTrue(body.contains("変更差額　+2,000円"));
+    }
+
+    @Test
+    @DisplayName("予約変更メールのSES送信に失敗しても例外を外部に伝播させない")
+    void sendReservationChange_whenSendFails_doesNotPropagateException() {
+        ReservationEmailRequestParams params = createParams();
+        doThrow(software.amazon.awssdk.core.exception.SdkException.create("ses error", null))
+            .when(sesV2Client).sendEmail(any(SendEmailRequest.class));
+
+        assertDoesNotThrow(() -> service.sendReservationChange(params));
+        verify(sesV2Client, times(1)).sendEmail(any(SendEmailRequest.class));
     }
 
     @Test
@@ -112,6 +134,17 @@ class SesReservationEmailServiceTest {
     }
 
     @Test
+    @DisplayName("予約キャンセルメールのSES送信に失敗しても例外を外部に伝播させない")
+    void sendReservationCancel_whenSendFails_doesNotPropagateException() {
+        ReservationEmailRequestParams params = createParams();
+        doThrow(software.amazon.awssdk.core.exception.SdkException.create("ses error", null))
+            .when(sesV2Client).sendEmail(any(SendEmailRequest.class));
+
+        assertDoesNotThrow(() -> service.sendReservationCancel(params));
+        verify(sesV2Client, times(1)).sendEmail(any(SendEmailRequest.class));
+    }
+
+    @Test
     @DisplayName("同行者割り当てメールにチケットURLを含めてSES経由送信する")
     void sendSetCompanion_sendsMailWithTicketUrl() {
         ReservationEmailRequestParams params = createParams();
@@ -127,6 +160,17 @@ class SesReservationEmailServiceTest {
     }
 
     @Test
+    @DisplayName("同行者割り当てメールのSES送信に失敗しても例外を外部に伝播させない")
+    void sendSetCompanion_whenSendFails_doesNotPropagateException() {
+        ReservationEmailRequestParams params = createParams();
+        doThrow(software.amazon.awssdk.core.exception.SdkException.create("ses error", null))
+            .when(sesV2Client).sendEmail(any(SendEmailRequest.class));
+
+        assertDoesNotThrow(() -> service.sendSetCompanion(params));
+        verify(sesV2Client, times(1)).sendEmail(any(SendEmailRequest.class));
+    }
+
+    @Test
     @DisplayName("同行者割り当て解除メールを正しい件名でSES経由送信する")
     void sendReleaseCompanion_sendsMail() {
         ReservationEmailRequestParams params = createParams();
@@ -139,13 +183,13 @@ class SesReservationEmailServiceTest {
     }
 
     @Test
-    @DisplayName("SES送信に失敗しても例外を外部に伝播させない")
-    void sendReservationConfirmation_whenSendFails_doesNotPropagateException() {
+    @DisplayName("同行者割り当て解除メールのSES送信に失敗しても例外を外部に伝播させない")
+    void sendReleaseCompanion_whenSendFails_doesNotPropagateException() {
         ReservationEmailRequestParams params = createParams();
         doThrow(software.amazon.awssdk.core.exception.SdkException.create("ses error", null))
             .when(sesV2Client).sendEmail(any(SendEmailRequest.class));
 
-        assertDoesNotThrow(() -> service.sendReservationConfirmation(params));
+        assertDoesNotThrow(() -> service.sendReleaseCompanion(params));
         verify(sesV2Client, times(1)).sendEmail(any(SendEmailRequest.class));
     }
 }

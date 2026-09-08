@@ -82,6 +82,16 @@ class LocalReservationEmailServiceTest {
     }
 
     @Test
+    @DisplayName("メール送信に失敗しても例外を外部に伝播させない")
+    void sendReservationConfirmation_whenSendFails_doesNotPropagateException() {
+        ReservationEmailRequestParams params = createParams();
+        doThrow(new MailSendException("smtp error")).when(mailSender).send(any(MimeMessage.class));
+
+        assertDoesNotThrow(() -> service.sendReservationConfirmation(params));
+        verify(mailSender, times(1)).send(any(MimeMessage.class));
+    }
+
+    @Test
     @DisplayName("予約変更メールを正しい宛先・件名・本文で送信する")
     void sendReservationChange_sendsMailToReserver() throws Exception {
         ReservationEmailRequestParams params = createParams();
@@ -95,6 +105,16 @@ class LocalReservationEmailServiceTest {
         assertEquals("user@example.com", sent.getAllRecipients()[0].toString());
         String content = (String) sent.getContent();
         assertTrue(content.contains("変更差額　+2,000円"));
+    }
+
+    @Test
+    @DisplayName("予約変更メール送信に失敗しても例外を外部に伝播させない")
+    void sendReservationChange_whenSendFails_doesNotPropagateException() {
+        ReservationEmailRequestParams params = createParams();
+        doThrow(new MailSendException("smtp error")).when(mailSender).send(any(MimeMessage.class));
+
+        assertDoesNotThrow(() -> service.sendReservationChange(params));
+        verify(mailSender, times(1)).send(any(MimeMessage.class));
     }
 
     @Test
@@ -114,6 +134,16 @@ class LocalReservationEmailServiceTest {
     }
 
     @Test
+    @DisplayName("予約キャンセルメール送信に失敗しても例外を外部に伝播させない")
+    void sendReservationCancel_whenSendFails_doesNotPropagateException() {
+        ReservationEmailRequestParams params = createParams();
+        doThrow(new MailSendException("smtp error")).when(mailSender).send(any(MimeMessage.class));
+
+        assertDoesNotThrow(() -> service.sendReservationCancel(params));
+        verify(mailSender, times(1)).send(any(MimeMessage.class));
+    }
+
+    @Test
     @DisplayName("同行者割り当てメールにチケットURLを含めて送信する")
     void sendSetCompanion_sendsMailWithTicketUrl() throws Exception {
         ReservationEmailRequestParams params = createParams();
@@ -130,6 +160,16 @@ class LocalReservationEmailServiceTest {
     }
 
     @Test
+    @DisplayName("同行者割り当てメール送信に失敗しても例外を外部に伝播させない")
+    void sendSetCompanion_whenSendFails_doesNotPropagateException() {
+        ReservationEmailRequestParams params = createParams();
+        doThrow(new MailSendException("smtp error")).when(mailSender).send(any(MimeMessage.class));
+
+        assertDoesNotThrow(() -> service.sendSetCompanion(params));
+        verify(mailSender, times(1)).send(any(MimeMessage.class));
+    }
+
+    @Test
     @DisplayName("同行者割り当て解除メールを正しい件名で送信する")
     void sendReleaseCompanion_sendsMail() throws Exception {
         ReservationEmailRequestParams params = createParams();
@@ -143,12 +183,12 @@ class LocalReservationEmailServiceTest {
     }
 
     @Test
-    @DisplayName("メール送信に失敗しても例外を外部に伝播させない")
-    void sendReservationConfirmation_whenSendFails_doesNotPropagateException() {
+    @DisplayName("同行者割り当て解除メール送信に失敗しても例外を外部に伝播させない")
+    void sendReleaseCompanion_whenSendFails_doesNotPropagateException() {
         ReservationEmailRequestParams params = createParams();
         doThrow(new MailSendException("smtp error")).when(mailSender).send(any(MimeMessage.class));
 
-        assertDoesNotThrow(() -> service.sendReservationConfirmation(params));
+        assertDoesNotThrow(() -> service.sendReleaseCompanion(params));
         verify(mailSender, times(1)).send(any(MimeMessage.class));
     }
 }
