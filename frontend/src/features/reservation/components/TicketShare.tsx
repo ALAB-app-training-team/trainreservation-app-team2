@@ -30,7 +30,7 @@ export function TicketShare({ shareUrl = '' }: TicketShareProps) {
             <button
                 onClick={() => setIsOpen(true)}
                 aria-label="チケットを共有"
-                className="bg-primary flex shrink-0 items-center justify-center rounded-full p-2.5 text-white"
+                className="text-primary focus-visible:ring-primary flex shrink-0 items-center justify-center rounded-full p-2.5 outline-none focus-visible:ring-2 focus-visible:ring-offset-2"
                 data-testid="ticket-share"
             >
                 <BsShare className="h-5 w-5" />
