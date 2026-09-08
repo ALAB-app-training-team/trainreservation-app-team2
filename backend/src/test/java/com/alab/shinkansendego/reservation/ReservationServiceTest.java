@@ -631,6 +631,7 @@ public class ReservationServiceTest {
         UUID result = service.insertReservation(request, session);
         assertNotNull(result);
         this.mockRestServiceServer.verify();
+        verify(eventPublisher, times(1)).publishEvent(any(ReservationCreatedEvent.class));
     }
 
     @Test

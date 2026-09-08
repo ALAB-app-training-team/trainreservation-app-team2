@@ -28,6 +28,7 @@ import java.util.UUID;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.Mockito.never;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
@@ -173,6 +174,35 @@ public class ReservedSeatServiceTest {
         verify(reservedSeatRepo, times(1)).findByIdAndReservationIdAndIsDeleted(reservedSeat1Id, reservationId, false);
         verify(reservedSeatRepo, times(1)).findByIdAndReservationIdAndIsDeleted(reservedSeat2Id, reservationId, false);
         verify(eventPublisher, times(1)).publishEvent(any(ReservedSeatSetEvent.class));
+    }
+
+    @Test
+    @DisplayName("割り当て済みの同行者を未割当にした場合、割当解除イベントのみが発行される")
+    void updateReservedSeats_releasesAssignedCompanion_publishesReleaseEventOnly() {
+        TrainCarEntity trainCar = new TrainCarEntity();
+        SeatTypeEntity seatType = new SeatTypeEntity();
+        seatType.setTrainCarTypeCd("CAR01");
+        trainCar.setSeatType(seatType);
+        reservedSeat1.setName("一般次郎");
+        reservedSeat1.setMail("test2-common@test.com");
+        reservedSeat2.setName("一般三郎");
+        reservedSeat2.setMail("test3-common@test.com");
+        when(reservationRepo.findById(reservationId)).thenReturn(Optional.of(reservation));
+        when(accountRepo.findById(any())).thenReturn(Optional.of(account));
+        when(departureArrivalTimeRepo.findByScheduleCd(any())).thenReturn(List.of(
+            buildSchedule(LocalTime.of(6, 0, 0), "THK01", "東京", LocalTime.of(6, 30, 0), "THK02", "上野"),
+            buildSchedule(LocalTime.of(7, 0, 0), "THK02", "上野", LocalTime.of(7, 30, 0), "CMN01", "大宮"),
+            buildSchedule(LocalTime.of(8, 0, 0), "CMN01", "大宮", LocalTime.of(8, 30, 0), "THK09", "仙台")));
+        when(reservedSeatRepo.findByIdAndReservationIdAndIsDeleted(reservedSeat1Id, reservationId, false)).thenReturn(Optional.of(reservedSeat1));
+        when(reservedSeatRepo.findByIdAndReservationIdAndIsDeleted(reservedSeat2Id, reservationId, false)).thenReturn(Optional.of(reservedSeat2));
+        when(trainCarRepo.findByTrainCarCd(any())).thenReturn(Optional.of(trainCar));
+
+        service.updateReservedSeats(reservationId, updateRequest, accountId, null, null);
+
+        assertEquals("", reservedSeat2.getName());
+        assertEquals("", reservedSeat2.getMail());
+        verify(eventPublisher, times(1)).publishEvent(any(ReservedSeatReleaseEvent.class));
+        verify(eventPublisher, never()).publishEvent(any(ReservedSeatSetEvent.class));
     }
 
     @Test
