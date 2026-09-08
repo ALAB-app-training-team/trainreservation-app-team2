@@ -137,12 +137,8 @@ export function ReservedTicket() {
     return (
         <>
             <div className="mx-auto flex w-full max-w-5xl min-w-90 flex-col items-center gap-2 p-4 md:w-7/10">
-                {(isBack || canShareLink) && (
-                    <div
-                        className={`w-full items-center justify-between gap-2 text-left ${
-                            isCreated ? 'hidden' : 'flex'
-                        }`}
-                    >
+                {(isBack || (canShareLink && !isCreated)) && (
+                    <div className="flex w-full items-center justify-between gap-2 text-left">
                         {isBack ? (
                             <button
                                 type="button"
