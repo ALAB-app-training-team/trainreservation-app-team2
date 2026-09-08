@@ -15,6 +15,7 @@ import { ReservedTicketInfoSkeleton } from '@/features/reservation/components/Re
 import { ReservedTicketQrCode } from '@/features/reservation/components/ReservedTicketQrCode/ReservedTicketQrCode';
 import { ReservedTicketQrCodeSkeleton } from '@/features/reservation/components/ReservedTicketQrCode/ReservedTicketQrCodeSkeleton';
 import { TicketShare } from '@/features/reservation/components/TicketShare';
+import { RESERVEDTICKET_MODE } from '@/features/reservation/constants/ReservedTicketState';
 import { useChangeModal } from '@/features/reservation/hooks/useChangeModal';
 import { useReservedTicketConfig } from '@/features/reservation/hooks/useReservedTicketConfig';
 import { useReservedTickets } from '@/features/reservation/hooks/useReservedTickets';
@@ -46,6 +47,7 @@ export function ReservedTicket() {
         canUpdateCompanions,
         canShareLink,
     } = useReservedTicketConfig(reservedTickets, mode, role);
+    const isCreated = mode === RESERVEDTICKET_MODE.created;
     const {
         isOpen: isCompanionsModalOpen,
         handleModalOpen: handleCompanionsModalOpen,
@@ -136,7 +138,11 @@ export function ReservedTicket() {
         <>
             <div className="mx-auto flex w-full max-w-5xl min-w-90 flex-col items-center gap-2 p-4 md:w-7/10">
                 {(isBack || canShareLink) && (
-                    <div className="flex w-full items-center justify-between gap-2 text-left">
+                    <div
+                        className={`w-full items-center justify-between gap-2 text-left ${
+                            isCreated ? 'hidden md:flex' : 'flex'
+                        }`}
+                    >
                         {isBack ? (
                             <button
                                 type="button"
@@ -155,10 +161,15 @@ export function ReservedTicket() {
                         {canShareLink && <TicketShare shareUrl={shareUrl} />}
                     </div>
                 )}
-                <div className="w-full text-left">
+                <div className="flex w-full items-center justify-between gap-2 text-left">
                     <h1 data-testid="reserve-title" className="m-0! text-3xl!">
                         {title}
                     </h1>
+                    {canShareLink && isCreated && (
+                        <div className="md:hidden">
+                            <TicketShare shareUrl={shareUrl} />
+                        </div>
+                    )}
                 </div>
                 {isDeleted ? (
                     <Suspense fallback={<ReservedTicketInfoSkeleton />}>
