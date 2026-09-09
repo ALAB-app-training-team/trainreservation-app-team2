@@ -445,7 +445,7 @@ export function SelectSeats() {
                     className={`fixed inset-x-0 bottom-0 z-30 w-full transition-transform duration-300 ease-out md:static md:z-auto md:flex-1 md:translate-y-0 md:transition-none ${
                         isSheetOpen
                             ? 'translate-y-0'
-                            : 'translate-y-[calc(100%-60px)]'
+                            : 'translate-y-[calc(100%-68px)]'
                     }`}
                 >
                     <div className="border-primary-light flex max-h-[80vh] w-full flex-col overflow-y-auto rounded-t-2xl border-2 bg-white text-left md:max-h-none md:overflow-visible md:rounded-2xl">
