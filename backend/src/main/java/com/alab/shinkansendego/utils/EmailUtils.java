@@ -172,7 +172,7 @@ public final class EmailUtils {
     }
 
     public static String ticketUrlFormatter(String baseUrl, ReservationEmailRequestParams params) {
-        return Boolean.TRUE.equals(params.getIsGuest())
+        return params.isGuest()
             ? guestLoginUrlFormatter(baseUrl, params.getReservationId())
             : baseUrl + LOGIN_PATH;
     }

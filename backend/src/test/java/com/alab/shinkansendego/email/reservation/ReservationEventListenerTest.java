@@ -104,7 +104,7 @@ class ReservationEventListenerTest {
         );
         ReserveRequestDto request = createRequest("user@example.com", "山田太郎", seats);
         UUID reservationId = UUID.randomUUID();
-        ReservationCreatedEvent event = new ReservationCreatedEvent(reservationId, request, LocalTime.of(9, 0), LocalTime.of(10, 30));
+        ReservationCreatedEvent event = new ReservationCreatedEvent(reservationId, request, LocalTime.of(9, 0), LocalTime.of(10, 30), false);
 
         listener.handleReservationCreated(event);
 
@@ -135,7 +135,7 @@ class ReservationEventListenerTest {
             new ReserveRequestDto.SelectedSeatDto("0001", "普通車", "SEAT1A", 5000)
         );
         ReserveRequestDto request = createRequest("user@example.com", null, seats);
-        ReservationCreatedEvent event = new ReservationCreatedEvent(UUID.randomUUID(), request, LocalTime.of(9, 0), LocalTime.of(10, 30));
+        ReservationCreatedEvent event = new ReservationCreatedEvent(UUID.randomUUID(), request, LocalTime.of(9, 0), LocalTime.of(10, 30), false);
 
         listener.handleReservationCreated(event);
 
@@ -264,7 +264,7 @@ class ReservationEventListenerTest {
         );
         ReserveRequestDto request = createRequest("user@example.com", "山田太郎", seats);
         ReservationCanceledEvent event = new ReservationCanceledEvent(
-            UUID.randomUUID(), request, LocalTime.of(9, 0), LocalTime.of(10, 30), "山田太郎", List.of(companionSeat)
+            UUID.randomUUID(), request, LocalTime.of(9, 0), LocalTime.of(10, 30), "山田太郎", List.of(companionSeat), false
         );
 
         listener.handleReservationCanceled(event);
@@ -294,7 +294,7 @@ class ReservationEventListenerTest {
         );
         ReserveRequestDto request = createRequest("user@example.com", "山田太郎", seats);
         ReservationCanceledEvent event = new ReservationCanceledEvent(
-            UUID.randomUUID(), request, LocalTime.of(9, 0), LocalTime.of(10, 30), "山田太郎", List.of(companionSeat)
+            UUID.randomUUID(), request, LocalTime.of(9, 0), LocalTime.of(10, 30), "山田太郎", List.of(companionSeat), false
         );
 
         listener.handleReservationCanceled(event);
@@ -315,7 +315,7 @@ class ReservationEventListenerTest {
         );
         ReserveRequestDto request = createRequest("user@example.com", "山田太郎", seats);
         ReservationCanceledEvent event = new ReservationCanceledEvent(
-            UUID.randomUUID(), request, LocalTime.of(9, 0), LocalTime.of(10, 30), "山田太郎", List.of()
+            UUID.randomUUID(), request, LocalTime.of(9, 0), LocalTime.of(10, 30), "山田太郎", List.of(), false
         );
 
         assertThrows(IllegalArgumentException.class, () -> listener.handleReservationCanceled(event));
