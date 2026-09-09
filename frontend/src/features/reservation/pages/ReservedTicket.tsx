@@ -15,6 +15,7 @@ import { ReservedTicketInfoSkeleton } from '@/features/reservation/components/Re
 import { ReservedTicketQrCode } from '@/features/reservation/components/ReservedTicketQrCode/ReservedTicketQrCode';
 import { ReservedTicketQrCodeSkeleton } from '@/features/reservation/components/ReservedTicketQrCode/ReservedTicketQrCodeSkeleton';
 import { TicketShare } from '@/features/reservation/components/TicketShare';
+import { RESERVEDTICKET_MODE } from '@/features/reservation/constants/ReservedTicketState';
 import { useChangeModal } from '@/features/reservation/hooks/useChangeModal';
 import { useReservedTicketConfig } from '@/features/reservation/hooks/useReservedTicketConfig';
 import { useReservedTickets } from '@/features/reservation/hooks/useReservedTickets';
@@ -46,6 +47,7 @@ export function ReservedTicket() {
         canUpdateCompanions,
         canShareLink,
     } = useReservedTicketConfig(reservedTickets, mode, role);
+    const isCreated = mode === RESERVEDTICKET_MODE.created;
     const {
         isOpen: isCompanionsModalOpen,
         handleModalOpen: handleCompanionsModalOpen,
@@ -135,25 +137,33 @@ export function ReservedTicket() {
     return (
         <>
             <div className="mx-auto flex w-full max-w-5xl min-w-90 flex-col items-center gap-2 p-4 md:w-7/10">
-                {isBack && (
-                    <div className="w-full text-left">
-                        <button
-                            type="button"
-                            onClick={() => {
-                                navigate('/reservationList');
-                            }}
-                        >
-                            <div className="flex items-center gap-2">
-                                <LuArrowLeft />
-                                予約一覧へ戻る
-                            </div>
-                        </button>
+                {(isBack || (canShareLink && !isCreated)) && (
+                    <div className="flex w-full items-center justify-between gap-2 text-left">
+                        {isBack ? (
+                            <button
+                                type="button"
+                                onClick={() => {
+                                    navigate('/reservationList');
+                                }}
+                            >
+                                <div className="flex items-center gap-2">
+                                    <LuArrowLeft />
+                                    予約一覧へ戻る
+                                </div>
+                            </button>
+                        ) : (
+                            <div />
+                        )}
+                        {canShareLink && <TicketShare shareUrl={shareUrl} />}
                     </div>
                 )}
-                <div className="w-full text-left">
+                <div className="flex w-full items-center justify-between gap-2 text-left">
                     <h1 data-testid="reserve-title" className="m-0! text-3xl!">
                         {title}
                     </h1>
+                    {canShareLink && isCreated && (
+                        <TicketShare shareUrl={shareUrl} />
+                    )}
                 </div>
                 {isDeleted ? (
                     <Suspense fallback={<ReservedTicketInfoSkeleton />}>
@@ -181,11 +191,6 @@ export function ReservedTicket() {
                             <RiGroupLine className="h-4 w-4" />
                             利用者に割り当て
                         </button>
-                    )}
-                    {canShareLink && (
-                        <div className="w-full md:order-3">
-                            <TicketShare shareUrl={shareUrl} />
-                        </div>
                     )}
                     {canUpdateReservation && (
                         <button

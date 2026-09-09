@@ -404,11 +404,7 @@ export const test = baseTest.extend<VisualFixture>({
             await createReservation();
             await expect(page).toHaveURL('/reservedTicket');
             await reservedTicketPage.changeButton.waitFor({ state: 'visible' });
-            await page
-                .getByText(
-                    '「チケットを共有」ボタンからリンクの保存をお願いします',
-                )
-                .waitFor({ state: 'hidden' });
+            await page.evaluate(() => window.scrollTo(0, 0));
             await page.evaluate(() => document.fonts.ready);
 
             await expect(page).toHaveScreenshot({

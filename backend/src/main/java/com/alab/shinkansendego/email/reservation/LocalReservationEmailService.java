@@ -49,7 +49,7 @@ public class LocalReservationEmailService implements ReservationEmailService {
                 seatDetail = EmailUtils.seatFormatter(params.getSeats());
             }
 
-            String loginUrl = baseUrl + EmailUtils.LOGIN_PATH;
+            String ticketUrl = EmailUtils.ticketUrlFormatter(baseUrl, params);
 
             String body = String.format(
                 EmailUtils.CONFIRMATION_BODY,
@@ -63,7 +63,7 @@ public class LocalReservationEmailService implements ReservationEmailService {
                 params.getTrainTypeName(),
                 seatDetail,
                 params.getTotalAmount(),
-                loginUrl
+                ticketUrl
             );
 
             helper.setText(body);
@@ -95,7 +95,7 @@ public class LocalReservationEmailService implements ReservationEmailService {
                 seatDetail = EmailUtils.seatFormatter(params.getSeats());
             }
 
-            String loginUrl = baseUrl + EmailUtils.LOGIN_PATH;
+            String ticketUrl = EmailUtils.ticketUrlFormatter(baseUrl, params);
 
             String body = String.format(
                 EmailUtils.CHANGE_BODY,
@@ -109,7 +109,7 @@ public class LocalReservationEmailService implements ReservationEmailService {
                 params.getTrainTypeName(),
                 seatDetail,
                 differenceFormatter(params.getTotalAmount(), params.getOldAmount()),
-                loginUrl
+                ticketUrl
             );
 
             helper.setText(body);
@@ -145,7 +145,7 @@ public class LocalReservationEmailService implements ReservationEmailService {
 
             Integer total = params.getTotalAmount() - refund;
 
-            String loginUrl = baseUrl + EmailUtils.LOGIN_PATH;
+            String ticketUrl = EmailUtils.ticketUrlFormatter(baseUrl, params);
 
             String body = String.format(EmailUtils.CANCEL_BODY,
                 params.getReserverName() != null ? params.getReserverName() : "ユーザー",
@@ -159,7 +159,7 @@ public class LocalReservationEmailService implements ReservationEmailService {
                 seatDetail,
                 refund,
                 total,
-                loginUrl
+                ticketUrl
             );
 
             helper.setText(body);
@@ -193,7 +193,7 @@ public class LocalReservationEmailService implements ReservationEmailService {
                 seatFare = params.getSeats().getFirst().getSeatFare();
             }
 
-            String ticketUrl = baseUrl + EmailUtils.TICKET_PATH + params.getReservationId();
+            String ticketUrl = EmailUtils.guestLoginUrlFormatter(baseUrl, params.getReservationId());
 
             String body = String.format(EmailUtils.SET_COMPANION_BODY,
                 params.getReserverName() != null ? params.getReserverName() : "ユーザー",
