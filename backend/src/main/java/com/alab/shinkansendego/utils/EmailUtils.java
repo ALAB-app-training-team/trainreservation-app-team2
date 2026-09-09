@@ -44,6 +44,8 @@ public final class EmailUtils {
         ■チケットURL
         %s
 
+        当日のご乗車まで本メールは削除せず、大切に保管してください。
+
         またのご利用をお待ちしております。
         """;
     public static final String CHANGE_BODY = """
