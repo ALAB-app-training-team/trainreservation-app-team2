@@ -496,10 +496,14 @@ export function SelectSeats() {
                                                 },
                                             })
                                         }
-                                        className="border-primary-mid-light flex w-full items-center justify-center gap-4 rounded-2xl border-2 bg-white p-2 text-center font-medium"
+                                        className="border-primary-mid-light flex w-full items-center justify-center gap-2 rounded-2xl border-2 bg-white p-2 text-center font-medium"
                                     >
                                         <LuLogIn />
-                                        ログインして氏名・メールアドレスを省略
+                                        <span className="text-left">
+                                            ログインして
+                                            <br />
+                                            氏名・メールアドレスを省略
+                                        </span>
                                     </button>
                                 </div>
                             )}
