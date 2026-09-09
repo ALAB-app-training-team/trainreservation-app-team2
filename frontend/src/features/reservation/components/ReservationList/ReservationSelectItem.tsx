@@ -65,7 +65,7 @@ export function ReservationSelectItem({
     const handleSearchReturnTrip = () => {
         const searchRequestDto: Partial<SearchRequestDto> = {
             date: canCheckReservation ? details.rideDate : '',
-            time: details.arrivalTime,
+            time: canCheckReservation ? details.arrivalTime : '',
             departureStationCd: details.arrivalStationCd,
             arrivalStationCd: details.departureStationCd,
             isArrivalTime: false,

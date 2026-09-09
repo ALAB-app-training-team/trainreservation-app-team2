@@ -7,6 +7,7 @@ export class ReservedTicketPage {
     readonly backButton: Locator;
     readonly title: Locator;
     readonly departureArrivalElement: Locator;
+    readonly rideDateElement: Locator;
     readonly seatFareElement: Locator;
     readonly modalCloseButton: Locator;
     // 予約変更
@@ -34,6 +35,7 @@ export class ReservedTicketPage {
         this.backButton = page.getByRole('button', { name: '予約一覧へ戻る' });
         this.title = page.getByTestId('reserve-title');
         this.departureArrivalElement = page.getByTestId('departure-arrival');
+        this.rideDateElement = page.getByTestId('ride-date');
         this.seatFareElement = page.getByTestId('reserved-seats');
         this.modalCloseButton = page.getByTestId('modal-close-button');
         // 予約変更
