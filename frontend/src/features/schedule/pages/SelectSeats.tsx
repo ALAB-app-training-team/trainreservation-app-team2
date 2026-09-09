@@ -453,7 +453,7 @@ export function SelectSeats() {
                             : 'translate-y-[calc(100%-80px)]'
                     }`}
                 >
-                    <div className="border-primary-light flex max-h-[85vh] w-full flex-col overflow-y-auto rounded-t-2xl border-2 bg-white text-left md:max-h-none md:overflow-visible md:rounded-2xl">
+                    <div className="border-primary-light flex max-h-[80vh] w-full flex-col overflow-y-auto rounded-t-2xl border-2 bg-white text-left md:max-h-none md:overflow-visible md:rounded-2xl">
                         <ReservationSheetHandle
                             seatCount={selectedSeats.length}
                             totalFare={selectedSeats.reduce(
