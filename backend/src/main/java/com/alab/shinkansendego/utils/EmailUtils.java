@@ -6,6 +6,7 @@ import org.springframework.util.CollectionUtils;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.util.List;
+import java.util.UUID;
 import java.util.stream.Collectors;
 
 public final class EmailUtils {
@@ -162,6 +163,16 @@ public final class EmailUtils {
 
     public static String rideDateFormatter(LocalDate date) {
         return date.format(DateTimeFormatter.ofPattern("yyyy年MM月dd日"));
+    }
+
+    public static String guestLoginUrlFormatter(String baseUrl, UUID reservationId) {
+        return baseUrl + GUESTLOGIN_PATH + reservationId;
+    }
+
+    public static String loginUrlFormatter(String baseUrl, ReservationEmailRequestParams params) {
+        return Boolean.TRUE.equals(params.getIsGuest())
+            ? guestLoginUrlFormatter(baseUrl, params.getReservationId())
+            : baseUrl + LOGIN_PATH;
     }
 
     public static String seatFormatter(List<ReservationEmailRequestParams.SelectedSeatParams> seats) {

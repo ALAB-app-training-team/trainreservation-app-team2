@@ -49,10 +49,7 @@ public class LocalReservationEmailService implements ReservationEmailService {
                 seatDetail = EmailUtils.seatFormatter(params.getSeats());
             }
 
-            String guestLoginUrl = baseUrl + EmailUtils.GUESTLOGIN_PATH + params.getReservationId();
-            String loginUrl = Boolean.TRUE.equals(params.getIsGuest())
-                ? guestLoginUrl
-                : baseUrl + EmailUtils.LOGIN_PATH;
+            String loginUrl = EmailUtils.loginUrlFormatter(baseUrl, params);
 
             String body = String.format(
                 EmailUtils.CONFIRMATION_BODY,
@@ -98,10 +95,7 @@ public class LocalReservationEmailService implements ReservationEmailService {
                 seatDetail = EmailUtils.seatFormatter(params.getSeats());
             }
 
-            String guestLoginUrl = baseUrl + EmailUtils.GUESTLOGIN_PATH + params.getReservationId();
-            String loginUrl = Boolean.TRUE.equals(params.getIsGuest())
-                ? guestLoginUrl
-                : baseUrl + EmailUtils.LOGIN_PATH;
+            String loginUrl = EmailUtils.loginUrlFormatter(baseUrl, params);
 
             String body = String.format(
                 EmailUtils.CHANGE_BODY,
@@ -151,10 +145,7 @@ public class LocalReservationEmailService implements ReservationEmailService {
 
             Integer total = params.getTotalAmount() - refund;
 
-            String guestLoginUrl = baseUrl + EmailUtils.GUESTLOGIN_PATH + params.getReservationId();
-            String loginUrl = Boolean.TRUE.equals(params.getIsGuest())
-                ? guestLoginUrl
-                : baseUrl + EmailUtils.LOGIN_PATH;
+            String loginUrl = EmailUtils.loginUrlFormatter(baseUrl, params);
 
             String body = String.format(EmailUtils.CANCEL_BODY,
                 params.getReserverName() != null ? params.getReserverName() : "ユーザー",
@@ -202,7 +193,7 @@ public class LocalReservationEmailService implements ReservationEmailService {
                 seatFare = params.getSeats().getFirst().getSeatFare();
             }
 
-            String ticketUrl = baseUrl + EmailUtils.GUESTLOGIN_PATH + params.getReservationId();
+            String ticketUrl = EmailUtils.guestLoginUrlFormatter(baseUrl, params.getReservationId());
 
             String body = String.format(EmailUtils.SET_COMPANION_BODY,
                 params.getReserverName() != null ? params.getReserverName() : "ユーザー",
