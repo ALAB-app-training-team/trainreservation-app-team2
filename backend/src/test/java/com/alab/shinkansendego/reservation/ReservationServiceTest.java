@@ -63,6 +63,7 @@ import static org.junit.jupiter.api.Assertions.assertNull;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 import static org.springframework.test.web.client.match.MockRestRequestMatchers.header;
@@ -630,6 +631,7 @@ public class ReservationServiceTest {
         UUID result = service.insertReservation(request, session);
         assertNotNull(result);
         this.mockRestServiceServer.verify();
+        verify(eventPublisher, times(1)).publishEvent(any(ReservationCreatedEvent.class));
     }
 
     @Test
@@ -683,6 +685,7 @@ public class ReservationServiceTest {
         UUID result = service.insertReservation(request, null);
         assertNotNull(result);
         this.mockRestServiceServer.verify();
+        verify(eventPublisher, times(1)).publishEvent(any(ReservationCreatedEvent.class));
     }
 
     @Test
@@ -1155,6 +1158,7 @@ public class ReservationServiceTest {
         verify(reservedSeatRepo).saveAll(any());
         verify(reservedSeatSectionRepo).saveAll(any());
         verify(reservationRepo).save(any());
+        verify(eventPublisher, times(1)).publishEvent(any(ReservationChangedEvent.class));
     }
 
     @Test
@@ -1376,6 +1380,7 @@ public class ReservationServiceTest {
         verify(reservedSeatSectionRepo).deleteAll(any());
         verify(reservedSeatRepo).saveAll(any());
         verify(reservedSeatSectionRepo).saveAll(any());
+        verify(eventPublisher, times(1)).publishEvent(any(ReservationChangedEvent.class));
     }
 
     @Test
@@ -1518,6 +1523,7 @@ public class ReservationServiceTest {
         assertTrue(deletedSeats.get(1).getIsDeleted());
         verify(reservedSeatRepo).saveAll(deletedSeats);
         verify(reservedSeatSectionRepo).deleteAll(deletedSections);
+        verify(eventPublisher, times(1)).publishEvent(any(ReservationCanceledEvent.class));
     }
 
     @Test
@@ -1550,6 +1556,7 @@ public class ReservationServiceTest {
         assertTrue(deletedSeats.get(1).getIsDeleted());
         verify(reservedSeatRepo).saveAll(deletedSeats);
         verify(reservedSeatSectionRepo).deleteAll(deletedSections);
+        verify(eventPublisher, times(1)).publishEvent(any(ReservationCanceledEvent.class));
     }
 
     @Test
