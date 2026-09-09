@@ -341,7 +341,8 @@ public class ReservationService {
             reservationId,
             reserveRequestDto,
             departureArrivalTimeOfStart.getDepartureTime(),
-            departureArrivalTimeOfGoal.getArrivalTime()
+            departureArrivalTimeOfGoal.getArrivalTime(),
+            session == null
         ));
 
         return reservationId;
@@ -765,7 +766,8 @@ public class ReservationService {
             departureTime,
             arrivalTime,
             reserverName,
-            reservedSeats
+            reservedSeats,
+            accountId == null
         ));
     }
 

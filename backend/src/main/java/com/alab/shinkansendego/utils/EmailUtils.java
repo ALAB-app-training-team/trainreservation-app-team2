@@ -6,6 +6,7 @@ import org.springframework.util.CollectionUtils;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.util.List;
+import java.util.UUID;
 import java.util.stream.Collectors;
 
 public final class EmailUtils {
@@ -40,8 +41,10 @@ public final class EmailUtils {
         座席：%s
         お支払い合計：%,d 円
 
-        ■アプリログインURL
+        ■チケットURL
         %s
+
+        当日のご乗車まで本メールは削除せず、大切に保管してください。
 
         またのご利用をお待ちしております。
         """;
@@ -59,7 +62,7 @@ public final class EmailUtils {
         座席：%s
         お支払い合計：%s
 
-        ■アプリログインURL
+        ■チケットURL
         %s
 
         またのご利用をお待ちしております。
@@ -79,7 +82,7 @@ public final class EmailUtils {
         手数料：%,d 円
         払戻金額：%,d 円
 
-        ■アプリログインURL
+        ■チケットURL
         %s
 
         またのご利用をお待ちしております。
@@ -162,6 +165,16 @@ public final class EmailUtils {
 
     public static String rideDateFormatter(LocalDate date) {
         return date.format(DateTimeFormatter.ofPattern("yyyy年MM月dd日"));
+    }
+
+    public static String guestLoginUrlFormatter(String baseUrl, UUID reservationId) {
+        return baseUrl + TICKET_PATH + reservationId;
+    }
+
+    public static String ticketUrlFormatter(String baseUrl, ReservationEmailRequestParams params) {
+        return params.isGuest()
+            ? guestLoginUrlFormatter(baseUrl, params.getReservationId())
+            : baseUrl + LOGIN_PATH;
     }
 
     public static String seatFormatter(List<ReservationEmailRequestParams.SelectedSeatParams> seats) {
