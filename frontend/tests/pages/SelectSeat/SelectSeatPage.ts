@@ -83,6 +83,15 @@ export class SelectSeatPage {
         this.reservationSheetButton = page.getByTestId('reservation-sheet');
     }
 
+    trainCarButton(carNumber: number | number[]): Locator {
+        const name = Array.isArray(carNumber)
+            ? new RegExp(`^(${carNumber.join('|')}) 号車$`)
+            : `${carNumber} 号車`;
+        return this.page
+            .getByTestId('train-cars')
+            .getByRole('button', { name, exact: !Array.isArray(carNumber) });
+    }
+
     async clickBackButton() {
         await this.backButton.click();
     }
