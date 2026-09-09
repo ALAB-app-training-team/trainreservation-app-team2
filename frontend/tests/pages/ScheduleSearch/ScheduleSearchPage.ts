@@ -62,6 +62,10 @@ export class ScheduleSearchPage {
         await this.page.goto('/');
     }
 
+    async clickTime() {
+        await this.time.click();
+    }
+
     async clickDetailButton() {
         await this.detailButton.first().click();
     }

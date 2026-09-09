@@ -4,6 +4,12 @@ test('visual-iPhone-scheduleSearch', async ({ visualScheduleSearch }) => {
     await visualScheduleSearch();
 });
 
+test('visual-iPhone-scheduleSearch-TimePicker', async ({
+    visualScheduleSearchTimePicker,
+}) => {
+    await visualScheduleSearchTimePicker();
+});
+
 test('visual-iPhone-selectSeat-guest', async ({ visualSelectSeatGuest }) => {
     await visualSelectSeatGuest();
 });
