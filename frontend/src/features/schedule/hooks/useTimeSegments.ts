@@ -25,6 +25,7 @@ export function useTimeSegments(
 
     const digitBufferRef = useRef('');
     const pendingSelectionRef = useRef<Segment | null>(null);
+    const handledByKeyDownRef = useRef(false);
 
     // hour:0~23, minites:0~55, 文字数を設定
     type Segment = 'hour' | 'minute';
@@ -162,6 +163,11 @@ export function useTimeSegments(
     };
 
     const handleChange = (e: ChangeEvent<HTMLInputElement>) => {
+        if (handledByKeyDownRef.current) {
+            handledByKeyDownRef.current = false;
+            return;
+        }
+
         // valueを時刻（hh:mm）形式に整える
         const formatTimeText = (raw: string): string => {
             const digits = raw.replace(/[^0-9]/g, '').slice(0, 4);
@@ -185,6 +191,7 @@ export function useTimeSegments(
     // キーボード入力をしたとき
     const handleKeyDown = (e: KeyboardEvent<HTMLInputElement>) => {
         const segment = activeSegment ?? 'hour';
+        handledByKeyDownRef.current = false;
 
         switch (e.key) {
             case 'ArrowLeft':
@@ -204,6 +211,7 @@ export function useTimeSegments(
             case 'Backspace':
             case 'Delete':
                 e.preventDefault();
+                handledByKeyDownRef.current = true;
                 focusSegment(segment);
                 commitSegment(segment, 0);
                 return;
@@ -211,6 +219,7 @@ export function useTimeSegments(
 
         if (/^[0-9]$/.test(e.key)) {
             e.preventDefault();
+            handledByKeyDownRef.current = true;
             const buffer = digitBufferRef.current + e.key;
             const enteredValue = Number(buffer);
             const maxLeadingDigit = segment === 'hour' ? 2 : 5;
@@ -233,6 +242,7 @@ export function useTimeSegments(
         // 数字以外の文字入力禁止
         if (e.key.length === 1) {
             e.preventDefault();
+            handledByKeyDownRef.current = true;
         }
     };
 
