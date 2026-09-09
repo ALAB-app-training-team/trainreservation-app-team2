@@ -5,7 +5,9 @@ export class ScheduleSearchPage {
     readonly page: Page;
     readonly header: Header;
     readonly detailButton: Locator;
+    readonly departureStationSelectElement: Locator;
     readonly departureStation: Locator;
+    readonly arrivalStationSelectElement: Locator;
     readonly arrivalStation: Locator;
     readonly date: Locator;
     readonly time: Locator;
@@ -26,7 +28,13 @@ export class ScheduleSearchPage {
         this.page = page;
         this.header = new Header(page);
         this.detailButton = page.getByRole('button', { name: '詳細を見る' });
+        this.departureStationSelectElement = page.getByTestId(
+            'departureStation-select',
+        );
         this.departureStation = page.getByRole('combobox', { name: '乗車駅' });
+        this.arrivalStationSelectElement = page.getByTestId(
+            'arrivalStation-select',
+        );
         this.arrivalStation = page.getByRole('combobox', { name: '降車駅' });
         this.date = page.getByRole('textbox', { name: '乗車日' });
         this.time = page.getByRole('textbox', { name: '時刻' });

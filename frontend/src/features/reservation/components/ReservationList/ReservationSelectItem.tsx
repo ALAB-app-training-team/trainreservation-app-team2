@@ -31,6 +31,7 @@ export function ReservationSelectItem({
 }: ReservationSelectItemProps) {
     const navigate = useNavigate();
     const {
+        isActiveReservation,
         canCancelReservation,
         canUpdateReservation,
         canCheckReservation,
@@ -64,8 +65,11 @@ export function ReservationSelectItem({
 
     const handleSearchReturnTrip = () => {
         const searchRequestDto: Partial<SearchRequestDto> = {
+            date: isActiveReservation ? details.rideDate : '',
+            time: isActiveReservation ? details.arrivalTime : '',
             departureStationCd: details.arrivalStationCd,
             arrivalStationCd: details.departureStationCd,
+            isArrivalTime: false,
         };
         navigate('/scheduleSearch', {
             state: {

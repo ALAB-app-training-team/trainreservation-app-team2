@@ -21,10 +21,26 @@ export function DepartureAndArrivalInfo({
         <>
             <div className="flex w-full flex-col items-start gap-2">
                 <label htmlFor={id}>{title}</label>
-                <label className="text-2xl font-bold" htmlFor={id}>
+                <label
+                    data-testid={
+                        id === 'departureInfo'
+                            ? 'departure-time'
+                            : 'arrival-time'
+                    }
+                    className="text-2xl font-bold"
+                    htmlFor={id}
+                >
                     {dayjs(time, 'HH:mm:ss').format('HH:mm')}
                 </label>
-                <label className="text-xl font-bold" htmlFor={id}>
+                <label
+                    data-testid={
+                        id === 'departureInfo'
+                            ? 'departure-station'
+                            : 'arrival-station'
+                    }
+                    className="text-xl font-bold"
+                    htmlFor={id}
+                >
                     {station}
                 </label>
                 {getFieldError?.(id) && (

@@ -1,7 +1,9 @@
+import dayjs from 'dayjs';
 import { expect } from '@playwright/test';
 import { test } from '@tests/fixtures';
 import { ReservationListPage } from '@tests/pages/ReservationList/ReservationListPage';
 import { ReservedTicketPage } from '../ReservedTicket/ReservedTicketPage';
+import { ScheduleSearchPage } from '@tests/pages/ScheduleSearch/ScheduleSearchPage';
 
 test('お支払い合計が正しく表示されていること', async ({
     page,
@@ -235,6 +237,126 @@ test('復路で検索の表示有無：有効・過去では表示あり、キ�
     // キャンセル：表示なし
     await reservationListPage.clickCanceledButton();
     await expect(reservationListPage.searchReturnTripButton).toHaveCount(0);
+
+    await logout();
+    await expect(page).toHaveURL('/login');
+});
+
+test('復路で検索の検索画面設定：有効な予約は到着日時を出発日時として設定する', async ({
+    page,
+    createReservation,
+    commonLogin,
+    logout,
+}) => {
+    const reservationListPage = new ReservationListPage(page);
+    const reservedTicketPage = new ReservedTicketPage(page);
+    const scheduleSearchPage = new ScheduleSearchPage(page);
+
+    await commonLogin();
+    await expect(page).toHaveURL('/scheduleSearch');
+    await createReservation();
+    await reservationListPage.goto();
+    await expect(page).toHaveURL('/reservationList');
+
+    // 有効の予約情報を控える
+    await reservationListPage.clickTicketButton();
+    await expect(page).toHaveURL('/reservedTicket');
+    await expect(reservedTicketPage.rideDateElement).toBeVisible();
+    await expect(reservedTicketPage.departureStationElement).toBeVisible();
+    await expect(reservedTicketPage.arrivalTimeElement).toBeVisible();
+    await expect(reservedTicketPage.arrivalStationElement).toBeVisible();
+    const expectedDepartureStation = (
+        await reservedTicketPage.departureStationElement.innerText()
+    ).trim();
+    const expectedArrivalTime = (
+        await reservedTicketPage.arrivalTimeElement.innerText()
+    ).trim();
+    const expectedArrivalStation = (
+        await reservedTicketPage.arrivalStationElement.innerText()
+    ).trim();
+    const rideDateText = (
+        await reservedTicketPage.rideDateElement.innerText()
+    ).trim();
+    const rideDateMatch = rideDateText.match(/(\d{4})年(\d{1,2})月(\d{1,2})日/);
+    if (!rideDateMatch) {
+        throw new Error(`乗車日の形式が不正です: ${rideDateText}`);
+    }
+    const [, year, month, day] = rideDateMatch;
+    const expectedDate = `${year}-${month.padStart(2, '0')}-${day.padStart(
+        2,
+        '0',
+    )}`;
+
+    // 復路で検索
+    await reservedTicketPage.clickBackButton();
+    await expect(page).toHaveURL('/reservationList');
+    await reservationListPage.clickSearchReturnTripButton();
+    await expect(page).toHaveURL('/scheduleSearch');
+
+    // 出発到着駅・日時の確認
+    await expect(
+        scheduleSearchPage.departureStationSelectElement,
+    ).toContainText(expectedArrivalStation);
+    await expect(scheduleSearchPage.arrivalStationSelectElement).toContainText(
+        expectedDepartureStation,
+    );
+    await expect(scheduleSearchPage.date).toHaveValue(expectedDate);
+    await expect(scheduleSearchPage.time).toHaveValue(expectedArrivalTime);
+    await expect(scheduleSearchPage.departureTimeButton).toBeChecked();
+    await expect(scheduleSearchPage.arrivalTimeButton).not.toBeChecked();
+
+    await logout();
+    await expect(page).toHaveURL('/login');
+});
+
+test('復路で検索の検索画面設定：過去の予約はデフォルト日時を出発日時として設定する', async ({
+    page,
+    createReservation,
+    commonLogin,
+    logout,
+}) => {
+    const reservationListPage = new ReservationListPage(page);
+    const reservedTicketPage = new ReservedTicketPage(page);
+    const scheduleSearchPage = new ScheduleSearchPage(page);
+
+    await commonLogin();
+    await expect(page).toHaveURL('/scheduleSearch');
+    await createReservation();
+    await reservationListPage.goto();
+    await expect(page).toHaveURL('/reservationList');
+
+    // 過去の予約情報を控える
+    await reservationListPage.clickTicketButton();
+    await expect(page).toHaveURL('/reservedTicket');
+    await expect(reservedTicketPage.departureStationElement).toBeVisible();
+    await expect(reservedTicketPage.arrivalStationElement).toBeVisible();
+    const expectedDepartureStation = (
+        await reservedTicketPage.departureStationElement.innerText()
+    ).trim();
+    const expectedArrivalStation = (
+        await reservedTicketPage.arrivalStationElement.innerText()
+    ).trim();
+
+    // 復路で検索
+    await reservedTicketPage.clickBackButton();
+    await expect(page).toHaveURL('/reservationList');
+    await reservationListPage.clickPastButton();
+    await reservationListPage.clickSearchReturnTripButton();
+    await expect(page).toHaveURL('/scheduleSearch');
+
+    // 出発到着駅・日時の確認
+    await expect(
+        scheduleSearchPage.departureStationSelectElement,
+    ).toContainText(expectedArrivalStation);
+    await expect(scheduleSearchPage.arrivalStationSelectElement).toContainText(
+        expectedDepartureStation,
+    );
+    await expect(scheduleSearchPage.date).toHaveValue(
+        dayjs().format('YYYY-MM-DD'),
+    );
+    await expect(scheduleSearchPage.time).toHaveValue(dayjs().format('HH:mm'));
+    await expect(scheduleSearchPage.departureTimeButton).toBeChecked();
+    await expect(scheduleSearchPage.arrivalTimeButton).not.toBeChecked();
 
     await logout();
     await expect(page).toHaveURL('/login');
