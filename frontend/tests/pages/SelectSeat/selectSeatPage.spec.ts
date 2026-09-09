@@ -71,6 +71,7 @@ test('座席を6席選択すると、それ以上選択できない', async ({ p
             .getByTestId('train-cars')
             .getByRole('button', { name: /^(9|11) 号車$/ }),
     ).toHaveAttribute('aria-current', 'true');
+    await selectSeatPage.waitForSeatMapToLoad();
     const trainCarInGreen =
         (await selectSeatPage.trainCars.first().textContent()) ?? '';
     const fifthSeat = (await selectSeatPage.emptySeat.first()) ?? '';
@@ -83,6 +84,7 @@ test('座席を6席選択すると、それ以上選択できない', async ({ p
             .getByTestId('train-cars')
             .getByRole('button', { name: /^(10|12) 号車$/ }),
     ).toHaveAttribute('aria-current', 'true');
+    await selectSeatPage.waitForSeatMapToLoad();
     const trainCarInGranClass =
         (await selectSeatPage.trainCars.first().textContent()) ?? '';
     const sixthSeat = (await selectSeatPage.emptySeat.first()) ?? '';

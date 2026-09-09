@@ -7,6 +7,7 @@ export class SelectSeatPage {
     readonly backButton: Locator;
     readonly trainCars: Locator;
     readonly emptySeat: Locator;
+    readonly seatsSkeleton: Locator;
     readonly name: Locator;
     readonly mailAddress: Locator;
     readonly accountCreateCheckBox: Locator;
@@ -36,6 +37,7 @@ export class SelectSeatPage {
         this.backButton = page.getByTestId('back-button-in-selectseat');
         this.trainCars = page.getByTestId('train-cars').getByRole('button');
         this.emptySeat = page.getByTestId('empty-seat');
+        this.seatsSkeleton = page.getByTestId('seats-by-train-car-skeleton');
         this.name = page.getByRole('textbox', { name: '予約者氏名' });
         this.mailAddress = page.getByRole('textbox', {
             name: 'メールアドレス',
@@ -83,6 +85,13 @@ export class SelectSeatPage {
 
     async clickBackButton() {
         await this.backButton.click();
+    }
+
+    async waitForSeatMapToLoad() {
+        await this.seatsSkeleton
+            .waitFor({ state: 'visible', timeout: 1000 })
+            .catch(() => {});
+        await this.seatsSkeleton.waitFor({ state: 'hidden' });
     }
 
     async selectSeat() {
