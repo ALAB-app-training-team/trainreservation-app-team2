@@ -258,7 +258,7 @@ test('復路で検索の検索画面設定：有効な予約', async ({
     await reservationListPage.goto();
     await expect(page).toHaveURL('/reservationList');
 
-    // 有効な予約情報を控える
+    // 有効な予約の情報を控える
     await reservationListPage.clickTicketButton();
     await expect(page).toHaveURL('/reservedTicket');
     const departureStationElement = reservedTicketPage.departureArrivalElement
@@ -317,7 +317,7 @@ test('復路で検索の検索画面設定：有効な予約', async ({
 
 test('復路で検索の検索画面設定：過去の予約', async ({
     page,
-    createPastReservation,
+    createReservation,
     commonLogin,
     logout,
 }) => {
@@ -327,10 +327,11 @@ test('復路で検索の検索画面設定：過去の予約', async ({
 
     await commonLogin();
     await expect(page).toHaveURL('/scheduleSearch');
-    await createPastReservation();
+    await createReservation();
     await reservationListPage.goto();
     await expect(page).toHaveURL('/reservationList');
-    // 過去の予約情報を控える
+
+    // 有効な予約の情報を控える
     await reservationListPage.clickTicketButton();
     await expect(page).toHaveURL('/reservedTicket');
     const departureStationElement = reservedTicketPage.departureArrivalElement
@@ -365,12 +366,7 @@ test('復路で検索の検索画面設定：過去の予約', async ({
     await expect(scheduleSearchPage.date).toHaveValue(
         dayjs().format('YYYY-MM-DD'),
     );
-    const expectedTimes = [dayjs(), dayjs().add(1, 'minute')].map((time) =>
-        time.format('HH:mm'),
-    );
-    await expect(scheduleSearchPage.time).toHaveValue(
-        new RegExp(`^(${expectedTimes.join('|')})$`),
-    );
+    await expect(scheduleSearchPage.time).toHaveValue(dayjs().format('HH:mm'));
     await expect(scheduleSearchPage.departureTimeButton).toBeChecked();
     await expect(scheduleSearchPage.arrivalTimeButton).not.toBeChecked();
 
