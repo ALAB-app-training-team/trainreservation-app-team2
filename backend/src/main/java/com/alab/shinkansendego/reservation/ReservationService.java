@@ -383,7 +383,7 @@ public class ReservationService {
      * @param rideDate      登録する乗車日付
      * @param scheduleCd    登録するダイヤCD
      * @param reserverName  予約者氏名(号車番号・席番号が最小の座席に設定する。nullの場合は割当を行わない)
-     * @param reserverMail  予約者メールアドレス(reserverNameがnullの場合は使用しない)
+     * @param reserverMail  予約者メールアドレス(nullの場合には割り当てを行わない)
      */
     private void insertReservedSeatAndReservedSeatSection(
         UUID reservationId,
@@ -526,7 +526,7 @@ public class ReservationService {
             changedReservation.getSeats(), sectionCds,
             changedReservation.getRideDate(),
             changedReservation.getScheduleCd(),
-            null, null
+            session.getName(), session.getMail()
         );
 
         List<DepartureArrivalTimeEntity> schedules = departureArrivalTimeRepository.findByScheduleCd(changedReservation.getScheduleCd());
