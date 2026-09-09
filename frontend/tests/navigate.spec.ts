@@ -171,9 +171,11 @@ test('navigate-アカウントログイン全機能', async ({
     await reservationListPage.clickChangeButton();
     await reservationListPage.clickChangeSeatConfirmButton();
     await expect(page).toHaveURL('/selectSeat');
-    await page
-        .getByRole('heading', { name: '1号車' })
-        .waitFor({ state: 'visible' });
+    await expect(
+        page
+            .getByTestId('train-cars')
+            .getByRole('button', { name: '1 号車', exact: true }),
+    ).toHaveAttribute('aria-current', 'true');
     await selectSeatPage.selectSeat();
     await selectSeatPage.clickUpdateButton();
     await expect(page.getByText('予約変更確認')).toBeVisible();

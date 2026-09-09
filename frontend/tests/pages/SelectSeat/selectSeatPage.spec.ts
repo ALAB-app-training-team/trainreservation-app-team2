@@ -56,7 +56,7 @@ test('座席を6席選択すると、それ以上選択できない', async ({ p
         .click();
     await expect(
         page.getByTestId('train-cars').getByRole('button', { name: '2' }),
-    ).toHaveClass(/bg-primary-light/);
+    ).toHaveAttribute('aria-current', 'true');
     await page.getByText('2号車').waitFor({ state: 'visible' });
     const thirdSeat = (await selectSeatPage.emptySeat.first()) ?? '';
     const thirdSeatText = await thirdSeat.textContent();
@@ -69,9 +69,8 @@ test('座席を6席選択すると、それ以上選択できない', async ({ p
     await expect(
         page
             .getByTestId('train-cars')
-            .getByRole('button', { name: /^(9|11)$/ }),
-    ).toHaveClass(/bg-primary-light/);
-    await page.getByText(/^(9|11)号車$/).waitFor({ state: 'visible' });
+            .getByRole('button', { name: /^(9|11) 号車$/ }),
+    ).toHaveAttribute('aria-current', 'true');
     const trainCarInGreen =
         (await selectSeatPage.trainCars.first().textContent()) ?? '';
     const fifthSeat = (await selectSeatPage.emptySeat.first()) ?? '';
@@ -82,9 +81,8 @@ test('座席を6席選択すると、それ以上選択できない', async ({ p
     await expect(
         page
             .getByTestId('train-cars')
-            .getByRole('button', { name: /^(10|12)$/ }),
-    ).toHaveClass(/bg-primary-light/);
-    await page.getByText(/^(10|12)号車$/).waitFor({ state: 'visible' });
+            .getByRole('button', { name: /^(10|12) 号車$/ }),
+    ).toHaveAttribute('aria-current', 'true');
     const trainCarInGranClass =
         (await selectSeatPage.trainCars.first().textContent()) ?? '';
     const sixthSeat = (await selectSeatPage.emptySeat.first()) ?? '';
@@ -106,10 +104,10 @@ test('座席を6席選択すると、それ以上選択できない', async ({ p
         '2号車' + fourthSeatText,
     );
     await expect(page.getByTestId('selected-seats')).toContainText(
-        trainCarInGreen + '号車' + fifthSeatText,
+        trainCarInGreen + fifthSeatText,
     );
     await expect(page.getByTestId('selected-seats')).toContainText(
-        trainCarInGranClass + '号車' + sixthSeatText,
+        trainCarInGranClass + sixthSeatText,
     );
     // ６席以上選択できないことを確認する
     await expect(

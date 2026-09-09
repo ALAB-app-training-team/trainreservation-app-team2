@@ -71,9 +71,11 @@ test('タイトル表示：予約完了時は予約完了、予約確認のゲ�
     await reservationListPage.clickChangeSeatConfirmButton();
     await expect(page).toHaveURL('/selectSeat');
     await expect(page.getByText('座席が選択されていません')).not.toBeVisible();
-    await page
-        .getByRole('heading', { name: '1号車' })
-        .waitFor({ state: 'visible' });
+    await expect(
+        page
+            .getByTestId('train-cars')
+            .getByRole('button', { name: '1 号車', exact: true }),
+    ).toHaveAttribute('aria-current', 'true');
     await selectSeatPage.selectSeat();
     await selectSeatPage.clickUpdateButton();
     await selectSeatPage.clickUpdateConfirmButton();
@@ -137,9 +139,11 @@ test('戻るボタン表示有無：予約確認のアカウントログイン�
     await reservationListPage.clickChangeSeatConfirmButton();
     await expect(page).toHaveURL('/selectSeat');
     await expect(page.getByText('座席が選択されていません')).not.toBeVisible();
-    await page
-        .getByRole('heading', { name: '1号車' })
-        .waitFor({ state: 'visible' });
+    await expect(
+        page
+            .getByTestId('train-cars')
+            .getByRole('button', { name: '1 号車', exact: true }),
+    ).toHaveAttribute('aria-current', 'true');
     await selectSeatPage.selectSeat();
     await selectSeatPage.clickUpdateButton();
     await selectSeatPage.clickUpdateConfirmButton();

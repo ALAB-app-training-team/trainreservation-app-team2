@@ -41,7 +41,7 @@ export class SelectSeatPage {
             name: 'メールアドレス',
         });
         this.accountCreateCheckBox = page.getByRole('checkbox', {
-            name: 'このメールアドレスでアカウントを作成する',
+            name: 'このメールアドレスでアカウントを 作成する',
         });
         this.password = page.getByRole('textbox', {
             name: 'パスワード',
@@ -76,7 +76,7 @@ export class SelectSeatPage {
             name: '変更を確定する',
         });
         this.loginButton = page.getByRole('button', {
-            name: 'ログインして氏名・メールアドレスを省略',
+            name: 'ログインして 氏名・メールアドレスを省略',
         });
         this.reservationSheetButton = page.getByTestId('reservation-sheet');
     }
