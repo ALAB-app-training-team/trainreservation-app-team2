@@ -12,6 +12,7 @@ export function useReservationSelectItemConfig(
     // 有効
     const isEnabled = departureDate >= now;
 
+    const isActiveReservation = !isDeleted && isEnabled;
     const canCancelReservation = !isDeleted && isEnabled;
     const canUpdateReservation = !isDeleted && isEnabled;
     const canCheckReservation = !isDeleted && isEnabled;
@@ -19,6 +20,7 @@ export function useReservationSelectItemConfig(
     const showThreeDotsMenu = canCancelReservation || canUpdateReservation;
 
     return {
+        isActiveReservation,
         canCancelReservation,
         canUpdateReservation,
         canCheckReservation,

@@ -18,7 +18,9 @@ export function useSearchRequestDto({
         initialDto?.date || dayjs().format('YYYY-MM-DD'),
     );
     const [time, setTime] = useState<string>(
-        initialDto?.time || dayjs().format('HH:mm'),
+        initialDto?.time
+            ? initialDto.time.slice(0, 5)
+            : dayjs().format('HH:mm'),
     );
     const [departureStation, setDepartureStation] = useState<string>(
         initialDto?.departureStationCd || stations[0].stationCd,
