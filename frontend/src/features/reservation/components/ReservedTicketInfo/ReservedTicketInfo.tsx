@@ -48,7 +48,7 @@ export function ReservedTicketInfo({ ticketInfo }: ReservedTicketInfoProps) {
                         </div>
                         <div className="flex items-center gap-2 text-xl font-bold">
                             <FaClock />
-                            <div>
+                            <div data-testid="ride-date">
                                 {formatter.format(
                                     new Date(ticketInfo.rideDate),
                                 )}
