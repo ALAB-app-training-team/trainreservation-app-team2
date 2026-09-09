@@ -15,7 +15,7 @@ public final class EmailUtils {
     }
 
     public static final String LOGIN_PATH = "/login";
-    public static final String GUESTLOGIN_PATH = "/reservationGuestLogin?reservationId=";
+    public static final String TICKET_PATH = "/reservationGuestLogin?reservationId=";
     public static final String SUBJECT = "[予約完了] 予約内容のご案内";
     public static final String CHANGE_SUBJECT = "[予約変更] 予約変更内容のご案内";
     public static final String CANCEL_SUBJECT = "[予約キャンセル] 予約キャンセル内容のご案内";
@@ -166,7 +166,7 @@ public final class EmailUtils {
     }
 
     public static String guestLoginUrlFormatter(String baseUrl, UUID reservationId) {
-        return baseUrl + GUESTLOGIN_PATH + reservationId;
+        return baseUrl + TICKET_PATH + reservationId;
     }
 
     public static String ticketUrlFormatter(String baseUrl, ReservationEmailRequestParams params) {
