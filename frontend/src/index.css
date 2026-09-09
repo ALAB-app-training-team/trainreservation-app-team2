@@ -54,6 +54,9 @@
     /* ---------- 状態 ---------- */
     --color-danger: light-dark(oklch(57.7% 0.245 27.325), #fca5a5);
     --color-danger-subtle: light-dark(oklch(93.6% 0.032 17.717), #3f1d1d);
+    /* 塗り。text-white と組み合わせて 6.5:1。--color-danger のダーク値（#fca5a5）は
+       文字色用の淡い赤なので、塗りには使わずこちらを両モード共通で使う */
+    --color-danger-solid: #b91c1c;
     --color-warning: light-dark(#9a3412, #fdba74);
     --color-warning-subtle: light-dark(oklch(95.4% 0.038 75.164), #3d2a12);
     --color-success: light-dark(#15803d, #86efac);
@@ -93,8 +96,8 @@
     --color-KK: #3e4aea;
     /* はくたか */
     --color-HT: #4da9ff;
-    /* あさま */
-    --color-AS: #4dffe1;
+    /* あさま。白アイコンとのコントラストが1.3:1程度と低かったため明度を落とした（白地 3.7:1） */
+    --color-AS: #009688;
 }
 
 * {

@@ -37,7 +37,7 @@ export function AccountDeleteConfirmModal({
                     type="button"
                     disabled={isSubmitting}
                     onClick={onClick}
-                    className="w-full rounded-lg bg-red-500 p-2 text-white"
+                    className="bg-danger-solid w-full rounded-lg p-2 text-white"
                 >
                     はい
                 </button>

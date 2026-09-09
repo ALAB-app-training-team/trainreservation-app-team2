@@ -136,7 +136,7 @@ export function ScheduleSearchForm({
                                 children={
                                     <div className="border-primary-ink inline-flex items-center overflow-hidden rounded border">
                                         <label
-                                            className={`cursor-pointer p-1 text-sm has-[:focus-visible]:ring-2 has-[:focus-visible]:ring-gray-900 has-[:focus-visible]:ring-inset ${!searchRequestDto.isArrivalTime ? 'bg-primary text-white' : 'bg-surface-subtle'}`}
+                                            className={`cursor-pointer p-1 text-sm has-[:focus-visible]:ring-2 has-[:focus-visible]:ring-heading has-[:focus-visible]:ring-inset ${!searchRequestDto.isArrivalTime ? 'bg-primary text-white' : 'bg-surface-subtle'}`}
                                         >
                                             <input
                                                 type="radio"
@@ -151,7 +151,7 @@ export function ScheduleSearchForm({
                                             出発
                                         </label>
                                         <label
-                                            className={`cursor-pointer p-1 text-sm has-[:focus-visible]:ring-2 has-[:focus-visible]:ring-gray-900 has-[:focus-visible]:outline-none has-[:focus-visible]:ring-inset ${searchRequestDto.isArrivalTime ? 'bg-primary text-white' : 'bg-surface-subtle'}`}
+                                            className={`cursor-pointer p-1 text-sm has-[:focus-visible]:ring-2 has-[:focus-visible]:ring-heading has-[:focus-visible]:outline-none has-[:focus-visible]:ring-inset ${searchRequestDto.isArrivalTime ? 'bg-primary text-white' : 'bg-surface-subtle'}`}
                                         >
                                             <input
                                                 type="radio"
@@ -182,6 +182,7 @@ export function ScheduleSearchForm({
                                     className={`flex flex-col gap-2 ${
                                         isExpanded ? '' : 'opacity-50'
                                     }`}
+                                    inert={!isExpanded}
                                 >
                                     <div className="flex w-full flex-col justify-between md:flex-row">
                                         <SeatTypeAndPassengersSelect
