@@ -1685,7 +1685,7 @@ public class ReservationServiceTest {
         }
 
         @Test
-        @DisplayName("変更後の席に利用者の割り当てだけが残るとき、その割り当てを保持し予約者を追加しない")
+        @DisplayName("変更後の席に利用者の割り当てが残るとき、その割り当てを保持し予約者を追加しない")
         void putReservedSeat_withRemainingCompanionAssignmentOnly_keepsAssignmentAndDoesNotAssignReserver() {
             // 変更前: 予約者の席(SEAT01001) + 同行者の席(SEAT01002) → 変更後: 同行者の席を残し、予約者の席を別の席(SEAT01003)に変更
             ReserveRequestDto request = new ReserveRequestDto("THK01", LocalDate.of(2026, 6, 1), "THK01", "THK09", "", "", "", List.of(new ReserveRequestDto.SelectedSeatDto("E5SER01", "CAR01", "SEAT01002", 5000), new ReserveRequestDto.SelectedSeatDto("E5SER01", "CAR01", "SEAT01003", 5000)));
@@ -1754,6 +1754,73 @@ public class ReservationServiceTest {
                 () -> assertEquals(1, savedSeats.size()),
                 () -> assertEquals(account.getName(), findSavedSeat(savedSeats, "SEAT01002").getName()),
                 () -> assertEquals(account.getMail(), findSavedSeat(savedSeats, "SEAT01002").getMail()),
+                () -> assertEquals(List.of(reserverSeat), deletedSeats)
+            );
+        }
+
+        @Test
+        @DisplayName("変更後に残る座席が新規座席より前方にあるとき、残る座席に予約者が割り当てられ、新規座席には割り当てられない")
+        void putReservedSeat_withLeavedSeatLowerThanNewSeat_assignsReserverToLeavedSeat() {
+            // 変更前: 予約者の席(SEAT01003, 1号車3番A) + 未割り当ての席(SEAT01001, 1号車1番A) → 変更後: SEAT01001を残し、予約者の席をSEAT01005(1号車5番A)に変更
+            // 変更後の席のうち最小となるのは残る側のSEAT01001
+            ReserveRequestDto request = new ReserveRequestDto("THK01", LocalDate.of(2026, 6, 1), "THK01", "THK09", "", "", "", List.of(new ReserveRequestDto.SelectedSeatDto("E5SER01", "CAR01", "SEAT01001", 5000), new ReserveRequestDto.SelectedSeatDto("E5SER01", "CAR01", "SEAT01005", 5000)));
+            ReservedSeatEntity reserverSeat = buildReservedSeatBeforeChange("E5SER01", 1, "SEAT01003", 3, "A", account.getName(), account.getMail());
+            ReservedSeatEntity leavedSeat = buildReservedSeatBeforeChange("E5SER01", 1, "SEAT01001", 1, "A", null, null);
+            Optional<ReservationEntity> reservation = buildAccountReservation(Set.of(reserverSeat, leavedSeat));
+            mockPutReservationSuccess(request, reservation);
+            when(trainCarRepo.findById("E5SER01")).thenReturn(Optional.of(buildTrainCar("E5SER01", 1)));
+            when(seatRepo.findById("SEAT01005")).thenReturn(Optional.of(buildSeatEntity("SEAT01005", 5, "A")));
+
+            service.putReservedSeat(reservationId1, request, session);
+
+            List<ReservedSeatEntity> savedSeats = captureSavedReservedSeats();
+            List<ReservedSeatEntity> deletedSeats = captureDeletedReservedSeats();
+            assertAll(
+                () -> assertEquals(account.getName(), leavedSeat.getName()),
+                () -> assertEquals(account.getMail(), leavedSeat.getMail()),
+                () -> assertEquals(1, savedSeats.size()),
+                () -> assertNull(findSavedSeat(savedSeats, "SEAT01005").getName()),
+                () -> assertNull(findSavedSeat(savedSeats, "SEAT01005").getMail()),
+                () -> assertEquals(List.of(reserverSeat), deletedSeats)
+            );
+        }
+
+        @Test
+        @DisplayName("座席を減らすだけの変更で残る座席が未割り当てのとき、残る座席に予約者が割り当てられる")
+        void putReservedSeat_withOnlyRemovalAndUnassignedLeavedSeat_assignsReserverToLeavedSeat() {
+            // 変更前: 予約者の席(SEAT01001) + 未割り当ての席(SEAT01002) → 変更後: SEAT01002のみ（新規追加なし）
+            ReserveRequestDto request = new ReserveRequestDto("THK01", LocalDate.of(2026, 6, 1), "THK01", "THK09", "", "", "", List.of(new ReserveRequestDto.SelectedSeatDto("E5SER01", "CAR01", "SEAT01002", 5000)));
+            ReservedSeatEntity reserverSeat = buildReservedSeatBeforeChange("E5SER01", 1, "SEAT01001", 1, "A", account.getName(), account.getMail());
+            ReservedSeatEntity leavedSeat = buildReservedSeatBeforeChange("E5SER01", 1, "SEAT01002", 1, "B", null, null);
+            Optional<ReservationEntity> reservation = buildAccountReservation(Set.of(reserverSeat, leavedSeat));
+            mockPutReservationSuccess(request, reservation);
+
+            service.putReservedSeat(reservationId1, request, session);
+
+            List<ReservedSeatEntity> deletedSeats = captureDeletedReservedSeats();
+            assertAll(
+                () -> assertEquals(account.getName(), leavedSeat.getName()),
+                () -> assertEquals(account.getMail(), leavedSeat.getMail()),
+                () -> assertEquals(List.of(reserverSeat), deletedSeats)
+            );
+        }
+
+        @Test
+        @DisplayName("座席を減らすだけの変更で残る座席に同行者が割り当てられているとき、その割り当てを保持し予約者を追加しない")
+        void putReservedSeat_withOnlyRemovalAndCompanionLeavedSeat_keepsAssignmentAndDoesNotAssignReserver() {
+            // 変更前: 予約者の席(SEAT01001) + 同行者の席(SEAT01002) → 変更後: SEAT01002のみ（新規追加なし）
+            ReserveRequestDto request = new ReserveRequestDto("THK01", LocalDate.of(2026, 6, 1), "THK01", "THK09", "", "", "", List.of(new ReserveRequestDto.SelectedSeatDto("E5SER01", "CAR01", "SEAT01002", 5000)));
+            ReservedSeatEntity reserverSeat = buildReservedSeatBeforeChange("E5SER01", 1, "SEAT01001", 1, "A", account.getName(), account.getMail());
+            ReservedSeatEntity companionSeat = buildReservedSeatBeforeChange("E5SER01", 1, "SEAT01002", 1, "B", seat2.getName(), seat2.getMail());
+            Optional<ReservationEntity> reservation = buildAccountReservation(Set.of(reserverSeat, companionSeat));
+            mockPutReservationSuccess(request, reservation);
+
+            service.putReservedSeat(reservationId1, request, session);
+
+            List<ReservedSeatEntity> deletedSeats = captureDeletedReservedSeats();
+            assertAll(
+                () -> assertEquals(seat2.getName(), companionSeat.getName()),
+                () -> assertEquals(seat2.getMail(), companionSeat.getMail()),
                 () -> assertEquals(List.of(reserverSeat), deletedSeats)
             );
         }
