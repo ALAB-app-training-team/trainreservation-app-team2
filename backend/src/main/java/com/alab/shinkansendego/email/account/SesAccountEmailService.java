@@ -113,7 +113,7 @@ public class SesAccountEmailService implements AccountEmailService {
                 .destination(Destination.builder().toAddresses(params.getAccountMail()).build())
                 .content(EmailContent.builder()
                     .simple(msg -> msg
-                        .subject(Content.builder().data(EmailUtils.ACCOUNT_CHANGED_SUBJECT).charset("UTF-8").build())
+                        .subject(Content.builder().data(EmailUtils.PASSWORD_CHANGED_SUBJECT).charset("UTF-8").build())
                         .body(Body.builder().text(Content.builder().data(body).charset("UTF-8").build()).build())
                     )
                     .build()
