@@ -560,8 +560,7 @@ public class ReservationService {
             oldTotalAmount,
             account.getName(),
             oldReservation,
-            assignedReservedSeats,
-            false
+            assignedReservedSeats
         ));
 
         return reservationId;
@@ -658,8 +657,7 @@ public class ReservationService {
             oldTotalAmount,
             account.getName(),
             oldReservation,
-            assignedReservedSeats,
-            false
+            assignedReservedSeats
         ));
 
         return reservationId;
