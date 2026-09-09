@@ -41,7 +41,7 @@ public final class EmailUtils {
         座席：%s
         お支払い合計：%,d 円
 
-        ■アプリログインURL
+        ■チケットURL
         %s
 
         またのご利用をお待ちしております。
@@ -60,7 +60,7 @@ public final class EmailUtils {
         座席：%s
         お支払い合計：%s
 
-        ■アプリログインURL
+        ■チケットURL
         %s
 
         またのご利用をお待ちしております。
@@ -80,7 +80,7 @@ public final class EmailUtils {
         手数料：%,d 円
         払戻金額：%,d 円
 
-        ■アプリログインURL
+        ■チケットURL
         %s
 
         またのご利用をお待ちしております。
@@ -169,7 +169,7 @@ public final class EmailUtils {
         return baseUrl + GUESTLOGIN_PATH + reservationId;
     }
 
-    public static String loginUrlFormatter(String baseUrl, ReservationEmailRequestParams params) {
+    public static String ticketUrlFormatter(String baseUrl, ReservationEmailRequestParams params) {
         return Boolean.TRUE.equals(params.getIsGuest())
             ? guestLoginUrlFormatter(baseUrl, params.getReservationId())
             : baseUrl + LOGIN_PATH;
