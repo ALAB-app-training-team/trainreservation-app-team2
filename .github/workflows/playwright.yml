@@ -44,6 +44,13 @@ jobs:
             - name: Run Playwright tests
               run: npx playwright test
               working-directory: ./frontend
+              env:
+                  TEST_DB_HOST: localhost
+                  TEST_DB_PORT: "5432"
+                  TEST_DB_NAME: postgres
+                  TEST_DB_USER: appuser
+                  TEST_DB_PASSWORD: localpassword
+                  TEST_API_BASE_URL: http://localhost:8080
             - uses: actions/upload-artifact@v4
               if: ${{ !cancelled() }}
               with:
