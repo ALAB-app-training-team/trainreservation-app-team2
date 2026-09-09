@@ -14,6 +14,7 @@ createRoot(document.getElementById('root')!).render(
             <App />
             <Toaster
                 position="top-center"
+                theme="system"
                 toastOptions={{
                     classNames: {
                         toast: 'md:!w-96 !p-5',

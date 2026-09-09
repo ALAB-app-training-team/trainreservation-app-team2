@@ -24,8 +24,9 @@
     /* 塗り。text-white と組み合わせて 4.6:1。ダークでも暗いまま維持する
        （明るくすると上に載る白文字が AA を落とすため） */
     --color-primary: #008803;
-    /* 面の上に置くブランド色の文字・枠線。ダークでは明度を上げる */
-    --color-primary-ink: light-dark(#008803, #4ec95f);
+    /* 面の上に置くブランド色の文字・枠線。ダークでは明度を上げる
+       白地 7.13:1 / primary-light 地 6.35:1（旧 #008803 は primary-light 地 4.13:1 で AA 未達だった） */
+    --color-primary-ink: light-dark(#166534, #4ec95f);
     /* 淡いブランド面（検索フォーム・入力欄の地） */
     --color-primary-light: light-dark(#e9f5e9, #16281a);
     --color-primary-mid-light: light-dark(#b2d9b2, #4d8a5c);
@@ -54,9 +55,11 @@
     /* ---------- 状態 ---------- */
     --color-danger: light-dark(oklch(57.7% 0.245 27.325), #fca5a5);
     --color-danger-subtle: light-dark(oklch(93.6% 0.032 17.717), #3f1d1d);
-    --color-warning: light-dark(oklch(70.5% 0.213 47.604), #fdba74);
+    /* 白地 7.31:1 / -subtle 地 6.37:1（旧 #ff6900 は白地 2.88:1 で AA 未達だった） */
+    --color-warning: light-dark(#9a3412, #fdba74);
     --color-warning-subtle: light-dark(oklch(95.4% 0.038 75.164), #3d2a12);
-    --color-success: light-dark(oklch(62.7% 0.194 149.214), #86efac);
+    /* 白地 5.02:1（旧 #00a63e は白地 3.21:1 で AA 未達だった） */
+    --color-success: light-dark(#15803d, #86efac);
     --color-success-subtle: light-dark(oklch(96.2% 0.044 156.743), #133a22);
 
     /* ---------- 席種 ----------
