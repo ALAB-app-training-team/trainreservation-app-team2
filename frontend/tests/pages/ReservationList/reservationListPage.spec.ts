@@ -242,7 +242,7 @@ test('復路で検索の表示有無：有効・過去では表示あり、キ�
     await expect(page).toHaveURL('/login');
 });
 
-test('復路で検索の検索画面設定：有効な予約', async ({
+test('復路で検索の検索画面設定：有効な予約は到着日時を出発日時として設定する', async ({
     page,
     createReservation,
     commonLogin,
@@ -258,31 +258,25 @@ test('復路で検索の検索画面設定：有効な予約', async ({
     await reservationListPage.goto();
     await expect(page).toHaveURL('/reservationList');
 
-    // 有効な予約の情報を控える
+    // 有効の予約情報を控える
     await reservationListPage.clickTicketButton();
     await expect(page).toHaveURL('/reservedTicket');
-    const departureStationElement = reservedTicketPage.departureArrivalElement
-        .locator('label[for="departureInfo"]')
-        .nth(2);
-    const arrivalTimeElement = reservedTicketPage.departureArrivalElement
-        .locator('label[for="arrivalInfo"]')
-        .nth(1);
-    const arrivalStationElement = reservedTicketPage.departureArrivalElement
-        .locator('label[for="arrivalInfo"]')
-        .nth(2);
-    const rideDateElement = reservedTicketPage.rideDateElement.first();
-    await expect(rideDateElement).toBeVisible();
-    await expect(departureStationElement).toBeVisible();
-    await expect(arrivalTimeElement).toBeVisible();
-    await expect(arrivalStationElement).toBeVisible();
+    await expect(reservedTicketPage.rideDateElement).toBeVisible();
+    await expect(reservedTicketPage.departureStationElement).toBeVisible();
+    await expect(reservedTicketPage.arrivalTimeElement).toBeVisible();
+    await expect(reservedTicketPage.arrivalStationElement).toBeVisible();
     const expectedDepartureStation = (
-        await departureStationElement.innerText()
+        await reservedTicketPage.departureStationElement.innerText()
     ).trim();
-    const expectedArrivalTime = (await arrivalTimeElement.innerText()).trim();
+    const expectedArrivalTime = (
+        await reservedTicketPage.arrivalTimeElement.innerText()
+    ).trim();
     const expectedArrivalStation = (
-        await arrivalStationElement.innerText()
+        await reservedTicketPage.arrivalStationElement.innerText()
     ).trim();
-    const rideDateText = (await rideDateElement.innerText()).trim();
+    const rideDateText = (
+        await reservedTicketPage.rideDateElement.innerText()
+    ).trim();
     const rideDateMatch = rideDateText.match(/(\d{4})年(\d{1,2})月(\d{1,2})日/);
     if (!rideDateMatch) {
         throw new Error(`乗車日の形式が不正です: ${rideDateText}`);
@@ -315,7 +309,7 @@ test('復路で検索の検索画面設定：有効な予約', async ({
     await expect(page).toHaveURL('/login');
 });
 
-test('復路で検索の検索画面設定：過去の予約', async ({
+test('復路で検索の検索画面設定：過去の予約はデフォルト日時を出発日時として設定する', async ({
     page,
     createReservation,
     commonLogin,
@@ -331,22 +325,16 @@ test('復路で検索の検索画面設定：過去の予約', async ({
     await reservationListPage.goto();
     await expect(page).toHaveURL('/reservationList');
 
-    // 有効な予約の情報を控える
+    // 過去の予約情報を控える
     await reservationListPage.clickTicketButton();
     await expect(page).toHaveURL('/reservedTicket');
-    const departureStationElement = reservedTicketPage.departureArrivalElement
-        .locator('label[for="departureInfo"]')
-        .nth(2);
-    const arrivalStationElement = reservedTicketPage.departureArrivalElement
-        .locator('label[for="arrivalInfo"]')
-        .nth(2);
-    await expect(departureStationElement).toBeVisible();
-    await expect(arrivalStationElement).toBeVisible();
+    await expect(reservedTicketPage.departureStationElement).toBeVisible();
+    await expect(reservedTicketPage.arrivalStationElement).toBeVisible();
     const expectedDepartureStation = (
-        await departureStationElement.innerText()
+        await reservedTicketPage.departureStationElement.innerText()
     ).trim();
     const expectedArrivalStation = (
-        await arrivalStationElement.innerText()
+        await reservedTicketPage.arrivalStationElement.innerText()
     ).trim();
 
     // 復路で検索

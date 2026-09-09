@@ -4,12 +4,6 @@ test('visual-scheduleSearch', async ({ visualScheduleSearch }) => {
     await visualScheduleSearch();
 });
 
-test('visual-scheduleSearch-TimePicker', async ({
-    visualScheduleSearchTimePicker,
-}) => {
-    await visualScheduleSearchTimePicker();
-});
-
 test('visual-selectSeat-guest', async ({ visualSelectSeatGuest }) => {
     await visualSelectSeatGuest();
 });

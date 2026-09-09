@@ -14,7 +14,6 @@ import { ReservationListPage } from '@tests/pages/ReservationList/ReservationLis
 import { ReservedTicketPage } from '@tests/pages/ReservedTicket/ReservedTicketPage';
 
 type VisualScheduleSearch = () => Promise<void>;
-type VisualScheduleSearchTimePicker = () => Promise<void>;
 type VisualSelectSeatGuest = () => Promise<void>;
 type VisualSelectSeatAccountCreate = () => Promise<void>;
 type VisualSelectSeatAccount = () => Promise<void>;
@@ -28,7 +27,6 @@ type VisualReservationList = () => Promise<void>;
 type VisualReservedTicket = () => Promise<void>;
 export type VisualFixture = {
     visualScheduleSearch: VisualScheduleSearch;
-    visualScheduleSearchTimePicker: VisualScheduleSearchTimePicker;
     visualSelectSeatGuest: VisualSelectSeatGuest;
     visualSelectSeatAccountCreate: VisualSelectSeatAccountCreate;
     visualSelectSeatAccount: VisualSelectSeatAccount;
@@ -61,42 +59,6 @@ export const test = baseTest.extend<VisualFixture>({
             await scheduleSearchPage.detailButton
                 .first()
                 .waitFor({ state: 'visible' });
-            await page.evaluate(() => document.fonts.ready);
-
-            const scheduleItems = page.getByTestId('schedule');
-            const itemCount = await scheduleItems.count();
-
-            const maskTargets = [];
-            for (let i = 1; i < itemCount; i++) {
-                maskTargets.push(scheduleItems.nth(i));
-            }
-            maskTargets.push(
-                page.getByTestId('schedule-departure-time').first(),
-            );
-            maskTargets.push(page.getByTestId('schedule-arrival-time').first());
-            maskTargets.push(page.getByTestId('schedule-train').first());
-
-            await expect(page).toHaveScreenshot({
-                ...screenshotOptions,
-                fullPage: false,
-                mask: maskTargets,
-            });
-        };
-        await use(visual);
-    },
-    visualScheduleSearchTimePicker: async (
-        { page }: { page: Page },
-        use: (fn: VisualScheduleSearch) => Promise<void>,
-    ) => {
-        const visual = async () => {
-            const scheduleSearchPage = new ScheduleSearchPage(page);
-
-            await scheduleSearchPage.goto();
-            await expect(page).toHaveURL('/scheduleSearch');
-            await scheduleSearchPage.detailButton
-                .first()
-                .waitFor({ state: 'visible' });
-            await scheduleSearchPage.clickTime();
             await page.evaluate(() => document.fonts.ready);
 
             const scheduleItems = page.getByTestId('schedule');

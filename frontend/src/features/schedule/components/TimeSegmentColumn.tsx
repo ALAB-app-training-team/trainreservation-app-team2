@@ -26,7 +26,7 @@ export function TimeSegmentColumn({
                     key={value}
                     data-selected={value === selectedValue}
                     onClick={() => onSelect(value)}
-                    className={`flex size-[44px] cursor-pointer items-center justify-center md:size-auto md:p-1 ${
+                    className={`flex size-[44px] min-h-[44px] min-w-[44px] cursor-pointer items-center justify-center md:size-auto md:p-1 ${
                         value === selectedValue
                             ? 'bg-primary text-white'
                             : 'hover:bg-primary-light'
