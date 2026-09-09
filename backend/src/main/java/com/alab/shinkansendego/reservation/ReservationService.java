@@ -606,13 +606,20 @@ public class ReservationService {
             List<String> sectionCds = getSectionCdList(changedReservation.getScheduleCd(),
                 changedReservation.getDepartureStationCd(),
                 changedReservation.getArrivalStationCd());
-
+            List<ReservedSeatEntity> leavedSeats = reservedSeats.stream()
+                .filter(reserved -> changedReservation.getSeats().stream().anyMatch(changed -> isSame(changed, reserved)))
+                .toList();
+            boolean hasRemainingAssignment = leavedSeats.stream()
+                .anyMatch(seat -> StringUtils.hasLength(seat.getMail()) && StringUtils.hasLength(seat.getName()));
+            System.out.println("aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa:" + hasRemainingAssignment);
+            String reserverName = hasRemainingAssignment ? null : account.getName();
+            String reserverMail = hasRemainingAssignment ? null : account.getMail();
             insertReservedSeatAndReservedSeatSection(
                 reservationId,
                 postSeats, sectionCds,
                 changedReservation.getRideDate(),
                 changedReservation.getScheduleCd(),
-                null, null
+                reserverName, reserverMail
             );
         }
         entityManager.flush();
