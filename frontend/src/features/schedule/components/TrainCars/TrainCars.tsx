@@ -96,7 +96,7 @@ export function TrainCars({
                 </>
             ) : (
                 <>
-                    <p className="py-4 pl-2 text-sm text-gray-400">
+                    <p className="py-4 pl-2 text-sm text-fg-muted">
                         {ERROR_MESSAGE.NO_TRAIN}
                     </p>
                 </>
