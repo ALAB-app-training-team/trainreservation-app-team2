@@ -1,13 +1,18 @@
 name: Claude Code
+
 on:
   issue_comment:
     types: [created]
   pull_request_review_comment:
     types: [created]
+  pull_request:
+    types: [opened, ready_for_review]
 
 jobs:
-  claude:
-    if: contains(github.event.comment.body, '@claude')
+  mention:
+    if: |
+      (github.event_name == 'issue_comment' || github.event_name == 'pull_request_review_comment') &&
+      contains(github.event.comment.body, '@claude')
     runs-on: ubuntu-latest
     timeout-minutes: 30
     permissions:
@@ -15,19 +20,43 @@ jobs:
       pull-requests: write
       issues: write
       id-token: write
-      actions: read
     steps:
       - uses: actions/checkout@v6
         with:
-          fetch-depth: 1
+          fetch-depth: 0
       - uses: anthropics/claude-code-action@v1
         with:
           claude_code_oauth_token: ${{ secrets.CLAUDE_CODE_OAUTH_TOKEN }}
-          additional_permissions: |
-            actions: read
           use_sticky_comment: false
           claude_args: |
             --model claude-sonnet-5
             --max-turns 30
             --allowedTools "Bash(git diff:*),Bash(git status:*),Bash(git log:*),Bash(git show:*)"
-            --append-system-prompt "CIでlint・型チェック・テストは実行済み。依存関係のインストール、ビルド、テスト実行は行わず、静的レビューに徹すること。"
+            --append-system-prompt "lint・型チェック・テストの実行と結果確認は別のCIワークフローに委ねる。依存関係のインストール、ビルド、lint・型チェック・テストの実行、CIの状態・ログの確認や完了待ちは行わず、コード差分と関連コードの静的レビューに専念すること。CIの完了・成功は仮定しない。整形・スタイルや単純なlint違反は指摘対象外とし、バグ、境界値・異常系の抜け、認可漏れ、入力検証、機微情報のログ出力、N+1、後方互換性の問題を優先する。テストで検出できる問題でも、コードから発見した実害のあるバグは指摘する。各指摘は path/to/file.ts:42 形式で位置を示し、問題の理由・影響・修正案を1〜2文で日本語で簡潔に述べる。差分を取得できないなどレビューを完了できなかった場合は、理由とともに「レビュー未完了」と明記し、「重大な問題なし」とは報告しない。レビューを完了し、重大な問題がなければその旨を明言する。"
+
+  auto-review:
+    if: |
+      github.event_name == 'pull_request' &&
+      github.event.pull_request.draft == false
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    permissions:
+      contents: read
+      pull-requests: write
+      issues: write
+      id-token: write
+    steps:
+      - uses: actions/checkout@v6
+        with:
+          ref: ${{ github.event.pull_request.head.sha }}
+          fetch-depth: 0
+      - uses: anthropics/claude-code-action@v1
+        with:
+          claude_code_oauth_token: ${{ secrets.CLAUDE_CODE_OAUTH_TOKEN }}
+          track_progress: true
+          prompt: "このプルリクエストをレビューしてください。"
+          claude_args: |
+            --model claude-sonnet-5
+            --max-turns 30
+            --allowedTools "Bash(git diff:*),Bash(git status:*),Bash(git log:*),Bash(git show:*)"
+            --append-system-prompt "レビュー対象は git diff ${{ github.event.pull_request.base.sha }}...${{ github.event.pull_request.head.sha }} の差分とする。lint・型チェック・テストの実行と結果確認は別のCIワークフローに委ねる。依存関係のインストール、ビルド、lint・型チェック・テストの実行、CIの状態・ログの確認や完了待ちは行わず、コード差分と関連コードの静的レビューに専念すること。CIの完了・成功は仮定しない。整形・スタイルや単純なlint違反は指摘対象外とし、バグ、境界値・異常系の抜け、認可漏れ、入力検証、機微情報のログ出力、N+1、後方互換性の問題を優先する。テストで検出できる問題でも、コードから発見した実害のあるバグは指摘する。各指摘は path/to/file.ts:42 形式で位置を示し、問題の理由・影響・修正案を1〜2文で日本語で簡潔に述べる。差分を取得できないなどレビューを完了できなかった場合は、理由とともに「レビュー未完了」と明記し、「重大な問題なし」とは報告しない。レビューを完了し、重大な問題がなければその旨を明言する。"
