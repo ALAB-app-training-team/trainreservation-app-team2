@@ -60,7 +60,7 @@ export function TrainCars({
             {filteredCars.length > 0 ? (
                 <>
                     <div
-                        className="flex gap-2 overflow-x-auto"
+                        className="flex scrollbar-thin gap-2 overflow-x-auto"
                         data-testid="train-cars"
                     >
                         {filteredCars.map((car) => (
