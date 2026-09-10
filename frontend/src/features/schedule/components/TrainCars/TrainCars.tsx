@@ -45,8 +45,8 @@ export function TrainCars({
                         onClick={() => handleSeatTypeChange(code)}
                         className={`flex-1 rounded-full px-4 py-2 text-center text-sm font-medium transition-all duration-200 ${
                             activeSeatTypeCd === code
-                                ? 'cursor-default bg-white font-semibold text-gray-900'
-                                : 'cursor-pointer hover:text-gray-900'
+                                ? 'bg-surface text-fg cursor-default font-semibold'
+                                : 'hover:text-fg cursor-pointer'
                         }`}
                     >
                         {trainCars?.find(
@@ -75,7 +75,7 @@ export function TrainCars({
                                 }
                                 className={`flex h-16 min-w-16 flex-col items-center justify-center rounded-2xl border-2 p-3 transition-all duration-200 md:h-20 md:min-w-20 ${
                                     activeTrainCarCd === car.trainCarCd
-                                        ? 'border-primary bg-primary-light text-primary font-bold shadow-sm'
+                                        ? 'border-primary-ink bg-primary-light text-primary-ink font-bold shadow-sm'
                                         : 'border-primary-light hover:bg-primary-light'
                                 }`}
                             >
@@ -99,7 +99,7 @@ export function TrainCars({
                 </>
             ) : (
                 <>
-                    <p className="py-4 pl-2 text-sm text-gray-400">
+                    <p className="py-4 pl-2 text-sm text-fg-muted">
                         {ERROR_MESSAGE.NO_TRAIN}
                     </p>
                 </>

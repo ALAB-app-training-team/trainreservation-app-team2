@@ -24,7 +24,7 @@ export function TotalSeatsFare({
             </div>
             <div className="flex flex-wrap items-center gap-2">
                 <h2 className="my-0!">お支払い合計：</h2>
-                <span className="text-primary ml-auto text-xl font-bold">
+                <span className="text-primary-ink ml-auto text-xl font-bold">
                     {!prevFare && `￥${totalFare.toLocaleString()}`}
                 </span>
             </div>
@@ -38,7 +38,7 @@ export function TotalSeatsFare({
                         <span>変更後</span>
                         <span>￥{totalFare.toLocaleString()}</span>
                     </div>
-                    <div className="text-primary flex justify-between text-xl font-bold">
+                    <div className="text-primary-ink flex justify-between text-xl font-bold">
                         <span>差額</span>
                         <span>￥{(totalFare - prevFare).toLocaleString()}</span>
                     </div>

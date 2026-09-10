@@ -51,11 +51,11 @@ export function GuestLoginInput({
                     autoComplete={autoComplete}
                     placeholder={placeHolder}
                     readOnly={readOnly}
-                    className="focus:border-primary bg-primary-light w-full rounded-xl p-2 pl-10 outline-none focus:border-2"
+                    className="focus:border-primary-ink bg-primary-light w-full rounded-xl p-2 pl-10 outline-none focus:border-2"
                 />
             </div>
             {validMessage !== '' && (
-                <p className="text-left text-sm text-red-600">{validMessage}</p>
+                <p className="text-danger text-left text-sm">{validMessage}</p>
             )}
         </div>
     );

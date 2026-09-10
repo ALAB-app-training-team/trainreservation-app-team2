@@ -22,7 +22,7 @@ export function UpdatedReservationInfo({
                     <span className="text-xl font-bold">
                         {dayjs(detail.date).format('YYYY年MM月DD日')}
                     </span>
-                    <span className="text-gray-500">
+                    <span className="text-fg-muted">
                         {detail.trainTypeName}
                     </span>
                 </div>
