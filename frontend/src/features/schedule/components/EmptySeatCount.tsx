@@ -66,28 +66,16 @@ export function EmptySeatCount({
 
     return (
         <>
-            <div className="flex flex-row items-end gap-1 md:flex-col">
-                {seatTypeList.map((seat) => {
-                    const seatColorClass =
-                        seat.count === 0
-                            ? 'border-line-strong bg-surface-inset'
-                            : {
-                                  'reserved-seat':
-                                      'border-reserved-seat text-reserved-seat',
-                                  'green-seat':
-                                      'border-green-seat text-green-seat',
-                                  'gc-seat': 'border-gc-seat text-gc-seat',
-                              }[seat.name] || '';
-                    return (
-                        <div
-                            key={seat.label}
-                            className={`flex w-24 flex-col items-center justify-between rounded-3xl border p-2 sm:w-32 sm:flex-row sm:gap-2 sm:rounded-full sm:px-2 sm:py-0.5 ${seatColorClass}`}
-                        >
-                            {seat.label}
-                            {getLeftSeatsLayout(seat)}
-                        </div>
-                    );
-                })}
+            <div className="flex gap-1">
+                {seatTypeList.map((seat) => (
+                    <div
+                        key={seat.label}
+                        className={`flex items-center gap-1 p-2 md:gap-2 md:px-2 md:py-0.5`}
+                    >
+                        {seat.label}
+                        {getLeftSeatsLayout(seat)}
+                    </div>
+                ))}
             </div>
         </>
     );
