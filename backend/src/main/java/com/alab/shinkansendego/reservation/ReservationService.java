@@ -621,10 +621,10 @@ public class ReservationService {
             );
         }
 
-        List<ReservedSeatEntity> leavedSeats = reservedSeats.stream()
+        List<ReservedSeatEntity> remainingSeats = reservedSeats.stream()
             .filter(reserved -> changedReservation.getSeats().stream().anyMatch(changed -> isSame(changed, reserved)))
             .toList();
-        List<ReservedSeatEntity> seatsAfterChange = new ArrayList<>(leavedSeats);
+        List<ReservedSeatEntity> seatsAfterChange = new ArrayList<>(remainingSeats);
         seatsAfterChange.addAll(postedSeats);
         boolean hasRemainingAssignment = seatsAfterChange.stream()
             .anyMatch(seat -> StringUtils.hasLength(seat.getMail()) && StringUtils.hasLength(seat.getName()));
