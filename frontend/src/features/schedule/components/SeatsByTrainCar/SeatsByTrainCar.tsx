@@ -28,6 +28,7 @@ export function SeatsByTrainCar({
     checkReservedSeats,
 }: SeatsByTrainCarProps) {
     const { seats } = useSeatsByTrainCar(seatsRequestDto);
+    const trainCarNumber = seats[0]?.trainCarNumber;
     const isDown = scheduleInfoDto.direction === TRAIN_DIRECTION.DOWN;
     const columns: string[] = Array.from(
         new Set(seats.map((seat) => seat.seatColumn)),
@@ -78,6 +79,11 @@ export function SeatsByTrainCar({
     return (
         <>
             <div className="mx-auto flex flex-col items-center gap-4">
+                {trainCarNumber !== undefined && (
+                    <h2 className="sr-only" aria-live="polite">
+                        {trainCarNumber}号車の座席
+                    </h2>
+                )}
                 <div className="flex flex-col items-center gap-2">
                     <div className="bg-primary-light flex items-center gap-2 rounded-full px-4 py-1 text-sm">
                         <FiArrowUp />
