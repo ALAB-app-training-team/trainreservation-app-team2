@@ -367,7 +367,7 @@ export const test = baseTest.extend<VisualFixture>({
             maskTargets.push(
                 page
                     .locator(
-                        '.flex.items-center.gap-1.rounded-lg.px-2.border-primary.border',
+                        '.flex.items-center.gap-1.rounded-lg.px-2.border-primary-ink.border',
                     )
                     .nth(0),
             );
@@ -420,7 +420,7 @@ export const test = baseTest.extend<VisualFixture>({
                         .nth(0),
                     page
                         .locator(
-                            '.flex.items-center.gap-1.rounded-lg.px-2.border-primary-light.text-primary.bg-green-100.border-2',
+                            '.flex.items-center.gap-1.rounded-lg.px-2.border-primary-light.text-primary-ink.bg-success-subtle.border-2',
                         )
                         .nth(0),
                 ],
