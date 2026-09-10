@@ -110,7 +110,7 @@ export function ScheduleItem({
                 schedule.greenSeats === 0 &&
                 schedule.gcSeats === 0
             }
-            className="border-primary-light group flex w-full flex-row flex-wrap items-center justify-start gap-4 rounded-2xl border-2 p-8 transition-colors duration-200 ease-out enabled:hover:border-primary md:items-center"
+            className="border-primary-light group enabled:hover:border-primary flex w-full flex-row flex-wrap items-start justify-start gap-4 rounded-2xl border-2 p-4 transition-colors duration-200 ease-out sm:p-8 md:items-center"
         >
             <div
                 data-testid="schedule-train"
@@ -122,7 +122,7 @@ export function ScheduleItem({
                 {(() => {
                     const trainTypeName = schedule.trainTypeName.split(/(\d+)/);
                     return (
-                        <div className="w-full min-w-20 text-left">
+                        <div className="text-left whitespace-nowrap">
                             <div className="text-lg font-extrabold">
                                 {trainTypeName[0]}
                             </div>
@@ -171,7 +171,7 @@ export function ScheduleItem({
                     <div>{arrivalStationName}</div>
                 </div>
             </div>
-            <div className="order-2 flex flex-wrap items-center gap-2 md:order-3 md:w-55 md:flex-col md:items-end">
+            <div className="order-2 flex flex-col items-end gap-2 md:order-3">
                 <EmptySeatCount
                     reservedSeats={schedule.reservedSeats}
                     greenSeats={schedule.greenSeats}
