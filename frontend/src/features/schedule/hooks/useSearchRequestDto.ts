@@ -1,9 +1,9 @@
 import dayjs from 'dayjs';
 import { useMemo, useState } from 'react';
 
+import { useSearchRequestValidation } from '@/features/schedule/hooks/useSearchRequestValidation';
 import type { SearchRequestDto } from '@/features/schedule/types/SearchRequestDto';
 import type { Station } from '@/features/schedule/types/Station';
-import { VALIDATION_MESSAGE } from '@/shared/constants/ValidationMessages';
 
 type useSearchRequestDtoProps = {
     stations: Station[];
@@ -79,51 +79,8 @@ export function useSearchRequestDto({
         setArrivalStation(currentDepartureStation);
     };
 
-    type InvalidMessage = {
-        field: 'date' | 'arrivalStation';
-        message: string;
-    };
-
-    const maxDate = dayjs().add(1, 'month').endOf(`day`).toDate();
-    const minDate = dayjs().startOf(`day`).toDate();
-
-    const isDateEmpty: boolean = date === '';
-    const isDateOutsideOneMonth: boolean =
-        new Date(date) < minDate || new Date(date) > maxDate;
-    const isStationSame: boolean = departureStation === arrivalStation;
-
-    const isInvalid: boolean =
-        isDateEmpty || isDateOutsideOneMonth || isStationSame;
-
-    const invalidMessages: InvalidMessage[] = useMemo(() => {
-        const messages: InvalidMessage[] = [];
-        if (isDateEmpty) {
-            messages.push({
-                field: 'date',
-                message: VALIDATION_MESSAGE.EMPTY_DATE,
-            });
-        }
-        if (isDateOutsideOneMonth) {
-            messages.push({
-                field: 'date',
-                message: VALIDATION_MESSAGE.OUTSIDE_ONE_MONTH,
-            });
-        }
-        if (isStationSame) {
-            messages.push({
-                field: 'arrivalStation',
-                message: VALIDATION_MESSAGE.SAME_STATION,
-            });
-        }
-
-        return messages;
-    }, [date, departureStation, arrivalStation]);
-
-    const getFieldError = (field: string) => {
-        return (
-            invalidMessages.find((item) => item.field === field)?.message ?? ''
-        );
-    };
+    const { isInvalid, getFieldError, maxDate, minDate } =
+        useSearchRequestValidation(date, departureStation, arrivalStation);
 
     const handleNextDate = () => {
         setDate((currentDate) =>
