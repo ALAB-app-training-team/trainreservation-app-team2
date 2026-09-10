@@ -565,6 +565,8 @@ export function SelectSeats() {
                     onClick={handleReserve}
                     onRequestClose={onRequestReserveConfirmModalClose}
                     isSubmitting={isSubmitting}
+                    selectedSeats={selectedSeats}
+                    scheduleInfo={scheduleInfoDto}
                 />
             </CustomModal>
             <CustomModal

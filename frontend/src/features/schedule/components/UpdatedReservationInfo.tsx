@@ -8,11 +8,13 @@ import type { ScheduleInfoDto } from '@/features/schedule/types/ScheduleInfoDto'
 type UpdatedReservationInfo = {
     detail: ScheduleInfoDto;
     seats: ReservedSeatDto[];
+    showTotalFare?: boolean;
 };
 
 export function UpdatedReservationInfo({
     detail,
     seats,
+    showTotalFare = true,
 }: UpdatedReservationInfo) {
     dayjs.extend(customParseFormat);
     const totalFare = seats.reduce(
@@ -35,12 +37,14 @@ export function UpdatedReservationInfo({
                             {detail.trainTypeName}
                         </span>
                     </div>
-                    <div className="hidden md:inline">
-                        <span>合計 </span>
-                        <span className="font-bold">
-                            ￥{totalFare.toLocaleString()}
-                        </span>
-                    </div>
+                    {showTotalFare && (
+                        <div className="hidden md:inline">
+                            <span>合計 </span>
+                            <span className="font-bold">
+                                ￥{totalFare.toLocaleString()}
+                            </span>
+                        </div>
+                    )}
                 </div>
 
                 <div className="flex gap-3 text-lg font-bold">
@@ -60,12 +64,14 @@ export function UpdatedReservationInfo({
                 </div>
             </div>
             <ReservedSeats id={'updateReservation'} title="" seats={seats} />
-            <div className="border-primary-mid-light flex justify-between border-t pt-2 md:hidden">
-                <span>合計</span>
-                <span className="font-bold">
-                    ￥{totalFare.toLocaleString()}
-                </span>
-            </div>
+            {showTotalFare && (
+                <div className="border-primary-mid-light flex justify-between border-t pt-2 md:hidden">
+                    <span>合計</span>
+                    <span className="font-bold">
+                        ￥{totalFare.toLocaleString()}
+                    </span>
+                </div>
+            )}
         </div>
     );
 }
