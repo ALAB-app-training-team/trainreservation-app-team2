@@ -1,5 +1,5 @@
 import { Fragment, useEffect, useMemo } from 'react';
-import { FiArrowDown, FiArrowUp } from 'react-icons/fi';
+import { FiArrowUp } from 'react-icons/fi';
 
 import type { ReservedSeatDto } from '@/features/reservation/types/ReservedSeatDto';
 import { Seat } from '@/features/schedule/components/Seat';
@@ -28,12 +28,14 @@ export function SeatsByTrainCar({
     checkReservedSeats,
 }: SeatsByTrainCarProps) {
     const { seats } = useSeatsByTrainCar(seatsRequestDto);
+    const trainCarNumber = seats[0]?.trainCarNumber;
+    const isDown = scheduleInfoDto.direction === TRAIN_DIRECTION.DOWN;
     const columns: string[] = Array.from(
         new Set(seats.map((seat) => seat.seatColumn)),
     ).sort();
     const rows: number[] = Array.from(
         new Set(seats.map((seat) => seat.seatNumber)),
-    ).sort((a, b) => a - b);
+    ).sort((a, b) => (isDown ? b - a : a - b));
 
     const layoutColumns: string[] = useMemo(() => {
         if (columns.length === 5) {
@@ -54,6 +56,10 @@ export function SeatsByTrainCar({
         }
         return columns;
     }, [columns]);
+
+    const displayColumns: string[] = isDown
+        ? [...layoutColumns].reverse()
+        : layoutColumns;
     const isOwnReservedSeat = (seat: SeatResponseDto) =>
         reservedSeats?.some(
             (reserved) =>
@@ -72,28 +78,26 @@ export function SeatsByTrainCar({
 
     return (
         <>
-            <div className="flex w-full flex-col items-start justify-center gap-4">
-                <h2 className="text-left">{seats[0].trainCarNumber}号車</h2>
+            <div className="mx-auto flex flex-col items-center gap-4">
+                {trainCarNumber !== undefined && (
+                    <h2 className="sr-only" aria-live="polite">
+                        {trainCarNumber}号車の座席
+                    </h2>
+                )}
                 <div className="flex flex-col items-center gap-2">
                     <div className="bg-primary-light flex items-center gap-2 rounded-full px-4 py-1 text-sm">
-                        {scheduleInfoDto.direction === TRAIN_DIRECTION.UP ? (
-                            <>
-                                <FiArrowUp />
-                                {`${scheduleInfoDto.arrivalStationName}駅方面（進行方向）`}
-                            </>
-                        ) : (
-                            `${scheduleInfoDto.departureStationName}駅方面`
-                        )}
+                        <FiArrowUp />
+                        {`${scheduleInfoDto.arrivalStationName}駅方面（進行方向）`}
                     </div>
                     <div
                         className={`grid gap-2`}
                         style={{
-                            gridTemplateColumns: `repeat(${layoutColumns.length}, minmax(0, 1fr))`,
+                            gridTemplateColumns: `repeat(${displayColumns.length}, minmax(0, 1fr))`,
                         }}
                     >
                         {rows.map((row) => (
                             <Fragment key={row}>
-                                {layoutColumns.map((column, colIndex) => {
+                                {displayColumns.map((column, colIndex) => {
                                     if (column === '') {
                                         return (
                                             <div
@@ -144,19 +148,9 @@ export function SeatsByTrainCar({
                         ))}
                     </div>
                     <div className="bg-primary-light flex items-center gap-2 rounded-full px-4 py-1 text-sm">
-                        {scheduleInfoDto.direction === TRAIN_DIRECTION.UP ? (
-                            <span>
-                                {scheduleInfoDto.departureStationName}駅方面
-                            </span>
-                        ) : (
-                            <>
-                                <FiArrowDown />
-                                <span>
-                                    {scheduleInfoDto.arrivalStationName}
-                                    駅方面（進行方向）
-                                </span>
-                            </>
-                        )}
+                        <span>
+                            {scheduleInfoDto.departureStationName}駅方面
+                        </span>
                     </div>
                 </div>
                 <div className="flex gap-4">

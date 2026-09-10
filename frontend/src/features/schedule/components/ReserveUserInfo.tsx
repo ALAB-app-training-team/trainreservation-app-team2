@@ -68,7 +68,7 @@ export function ReserveUserInfo({
                             icon={IoMailOutline}
                             getFieldError={getFieldError}
                         />
-                        <div className="flex gap-2 bg-transparent text-left">
+                        <div className="flex items-center gap-4 bg-transparent">
                             <input
                                 type="checkbox"
                                 id="isAccountCreate"
@@ -76,10 +76,12 @@ export function ReserveUserInfo({
                                 onChange={(e) =>
                                     setIsAccountCreate(e.target.checked)
                                 }
-                                className="accent-primary"
+                                className="accent-primary focus-visible:ring-primary focus-visible:ring-1 focus-visible:ring-offset-2"
                             />
                             <label htmlFor="isAccountCreate">
-                                このメールアドレスでアカウントを作成する
+                                このメールアドレスでアカウントを
+                                <br className="hidden md:block" />
+                                作成する
                             </label>
                         </div>
                         {isAccountCreate && (
