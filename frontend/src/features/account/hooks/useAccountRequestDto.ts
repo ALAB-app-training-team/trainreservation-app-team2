@@ -6,6 +6,7 @@ import { toast } from 'sonner';
 import apiClient from '@/api/apiClient';
 import { ENDPOINTS } from '@/api/routes';
 import type { AccountForm } from '@/features/account/types/AccountForm';
+import type { LoginResponseDto } from '@/features/account/types/LoginResponseDto';
 import type { PasswordCheck } from '@/features/account/types/PasswordCheck';
 import { ERROR_MESSAGE } from '@/shared/constants/ErrorMessages';
 import { VALIDATION_MESSAGE } from '@/shared/constants/ValidationMessages';
@@ -166,15 +167,18 @@ export function useAccountRequestDto(isPasswordUpdateForAdmin: boolean) {
         if (isSubmitting) return;
         setIsSubmitting(true);
         try {
-            await apiClient.post<void>(ENDPOINTS.ACCOUNT(), {
-                name: removeWhiteSpace(accountForm.name),
-                mail: removeWhiteSpace(accountForm.mail),
-                password: accountForm.password,
-            });
-            toast.success(
-                'アカウント登録が完了しました。ログインしてください。',
+            const response = await apiClient.post<LoginResponseDto>(
+                ENDPOINTS.ACCOUNT(),
+                {
+                    name: removeWhiteSpace(accountForm.name),
+                    mail: removeWhiteSpace(accountForm.mail),
+                    password: accountForm.password,
+                },
             );
-            navigate('/login', { replace: true });
+            localStorage.setItem('name', response.data.name);
+            localStorage.setItem('role', response.data.role);
+            toast.success('アカウント登録が完了しました。');
+            navigate('/scheduleSearch', { replace: true });
         } catch (error) {
             if (
                 axios.isAxiosError(error) &&

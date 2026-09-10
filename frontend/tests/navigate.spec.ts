@@ -129,13 +129,17 @@ test('navigate-アカウントログイン全機能', async ({
     await expect(page).toHaveURL('/accountCreate');
     await accountCreatePage.inputCreateRamdomAccountInfo();
     await accountCreatePage.clickCreateButton();
-    await expect(page).toHaveURL('/login');
+    await expect(page).toHaveURL('/scheduleSearch');
+    await expect(scheduleSearchPage.header.userName).toBeVisible();
+    await logout();
 
     // 作成したアカウントでログイン
+    await loginPage.goto();
     await loginPage.fillMailAddress(await accountCreatePage.ramdomMail);
     await loginPage.fillPassword('Password1');
     await loginPage.clickLoginButton();
     await expect(page).toHaveURL('/scheduleSearch');
+    await expect(scheduleSearchPage.header.userName).toBeVisible();
     await logout();
 
     // ログイン、検索～予約
@@ -302,9 +306,12 @@ test('navigate-管理者ログイン-管理機能', async ({
     await accountCreatePage.fillPassword('Password1');
     await accountCreatePage.fillPasswordCheck('Password1');
     await accountCreatePage.clickCreateButton();
-    await expect(page).toHaveURL('/login');
+    await expect(page).toHaveURL('/scheduleSearch');
+    await expect(scheduleSearchPage.header.userName).toBeVisible();
+    await logout();
 
     // ユーザがPassword1でログインできること
+    await loginPage.goto();
     await loginPage.fillMailAddress(accountMailAddress);
     await loginPage.fillPassword('Password1');
     await loginPage.clickLoginButton();
