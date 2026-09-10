@@ -1716,7 +1716,7 @@ public class ReservationServiceTest {
     }
 
     @Test
-    @DisplayName("変更前の席が一部残っていても、その席が未割り当てで、割り当て済みの席がすべて変更対象なら、予約者が自動割り当てされる")
+    @DisplayName("変更前で割り当て済みの座席があっても、変更後の座席がすべて未割り当てなら、予約者が自動割り当てされる")
     void putReservedSeat_withRemainingUnassignedSeatAndAllAssignedSeatsChanged_assignsReserverAutomatically() {
         // 変更前: 予約者の席(SEAT01001) + 未割り当ての席(SEAT01005) → 変更後: 未割り当ての席を残し、予約者の席を別の席(SEAT01002)に変更
         // 変更後の席のうち最小となるのは新規登録するSEAT01002（1号車2番A）
@@ -2007,4 +2007,3 @@ public class ReservationServiceTest {
         assertEquals("ArrivalTime is not found", ex.getMessage());
     }
 }
-
