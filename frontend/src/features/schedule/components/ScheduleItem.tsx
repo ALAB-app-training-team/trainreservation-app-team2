@@ -84,7 +84,7 @@ export function ScheduleItem({
                 scheduleInfoDto,
                 searchRequestDto,
                 ...(reservationId && { reservationId }),
-                isChanging: isChanging,
+                isChanging,
                 isBack,
                 isFromReservedTicket: false,
                 ...(preChangeScheduleInfo && { preChangeScheduleInfo }),

@@ -28,10 +28,18 @@ export function useSearchRequestDto({
     const [arrivalStation, setArrivalStation] = useState<string>(
         initialDto?.arrivalStationCd || stations[1].stationCd,
     );
-    const [isArrivalTime, setIsArrivalTime] = useState<boolean>(false);
-    const [seatType, setSeatType] = useState<string>('-');
-    const [passengers, setPassengers] = useState<string>('-');
-    const [isOnlyAvailable, setIsOnlyAvailable] = useState<boolean>(true);
+    const [isArrivalTime, setIsArrivalTime] = useState<boolean>(
+        initialDto?.isArrivalTime ?? false,
+    );
+    const [seatType, setSeatType] = useState<string>(
+        initialDto?.seatType ?? '-',
+    );
+    const [passengers, setPassengers] = useState<string>(
+        initialDto?.passengers != null ? String(initialDto.passengers) : '-',
+    );
+    const [isOnlyAvailable, setIsOnlyAvailable] = useState<boolean>(
+        initialDto?.isOnlyAvailable ?? true,
+    );
     const isSeatTypeSpecified = seatType !== '-' && seatType !== '';
 
     const searchRequestDto: SearchRequestDto = useMemo<SearchRequestDto>(() => {
