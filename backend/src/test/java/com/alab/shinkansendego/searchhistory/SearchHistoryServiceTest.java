@@ -14,10 +14,12 @@ import java.time.LocalDate;
 import java.time.LocalTime;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 import java.util.UUID;
 
 import static org.junit.jupiter.api.Assertions.assertAll;
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.never;
 import static org.mockito.Mockito.times;
@@ -215,5 +217,27 @@ public class SearchHistoryServiceTest {
         assertEquals(historyId, result);
         verify(searchHistoryRepository, times(1)).delete(any());
         verify(searchHistoryRepository, times(1)).save(any());
+    }
+
+    @Test
+    @DisplayName("本人の検索履歴を削除できる")
+    void deleteSearchHistory_withOwnedHistory_deletesHistory() {
+        SearchHistoryEntity entity = createSearchHistoryEntity(1, "2026-08-03", "08:30:00", "THK01", "THK09", false);
+        UUID historyId = entity.getId();
+        when(searchHistoryRepository.findByIdAndAccountId(historyId, accountId)).thenReturn(Optional.of(entity));
+
+        service.deleteSearchHistory(historyId, accountId);
+
+        verify(searchHistoryRepository, times(1)).delete(entity);
+    }
+
+    @Test
+    @DisplayName("本人の検索履歴でない、または存在しない場合、例外が発生する")
+    void deleteSearchHistory_withNotOwnedOrNotFoundHistory_throwsIllegalArgumentException() {
+        UUID historyId = UUID.randomUUID();
+        when(searchHistoryRepository.findByIdAndAccountId(historyId, accountId)).thenReturn(Optional.empty());
+
+        assertThrows(IllegalArgumentException.class, () -> service.deleteSearchHistory(historyId, accountId));
+        verify(searchHistoryRepository, never()).delete(any());
     }
 }
