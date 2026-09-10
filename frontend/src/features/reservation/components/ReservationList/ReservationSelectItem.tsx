@@ -2,13 +2,11 @@ import dayjs from 'dayjs';
 import customParseFormat from 'dayjs/plugin/customParseFormat';
 import { useState } from 'react';
 import { BsQrCode } from 'react-icons/bs';
-import { FaClock, FaEdit, FaSearch } from 'react-icons/fa';
+import { FaEdit, FaSearch } from 'react-icons/fa';
 import { IoTrashOutline } from 'react-icons/io5';
-import { LuTicket } from 'react-icons/lu';
-import { MdMoreVert } from 'react-icons/md';
+import { MdAirlineSeatReclineExtra, MdMoreVert } from 'react-icons/md';
 import { useNavigate } from 'react-router-dom';
 
-import { ReservedSeats } from '@/features/reservation/components/ReservedSeats';
 import {
     RESERVEDTICKET_MODE,
     RESERVEDTICKET_ROLE,
@@ -17,6 +15,17 @@ import { useReservationSelectItemConfig } from '@/features/reservation/hooks/use
 import type { ReservationResponseDto } from '@/features/reservation/types/ReservationResponseDto';
 import type { SearchRequestDto } from '@/features/schedule/types/SearchRequestDto';
 import { useOutsideClick } from '@/shared/hooks/useOutsideClick';
+
+dayjs.extend(customParseFormat);
+
+// 出発と到着は必ず同じ体裁にするため共通化する。
+// スマホは時刻の下に駅名を積み、PCは1行に並べる
+const TIME_BLOCK =
+    'flex min-w-0 flex-col text-left md:flex-row md:items-baseline md:gap-1.5';
+const TIME_TEXT = 'text-2xl leading-tight font-bold tabular-nums md:text-3xl';
+const STATION_TEXT = 'truncate text-sm md:text-base';
+
+const formatTime = (time: string) => dayjs(time, 'HH:mm:ss').format('HH:mm');
 
 type ReservationSelectItemProps = {
     details: ReservationResponseDto;
@@ -47,11 +56,6 @@ export function ReservationSelectItem({
         setIsMenuOpen(!isMenuOpen);
     };
 
-    const totalFare = details.reservedSeats.reduce(
-        (sum, seat) => sum + (seat.seatFare || 0),
-        0,
-    );
-
     const handleReservationDetail = () => {
         navigate('/reservedTicket', {
             state: {
@@ -78,65 +82,62 @@ export function ReservationSelectItem({
         });
     };
 
-    dayjs.extend(customParseFormat);
-
     return (
-        <div className="border-primary-light flex flex-col gap-2 rounded-2xl border-2 p-8">
-            <div className="flex-col">
-                <div className="flex">
-                    <div className="flex items-center gap-2">
-                        <LuTicket />
-                        <label>{details.trainTypeName}</label>
-                    </div>
-                </div>
-                <div className="flex py-2 text-xl font-bold">
-                    <label>
-                        {details.departureStationName} →{' '}
-                        {details.arrivalStationName}
-                    </label>
-                </div>
-            </div>
-            <div className="flex justify-between">
-                <div className="flex w-full flex-col items-start">
-                    <div className="flex items-center gap-2">
-                        <FaClock className="mt-0.5 md:mt-0" />
-                        <label>出発</label>
-                    </div>
-                    <label
-                        data-testid="ride-date"
-                        className="text-xl font-bold"
+        <div
+            data-testid="reservation-item"
+            className="border-primary-mid-light md:border-line-strong flex flex-col gap-2 rounded-2xl border-2 p-5 text-left md:flex-row md:items-center md:gap-6 md:rounded-xl md:border md:p-4"
+        >
+            <div className="flex items-center gap-3 md:grow">
+                <div className={TIME_BLOCK}>
+                    <span
+                        data-testid="list-departure-time"
+                        className={TIME_TEXT}
                     >
-                        {dayjs(details.rideDate).format('YYYY年MM月DD日')}
-                    </label>
-                    <label className="text-xl font-bold">
-                        {dayjs(details.departureTime, 'HH:mm:ss').format(
-                            'HH:mm',
-                        )}
-                    </label>
+                        {formatTime(details.departureTime)}
+                    </span>
+                    <span className={STATION_TEXT}>
+                        {details.departureStationName}
+                    </span>
                 </div>
-            </div>
-            <div className="border-primary-ink/20 border-b-2 py-2">
-                <ReservedSeats
-                    id="reservationList"
-                    title="座席"
-                    seats={details.reservedSeats}
+                {/* 出発と到着をつなぐ罫線。スマホは伸ばし、PCは固定幅 */}
+                <span
+                    aria-hidden="true"
+                    className="bg-primary-mid-light h-px grow md:w-8 md:grow-0"
                 />
-            </div>
-            <div className="flex flex-col justify-between gap-2 py-2 md:flex-row">
-                <div className="flex items-baseline">
-                    <div>お支払い合計：</div>
-                    <div
-                        data-testid="total-fare"
-                        className="text-primary-ink text-xl font-bold"
-                    >
-                        ￥{totalFare.toLocaleString()}
-                    </div>
+                <div className={TIME_BLOCK}>
+                    <span data-testid="list-arrival-time" className={TIME_TEXT}>
+                        {formatTime(details.arrivalTime)}
+                    </span>
+                    <span className={STATION_TEXT}>
+                        {details.arrivalStationName}
+                    </span>
                 </div>
-                <div className="flex w-full gap-2 md:w-auto md:justify-end">
+            </div>
+            <div className="flex items-center gap-2 md:shrink-0">
+                <MdAirlineSeatReclineExtra className="text-xl" />
+                <span>座席</span>
+                <span data-testid="seat-count">
+                    {details.reservedSeats.length}席
+                </span>
+            </div>
+            {/* きっぷのミシン目。両端の丸をカードの枠線に重ねて切り欠きに見せる。
+                -mx-[22px] は p-5(20px) + border-2(2px) を打ち消して枠線まで届かせる値 */}
+            <div
+                aria-hidden="true"
+                className="relative -mx-[22px] my-1 md:hidden"
+            >
+                <span className="bg-page absolute top-0 left-0 h-4 w-4 -translate-x-1/2 -translate-y-1/2 rounded-full" />
+                <span className="border-primary-mid-light mx-3 block border-t-2 border-dashed" />
+                <span className="bg-page absolute top-0 right-0 h-4 w-4 translate-x-1/2 -translate-y-1/2 rounded-full" />
+            </div>
+            <div className="flex shrink-0 items-center gap-2">
+                {/* スマホは44pxの3点リーダーと同じ行に収めるため、
+                    ボタンの左右余白とアイコンの字間を詰めている（PCは md: で元に戻す） */}
+                <div className="flex w-full gap-2 md:w-auto">
                     {canSearchReturinTrip && (
                         <button
                             onClick={handleSearchReturnTrip}
-                            className="border-primary-ink text-primary-ink flex w-full items-center justify-center gap-4 rounded-md border px-4 py-2 text-sm whitespace-nowrap md:w-auto"
+                            className="border-primary-ink text-primary-ink flex w-full items-center justify-center gap-1.5 rounded-md border px-2 py-2 text-sm whitespace-nowrap md:gap-4 md:px-4"
                         >
                             <FaSearch />
                             復路で検索
@@ -145,54 +146,55 @@ export function ReservationSelectItem({
                     {canCheckReservation && (
                         <button
                             onClick={handleReservationDetail}
-                            className="bg-primary flex w-full items-center justify-center gap-4 rounded-md px-4 py-2 text-sm whitespace-nowrap text-white"
+                            className="bg-primary flex w-full items-center justify-center gap-1.5 rounded-md px-2 py-2 text-sm whitespace-nowrap text-white md:gap-4 md:px-4"
                         >
                             <BsQrCode />
                             チケットを表示
                         </button>
                     )}
-                    {showThreeDotsMenu && (
-                        <div className="relative" ref={menuRef}>
-                            <button
-                                onClick={handleMenuOpen}
-                                className="text-primary-ink py-2"
-                                data-testid="three-dots-button"
-                            >
-                                <MdMoreVert />
-                            </button>
-                            {isMenuOpen && (
-                                <div className="bg-surface absolute top-full right-1 z-50 flex w-40 flex-col gap-2 rounded-md p-2 text-sm font-bold shadow-md">
-                                    <div className="flex w-full flex-col gap-2 text-left">
-                                        {canUpdateReservation && (
-                                            <button
-                                                onClick={() =>
-                                                    onChangeClicked(details)
-                                                }
-                                                className="hover:bg-surface-muted flex w-full items-center gap-4 px-4 py-2"
-                                                data-testid={'change-button'}
-                                            >
-                                                <FaEdit />
-                                                予約を変更
-                                            </button>
-                                        )}
-                                        {canCancelReservation && (
-                                            <button
-                                                onClick={() =>
-                                                    onRefundClicked(details)
-                                                }
-                                                className="hover:bg-surface-muted flex w-full items-center gap-4 px-4 py-2"
-                                                data-testid={'refund-button'}
-                                            >
-                                                <IoTrashOutline />
-                                                キャンセル
-                                            </button>
-                                        )}
-                                    </div>
-                                </div>
-                            )}
-                        </div>
-                    )}
                 </div>
+                {/* self-stretch でボタン列と同じ高さにし、メニューがボタンに被らないようにする */}
+                {showThreeDotsMenu && (
+                    <div
+                        className="relative flex shrink-0 items-center self-stretch"
+                        ref={menuRef}
+                    >
+                        {/* h-11 w-11 = 44px。タップ領域の下限を満たす大きさ */}
+                        <button
+                            onClick={handleMenuOpen}
+                            className="text-primary-ink hover:bg-surface-muted flex h-11 w-11 items-center justify-center rounded-md text-2xl transition"
+                            data-testid="three-dots-button"
+                            aria-label="予約の操作メニュー"
+                            aria-expanded={isMenuOpen}
+                        >
+                            <MdMoreVert />
+                        </button>
+                        {isMenuOpen && (
+                            <div className="bg-surface absolute top-full right-0 z-50 mt-1 flex w-40 flex-col gap-2 rounded-md p-2 text-left text-sm font-bold shadow-md">
+                                {canUpdateReservation && (
+                                    <button
+                                        onClick={() => onChangeClicked(details)}
+                                        className="hover:bg-surface-muted flex w-full items-center gap-4 px-4 py-2"
+                                        data-testid="change-button"
+                                    >
+                                        <FaEdit />
+                                        予約を変更
+                                    </button>
+                                )}
+                                {canCancelReservation && (
+                                    <button
+                                        onClick={() => onRefundClicked(details)}
+                                        className="hover:bg-surface-muted flex w-full items-center gap-4 px-4 py-2"
+                                        data-testid="refund-button"
+                                    >
+                                        <IoTrashOutline />
+                                        キャンセル
+                                    </button>
+                                )}
+                            </div>
+                        )}
+                    </div>
+                )}
             </div>
         </div>
     );

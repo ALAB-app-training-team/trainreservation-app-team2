@@ -10,6 +10,10 @@ type ReservedTicketInfoProps = {
 };
 
 export function ReservedTicketInfo({ ticketInfo }: ReservedTicketInfoProps) {
+    const totalFare = ticketInfo.reservedSeats.reduce(
+        (sum, seat) => sum + (seat.seatFare || 0),
+        0,
+    );
     const formatter = new Intl.DateTimeFormat('ja-JP', {
         year: 'numeric',
         month: 'long',
@@ -60,6 +64,15 @@ export function ReservedTicketInfo({ ticketInfo }: ReservedTicketInfoProps) {
                                 title="座席"
                                 seats={ticketInfo.reservedSeats}
                             />
+                        </div>
+                        <div className="border-primary-ink/20 flex items-baseline justify-between gap-2 border-t-2 pt-4">
+                            <span>お支払い合計</span>
+                            <span
+                                data-testid="total-fare"
+                                className="text-primary-ink text-xl font-bold tabular-nums"
+                            >
+                                ￥{totalFare.toLocaleString()}
+                            </span>
                         </div>
                     </div>
                 </div>

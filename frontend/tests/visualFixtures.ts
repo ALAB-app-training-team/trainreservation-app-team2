@@ -353,24 +353,21 @@ export const test = baseTest.extend<VisualFixture>({
             await reservationListPage.ticketButton
                 .first()
                 .waitFor({ state: 'visible' });
-            const listItems = page.locator(
-                '.border-primary-light.flex.flex-col.gap-2.rounded-2xl.border-2.p-8',
-            );
+            const listItems = page.getByTestId('reservation-item');
             const itemCount = await listItems.count();
 
             const maskTargets = [];
             for (let i = 1; i < itemCount; i++) {
                 maskTargets.push(listItems.nth(i));
             }
-            maskTargets.push(page.locator('.text-xl.font-bold').nth(1));
-            maskTargets.push(page.locator('.text-xl.font-bold').nth(2));
-            maskTargets.push(
-                page
-                    .locator(
-                        '.flex.items-center.gap-1.rounded-lg.px-2.border-primary-ink.border',
-                    )
-                    .nth(0),
-            );
+            // 予約ごとに変わる値はマスクする（乗車日・件数・出発時刻・到着時刻）。
+            // 乗車日と件数は日付グループごとの見出しに出るため全件マスクする。
+            // 時刻の testid が list- 始まりなのは、予約詳細画面の
+            // departure-time / arrival-time と衝突させないため
+            maskTargets.push(page.getByTestId('ride-date'));
+            maskTargets.push(page.getByTestId('ride-date-count'));
+            maskTargets.push(page.getByTestId('list-departure-time').nth(0));
+            maskTargets.push(page.getByTestId('list-arrival-time').nth(0));
             await page.evaluate(() => document.fonts.ready);
 
             await expect(page).toHaveScreenshot({
