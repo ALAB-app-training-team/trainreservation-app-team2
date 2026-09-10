@@ -15,19 +15,35 @@ export function UpdatedReservationInfo({
     seats,
 }: UpdatedReservationInfo) {
     dayjs.extend(customParseFormat);
+    const totalFare = seats.reduce(
+        (accumulator, seat) => accumulator + seat.seatFare,
+        0,
+    );
     return (
-        <div className={'border-primary-mid-light rounded-2xl border-2 p-3'}>
-            <div className="p-2">
-                <div className="flex gap-3">
-                    <span className="text-xl font-bold">
-                        {dayjs(detail.date).format('YYYY年MM月DD日')}
-                    </span>
-                    <span className="text-gray-500">
-                        {detail.trainTypeName}
-                    </span>
+        <div
+            className={
+                'border-primary-mid-light flex flex-col gap-1 rounded-2xl border-2 p-4'
+            }
+        >
+            <div>
+                <div className="flex justify-between">
+                    <div className="flex gap-3">
+                        <span className="text-base font-bold">
+                            {dayjs(detail.date).format('YYYY年MM月DD日')}
+                        </span>
+                        <span className="text-gray-500">
+                            {detail.trainTypeName}
+                        </span>
+                    </div>
+                    <div className="hidden md:inline">
+                        <span>合計 </span>
+                        <span className="font-bold">
+                            ￥{totalFare.toLocaleString()}
+                        </span>
+                    </div>
                 </div>
 
-                <div className="flex gap-3 text-2xl font-bold">
+                <div className="flex gap-3 text-lg font-bold">
                     <div className="flex-col">
                         {detail.departureStationName}
                         <br />
@@ -43,8 +59,13 @@ export function UpdatedReservationInfo({
                     </div>
                 </div>
             </div>
-
             <ReservedSeats id={'updateReservation'} title="" seats={seats} />
+            <div className="border-primary-mid-light flex justify-between border-t pt-2 md:hidden">
+                <span>合計</span>
+                <span className="font-bold">
+                    ￥{totalFare.toLocaleString()}
+                </span>
+            </div>
         </div>
     );
 }

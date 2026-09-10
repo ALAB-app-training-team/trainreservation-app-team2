@@ -25,15 +25,40 @@ export function UpdateConfirmModal({
     scheduleInfo,
     preChangeScheduleInfo,
 }: UpdateConfirmModalProps) {
+    const prevFare = reservedSeats.reduce(
+        (accumulator, seat) => accumulator + seat.seatFare,
+        0,
+    );
+    const newFare = selectedSeats.reduce(
+        (accumulator, seat) => accumulator + seat.seatFare,
+        0,
+    );
+    const fareDifference = newFare - prevFare;
+    const fareDifferenceLabel =
+        fareDifference > 0
+            ? '差額（追加でお支払い）'
+            : fareDifference < 0
+              ? '差額（払い戻し）'
+              : '差額';
+    const fareDifferenceAmount =
+        fareDifference < 0
+            ? `-￥${Math.abs(fareDifference).toLocaleString()}`
+            : `${fareDifference > 0 ? '+' : ''}￥${fareDifference.toLocaleString()}`;
+    const fareDifferenceColor =
+        fareDifference > 0
+            ? 'text-red-600'
+            : fareDifference < 0
+              ? 'text-primary'
+              : 'text-gray-900';
+
     return (
         <>
-            <div className="flex flex-col items-start justify-center gap-1 py-2">
+            <div className="flex flex-col items-start justify-center gap-1 pb-2">
                 <CustomModalTitle
                     title="予約変更確認"
                     onRequestClose={onRequestClose}
                     isSubmitting={isSubmitting}
                 />
-                <div>変更を確定しますか？</div>
             </div>
             <div className="flex flex-col gap-2">
                 <div className="font-bold">変更前</div>
@@ -60,7 +85,15 @@ export function UpdateConfirmModal({
                     }))}
                 />
             </div>
-            <div className="flex w-full items-center justify-end gap-4 p-2">
+            <div className="m-2 flex items-center justify-between rounded-lg bg-gray-50 px-4 py-2.5">
+                <span className="text-sm text-gray-500">
+                    {fareDifferenceLabel}
+                </span>
+                <span className={`text-lg font-bold ${fareDifferenceColor}`}>
+                    {fareDifferenceAmount}
+                </span>
+            </div>
+            <div className="flex w-full items-center justify-end gap-4 p-1">
                 <button
                     onClick={onRequestClose}
                     disabled={isSubmitting}
