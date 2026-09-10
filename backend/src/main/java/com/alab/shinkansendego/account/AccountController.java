@@ -84,12 +84,21 @@ public class AccountController {
      * アカウント新規作成メソッド
      *
      * @param request 登録するアカウント情報
-     * @return NoContent
+     * @param session ログインセッション
+     * @return 作成したアカウントのログインユーザー名
      */
     @PostMapping("account")
-    public ResponseEntity<Void> insertAccount(@Valid @RequestBody AccountRequestDto request) {
-        accountService.insertAccount(request);
-        return ResponseEntity.status(HttpStatus.CREATED).build();
+    public ResponseEntity<LoginResponseDto> insertAccount(
+        @Valid @RequestBody AccountRequestDto request,
+        HttpSession session
+    ) {
+        AccountEntity account = accountService.insertAccount(request);
+
+        AccountSessionDto accountSession = new AccountSessionDto(account.getId(), account.getMail(), account.getName());
+        List<GrantedAuthority> authorities = List.of(new SimpleGrantedAuthority(account.getRole()));
+        saveAccountToSession(session, accountSession, authorities);
+
+        return ResponseEntity.status(HttpStatus.CREATED).body(new LoginResponseDto(account.getName(), account.getRole()));
     }
 
     /**
