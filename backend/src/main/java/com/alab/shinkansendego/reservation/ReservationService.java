@@ -131,7 +131,6 @@ public class ReservationService {
             List<ReservedSeatDto> reservedSeatDtos = reservedSeatEntityMap
                 .getOrDefault(reservation.getId(), new ArrayList<>()).stream()
                 .sorted(SEAT_ORDER)
-
                 .map(seat -> new ReservedSeatDto(
                     seat.getId(),
                     seat.getTrainCar().getSeatType().getTrainCarType().getName(),
