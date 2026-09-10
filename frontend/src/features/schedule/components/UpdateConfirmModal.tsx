@@ -59,7 +59,7 @@ export function UpdateConfirmModal({
                     onRequestClose={onRequestClose}
                     isSubmitting={isSubmitting}
                 />
-                <p>変更を確定しますか？</p>
+                <div>変更を確定しますか？</div>
             </div>
             <div className="flex flex-col gap-2">
                 <div className="font-bold">変更前</div>
