@@ -35,7 +35,7 @@ export function PasswordInput({
         <div className="flex flex-col items-start">
             <label htmlFor={id}>{label}</label>
             <div className="flex w-full flex-col gap-2">
-                <div className="focus-within:border-primary bg-primary-light box-border flex w-full items-center justify-between gap-4 rounded-lg px-4 py-2 outline-none focus-within:border-2">
+                <div className="focus-within:border-primary-ink bg-primary-light box-border flex w-full items-center justify-between gap-4 rounded-lg px-4 py-2 outline-none focus-within:border-2">
                     <input
                         id={id}
                         type={type}
@@ -61,7 +61,7 @@ export function PasswordInput({
                 </div>
             </div>
             {getFieldError !== undefined && getFieldError?.(id) && (
-                <p className="text-left text-sm text-red-600">
+                <p className="text-danger text-left text-sm">
                     {getFieldError(id)}
                 </p>
             )}

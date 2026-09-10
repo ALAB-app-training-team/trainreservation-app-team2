@@ -23,6 +23,7 @@ export class ScheduleSearchPage {
     readonly passengersSelect: Locator;
     readonly isOnlyAvailableHint: Locator;
     readonly ticketUpdateToastButton: Locator;
+    readonly expandSearchOptionsButton: Locator;
 
     constructor(page: Page) {
         this.page = page;
@@ -63,6 +64,9 @@ export class ScheduleSearchPage {
         this.isOnlyAvailableHint = page.getByTestId('isOnlyAvailable-hint');
         this.ticketUpdateToastButton = page.getByRole('button', {
             name: '→チケットを更新する',
+        });
+        this.expandSearchOptionsButton = page.getByRole('button', {
+            name: '検索オプションを表示する',
         });
     }
 
@@ -144,5 +148,9 @@ export class ScheduleSearchPage {
 
     async clickTicketUpdateToastButton() {
         await this.ticketUpdateToastButton.click();
+    }
+
+    async clickExpandSearchOptionsButton() {
+        await this.expandSearchOptionsButton.click();
     }
 }

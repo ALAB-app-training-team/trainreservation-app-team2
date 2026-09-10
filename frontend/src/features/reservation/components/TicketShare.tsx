@@ -38,18 +38,18 @@ export function TicketShare({ shareUrl = '' }: TicketShareProps) {
 
             <CustomModal isOpen={isOpen} onRequestClose={handleClose}>
                 <div className="relative">
-                    <h3 className="mb-2 text-lg font-bold text-gray-900">
+                    <h3 className="text-fg mb-2 text-lg font-bold">
                         チケットを共有
                     </h3>
-                    <div className="mb-4 text-sm text-gray-600">
+                    <div className="text-fg-secondary mb-4 text-sm">
                         以下のリンクをコピーして共有できます
                     </div>
-                    <div className="flex items-center gap-2 rounded-lg border border-gray-200 bg-gray-50 p-2">
+                    <div className="border-line bg-surface-subtle flex items-center gap-2 rounded-lg border p-2">
                         <input
                             type="text"
                             readOnly
                             value={shareUrl}
-                            className="flex-1 overflow-hidden bg-transparent px-2 text-sm text-ellipsis whitespace-nowrap text-gray-700 outline-none"
+                            className="text-fg-secondary flex-1 overflow-hidden bg-transparent px-2 text-sm text-ellipsis whitespace-nowrap outline-none"
                         />
                         <button
                             onClick={handleCopy}
