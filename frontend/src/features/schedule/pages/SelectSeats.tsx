@@ -51,7 +51,7 @@ export function SelectSeats() {
         preChangeScheduleInfo,
         preChangeReservedSeats,
     }: SelectSeatsLocationState = location.state;
-    const { resolveReservedSeat } = useResolveReservedSeats(
+    const { resolveReservedSeat, trainCars } = useResolveReservedSeats(
         scheduleInfoDto,
         reservedSeats,
     );
@@ -563,6 +563,7 @@ export function SelectSeats() {
                     isSubmitting={isSubmitting}
                     selectedSeats={selectedSeats}
                     scheduleInfo={scheduleInfoDto}
+                    trainCars={trainCars}
                 />
             </CustomModal>
             <CustomModal

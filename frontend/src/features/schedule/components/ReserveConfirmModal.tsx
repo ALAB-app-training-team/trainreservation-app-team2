@@ -1,7 +1,3 @@
-import { useSuspenseQuery } from '@tanstack/react-query';
-
-import apiClient from '@/api/apiClient';
-import { ENDPOINTS } from '@/api/routes';
 import { FARE_CONSTANTS } from '@/features/reservation/constants/FareConstant';
 import { UpdatedReservationInfo } from '@/features/schedule/components/UpdatedReservationInfo';
 import type { ScheduleInfoDto } from '@/features/schedule/types/ScheduleInfoDto';
@@ -15,6 +11,7 @@ type ReserveConfirmModalProps = {
     isSubmitting: boolean;
     selectedSeats: SeatResponseDto[];
     scheduleInfo: ScheduleInfoDto;
+    trainCars: TrainCarFormationResponseDto[];
 };
 
 export function ReserveConfirmModal({
@@ -23,16 +20,8 @@ export function ReserveConfirmModal({
     isSubmitting,
     selectedSeats,
     scheduleInfo,
+    trainCars,
 }: ReserveConfirmModalProps) {
-    const { data: trainCars } = useSuspenseQuery({
-        queryKey: ['scheduleCd', scheduleInfo.scheduleCd],
-        queryFn: async () => {
-            const response = await apiClient.get<
-                TrainCarFormationResponseDto[]
-            >(ENDPOINTS.TRAINCAR(scheduleInfo.scheduleCd));
-            return response.data;
-        },
-    });
     const trainCarTypeNameByCarCd = new Map(
         trainCars.map((car) => [car.trainCarCd, car.trainCarTypeName]),
     );
