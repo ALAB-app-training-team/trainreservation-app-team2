@@ -72,9 +72,10 @@ public class AccountService {
      * アカウント新規作成を行うメソッド
      *
      * @param request 登録するアカウント情報
+     * @return 作成したアカウント情報
      */
     @Transactional
-    public void insertAccount(AccountRequestDto request) {
+    public AccountEntity insertAccount(AccountRequestDto request) {
         Optional<AccountEntity> account = accountRepository.findByMail(request.getMail());
         if (account.isPresent()) {
             throw new ConflictException(request.getMail() + " is Duplicate");
@@ -88,11 +89,13 @@ public class AccountService {
             "ROLE_USER"
         );
 
-        accountRepository.save(postAccount);
+        AccountEntity savedAccount = accountRepository.save(postAccount);
 
         eventPublisher.publishEvent(new AccountCreatedEvent(
-            new AccountRequestDto(postAccount.getName(), postAccount.getMail(), null)
+            new AccountRequestDto(savedAccount.getName(), savedAccount.getMail(), null)
         ));
+
+        return savedAccount;
     }
 
     /**

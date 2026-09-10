@@ -110,7 +110,7 @@ export function ScheduleItem({
                 schedule.greenSeats === 0 &&
                 schedule.gcSeats === 0
             }
-            className="border-primary-light group enabled:hover:border-primary flex w-full flex-row flex-wrap items-start justify-start gap-4 rounded-2xl border-2 p-4 transition-colors duration-200 ease-out sm:p-8 md:items-center"
+            className="border-primary-light group enabled:hover:border-primary-ink flex w-full flex-row flex-wrap items-start justify-start gap-4 rounded-2xl border-2 p-4 transition-colors duration-200 ease-out sm:p-8 md:items-center"
         >
             <div
                 data-testid="schedule-train"
@@ -146,9 +146,9 @@ export function ScheduleItem({
                     </div>
                     <div>{departureStationName}</div>
                 </div>
-                <div className="text-primary flex flex-1 items-center gap-2">
+                <div className="text-primary-ink flex flex-1 items-center gap-2">
                     <div className="border-primary-light relative w-full border-t-4 border-dotted">
-                        <span className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 bg-white px-2 group-disabled:bg-gray-300">
+                        <span className="bg-surface absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 px-2 group-disabled:bg-gray-300">
                             {calculateDuration(
                                 schedule.departureTime,
                                 schedule.arrivalTime,

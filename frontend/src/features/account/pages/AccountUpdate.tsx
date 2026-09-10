@@ -32,11 +32,11 @@ export function AccountUpdate() {
         <div className="flex justify-center">
             <div className="flex w-full max-w-xl flex-col items-center justify-center gap-4 p-8 md:w-4/10 md:min-w-md">
                 <div className="flex flex-col items-center justify-center gap-1">
-                    <h1 className="!text-primary !m-0 flex items-center justify-center !text-3xl">
+                    <h1 className="!text-primary-ink !m-0 flex items-center justify-center !text-3xl">
                         <FiUser />
                         氏名・メールアドレス変更
                     </h1>
-                    <p className="text-gray-500">
+                    <p className="text-fg-muted">
                         変更するアカウント情報を入力してください
                     </p>
                 </div>
@@ -100,7 +100,7 @@ export function AccountUpdate() {
                         <button
                             type="button"
                             onClick={() => setIsDeleteModalOpen(true)}
-                            className="mt-2 text-sm text-gray-500 underline"
+                            className="text-fg-muted mt-2 text-sm underline"
                         >
                             退会はこちら
                         </button>

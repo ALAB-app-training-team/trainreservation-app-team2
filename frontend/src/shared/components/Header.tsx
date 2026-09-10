@@ -52,7 +52,7 @@ export function Header() {
                     to="/"
                     onClick={() => setIsMenuOpen(false)}
                     className={({ isActive }) =>
-                        `text-primary flex shrink-0 items-center gap-2 px-0 text-lg font-bold md:px-4 ${
+                        `text-primary-ink flex shrink-0 items-center gap-2 px-0 text-lg font-bold md:px-4 ${
                             isActive || location.pathname === '/scheduleSearch'
                                 ? 'cursor-default'
                                 : 'cursor-pointer'
@@ -103,7 +103,7 @@ export function Header() {
             </div>
             {isMenuOpen && (
                 <div
-                    className="absolute top-full right-4 z-50 flex w-[200px] flex-col gap-2 rounded-md bg-white p-2 py-2 text-base font-bold shadow-md"
+                    className="bg-surface absolute top-full right-4 z-50 flex w-[200px] flex-col gap-2 rounded-md p-2 py-2 text-base font-bold shadow-md"
                     onClick={() => setIsMenuOpen(false)}
                 >
                     <div className="flex w-full flex-col gap-2 text-left md:hidden">
@@ -112,7 +112,7 @@ export function Header() {
                                 key={index}
                                 to={button.to}
                                 onClick={handleMenuOpen}
-                                className="w-full rounded text-left text-gray-700 hover:bg-gray-100"
+                                className="text-fg-secondary hover:bg-surface-muted w-full rounded text-left"
                             >
                                 {button.label}
                             </NavLink>
@@ -122,7 +122,7 @@ export function Header() {
                     {role === 'ROLE_ADMIN' && (
                         <button
                             onClick={() => navigate('/admin/password')}
-                            className="w-full text-left hover:bg-gray-100"
+                            className="hover:bg-surface-muted w-full text-left"
                         >
                             ユーザー管理
                         </button>
@@ -131,26 +131,26 @@ export function Header() {
                         <>
                             <button
                                 onClick={() => navigate('/reservationList')}
-                                className="w-full text-left hover:bg-gray-100"
+                                className="hover:bg-surface-muted w-full text-left"
                             >
                                 予約一覧
                             </button>
                             <button
                                 onClick={() => navigate('/accountUpdate')}
-                                className="w-full text-left hover:bg-gray-100"
+                                className="hover:bg-surface-muted w-full text-left"
                             >
                                 氏名・メールアドレス変更
                             </button>
 
                             <button
                                 onClick={() => navigate('/passwordUpdate')}
-                                className="w-full text-left hover:bg-gray-100"
+                                className="hover:bg-surface-muted w-full text-left"
                             >
                                 パスワード変更
                             </button>
                             <button
                                 onClick={handleLogout}
-                                className="w-full text-left hover:bg-gray-100"
+                                className="hover:bg-surface-muted w-full text-left"
                             >
                                 ログアウト
                             </button>

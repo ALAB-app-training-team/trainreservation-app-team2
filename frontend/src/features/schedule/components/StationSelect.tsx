@@ -42,10 +42,10 @@ export function StationSelect({
                     className="w-full text-left"
                     classNames={{
                         control: ({ isFocused }) =>
-                            'cursor-pointer rounded-xl bg-white p-2 ' +
-                            `${isFocused ? 'border-primary border-2' : 'border-transparent'}`,
+                            'cursor-pointer rounded-xl bg-surface p-2 ' +
+                            `${isFocused ? 'border-primary-ink border-2' : 'border-transparent'}`,
                         input: () => 'cursor-pointer',
-                        menu: () => 'bg-white p-2',
+                        menu: () => 'bg-surface p-2',
                         option: ({ isFocused, isSelected }) =>
                             `!cursor-pointer ${isSelected ? 'bg-primary text-white' : isFocused && 'bg-primary-light'}`,
                     }}
@@ -54,7 +54,7 @@ export function StationSelect({
                     noOptionsMessage={() => '該当する駅が見つかりません'}
                 />
                 {getFieldError?.(id) && (
-                    <p className="text-left text-sm text-red-600">
+                    <p className="text-danger text-left text-sm">
                         {getFieldError(id)}
                     </p>
                 )}
