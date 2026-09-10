@@ -89,11 +89,11 @@ export function ReserveConfirmModal({
                     }))}
                 />
             </div>
-            <div className="mt-3.5 flex flex-col gap-1 rounded-lg bg-gray-50 px-4 py-2.5">
+            <div className="bg-surface-subtle mt-3.5 flex flex-col gap-1 rounded-lg px-4 py-2.5">
                 {fareBreakdown.map((item) => (
                     <div
                         key={`${item.typeName}-${item.seatFare}`}
-                        className="flex items-center justify-between text-sm text-gray-600"
+                        className="text-fg-secondary flex items-center justify-between text-sm"
                     >
                         <span>
                             {item.typeName}

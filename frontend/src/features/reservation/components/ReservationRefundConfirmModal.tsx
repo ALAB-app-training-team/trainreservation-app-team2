@@ -32,7 +32,7 @@ export function ReservationRefundConfirmModal({
                 <div>以下の予約を取り消しますか？</div>
 
                 <ReservationInfo detail={detail} id="reservationList" />
-                <div className="flex w-full flex-col gap-2 rounded-lg bg-slate-50 p-3">
+                <div className="bg-surface-subtle flex w-full flex-col gap-2 rounded-lg p-3">
                     <div className="flex justify-between">
                         <span>チケット料金</span>
                         <span>￥{seatFare.toLocaleString()}</span>

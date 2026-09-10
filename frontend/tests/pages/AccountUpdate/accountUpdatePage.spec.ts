@@ -80,12 +80,6 @@ test('退会したらログインできないこと', async ({ page }) => {
     await accountCreatePage.fillPassword(deletePassword);
     await accountCreatePage.fillPasswordCheck(deletePassword);
     await accountCreatePage.clickCreateButton();
-    await expect(page).toHaveURL('/login');
-
-    // 作成したアカウントでログインできること
-    await loginPage.fillMailAddress(deleteMail);
-    await loginPage.fillPassword(deletePassword);
-    await loginPage.clickLoginButton();
     await expect(page).toHaveURL('/scheduleSearch');
 
     // 退会できること
@@ -138,11 +132,6 @@ test('予約中のきっぷがあると退会できないこと', async ({
     await accountCreatePage.fillPassword(reservedPassword);
     await accountCreatePage.fillPasswordCheck(reservedPassword);
     await accountCreatePage.clickCreateButton();
-    await expect(page).toHaveURL('/login');
-
-    await loginPage.fillMailAddress(reservedMail);
-    await loginPage.fillPassword(reservedPassword);
-    await loginPage.clickLoginButton();
     await expect(page).toHaveURL('/scheduleSearch');
 
     // きっぷを1件予約する
@@ -214,12 +203,6 @@ test('メールアドレス変更後のモーダルのリンクから予約一�
     await accountCreatePage.fillPassword(password);
     await accountCreatePage.fillPasswordCheck(password);
     await accountCreatePage.clickCreateButton();
-    await expect(page).toHaveURL('/login');
-
-    // 作成したアカウントでログインできること
-    await loginPage.fillMailAddress(beforeMail);
-    await loginPage.fillPassword(password);
-    await loginPage.clickLoginButton();
     await expect(page).toHaveURL('/scheduleSearch');
 
     // メールアドレスを変更できること

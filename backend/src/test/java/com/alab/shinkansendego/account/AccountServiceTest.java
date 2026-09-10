@@ -126,7 +126,7 @@ public class AccountServiceTest {
         when(passwordEncoder.encode(rawPassword)).thenReturn(hashedPassword);
         when(accountRepository.save(any())).thenReturn(savedAccount);
 
-        service.insertAccount(request);
+        assertEquals(savedAccount, service.insertAccount(request));
         verify(accountRepository).save(any());
         verify(eventPublisher, times(1)).publishEvent(any(AccountCreatedEvent.class));
     }

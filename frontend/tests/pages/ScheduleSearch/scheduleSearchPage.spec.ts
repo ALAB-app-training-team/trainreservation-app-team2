@@ -304,6 +304,7 @@ test('出発時刻・到着時刻の切り替えができること、空席表�
     );
     expect(departureTimes).toEqual(sortedDepartureTimes);
     // 「空席がある列車のみ表示する」ボタンを外す
+    await scheduleSearchPage.clickExpandSearchOptionsButton();
     await scheduleSearchPage.clickAvailableTrainCheckBox();
     await expect(scheduleSearchPage.availableTrainCheckBox).not.toBeChecked();
     const fullTrainCountWithDepartureTime = await page
@@ -412,6 +413,7 @@ test('未ログイン状態ではお気に入り経路の登録が表示され�
     await scheduleSearchPage.selectArrivalStation('白石蔵王');
     await scheduleSearchPage.time.fill('10:30');
     await scheduleSearchPage.clickArrivalTimeButton();
+    await scheduleSearchPage.clickExpandSearchOptionsButton();
     await scheduleSearchPage.clickHistoryDetailAccordionButton();
     await scheduleSearchPage.clickHistorySaveButton();
     const registeredRoute = page
@@ -463,6 +465,7 @@ test('座席種別を指定すると、空席チェックがONかつ無効化さ
     const scheduleSearchPage = new ScheduleSearchPage(page);
     await scheduleSearchPage.goto();
 
+    await scheduleSearchPage.clickExpandSearchOptionsButton();
     await scheduleSearchPage.selectSeatType('指定席');
 
     await expect(scheduleSearchPage.availableTrainCheckBox).toBeChecked();
@@ -479,6 +482,7 @@ test('人数を指定すると、空席チェックがONかつ無効化され補
     const scheduleSearchPage = new ScheduleSearchPage(page);
     await scheduleSearchPage.goto();
 
+    await scheduleSearchPage.clickExpandSearchOptionsButton();
     await scheduleSearchPage.selectPassengers('3人');
 
     await expect(scheduleSearchPage.availableTrainCheckBox).toBeChecked();
@@ -495,6 +499,7 @@ test('座席種別をハイフンに戻すと空席チェックが操作可能�
     const scheduleSearchPage = new ScheduleSearchPage(page);
     await scheduleSearchPage.goto();
 
+    await scheduleSearchPage.clickExpandSearchOptionsButton();
     await scheduleSearchPage.selectSeatType('指定席');
     await scheduleSearchPage.selectSeatType('-');
 
@@ -506,6 +511,7 @@ test('人数をハイフンに戻すと空席チェックが操作可能にな�
     const scheduleSearchPage = new ScheduleSearchPage(page);
     await scheduleSearchPage.goto();
 
+    await scheduleSearchPage.clickExpandSearchOptionsButton();
     await scheduleSearchPage.selectPassengers('3人');
     await scheduleSearchPage.selectPassengers('-');
 
@@ -522,6 +528,7 @@ test('座席種別がハイフンの時に空席チェックをオフにでき�
     await expect(scheduleSearchPage.availableTrainCheckBox).toBeEnabled();
     await expect(scheduleSearchPage.availableTrainCheckBox).toBeChecked();
 
+    await scheduleSearchPage.clickExpandSearchOptionsButton();
     await scheduleSearchPage.unCheckAvailableTrainCheckBox();
     await expect(scheduleSearchPage.availableTrainCheckBox).not.toBeChecked();
 });
@@ -545,6 +552,7 @@ test('グランクラスかつ4人指定時に、グランクラス残席が4未
 
     const time = await page.getByRole('textbox', { name: '時刻' }).inputValue();
 
+    await scheduleSearchPage.clickExpandSearchOptionsButton();
     await scheduleSearchPage.selectSeatType('グランクラス');
     await scheduleSearchPage.selectPassengers('4人');
 

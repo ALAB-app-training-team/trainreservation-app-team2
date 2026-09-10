@@ -142,11 +142,24 @@ public class AccountControllerTest {
     @DisplayName("アカウント作成できること")
     void insertAccount_return201() throws Exception {
         AccountRequestDto request = new AccountRequestDto("太郎", "a@a.com", rawPassword);
+        AccountEntity account = new AccountEntity(UUID.randomUUID(), "太郎", "a@a.com", hashedPassword, "ROLE_USER");
+        when(service.insertAccount(any())).thenReturn(account);
 
-        mockMvc.perform(MockMvcRequestBuilders.post(baseUrl + "account")
+        MvcResult result = mockMvc.perform(MockMvcRequestBuilders.post(baseUrl + "account")
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(objectMapper.writeValueAsString(request)))
-            .andExpect(status().isCreated());
+            .andExpect(status().isCreated())
+            .andExpect(jsonPath("$.name").value(account.getName()))
+            .andExpect(jsonPath("$.role").value(account.getRole()))
+            .andReturn();
+
+        MockHttpSession session = (MockHttpSession) result.getRequest().getSession(false);
+        SecurityContext securityContext = (SecurityContext) session.getAttribute(HttpSessionSecurityContextRepository.SPRING_SECURITY_CONTEXT_KEY);
+        AccountSessionDto sessionAccount = (AccountSessionDto) securityContext.getAuthentication().getPrincipal();
+        assertNotNull(sessionAccount, "セッションが作成されていること");
+        assertEquals(sessionAccount.getId(), account.getId());
+        assertEquals(sessionAccount.getName(), account.getName());
+        assertEquals(sessionAccount.getMail(), account.getMail());
     }
 
     @Test
