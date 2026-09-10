@@ -36,7 +36,7 @@ export function TrainCars({
     } = useTrainCar(scheduleInfoDto, reservedSeats);
 
     return (
-        <div className="border-primary-light flex flex-col gap-8 rounded-2xl border-2 p-8">
+        <div className="border-primary-light flex w-full flex-col gap-8 rounded-2xl border-2 p-8">
             <div className="bg-primary-light flex w-full rounded-full p-1">
                 {(Object.keys(SEAT_TYPE_LABELS) as SeatTypeCd[]).map((code) => (
                     <button
@@ -59,7 +59,6 @@ export function TrainCars({
             </div>
             {filteredCars.length > 0 ? (
                 <>
-                    <div className="text-left">号車を選択</div>
                     <div
                         className="flex scrollbar-thin gap-2 overflow-x-auto"
                         data-testid="train-cars"
@@ -71,15 +70,19 @@ export function TrainCars({
                                 onClick={() =>
                                     setSelectedTrainCarCd(car.trainCarCd)
                                 }
-                                className={`flex h-20 min-w-20 flex-col items-center justify-center rounded-2xl border-2 p-3 transition-all duration-200 ${
+                                aria-current={
+                                    activeTrainCarCd === car.trainCarCd
+                                }
+                                className={`flex h-16 min-w-16 flex-col items-center justify-center rounded-2xl border-2 p-3 transition-all duration-200 md:h-20 md:min-w-20 ${
                                     activeTrainCarCd === car.trainCarCd
                                         ? 'border-primary-ink bg-primary-light text-primary-ink font-bold shadow-sm'
                                         : 'border-primary-light hover:bg-primary-light'
                                 }`}
                             >
-                                <span className="font-bold">
+                                <span className="text-xl font-bold">
                                     {car.trainCarNumber}
                                 </span>
+                                <span className="text-sm">号車</span>
                             </button>
                         ))}
                     </div>

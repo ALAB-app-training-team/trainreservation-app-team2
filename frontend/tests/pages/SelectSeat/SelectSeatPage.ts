@@ -7,6 +7,7 @@ export class SelectSeatPage {
     readonly backButton: Locator;
     readonly trainCars: Locator;
     readonly emptySeat: Locator;
+    readonly seatsSkeleton: Locator;
     readonly name: Locator;
     readonly mailAddress: Locator;
     readonly accountCreateCheckBox: Locator;
@@ -36,12 +37,13 @@ export class SelectSeatPage {
         this.backButton = page.getByTestId('back-button-in-selectseat');
         this.trainCars = page.getByTestId('train-cars').getByRole('button');
         this.emptySeat = page.getByTestId('empty-seat');
+        this.seatsSkeleton = page.getByTestId('seats-by-train-car-skeleton');
         this.name = page.getByRole('textbox', { name: '予約者氏名' });
         this.mailAddress = page.getByRole('textbox', {
             name: 'メールアドレス',
         });
         this.accountCreateCheckBox = page.getByRole('checkbox', {
-            name: 'このメールアドレスでアカウントを作成する',
+            name: 'このメールアドレスでアカウントを 作成する',
         });
         this.password = page.getByRole('textbox', {
             name: 'パスワード',
@@ -76,13 +78,29 @@ export class SelectSeatPage {
             name: '変更を確定する',
         });
         this.loginButton = page.getByRole('button', {
-            name: 'ログインして氏名・メールアドレスを省略',
+            name: 'ログインして 氏名・メールアドレスを省略',
         });
         this.reservationSheetButton = page.getByTestId('reservation-sheet');
     }
 
+    trainCarButton(carNumber: number | number[]): Locator {
+        const name = Array.isArray(carNumber)
+            ? new RegExp(`^(${carNumber.join('|')}) 号車$`)
+            : `${carNumber} 号車`;
+        return this.page
+            .getByTestId('train-cars')
+            .getByRole('button', { name, exact: !Array.isArray(carNumber) });
+    }
+
     async clickBackButton() {
         await this.backButton.click();
+    }
+
+    async waitForSeatMapToLoad() {
+        await this.seatsSkeleton
+            .waitFor({ state: 'visible', timeout: 1000 })
+            .catch(() => {});
+        await this.seatsSkeleton.waitFor({ state: 'hidden' });
     }
 
     async selectSeat() {
