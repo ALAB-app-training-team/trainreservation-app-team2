@@ -144,14 +144,10 @@ export function SelectSeats() {
         };
 
         if (isAccountCreate) {
-            await apiClient.post(ENDPOINTS.ACCOUNT(), {
-                name: reserveUser.reserverName,
-                mail: reserveUser.reserverMail,
-                password: reserveUser.password,
-            });
             const response = await apiClient.post<LoginResponseDto>(
-                ENDPOINTS.LOGIN(),
+                ENDPOINTS.ACCOUNT(),
                 {
+                    name: reserveUser.reserverName,
                     mail: reserveUser.reserverMail,
                     password: reserveUser.password,
                 },
