@@ -47,11 +47,7 @@ public class AccountController {
     public ResponseEntity<LoginResponseDto> login(@Valid @RequestBody LoginRequestDto request, HttpSession session) {
         AccountEntity account = accountService.login(request.getMail(), request.getPassword());
 
-        AccountSessionDto accountSession = new AccountSessionDto(account.getId(), account.getMail(), account.getName());
-        List<GrantedAuthority> authorities = List.of(new SimpleGrantedAuthority(account.getRole()));
-        saveAccountToSession(session, accountSession, authorities);
-
-        return ResponseEntity.ok(new LoginResponseDto(account.getName(), account.getRole()));
+        return ResponseEntity.ok(buildLoginResponse(session, account));
     }
 
     /**
@@ -94,11 +90,7 @@ public class AccountController {
     ) {
         AccountEntity account = accountService.insertAccount(request);
 
-        AccountSessionDto accountSession = new AccountSessionDto(account.getId(), account.getMail(), account.getName());
-        List<GrantedAuthority> authorities = List.of(new SimpleGrantedAuthority(account.getRole()));
-        saveAccountToSession(session, accountSession, authorities);
-
-        return ResponseEntity.status(HttpStatus.CREATED).body(new LoginResponseDto(account.getName(), account.getRole()));
+        return ResponseEntity.status(HttpStatus.CREATED).body(buildLoginResponse(session, account));
     }
 
     /**
@@ -180,6 +172,21 @@ public class AccountController {
         accountService.deleteAccount(session.getId());
         httpSession.invalidate();
         return ResponseEntity.noContent().build();
+    }
+
+    /**
+     * アカウントをログイン状態にし、レスポンスを組み立てるメソッド
+     *
+     * @param session ログインセッション
+     * @param account ログイン状態にするアカウント
+     * @return ログインユーザー名
+     */
+    private LoginResponseDto buildLoginResponse(HttpSession session, AccountEntity account) {
+        AccountSessionDto accountSession = new AccountSessionDto(account.getId(), account.getMail(), account.getName());
+        List<GrantedAuthority> authorities = List.of(new SimpleGrantedAuthority(account.getRole()));
+        saveAccountToSession(session, accountSession, authorities);
+
+        return new LoginResponseDto(account.getName(), account.getRole());
     }
 
     /**
