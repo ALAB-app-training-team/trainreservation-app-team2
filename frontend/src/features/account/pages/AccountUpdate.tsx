@@ -34,7 +34,9 @@ export function AccountUpdate() {
                 <div className="flex flex-col items-center justify-center gap-1">
                     <h1 className="!text-primary-ink !m-0 flex items-center justify-center !text-3xl">
                         <FiUser />
-                        氏名・メールアドレス変更
+                        氏名・メールアドレス
+                        <br className="md:hidden" />
+                        変更
                     </h1>
                     <p className="text-fg-muted">
                         変更するアカウント情報を入力してください
