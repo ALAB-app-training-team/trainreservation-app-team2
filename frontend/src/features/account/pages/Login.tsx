@@ -11,8 +11,15 @@ import { removeGuestReservation } from '@/shared/utils/RemoveGuestReservation';
 export function Login() {
     const queryClient = useQueryClient();
     const navigate = useNavigate();
-    const { loginRequestDto, handleChange, handleLogin, isSubmitting } =
-        useLoginRequestDto();
+    const {
+        loginRequestDto,
+        handleChange,
+        handleBlur,
+        getFieldError,
+        isDisable,
+        handleLogin,
+        isSubmitting,
+    } = useLoginRequestDto();
     const [passwordType, setPasswordType] = useState('password');
     useToastForRedirect();
     useEffect(() => {
@@ -51,12 +58,18 @@ export function Login() {
                                     name="mail"
                                     value={loginRequestDto.mail}
                                     onChange={handleChange}
+                                    onBlur={handleBlur}
                                     placeholder="example@email.com"
                                     autoComplete="email"
                                     required
                                     className="w-full outline-none"
                                 />
                             </div>
+                            {getFieldError('mail') && (
+                                <p className="text-danger text-left text-sm">
+                                    {getFieldError('mail')}
+                                </p>
+                            )}
                         </div>
                         <div className="flex flex-col items-start">
                             <label htmlFor="password">パスワード</label>
@@ -67,6 +80,7 @@ export function Login() {
                                     name="password"
                                     value={loginRequestDto.password}
                                     onChange={handleChange}
+                                    onBlur={handleBlur}
                                     placeholder="パスワードを入力"
                                     autoComplete="current-password"
                                     required
@@ -85,11 +99,16 @@ export function Login() {
                                     />
                                 )}
                             </div>
+                            {getFieldError('password') && (
+                                <p className="text-danger text-left text-sm">
+                                    {getFieldError('password')}
+                                </p>
+                            )}
                         </div>
                     </div>
                     <button
                         type="submit"
-                        disabled={isSubmitting}
+                        disabled={isSubmitting || isDisable}
                         className="bg-primary flex w-full items-center justify-center gap-2 rounded-lg p-2 text-white"
                     >
                         <FiLogIn />
