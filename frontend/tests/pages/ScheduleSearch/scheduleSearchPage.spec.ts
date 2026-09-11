@@ -589,7 +589,7 @@ test('グランクラスかつ4人指定時に、グランクラス残席が4未
 
     await scheduleSearchPage.goto();
     const response = await responsePromise;
-    const allSchedules = await response.json();
+    const { schedules: allSchedules } = await response.json();
 
     const resultLocator = page.getByText(/\d+件の列車が見つかりました/);
     await expect(resultLocator).toBeVisible();
