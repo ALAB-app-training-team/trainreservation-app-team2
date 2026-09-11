@@ -65,7 +65,7 @@ export function ReservedTicketInfo({ ticketInfo }: ReservedTicketInfoProps) {
                                 seats={ticketInfo.reservedSeats}
                             />
                         </div>
-                        <div className="border-primary-ink/20 flex items-baseline justify-between gap-2 border-t-2 pt-4">
+                        <div className="border-primary-ink/20 flex items-baseline gap-6 border-t-2 pt-4">
                             <span>お支払い合計</span>
                             <span
                                 data-testid="total-fare"
