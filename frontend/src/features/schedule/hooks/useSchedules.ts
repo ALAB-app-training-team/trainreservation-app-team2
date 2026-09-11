@@ -9,8 +9,10 @@ export function useSchedules(
     searchRequestDto: SearchRequestDto,
     isInvalid: boolean,
 ) {
+    const { date, departureStationCd, arrivalStationCd } = searchRequestDto;
+
     const { data: schedules } = useSuspenseQuery({
-        queryKey: ['schedule', searchRequestDto],
+        queryKey: ['schedule', date, departureStationCd, arrivalStationCd],
         queryFn: async () => {
             if (isInvalid) {
                 return [];
@@ -18,7 +20,7 @@ export function useSchedules(
             const response = await apiClient.get<SearchResponseDto[]>(
                 ENDPOINTS.SCHEDULES_SEARCH(),
                 {
-                    params: searchRequestDto,
+                    params: { date, departureStationCd, arrivalStationCd },
                 },
             );
             return response.data;
