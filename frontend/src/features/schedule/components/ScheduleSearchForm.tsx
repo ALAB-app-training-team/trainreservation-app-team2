@@ -3,6 +3,7 @@ import customParseFormat from 'dayjs/plugin/customParseFormat';
 import { type SetStateAction, useState } from 'react';
 import {
     HiOutlineArrowNarrowRight,
+    HiOutlineMinus,
     HiOutlineMinusCircle,
     HiOutlinePlus,
     HiOutlinePlusCircle,
@@ -84,8 +85,12 @@ export function ScheduleSearchForm({
     const isPassengersSpecified = passengers !== '-' && passengers !== '';
     const isFilteeForced = isSeatTypeSpecified || isPassengersSpecified;
 
-    const { searchHistoryDtos, handleSaveHistory, isSubmitting } =
-        useSearchHistoryDto(searchRequestDto);
+    const {
+        searchHistoryDtos,
+        handleSaveHistory,
+        handleDeleteHistory,
+        isSubmitting,
+    } = useSearchHistoryDto(searchRequestDto);
 
     return (
         <>
@@ -227,61 +232,81 @@ export function ScheduleSearchForm({
                                                                     )?.name;
 
                                                                 return (
-                                                                    <button
+                                                                    <div
                                                                         key={
                                                                             dto.id
                                                                         }
-                                                                        type="button"
-                                                                        onClick={() => {
-                                                                            setDepartureStation(
-                                                                                dto.departureStationCd,
-                                                                            );
-                                                                            setArrivalStation(
-                                                                                dto.arrivalStationCd,
-                                                                            );
-                                                                            setTime(
-                                                                                dayjs(
-                                                                                    dto.time,
-                                                                                    'HH:mm:ss',
-                                                                                ).format(
-                                                                                    'HH:mm',
-                                                                                ),
-                                                                            );
-                                                                            setIsArrivalTime(
-                                                                                dto.isArrivalTime,
-                                                                            );
-                                                                        }}
-                                                                        className="border-primary-ink hover:bg-primary-light bg-surface flex w-fit items-center gap-4 rounded-lg border px-4 py-1 text-left"
+                                                                        className="relative w-fit"
                                                                     >
-                                                                        <span className="flex items-center gap-2 font-medium">
-                                                                            <span>
-                                                                                {
-                                                                                    departureStationName
-                                                                                }
+                                                                        <button
+                                                                            type="button"
+                                                                            onClick={() => {
+                                                                                setDepartureStation(
+                                                                                    dto.departureStationCd,
+                                                                                );
+                                                                                setArrivalStation(
+                                                                                    dto.arrivalStationCd,
+                                                                                );
+                                                                                setTime(
+                                                                                    dayjs(
+                                                                                        dto.time,
+                                                                                        'HH:mm:ss',
+                                                                                    ).format(
+                                                                                        'HH:mm',
+                                                                                    ),
+                                                                                );
+                                                                                setIsArrivalTime(
+                                                                                    dto.isArrivalTime,
+                                                                                );
+                                                                            }}
+                                                                            className="border-primary-ink hover:bg-primary-light bg-surface flex w-fit items-center gap-4 rounded-lg border px-4 py-1 text-left"
+                                                                        >
+                                                                            <span className="flex items-center gap-2 font-medium">
+                                                                                <span>
+                                                                                    {
+                                                                                        departureStationName
+                                                                                    }
+                                                                                </span>
+                                                                                <HiOutlineArrowNarrowRight className="text-primary-ink shrink-0" />
+                                                                                <span>
+                                                                                    {
+                                                                                        arrivalStationName
+                                                                                    }
+                                                                                </span>
                                                                             </span>
-                                                                            <HiOutlineArrowNarrowRight className="text-primary-ink shrink-0" />
-                                                                            <span>
-                                                                                {
-                                                                                    arrivalStationName
-                                                                                }
+                                                                            <span className="flex items-center gap-1 text-sm">
+                                                                                <span className="bg-primary rounded px-2 py-0.5 text-xs text-white">
+                                                                                    {dto.isArrivalTime
+                                                                                        ? '到着'
+                                                                                        : '出発'}
+                                                                                </span>
+                                                                                <span>
+                                                                                    {dayjs(
+                                                                                        dto.time,
+                                                                                        'HH:mm:ss',
+                                                                                    ).format(
+                                                                                        'HH:mm',
+                                                                                    )}
+                                                                                </span>
                                                                             </span>
-                                                                        </span>
-                                                                        <span className="flex items-center gap-1 text-sm">
-                                                                            <span className="bg-primary rounded px-2 py-0.5 text-xs text-white">
-                                                                                {dto.isArrivalTime
-                                                                                    ? '到着'
-                                                                                    : '出発'}
-                                                                            </span>
-                                                                            <span>
-                                                                                {dayjs(
-                                                                                    dto.time,
-                                                                                    'HH:mm:ss',
-                                                                                ).format(
-                                                                                    'HH:mm',
-                                                                                )}
-                                                                            </span>
-                                                                        </span>
-                                                                    </button>
+                                                                        </button>
+                                                                        <button
+                                                                            type="button"
+                                                                            onClick={() =>
+                                                                                handleDeleteHistory(
+                                                                                    dto.id,
+                                                                                )
+                                                                            }
+                                                                            disabled={
+                                                                                isSubmitting
+                                                                            }
+                                                                            aria-label={`${departureStationName}から${arrivalStationName}のお気に入り経路を削除`}
+                                                                            data-testid={`history-delete-button-${dto.id}`}
+                                                                            className="border-primary-ink text-primary-ink hover:bg-primary-light bg-surface absolute -top-2 -right-2 flex h-5 w-5 items-center justify-center rounded-full border text-xs leading-none"
+                                                                        >
+                                                                            <HiOutlineMinus />
+                                                                        </button>
+                                                                    </div>
                                                                 );
                                                             },
                                                         )}
