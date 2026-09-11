@@ -157,13 +157,13 @@ public class ScheduleService {
             Double distanceKm = sectionKmList.stream().mapToDouble(SectionKmEntity::getDistanceKm).sum();
             Map<String, Integer> fares = fareKmService.getFareFromDistance(distanceKm);
 
-            if (responseList.stream().mapToInt(ScheduleDto::getReservedSeats).sum() >= 0) {
+            if (responseList.stream().mapToInt(ScheduleDto::getReservedSeats).sum() > 0) {
                 reservedFare = fares.get("reserved");
             }
-            if (responseList.stream().mapToInt(ScheduleDto::getGreenSeats).sum() >= 0) {
+            if (responseList.stream().mapToInt(ScheduleDto::getGreenSeats).sum() > 0) {
                 greenFare = fares.get("green");
             }
-            if (responseList.stream().mapToInt(ScheduleDto::getGcSeats).sum() >= 0) {
+            if (responseList.stream().mapToInt(ScheduleDto::getGcSeats).sum() > 0) {
                 gcFare = fares.get("gran-class");
             }
         }
