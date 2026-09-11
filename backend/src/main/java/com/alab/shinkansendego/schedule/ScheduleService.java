@@ -2,18 +2,21 @@ package com.alab.shinkansendego.schedule;
 
 import com.alab.shinkansendego.departurearrivaltime.DepartureArrivalTimeEntity;
 import com.alab.shinkansendego.departurearrivaltime.DepartureArrivalTimeRepository;
+import com.alab.shinkansendego.farekm.FareKmService;
 import com.alab.shinkansendego.reservedseatsection.ReservedSeatSectionEntity;
 import com.alab.shinkansendego.reservedseatsection.ReservedSeatSectionRepository;
 import com.alab.shinkansendego.sectionkm.SectionKmEntity;
 import com.alab.shinkansendego.sectionkm.SectionKmRepository;
 import com.alab.shinkansendego.totalseat.TotalSeatEntity;
 import com.alab.shinkansendego.totalseat.TotalSeatRepository;
+import com.alab.shinkansendego.traincar.TrainCarEntity;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.List;
+import java.util.Map;
 import java.util.Objects;
 import java.util.Optional;
 import java.util.stream.Collectors;
@@ -25,23 +28,32 @@ public class ScheduleService {
     private final ScheduleRepository scheduleRepository;
     private final ReservedSeatSectionRepository reservedSeatSectionRepository;
     private final TotalSeatRepository totalSeatRepository;
+    private final FareKmService fareKmService;
 
     @Autowired
     public ScheduleService(SectionKmRepository sectionKmRepository,
                            DepartureArrivalTimeRepository departureArrivalTimeRepository,
                            ScheduleRepository scheduleRepository,
                            ReservedSeatSectionRepository reservedSeatSectionRepository,
-                           TotalSeatRepository totalSeatRepository) {
+                           TotalSeatRepository totalSeatRepository,
+                           FareKmService fareKmService) {
         this.sectionKmRepository = sectionKmRepository;
         this.departureArrivalTimeRepository = departureArrivalTimeRepository;
         this.scheduleRepository = scheduleRepository;
         this.reservedSeatSectionRepository = reservedSeatSectionRepository;
         this.totalSeatRepository = totalSeatRepository;
+        this.fareKmService = fareKmService;
     }
 
-    public List<ScheduleResponseDto> getSearchedScheduleByStation(ScheduleRequestDto request) {
+    /**
+     * 検索画面の入力内容に該当するスケジュールリストを返す
+     *
+     * @param request 検索画面で入力した条件
+     * @return 各席種の料金とスケジュールリスト
+     */
+    public ScheduleResponseDto getSearchedScheduleByStation(ScheduleRequestDto request) {
 
-        List<ScheduleResponseDto> responseList = new ArrayList<>();
+        List<ScheduleDto> responseList = new ArrayList<>();
 
         List<SectionKmEntity> departureSectionKmList = sectionKmRepository.findByStartStationCd(request.getDepartureStationCd());
         List<SectionKmEntity> arrivalSectionKmList = sectionKmRepository.findByGoalStationCd(request.getArrivalStationCd());
@@ -82,7 +94,7 @@ public class ScheduleService {
 
                     List<String> sectionCdList = departureArrivalTimeRepository.findByScheduleCdAndDepartureTimeGreaterThanEqualAndArrivalTimeLessThanEqual(
                             departure.getScheduleCd(), departure.getDepartureTime(), arrival.getArrivalTime())
-                        .stream().map(entity -> entity.getSectionCd()).toList();
+                        .stream().map(DepartureArrivalTimeEntity::getSectionCd).toList();
                     List<ReservedSeatSectionEntity> reservedSeatSectionEntities
                         = reservedSeatSectionRepository
                         .findByRideDateAndScheduleCdAndReservedSectionCdIn(
@@ -114,7 +126,7 @@ public class ScheduleService {
                         .findFirst()
                         .orElseThrow(() -> new IllegalArgumentException("SectionKm is Not found"));
 
-                    ScheduleResponseDto data = new ScheduleResponseDto();
+                    ScheduleDto data = new ScheduleDto();
                     data.setScheduleCd(departure.getScheduleCd());
                     data.setTrainTypeName(scheduleEntity.get().getTrainType().getName());
                     data.setDepartureTime(departure.getDepartureTime());
@@ -127,23 +139,54 @@ public class ScheduleService {
                 }
             }
         }
+        responseList.sort(Comparator.comparing(ScheduleDto::getDepartureTime));
 
-        responseList.sort(Comparator.comparing(ScheduleResponseDto::getDepartureTime));
+        Integer reservedFare = null;
+        Integer greenFare = null;
+        Integer gcFare = null;
+        if (!responseList.isEmpty()) {
+            ScheduleDto representative = responseList.getFirst();
+            List<String> sectionCdList =
+                departureArrivalTimeRepository.findByScheduleCdAndDepartureTimeGreaterThanEqualAndArrivalTimeLessThanEqual(
+                        representative.getScheduleCd(), representative.getDepartureTime(), representative.getArrivalTime())
+                    .stream().map(DepartureArrivalTimeEntity::getSectionCd).toList();
+            if (sectionCdList.isEmpty()) {
+                throw new IllegalArgumentException("SectionCdOfSeat is Not found");
+            }
+            List<SectionKmEntity> sectionKmList = sectionKmRepository.findBySectionCdIn(sectionCdList);
+            Double distanceKm = sectionKmList.stream().mapToDouble(SectionKmEntity::getDistanceKm).sum();
+            Map<String, Integer> fares = fareKmService.getFareFromDistance(distanceKm);
 
-        return responseList;
+            if (responseList.stream().mapToInt(ScheduleDto::getReservedSeats).sum() > 0) {
+                reservedFare = fares.get("reserved");
+            }
+            if (responseList.stream().mapToInt(ScheduleDto::getGreenSeats).sum() > 0) {
+                greenFare = fares.get("green");
+            }
+            if (responseList.stream().mapToInt(ScheduleDto::getGcSeats).sum() > 0) {
+                gcFare = fares.get("gran-class");
+            }
+        }
+
+        return new ScheduleResponseDto(reservedFare, greenFare, gcFare, responseList);
     }
 
+    /**
+     * スケジュールCDを受け取って号車情報尾を返す
+     *
+     * @param scheduledCd スケジュールCD
+     * @return 列車の号車構成
+     */
     public List<TrainCarFormationResponseDto> getTrainCarList(String scheduledCd) {
         ScheduleEntity schedule = scheduleRepository.findByScheduleCd(scheduledCd).orElseThrow(() -> new IllegalArgumentException("Schedule is not found"));
 
-        List<TrainCarFormationResponseDto> trainCarList = schedule.getTrainType().getTrainSeries().getTrainCars().stream()
-            .sorted(Comparator.comparing(tc -> tc.getTrainCarNumber()))
+        return schedule.getTrainType().getTrainSeries().getTrainCars().stream()
+            .sorted(Comparator.comparing(TrainCarEntity::getTrainCarNumber))
             .map(tc -> new TrainCarFormationResponseDto(
                 tc.getTrainCarCd(),
                 tc.getTrainCarNumber(),
                 tc.getSeatType().getSeatTypeCd(),
                 tc.getSeatType().getTrainCarType().getName()
             )).collect(Collectors.toList());
-        return trainCarList;
     }
 }

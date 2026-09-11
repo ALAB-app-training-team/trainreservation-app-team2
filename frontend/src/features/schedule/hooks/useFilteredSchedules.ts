@@ -1,9 +1,9 @@
 import { useMemo } from 'react';
 
-import type { SearchResponseDto } from '@/features/schedule/types/SearchResponseDto';
+import type { ScheduleDto } from '@/features/schedule/types/ScheduleDto';
 
 type UseFilteredSchedulesParams = {
-    schedules: SearchResponseDto[];
+    schedules: ScheduleDto[];
     seatType: string;
     passengers: string;
     isOnlyAvailable: boolean;

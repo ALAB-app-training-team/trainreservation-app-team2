@@ -9,6 +9,7 @@ import _ReactPaginate from 'react-paginate';
 
 import type { ReservedSeatDto } from '@/features/reservation/types/ReservedSeatDto';
 import { ScheduleItem } from '@/features/schedule/components/ScheduleItem';
+import { SeatTypeFares } from '@/features/schedule/components/SeatTypeFares';
 import { useFilteredSchedules } from '@/features/schedule/hooks/useFilteredSchedules';
 import { useSchedules } from '@/features/schedule/hooks/useSchedules';
 import type { ScheduleInfoDto } from '@/features/schedule/types/ScheduleInfoDto';
@@ -58,7 +59,10 @@ export function ScheduleList({
     handleNextDate,
     maxDate,
 }: ScheduleListProps) {
-    const { schedules } = useSchedules(searchRequestDto, isInvalid);
+    const { schedules, reservedFare, greenFare, gcFare } = useSchedules(
+        searchRequestDto,
+        isInvalid,
+    );
 
     const [offset, setOffset] = useState(0);
     const perPage: number = 10;
@@ -94,9 +98,22 @@ export function ScheduleList({
     return (
         <>
             <div className="flex flex-col gap-4">
-                <span className="text-left">
-                    {filteredSchedules.length}件の列車が見つかりました
-                </span>
+                <div className="flex flex-wrap items-center justify-between gap-4 text-sm">
+                    <div>
+                        {filteredSchedules.length}件の列車が
+                        {filteredSchedules.length > 0 && (
+                            <br className="sm:hidden" />
+                        )}
+                        見つかりました
+                    </div>
+                    {filteredSchedules.length > 0 && (
+                        <SeatTypeFares
+                            reservedFare={reservedFare}
+                            greenFare={greenFare}
+                            gcFare={gcFare}
+                        />
+                    )}
+                </div>
                 {filteredSchedules.length ? (
                     <>
                         {filteredSchedules

@@ -35,12 +35,19 @@ public class ScheduleControllerTest {
     @MockitoBean
     private ScheduleService service;
 
-    private static @NonNull List<ScheduleResponseDto> getExpectScheduleResponseDtosList() {
-        ScheduleResponseDto expect01 = new ScheduleResponseDto("THK001", "やまびこ2号", LocalTime.of(11, 0, 0), LocalTime.of(16, 10, 0), 30, 20, 10, "UP");
-        ScheduleResponseDto expect02 = new ScheduleResponseDto("THK002", "やまびこ3号", LocalTime.of(12, 0, 0), LocalTime.of(12, 30, 0), 30, 20, 10, "UP");
-        ScheduleResponseDto expect03 = new ScheduleResponseDto("THK003", "やまびこ4号", LocalTime.of(13, 0, 0), LocalTime.of(13, 40, 0), 30, 20, 10, "UP");
-        ScheduleResponseDto expect04 = new ScheduleResponseDto("THK004", "やまびこ6号", LocalTime.of(15, 0, 0), LocalTime.of(16, 0, 0), 30, 20, 10, "UP");
+    private static @NonNull List<ScheduleDto> getExpectScheduleDtosList() {
+        ScheduleDto expect01 = new ScheduleDto("THK001", "やまびこ2号", LocalTime.of(11, 0, 0), LocalTime.of(16, 10, 0), 30, 20, 10, "UP");
+        ScheduleDto expect02 = new ScheduleDto("THK002", "やまびこ3号", LocalTime.of(12, 0, 0), LocalTime.of(12, 30, 0), 30, 20, 10, "UP");
+        ScheduleDto expect03 = new ScheduleDto("THK003", "やまびこ4号", LocalTime.of(13, 0, 0), LocalTime.of(13, 40, 0), 30, 20, 10, "UP");
+        ScheduleDto expect04 = new ScheduleDto("THK004", "やまびこ6号", LocalTime.of(15, 0, 0), LocalTime.of(16, 0, 0), 30, 20, 10, "UP");
         return Arrays.asList(expect01, expect02, expect03, expect04);
+    }
+
+    private static @NonNull ScheduleResponseDto getExpectScheduleResponseDto() {
+        return new ScheduleResponseDto(
+            11410, 15070, 22170,
+            getExpectScheduleDtosList()
+        );
     }
 
     private static @NonNull List<TrainCarFormationResponseDto> getTrainCarResponseDtosList() {
@@ -63,10 +70,10 @@ public class ScheduleControllerTest {
     @DisplayName("リクエストDTOからダイヤリストが取得できる")
     void getSchedule_withValidScheduleRequestDto_returnGetScheduleListSuccess() throws Exception {
 
-        List<ScheduleResponseDto> expectList = getExpectScheduleResponseDtosList();
+        ScheduleResponseDto expectResponse = getExpectScheduleResponseDto();
         String url = baseUrl + "?date=2026-06-01&time=12:00:00&departureStationCd=THK01&arrivalStationCd=THK02";
 
-        Mockito.when(service.getSearchedScheduleByStation(request)).thenReturn(expectList);
+        Mockito.when(service.getSearchedScheduleByStation(request)).thenReturn(expectResponse);
 
         String json = objectMapper.writeValueAsString(request);
 
@@ -75,23 +82,48 @@ public class ScheduleControllerTest {
                     .contentType(MediaType.APPLICATION_JSON)
                     .content(json))
             .andExpect(status().isOk())
-            .andExpect(jsonPath("$.length()").value(4))
-            .andExpect(jsonPath("$[0].scheduleCd").value("THK001"))
-            .andExpect(jsonPath("$[1].scheduleCd").value("THK002"))
-            .andExpect(jsonPath("$[2].scheduleCd").value("THK003"))
-            .andExpect(jsonPath("$[3].scheduleCd").value("THK004"))
-            .andExpect(jsonPath("$[0].trainTypeName").value("やまびこ2号"))
-            .andExpect(jsonPath("$[1].trainTypeName").value("やまびこ3号"))
-            .andExpect(jsonPath("$[2].trainTypeName").value("やまびこ4号"))
-            .andExpect(jsonPath("$[3].trainTypeName").value("やまびこ6号"))
-            .andExpect(jsonPath("$[0].departureTime").value("11:00:00"))
-            .andExpect(jsonPath("$[1].departureTime").value("12:00:00"))
-            .andExpect(jsonPath("$[2].departureTime").value("13:00:00"))
-            .andExpect(jsonPath("$[3].departureTime").value("15:00:00"))
-            .andExpect(jsonPath("$[0].arrivalTime").value("16:10:00"))
-            .andExpect(jsonPath("$[1].arrivalTime").value("12:30:00"))
-            .andExpect(jsonPath("$[2].arrivalTime").value("13:40:00"))
-            .andExpect(jsonPath("$[3].arrivalTime").value("16:00:00"));
+            .andExpect(jsonPath("$.schedules.length()").value(4))
+            .andExpect(jsonPath("$.schedules[0].scheduleCd").value("THK001"))
+            .andExpect(jsonPath("$.schedules[1].scheduleCd").value("THK002"))
+            .andExpect(jsonPath("$.schedules[2].scheduleCd").value("THK003"))
+            .andExpect(jsonPath("$.schedules[3].scheduleCd").value("THK004"))
+            .andExpect(jsonPath("$.schedules[0].trainTypeName").value("やまびこ2号"))
+            .andExpect(jsonPath("$.schedules[1].trainTypeName").value("やまびこ3号"))
+            .andExpect(jsonPath("$.schedules[2].trainTypeName").value("やまびこ4号"))
+            .andExpect(jsonPath("$.schedules[3].trainTypeName").value("やまびこ6号"))
+            .andExpect(jsonPath("$.schedules[0].departureTime").value("11:00:00"))
+            .andExpect(jsonPath("$.schedules[1].departureTime").value("12:00:00"))
+            .andExpect(jsonPath("$.schedules[2].departureTime").value("13:00:00"))
+            .andExpect(jsonPath("$.schedules[3].departureTime").value("15:00:00"))
+            .andExpect(jsonPath("$.schedules[0].arrivalTime").value("16:10:00"))
+            .andExpect(jsonPath("$.schedules[1].arrivalTime").value("12:30:00"))
+            .andExpect(jsonPath("$.schedules[2].arrivalTime").value("13:40:00"))
+            .andExpect(jsonPath("$.schedules[3].arrivalTime").value("16:00:00"))
+            .andExpect(jsonPath("$.reservedFare").value(11410))
+            .andExpect(jsonPath("$.greenFare").value(15070))
+            .andExpect(jsonPath("$.gcFare").value(22170));
+    }
+
+    @Test
+    @DisplayName("該当するダイヤが無い場合、料金はnullで返る")
+    void getSchedule_withNoMatchedSchedule_returnNullFares() throws Exception {
+
+        String url = baseUrl + "?date=2026-06-01&time=12:00:00&departureStationCd=THK01&arrivalStationCd=THK02";
+
+        Mockito.when(service.getSearchedScheduleByStation(request))
+            .thenReturn(new ScheduleResponseDto(null, null, null, List.of()));
+
+        String json = objectMapper.writeValueAsString(request);
+
+        mockMvc.perform(
+                get(url)
+                    .contentType(MediaType.APPLICATION_JSON)
+                    .content(json))
+            .andExpect(status().isOk())
+            .andExpect(jsonPath("$.schedules.length()").value(0))
+            .andExpect(jsonPath("$.reservedFare").isEmpty())
+            .andExpect(jsonPath("$.greenFare").isEmpty())
+            .andExpect(jsonPath("$.gcFare").isEmpty());
     }
 
     @Test
