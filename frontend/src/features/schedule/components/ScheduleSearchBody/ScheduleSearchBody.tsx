@@ -90,6 +90,11 @@ export function ScheduleSearchBody() {
                             </div>
                         </button>
                     ) : null}
+                    {isChanging && (
+                        <h1 className="m-0! text-left text-3xl!">
+                            予約変更中
+                        </h1>
+                    )}
                     <ScheduleSearchForm
                         stations={stations}
                         departureDtos={departureDtos}
