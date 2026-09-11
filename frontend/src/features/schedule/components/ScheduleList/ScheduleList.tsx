@@ -8,7 +8,6 @@ import type { ReactPaginateProps } from 'react-paginate';
 import _ReactPaginate from 'react-paginate';
 
 import type { ReservedSeatDto } from '@/features/reservation/types/ReservedSeatDto';
-import { EmptySeatCount } from '@/features/schedule/components/EmptySeatCount';
 import { ScheduleItem } from '@/features/schedule/components/ScheduleItem';
 import { useFilteredSchedules } from '@/features/schedule/hooks/useFilteredSchedules';
 import { useSchedules } from '@/features/schedule/hooks/useSchedules';
@@ -95,12 +94,9 @@ export function ScheduleList({
     return (
         <>
             <div className="flex flex-col gap-4">
-                <div className="flex flex-wrap justify-between gap-4">
-                    <div>
-                        {filteredSchedules.length}件の列車が見つかりました
-                    </div>
-                    <EmptySeatCount />
-                </div>
+                <span className="text-left">
+                    {filteredSchedules.length}件の列車が見つかりました
+                </span>
                 {filteredSchedules.length ? (
                     <>
                         {filteredSchedules

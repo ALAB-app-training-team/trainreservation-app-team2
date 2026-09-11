@@ -56,7 +56,7 @@ export const test = baseTest.extend<VisualFixture>({
 
             await scheduleSearchPage.goto();
             await expect(page).toHaveURL('/scheduleSearch');
-            await scheduleSearchPage.detailButton
+            await scheduleSearchPage.scheduleItemButton
                 .first()
                 .waitFor({ state: 'visible' });
             await page.evaluate(() => document.fonts.ready);
@@ -92,7 +92,7 @@ export const test = baseTest.extend<VisualFixture>({
             const selectSeatPage = new SelectSeatPage(page);
 
             await scheduleSearchPage.goto();
-            await scheduleSearchPage.clickDetailButton();
+            await scheduleSearchPage.clickScheduleItemButton();
             await expect(page).toHaveURL('/selectSeat');
             await selectSeatPage.emptySeat
                 .first()
@@ -120,7 +120,7 @@ export const test = baseTest.extend<VisualFixture>({
             const selectSeatPage = new SelectSeatPage(page);
 
             await scheduleSearchPage.goto();
-            await scheduleSearchPage.clickDetailButton();
+            await scheduleSearchPage.clickScheduleItemButton();
             await expect(page).toHaveURL('/selectSeat');
             await selectSeatPage.emptySeat
                 .first()
@@ -155,7 +155,7 @@ export const test = baseTest.extend<VisualFixture>({
 
             await commonLogin();
             await expect(page).toHaveURL('/scheduleSearch');
-            await scheduleSearchPage.clickDetailButton();
+            await scheduleSearchPage.clickScheduleItemButton();
             await expect(page).toHaveURL('/selectSeat');
             await selectSeatPage.emptySeat
                 .first()
