@@ -3,7 +3,7 @@ import customParseFormat from 'dayjs/plugin/customParseFormat';
 import { useState } from 'react';
 import { BsQrCode } from 'react-icons/bs';
 import { FaEdit, FaSearch } from 'react-icons/fa';
-import { IoTrashOutline } from 'react-icons/io5';
+import { IoTrashOutline, IoWarningOutline } from 'react-icons/io5';
 import { MdAirlineSeatReclineExtra, MdMoreVert } from 'react-icons/md';
 import { useNavigate } from 'react-router-dom';
 
@@ -44,6 +44,7 @@ export function ReservationSelectItem({
         canCheckReservation,
         canSearchReturinTrip,
         showThreeDotsMenu,
+        hasUnassignedSeat,
     } = useReservationSelectItemConfig(details);
     const [isMenuOpen, setIsMenuOpen] = useState(false);
     const { ref: menuRef } = useOutsideClick(
@@ -54,12 +55,13 @@ export function ReservationSelectItem({
         setIsMenuOpen(!isMenuOpen);
     };
 
-    const handleReservationDetail = () => {
+    const handleReservationDetail = (openCompanions: boolean) => {
         navigate('/reservedTicket', {
             state: {
                 reservationId: details.reservationId,
                 role: RESERVEDTICKET_ROLE.account,
                 mode: RESERVEDTICKET_MODE.detail,
+                openCompanions,
             },
         });
         window.scrollTo(0, 0);
@@ -83,7 +85,7 @@ export function ReservationSelectItem({
     return (
         <div
             data-testid="reservation-item"
-            className="border-primary-mid-light md:border-line-strong flex flex-col gap-2 rounded-2xl border-2 p-5 text-left md:flex-row md:items-center md:gap-6 md:rounded-xl md:border md:p-4"
+            className="border-primary-mid-light md:border-line-strong flex flex-col gap-2 rounded-2xl border-2 p-5 text-left md:flex-row md:items-center md:gap-4 md:rounded-xl md:border md:p-4"
         >
             <div className="flex items-center gap-3 md:grow">
                 <div className={TIME_BLOCK}>
@@ -99,7 +101,7 @@ export function ReservationSelectItem({
                 </div>
                 <span
                     aria-hidden="true"
-                    className="bg-primary-mid-light h-px grow md:w-8 md:grow-0"
+                    className="bg-primary-mid-light h-px grow md:w-6 md:grow-0"
                 />
                 <div className={TIME_BLOCK}>
                     <span data-testid="list-arrival-time" className={TIME_TEXT}>
@@ -110,12 +112,29 @@ export function ReservationSelectItem({
                     </span>
                 </div>
             </div>
-            <div className="flex items-center gap-2 md:shrink-0">
-                <MdAirlineSeatReclineExtra className="text-xl" />
-                <span>座席</span>
-                <span data-testid="seat-count">
-                    {details.reservedSeats.length}席
-                </span>
+            <div className="flex flex-col gap-1 md:w-40 md:shrink-0">
+                <div className="flex items-center gap-2">
+                    <MdAirlineSeatReclineExtra className="text-xl" />
+                    <span>座席</span>
+                    <span data-testid="seat-count">
+                        {details.reservedSeats.length}席
+                    </span>
+                </div>
+                {hasUnassignedSeat && (
+                    <button
+                        type="button"
+                        onClick={() => handleReservationDetail(true)}
+                        data-testid="unassigned-seat-notice"
+                        aria-label="未割り当ての座席あり。利用者の割り当てを開く"
+                        className="text-warning flex items-center gap-1 self-start py-1 text-xs underline underline-offset-2"
+                    >
+                        <IoWarningOutline
+                            aria-hidden="true"
+                            className="shrink-0"
+                        />
+                        未割り当ての座席あり
+                    </button>
+                )}
             </div>
             <div
                 aria-hidden="true"
@@ -130,7 +149,7 @@ export function ReservationSelectItem({
                     {canSearchReturinTrip && (
                         <button
                             onClick={handleSearchReturnTrip}
-                            className="border-primary-ink text-primary-ink flex w-full items-center justify-center gap-1.5 rounded-md border px-2 py-2 text-sm whitespace-nowrap md:gap-4 md:px-4"
+                            className="border-primary-ink text-primary-ink flex w-full items-center justify-center gap-1.5 rounded-md border px-2 py-2 text-sm whitespace-nowrap md:gap-2 md:px-3"
                         >
                             <FaSearch />
                             復路で検索
@@ -138,8 +157,8 @@ export function ReservationSelectItem({
                     )}
                     {canCheckReservation && (
                         <button
-                            onClick={handleReservationDetail}
-                            className="bg-primary flex w-full items-center justify-center gap-1.5 rounded-md px-2 py-2 text-sm whitespace-nowrap text-white md:gap-4 md:px-4"
+                            onClick={() => handleReservationDetail(false)}
+                            className="bg-primary flex w-full items-center justify-center gap-1.5 rounded-md px-2 py-2 text-sm whitespace-nowrap text-white md:gap-2 md:px-3"
                         >
                             <BsQrCode />
                             チケットを表示
