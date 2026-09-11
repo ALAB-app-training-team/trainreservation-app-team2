@@ -18,8 +18,6 @@ import { useOutsideClick } from '@/shared/hooks/useOutsideClick';
 
 dayjs.extend(customParseFormat);
 
-// 出発と到着は必ず同じ体裁にするため共通化する。
-// スマホは時刻の下に駅名を積み、PCは1行に並べる
 const TIME_BLOCK =
     'flex min-w-0 flex-col text-left md:flex-row md:items-baseline md:gap-1.5';
 const TIME_TEXT = 'text-2xl leading-tight font-bold tabular-nums md:text-3xl';
@@ -99,7 +97,6 @@ export function ReservationSelectItem({
                         {details.departureStationName}
                     </span>
                 </div>
-                {/* 出発と到着をつなぐ罫線。スマホは伸ばし、PCは固定幅 */}
                 <span
                     aria-hidden="true"
                     className="bg-primary-mid-light h-px grow md:w-8 md:grow-0"
@@ -120,8 +117,6 @@ export function ReservationSelectItem({
                     {details.reservedSeats.length}席
                 </span>
             </div>
-            {/* きっぷのミシン目。両端の丸をカードの枠線に重ねて切り欠きに見せる。
-                -mx-[22px] は p-5(20px) + border-2(2px) を打ち消して枠線まで届かせる値 */}
             <div
                 aria-hidden="true"
                 className="relative -mx-[22px] my-1 md:hidden"
@@ -131,8 +126,6 @@ export function ReservationSelectItem({
                 <span className="bg-page absolute top-0 right-0 h-4 w-4 translate-x-1/2 -translate-y-1/2 rounded-full" />
             </div>
             <div className="flex shrink-0 items-center gap-2">
-                {/* スマホは44pxの3点リーダーと同じ行に収めるため、
-                    ボタンの左右余白とアイコンの字間を詰めている（PCは md: で元に戻す） */}
                 <div className="flex w-full gap-2 md:w-auto">
                     {canSearchReturinTrip && (
                         <button
@@ -153,13 +146,11 @@ export function ReservationSelectItem({
                         </button>
                     )}
                 </div>
-                {/* self-stretch でボタン列と同じ高さにし、メニューがボタンに被らないようにする */}
                 {showThreeDotsMenu && (
                     <div
                         className="relative flex shrink-0 items-center self-stretch"
                         ref={menuRef}
                     >
-                        {/* h-11 w-11 = 44px。タップ領域の下限を満たす大きさ */}
                         <button
                             onClick={handleMenuOpen}
                             className="text-primary-ink hover:bg-surface-muted flex h-11 w-11 items-center justify-center rounded-md text-2xl transition"
