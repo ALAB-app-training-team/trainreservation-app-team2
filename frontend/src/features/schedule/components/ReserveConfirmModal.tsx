@@ -68,23 +68,21 @@ export function ReserveConfirmModal({
                 />
                 <div>予約を確定しますか？</div>
             </div>
-            <div className="flex flex-col gap-2">
-                <UpdatedReservationInfo
-                    detail={scheduleInfo}
-                    showTotalFare={false}
-                    seats={selectedSeats.map((seat) => ({
-                        id: '',
-                        trainCarTypeName: '',
-                        trainCarNumber: seat.trainCarNumber,
-                        seatNumber: seat.seatNumber,
-                        seatColumn: seat.seatColumn,
-                        codeToken: '',
-                        seatFare: seat.seatFare,
-                        name: '',
-                        mail: '',
-                    }))}
-                />
-            </div>
+            <UpdatedReservationInfo
+                detail={scheduleInfo}
+                showTotalFare={false}
+                seats={selectedSeats.map((seat) => ({
+                    id: '',
+                    trainCarTypeName: '',
+                    trainCarNumber: seat.trainCarNumber,
+                    seatNumber: seat.seatNumber,
+                    seatColumn: seat.seatColumn,
+                    codeToken: '',
+                    seatFare: seat.seatFare,
+                    name: '',
+                    mail: '',
+                }))}
+            />
             <div className="bg-surface-subtle mt-3.5 flex flex-col gap-1 rounded-lg px-4 py-2.5">
                 {fareBreakdown.map((item) => (
                     <div
