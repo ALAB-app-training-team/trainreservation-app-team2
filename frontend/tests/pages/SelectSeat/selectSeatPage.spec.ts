@@ -238,8 +238,26 @@ test('購入者情報バリデーションチェック', async ({ page }) => {
     await expect(selectSeatPage.reservationInfoError).toContainText(
         'MM/YY（月/年）の形式で入力してください',
     );
-    // 有効期限-正常系
-    await selectSeatPage.fillCardExpiry('12/28');
+    // 有効期限-不正な月
+    await selectSeatPage.fillCardExpiry('13/30');
+    await expect(selectSeatPage.reservationInfoError).toContainText(
+        '月は01〜12で入力してください',
+    );
+    // 有効期限-過去
+    await selectSeatPage.fillCardExpiry('08/26');
+    await expect(selectSeatPage.reservationInfoError).toContainText(
+        '現在以降の年月を入力してください',
+    );
+    // 有効期限-過去-正常系
+    await selectSeatPage.fillCardExpiry('10/26');
+    await expect(selectSeatPage.reservationInfoError).toBeHidden();
+    // 有効期限-未来すぎ
+    await selectSeatPage.fillCardExpiry('12/37');
+    await expect(selectSeatPage.reservationInfoError).toContainText(
+        '現在から10年以内の年を入力してください',
+    );
+    // 有効期限-未来-正常系
+    await selectSeatPage.fillCardExpiry('12/36');
     await expect(selectSeatPage.reservationInfoError).toBeHidden();
 
     // セキュリティコード-必須
