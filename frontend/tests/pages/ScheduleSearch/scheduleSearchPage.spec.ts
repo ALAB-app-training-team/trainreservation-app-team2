@@ -440,6 +440,9 @@ test('未ログイン状態ではお気に入り経路の登録が表示され�
     );
     await expect(scheduleSearchPage.time).toHaveValue('10:30');
     await expect(scheduleSearchPage.arrivalTimeButton).toBeChecked();
+
+    await scheduleSearchPage.clickHistoryDeleteButton('仙台', '白石蔵王');
+    await expect(registeredRoute).toBeHidden();
 });
 
 test('お気に入り経路の削除ボタンを押すと、対象のお気に入り経路が削除され、一覧に表示されなくなること', async ({

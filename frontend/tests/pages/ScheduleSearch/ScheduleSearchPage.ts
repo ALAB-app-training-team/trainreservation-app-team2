@@ -146,9 +146,11 @@ export class ScheduleSearchPage {
         departureStationName: string,
         arrivalStationName: string,
     ) {
-        return this.page.getByRole('button', {
-            name: `${departureStationName}から${arrivalStationName}のお気に入り経路を削除`,
-        });
+        return this.page
+            .getByRole('button', {
+                name: `${departureStationName}から${arrivalStationName}のお気に入り経路を削除`,
+            })
+            .first();
     }
 
     async clickHistoryDeleteButton(
