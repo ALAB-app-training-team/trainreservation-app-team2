@@ -1,4 +1,4 @@
-import { useQuery } from '@tanstack/react-query';
+import { useQuery, useQueryClient } from '@tanstack/react-query';
 import { useState } from 'react';
 import { toast } from 'sonner';
 
@@ -8,9 +8,24 @@ import type { SearchHistoryDto } from '@/features/schedule/types/SearchHistoryDt
 import type { SearchRequestDto } from '@/features/schedule/types/SearchRequestDto';
 import { ERROR_MESSAGE } from '@/shared/constants/ErrorMessages';
 
+const showHistoryErrorToast = (message: string) => {
+    toast.error(message, {
+        duration: Infinity,
+        action: {
+            label: 'OK',
+            onClick: () => {},
+        },
+        classNames: {
+            title: 'text-left whitespace-pre-line',
+            actionButton: '!px-4 !py-2 !text-base !h-auto',
+        },
+    });
+};
+
 export function useSearchHistoryDto(searchRequestDto: SearchRequestDto) {
     const info = localStorage.getItem('name');
     const [isSubmitting, setIsSubmitting] = useState<boolean>(false);
+    const queryClient = useQueryClient();
 
     const { data: searchHistoryDtos = [] } = useQuery({
         queryKey: ['searchHistory'],
@@ -41,22 +56,38 @@ export function useSearchHistoryDto(searchRequestDto: SearchRequestDto) {
                 createdAt: '',
             };
             await apiClient.post(ENDPOINTS.HISTORY(), searchHistoryDto);
-        } catch {
-            toast.error(ERROR_MESSAGE.SAVE_HISTORY_ERROR, {
-                duration: Infinity,
-                action: {
-                    label: 'OK',
-                    onClick: () => {},
-                },
-                classNames: {
-                    title: 'text-left whitespace-pre-line',
-                    actionButton: '!px-4 !py-2 !text-base !h-auto',
-                },
+            await queryClient.invalidateQueries({
+                queryKey: ['searchHistory'],
             });
+        } catch {
+            showHistoryErrorToast(ERROR_MESSAGE.SAVE_HISTORY_ERROR);
         } finally {
             setIsSubmitting(false);
         }
     };
 
-    return { searchHistoryDtos, handleSaveHistory, isSubmitting };
+    const handleDeleteHistory = async (id: string) => {
+        if (!info) {
+            return;
+        }
+        if (isSubmitting) return;
+        try {
+            setIsSubmitting(true);
+            await apiClient.delete(ENDPOINTS.HISTORY(id));
+            await queryClient.invalidateQueries({
+                queryKey: ['searchHistory'],
+            });
+        } catch {
+            showHistoryErrorToast(ERROR_MESSAGE.DELETE_HISTORY_ERROR);
+        } finally {
+            setIsSubmitting(false);
+        }
+    };
+
+    return {
+        searchHistoryDtos,
+        handleSaveHistory,
+        handleDeleteHistory,
+        isSubmitting,
+    };
 }
