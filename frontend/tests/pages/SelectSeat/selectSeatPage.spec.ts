@@ -11,7 +11,7 @@ test('ゴミ箱ボタンを押すと、選択した座席が解除される', as
 
     await scheduleSearchPage.goto();
     await expect(page).toHaveURL('/scheduleSearch');
-    await scheduleSearchPage.clickDetailButton();
+    await scheduleSearchPage.clickScheduleItemButton();
     await expect(page.getByText('座席が選択されていません')).toBeVisible();
     const firstSeat =
         (await selectSeatPage.emptySeat.first().textContent()) ?? '';
@@ -39,7 +39,7 @@ test('座席を6席選択すると、それ以上選択できない', async ({ p
     //  ダイヤ検索画面からシートマップ画面に遷移する
     await scheduleSearchPage.goto();
     await expect(page).toHaveURL('/scheduleSearch');
-    await scheduleSearchPage.clickDetailButton();
+    await scheduleSearchPage.clickScheduleItemButton();
     await expect(page.getByText('座席が選択されていません')).toBeVisible();
     // 1号車から座席を選択する
     const firstSeat = (await selectSeatPage.emptySeat.first()) ?? '';
@@ -121,7 +121,7 @@ test('購入者情報バリデーションチェック', async ({ page }) => {
 
     await scheduleSearchPage.goto();
     await expect(page).toHaveURL('/scheduleSearch');
-    await scheduleSearchPage.clickDetailButton();
+    await scheduleSearchPage.clickScheduleItemButton();
     await selectSeatPage.selectSeat();
     await expect(selectSeatPage.reserveButton).toBeDisabled();
 
@@ -282,7 +282,7 @@ test('アカウント作成時のパスワードバリデーションチェッ�
 
     await scheduleSearchPage.goto();
     await expect(page).toHaveURL('/scheduleSearch');
-    await scheduleSearchPage.clickDetailButton();
+    await scheduleSearchPage.clickScheduleItemButton();
     await selectSeatPage.selectSeat();
     await expect(selectSeatPage.reserveButton).toBeDisabled();
     await selectSeatPage.clickAccountCreateCheckBox();
@@ -346,7 +346,7 @@ test('予約確定', async ({ page }) => {
 
     await scheduleSearchPage.goto();
     await expect(page).toHaveURL('/scheduleSearch');
-    await scheduleSearchPage.clickDetailButton();
+    await scheduleSearchPage.clickScheduleItemButton();
     await expect(page).toHaveURL('/selectSeat');
     await selectSeatPage.selectSeat();
     await selectSeatPage.inputGuestReserverInfo();
@@ -369,7 +369,7 @@ test('パスワードがエラーの場合、予約するボタンが非活性',
 
     await scheduleSearchPage.goto();
     await expect(page).toHaveURL('/scheduleSearch');
-    await scheduleSearchPage.clickDetailButton();
+    await scheduleSearchPage.clickScheduleItemButton();
     await expect(page).toHaveURL('/selectSeat');
     await selectSeatPage.selectSeat();
     await selectSeatPage.inputGuestReserverInfo();
@@ -401,7 +401,7 @@ test('登録済メールアドレスでアカウント作成できない', async
 
     await scheduleSearchPage.goto();
     await expect(page).toHaveURL('/scheduleSearch');
-    await scheduleSearchPage.clickDetailButton();
+    await scheduleSearchPage.clickScheduleItemButton();
     await expect(page).toHaveURL('/selectSeat');
     await selectSeatPage.selectSeat();
     await selectSeatPage.fillName('一般太郎');
@@ -427,7 +427,7 @@ test('ログイン中は氏名・メールアドレス入力欄・アカウン�
 
     await commonLogin();
     await expect(page).toHaveURL('/scheduleSearch');
-    await scheduleSearchPage.clickDetailButton();
+    await scheduleSearchPage.clickScheduleItemButton();
 
     await selectSeatPagePage.name.isHidden();
     await selectSeatPagePage.mailAddress.isHidden();
@@ -445,7 +445,7 @@ test('未ログイン時は氏名・メールアドレス入力欄・アカウ�
 
     await scheduleSearchPage.goto();
     await expect(page).toHaveURL('/scheduleSearch');
-    await scheduleSearchPage.clickDetailButton();
+    await scheduleSearchPage.clickScheduleItemButton();
 
     await selectSeatPagePage.name.isEditable();
     await selectSeatPagePage.mailAddress.isEditable();
@@ -462,7 +462,7 @@ test('シートマップでログインすると選択した座席が保持さ�
 
     await scheduleSearchPage.goto();
     await expect(page).toHaveURL('/scheduleSearch');
-    await scheduleSearchPage.clickDetailButton();
+    await scheduleSearchPage.clickScheduleItemButton();
     await expect(page).toHaveURL('/selectSeat');
     await expect(page.getByText('座席が選択されていません')).toBeVisible();
     await selectSeatPage.selectSeat();
@@ -546,7 +546,7 @@ test('日時電車変更の際はクレカ入力欄が表示されないこと',
     await reservationListPage.clickChangeButton();
     await reservationListPage.clickChangeTrainConfirmButton();
     await expect(page).toHaveURL('/scheduleSearch');
-    await scheduleSearchPage.clickDetailButton();
+    await scheduleSearchPage.clickScheduleItemButton();
     await expect(page).toHaveURL('selectSeat');
     //  確認事項
     await expect(
@@ -577,12 +577,12 @@ test('日時電車変更で新しい電車を選ぶと座席未選択,同じ電�
     await reservationListPage.clickChangeTrainConfirmButton();
     await expect(page).toHaveURL('/scheduleSearch');
     //  確認事項
-    await scheduleSearchPage.clickDetailButton();
+    await scheduleSearchPage.clickScheduleItemButton();
     await expect(page).toHaveURL('selectSeat');
     await expect(page.getByText('座席が選択されていません')).not.toBeVisible();
     await selectSeatPage.clickBackButton();
     await expect(page).toHaveURL('/scheduleSearch');
-    await scheduleSearchPage.clickSecondDetailButton();
+    await scheduleSearchPage.clickSecondScheduleItemButton();
     await expect(page).toHaveURL('selectSeat');
     await expect(page.getByText('座席が選択されていません')).toBeVisible();
 
