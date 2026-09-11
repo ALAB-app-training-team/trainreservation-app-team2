@@ -46,8 +46,8 @@ export function UpdateConfirmModal({
             : `${fareDifference > 0 ? '+' : ''}￥${fareDifference.toLocaleString()}`;
 
     return (
-        <>
-            <div className="flex flex-col items-start justify-center gap-1 pb-2">
+        <div className="flex flex-col gap-3">
+            <div className="flex flex-col items-start justify-center gap-1">
                 <CustomModalTitle
                     title="予約変更確認"
                     onRequestClose={onRequestClose}
@@ -80,7 +80,7 @@ export function UpdateConfirmModal({
                     }))}
                 />
             </div>
-            <div className="bg-surface-subtle m-2 flex items-center justify-between rounded-lg px-4 py-2.5">
+            <div className="bg-surface-subtle flex items-center justify-between rounded-lg px-4 py-2.5">
                 <span className="text-fg-muted text-sm">
                     {fareDifferenceLabel}
                 </span>
@@ -88,7 +88,7 @@ export function UpdateConfirmModal({
                     {fareDifferenceAmount}
                 </span>
             </div>
-            <div className="flex w-full items-center justify-end gap-4 p-1">
+            <div className="flex w-full items-center justify-end gap-4">
                 <button
                     onClick={onRequestClose}
                     disabled={isSubmitting}
@@ -104,6 +104,6 @@ export function UpdateConfirmModal({
                     変更を確定する
                 </button>
             </div>
-        </>
+        </div>
     );
 }

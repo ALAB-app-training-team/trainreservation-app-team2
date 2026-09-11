@@ -59,8 +59,8 @@ export function ReserveConfirmModal({
     );
 
     return (
-        <>
-            <div className="flex flex-col items-start justify-center gap-1 pb-2">
+        <div className="flex flex-col gap-3">
+            <div className="flex flex-col items-start justify-center gap-1">
                 <CustomModalTitle
                     title="予約確認"
                     onRequestClose={onRequestClose}
@@ -83,7 +83,7 @@ export function ReserveConfirmModal({
                     mail: '',
                 }))}
             />
-            <div className="bg-surface-subtle mt-3.5 flex flex-col gap-1 rounded-lg px-4 py-2.5">
+            <div className="bg-surface-subtle flex flex-col gap-1 rounded-lg px-4 py-2.5">
                 {fareBreakdown.map((item) => (
                     <div
                         key={`${item.typeName}-${item.seatFare}`}
@@ -108,11 +108,11 @@ export function ReserveConfirmModal({
                     </span>
                 </div>
             </div>
-            <div className="text-fg-muted mt-2 text-sm">
+            <div className="text-fg-muted text-sm">
                 ※予約の取り消しには手数料が発生します (1座席につき{' '}
                 {FARE_CONSTANTS.REFUND}円)
             </div>
-            <div className="flex w-full items-center justify-end gap-4 p-2">
+            <div className="flex w-full items-center justify-end gap-4">
                 <button
                     onClick={onRequestClose}
                     disabled={isSubmitting}
@@ -128,6 +128,6 @@ export function ReserveConfirmModal({
                     予約を確定する
                 </button>
             </div>
-        </>
+        </div>
     );
 }
