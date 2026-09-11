@@ -1,5 +1,4 @@
 import { BsCircle, BsDashLg, BsTriangle, BsXLg } from 'react-icons/bs';
-import { RxPeople } from 'react-icons/rx';
 
 import { FEW_LEFT_SEATS } from '@/features/schedule/constants/FewLeftSeats';
 import { SEAT_TYPE_LABELS } from '@/features/schedule/constants/SeatTypeLabel';
@@ -62,37 +61,21 @@ export function EmptySeatCount({
     };
 
     if (reservedSeats === 0 && greenSeats === 0 && gcSeats === 0) {
-        return (
-            <>
-                <div className="text-danger">満席</div>
-            </>
-        );
+        return <span className="text-danger">満席</span>;
     }
 
     return (
         <>
-            <div className="flex flex-wrap gap-1">
-                {seatTypeList.map((seat) => {
-                    const seatColorClass =
-                        seat.count === 0
-                            ? 'border-line-strong bg-surface-inset'
-                            : {
-                                  'reserved-seat':
-                                      'border-reserved-seat text-reserved-seat',
-                                  'green-seat':
-                                      'border-green-seat text-green-seat',
-                                  'gc-seat': 'border-gc-seat text-gc-seat',
-                              }[seat.name] || '';
-                    return (
-                        <div
-                            key={seat.label}
-                            className={`flex items-center gap-2 rounded-full border-1 px-2 py-0.5 ${seatColorClass}`}
-                        >
-                            <RxPeople />
-                            {getLeftSeatsLayout(seat)}
-                        </div>
-                    );
-                })}
+            <div className="flex gap-1">
+                {seatTypeList.map((seat) => (
+                    <div
+                        key={seat.label}
+                        className={`flex items-center gap-1 p-2 md:gap-2 md:px-2 md:py-0.5`}
+                    >
+                        {seat.label}
+                        {getLeftSeatsLayout(seat)}
+                    </div>
+                ))}
             </div>
         </>
     );

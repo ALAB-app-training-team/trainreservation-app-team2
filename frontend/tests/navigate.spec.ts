@@ -25,11 +25,11 @@ test('navigate-ゲストログイン全機能', async ({ page, context, logout }
     // 検索～予約
     await scheduleSearchPage.goto();
     await expect(page).toHaveURL('/scheduleSearch');
-    await scheduleSearchPage.clickDetailButton();
+    await scheduleSearchPage.clickScheduleItemButton();
     await expect(page).toHaveURL('/selectSeat');
     await selectSeatPage.clickBackButton();
     await expect(page).toHaveURL('/scheduleSearch');
-    await scheduleSearchPage.clickDetailButton();
+    await scheduleSearchPage.clickScheduleItemButton();
     await expect(page).toHaveURL('/selectSeat');
     await selectSeatPage.selectSeat();
     await selectSeatPage.inputGuestReserverInfo();
@@ -72,11 +72,11 @@ test('navigate-ゲストログイン全機能', async ({ page, context, logout }
     const createdAccountMail = `guest-${Date.now()}@test.com`;
     await scheduleSearchPage.goto();
     await expect(page).toHaveURL('/scheduleSearch');
-    await scheduleSearchPage.clickDetailButton();
+    await scheduleSearchPage.clickScheduleItemButton();
     await expect(page).toHaveURL('/selectSeat');
     await selectSeatPage.clickBackButton();
     await expect(page).toHaveURL('/scheduleSearch');
-    await scheduleSearchPage.clickDetailButton();
+    await scheduleSearchPage.clickScheduleItemButton();
     await expect(page).toHaveURL('/selectSeat');
     await selectSeatPage.selectSeat();
     await selectSeatPage.fillName('シートマップ画面で新規登録太郎');
@@ -146,7 +146,7 @@ test('navigate-アカウントログイン全機能', async ({
     await commonLogin();
     await expect(page).toHaveURL('/scheduleSearch');
     await expect(scheduleSearchPage.header.userName).toBeVisible();
-    await scheduleSearchPage.clickDetailButton();
+    await scheduleSearchPage.clickScheduleItemButton();
     await expect(page).toHaveURL('/selectSeat');
     await selectSeatPage.selectSeat();
     await expect(page.getByText('座席が選択されていません')).toBeHidden();
@@ -192,7 +192,7 @@ test('navigate-アカウントログイン全機能', async ({
     await reservationListPage.clickChangeButton();
     await reservationListPage.clickChangeTrainConfirmButton();
     await expect(page).toHaveURL('/scheduleSearch');
-    await scheduleSearchPage.clickDetailButton();
+    await scheduleSearchPage.clickScheduleItemButton();
     await expect(page).toHaveURL('/selectSeat');
     await expect(page.getByText('座席が選択されていません')).not.toBeVisible();
     await selectSeatPage.clickBackButton();
@@ -203,7 +203,7 @@ test('navigate-アカウントログイン全機能', async ({
     await reservationListPage.clickChangeButton();
     await reservationListPage.clickChangeTrainConfirmButton();
     await expect(page).toHaveURL('/scheduleSearch');
-    await scheduleSearchPage.clickSecondDetailButton();
+    await scheduleSearchPage.clickSecondScheduleItemButton();
     await expect(page).toHaveURL('/selectSeat');
     await expect(page.getByText('座席が選択されていません')).toBeVisible();
     await selectSeatPage.selectSeat();
@@ -236,7 +236,7 @@ test('navigate-アカウントログイン全機能', async ({
     await reservedTicketPage.clickChangeButton();
     await reservedTicketPage.clickChangeTrainConfirmButton();
     await expect(page).toHaveURL('/scheduleSearch');
-    await scheduleSearchPage.clickDetailButton();
+    await scheduleSearchPage.clickScheduleItemButton();
     await expect(page).toHaveURL('/selectSeat');
     await expect(page.getByText('座席が選択されていません')).not.toBeVisible();
     await selectSeatPage.clickBackButton();
@@ -246,7 +246,7 @@ test('navigate-アカウントログイン全機能', async ({
     await reservedTicketPage.clickChangeButton();
     await reservedTicketPage.clickChangeTrainConfirmButton();
     await expect(page).toHaveURL('/scheduleSearch');
-    await scheduleSearchPage.clickSecondDetailButton();
+    await scheduleSearchPage.clickSecondScheduleItemButton();
     await expect(page).toHaveURL('/selectSeat');
     await expect(page.getByText('座席が選択されていません')).toBeVisible();
     await selectSeatPage.selectSeat();
@@ -351,7 +351,7 @@ test('navigate-座席選択画面からログインして予約', async ({ page,
 
     await scheduleSearchPage.goto();
     await expect(page).toHaveURL('/scheduleSearch');
-    await scheduleSearchPage.clickDetailButton();
+    await scheduleSearchPage.clickScheduleItemButton();
     await expect(page).toHaveURL('/selectSeat');
     await selectSeatPage.clickLoginButton();
     await expect(page).toHaveURL('/login');
