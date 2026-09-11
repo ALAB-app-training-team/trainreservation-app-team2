@@ -26,6 +26,12 @@ public class ScheduleController {
         return ResponseEntity.ok(response);
     }
 
+    @GetMapping(path = "/fares")
+    public ResponseEntity<FareResponseDto> getFares(@Valid FareRequestDto request) {
+        FareResponseDto response = scheduleService.getFares(request);
+        return ResponseEntity.ok(response);
+    }
+
     @GetMapping(path = "/{id}/traincars")
     public ResponseEntity<List<TrainCarFormationResponseDto>> getTrainCarList(@PathVariable("id") String scheduleCd) {
         List<TrainCarFormationResponseDto> response = scheduleService.getTrainCarList(scheduleCd);
