@@ -237,7 +237,10 @@ public class SearchHistoryServiceTest {
         UUID historyId = UUID.randomUUID();
         when(searchHistoryRepository.findByIdAndAccountId(historyId, accountId)).thenReturn(Optional.empty());
 
-        assertThrows(IllegalArgumentException.class, () -> service.deleteSearchHistory(historyId, accountId));
+        IllegalArgumentException ex = assertThrows(
+            IllegalArgumentException.class, () -> service.deleteSearchHistory(historyId, accountId)
+        );
+        assertEquals("Search history is not found", ex.getMessage());
         verify(searchHistoryRepository, never()).delete(any());
     }
 }
