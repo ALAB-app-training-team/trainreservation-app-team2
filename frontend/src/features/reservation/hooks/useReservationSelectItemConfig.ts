@@ -18,6 +18,8 @@ export function useReservationSelectItemConfig(
     const canCheckReservation = !isDeleted && isEnabled;
     const canSearchReturinTrip = !isDeleted;
     const showThreeDotsMenu = canCancelReservation || canUpdateReservation;
+    const hasUnassignedSeat =
+        isActiveReservation && details.reservedSeats.some((seat) => !seat.name);
 
     return {
         isActiveReservation,
@@ -26,5 +28,6 @@ export function useReservationSelectItemConfig(
         canCheckReservation,
         canSearchReturinTrip,
         showThreeDotsMenu,
+        hasUnassignedSeat,
     };
 }

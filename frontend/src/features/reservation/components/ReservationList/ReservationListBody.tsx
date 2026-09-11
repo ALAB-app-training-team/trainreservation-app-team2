@@ -1,4 +1,5 @@
 import { useQueryClient } from '@tanstack/react-query';
+import dayjs from 'dayjs';
 import { useEffect, useState } from 'react';
 import { CiCalendar } from 'react-icons/ci';
 import { LuTicket } from 'react-icons/lu';
@@ -21,6 +22,29 @@ import type { ReservationResponseDto } from '@/features/reservation/types/Reserv
 import { CustomModal } from '@/shared/components/CustomModal';
 import { ERROR_MESSAGE } from '@/shared/constants/ErrorMessages';
 import { useModal } from '@/shared/hooks/useModal';
+
+type RideDateGroup = {
+    rideDate: string;
+    reservations: ReservationResponseDto[];
+};
+
+function groupByRideDate(
+    reservations: ReservationResponseDto[],
+): RideDateGroup[] {
+    const groups = new Map<string, ReservationResponseDto[]>();
+    for (const reservation of reservations) {
+        const group = groups.get(reservation.rideDate);
+        if (group) {
+            group.push(reservation);
+        } else {
+            groups.set(reservation.rideDate, [reservation]);
+        }
+    }
+    return [...groups].map(([rideDate, reservations]) => ({
+        rideDate,
+        reservations,
+    }));
+}
 
 export function ReservationListBody() {
     const { activeReservations, canceledReservations, pastReservations } =
@@ -136,16 +160,38 @@ export function ReservationListBody() {
                     </div>
                 </div>
                 {filteredReservations && filteredReservations.length > 0 ? (
-                    filteredReservations.map((reservation) => {
-                        return (
-                            <ReservationSelectItem
-                                key={reservation.reservationId}
-                                details={reservation}
-                                onRefundClicked={handleRefundModalOpen}
-                                onChangeClicked={handleChangeModalOpen}
-                            />
-                        );
-                    })
+                    groupByRideDate(filteredReservations).map((group) => (
+                        <div
+                            key={group.rideDate}
+                            className="flex flex-col gap-4 md:gap-3"
+                        >
+                            <div className="flex items-center gap-3">
+                                <span
+                                    data-testid="ride-date"
+                                    className="text-heading text-lg font-bold md:text-base"
+                                >
+                                    {dayjs(group.rideDate).format(
+                                        'YYYY年MM月DD日',
+                                    )}
+                                </span>
+                                <span
+                                    data-testid="ride-date-count"
+                                    className="bg-primary-light text-primary-ink rounded-full px-2 py-0.5 text-xs"
+                                >
+                                    {group.reservations.length}件
+                                </span>
+                                <span className="bg-line h-px grow" />
+                            </div>
+                            {group.reservations.map((reservation) => (
+                                <ReservationSelectItem
+                                    key={reservation.reservationId}
+                                    details={reservation}
+                                    onRefundClicked={handleRefundModalOpen}
+                                    onChangeClicked={handleChangeModalOpen}
+                                />
+                            ))}
+                        </div>
+                    ))
                 ) : (
                     <p>該当する予約が存在しません</p>
                 )}

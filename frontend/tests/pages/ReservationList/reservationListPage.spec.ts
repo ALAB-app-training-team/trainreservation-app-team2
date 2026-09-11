@@ -5,7 +5,7 @@ import { ReservationListPage } from '@tests/pages/ReservationList/ReservationLis
 import { ReservedTicketPage } from '../ReservedTicket/ReservedTicketPage';
 import { ScheduleSearchPage } from '@tests/pages/ScheduleSearch/ScheduleSearchPage';
 
-test('お支払い合計が正しく表示されていること', async ({
+test('予約した座席数が表示されていること', async ({
     page,
     createReservation,
     commonLogin,
@@ -18,10 +18,10 @@ test('お支払い合計が正しく表示されていること', async ({
     await createReservation();
     await reservationListPage.goto();
     await expect(page).toHaveURL('/reservationList');
-    const expectedFare = await reservationListPage.totalFareElement.filter({
-        hasText: '2,600',
+    const expectedSeatCount = reservationListPage.seatCountElement.filter({
+        hasText: '1席',
     });
-    await expect(expectedFare.first()).toBeVisible();
+    await expect(expectedSeatCount.first()).toBeVisible();
 
     await logout();
     await expect(page).toHaveURL('/login');
@@ -101,17 +101,17 @@ test('削除すると予約が1件削除されること', async ({
     await expect(page).toHaveURL('/scheduleSearch');
     await reservationListPage.goto();
     await expect(page).toHaveURL('/reservationList');
-    await reservationListPage.threeDotsButton
+    await reservationListPage.reservationItem
         .first()
         .waitFor({ state: 'visible' });
     const beforeReservationCount: number =
-        await reservationListPage.threeDotsButton.count();
+        await reservationListPage.reservationItem.count();
 
     await reservationListPage.clickThreeDotsButton();
     await reservationListPage.clickRefundButton();
     await reservationListPage.clickRefundConfirmButton();
 
-    await expect(reservationListPage.threeDotsButton).toHaveCount(
+    await expect(reservationListPage.reservationItem).toHaveCount(
         beforeReservationCount - 1,
     );
     await logout();
@@ -224,7 +224,7 @@ test('復路で検索の表示有無：有効・過去では表示あり、キ�
 
     // 過去：1件以上あったら、表示あり
     if (
-        await reservationListPage.totalFareElement
+        await reservationListPage.reservationItem
             .first()
             .isVisible()
             .catch(() => false)
