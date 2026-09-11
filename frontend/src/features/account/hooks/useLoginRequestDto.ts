@@ -8,7 +8,6 @@ import type { LoginRequestDto } from '@/features/account/types/LoginRequestDto';
 import type { LoginResponseDto } from '@/features/account/types/LoginResponseDto';
 import { ERROR_MESSAGE } from '@/shared/constants/ErrorMessages';
 import { VALIDATION_MESSAGE } from '@/shared/constants/ValidationMessages';
-import { removeWhiteSpace } from '@/shared/utils/RemoveWhiteSpace';
 
 export function useLoginRequestDto() {
     const navigate = useNavigate();
@@ -28,7 +27,7 @@ export function useLoginRequestDto() {
         [],
     );
 
-    const isMailEmpty = (value: string) => removeWhiteSpace(value) === '';
+    const isMailEmpty = (value: string) => value === '';
     const isPasswordEmpty = (value: string) => value === '';
 
     const isDisable =
@@ -70,6 +69,9 @@ export function useLoginRequestDto() {
             ...prev,
             [name]: value,
         }));
+        if (getFieldError(name)) {
+            editValidateMessage(name, value);
+        }
     };
 
     const handleLogin = async () => {
