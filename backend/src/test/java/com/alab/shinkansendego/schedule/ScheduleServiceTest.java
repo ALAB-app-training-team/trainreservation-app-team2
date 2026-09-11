@@ -32,6 +32,7 @@ import java.util.Optional;
 import java.util.UUID;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNull;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.never;
@@ -246,6 +247,36 @@ public class ScheduleServiceTest {
         ScheduleResponseDto actualResponse = service.getSearchedScheduleByStation(request);
 
         assertEquals(expectResponse, actualResponse);
+    }
+
+    @Test
+    @DisplayName("検索結果の全列車が満席の場合、料金は席種を問わずnullで返る")
+    void getSearchedScheduleByStation_withNoAvailableSeats_returnNullFares() {
+        when(sectionRepo.findByStartStationCd("STATION01")).thenReturn(depatureSectionList);
+        when(sectionRepo.findByGoalStationCd("STATION02")).thenReturn(arrivalSectionList);
+        when(timeRepo.findBySectionCd("SEC01")).thenReturn(sec01ScheduleList);
+        when(timeRepo.findBySectionCd("SEC02")).thenReturn(sec02ScheduleList);
+        when(timeRepo.findBySectionCd("SEC03")).thenReturn(sec03ScheduleList);
+        when(totalSeatRepo.findAll()).thenReturn(List.of(new TotalSeatEntity("E5SER", 3, 2, 1)));
+        when(scheduleRepo.findById("TIME01")).thenReturn(getScheduleEntity(trainType1));
+        when(scheduleRepo.findById("TIME02")).thenReturn(getScheduleEntity(trainType2));
+        when(scheduleRepo.findById("TIME03")).thenReturn(getScheduleEntity(trainType3));
+        when(scheduleRepo.findById("TIME04")).thenReturn(getScheduleEntity(trainType4));
+        when(scheduleRepo.findById("TIME05")).thenReturn(getScheduleEntity(trainType5));
+        when(scheduleRepo.findById("TIME06")).thenReturn(getScheduleEntity(trainType6));
+        when(timeRepo.findByScheduleCdAndDepartureTimeGreaterThanEqualAndArrivalTimeLessThanEqual(any(), any(), any())).thenReturn(secList);
+        when(reservedSeatSectionRepo.findByRideDateAndScheduleCdAndReservedSectionCdIn(any(), any(), any())).thenReturn(reservedSeatSecList);
+        when(sectionRepo.findBySectionCdIn(any())).thenReturn(fareSectionKmList);
+        when(fareKmService.getFareFromDistance(any())).thenReturn(
+            Map.of("non-reserved", 10880, "reserved", 11410, "green", 15070, "gran-class", 22170)
+        );
+
+        ScheduleResponseDto actualResponse = service.getSearchedScheduleByStation(request);
+
+        assertEquals(4, actualResponse.getSchedules().size());
+        assertNull(actualResponse.getReservedFare());
+        assertNull(actualResponse.getGreenFare());
+        assertNull(actualResponse.getGcFare());
     }
 
     @Test
