@@ -31,18 +31,19 @@ type RideDateGroup = {
 function groupByRideDate(
     reservations: ReservationResponseDto[],
 ): RideDateGroup[] {
-    return reservations.reduce<RideDateGroup[]>((groups, reservation) => {
-        const lastGroup = groups.at(-1);
-        if (lastGroup?.rideDate === reservation.rideDate) {
-            lastGroup.reservations.push(reservation);
+    const groups = new Map<string, ReservationResponseDto[]>();
+    for (const reservation of reservations) {
+        const group = groups.get(reservation.rideDate);
+        if (group) {
+            group.push(reservation);
         } else {
-            groups.push({
-                rideDate: reservation.rideDate,
-                reservations: [reservation],
-            });
+            groups.set(reservation.rideDate, [reservation]);
         }
-        return groups;
-    }, []);
+    }
+    return [...groups].map(([rideDate, reservations]) => ({
+        rideDate,
+        reservations,
+    }));
 }
 
 export function ReservationListBody() {
