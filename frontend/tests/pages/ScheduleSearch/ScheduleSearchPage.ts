@@ -142,6 +142,25 @@ export class ScheduleSearchPage {
         await this.historySaveButton.click();
     }
 
+    historyDeleteButton(
+        departureStationName: string,
+        arrivalStationName: string,
+    ) {
+        return this.page.getByRole('button', {
+            name: `${departureStationName}から${arrivalStationName}のお気に入り経路を削除`,
+        });
+    }
+
+    async clickHistoryDeleteButton(
+        departureStationName: string,
+        arrivalStationName: string,
+    ) {
+        await this.historyDeleteButton(
+            departureStationName,
+            arrivalStationName,
+        ).click();
+    }
+
     async clickHistoryDetailAccordionButton() {
         await this.historyDetailAccordionButton.click();
     }
