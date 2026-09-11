@@ -4,13 +4,13 @@ import { useNavigate } from 'react-router-dom';
 
 import type { ReservedSeatDto } from '@/features/reservation/types/ReservedSeatDto';
 import { EmptySeatCount } from '@/features/schedule/components/EmptySeatCount';
+import type { ScheduleDto } from '@/features/schedule/types/ScheduleDto';
 import type { ScheduleInfoDto } from '@/features/schedule/types/ScheduleInfoDto';
 import type { SearchRequestDto } from '@/features/schedule/types/SearchRequestDto';
-import type { SearchResponseDto } from '@/features/schedule/types/SearchResponseDto';
 import { TrainIcon } from '@/shared/components/TrainIcon';
 
 type ScheduleItemProps = {
-    schedule: SearchResponseDto;
+    schedule: ScheduleDto;
     date: string;
     departureStationCd: string;
     departureStationName: string;

@@ -58,7 +58,10 @@ export function ScheduleList({
     handleNextDate,
     maxDate,
 }: ScheduleListProps) {
-    const { schedules } = useSchedules(searchRequestDto, isInvalid);
+    const { schedules, reservedFare, greenFare, gcFare } = useSchedules(
+        searchRequestDto,
+        isInvalid,
+    );
 
     const [offset, setOffset] = useState(0);
     const perPage: number = 10;
@@ -94,9 +97,26 @@ export function ScheduleList({
     return (
         <>
             <div className="flex flex-col gap-4">
-                <span className="text-left">
-                    {filteredSchedules.length}件の列車が見つかりました
-                </span>
+                <div className="flex flex-wrap justify-between gap-4">
+                    <div>
+                        {filteredSchedules.length}件の列車が見つかりました
+                    </div>
+                    {reservedFare !== null &&
+                        greenFare !== null &&
+                        gcFare !== null && (
+                            <div className="flex flex-wrap gap-4">
+                                <div>
+                                    指定席：{reservedFare.toLocaleString()}円
+                                </div>
+                                <div>
+                                    グリーン車：{greenFare.toLocaleString()}円
+                                </div>
+                                <div>
+                                    グランクラス：{gcFare.toLocaleString()}円
+                                </div>
+                            </div>
+                        )}
+                </div>
                 {filteredSchedules.length ? (
                     <>
                         {filteredSchedules

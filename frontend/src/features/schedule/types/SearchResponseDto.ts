@@ -1,12 +1,8 @@
-import type { TrainDirection } from '@/features/schedule/types/TrainDirection';
+import type { ScheduleDto } from '@/features/schedule/types/ScheduleDto';
 
 export type SearchResponseDto = {
-    scheduleCd: string;
-    trainTypeName: string;
-    departureTime: string;
-    arrivalTime: string;
-    reservedSeats: number;
-    greenSeats: number;
-    gcSeats: number;
-    direction: TrainDirection;
+    reservedFare: number | null;
+    greenFare: number | null;
+    gcFare: number | null;
+    schedules: ScheduleDto[];
 };

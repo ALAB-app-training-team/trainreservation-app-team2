@@ -21,14 +21,8 @@ public class ScheduleController {
     }
 
     @GetMapping
-    public ResponseEntity<List<ScheduleResponseDto>> getSchedule(@Valid ScheduleRequestDto request) {
-        List<ScheduleResponseDto> response = scheduleService.getSearchedScheduleByStation(request);
-        return ResponseEntity.ok(response);
-    }
-
-    @GetMapping(path = "/fares")
-    public ResponseEntity<FareResponseDto> getFares(@Valid FareRequestDto request) {
-        FareResponseDto response = scheduleService.getFares(request);
+    public ResponseEntity<ScheduleResponseDto> getSchedule(@Valid ScheduleRequestDto request) {
+        ScheduleResponseDto response = scheduleService.getSearchedScheduleByStation(request);
         return ResponseEntity.ok(response);
     }
 

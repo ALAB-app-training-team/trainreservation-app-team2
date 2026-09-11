@@ -2,6 +2,7 @@ package com.alab.shinkansendego.schedule;
 
 import com.alab.shinkansendego.departurearrivaltime.DepartureArrivalTimeEntity;
 import com.alab.shinkansendego.departurearrivaltime.DepartureArrivalTimeRepository;
+import com.alab.shinkansendego.farekm.FareKmService;
 import com.alab.shinkansendego.reservedseatsection.ReservedSeatSectionEntity;
 import com.alab.shinkansendego.reservedseatsection.ReservedSeatSectionRepository;
 import com.alab.shinkansendego.seattype.SeatTypeEntity;
@@ -26,17 +27,21 @@ import java.time.LocalTime;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 import java.util.UUID;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.Mockito.never;
+import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
 public class ScheduleServiceTest {
     private final List<SectionKmEntity> depatureSectionList = new ArrayList<>();
     private final List<SectionKmEntity> arrivalSectionList = new ArrayList<>();
+    private final List<SectionKmEntity> fareSectionKmList = new ArrayList<>();
     private final List<DepartureArrivalTimeEntity> sec01ScheduleList = new ArrayList<>();
     private final List<DepartureArrivalTimeEntity> sec02ScheduleList = new ArrayList<>();
     private final List<DepartureArrivalTimeEntity> sec03ScheduleList = new ArrayList<>();
@@ -61,15 +66,24 @@ public class ScheduleServiceTest {
     private ReservedSeatSectionRepository reservedSeatSectionRepo;
     @Mock
     private TotalSeatRepository totalSeatRepo;
+    @Mock
+    private FareKmService fareKmService;
     @InjectMocks
     private ScheduleService service;
 
-    private static @NonNull List<ScheduleResponseDto> getExpectScheduleResponseDtosList() {
-        ScheduleResponseDto expect01 = new ScheduleResponseDto("TIME02", "やまびこ2号", LocalTime.of(11, 0, 0), LocalTime.of(16, 10, 0), 797, 58, 17, "UP");
-        ScheduleResponseDto expect02 = new ScheduleResponseDto("TIME03", "やまびこ3号", LocalTime.of(12, 0, 0), LocalTime.of(12, 30, 0), 797, 58, 17, "UP");
-        ScheduleResponseDto expect03 = new ScheduleResponseDto("TIME04", "やまびこ4号", LocalTime.of(13, 0, 0), LocalTime.of(13, 40, 0), 797, 58, 17, "UP");
-        ScheduleResponseDto expect04 = new ScheduleResponseDto("TIME06", "やまびこ6号", LocalTime.of(15, 0, 0), LocalTime.of(16, 0, 0), 797, 58, 17, "UP");
+    private static @NonNull List<ScheduleDto> getExpectScheduleDtosList() {
+        ScheduleDto expect01 = new ScheduleDto("TIME02", "やまびこ2号", LocalTime.of(11, 0, 0), LocalTime.of(16, 10, 0), 797, 58, 17, "UP");
+        ScheduleDto expect02 = new ScheduleDto("TIME03", "やまびこ3号", LocalTime.of(12, 0, 0), LocalTime.of(12, 30, 0), 797, 58, 17, "UP");
+        ScheduleDto expect03 = new ScheduleDto("TIME04", "やまびこ4号", LocalTime.of(13, 0, 0), LocalTime.of(13, 40, 0), 797, 58, 17, "UP");
+        ScheduleDto expect04 = new ScheduleDto("TIME06", "やまびこ6号", LocalTime.of(15, 0, 0), LocalTime.of(16, 0, 0), 797, 58, 17, "UP");
         return Arrays.asList(expect01, expect02, expect03, expect04);
+    }
+
+    private static @NonNull ScheduleResponseDto getExpectScheduleResponseDto() {
+        return new ScheduleResponseDto(
+            11410, 15070, 22170,
+            getExpectScheduleDtosList()
+        );
     }
 
     private static @NonNull ScheduleEntity getExpectScheduleByScheduleCd() {
@@ -117,6 +131,7 @@ public class ScheduleServiceTest {
         MockitoAnnotations.openMocks(this);
         depatureSectionList.clear();
         arrivalSectionList.clear();
+        fareSectionKmList.clear();
         sec01ScheduleList.clear();
         sec02ScheduleList.clear();
         sec03ScheduleList.clear();
@@ -134,6 +149,10 @@ public class ScheduleServiceTest {
         sec03.setDirection("UP");
         depatureSectionList.addAll(Arrays.asList(sec01, sec02));
         arrivalSectionList.addAll(Arrays.asList(sec02, sec03));
+        sec01.setDistanceKm(30.3);
+        sec02.setDistanceKm(321.5);
+        sec03.setDistanceKm(183.5);
+        fareSectionKmList.addAll(Arrays.asList(sec01, sec02, sec03));
         DepartureArrivalTimeEntity data01 = new DepartureArrivalTimeEntity();
         data01.setTimeCd("TIME01");
         data01.setScheduleCd("TIME01");
@@ -217,12 +236,29 @@ public class ScheduleServiceTest {
         when(scheduleRepo.findById("TIME06")).thenReturn(getScheduleEntity(trainType6));
         when(timeRepo.findByScheduleCdAndDepartureTimeGreaterThanEqualAndArrivalTimeLessThanEqual(any(), any(), any())).thenReturn(secList);
         when(reservedSeatSectionRepo.findByRideDateAndScheduleCdAndReservedSectionCdIn(any(), any(), any())).thenReturn(reservedSeatSecList);
+        when(sectionRepo.findBySectionCdIn(any())).thenReturn(fareSectionKmList);
+        when(fareKmService.getFareFromDistance(any())).thenReturn(
+            Map.of("non-reserved", 10880, "reserved", 11410, "green", 15070, "gran-class", 22170)
+        );
 
-        List<ScheduleResponseDto> expectList = getExpectScheduleResponseDtosList();
+        ScheduleResponseDto expectResponse = getExpectScheduleResponseDto();
 
-        List<ScheduleResponseDto> actualList = service.getSearchedScheduleByStation(request);
+        ScheduleResponseDto actualResponse = service.getSearchedScheduleByStation(request);
 
-        assertEquals(expectList, actualList);
+        assertEquals(expectResponse, actualResponse);
+    }
+
+    @Test
+    @DisplayName("該当するダイヤが無い場合、料金はnullで返り料金算出も行われない")
+    void getSearchedScheduleByStation_withNoMatchedSchedule_returnNullFares() {
+        when(sectionRepo.findByStartStationCd("STATION01")).thenReturn(depatureSectionList);
+        when(sectionRepo.findByGoalStationCd("STATION02")).thenReturn(arrivalSectionList);
+        when(timeRepo.findBySectionCd(any())).thenReturn(new ArrayList<>());
+
+        ScheduleResponseDto actualResponse = service.getSearchedScheduleByStation(request);
+
+        assertEquals(new ScheduleResponseDto(null, null, null, new ArrayList<>()), actualResponse);
+        verify(fareKmService, never()).getFareFromDistance(any());
     }
 
     @Test
