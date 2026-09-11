@@ -108,10 +108,10 @@ export function ReserveConfirmModal({
                     </span>
                 </div>
             </div>
-            <p className="text-fg-muted mt-2 text-sm">
+            <div className="text-fg-muted mt-2 text-sm">
                 ※予約の取り消しには手数料が発生します (1座席につき{' '}
                 {FARE_CONSTANTS.REFUND}円)
-            </p>
+            </div>
             <div className="flex w-full items-center justify-end gap-4 p-2">
                 <button
                     onClick={onRequestClose}
