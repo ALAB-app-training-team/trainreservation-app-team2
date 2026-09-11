@@ -60,7 +60,7 @@ export function TrainCars({
             {filteredCars.length > 0 ? (
                 <>
                     <div
-                        className="flex scrollbar-thin gap-2 overflow-x-auto"
+                        className="flex gap-2 overflow-x-auto"
                         data-testid="train-cars"
                     >
                         {filteredCars.map((car) => (
@@ -99,7 +99,7 @@ export function TrainCars({
                 </>
             ) : (
                 <>
-                    <p className="py-4 pl-2 text-sm text-fg-muted">
+                    <p className="text-fg-muted py-4 pl-2 text-sm">
                         {ERROR_MESSAGE.NO_TRAIN}
                     </p>
                 </>
