@@ -69,9 +69,7 @@ export function useLoginRequestDto() {
             ...prev,
             [name]: value,
         }));
-        if (getFieldError(name)) {
-            editValidateMessage(name, value);
-        }
+        editValidateMessage(name, value);
     };
 
     const handleLogin = async () => {
