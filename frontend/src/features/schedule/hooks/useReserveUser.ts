@@ -63,34 +63,106 @@ export function useReserveUser() {
     const isCardNameInvalid = (value: string) => {
         return !/^[A-Z\s]+$/.test(value);
     };
-    const isExpiryInvalid = (value: string) => {
+    const isExpiryFormatInvalid = (value: string) => {
         return value === '' || !/^\d{2}\/\d{2}$/.test(value);
+    };
+    const parseExpiry = (value: string) => {
+        const match = /^(\d{2})\/(\d{2})$/.exec(value);
+        if (!match) {
+            return null;
+        }
+        return { month: Number(match[1]), year: Number(match[2]) };
+    };
+    const isExpiryMonthInvalid = (value: string) => {
+        const parsed = parseExpiry(value);
+        return parsed !== null && (parsed.month < 1 || parsed.month > 12);
+    };
+    const isExpiryPast = (value: string) => {
+        const parsed = parseExpiry(value);
+        if (parsed === null || isExpiryMonthInvalid(value)) {
+            return false;
+        }
+        const now = new Date();
+        const currentYear = now.getFullYear() % 100;
+        const currentMonth = now.getMonth() + 1;
+        return (
+            parsed.year < currentYear ||
+            (parsed.year === currentYear && parsed.month < currentMonth)
+        );
+    };
+    const isExpiryTooFuture = (value: string) => {
+        const parsed = parseExpiry(value);
+        if (parsed === null || isExpiryMonthInvalid(value)) {
+            return false;
+        }
+        const currentYear = new Date().getFullYear() % 100;
+        return parsed.year > currentYear + 10;
+    };
+    const isExpiryInvalid = (value: string) => {
+        return (
+            isExpiryFormatInvalid(value) ||
+            isExpiryMonthInvalid(value) ||
+            isExpiryPast(value) ||
+            isExpiryTooFuture(value)
+        );
     };
     const isCvcInvalid = (value: string) => {
         return value === '' || !/^\d{3,4}$/.test(value);
     };
 
-    const checkInvalid = (reserveUser: ReserveUser) => {
+    const getExpiryErrorMessage = (value: string): string | null => {
+        if (isExpiryFormatInvalid(value)) {
+            return VALIDATION_MESSAGE.INVALID_EXPIRY;
+        }
+        if (isExpiryMonthInvalid(value)) {
+            return VALIDATION_MESSAGE.INVALID_EXPIRY_MONTH;
+        }
+        if (isExpiryPast(value)) {
+            return VALIDATION_MESSAGE.EXPIRY_PAST;
+        }
+        if (isExpiryTooFuture(value)) {
+            return VALIDATION_MESSAGE.EXPIRY_TOO_FUTURE;
+        }
+        return null;
+    };
+
+    const isReserverInfoInvalid = (reserveUser: ReserveUser) => {
         return (
-            (!isLoggedIn &&
-                (isNameEmpty(reserveUser.reserverName) ||
-                    isNameMaxLength(reserveUser.reserverName) ||
-                    isMailEmpty(reserveUser.reserverMail) ||
-                    isMailInvalid(reserveUser.reserverMail) ||
-                    isMailMaxLength(reserveUser.reserverMail))) ||
-            (isAccountCreate &&
-                (!policy.isBetweenLength ||
-                    !policy.hasNumber ||
-                    !policy.hasUppercase ||
-                    !policy.hasLowercase ||
-                    !policy.isValid ||
-                    isPasswordCheckEmpty(reserveUser.passwordCheck) ||
-                    isNotMatchPassword(reserveUser.passwordCheck))) ||
+            isNameEmpty(reserveUser.reserverName) ||
+            isNameMaxLength(reserveUser.reserverName) ||
+            isMailEmpty(reserveUser.reserverMail) ||
+            isMailInvalid(reserveUser.reserverMail) ||
+            isMailMaxLength(reserveUser.reserverMail)
+        );
+    };
+
+    const isAccountCreateInvalid = (reserveUser: ReserveUser) => {
+        return (
+            !policy.isBetweenLength ||
+            !policy.hasNumber ||
+            !policy.hasUppercase ||
+            !policy.hasLowercase ||
+            !policy.isValid ||
+            isPasswordCheckEmpty(reserveUser.passwordCheck) ||
+            isNotMatchPassword(reserveUser.passwordCheck)
+        );
+    };
+
+    const isCardInfoInvalid = (reserveUser: ReserveUser) => {
+        return (
             isCardNumberInvalid(reserveUser.cardNumber) ||
             isCardNameEmpty(reserveUser.cardName) ||
             isCardNameInvalid(reserveUser.cardName) ||
             isExpiryInvalid(reserveUser.expiry) ||
             isCvcInvalid(reserveUser.cvc)
+        );
+    };
+
+    const checkInvalid = (reserveUser: ReserveUser) => {
+        return (
+            (!isLoggedIn && isReserverInfoInvalid(reserveUser)) ||
+            (isAccountCreate && isAccountCreateInvalid(reserveUser)) ||
+            isCardInfoInvalid(reserveUser)
         );
     };
 
@@ -166,11 +238,9 @@ export function useReserveUser() {
                 });
             }
         } else if (field === 'expiry') {
-            if (isExpiryInvalid(value)) {
-                messages.push({
-                    field: 'expiry',
-                    message: VALIDATION_MESSAGE.INVALID_EXPIRY,
-                });
+            const expiryMessage = getExpiryErrorMessage(value);
+            if (expiryMessage !== null) {
+                messages.push({ field: 'expiry', message: expiryMessage });
             }
         } else if (field === 'cvc') {
             if (isCvcInvalid(value)) {
