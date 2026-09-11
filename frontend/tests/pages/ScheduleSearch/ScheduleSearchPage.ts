@@ -4,7 +4,7 @@ import { Header } from '@tests/pages/shared/Header';
 export class ScheduleSearchPage {
     readonly page: Page;
     readonly header: Header;
-    readonly detailButton: Locator;
+    readonly scheduleItemButton: Locator;
     readonly departureStationSelectElement: Locator;
     readonly departureStation: Locator;
     readonly arrivalStationSelectElement: Locator;
@@ -28,7 +28,7 @@ export class ScheduleSearchPage {
     constructor(page: Page) {
         this.page = page;
         this.header = new Header(page);
-        this.detailButton = page.getByRole('button', { name: '詳細を見る' });
+        this.scheduleItemButton = page.getByTestId('schedule');
         this.departureStationSelectElement = page.getByTestId(
             'departureStation-select',
         );
@@ -74,12 +74,12 @@ export class ScheduleSearchPage {
         await this.page.goto('/');
     }
 
-    async clickDetailButton() {
-        await this.detailButton.first().click();
+    async clickScheduleItemButton() {
+        await this.scheduleItemButton.first().click();
     }
 
-    async clickSecondDetailButton() {
-        await this.detailButton.nth(1).click();
+    async clickSecondScheduleItemButton() {
+        await this.scheduleItemButton.nth(1).click();
     }
 
     async openDepartureStationDropdown() {

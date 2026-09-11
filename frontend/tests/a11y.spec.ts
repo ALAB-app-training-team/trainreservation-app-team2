@@ -17,7 +17,7 @@ test('a11y-scheduleSearch', async ({ page }) => {
 
     await scheduleSearchPage.goto();
     await expect(page).toHaveURL('/scheduleSearch');
-    await scheduleSearchPage.detailButton.first().waitFor({ state: 'visible' });
+    await scheduleSearchPage.scheduleItemButton.first().waitFor({ state: 'visible' });
 
     const accessibilityScanResults = await new AxeBuilder({ page })
         .withRules(['color-contrast'])
@@ -31,7 +31,7 @@ test('a11y-selectSeat-guest', async ({ page }) => {
     const selectSeatPage = new SelectSeatPage(page);
 
     await scheduleSearchPage.goto();
-    await scheduleSearchPage.clickDetailButton();
+    await scheduleSearchPage.clickScheduleItemButton();
     await expect(page).toHaveURL('/selectSeat');
     await selectSeatPage.emptySeat.first().waitFor({ state: 'visible' });
 
@@ -47,7 +47,7 @@ test('a11y-selectSeat-accountCreate', async ({ page }) => {
     const selectSeatPage = new SelectSeatPage(page);
 
     await scheduleSearchPage.goto();
-    await scheduleSearchPage.clickDetailButton();
+    await scheduleSearchPage.clickScheduleItemButton();
     await expect(page).toHaveURL('/selectSeat');
     await selectSeatPage.emptySeat.first().waitFor({ state: 'visible' });
     await selectSeatPage.clickAccountCreateCheckBox();
@@ -65,7 +65,7 @@ test('a11y-selectSeat-account', async ({ page, commonLogin, logout }) => {
 
     await commonLogin();
     await expect(page).toHaveURL('/scheduleSearch');
-    await scheduleSearchPage.clickDetailButton();
+    await scheduleSearchPage.clickScheduleItemButton();
     await expect(page).toHaveURL('/selectSeat');
     await selectSeatPage.emptySeat.first().waitFor({ state: 'visible' });
 
