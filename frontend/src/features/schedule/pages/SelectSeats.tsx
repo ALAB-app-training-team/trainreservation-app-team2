@@ -423,11 +423,6 @@ export function SelectSeats() {
                     </button>
                 )}
             </div>
-            {isChanging && (
-                <h1 className="m-0! px-4 pt-2 text-left text-3xl! md:pt-4">
-                    予約変更中
-                </h1>
-            )}
 
             <div className="flex w-full flex-col items-start justify-between gap-4 p-4 pb-24 md:flex-row md:pb-4">
                 <div className="w-full md:w-7/10 md:min-w-0">
