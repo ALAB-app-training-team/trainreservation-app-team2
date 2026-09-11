@@ -44,12 +44,6 @@ export function UpdateConfirmModal({
         fareDifference < 0
             ? `-￥${Math.abs(fareDifference).toLocaleString()}`
             : `${fareDifference > 0 ? '+' : ''}￥${fareDifference.toLocaleString()}`;
-    const fareDifferenceColor =
-        fareDifference > 0
-            ? 'text-red-600'
-            : fareDifference < 0
-              ? 'text-primary'
-              : 'text-gray-900';
 
     return (
         <>
@@ -86,11 +80,11 @@ export function UpdateConfirmModal({
                     }))}
                 />
             </div>
-            <div className="m-2 flex items-center justify-between rounded-lg bg-gray-50 px-4 py-2.5">
-                <span className="text-sm text-gray-500">
+            <div className="bg-surface-subtle m-2 flex items-center justify-between rounded-lg px-4 py-2.5">
+                <span className="text-fg-muted text-sm">
                     {fareDifferenceLabel}
                 </span>
-                <span className={`text-lg font-bold ${fareDifferenceColor}`}>
+                <span className="text-fg text-lg font-bold">
                     {fareDifferenceAmount}
                 </span>
             </div>

@@ -86,7 +86,7 @@ export function ReserveConfirmModal({
                     >
                         <span>
                             {item.typeName}
-                            <span className="ml-2 text-gray-500">
+                            <span className="ml-2">
                                 ￥{item.seatFare.toLocaleString()} ×{' '}
                                 {item.count}
                             </span>
@@ -96,14 +96,14 @@ export function ReserveConfirmModal({
                         </span>
                     </div>
                 ))}
-                <div className="mt-1 flex items-center justify-between border-t border-gray-200 pt-2">
-                    <span className="text-sm text-gray-500">お支払い合計</span>
-                    <span className="text-primary text-lg font-bold">
+                <div className="border-line mt-1 flex items-center justify-between border-t pt-2">
+                    <span className="text-fg-muted text-sm">お支払い合計</span>
+                    <span className="text-lg font-bold">
                         ￥{totalFare.toLocaleString()}
                     </span>
                 </div>
             </div>
-            <p className="mt-2 text-sm text-gray-500">
+            <p className="text-fg-muted mt-2 text-sm">
                 ※予約の取り消しには手数料が発生します (1座席につき{' '}
                 {FARE_CONSTANTS.REFUND}円)
             </p>
@@ -111,7 +111,7 @@ export function ReserveConfirmModal({
                 <button
                     onClick={onRequestClose}
                     disabled={isSubmitting}
-                    className="border-primary text-primary rounded-lg border-2 p-2 disabled:border-gray-300 disabled:bg-gray-300 disabled:text-white"
+                    className="border-primary-ink text-primary-ink disabled:border-line-strong disabled:bg-surface-disabled rounded-lg border-2 p-2 disabled:text-white"
                 >
                     キャンセル
                 </button>
