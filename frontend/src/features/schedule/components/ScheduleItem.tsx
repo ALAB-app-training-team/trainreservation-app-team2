@@ -1,6 +1,5 @@
 import dayjs from 'dayjs';
 import customParseFormat from 'dayjs/plugin/customParseFormat';
-import { FiArrowRight } from 'react-icons/fi';
 import { useNavigate } from 'react-router-dom';
 
 import type { ReservedSeatDto } from '@/features/reservation/types/ReservedSeatDto';
@@ -84,7 +83,7 @@ export function ScheduleItem({
                 scheduleInfoDto,
                 searchRequestDto,
                 ...(reservationId && { reservationId }),
-                isChanging: isChanging,
+                isChanging,
                 isBack,
                 isFromReservedTicket: false,
                 ...(preChangeScheduleInfo && { preChangeScheduleInfo }),
@@ -101,91 +100,62 @@ export function ScheduleItem({
     dayjs.extend(customParseFormat);
 
     return (
-        <>
-            <div
-                data-testid="schedule"
-                className="border-primary-light flex w-full flex-row flex-wrap items-center justify-start gap-4 rounded-2xl border-2 p-8 md:items-center"
-            >
-                <div
-                    data-testid="schedule-train"
-                    className="order-1 flex flex-1 gap-4 md:flex-none"
-                >
-                    <div className="flex items-center">
-                        <TrainIcon trainTypeName={schedule.trainTypeName} />
-                    </div>
-                    {(() => {
-                        const trainTypeName =
-                            schedule.trainTypeName.split(/(\d+)/);
-                        return (
-                            <div className="w-full min-w-20 text-left">
-                                <div className="text-lg font-extrabold">
-                                    {trainTypeName[0]}
-                                </div>
-                                <div className="text-base">
-                                    {trainTypeName[1]}
-                                    {trainTypeName[2]}
-                                </div>
-                            </div>
-                        );
-                    })()}
-                </div>
-                <div className="order-3 flex w-full items-center justify-between gap-4 md:order-2 md:flex-1">
-                    <div className="text-left">
-                        <div
+        <button
+            type="button"
+            onClick={handleSearch}
+            data-testid="schedule"
+            disabled={
+                schedule.reservedSeats === 0 &&
+                schedule.greenSeats === 0 &&
+                schedule.gcSeats === 0
+            }
+            className="border-primary-light group enabled:hover:border-primary-ink flex w-full flex-col items-start gap-3 rounded-2xl border-2 p-4 text-left transition-colors duration-200 ease-out sm:p-8 md:flex-row md:items-center md:justify-between"
+        >
+            <div className="flex items-center gap-2">
+                <TrainIcon trainTypeName={schedule.trainTypeName} size="lg" />
+                <div className="flex flex-col items-start gap-1">
+                    <div className="flex flex-wrap items-baseline gap-1.5">
+                        <span
                             data-testid="schedule-departure-time"
-                            className="text-2xl font-black"
+                            className="text-heading text-2xl font-black tabular-nums"
                         >
                             {dayjs(schedule.departureTime, 'HH:mm:ss').format(
                                 'HH:mm',
                             )}
-                        </div>
-                        <div>{departureStationName}</div>
-                    </div>
-                    <div className="text-primary-ink flex flex-1 items-center gap-2">
-                        <div className="border-primary-light relative w-full border-t-4 border-dotted">
-                            <span className="bg-surface absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 px-2">
-                                {calculateDuration(
-                                    schedule.departureTime,
-                                    schedule.arrivalTime,
-                                )}
-                            </span>
-                        </div>
-                        <div className="text-2xl">
-                            <FiArrowRight />
-                        </div>
-                    </div>
-                    <div className="text-left">
-                        <div
+                        </span>
+                        <span className="text-heading text-2xl font-black">
+                            -
+                        </span>
+                        <span
                             data-testid="schedule-arrival-time"
-                            className="text-2xl font-black"
+                            className="text-heading text-2xl font-black tabular-nums"
                         >
                             {dayjs(schedule.arrivalTime, 'HH:mm:ss').format(
                                 'HH:mm',
                             )}
-                        </div>
-                        <div>{arrivalStationName}</div>
+                        </span>
+                        <span className="text-fg-muted text-sm">
+                            (
+                            {calculateDuration(
+                                schedule.departureTime,
+                                schedule.arrivalTime,
+                            )}
+                            )
+                        </span>
+                    </div>
+                    <div
+                        data-testid="schedule-train"
+                        className="text-fg-secondary text-sm"
+                    >
+                        {schedule.trainTypeName}
                     </div>
                 </div>
-                <div className="order-2 flex flex-wrap items-center gap-2 md:order-3 md:w-55 md:flex-col md:items-end">
-                    <EmptySeatCount
-                        reservedSeats={schedule.reservedSeats}
-                        greenSeats={schedule.greenSeats}
-                        gcSeats={schedule.gcSeats}
-                    />
-                    <button
-                        type="button"
-                        onClick={handleSearch}
-                        className="bg-primary order-2 rounded-lg p-2 text-white md:order-3"
-                        disabled={
-                            schedule.reservedSeats === 0 &&
-                            schedule.greenSeats === 0 &&
-                            schedule.gcSeats === 0
-                        }
-                    >
-                        詳細を見る
-                    </button>
-                </div>
             </div>
-        </>
+            <EmptySeatCount
+                reservedSeats={schedule.reservedSeats}
+                greenSeats={schedule.greenSeats}
+                gcSeats={schedule.gcSeats}
+            />
+        </button>
     );
 }

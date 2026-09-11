@@ -33,7 +33,7 @@ export const test = base.extend<Fixture>({
             const selectSeatPage = new SelectSeatPage(page);
 
             await scheduleSearchPage.goto();
-            await scheduleSearchPage.clickDetailButton();
+            await scheduleSearchPage.clickScheduleItemButton();
             await selectSeatPage.selectSeat();
             await selectSeatPage.inputGuestReserverInfo();
             await selectSeatPage.inputCardInfo();
@@ -52,7 +52,7 @@ export const test = base.extend<Fixture>({
             const selectSeatPage = new SelectSeatPage(page);
 
             await scheduleSearchPage.goto();
-            await scheduleSearchPage.clickDetailButton();
+            await scheduleSearchPage.clickScheduleItemButton();
             await selectSeatPage.selectSeat();
             if (testInfo.project.name === iPhoneSEProjectName) {
                 await selectSeatPage.clickReservationSheetButton();
