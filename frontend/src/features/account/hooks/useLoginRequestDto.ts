@@ -1,4 +1,4 @@
-import { type ChangeEvent, useState } from 'react';
+import { type ChangeEvent, type FocusEvent, useState } from 'react';
 import { useLocation, useNavigate } from 'react-router-dom';
 import { toast } from 'sonner';
 
@@ -7,6 +7,7 @@ import { ENDPOINTS } from '@/api/routes';
 import type { LoginRequestDto } from '@/features/account/types/LoginRequestDto';
 import type { LoginResponseDto } from '@/features/account/types/LoginResponseDto';
 import { ERROR_MESSAGE } from '@/shared/constants/ErrorMessages';
+import { VALIDATION_MESSAGE } from '@/shared/constants/ValidationMessages';
 
 export function useLoginRequestDto() {
     const navigate = useNavigate();
@@ -18,12 +19,57 @@ export function useLoginRequestDto() {
     const location = useLocation();
     const { prevPath, ...prevData } = location.state ?? {};
 
+    type InvalidMessage = {
+        field: keyof LoginRequestDto;
+        message: string;
+    };
+    const [invalidMessages, setInvalidMessages] = useState<InvalidMessage[]>(
+        [],
+    );
+
+    const isMailEmpty = (value: string) => value === '';
+    const isPasswordEmpty = (value: string) => value === '';
+
+    const isDisable =
+        isMailEmpty(loginRequestDto.mail) ||
+        isPasswordEmpty(loginRequestDto.password);
+
+    const editValidateMessage = (field: string, value: string) => {
+        const messages: InvalidMessage[] = invalidMessages.filter(
+            (item) => item.field !== field,
+        );
+        if (field === 'mail' && isMailEmpty(value)) {
+            messages.push({
+                field: 'mail',
+                message: VALIDATION_MESSAGE.EMPTY_MAIL,
+            });
+        } else if (field === 'password' && isPasswordEmpty(value)) {
+            messages.push({
+                field: 'password',
+                message: VALIDATION_MESSAGE.EMPTY_PASSWORD,
+            });
+        }
+        setInvalidMessages(messages);
+    };
+
+    const getFieldError = (field: string) => {
+        return (
+            invalidMessages.find((item) => item.field === field)?.message ?? ''
+        );
+    };
+
+    const handleBlur = (e: FocusEvent<HTMLInputElement>) => {
+        const { name, value } = e.target;
+        editValidateMessage(name, value);
+    };
+
     const handleChange = (e: ChangeEvent<HTMLInputElement>) => {
         const { name, value } = e.target;
         setLoginRequestDto((prev) => ({
             ...prev,
             [name]: value,
         }));
+        editValidateMessage(name, value);
     };
 
     const handleLogin = async () => {
@@ -60,5 +106,13 @@ export function useLoginRequestDto() {
         }
     };
 
-    return { loginRequestDto, handleChange, handleLogin, isSubmitting };
+    return {
+        loginRequestDto,
+        handleChange,
+        handleBlur,
+        getFieldError,
+        isDisable,
+        handleLogin,
+        isSubmitting,
+    };
 }
