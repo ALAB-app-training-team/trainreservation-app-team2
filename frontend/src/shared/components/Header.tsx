@@ -16,7 +16,7 @@ export function Header() {
         {
             label: '新幹線を探す',
             to: '/scheduleSearch',
-            relatedPath: [],
+            relatedPath: ['/selectSeat'],
         },
         ...(!name
             ? [
