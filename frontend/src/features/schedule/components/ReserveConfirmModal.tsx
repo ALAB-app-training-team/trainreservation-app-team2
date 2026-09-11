@@ -5,6 +5,13 @@ import type { SeatResponseDto } from '@/features/schedule/types/SeatResponseDto'
 import type { TrainCarFormationResponseDto } from '@/features/schedule/types/TrainCarFormationResponseDto';
 import { CustomModalTitle } from '@/shared/components/CustomModalTitle';
 
+type FareBreakdownItem = {
+    trainCarTypeCd: string;
+    typeName: string;
+    seatFare: number;
+    count: number;
+};
+
 type ReserveConfirmModalProps = {
     onClick: () => void;
     onRequestClose: () => void;
@@ -30,26 +37,26 @@ export function ReserveConfirmModal({
         (accumulator, seat) => accumulator + seat.seatFare,
         0,
     );
-    const fareBreakdown = Object.values(
-        selectedSeats.reduce<
-            Record<
-                string,
-                { typeName: string; seatFare: number; count: number }
-            >
-        >((accumulator, seat) => {
-            const typeName =
-                trainCarTypeNameByCarCd.get(seat.trainCarCd) ??
-                seat.trainCarTypeCd;
-            const key = `${typeName}-${seat.seatFare}`;
-            accumulator[key] ??= {
-                typeName,
-                seatFare: seat.seatFare,
-                count: 0,
-            };
-            accumulator[key].count += 1;
-            return accumulator;
-        }, {}),
-    ).sort((a, b) => a.seatFare - b.seatFare);
+    // 席種・単価ごとに枚数を集計する
+    const breakdownByKey = selectedSeats.reduce<
+        Record<string, FareBreakdownItem>
+    >((accumulator, seat) => {
+        const typeName =
+            trainCarTypeNameByCarCd.get(seat.trainCarCd) ?? seat.trainCarTypeCd;
+        const key = `${seat.trainCarTypeCd}-${seat.seatFare}`;
+        accumulator[key] ??= {
+            trainCarTypeCd: seat.trainCarTypeCd,
+            typeName,
+            seatFare: seat.seatFare,
+            count: 0,
+        };
+        accumulator[key].count += 1;
+        return accumulator;
+    }, {});
+    // 席種コード順 (CAR01 → CAR03) = 指定席 → グリーン車 → グランクラス
+    const fareBreakdown = Object.values(breakdownByKey).sort((a, b) =>
+        a.trainCarTypeCd.localeCompare(b.trainCarTypeCd),
+    );
 
     return (
         <>
