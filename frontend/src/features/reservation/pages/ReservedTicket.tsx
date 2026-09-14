@@ -2,7 +2,6 @@ import { useQueryClient } from '@tanstack/react-query';
 import { Suspense, useEffect, useState } from 'react';
 import { FaEdit } from 'react-icons/fa';
 import { IoTrashOutline } from 'react-icons/io5';
-import { LuArrowLeft } from 'react-icons/lu';
 import { RiGroupLine } from 'react-icons/ri';
 import { useLocation, useNavigate } from 'react-router-dom';
 import { toast } from 'sonner';
@@ -10,6 +9,7 @@ import { toast } from 'sonner';
 import { CompanionModal } from '@/features/reservation/components/CompanionModal';
 import { ReservationChangeConfirmModal } from '@/features/reservation/components/ReservationChangeConfirmModal';
 import { ReservationRefundConfirmModal } from '@/features/reservation/components/ReservationRefundConfirmModal';
+import { ReservedTicketHeader } from '@/features/reservation/components/ReservedTicketHeader';
 import { ReservedTicketInfo } from '@/features/reservation/components/ReservedTicketInfo/ReservedTicketInfo';
 import { ReservedTicketInfoSkeleton } from '@/features/reservation/components/ReservedTicketInfo/ReservedTicketInfoSkeleton';
 import { ReservedTicketQrCode } from '@/features/reservation/components/ReservedTicketQrCode/ReservedTicketQrCode';
@@ -138,24 +138,11 @@ export function ReservedTicket() {
         <>
             <div className="mx-auto flex w-full max-w-5xl min-w-90 flex-col items-center gap-2 p-4 md:w-7/10">
                 {(isBack || (canShareLink && !isCreated)) && (
-                    <div className="flex w-full items-center justify-between gap-2 text-left">
-                        {isBack ? (
-                            <button
-                                type="button"
-                                onClick={() => {
-                                    navigate('/reservationList');
-                                }}
-                            >
-                                <div className="flex items-center gap-2">
-                                    <LuArrowLeft />
-                                    予約一覧へ戻る
-                                </div>
-                            </button>
-                        ) : (
-                            <div />
-                        )}
-                        {canShareLink && <TicketShare shareUrl={shareUrl} />}
-                    </div>
+                    <ReservedTicketHeader
+                        isBack={isBack}
+                        canShareLink={canShareLink}
+                        shareUrl={shareUrl}
+                    />
                 )}
                 <div className="flex w-full items-center justify-between gap-2 text-left">
                     <h1 data-testid="reserve-title" className="m-0! text-3xl!">
