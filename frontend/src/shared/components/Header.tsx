@@ -47,7 +47,12 @@ export function Header() {
 
     const accountMenuItems = [
         ...(role === 'ROLE_ADMIN'
-            ? [{ label: 'ユーザー管理', onClick: () => navigate('/admin/password') }]
+            ? [
+                  {
+                      label: 'ユーザー管理',
+                      onClick: () => navigate('/admin/password'),
+                  },
+              ]
             : []),
         { label: '予約一覧', onClick: () => navigate('/reservationList') },
         {
@@ -83,7 +88,7 @@ export function Header() {
                                 to={button.to}
                                 onClick={() => setIsMenuOpen(false)}
                                 className={({ isActive }) =>
-                                    `rounded-xl px-4 py-3 text-base font-bold ${
+                                    `flex min-h-11 items-center justify-center rounded-xl px-4 py-3 text-base font-bold ${
                                         isActive
                                             ? 'bg-primary cursor-default text-white'
                                             : button.relatedPath.includes(
@@ -101,7 +106,7 @@ export function Header() {
                     <button
                         type="button"
                         onClick={handleMenuOpen}
-                        className={`flex min-h-11 min-w-11 items-center justify-center gap-2 text-base font-bold ${
+                        className={`flex min-h-11 min-w-11 items-center justify-center gap-2 py-3 text-base font-bold ${
                             name ? '' : 'md:hidden'
                         }`}
                     >
