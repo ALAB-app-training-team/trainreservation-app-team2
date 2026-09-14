@@ -362,7 +362,7 @@ export function SelectSeats() {
 
     return (
         <div className="mx-auto flex w-full max-w-5xl flex-col">
-            <div className="flex items-center justify-start p-4 pb-0">
+            <div className="flex flex-col justify-start p-4 pb-0">
                 {searchRequestDto !== null ? (
                     <button
                         data-testid={'back-button-in-selectseat'}
@@ -421,6 +421,9 @@ export function SelectSeats() {
                             予約一覧へ戻る
                         </div>
                     </button>
+                )}
+                {reservationId !== undefined && (
+                    <h1 className="!m-0 text-left !text-3xl">予約変更</h1>
                 )}
             </div>
 

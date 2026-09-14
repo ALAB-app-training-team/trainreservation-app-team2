@@ -57,39 +57,48 @@ export function ScheduleSearchBody() {
         <>
             <div className="flex justify-center">
                 <div className="mx-4 my-2 flex w-full max-w-5xl flex-col gap-2 md:mx-8 md:my-4 md:gap-4">
-                    {isBack ? (
-                        <button
-                            data-testid={'back-button-in-scheduleSearch'}
-                            type="button"
-                            onClick={() => {
-                                navigate('/reservationList');
-                            }}
-                        >
-                            <div className="flex items-center gap-2">
-                                <LuArrowLeft />
-                                予約一覧へ戻る
-                            </div>
-                        </button>
-                    ) : isFromReservedTicket || isChanging ? (
-                        <button
-                            data-testid={'back-button-in-scheduleSearch'}
-                            type="button"
-                            onClick={() => {
-                                navigate('/reservedTicket', {
-                                    state: {
-                                        reservationId: reservationId,
-                                        mode: RESERVEDTICKET_MODE.detail,
-                                        role: RESERVEDTICKET_ROLE.account,
-                                    },
-                                });
-                            }}
-                        >
-                            <div className="flex items-center gap-2">
-                                <LuArrowLeft />
-                                予約詳細へ戻る
-                            </div>
-                        </button>
-                    ) : null}
+                    <div className="flex flex-col justify-start">
+                        {isBack ? (
+                            <button
+                                data-testid={'back-button-in-scheduleSearch'}
+                                type="button"
+                                className="w-fit"
+                                onClick={() => {
+                                    navigate('/reservationList');
+                                }}
+                            >
+                                <div className="flex items-center gap-2">
+                                    <LuArrowLeft />
+                                    予約一覧へ戻る
+                                </div>
+                            </button>
+                        ) : isFromReservedTicket || isChanging ? (
+                            <button
+                                data-testid={'back-button-in-scheduleSearch'}
+                                type="button"
+                                className="w-fit"
+                                onClick={() => {
+                                    navigate('/reservedTicket', {
+                                        state: {
+                                            reservationId: reservationId,
+                                            mode: RESERVEDTICKET_MODE.detail,
+                                            role: RESERVEDTICKET_ROLE.account,
+                                        },
+                                    });
+                                }}
+                            >
+                                <div className="flex items-center gap-2">
+                                    <LuArrowLeft />
+                                    予約詳細へ戻る
+                                </div>
+                            </button>
+                        ) : null}
+                        {(isBack || isFromReservedTicket || isChanging) && (
+                            <h1 className="!m-0 text-left !text-3xl">
+                                予約変更
+                            </h1>
+                        )}
+                    </div>
                     <ScheduleSearchForm
                         stations={stations}
                         departureDtos={departureDtos}
