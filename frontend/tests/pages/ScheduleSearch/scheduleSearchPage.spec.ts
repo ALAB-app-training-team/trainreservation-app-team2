@@ -589,7 +589,7 @@ test('グランクラスかつ4人指定時に、グランクラス残席が4未
 
     await scheduleSearchPage.goto();
     const response = await responsePromise;
-    const { schedules: allSchedules } = await response.json();
+    const { schedules } = await response.json();
 
     const resultLocator = page.getByText(/\d+件の列車が見つかりました/);
     await expect(resultLocator).toBeVisible();
@@ -606,7 +606,7 @@ test('グランクラスかつ4人指定時に、グランクラス残席が4未
         (await resultLocator.textContent())?.match(/(\d+)/)?.[1],
     );
 
-    const expectedCount = allSchedules.filter(
+    const expectedCount = schedules.filter(
         (schedule: { gcSeats: number; departureTime: string }) =>
             schedule.gcSeats >= 4 &&
             schedule.departureTime.slice(0, 5) >= time.slice(0, 5),

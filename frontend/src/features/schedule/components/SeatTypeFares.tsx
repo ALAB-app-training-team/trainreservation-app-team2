@@ -30,8 +30,11 @@ export function SeatTypeFares({
                             key={seat.label}
                             className="flex flex-col px-3 first:pl-0 last:pr-0"
                         >
-                            <span>{seat.label}</span>
-                            <span>{`${seat.fare.toLocaleString()}円`}</span>
+                            <span>
+                                {seat.label}
+                                <br className="md:hidden" />
+                                {`${seat.fare.toLocaleString()}円`}
+                            </span>
                         </div>
                     ),
             )}

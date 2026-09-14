@@ -98,11 +98,11 @@ export function ScheduleList({
     return (
         <>
             <div className="flex flex-col gap-4">
-                <div className="flex flex-wrap items-center justify-between gap-4 text-sm">
+                <div className="flex flex-wrap items-center justify-between gap-4 text-sm md:text-base">
                     <div>
                         {filteredSchedules.length}件の列車が
                         {filteredSchedules.length > 0 && (
-                            <br className="sm:hidden" />
+                            <br className="md:hidden" />
                         )}
                         見つかりました
                     </div>
