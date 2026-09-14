@@ -190,4 +190,32 @@ export class SelectSeatPage {
     async clickReservationSheetButton() {
         await this.reservationSheetButton.click();
     }
+
+    async swipeReservationSheet(deltaY: number) {
+        const box = await this.reservationSheetButton.boundingBox();
+        if (!box) throw new Error('reservation-sheet handle not found');
+        const centerX = box.x + box.width / 2;
+        const centerY = box.y + box.height / 2;
+
+        await this.reservationSheetButton.dispatchEvent('touchstart', {
+            touches: [{ clientX: centerX, clientY: centerY, identifier: 0 }],
+            changedTouches: [
+                { clientX: centerX, clientY: centerY, identifier: 0 },
+            ],
+        });
+        await this.reservationSheetButton.dispatchEvent('touchend', {
+            touches: [],
+            changedTouches: [
+                { clientX: centerX, clientY: centerY + deltaY, identifier: 0 },
+            ],
+        });
+    }
+
+    isReservationSheetOpen() {
+        return this.reservationSheetButton.evaluate((el) => {
+            const className =
+                el.closest('.transition-transform')?.className ?? '';
+            return className.split(/\s+/).includes('translate-y-0');
+        });
+    }
 }
