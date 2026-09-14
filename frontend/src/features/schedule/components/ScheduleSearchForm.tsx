@@ -122,7 +122,7 @@ export function ScheduleSearchForm({
                                 getFieldError={getFieldError}
                             />
                         </div>
-                        <div className="flex flex-col justify-between gap-4 md:flex-row">
+                        <div className="flex flex-col gap-4 md:flex-row md:items-start">
                             <CustomDatePicker
                                 id="date"
                                 label="乗車日"
