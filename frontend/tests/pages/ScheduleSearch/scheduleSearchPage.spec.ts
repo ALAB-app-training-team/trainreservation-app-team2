@@ -390,7 +390,7 @@ test('座席種別ごとの料金が表示されること', async ({ page }) => 
             await expect(fareLocator).toBeHidden();
         } else {
             await expect(fareLocator).toHaveText(
-                `${label}${fare.toLocaleString()}円`,
+                `${label} ${fare.toLocaleString()}円`,
             );
         }
     }

@@ -45,7 +45,7 @@ export function SeatTypeFares({
                             <span>
                                 {seat.label}
                                 <br className="md:hidden" />
-                                {`${seat.fare.toLocaleString()}円`}
+                                {` ${seat.fare.toLocaleString()}円`}
                             </span>
                         </div>
                     ),
