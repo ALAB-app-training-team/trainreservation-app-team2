@@ -112,7 +112,7 @@ export function Header() {
                                 key={index}
                                 to={button.to}
                                 onClick={handleMenuOpen}
-                                className="text-fg-secondary hover:bg-surface-muted w-full rounded text-left"
+                                className="hover:bg-surface-muted min-h-11 w-full rounded px-3 py-3 text-left"
                             >
                                 {button.label}
                             </NavLink>
@@ -122,7 +122,7 @@ export function Header() {
                     {role === 'ROLE_ADMIN' && (
                         <button
                             onClick={() => navigate('/admin/password')}
-                            className="hover:bg-surface-muted w-full text-left"
+                            className="hover:bg-surface-muted min-h-11 w-full rounded px-3 py-3 text-left"
                         >
                             ユーザー管理
                         </button>
@@ -131,26 +131,26 @@ export function Header() {
                         <>
                             <button
                                 onClick={() => navigate('/reservationList')}
-                                className="hover:bg-surface-muted w-full text-left"
+                                className="hover:bg-surface-muted min-h-11 w-full px-3 py-3 text-left"
                             >
                                 予約一覧
                             </button>
                             <button
                                 onClick={() => navigate('/accountUpdate')}
-                                className="hover:bg-surface-muted w-full text-left"
+                                className="hover:bg-surface-muted min-h-11 w-full px-3 py-3 text-left"
                             >
                                 氏名・メールアドレス変更
                             </button>
 
                             <button
                                 onClick={() => navigate('/passwordUpdate')}
-                                className="hover:bg-surface-muted w-full text-left"
+                                className="hover:bg-surface-muted min-h-11 w-full px-3 py-3 text-left"
                             >
                                 パスワード変更
                             </button>
                             <button
                                 onClick={handleLogout}
-                                className="hover:bg-surface-muted w-full text-left"
+                                className="hover:bg-surface-muted min-h-11 w-full px-3 py-3 text-left"
                             >
                                 ログアウト
                             </button>
