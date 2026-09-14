@@ -41,8 +41,8 @@ export function CustomTimePicker({
     } = useTimeSegments(value, setValue);
 
     return (
-        <div className="flex w-full flex-col items-start justify-between gap-2">
-            <div className="flex h-full items-center gap-4">
+        <div className="flex w-full flex-col items-start gap-2">
+            <div className="flex h-8 items-center gap-4">
                 <label htmlFor={id}>{label}</label>
                 {children}
             </div>

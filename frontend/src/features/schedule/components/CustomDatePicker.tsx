@@ -21,8 +21,8 @@ export function CustomDatePicker({
     minDate,
 }: CustomDatePickerProps) {
     return (
-        <div className="flex w-full flex-col items-start justify-between gap-2">
-            <div className="flex h-full items-center gap-4">
+        <div className="flex w-full flex-col items-start gap-2">
+            <div className="flex h-8 items-center gap-4">
                 <label htmlFor={id}>{label}</label>
             </div>
             <input
@@ -30,7 +30,7 @@ export function CustomDatePicker({
                 type="date"
                 value={value}
                 onChange={(e) => setValue(e.target.value)}
-                className="focus:border-primary-ink bg-surface w-full cursor-pointer rounded-xl p-2 outline-none focus:border-2"
+                className="focus:border-primary-ink bg-surface w-full min-w-0 cursor-pointer appearance-none rounded-xl p-2 outline-none focus:border-2"
                 min={dayjs(minDate).format('YYYY-MM-DD')}
                 max={dayjs(maxDate).format('YYYY-MM-DD')}
             />
