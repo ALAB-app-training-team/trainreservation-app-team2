@@ -360,10 +360,6 @@ export const test = baseTest.extend<VisualFixture>({
             for (let i = 1; i < itemCount; i++) {
                 maskTargets.push(listItems.nth(i));
             }
-            // 予約ごとに変わる値はマスクする（乗車日・件数・出発時刻・到着時刻）。
-            // 乗車日と件数は日付グループごとの見出しに出るため全件マスクする。
-            // 時刻の testid が list- 始まりなのは、予約詳細画面の
-            // departure-time / arrival-time と衝突させないため
             maskTargets.push(page.getByTestId('ride-date'));
             maskTargets.push(page.getByTestId('ride-date-count'));
             maskTargets.push(page.getByTestId('list-departure-time').nth(0));
