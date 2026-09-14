@@ -648,3 +648,41 @@ test('新規予約で予約変更タイトルが表示されないこと', async
     await expect(page).toHaveURL('/selectSeat');
     await expect(selectSeatPage.reservationUpdateTitle).toBeHidden();
 });
+
+test.describe('予約者情報入力シートのスワイプ開閉', () => {
+    test.use({ viewport: { width: 375, height: 667 }, hasTouch: true });
+
+    test('閉じている状態で上スワイプすると開く', async ({ page }) => {
+        const scheduleSearchPage = new ScheduleSearchPage(page);
+        const selectSeatPage = new SelectSeatPage(page);
+
+        await scheduleSearchPage.goto();
+        await scheduleSearchPage.clickScheduleItemButton();
+        await expect(selectSeatPage.reservationSheetButton).toBeVisible();
+        expect(await selectSeatPage.isReservationSheetOpen()).toBe(false);
+
+        await selectSeatPage.swipeReservationSheet(-100);
+
+        await expect
+            .poll(() => selectSeatPage.isReservationSheetOpen())
+            .toBe(true);
+    });
+
+    test('開いている状態で下スワイプすると閉じる', async ({ page }) => {
+        const scheduleSearchPage = new ScheduleSearchPage(page);
+        const selectSeatPage = new SelectSeatPage(page);
+
+        await scheduleSearchPage.goto();
+        await scheduleSearchPage.clickScheduleItemButton();
+        await selectSeatPage.clickReservationSheetButton();
+        await expect
+            .poll(() => selectSeatPage.isReservationSheetOpen())
+            .toBe(true);
+
+        await selectSeatPage.swipeReservationSheet(100);
+
+        await expect
+            .poll(() => selectSeatPage.isReservationSheetOpen())
+            .toBe(false);
+    });
+});
