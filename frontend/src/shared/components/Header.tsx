@@ -45,6 +45,19 @@ export function Header() {
         navigate('/login');
     };
 
+    const accountMenuItems = [
+        ...(role === 'ROLE_ADMIN'
+            ? [{ label: 'ユーザー管理', onClick: () => navigate('/admin/password') }]
+            : []),
+        { label: '予約一覧', onClick: () => navigate('/reservationList') },
+        {
+            label: '氏名・メールアドレス変更',
+            onClick: () => navigate('/accountUpdate'),
+        },
+        { label: 'パスワード変更', onClick: () => navigate('/passwordUpdate') },
+        { label: 'ログアウト', onClick: handleLogout },
+    ];
+
     return (
         <div ref={menuRef}>
             <div className="border-primary-light relative flex h-16 items-center justify-start gap-3 border-b-2 px-4 py-2 md:gap-6 md:px-8">
@@ -103,7 +116,7 @@ export function Header() {
             </div>
             {isMenuOpen && (
                 <div
-                    className="bg-surface absolute top-full right-4 z-50 flex w-[240px] flex-col gap-2 rounded-md p-2 py-2 text-lg font-bold shadow-md"
+                    className="bg-surface absolute top-full right-4 z-50 flex w-[240px] flex-col gap-2 rounded-md p-2 py-2 text-base font-bold shadow-md"
                     onClick={() => setIsMenuOpen(false)}
                 >
                     <div className="flex w-full flex-col gap-2 text-left md:hidden">
@@ -119,43 +132,16 @@ export function Header() {
                         ))}
                     </div>
 
-                    {role === 'ROLE_ADMIN' && (
-                        <button
-                            onClick={() => navigate('/admin/password')}
-                            className="hover:bg-surface-muted min-h-11 w-full px-2 py-2 text-left"
-                        >
-                            ユーザー管理
-                        </button>
-                    )}
-                    {name && (
-                        <>
+                    {name &&
+                        accountMenuItems.map((item) => (
                             <button
-                                onClick={() => navigate('/reservationList')}
+                                key={item.label}
+                                onClick={item.onClick}
                                 className="hover:bg-surface-muted min-h-11 w-full px-2 py-2 text-left"
                             >
-                                予約一覧
+                                {item.label}
                             </button>
-                            <button
-                                onClick={() => navigate('/accountUpdate')}
-                                className="hover:bg-surface-muted min-h-11 w-full px-2 py-2 text-left"
-                            >
-                                氏名・メールアドレス変更
-                            </button>
-
-                            <button
-                                onClick={() => navigate('/passwordUpdate')}
-                                className="hover:bg-surface-muted min-h-11 w-full px-2 py-2 text-left"
-                            >
-                                パスワード変更
-                            </button>
-                            <button
-                                onClick={handleLogout}
-                                className="hover:bg-surface-muted min-h-11 w-full px-2 py-2 text-left"
-                            >
-                                ログアウト
-                            </button>
-                        </>
-                    )}
+                        ))}
                 </div>
             )}
         </div>
