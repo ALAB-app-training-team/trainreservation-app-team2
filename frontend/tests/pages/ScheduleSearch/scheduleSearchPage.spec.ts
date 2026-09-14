@@ -362,6 +362,54 @@ test('出発時刻・到着時刻の切り替えができること、空席表�
     );
 });
 
+test('座席種別ごとの料金が表示されること', async ({ page }) => {
+    const scheduleSearchPage = new ScheduleSearchPage(page);
+
+    const responsePromise = page.waitForResponse(
+        (response) =>
+            response.url().includes('/schedules') && response.status() === 200,
+    );
+
+    await scheduleSearchPage.goto();
+    const { reservedFare, greenFare, gcFare } = await (
+        await responsePromise
+    ).json();
+
+    await expect(page.getByText(/\d+件の列車が見つかりました/)).toBeVisible();
+    await expect(scheduleSearchPage.seatTypeFares).toBeVisible();
+
+    const expectedFares = [
+        { seatTypeCd: 'SEAT01', label: '指定席', fare: reservedFare },
+        { seatTypeCd: 'SEAT02', label: 'グリーン車', fare: greenFare },
+        { seatTypeCd: 'SEAT03', label: 'グランクラス', fare: gcFare },
+    ];
+
+    for (const { seatTypeCd, label, fare } of expectedFares) {
+        const fareLocator = scheduleSearchPage.seatTypeFare(seatTypeCd);
+        if (fare === null) {
+            await expect(fareLocator).toBeHidden();
+        } else {
+            await expect(fareLocator).toHaveText(
+                `${label}${fare.toLocaleString()}円`,
+            );
+        }
+    }
+});
+
+test('該当条件の列車が存在しない場合、座席種別ごとの料金が表示されないこと', async ({
+    page,
+}) => {
+    const scheduleSearchPage = new ScheduleSearchPage(page);
+    await scheduleSearchPage.goto();
+
+    await expect(scheduleSearchPage.seatTypeFares).toBeVisible();
+
+    await scheduleSearchPage.time.fill('23:59');
+
+    await expect(page.getByText('0件の列車が見つかりました')).toBeVisible();
+    await expect(scheduleSearchPage.seatTypeFares).toBeHidden();
+});
+
 test('列車が見つからない場合、翌日の始発で検索できる', async ({ page }) => {
     const scheduleSearchPage = new ScheduleSearchPage(page);
     await scheduleSearchPage.goto();

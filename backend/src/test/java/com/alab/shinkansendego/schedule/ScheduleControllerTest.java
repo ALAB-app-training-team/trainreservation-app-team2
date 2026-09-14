@@ -105,6 +105,28 @@ public class ScheduleControllerTest {
     }
 
     @Test
+    @DisplayName("満席の席種がある場合、その席種の料金のみnullで返る")
+    void getSchedule_withPartiallyAvailableSeats_returnNullFareOfFullSeatType() throws Exception {
+
+        String url = baseUrl + "?date=2026-06-01&time=12:00:00&departureStationCd=THK01&arrivalStationCd=THK02";
+
+        Mockito.when(service.getSearchedScheduleByStation(request))
+            .thenReturn(new ScheduleResponseDto(11410, null, 22170, getExpectScheduleDtosList()));
+
+        String json = objectMapper.writeValueAsString(request);
+
+        mockMvc.perform(
+                get(url)
+                    .contentType(MediaType.APPLICATION_JSON)
+                    .content(json))
+            .andExpect(status().isOk())
+            .andExpect(jsonPath("$.schedules.length()").value(4))
+            .andExpect(jsonPath("$.reservedFare").value(11410))
+            .andExpect(jsonPath("$.greenFare").isEmpty())
+            .andExpect(jsonPath("$.gcFare").value(22170));
+    }
+
+    @Test
     @DisplayName("該当するダイヤが無い場合、料金はnullで返る")
     void getSchedule_withNoMatchedSchedule_returnNullFares() throws Exception {
 

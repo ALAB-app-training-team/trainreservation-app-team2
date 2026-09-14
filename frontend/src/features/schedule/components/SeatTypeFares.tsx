@@ -12,9 +12,17 @@ export function SeatTypeFares({
     gcFare,
 }: SeatTypeFaresProps) {
     const fareList = [
-        { label: SEAT_TYPE_LABELS.SEAT01, fare: reservedFare },
-        { label: SEAT_TYPE_LABELS.SEAT02, fare: greenFare },
-        { label: SEAT_TYPE_LABELS.SEAT03, fare: gcFare },
+        {
+            seatTypeCd: 'SEAT01',
+            label: SEAT_TYPE_LABELS.SEAT01,
+            fare: reservedFare,
+        },
+        {
+            seatTypeCd: 'SEAT02',
+            label: SEAT_TYPE_LABELS.SEAT02,
+            fare: greenFare,
+        },
+        { seatTypeCd: 'SEAT03', label: SEAT_TYPE_LABELS.SEAT03, fare: gcFare },
     ];
 
     if (fareList.every((seat) => seat.fare === null)) {
@@ -22,12 +30,16 @@ export function SeatTypeFares({
     }
 
     return (
-        <div className="divide-line flex divide-x">
+        <div
+            data-testid="seat-type-fares"
+            className="divide-line flex divide-x"
+        >
             {fareList.map(
                 (seat) =>
                     seat.fare !== null && (
                         <div
-                            key={seat.label}
+                            key={seat.seatTypeCd}
+                            data-testid={`seat-type-fare-${seat.seatTypeCd}`}
                             className="flex flex-col px-3 first:pl-0 last:pr-0"
                         >
                             <span>

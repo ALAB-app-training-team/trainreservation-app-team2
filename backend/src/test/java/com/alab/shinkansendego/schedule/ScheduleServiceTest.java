@@ -18,6 +18,7 @@ import org.jspecify.annotations.NonNull;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
+import org.mockito.ArgumentCaptor;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
@@ -35,6 +36,7 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNull;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.Mockito.never;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
@@ -55,6 +57,7 @@ public class ScheduleServiceTest {
     private final List<TotalSeatEntity> totalSeatList = new ArrayList<>();
     private final List<DepartureArrivalTimeEntity> secList = new ArrayList<>();
     private final List<ReservedSeatSectionEntity> reservedSeatSecList = new ArrayList<>();
+    private final List<ReservedSeatSectionEntity> fullyBookedSeatSecList = new ArrayList<>();
     private final ScheduleRequestDto request = new ScheduleRequestDto(LocalDate.of(2026, 6, 1), "東京", "上野");
     private final List<SectionKmEntity> emptySectionCdList = new ArrayList<>();
     @Mock
@@ -139,6 +142,7 @@ public class ScheduleServiceTest {
         totalSeatList.clear();
         secList.clear();
         reservedSeatSecList.clear();
+        fullyBookedSeatSecList.clear();
         SectionKmEntity sec01 = new SectionKmEntity();
         sec01.setSectionCd("SEC01");
         sec01.setDirection("UP");
@@ -215,20 +219,26 @@ public class ScheduleServiceTest {
         reservedSeatSecList.add(new ReservedSeatSectionEntity(UUID.randomUUID(), UUID.randomUUID(), LocalDate.of(2026, 6, 1), "TIME01", "E5SER01", "SEAT02002", "SEC01", "CAR02"));
         reservedSeatSecList.add(new ReservedSeatSectionEntity(UUID.randomUUID(), UUID.randomUUID(), LocalDate.of(2026, 6, 1), "TIME01", "E5SER01", "SEAT03001", "SEC01", "CAR03"));
 
+        // 指定席4席・グリーン3席・グランクラス2席が予約済みの状態
+        fullyBookedSeatSecList.addAll(reservedSeatSecList);
+        fullyBookedSeatSecList.add(new ReservedSeatSectionEntity(UUID.randomUUID(), UUID.randomUUID(), LocalDate.of(2026, 6, 1), "TIME02", "E5SER01", "SEAT01004", "SEC01", "CAR01"));
+        fullyBookedSeatSecList.add(new ReservedSeatSectionEntity(UUID.randomUUID(), UUID.randomUUID(), LocalDate.of(2026, 6, 1), "TIME02", "E5SER01", "SEAT02003", "SEC01", "CAR02"));
+        fullyBookedSeatSecList.add(new ReservedSeatSectionEntity(UUID.randomUUID(), UUID.randomUUID(), LocalDate.of(2026, 6, 1), "TIME02", "E5SER01", "SEAT03002", "SEC01", "CAR03"));
+
         request.setDate(LocalDate.of(2026, 6, 1));
         request.setDepartureStationCd("STATION01");
         request.setArrivalStationCd("STATION02");
     }
 
-    @Test
-    @DisplayName("出発・到着駅名のリクエストDTOからダイヤリストが取得できる")
-    void getSearchedScheduleByStation_withValidScheduleRequestDto_returnGetScheduleListSuccess() {
+    /**
+     * ダイヤ検索が成功する状態のリポジトリをスタブする
+     */
+    private void stubScheduleLookups() {
         when(sectionRepo.findByStartStationCd("STATION01")).thenReturn(depatureSectionList);
         when(sectionRepo.findByGoalStationCd("STATION02")).thenReturn(arrivalSectionList);
         when(timeRepo.findBySectionCd("SEC01")).thenReturn(sec01ScheduleList);
         when(timeRepo.findBySectionCd("SEC02")).thenReturn(sec02ScheduleList);
         when(timeRepo.findBySectionCd("SEC03")).thenReturn(sec03ScheduleList);
-        when(totalSeatRepo.findAll()).thenReturn(totalSeatList);
         when(scheduleRepo.findById("TIME01")).thenReturn(getScheduleEntity(trainType1));
         when(scheduleRepo.findById("TIME02")).thenReturn(getScheduleEntity(trainType2));
         when(scheduleRepo.findById("TIME03")).thenReturn(getScheduleEntity(trainType3));
@@ -237,10 +247,24 @@ public class ScheduleServiceTest {
         when(scheduleRepo.findById("TIME06")).thenReturn(getScheduleEntity(trainType6));
         when(timeRepo.findByScheduleCdAndDepartureTimeGreaterThanEqualAndArrivalTimeLessThanEqual(any(), any(), any())).thenReturn(secList);
         when(reservedSeatSectionRepo.findByRideDateAndScheduleCdAndReservedSectionCdIn(any(), any(), any())).thenReturn(reservedSeatSecList);
+    }
+
+    /**
+     * 営業キロ程から各席種の料金が取得できる状態をスタブする
+     */
+    private void stubFareCalculation() {
         when(sectionRepo.findBySectionCdIn(any())).thenReturn(fareSectionKmList);
         when(fareKmService.getFareFromDistance(any())).thenReturn(
             Map.of("non-reserved", 10880, "reserved", 11410, "green", 15070, "gran-class", 22170)
         );
+    }
+
+    @Test
+    @DisplayName("出発・到着駅名のリクエストDTOからダイヤリストが取得できる")
+    void getSearchedScheduleByStation_withValidScheduleRequestDto_returnGetScheduleListSuccess() {
+        stubScheduleLookups();
+        when(totalSeatRepo.findAll()).thenReturn(totalSeatList);
+        stubFareCalculation();
 
         ScheduleResponseDto expectResponse = getExpectScheduleResponseDto();
 
@@ -250,26 +274,11 @@ public class ScheduleServiceTest {
     }
 
     @Test
-    @DisplayName("検索結果の全列車が満席の場合、料金は席種を問わずnullで返る")
+    @DisplayName("検索結果の全列車が満席の場合、すべての席種料金がnullになること")
     void getSearchedScheduleByStation_withNoAvailableSeats_returnNullFares() {
-        when(sectionRepo.findByStartStationCd("STATION01")).thenReturn(depatureSectionList);
-        when(sectionRepo.findByGoalStationCd("STATION02")).thenReturn(arrivalSectionList);
-        when(timeRepo.findBySectionCd("SEC01")).thenReturn(sec01ScheduleList);
-        when(timeRepo.findBySectionCd("SEC02")).thenReturn(sec02ScheduleList);
-        when(timeRepo.findBySectionCd("SEC03")).thenReturn(sec03ScheduleList);
+        stubScheduleLookups();
         when(totalSeatRepo.findAll()).thenReturn(List.of(new TotalSeatEntity("E5SER", 3, 2, 1)));
-        when(scheduleRepo.findById("TIME01")).thenReturn(getScheduleEntity(trainType1));
-        when(scheduleRepo.findById("TIME02")).thenReturn(getScheduleEntity(trainType2));
-        when(scheduleRepo.findById("TIME03")).thenReturn(getScheduleEntity(trainType3));
-        when(scheduleRepo.findById("TIME04")).thenReturn(getScheduleEntity(trainType4));
-        when(scheduleRepo.findById("TIME05")).thenReturn(getScheduleEntity(trainType5));
-        when(scheduleRepo.findById("TIME06")).thenReturn(getScheduleEntity(trainType6));
-        when(timeRepo.findByScheduleCdAndDepartureTimeGreaterThanEqualAndArrivalTimeLessThanEqual(any(), any(), any())).thenReturn(secList);
-        when(reservedSeatSectionRepo.findByRideDateAndScheduleCdAndReservedSectionCdIn(any(), any(), any())).thenReturn(reservedSeatSecList);
-        when(sectionRepo.findBySectionCdIn(any())).thenReturn(fareSectionKmList);
-        when(fareKmService.getFareFromDistance(any())).thenReturn(
-            Map.of("non-reserved", 10880, "reserved", 11410, "green", 15070, "gran-class", 22170)
-        );
+        stubFareCalculation();
 
         ScheduleResponseDto actualResponse = service.getSearchedScheduleByStation(request);
 
@@ -277,6 +286,61 @@ public class ScheduleServiceTest {
         assertNull(actualResponse.getReservedFare());
         assertNull(actualResponse.getGreenFare());
         assertNull(actualResponse.getGcFare());
+    }
+
+    @Test
+    @DisplayName("全列車合計で満席の席種料金はnull、空席のある席種料金は金額が取得できる")
+    void getSearchedScheduleByStation_withPartiallyAvailableSeats_returnFareOfAvailableSeatTypeOnly() {
+        stubScheduleLookups();
+        when(totalSeatRepo.findAll()).thenReturn(List.of(new TotalSeatEntity("E5SER", 5, 2, 3)));
+        stubFareCalculation();
+
+        ScheduleResponseDto actualResponse = service.getSearchedScheduleByStation(request);
+
+        ScheduleDto firstSchedule = actualResponse.getSchedules().getFirst();
+        assertEquals(2, firstSchedule.getReservedSeats());
+        assertEquals(0, firstSchedule.getGreenSeats());
+        assertEquals(2, firstSchedule.getGcSeats());
+        assertEquals(11410, actualResponse.getReservedFare());
+        assertNull(actualResponse.getGreenFare());
+        assertEquals(22170, actualResponse.getGcFare());
+    }
+
+    @Test
+    @DisplayName("一部の列車のみ満席かつ全列車合計で空席が存在する場合、該当座席種別の料金が取得できる")
+    void getSearchedScheduleByStation_withAvailableSeatsOnSomeSchedules_returnFares() {
+        stubScheduleLookups();
+        when(totalSeatRepo.findAll()).thenReturn(List.of(new TotalSeatEntity("E5SER", 4, 3, 2)));
+        when(reservedSeatSectionRepo.findByRideDateAndScheduleCdAndReservedSectionCdIn(any(), eq("TIME02"), any()))
+            .thenReturn(fullyBookedSeatSecList);
+        stubFareCalculation();
+
+        ScheduleResponseDto actualResponse = service.getSearchedScheduleByStation(request);
+
+        ScheduleDto firstSchedule = actualResponse.getSchedules().getFirst();
+        assertEquals("TIME02", firstSchedule.getScheduleCd());
+        assertEquals(0, firstSchedule.getReservedSeats());
+        assertEquals(0, firstSchedule.getGreenSeats());
+        assertEquals(0, firstSchedule.getGcSeats());
+        assertEquals(11410, actualResponse.getReservedFare());
+        assertEquals(15070, actualResponse.getGreenFare());
+        assertEquals(22170, actualResponse.getGcFare());
+    }
+
+    @Test
+    @DisplayName("料金算出対象の区間リストが取得できない場合、エラーを発生させる")
+    void getSearchedScheduleByStation_withNotExistSectionCdOfSeat_returnIllegalArgumentException() {
+        stubScheduleLookups();
+        when(totalSeatRepo.findAll()).thenReturn(totalSeatList);
+        when(timeRepo.findByScheduleCdAndDepartureTimeGreaterThanEqualAndArrivalTimeLessThanEqual(any(), any(), any()))
+            .thenReturn(new ArrayList<>());
+
+        Exception ex = assertThrows(
+            IllegalArgumentException.class,
+            () -> service.getSearchedScheduleByStation(request)
+        );
+        assertEquals("SectionCdOfSeat is Not found", ex.getMessage());
+        verify(fareKmService, never()).getFareFromDistance(any());
     }
 
     @Test
