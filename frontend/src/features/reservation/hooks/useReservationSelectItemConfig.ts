@@ -18,6 +18,13 @@ export function useReservationSelectItemConfig(
     const canCheckReservation = !isDeleted && isEnabled;
     const canSearchReturinTrip = !isDeleted;
     const showThreeDotsMenu = canCancelReservation || canUpdateReservation;
+    const hasUnassignedSeat =
+        isActiveReservation && details.reservedSeats.some((seat) => !seat.name);
+    const showTotalFare = !isActiveReservation;
+    const totalFare = details.reservedSeats.reduce(
+        (sum, seat) => sum + (seat.seatFare || 0),
+        0,
+    );
 
     return {
         isActiveReservation,
@@ -26,5 +33,8 @@ export function useReservationSelectItemConfig(
         canCheckReservation,
         canSearchReturinTrip,
         showThreeDotsMenu,
+        hasUnassignedSeat,
+        showTotalFare,
+        totalFare,
     };
 }
