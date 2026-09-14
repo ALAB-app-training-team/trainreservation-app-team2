@@ -30,7 +30,7 @@ export function CustomDatePicker({
                 type="date"
                 value={value}
                 onChange={(e) => setValue(e.target.value)}
-                className="focus:border-primary-ink bg-surface w-full min-w-0 cursor-pointer appearance-none rounded-xl p-2 outline-none focus:border-2"
+                className="focus:ring-primary-ink bg-surface w-full min-w-0 cursor-pointer appearance-none rounded-xl p-2 outline-none focus:ring-2 focus:ring-inset"
                 min={dayjs(minDate).format('YYYY-MM-DD')}
                 max={dayjs(maxDate).format('YYYY-MM-DD')}
             />

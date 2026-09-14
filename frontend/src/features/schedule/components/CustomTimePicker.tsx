@@ -63,7 +63,7 @@ export function CustomTimePicker({
                     onClick={handleClick}
                     onKeyDown={handleKeyDown}
                     onBlur={handleBlur}
-                    className="focus:border-primary-ink bg-surface w-full cursor-pointer rounded-xl p-2 pr-9 outline-none focus:border-2"
+                    className="focus:ring-primary-ink bg-surface w-full cursor-pointer rounded-xl p-2 pr-9 outline-none focus:ring-2 focus:ring-inset"
                 />
                 <span
                     tabIndex={0}
