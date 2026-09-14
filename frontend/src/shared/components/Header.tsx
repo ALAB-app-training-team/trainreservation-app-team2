@@ -116,28 +116,27 @@ export function Header() {
             </div>
             {isMenuOpen && (
                 <div
-                    className="bg-surface absolute top-full right-4 z-50 flex w-[240px] flex-col gap-2 rounded-md p-2 py-2 text-base font-bold shadow-md"
+                    className="bg-surface divide-primary absolute top-full right-4 z-50 flex w-[240px] flex-col divide-y rounded-md p-2 py-2 text-base font-bold shadow-md"
                     onClick={() => setIsMenuOpen(false)}
                 >
-                    <div className="flex w-full flex-col gap-2 text-left md:hidden">
+                    <div className="divide-primary flex w-full flex-col divide-y text-left md:hidden">
                         {buttons.map((button, index) => (
                             <NavLink
                                 key={index}
                                 to={button.to}
                                 onClick={handleMenuOpen}
-                                className="hover:bg-surface-muted min-h-11 w-full px-2 py-2 text-left"
+                                className="hover:bg-primary-light min-h-11 w-full px-2 py-2 text-left"
                             >
                                 {button.label}
                             </NavLink>
                         ))}
                     </div>
-
                     {name &&
                         accountMenuItems.map((item) => (
                             <button
                                 key={item.label}
                                 onClick={item.onClick}
-                                className="hover:bg-surface-muted min-h-11 w-full px-2 py-2 text-left"
+                                className="hover:bg-primary-light min-h-11 w-full px-2 py-2 text-left"
                             >
                                 {item.label}
                             </button>
