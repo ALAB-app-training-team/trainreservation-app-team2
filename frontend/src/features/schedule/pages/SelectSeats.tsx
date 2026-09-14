@@ -2,7 +2,7 @@ import { useQueryClient } from '@tanstack/react-query';
 import axios, { HttpStatusCode } from 'axios';
 import { Suspense, useEffect, useState } from 'react';
 import { IoCardOutline } from 'react-icons/io5';
-import { LuArrowLeft, LuLogIn } from 'react-icons/lu';
+import { LuLogIn } from 'react-icons/lu';
 import { redirect, useLocation, useNavigate } from 'react-router-dom';
 import { toast } from 'sonner';
 
@@ -18,6 +18,7 @@ import { ReservationSheetHandle } from '@/features/schedule/components/Reservati
 import { ReserveConfirmModal } from '@/features/schedule/components/ReserveConfirmModal';
 import { ReserveUserInfo } from '@/features/schedule/components/ReserveUserInfo';
 import { SelectedSeats } from '@/features/schedule/components/SelectedSeats';
+import { SelectSeatsHeader } from '@/features/schedule/components/SelectSeatsHeader';
 import { TotalSeatsFare } from '@/features/schedule/components/TotalSeatsFare';
 import { TrainCars } from '@/features/schedule/components/TrainCars/TrainCars';
 import { TrainCarsSkeleton } from '@/features/schedule/components/TrainCars/TrainCarsSkeleton';
@@ -362,70 +363,15 @@ export function SelectSeats() {
 
     return (
         <div className="mx-auto flex w-full max-w-5xl flex-col">
-            <div className="flex flex-col justify-start p-4 pb-0">
-                {searchRequestDto !== null ? (
-                    <button
-                        data-testid={'back-button-in-selectseat'}
-                        type="button"
-                        onClick={() => {
-                            navigate('/scheduleSearch', {
-                                state: {
-                                    searchRequestDto,
-                                    isChanging: isChanging,
-                                    isBack: isBack,
-                                    ...(reservationId && { reservationId }),
-                                    ...(preChangeReservedSeats && {
-                                        reservedSeats: preChangeReservedSeats,
-                                    }),
-                                    ...(preChangeScheduleInfo && {
-                                        preChangeScheduleInfo,
-                                    }),
-                                },
-                            });
-                        }}
-                    >
-                        <div className="flex items-center gap-2">
-                            <LuArrowLeft />
-                            検索画面に戻る
-                        </div>
-                    </button>
-                ) : isFromReservedTicket ? (
-                    <button
-                        data-testid={'back-button-in-selectseat'}
-                        type="button"
-                        onClick={() => {
-                            navigate('/reservedTicket', {
-                                state: {
-                                    reservationId: reservationId,
-                                    mode: RESERVEDTICKET_MODE.detail,
-                                    role: RESERVEDTICKET_ROLE.account,
-                                },
-                            });
-                        }}
-                    >
-                        <div className="flex items-center gap-2">
-                            <LuArrowLeft />
-                            予約詳細へ戻る
-                        </div>
-                    </button>
-                ) : (
-                    <button
-                        data-testid={'back-button-in-selectseat'}
-                        type="button"
-                        onClick={() => {
-                            navigate('/reservationList');
-                        }}
-                    >
-                        <div className="flex items-center gap-2">
-                            <LuArrowLeft />
-                            予約一覧へ戻る
-                        </div>
-                    </button>
-                )}
-                {reservationId !== undefined && (
-                    <h1 className="!m-0 text-left !text-3xl">予約変更</h1>
-                )}
-            </div>
+            <SelectSeatsHeader
+                searchRequestDto={searchRequestDto}
+                isChanging={isChanging}
+                isFromReservedTicket={isFromReservedTicket}
+                isBack={isBack}
+                reservationId={reservationId}
+                preChangeScheduleInfo={preChangeScheduleInfo}
+                preChangeReservedSeats={preChangeReservedSeats}
+            />
 
             <div className="flex w-full flex-col items-start justify-between gap-4 p-4 pb-24 md:flex-row md:pb-4">
                 <div className="w-full md:w-7/10 md:min-w-0">
