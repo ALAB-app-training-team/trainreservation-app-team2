@@ -35,6 +35,7 @@ export function SelectSeatsHeader({
                 <button
                     data-testid={'back-button-in-selectseat'}
                     type="button"
+                    className="w-fit"
                     onClick={() => {
                         navigate('/scheduleSearch', {
                             state: {
@@ -61,6 +62,7 @@ export function SelectSeatsHeader({
                 <button
                     data-testid={'back-button-in-selectseat'}
                     type="button"
+                    className="w-fit"
                     onClick={() => {
                         navigate('/reservedTicket', {
                             state: {
@@ -80,6 +82,7 @@ export function SelectSeatsHeader({
                 <button
                     data-testid={'back-button-in-selectseat'}
                     type="button"
+                    className="w-fit"
                     onClick={() => {
                         navigate('/reservationList');
                     }}
