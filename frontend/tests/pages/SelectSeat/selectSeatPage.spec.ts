@@ -590,7 +590,7 @@ test('日時電車変更で新しい電車を選ぶと座席未選択,同じ電�
 });
 
 test.describe('予約者情報入力シートのスワイプ開閉', () => {
-    test.use({ viewport: { width: 390, height: 844 }, hasTouch: true });
+    test.use({ viewport: { width: 375, height: 667 }, hasTouch: true });
 
     test('閉じている状態で上スワイプすると開く', async ({ page }) => {
         const scheduleSearchPage = new ScheduleSearchPage(page);
