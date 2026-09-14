@@ -13,6 +13,7 @@ export class ReservedTicketPage {
     readonly arrivalStationElement: Locator;
     readonly rideDateElement: Locator;
     readonly seatFareElement: Locator;
+    readonly totalFareElement: Locator;
     readonly modalCloseButton: Locator;
     // 予約変更
     readonly changeButton: Locator;
@@ -45,6 +46,7 @@ export class ReservedTicketPage {
         this.arrivalStationElement = page.getByTestId('arrival-station');
         this.rideDateElement = page.getByTestId('ride-date').first();
         this.seatFareElement = page.getByTestId('reserved-seats');
+        this.totalFareElement = page.getByTestId('total-fare');
         this.modalCloseButton = page.getByTestId('modal-close-button');
         // 予約変更
         this.changeButton = page.getByRole('button', { name: '予約を変更' });

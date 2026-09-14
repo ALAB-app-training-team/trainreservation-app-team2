@@ -4,7 +4,8 @@ import { Header } from '@tests/pages/shared/Header';
 export class ReservationListPage {
     readonly page: Page;
     readonly header: Header;
-    readonly totalFareElement: Locator;
+    readonly reservationItem: Locator;
+    readonly seatCountElement: Locator;
     // ボタン系
     readonly ticketButton: Locator;
     readonly searchReturnTripButton;
@@ -23,7 +24,8 @@ export class ReservationListPage {
     constructor(page: Page) {
         this.page = page;
         this.header = new Header(page);
-        this.totalFareElement = page.getByTestId('total-fare');
+        this.reservationItem = page.getByTestId('reservation-item');
+        this.seatCountElement = page.getByTestId('seat-count');
         // ボタン
         this.ticketButton = page.getByRole('button', {
             name: 'チケットを表示',
