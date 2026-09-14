@@ -30,11 +30,16 @@ export class SelectSeatPage {
     readonly loginButton: Locator;
     readonly reservationInfoError: Locator;
     readonly reservationSheetButton: Locator;
+    readonly reservationUpdateTitle: Locator;
 
     constructor(page: Page) {
         this.page = page;
         this.header = new Header(page);
         this.backButton = page.getByTestId('back-button-in-selectseat');
+        this.reservationUpdateTitle = page.getByRole('heading', {
+            name: '予約変更',
+            exact: true,
+        });
         this.trainCars = page.getByTestId('train-cars').getByRole('button');
         this.emptySeat = page.getByTestId('empty-seat');
         this.seatsSkeleton = page.getByTestId('seats-by-train-car-skeleton');

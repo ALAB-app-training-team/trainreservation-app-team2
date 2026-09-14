@@ -24,6 +24,7 @@ export class ScheduleSearchPage {
     readonly isOnlyAvailableHint: Locator;
     readonly ticketUpdateToastButton: Locator;
     readonly expandSearchOptionsButton: Locator;
+    readonly reservationUpdateTitle: Locator;
 
     constructor(page: Page) {
         this.page = page;
@@ -67,6 +68,10 @@ export class ScheduleSearchPage {
         });
         this.expandSearchOptionsButton = page.getByRole('button', {
             name: '検索オプションを表示する',
+        });
+        this.reservationUpdateTitle = page.getByRole('heading', {
+            name: '予約変更',
+            exact: true,
         });
     }
 

@@ -1,6 +1,8 @@
 import { expect } from '@playwright/test';
 import { test } from '@tests/fixtures';
+import { ReservationListPage } from '@tests/pages/ReservationList/ReservationListPage';
 import { ScheduleSearchPage } from '@tests/pages/ScheduleSearch/ScheduleSearchPage';
+import { SelectSeatPage } from '@tests/pages/SelectSeat/SelectSeatPage';
 import dayjs from 'dayjs';
 
 test('駅の初期表示・初回選択肢', async ({ page }) => {
@@ -360,6 +362,44 @@ test('出発時刻・到着時刻の切り替えができること、空席表�
     expect(arrivalTimesWithUnavailableTrain).toEqual(
         sortedArrivalTimesWithUnavailableTrain,
     );
+});
+
+test('予約変更で予約変更タイトルが表示されること', async ({
+    page,
+    commonLogin,
+    createReservation,
+    logout,
+}) => {
+    const reservationListPage = new ReservationListPage(page);
+    const scheduleSearchPage = new ScheduleSearchPage(page);
+    const selectSeatPage = new SelectSeatPage(page);
+
+    await commonLogin();
+    await expect(page).toHaveURL('/scheduleSearch');
+    await createReservation();
+    await reservationListPage.goto();
+    await expect(page).toHaveURL('/reservationList');
+    await reservationListPage.clickThreeDotsButton();
+    await reservationListPage.clickChangeButton();
+    await reservationListPage.clickChangeTrainConfirmButton();
+    await expect(page).toHaveURL('/scheduleSearch');
+    await expect(scheduleSearchPage.reservationUpdateTitle).toBeVisible();
+    await scheduleSearchPage.clickScheduleItemButton();
+    await expect(page).toHaveURL('/selectSeat');
+    await selectSeatPage.clickBackButton();
+    await expect(page).toHaveURL('/scheduleSearch');
+    await expect(scheduleSearchPage.reservationUpdateTitle).toBeVisible();
+
+    await logout();
+});
+
+test('新規予約で予約変更タイトルが表示されないこと', async ({ page }) => {
+    const scheduleSearchPage = new ScheduleSearchPage(page);
+
+    await scheduleSearchPage.goto();
+    await expect(page).toHaveURL('/scheduleSearch');
+
+    await expect(scheduleSearchPage.reservationUpdateTitle).toBeHidden();
 });
 
 test('列車が見つからない場合、翌日の始発で検索できる', async ({ page }) => {
