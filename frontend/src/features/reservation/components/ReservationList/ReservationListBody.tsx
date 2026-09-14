@@ -166,14 +166,14 @@ export function ReservationListBody() {
                             className="flex flex-col gap-4 md:gap-3"
                         >
                             <div className="flex items-center gap-3">
-                                <span
+                                <h2
                                     data-testid="ride-date"
-                                    className="text-heading text-lg font-bold md:text-base"
+                                    className="text-heading m-0! text-lg! leading-7! font-bold! md:text-base! md:leading-6!"
                                 >
                                     {dayjs(group.rideDate).format(
                                         'YYYY年MM月DD日',
                                     )}
-                                </span>
+                                </h2>
                                 <span
                                     data-testid="ride-date-count"
                                     className="bg-primary-light text-primary-ink rounded-full px-2 py-0.5 text-xs"
