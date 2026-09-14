@@ -59,5 +59,5 @@ export function useResolveReservedSeats(
                 reserved.seatColumn === seat.seatColumn,
         ),
     );
-    return { resolveReservedSeat };
+    return { resolveReservedSeat, trainCars };
 }

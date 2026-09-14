@@ -8,26 +8,46 @@ import type { ScheduleInfoDto } from '@/features/schedule/types/ScheduleInfoDto'
 type UpdatedReservationInfo = {
     detail: ScheduleInfoDto;
     seats: ReservedSeatDto[];
+    showTotalFare?: boolean;
 };
 
 export function UpdatedReservationInfo({
     detail,
     seats,
+    showTotalFare = true,
 }: UpdatedReservationInfo) {
     dayjs.extend(customParseFormat);
+    const totalFare = seats.reduce(
+        (accumulator, seat) => accumulator + seat.seatFare,
+        0,
+    );
     return (
-        <div className={'border-primary-mid-light rounded-2xl border-2 p-3'}>
-            <div className="p-2">
-                <div className="flex gap-3">
-                    <span className="text-xl font-bold">
-                        {dayjs(detail.date).format('YYYY年MM月DD日')}
-                    </span>
-                    <span className="text-fg-muted">
-                        {detail.trainTypeName}
-                    </span>
+        <div
+            className={
+                'border-primary-mid-light flex flex-col gap-1 rounded-2xl border-2 p-4'
+            }
+        >
+            <div>
+                <div className="flex justify-between">
+                    <div className="flex gap-3">
+                        <span className="text-base font-bold">
+                            {dayjs(detail.date).format('YYYY年MM月DD日')}
+                        </span>
+                        <span className="text-fg-muted">
+                            {detail.trainTypeName}
+                        </span>
+                    </div>
+                    {showTotalFare && (
+                        <div className="hidden md:inline">
+                            <span>合計 </span>
+                            <span className="font-bold">
+                                ￥{totalFare.toLocaleString()}
+                            </span>
+                        </div>
+                    )}
                 </div>
 
-                <div className="flex gap-3 text-2xl font-bold">
+                <div className="flex gap-3 text-lg font-bold">
                     <div className="flex-col">
                         {detail.departureStationName}
                         <br />
@@ -43,8 +63,15 @@ export function UpdatedReservationInfo({
                     </div>
                 </div>
             </div>
-
             <ReservedSeats id={'updateReservation'} title="" seats={seats} />
+            {showTotalFare && (
+                <div className="border-primary-mid-light flex justify-between border-t pt-2 md:hidden">
+                    <span>合計</span>
+                    <span className="font-bold">
+                        ￥{totalFare.toLocaleString()}
+                    </span>
+                </div>
+            )}
         </div>
     );
 }
