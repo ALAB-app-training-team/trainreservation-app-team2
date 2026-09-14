@@ -32,6 +32,7 @@ test('座席ごとの金額が正しく表示されていること', async ({
     await expect(reservedTicketPage.seatFareElement.first()).toContainText(
         '2,600',
     );
+    await expect(reservedTicketPage.totalFareElement).toHaveText('￥2,600');
     await logout();
     await expect(page).toHaveURL('/login');
 });

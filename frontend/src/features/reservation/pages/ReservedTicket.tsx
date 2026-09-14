@@ -31,7 +31,7 @@ export function ReservedTicket() {
     const location = useLocation();
     const navigate = useNavigate();
     const [isSubmitting, setIsSubmitting] = useState<boolean>(false);
-    const { reservationId, mode, role } = location.state;
+    const { reservationId, mode, role, openCompanions } = location.state;
     const {
         reservedTickets,
         updateCompanions,
@@ -52,7 +52,7 @@ export function ReservedTicket() {
         isOpen: isCompanionsModalOpen,
         handleModalOpen: handleCompanionsModalOpen,
         onRequestClose: onCompanionsModalRequestClose,
-    } = useModal();
+    } = useModal(openCompanions === true && canUpdateCompanions);
     const {
         isOpen: isRefundConfirmModalOpen,
         handleModalOpen: handleRefundConfirmModalOpen,
