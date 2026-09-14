@@ -51,7 +51,7 @@ export function SeatTypeAndPassengersSelect({
                     classNames={{
                         control: ({ isFocused }) =>
                             'cursor-pointer rounded-xl bg-surface p-2 ' +
-                            `${isFocused ? 'border-primary-ink border-2' : 'border-transparent'}`,
+                            `${isFocused ? 'ring-primary-ink ring-2 ring-inset' : ''}`,
                         input: () => 'cursor-pointer',
                         menu: () => 'bg-surface p-2',
                         option: ({ isFocused, isSelected }) =>
@@ -75,7 +75,7 @@ export function SeatTypeAndPassengersSelect({
                     classNames={{
                         control: ({ isFocused }) =>
                             'cursor-pointer rounded-xl bg-surface p-2 ' +
-                            `${isFocused ? 'border-primary-ink border-2' : 'border-transparent'}`,
+                            `${isFocused ? 'ring-primary-ink ring-2 ring-inset' : ''}`,
                         input: () => 'cursor-pointer',
                         menu: () => 'bg-surface p-2',
                         option: ({ isFocused, isSelected }) =>
