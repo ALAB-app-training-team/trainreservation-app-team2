@@ -72,10 +72,6 @@ export class ScheduleSearchPage {
         this.seatTypeFares = page.getByTestId('seat-type-fares');
     }
 
-    seatTypeFare(seatTypeCd: string) {
-        return this.page.getByTestId(`seat-type-fare-${seatTypeCd}`);
-    }
-
     async goto() {
         await this.page.goto('/');
     }
@@ -179,5 +175,9 @@ export class ScheduleSearchPage {
 
     async clickExpandSearchOptionsButton() {
         await this.expandSearchOptionsButton.click();
+    }
+
+    seatTypeFare(seatTypeCd: string) {
+        return this.page.getByTestId(`seat-type-fare-${seatTypeCd}`);
     }
 }
