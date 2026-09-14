@@ -103,7 +103,7 @@ export function Header() {
             </div>
             {isMenuOpen && (
                 <div
-                    className="bg-surface absolute top-full right-4 z-50 flex w-[200px] flex-col gap-2 rounded-md p-2 py-2 text-base font-bold shadow-md"
+                    className="bg-surface absolute top-full right-4 z-50 flex w-[240px] flex-col gap-2 rounded-md p-2 py-2 text-lg font-bold shadow-md"
                     onClick={() => setIsMenuOpen(false)}
                 >
                     <div className="flex w-full flex-col gap-2 text-left md:hidden">
@@ -112,7 +112,7 @@ export function Header() {
                                 key={index}
                                 to={button.to}
                                 onClick={handleMenuOpen}
-                                className="hover:bg-surface-muted min-h-11 w-full rounded px-3 py-3 text-left"
+                                className="hover:bg-surface-muted min-h-11 w-full px-2 py-2 text-left"
                             >
                                 {button.label}
                             </NavLink>
@@ -122,7 +122,7 @@ export function Header() {
                     {role === 'ROLE_ADMIN' && (
                         <button
                             onClick={() => navigate('/admin/password')}
-                            className="hover:bg-surface-muted min-h-11 w-full rounded px-3 py-3 text-left"
+                            className="hover:bg-surface-muted min-h-11 w-full px-2 py-2 text-left"
                         >
                             ユーザー管理
                         </button>
@@ -131,26 +131,26 @@ export function Header() {
                         <>
                             <button
                                 onClick={() => navigate('/reservationList')}
-                                className="hover:bg-surface-muted min-h-11 w-full px-3 py-3 text-left"
+                                className="hover:bg-surface-muted min-h-11 w-full px-2 py-2 text-left"
                             >
                                 予約一覧
                             </button>
                             <button
                                 onClick={() => navigate('/accountUpdate')}
-                                className="hover:bg-surface-muted min-h-11 w-full px-3 py-3 text-left"
+                                className="hover:bg-surface-muted min-h-11 w-full px-2 py-2 text-left"
                             >
                                 氏名・メールアドレス変更
                             </button>
 
                             <button
                                 onClick={() => navigate('/passwordUpdate')}
-                                className="hover:bg-surface-muted min-h-11 w-full px-3 py-3 text-left"
+                                className="hover:bg-surface-muted min-h-11 w-full px-2 py-2 text-left"
                             >
                                 パスワード変更
                             </button>
                             <button
                                 onClick={handleLogout}
-                                className="hover:bg-surface-muted min-h-11 w-full px-3 py-3 text-left"
+                                className="hover:bg-surface-muted min-h-11 w-full px-2 py-2 text-left"
                             >
                                 ログアウト
                             </button>
