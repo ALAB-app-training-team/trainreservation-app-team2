@@ -45,6 +45,8 @@ export function ReservationSelectItem({
         canSearchReturinTrip,
         showThreeDotsMenu,
         hasUnassignedSeat,
+        showTotalFare,
+        totalFare,
     } = useReservationSelectItemConfig(details);
     const [isMenuOpen, setIsMenuOpen] = useState(false);
     const { ref: menuRef } = useOutsideClick(
@@ -85,7 +87,7 @@ export function ReservationSelectItem({
     return (
         <div
             data-testid="reservation-item"
-            className="border-primary-mid-light md:border-line-strong flex flex-col gap-2 rounded-2xl border-2 p-5 text-left md:flex-row md:items-center md:gap-4 md:rounded-xl md:border md:p-4"
+            className="border-primary-mid-light md:border-line-strong flex flex-col gap-2 rounded-2xl border-2 p-5 text-left md:flex-row md:items-center md:gap-6 md:rounded-xl md:border md:p-4"
         >
             <div className="flex items-center gap-3 md:grow">
                 <div className={TIME_BLOCK}>
@@ -112,7 +114,11 @@ export function ReservationSelectItem({
                     </span>
                 </div>
             </div>
-            <div className="flex flex-col gap-1 md:w-40 md:shrink-0">
+            <div
+                className={`flex flex-col gap-1 md:shrink-0 ${
+                    isActiveReservation ? 'md:w-40' : ''
+                }`}
+            >
                 <div className="flex items-center gap-2">
                     <MdAirlineSeatReclineExtra className="text-xl" />
                     <span>座席</span>
@@ -136,6 +142,17 @@ export function ReservationSelectItem({
                     </button>
                 )}
             </div>
+            {showTotalFare && (
+                <p className="text-fg-muted flex items-center gap-1 md:shrink-0">
+                    お支払い合計
+                    <span
+                        data-testid="list-total-fare"
+                        className="text-heading font-bold tabular-nums"
+                    >
+                        ￥{totalFare.toLocaleString()}
+                    </span>
+                </p>
+            )}
             <div
                 aria-hidden="true"
                 className="relative -mx-[22px] my-1 md:hidden"

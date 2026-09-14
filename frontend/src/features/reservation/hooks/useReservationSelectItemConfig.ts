@@ -20,6 +20,11 @@ export function useReservationSelectItemConfig(
     const showThreeDotsMenu = canCancelReservation || canUpdateReservation;
     const hasUnassignedSeat =
         isActiveReservation && details.reservedSeats.some((seat) => !seat.name);
+    const showTotalFare = !isActiveReservation;
+    const totalFare = details.reservedSeats.reduce(
+        (sum, seat) => sum + (seat.seatFare || 0),
+        0,
+    );
 
     return {
         isActiveReservation,
@@ -29,5 +34,7 @@ export function useReservationSelectItemConfig(
         canSearchReturinTrip,
         showThreeDotsMenu,
         hasUnassignedSeat,
+        showTotalFare,
+        totalFare,
     };
 }
