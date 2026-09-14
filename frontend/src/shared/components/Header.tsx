@@ -88,7 +88,7 @@ export function Header() {
                     <button
                         type="button"
                         onClick={handleMenuOpen}
-                        className={`flex min-w-0 items-center gap-2 text-base font-bold ${
+                        className={`flex min-h-11 min-w-11 items-center justify-center gap-2 text-base font-bold ${
                             name ? '' : 'md:hidden'
                         }`}
                     >
@@ -97,7 +97,7 @@ export function Header() {
                                 {name}さん
                             </span>
                         )}
-                        <FiMenu className="shrink-0" />
+                        <FiMenu className="shrink-0 text-3xl" />
                     </button>
                 </div>
             </div>
