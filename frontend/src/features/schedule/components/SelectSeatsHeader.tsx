@@ -30,7 +30,7 @@ export function SelectSeatsHeader({
     const navigate = useNavigate();
 
     return (
-        <div className="flex flex-col justify-start gap-2 p-4 pb-0">
+        <div className="flex flex-col justify-start gap-2 px-4 pt-2 pb-0 md:pt-4">
             {searchRequestDto !== null ? (
                 <button
                     data-testid={'back-button-in-selectseat'}
