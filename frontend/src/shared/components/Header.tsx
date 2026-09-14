@@ -45,6 +45,24 @@ export function Header() {
         navigate('/login');
     };
 
+    const accountMenuItems = [
+        ...(role === 'ROLE_ADMIN'
+            ? [
+                  {
+                      label: 'ユーザー管理',
+                      onClick: () => navigate('/admin/password'),
+                  },
+              ]
+            : []),
+        { label: '予約一覧', onClick: () => navigate('/reservationList') },
+        {
+            label: '氏名・メールアドレス変更',
+            onClick: () => navigate('/accountUpdate'),
+        },
+        { label: 'パスワード変更', onClick: () => navigate('/passwordUpdate') },
+        { label: 'ログアウト', onClick: handleLogout },
+    ];
+
     return (
         <div ref={menuRef}>
             <div className="border-primary-light relative flex h-16 items-center justify-start gap-3 border-b-2 px-4 py-2 md:gap-6 md:px-8">
@@ -70,7 +88,7 @@ export function Header() {
                                 to={button.to}
                                 onClick={() => setIsMenuOpen(false)}
                                 className={({ isActive }) =>
-                                    `rounded-xl px-4 py-3 text-base font-bold ${
+                                    `flex min-h-11 items-center justify-center rounded-xl px-4 py-3 text-base font-bold ${
                                         isActive
                                             ? 'bg-primary cursor-default text-white'
                                             : button.relatedPath.includes(
@@ -88,7 +106,7 @@ export function Header() {
                     <button
                         type="button"
                         onClick={handleMenuOpen}
-                        className={`flex min-w-0 items-center gap-2 text-base font-bold ${
+                        className={`flex min-h-11 min-w-11 items-center justify-center gap-2 py-3 text-base font-bold ${
                             name ? '' : 'md:hidden'
                         }`}
                     >
@@ -97,65 +115,37 @@ export function Header() {
                                 {name}さん
                             </span>
                         )}
-                        <FiMenu className="shrink-0" />
+                        <FiMenu className="shrink-0 text-3xl" />
                     </button>
                 </div>
             </div>
             {isMenuOpen && (
                 <div
-                    className="bg-surface absolute top-full right-4 z-50 flex w-[200px] flex-col gap-2 rounded-md p-2 py-2 text-base font-bold shadow-md"
+                    className="bg-surface divide-primary absolute top-full right-4 z-50 flex w-[240px] flex-col divide-y rounded-md p-2 py-2 text-base font-bold shadow-md"
                     onClick={() => setIsMenuOpen(false)}
                 >
-                    <div className="flex w-full flex-col gap-2 text-left md:hidden">
+                    <div className="divide-primary flex w-full flex-col divide-y text-left md:hidden">
                         {buttons.map((button, index) => (
                             <NavLink
                                 key={index}
                                 to={button.to}
                                 onClick={handleMenuOpen}
-                                className="text-fg-secondary hover:bg-surface-muted w-full rounded text-left"
+                                className="hover:bg-primary-light min-h-11 w-full px-2 py-2 text-left"
                             >
                                 {button.label}
                             </NavLink>
                         ))}
                     </div>
-
-                    {role === 'ROLE_ADMIN' && (
-                        <button
-                            onClick={() => navigate('/admin/password')}
-                            className="hover:bg-surface-muted w-full text-left"
-                        >
-                            ユーザー管理
-                        </button>
-                    )}
-                    {name && (
-                        <>
+                    {name &&
+                        accountMenuItems.map((item) => (
                             <button
-                                onClick={() => navigate('/reservationList')}
-                                className="hover:bg-surface-muted w-full text-left"
+                                key={item.label}
+                                onClick={item.onClick}
+                                className="hover:bg-primary-light min-h-11 w-full px-2 py-2 text-left"
                             >
-                                予約一覧
+                                {item.label}
                             </button>
-                            <button
-                                onClick={() => navigate('/accountUpdate')}
-                                className="hover:bg-surface-muted w-full text-left"
-                            >
-                                氏名・メールアドレス変更
-                            </button>
-
-                            <button
-                                onClick={() => navigate('/passwordUpdate')}
-                                className="hover:bg-surface-muted w-full text-left"
-                            >
-                                パスワード変更
-                            </button>
-                            <button
-                                onClick={handleLogout}
-                                className="hover:bg-surface-muted w-full text-left"
-                            >
-                                ログアウト
-                            </button>
-                        </>
-                    )}
+                        ))}
                 </div>
             )}
         </div>
