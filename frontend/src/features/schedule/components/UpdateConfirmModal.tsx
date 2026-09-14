@@ -25,9 +25,29 @@ export function UpdateConfirmModal({
     scheduleInfo,
     preChangeScheduleInfo,
 }: UpdateConfirmModalProps) {
+    const prevFare = reservedSeats.reduce(
+        (accumulator, seat) => accumulator + seat.seatFare,
+        0,
+    );
+    const newFare = selectedSeats.reduce(
+        (accumulator, seat) => accumulator + seat.seatFare,
+        0,
+    );
+    const fareDifference = newFare - prevFare;
+    const fareDifferenceLabel =
+        fareDifference > 0
+            ? '差額（追加でお支払い）'
+            : fareDifference < 0
+              ? '差額（払い戻し）'
+              : '差額';
+    const fareDifferenceAmount =
+        fareDifference < 0
+            ? `-￥${Math.abs(fareDifference).toLocaleString()}`
+            : `${fareDifference > 0 ? '+' : ''}￥${fareDifference.toLocaleString()}`;
+
     return (
-        <>
-            <div className="flex flex-col items-start justify-center gap-1 py-2">
+        <div className="flex flex-col gap-3">
+            <div className="flex flex-col items-start justify-center gap-1">
                 <CustomModalTitle
                     title="予約変更確認"
                     onRequestClose={onRequestClose}
@@ -60,7 +80,15 @@ export function UpdateConfirmModal({
                     }))}
                 />
             </div>
-            <div className="flex w-full items-center justify-end gap-4 p-2">
+            <div className="bg-surface-subtle flex items-center justify-between rounded-lg px-4 py-2.5">
+                <span className="text-fg-muted text-sm">
+                    {fareDifferenceLabel}
+                </span>
+                <span className="text-fg text-lg font-bold">
+                    {fareDifferenceAmount}
+                </span>
+            </div>
+            <div className="flex w-full items-center justify-end gap-4">
                 <button
                     onClick={onRequestClose}
                     disabled={isSubmitting}
@@ -76,6 +104,6 @@ export function UpdateConfirmModal({
                     変更を確定する
                 </button>
             </div>
-        </>
+        </div>
     );
 }

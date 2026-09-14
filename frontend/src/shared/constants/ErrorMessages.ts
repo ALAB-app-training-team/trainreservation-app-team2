@@ -45,4 +45,6 @@ export const ERROR_MESSAGE = {
         '退会に失敗しました。お手数ですが、再度お試しください。',
     SAVE_HISTORY_ERROR:
         'お気に入り検索の登録に失敗しました。お手数ですが、再度お試しください。',
+    DELETE_HISTORY_ERROR:
+        'お気に入り検索の削除に失敗しました。お手数ですが、再度お試しください。',
 } as const;

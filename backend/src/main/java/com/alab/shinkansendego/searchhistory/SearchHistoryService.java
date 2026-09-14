@@ -78,4 +78,16 @@ public class SearchHistoryService {
         SearchHistoryEntity saved = searchHistoryRepository.save(target);
         return saved.getId();
     }
+
+    /**
+     *
+     * @param id        削除する検索履歴のId
+     * @param accountId 検索履歴を削除するアカウントID
+     */
+    @Transactional
+    public void deleteSearchHistory(UUID id, UUID accountId) {
+        SearchHistoryEntity history = searchHistoryRepository.findByIdAndAccountId(id, accountId)
+            .orElseThrow(() -> new IllegalArgumentException("Search history is not found"));
+        searchHistoryRepository.delete(history);
+    }
 }

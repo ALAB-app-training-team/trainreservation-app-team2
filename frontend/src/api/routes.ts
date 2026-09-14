@@ -24,7 +24,7 @@ export const ENDPOINTS = {
     RESERVATION_SEAT_UPDATE: (id: string) => `${RESERVATION}/seat/${id}`,
     GUESTRESERVATION: (id?: string) =>
         id ? `${RESERVATION}/guest/${id}` : `${RESERVATION}/guest`,
-    HISTORY: () => HISTORY,
+    HISTORY: (id?: string) => (id ? `${HISTORY}/${id}` : HISTORY),
     RESERVEDSEAT: (id?: string) => `${RESERVEDSEAT}/${id}`,
     SCHEDULES_SEARCH: () => SCHEDULES,
     SEATS_SELECT: () => `${TRAINCARS}/seats`,

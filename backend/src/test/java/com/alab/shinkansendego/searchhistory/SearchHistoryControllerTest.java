@@ -27,6 +27,7 @@ import java.util.Collections;
 import java.util.List;
 import java.util.UUID;
 
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.delete;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
@@ -165,6 +166,41 @@ public class SearchHistoryControllerTest {
         mockMvc.perform(post(baseUrl)
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(objectMapper.writeValueAsString(request)))
+            .andExpect(status().isUnauthorized())
+            .andExpect(content().string("Unauthorized"));
+    }
+
+    @Test
+    @DisplayName("認証済みの場合、検索履歴を削除できる")
+    void deleteSearchHistory_withSession_return204StatusCode() throws Exception {
+        UUID historyId = UUID.randomUUID();
+
+        mockMvc.perform(delete(baseUrl + "/" + historyId)
+                .with(SecurityMockMvcRequestPostProcessors.authentication(auth)))
+            .andExpect(status().isNoContent());
+
+        Mockito.verify(service).deleteSearchHistory(historyId, session.getId());
+    }
+
+    @Test
+    @DisplayName("本人の検索履歴でない、または存在しない場合、400エラーが発生する")
+    void deleteSearchHistory_withNotOwnedOrNotFoundHistory_return400StatusCode() throws Exception {
+        UUID historyId = UUID.randomUUID();
+        Mockito.doThrow(new IllegalArgumentException("Search history is not found"))
+            .when(service).deleteSearchHistory(historyId, session.getId());
+
+        mockMvc.perform(delete(baseUrl + "/" + historyId)
+                .with(SecurityMockMvcRequestPostProcessors.authentication(auth)))
+            .andExpect(status().isBadRequest())
+            .andExpect(content().string("Search history is not found"));
+    }
+
+    @Test
+    @DisplayName("未ログインの場合、401エラーが発生する")
+    void deleteSearchHistory_withNoSession_return401StatusCode() throws Exception {
+        UUID historyId = UUID.randomUUID();
+
+        mockMvc.perform(delete(baseUrl + "/" + historyId))
             .andExpect(status().isUnauthorized())
             .andExpect(content().string("Unauthorized"));
     }

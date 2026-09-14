@@ -440,6 +440,50 @@ test('未ログイン状態ではお気に入り経路の登録が表示され�
     );
     await expect(scheduleSearchPage.time).toHaveValue('10:30');
     await expect(scheduleSearchPage.arrivalTimeButton).toBeChecked();
+
+    await scheduleSearchPage.clickHistoryDeleteButton('仙台', '白石蔵王');
+    await expect(registeredRoute).toBeHidden();
+});
+
+test('お気に入り経路の削除ボタンを押すと、対象のお気に入り経路が削除され、一覧に表示されなくなること', async ({
+    page,
+    commonLogin,
+}) => {
+    const scheduleSearchPage = new ScheduleSearchPage(page);
+
+    await scheduleSearchPage.goto();
+    await commonLogin();
+    await expect(page).toHaveURL('/scheduleSearch');
+
+    await scheduleSearchPage.selectDepartureStation('仙台');
+    await scheduleSearchPage.selectArrivalStation('白石蔵王');
+    await scheduleSearchPage.time.fill('10:30');
+    await scheduleSearchPage.clickArrivalTimeButton();
+    await scheduleSearchPage.clickExpandSearchOptionsButton();
+    await scheduleSearchPage.clickHistoryDetailAccordionButton();
+    await scheduleSearchPage.clickHistorySaveButton();
+    const registeredRoute = page
+        .getByRole('button', {
+            name: '仙台 白石蔵王',
+        })
+        .first();
+    await expect(registeredRoute).toBeVisible();
+
+    await scheduleSearchPage.selectDepartureStation('東京');
+    await scheduleSearchPage.selectArrivalStation('上野');
+    await scheduleSearchPage.time.fill('06:00');
+    await scheduleSearchPage.clickDepartureTimeButton();
+    await scheduleSearchPage.clickHistorySaveButton();
+    const otherRegisteredRoute = page
+        .getByRole('button', {
+            name: '東京 上野',
+        })
+        .first();
+    await expect(otherRegisteredRoute).toBeVisible();
+
+    await scheduleSearchPage.clickHistoryDeleteButton('仙台', '白石蔵王');
+    await expect(registeredRoute).toBeHidden();
+    await expect(otherRegisteredRoute).toBeVisible();
 });
 
 test('座席種別と人数のドロップダウンが表示され、初期値がハイフンであること', async ({
