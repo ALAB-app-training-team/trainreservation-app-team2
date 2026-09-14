@@ -25,6 +25,7 @@ export class ScheduleSearchPage {
     readonly ticketUpdateToastButton: Locator;
     readonly expandSearchOptionsButton: Locator;
     readonly reservationUpdateTitle: Locator;
+    readonly seatTypeFares: Locator;
 
     constructor(page: Page) {
         this.page = page;
@@ -73,6 +74,7 @@ export class ScheduleSearchPage {
             name: '予約変更',
             exact: true,
         });
+        this.seatTypeFares = page.getByTestId('seat-type-fares');
     }
 
     async goto() {
@@ -178,5 +180,9 @@ export class ScheduleSearchPage {
 
     async clickExpandSearchOptionsButton() {
         await this.expandSearchOptionsButton.click();
+    }
+
+    seatTypeFare(seatTypeCd: string) {
+        return this.page.getByTestId(`seat-type-fare-${seatTypeCd}`);
     }
 }

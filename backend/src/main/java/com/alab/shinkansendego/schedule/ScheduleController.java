@@ -21,8 +21,8 @@ public class ScheduleController {
     }
 
     @GetMapping
-    public ResponseEntity<List<ScheduleResponseDto>> getSchedule(@Valid ScheduleRequestDto request) {
-        List<ScheduleResponseDto> response = scheduleService.getSearchedScheduleByStation(request);
+    public ResponseEntity<ScheduleResponseDto> getSchedule(@Valid ScheduleRequestDto request) {
+        ScheduleResponseDto response = scheduleService.getSearchedScheduleByStation(request);
         return ResponseEntity.ok(response);
     }
 
