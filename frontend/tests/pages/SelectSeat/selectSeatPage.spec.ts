@@ -1,9 +1,42 @@
 import { expect } from '@playwright/test';
+import type { Locator, Page } from '@playwright/test';
 import { ScheduleSearchPage } from '@tests/pages/ScheduleSearch/ScheduleSearchPage';
 import { SelectSeatPage } from '@tests/pages/SelectSeat/SelectSeatPage';
 import { test } from '@tests/fixtures';
 import { LoginPage } from '../Login/LoginPage';
 import { ReservationListPage } from '../ReservationList/ReservationListPage';
+
+const getReservationSheetClassName = (page: Page) =>
+    page.evaluate(
+        () =>
+            document
+                .querySelector('[data-testid="reservation-sheet"]')
+                ?.closest('.transition-transform')?.className,
+    );
+
+const swipeReservationSheet = async (page: Page, handle: Locator, deltaY: number) => {
+    const box = await handle.boundingBox();
+    if (!box) throw new Error('reservation-sheet handle not found');
+    const centerX = box.x + box.width / 2;
+    const centerY = box.y + box.height / 2;
+
+    await page.dispatchEvent(
+        '[data-testid="reservation-sheet"]',
+        'touchstart',
+        {
+            touches: [{ clientX: centerX, clientY: centerY, identifier: 0 }],
+            changedTouches: [
+                { clientX: centerX, clientY: centerY, identifier: 0 },
+            ],
+        },
+    );
+    await page.dispatchEvent('[data-testid="reservation-sheet"]', 'touchend', {
+        touches: [],
+        changedTouches: [
+            { clientX: centerX, clientY: centerY + deltaY, identifier: 0 },
+        ],
+    });
+};
 
 test('ゴミ箱ボタンを押すと、選択した座席が解除される', async ({ page }) => {
     const scheduleSearchPage = new ScheduleSearchPage(page);
@@ -587,4 +620,52 @@ test('日時電車変更で新しい電車を選ぶと座席未選択,同じ電�
     await expect(page.getByText('座席が選択されていません')).toBeVisible();
 
     await logout();
+});
+
+test.describe('予約者情報入力シートのスワイプ開閉', () => {
+    test.use({ viewport: { width: 390, height: 844 }, hasTouch: true });
+
+    test('閉じている状態で上スワイプすると開く', async ({ page }) => {
+        const scheduleSearchPage = new ScheduleSearchPage(page);
+        const selectSeatPage = new SelectSeatPage(page);
+
+        await scheduleSearchPage.goto();
+        await scheduleSearchPage.clickScheduleItemButton();
+        await expect(selectSeatPage.reservationSheetButton).toBeVisible();
+        await expect(await getReservationSheetClassName(page)).toContain(
+            'translate-y-[calc(100%-68px)]',
+        );
+
+        await swipeReservationSheet(
+            page,
+            selectSeatPage.reservationSheetButton,
+            -100,
+        );
+
+        await expect
+            .poll(() => getReservationSheetClassName(page))
+            .toContain('translate-y-0');
+    });
+
+    test('開いている状態で下スワイプすると閉じる', async ({ page }) => {
+        const scheduleSearchPage = new ScheduleSearchPage(page);
+        const selectSeatPage = new SelectSeatPage(page);
+
+        await scheduleSearchPage.goto();
+        await scheduleSearchPage.clickScheduleItemButton();
+        await selectSeatPage.clickReservationSheetButton();
+        await expect
+            .poll(() => getReservationSheetClassName(page))
+            .toContain('translate-y-0');
+
+        await swipeReservationSheet(
+            page,
+            selectSeatPage.reservationSheetButton,
+            100,
+        );
+
+        await expect
+            .poll(() => getReservationSheetClassName(page))
+            .toContain('translate-y-[calc(100%-68px)]');
+    });
 });

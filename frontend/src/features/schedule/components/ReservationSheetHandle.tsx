@@ -28,8 +28,6 @@ export function ReservationSheetHandle({
 
         if (Math.abs(deltaY) <= SWIPE_THRESHOLD_PX) return;
 
-        // Swiping beyond the threshold also fires a synthetic click on
-        // touch devices; suppress it so the swipe isn't immediately undone.
         e.preventDefault();
 
         if (deltaY > 0 && !isOpen) {
