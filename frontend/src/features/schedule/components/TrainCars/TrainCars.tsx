@@ -1,9 +1,11 @@
 import { Suspense } from 'react';
+import { IoChevronForward } from 'react-icons/io5';
 
 import type { ReservedSeatDto } from '@/features/reservation/types/ReservedSeatDto';
 import { SeatsByTrainCar } from '@/features/schedule/components/SeatsByTrainCar/SeatsByTrainCar';
 import { SeatsByTrainCarSkeleton } from '@/features/schedule/components/SeatsByTrainCar/SeatsByTrainCarSkeleton';
 import { SEAT_TYPE_LABELS } from '@/features/schedule/constants/SeatTypeLabel';
+import { useScrollOverflow } from '@/features/schedule/hooks/useScrollOverflow';
 import { useTrainCar } from '@/features/schedule/hooks/useTrainCar';
 import type { ScheduleInfoDto } from '@/features/schedule/types/ScheduleInfoDto';
 import type { SeatResponseDto } from '@/features/schedule/types/SeatResponseDto';
@@ -34,6 +36,9 @@ export function TrainCars({
         setSelectedTrainCarCd,
         seatsRequestDto,
     } = useTrainCar(scheduleInfoDto, reservedSeats);
+    const { ref: trainCarListRef, canScrollRight } = useScrollOverflow([
+        filteredCars.length,
+    ]);
 
     return (
         <div className="border-primary-light flex w-full flex-col gap-8 rounded-2xl border-2 p-8">
@@ -59,32 +64,49 @@ export function TrainCars({
             </div>
             {filteredCars.length > 0 ? (
                 <>
-                    <div
-                        className="flex gap-2 overflow-x-auto md:scrollbar-thin"
-                        data-testid="train-cars"
-                    >
-                        {filteredCars.map((car) => (
-                            <button
-                                key={car.trainCarNumber}
-                                type="button"
-                                onClick={() =>
-                                    setSelectedTrainCarCd(car.trainCarCd)
-                                }
-                                aria-current={
-                                    activeTrainCarCd === car.trainCarCd
-                                }
-                                className={`flex h-16 min-w-16 flex-col items-center justify-center rounded-2xl border-2 p-3 transition-all duration-200 md:h-20 md:min-w-20 ${
-                                    activeTrainCarCd === car.trainCarCd
-                                        ? 'border-primary-ink bg-primary-light text-primary-ink font-bold shadow-sm'
-                                        : 'border-primary-light hover:bg-primary-light'
-                                }`}
+                    <div className="relative">
+                        <div
+                            ref={trainCarListRef}
+                            className="flex scroll-pr-12 gap-2 overflow-x-auto"
+                            onFocus={(e) =>
+                                e.target.scrollIntoView({
+                                    block: 'nearest',
+                                    inline: 'nearest',
+                                })
+                            }
+                        >
+                            {filteredCars.map((car) => (
+                                <button
+                                    key={car.trainCarNumber}
+                                    type="button"
+                                    onClick={() =>
+                                        setSelectedTrainCarCd(car.trainCarCd)
+                                    }
+                                    aria-current={
+                                        activeTrainCarCd === car.trainCarCd
+                                    }
+                                    className={`flex h-16 min-w-16 flex-col items-center justify-center rounded-2xl border-2 p-3 transition-all duration-200 md:h-20 md:min-w-20 ${
+                                        activeTrainCarCd === car.trainCarCd
+                                            ? 'border-primary-ink bg-primary-light text-primary-ink font-bold shadow-sm'
+                                            : 'border-primary-light hover:bg-primary-light'
+                                    }`}
+                                >
+                                    <span className="text-xl font-bold">
+                                        {car.trainCarNumber}
+                                    </span>
+                                    <span className="text-sm">号車</span>
+                                </button>
+                            ))}
+                        </div>
+                        {canScrollRight && (
+                            <div
+                                aria-hidden="true"
+                                data-testid="train-cars-scroll-hint"
+                                className="from-surface pointer-events-none absolute inset-y-0 right-0 flex w-12 items-center justify-end bg-gradient-to-l pr-1"
                             >
-                                <span className="text-xl font-bold">
-                                    {car.trainCarNumber}
-                                </span>
-                                <span className="text-sm">号車</span>
-                            </button>
-                        ))}
+                                <IoChevronForward className="text-primary-ink size-5" />
+                            </div>
+                        )}
                     </div>
                     <Suspense fallback={<SeatsByTrainCarSkeleton />}>
                         <SeatsByTrainCar
