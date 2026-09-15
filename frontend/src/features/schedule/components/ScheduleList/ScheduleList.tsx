@@ -149,13 +149,11 @@ export function ScheduleList({
                             marginPagesDisplayed={1}
                             pageRangeDisplayed={2}
                             onPageChange={handlePageChange}
-                            previousLabel={'前へ'}
-                            nextLabel={'次へ'}
-                            containerClassName="flex justify-center space-x-2"
-                            pageLinkClassName="border-2 border-primary-light rounded-lg px-4 py-2 cursor-pointer"
+                            containerClassName="flex flex-wrap justify-center gap-1"
+                            pageLinkClassName="flex min-h-11 min-w-11 items-center justify-center whitespace-nowrap border-2 border-primary-light rounded-lg px-2 text-sm cursor-pointer sm:px-4 sm:text-base"
                             activeLinkClassName="bg-primary text-white cursor-not-allowed"
-                            previousLinkClassName="border-2 border-primary-light rounded-lg px-4 py-2 cursor-pointer"
-                            nextLinkClassName="border-2 border-primary-light rounded-lg px-4 py-2 cursor-pointer"
+                            previousClassName="hidden"
+                            nextClassName="hidden"
                             disabledLinkClassName="bg-surface-disabled cursor-not-allowed"
                         />
                     </>
