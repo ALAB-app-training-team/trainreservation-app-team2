@@ -30,9 +30,9 @@ jobs:
           use_sticky_comment: false
           claude_args: |
             --model claude-sonnet-5
-            --max-turns 30
+            --max-turns 60
             --allowedTools "Bash(git diff:*),Bash(git status:*),Bash(git log:*),Bash(git show:*)"
-            --append-system-prompt "lint・型チェック・テストの実行と結果確認は別のCIワークフローに委ねる。依存関係のインストール、ビルド、lint・型チェック・テストの実行、CIの状態・ログの確認や完了待ちは行わず、コード差分と関連コードの静的レビューに専念すること。CIの完了・成功は仮定しない。整形・スタイルや単純なlint違反は指摘対象外とし、バグ、境界値・異常系の抜け、認可漏れ、入力検証、機微情報のログ出力、N+1、後方互換性の問題を優先する。テストで検出できる問題でも、コードから発見した実害のあるバグは指摘する。各指摘は path/to/file.ts:42 形式で位置を示し、問題の理由・影響・修正案を1〜2文で日本語で簡潔に述べる。差分を取得できないなどレビューを完了できなかった場合は、理由とともに「レビュー未完了」と明記し、「重大な問題なし」とは報告しない。レビューを完了し、重大な問題がなければその旨を明言する。"
+            --append-system-prompt "レビュー対象は git diff ${{ github.event.pull_request.base.sha }}...${{ github.event.pull_request.head.sha }} の差分とする。使用可能なツールは Read/Glob/Grep/LS と git の diff・status・log・show のみ。npm・yarn・ls・cat・find などその他のコマンドは実行できないため試行しないこと。依存関係のインストール、ビルド、lint・型チェック・テストの実行、CIの状態やログの確認は行わない。進捗のTodoリストは作成も更新もせず、mcp__github_comment__update_claude_comment の呼び出しは最終レビュー結果の投稿1回のみとすること。ファイルの読み込みは差分だけで判断できない場合に限り、複数ファイルを読む場合は1回のメッセージでまとめて読むこと。整形・スタイルや単純なlint違反は指摘対象外とし、バグ、境界値・異常系の抜け、認可漏れ、入力検証、機微情報のログ出力、N+1、後方互換性の問題を優先する。各指摘は path/to/file.ts:42 形式で位置を示し、理由・影響・修正案を1〜2文で日本語で簡潔に述べる。レビューを完了できなかった場合は理由とともに「レビュー未完了」と明記し、「重大な問題なし」とは報告しない。レビューを完了し重大な問題がなければその旨を明言する。"
 
   auto-review:
     if: |
@@ -57,6 +57,6 @@ jobs:
           prompt: "このプルリクエストをレビューしてください。"
           claude_args: |
             --model claude-sonnet-5
-            --max-turns 30
+            --max-turns 60
             --allowedTools "Bash(git diff:*),Bash(git status:*),Bash(git log:*),Bash(git show:*)"
-            --append-system-prompt "レビュー対象は git diff ${{ github.event.pull_request.base.sha }}...${{ github.event.pull_request.head.sha }} の差分とする。lint・型チェック・テストの実行と結果確認は別のCIワークフローに委ねる。依存関係のインストール、ビルド、lint・型チェック・テストの実行、CIの状態・ログの確認や完了待ちは行わず、コード差分と関連コードの静的レビューに専念すること。CIの完了・成功は仮定しない。整形・スタイルや単純なlint違反は指摘対象外とし、バグ、境界値・異常系の抜け、認可漏れ、入力検証、機微情報のログ出力、N+1、後方互換性の問題を優先する。テストで検出できる問題でも、コードから発見した実害のあるバグは指摘する。各指摘は path/to/file.ts:42 形式で位置を示し、問題の理由・影響・修正案を1〜2文で日本語で簡潔に述べる。差分を取得できないなどレビューを完了できなかった場合は、理由とともに「レビュー未完了」と明記し、「重大な問題なし」とは報告しない。レビューを完了し、重大な問題がなければその旨を明言する。"
+            --append-system-prompt "レビュー対象は git diff ${{ github.event.pull_request.base.sha }}...${{ github.event.pull_request.head.sha }} の差分とする。使用可能なツールは Read/Glob/Grep/LS と git の diff・status・log・show のみ。npm・yarn・ls・cat・find などその他のコマンドは実行できないため試行しないこと。依存関係のインストール、ビルド、lint・型チェック・テストの実行、CIの状態やログの確認は行わない。進捗のTodoリストは作成も更新もせず、mcp__github_comment__update_claude_comment の呼び出しは最終レビュー結果の投稿1回のみとすること。ファイルの読み込みは差分だけで判断できない場合に限り、複数ファイルを読む場合は1回のメッセージでまとめて読むこと。整形・スタイルや単純なlint違反は指摘対象外とし、バグ、境界値・異常系の抜け、認可漏れ、入力検証、機微情報のログ出力、N+1、後方互換性の問題を優先する。各指摘は path/to/file.ts:42 形式で位置を示し、理由・影響・修正案を1〜2文で日本語で簡潔に述べる。レビューを完了できなかった場合は理由とともに「レビュー未完了」と明記し、「重大な問題なし」とは報告しない。レビューを完了し重大な問題がなければその旨を明言する。"
