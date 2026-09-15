@@ -1,7 +1,7 @@
-import type { SeatResponseDto } from '@/features/schedule/types/SeatResponseDto';
+import type { SeatDto } from '@/features/schedule/types/SeatDto';
 
 type TotalSeatsFareProps = {
-    selectedSeats: SeatResponseDto[];
+    selectedSeats: SeatDto[];
     prevFare?: number;
 };
 

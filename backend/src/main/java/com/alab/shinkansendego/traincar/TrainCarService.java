@@ -36,8 +36,8 @@ public class TrainCarService {
         this.fareKmService = fareKmService;
     }
 
-    public List<SeatResponseDto> getSeatListWithReserved(SeatRequestDto request) {
-        List<SeatResponseDto> seatList = trainCarRepository.findSeatByTrainCarCd(request.getTrainCarCd());
+    public SeatResponseDto getSeatListWithReserved(SeatRequestDto request) {
+        List<SeatDto> seatList = trainCarRepository.findSeatByTrainCarCd(request.getTrainCarCd());
         if (seatList.isEmpty()) {
             throw new IllegalArgumentException("TrainCarCd is Not found");
         }
@@ -67,13 +67,13 @@ public class TrainCarService {
             default -> fare = 0;
         }
 
-        for (SeatResponseDto seat : seatList) {
+        for (SeatDto seat : seatList) {
             seat.setIsReserved(reservedSeatCdList.contains(seat.getSeatCd()));
             seat.setSeatFare(fare);
         }
 
-        seatList.sort(Comparator.comparing(SeatResponseDto::getSeatNumber).thenComparing(SeatResponseDto::getSeatColumn));
+        seatList.sort(Comparator.comparing(SeatDto::getSeatNumber).thenComparing(SeatDto::getSeatColumn));
 
-        return seatList;
+        return new SeatResponseDto(null, null, seatList);
     }
 }

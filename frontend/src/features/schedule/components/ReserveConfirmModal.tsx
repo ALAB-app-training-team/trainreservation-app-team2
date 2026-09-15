@@ -1,7 +1,7 @@
 import { FARE_CONSTANTS } from '@/features/reservation/constants/FareConstant';
 import { UpdatedReservationInfo } from '@/features/schedule/components/UpdatedReservationInfo';
 import type { ScheduleInfoDto } from '@/features/schedule/types/ScheduleInfoDto';
-import type { SeatResponseDto } from '@/features/schedule/types/SeatResponseDto';
+import type { SeatDto } from '@/features/schedule/types/SeatDto';
 import type { TrainCarFormationResponseDto } from '@/features/schedule/types/TrainCarFormationResponseDto';
 import { CustomModalTitle } from '@/shared/components/CustomModalTitle';
 
@@ -16,7 +16,7 @@ type ReserveConfirmModalProps = {
     onClick: () => void;
     onRequestClose: () => void;
     isSubmitting: boolean;
-    selectedSeats: SeatResponseDto[];
+    selectedSeats: SeatDto[];
     scheduleInfo: ScheduleInfoDto;
     trainCars: TrainCarFormationResponseDto[];
 };

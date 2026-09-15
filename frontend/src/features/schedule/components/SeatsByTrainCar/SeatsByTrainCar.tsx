@@ -6,16 +6,16 @@ import { Seat } from '@/features/schedule/components/Seat';
 import { TRAIN_DIRECTION } from '@/features/schedule/constants/TrainDirection';
 import { useSeatsByTrainCar } from '@/features/schedule/hooks/useSeatsByTrainCar';
 import type { ScheduleInfoDto } from '@/features/schedule/types/ScheduleInfoDto';
-import type { SeatResponseDto } from '@/features/schedule/types/SeatResponseDto';
+import type { SeatDto } from '@/features/schedule/types/SeatDto';
 import type { SeatsRequestDto } from '@/features/schedule/types/SeatsRequestDto';
 import { LIMIT } from '@/shared/constants/Limit';
 
 type SeatsByTrainCarProps = {
     scheduleInfoDto: ScheduleInfoDto;
     seatsRequestDto: SeatsRequestDto;
-    selectedSeats: SeatResponseDto[];
-    handleSelectedSeats: (seat: SeatResponseDto) => void;
-    checkReservedSeats: (seats: SeatResponseDto[]) => void;
+    selectedSeats: SeatDto[];
+    handleSelectedSeats: (seat: SeatDto) => void;
+    checkReservedSeats: (seats: SeatDto[]) => void;
     reservedSeats?: ReservedSeatDto[];
 };
 
@@ -60,7 +60,7 @@ export function SeatsByTrainCar({
     const displayColumns: string[] = isDown
         ? [...layoutColumns].reverse()
         : layoutColumns;
-    const isOwnReservedSeat = (seat: SeatResponseDto) =>
+    const isOwnReservedSeat = (seat: SeatDto) =>
         reservedSeats?.some(
             (reserved) =>
                 reserved.trainCarNumber === seat.trainCarNumber &&

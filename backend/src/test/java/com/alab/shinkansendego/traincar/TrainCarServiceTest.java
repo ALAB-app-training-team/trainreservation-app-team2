@@ -32,7 +32,7 @@ import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.Mockito.when;
 
 public class TrainCarServiceTest {
-    private final List<SeatResponseDto> emptySeatList = new ArrayList<>();
+    private final List<SeatDto> emptySeatList = new ArrayList<>();
     private final List<DepartureArrivalTimeEntity> emptyDepartureArrivalTimeList = new ArrayList<>();
     private final SeatRequestDto request = new SeatRequestDto();
     private final List<SectionKmEntity> sectionKmEntities = new ArrayList<>();
@@ -52,19 +52,19 @@ public class TrainCarServiceTest {
     @InjectMocks
     private TrainCarService service;
 
-    private static @NonNull List<SeatResponseDto> getSeatResponseDtosList() {
-        SeatResponseDto expect01 = new SeatResponseDto("Test001", 1, "CAR01", "TestSeat1", 1, "T", 2610, false);
-        SeatResponseDto expect02 = new SeatResponseDto("Test001", 1, "CAR01", "TestSeat2", 2, "E", 2610, true);
-        SeatResponseDto expect03 = new SeatResponseDto("Test001", 1, "CAR01", "TestSeat3", 3, "S", 2610, false);
-        SeatResponseDto expect04 = new SeatResponseDto("Test001", 1, "CAR01", "TestSeat4", 4, "T", 2610, true);
+    private static @NonNull List<SeatDto> getSeatResponseDtosList() {
+        SeatDto expect01 = new SeatDto("Test001", 1, "CAR01", "TestSeat1", 1, "T", 2610, false);
+        SeatDto expect02 = new SeatDto("Test001", 1, "CAR01", "TestSeat2", 2, "E", 2610, true);
+        SeatDto expect03 = new SeatDto("Test001", 1, "CAR01", "TestSeat3", 3, "S", 2610, false);
+        SeatDto expect04 = new SeatDto("Test001", 1, "CAR01", "TestSeat4", 4, "T", 2610, true);
         return Arrays.asList(expect01, expect02, expect03, expect04);
     }
 
-    private static @NonNull List<SeatResponseDto> getIsreservedIsNullList() {
-        SeatResponseDto expect01 = new SeatResponseDto("Test001", 1, "CAR01", "TestSeat1", 1, "T", 0, null);
-        SeatResponseDto expect02 = new SeatResponseDto("Test001", 1, "CAR01", "TestSeat2", 2, "E", 0, null);
-        SeatResponseDto expect03 = new SeatResponseDto("Test001", 1, "CAR01", "TestSeat3", 3, "S", 0, null);
-        SeatResponseDto expect04 = new SeatResponseDto("Test001", 1, "CAR01", "TestSeat4", 4, "T", 0, null);
+    private static @NonNull List<SeatDto> getIsreservedIsNullList() {
+        SeatDto expect01 = new SeatDto("Test001", 1, "CAR01", "TestSeat1", 1, "T", 0, null);
+        SeatDto expect02 = new SeatDto("Test001", 1, "CAR01", "TestSeat2", 2, "E", 0, null);
+        SeatDto expect03 = new SeatDto("Test001", 1, "CAR01", "TestSeat3", 3, "S", 0, null);
+        SeatDto expect04 = new SeatDto("Test001", 1, "CAR01", "TestSeat4", 4, "T", 0, null);
         return Arrays.asList(expect01, expect02, expect03, expect04);
     }
 
@@ -125,12 +125,12 @@ public class TrainCarServiceTest {
         when(trainCarRepo.findByTrainCarCd(request.getTrainCarCd())).thenReturn(Optional.of(trainCarEntity));
         when(fareKmService.getFareFromDistance(20.0)).thenReturn(fares);
 
-        List<SeatResponseDto> expectList = getSeatResponseDtosList();
+        List<SeatDto> expectList = getSeatResponseDtosList();
 
-        List<SeatResponseDto> actualList = service.getSeatListWithReserved(request);
+        SeatResponseDto actual = service.getSeatListWithReserved(request);
 
-        assertEquals(4, actualList.size());
-        assertEquals(expectList, actualList);
+        assertEquals(4, actual.getSeats().size());
+        assertEquals(expectList, actual.getSeats());
     }
 
     @Test

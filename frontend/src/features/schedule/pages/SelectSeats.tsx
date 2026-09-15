@@ -29,7 +29,7 @@ import { useResolveReservedSeats } from '@/features/schedule/hooks/useResolveRes
 import { useSelectedSeats } from '@/features/schedule/hooks/useSelectedSeats';
 import type { PaymentRequestDto } from '@/features/schedule/types/PaymentRequestDto';
 import type { ReserveRequestDto } from '@/features/schedule/types/ReserveRequestDto';
-import type { SeatResponseDto } from '@/features/schedule/types/SeatResponseDto';
+import type { SeatDto } from '@/features/schedule/types/SeatDto';
 import type { SelectSeatsLocationState } from '@/features/schedule/types/SelectSeatsLocationState';
 import { CustomModal } from '@/shared/components/CustomModal';
 import { ERROR_MESSAGE } from '@/shared/constants/ErrorMessages';
@@ -236,7 +236,7 @@ export function SelectSeats() {
                 error.response?.data
             ) {
                 const errorData = error.response.data;
-                const conflictSeats: SeatResponseDto[] =
+                const conflictSeats: SeatDto[] =
                     typeof errorData === 'string'
                         ? JSON.parse(errorData)
                         : errorData;
@@ -306,7 +306,7 @@ export function SelectSeats() {
                 error.response?.data
             ) {
                 const errorData = error.response.data;
-                const conflictSeats: SeatResponseDto[] =
+                const conflictSeats: SeatDto[] =
                     typeof errorData === 'string'
                         ? JSON.parse(errorData)
                         : errorData;
