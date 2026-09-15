@@ -68,6 +68,7 @@ export function TrainCars({
                         <div
                             ref={trainCarListRef}
                             className="flex scroll-pr-12 gap-2 overflow-x-auto"
+                            data-testid="train-cars"
                             onFocus={(e) =>
                                 e.target.scrollIntoView({
                                     block: 'nearest',
