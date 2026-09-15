@@ -3,12 +3,12 @@ CREATE TABLE M_TrainCarFacility
     train_car_cd VARCHAR(7) NOT NULL REFERENCES M_TrainCar (train_car_cd) ON DELETE CASCADE,
     facility_cd  VARCHAR(5) NOT NULL REFERENCES M_Facility (facility_cd) ON DELETE RESTRICT,
     position     VARCHAR(5) NOT NULL, -- 'FRONT' / 'REAR'
-    PRIMARY KEY (train_car_cd, facility_cd, position)
+    PRIMARY KEY (train_car_cd, facility_cd, position),
+    CONSTRAINT chk_m_train_car_facility_position CHECK (position IN ('FRONT', 'REAR'))
 );
 
 INSERT INTO M_TrainCarFacility (train_car_cd, facility_cd, position)
 VALUES
-    -- 1号車
     ('E2SER01', 'FC001', 'REAR'),
     ('E2SER01', 'FC002', 'REAR'),
     ('E2SER01', 'FC003', 'REAR'),
@@ -185,7 +185,7 @@ VALUES
     ('E7SER10', 'FC002', 'FRONT'),
     ('E7SER10', 'FC003', 'FRONT'),
     ('E7SER10', 'FC005', 'FRONT'),
-    ('E7SER10', 'FC006','FRONT'),
+    ('E7SER10', 'FC006', 'FRONT'),
     ('E7SER11', 'FC002', 'REAR'),
     ('E7SER11', 'FC003', 'REAR'),
     ('E7SER11', 'FC004', 'REAR'),
