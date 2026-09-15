@@ -589,6 +589,66 @@ test('日時電車変更で新しい電車を選ぶと座席未選択,同じ電�
     await logout();
 });
 
+test('人数座席変更で予約変更タイトルが表示されること', async ({
+    page,
+    commonLogin,
+    createReservation,
+    logout,
+}) => {
+    const reservationListPage = new ReservationListPage(page);
+    const selectSeatPage = new SelectSeatPage(page);
+
+    await commonLogin();
+    await expect(page).toHaveURL('/scheduleSearch');
+    await createReservation();
+    await reservationListPage.goto();
+    await expect(page).toHaveURL('/reservationList');
+    await reservationListPage.clickThreeDotsButton();
+    await reservationListPage.clickChangeButton();
+    await reservationListPage.clickChangeSeatConfirmButton();
+    await expect(page).toHaveURL('/selectSeat');
+    await expect(selectSeatPage.reservationUpdateTitle).toBeVisible();
+
+    await logout();
+});
+
+test('日時電車変更で予約変更タイトルが表示されること', async ({
+    page,
+    commonLogin,
+    createReservation,
+    logout,
+}) => {
+    const reservationListPage = new ReservationListPage(page);
+    const scheduleSearchPage = new ScheduleSearchPage(page);
+    const selectSeatPage = new SelectSeatPage(page);
+
+    await commonLogin();
+    await expect(page).toHaveURL('/scheduleSearch');
+    await createReservation();
+    await reservationListPage.goto();
+    await expect(page).toHaveURL('/reservationList');
+    await reservationListPage.clickThreeDotsButton();
+    await reservationListPage.clickChangeButton();
+    await reservationListPage.clickChangeTrainConfirmButton();
+    await expect(page).toHaveURL('/scheduleSearch');
+    await scheduleSearchPage.clickScheduleItemButton();
+    await expect(page).toHaveURL('/selectSeat');
+    await expect(selectSeatPage.reservationUpdateTitle).toBeVisible();
+
+    await logout();
+});
+
+test('新規予約で予約変更タイトルが表示されないこと', async ({ page }) => {
+    const scheduleSearchPage = new ScheduleSearchPage(page);
+    const selectSeatPage = new SelectSeatPage(page);
+
+    await scheduleSearchPage.goto();
+    await expect(page).toHaveURL('/scheduleSearch');
+    await scheduleSearchPage.clickScheduleItemButton();
+    await expect(page).toHaveURL('/selectSeat');
+    await expect(selectSeatPage.reservationUpdateTitle).toBeHidden();
+});
+
 test.describe('予約者情報入力シートのスワイプ開閉', () => {
     test.use({ viewport: { width: 375, height: 667 }, hasTouch: true });
 
