@@ -6,7 +6,7 @@ import type { SeatResponseDto } from '@/features/schedule/types/SeatResponseDto'
 import type { SeatsRequestDto } from '@/features/schedule/types/SeatsRequestDto';
 
 export function useSeatsByTrainCar(seatsRequestDto: SeatsRequestDto) {
-    const { data: seats } = useSuspenseQuery({
+    const { data } = useSuspenseQuery({
         queryKey: [
             'seat',
             seatsRequestDto.date,
@@ -14,7 +14,7 @@ export function useSeatsByTrainCar(seatsRequestDto: SeatsRequestDto) {
             seatsRequestDto.trainCarCd,
         ],
         queryFn: async () => {
-            const response = await apiClient.get<SeatResponseDto[]>(
+            const response = await apiClient.get<SeatResponseDto>(
                 ENDPOINTS.SEATS_SELECT(),
                 {
                     params: seatsRequestDto,
@@ -24,5 +24,9 @@ export function useSeatsByTrainCar(seatsRequestDto: SeatsRequestDto) {
         },
     });
 
-    return { seats };
+    return {
+        seats: data.seats,
+        frontFacilities: data.frontFacilities,
+        rearFacilities: data.rearFacilities,
+    };
 }

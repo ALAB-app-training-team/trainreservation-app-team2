@@ -15,7 +15,7 @@ import com.alab.shinkansendego.seat.SeatEntity;
 import com.alab.shinkansendego.seat.SeatRepository;
 import com.alab.shinkansendego.sectionkm.SectionKmEntity;
 import com.alab.shinkansendego.sectionkm.SectionKmRepository;
-import com.alab.shinkansendego.traincar.SeatResponseDto;
+import com.alab.shinkansendego.traincar.SeatDto;
 import com.alab.shinkansendego.traincar.TrainCarEntity;
 import com.alab.shinkansendego.traincar.TrainCarRepository;
 import jakarta.persistence.EntityManager;
@@ -455,12 +455,12 @@ public class ReservationService {
             Set<String> existingKeys = existingReservedSeatSections.stream()
                 .map(sec -> sec.getTrainCarCd() + "_" + sec.getSeatCd())
                 .collect(Collectors.toSet());
-            List<SeatResponseDto> seatResponseDtos = new ArrayList<>();
+            List<SeatDto> seatResponseDtos = new ArrayList<>();
 
             for (ReservedSeatEntity reservedSeat : savedReservedSeats) {
                 String key = reservedSeat.getTrainCarCd() + "_" + reservedSeat.getSeatCd();
                 if (existingKeys.contains(key)) {
-                    seatResponseDtos.add(new SeatResponseDto(reservedSeat.getTrainCarCd(), reservedSeat.getTrainCar().getTrainCarNumber(), reservedSeat.getTrainCar().getSeatType().getTrainCarTypeCd(), reservedSeat.getSeatCd(), reservedSeat.getSeat().getSeatNumber(), reservedSeat.getSeat().getSeatColumn(), 0, true));
+                    seatResponseDtos.add(new SeatDto(reservedSeat.getTrainCarCd(), reservedSeat.getTrainCar().getTrainCarNumber(), reservedSeat.getTrainCar().getSeatType().getTrainCarTypeCd(), reservedSeat.getSeatCd(), reservedSeat.getSeat().getSeatNumber(), reservedSeat.getSeat().getSeatColumn(), 0, true));
                 }
             }
             if (!seatResponseDtos.isEmpty()) {

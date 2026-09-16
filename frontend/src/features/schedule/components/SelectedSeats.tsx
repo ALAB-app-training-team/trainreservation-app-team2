@@ -1,11 +1,11 @@
 import { FaTrashCan } from 'react-icons/fa6';
 
-import type { SeatResponseDto } from '@/features/schedule/types/SeatResponseDto';
+import type { SeatDto } from '@/features/schedule/types/SeatDto';
 import { ERROR_MESSAGE } from '@/shared/constants/ErrorMessages';
 import { LIMIT } from '@/shared/constants/Limit';
 
 type SelectedSeatsProps = {
-    selectedSeats: SeatResponseDto[];
+    selectedSeats: SeatDto[];
     handleClear: () => void;
 };
 

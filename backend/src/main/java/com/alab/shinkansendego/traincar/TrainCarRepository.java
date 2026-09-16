@@ -10,11 +10,11 @@ import java.util.Optional;
 
 @Repository
 public interface TrainCarRepository extends JpaRepository<TrainCarEntity, String> {
-    @Query("SELECT new com.alab.shinkansendego.traincar.SeatResponseDto(tc.trainCarCd, tc.trainCarNumber,st.trainCarTypeCd, s.seatCd,s.seatNumber, s.seatColumn, 0, false) " +
+    @Query("SELECT new com.alab.shinkansendego.traincar.SeatDto(tc.trainCarCd, tc.trainCarNumber,st.trainCarTypeCd, s.seatCd,s.seatNumber, s.seatColumn, 0, false) " +
         "FROM TrainCarEntity tc " +
         "INNER JOIN SeatTypeEntity st ON tc.seatTypeCd = st.seatTypeCd AND tc.trainCarCd = :trainCarCd " +
         "INNER JOIN SeatEntity s ON st.seatTypeCd = s.seatTypeCd ORDER BY s.seatNumber, s.seatColumn")
-    List<SeatResponseDto> findSeatByTrainCarCd(String trainCarCd);
+    List<SeatDto> findSeatByTrainCarCd(String trainCarCd);
 
     @EntityGraph(attributePaths = {"seatType", "seatType.trainCarType"})
     Optional<TrainCarEntity> findByTrainCarCd(String trainCarCd);
