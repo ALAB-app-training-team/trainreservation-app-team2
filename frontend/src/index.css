@@ -227,19 +227,6 @@ input[type='checkbox'] {
     cursor: pointer;
 }
 
-/*
- * 共通 focus-visible スタイル
- * =====================================================================
- * ブラウザ既定の黒い outline はコントラストが低く、要素によって太さも
- * バラつくため、ブランドカラーの outline に統一する。
- *
- * @layer base に置くことで、要素側で focus-visible:ring-* や
- * outline-none などの Tailwind ユーティリティ（@layer utilities）を
- * 指定している場合はそちらが優先される（Cascade Layers は
- * utilities > base）。何のフォーカス表示も指定していない要素だけが
- * この既定値を使う。
- * =====================================================================
- */
 @layer base {
     :focus-visible {
         outline: 2px solid var(--color-primary-ink);

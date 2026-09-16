@@ -51,7 +51,6 @@ export function GuestLoginInput({
                     autoComplete={autoComplete}
                     placeholder={placeHolder}
                     readOnly={readOnly}
-                    // 読み取り専用の項目は編集できないため Tab で止まらないようにする
                     tabIndex={readOnly ? -1 : undefined}
                     className="focus:border-primary-ink bg-primary-light w-full rounded-xl p-2 pl-10 outline-none focus:border-2"
                 />

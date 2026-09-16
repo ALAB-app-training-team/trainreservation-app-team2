@@ -7,19 +7,11 @@ type CheckboxProps = {
     onChange: (checked: boolean) => void;
     label: ReactNode;
     disabled?: boolean;
-    /** ラッパー div に付与するクラス（gap の調整など） */
     className?: string;
-    /** input に付与するクラス（size の調整など） */
     inputClassName?: string;
     dataTestId?: string;
 };
 
-/**
- * キーボード操作に対応した共通チェックボックス。
- * - Space に加えて Enter でもチェック状態を切り替える
- *   （form 内では Enter の暗黙送信を抑止する）
- * - focus-visible 時にリングを表示して選択中の項目を分かるようにする
- */
 export function Checkbox({
     id,
     checked,
