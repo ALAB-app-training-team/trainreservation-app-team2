@@ -33,6 +33,7 @@ import type { SeatDto } from '@/features/schedule/types/SeatDto';
 import type { SelectSeatsLocationState } from '@/features/schedule/types/SelectSeatsLocationState';
 import { CustomModal } from '@/shared/components/CustomModal';
 import { ERROR_MESSAGE } from '@/shared/constants/ErrorMessages';
+import { useLockBodyScroll } from '@/shared/hooks/useLockBodyScroll';
 import { useModal } from '@/shared/hooks/useModal';
 import { removeWhiteSpace } from '@/shared/utils/RemoveWhiteSpace';
 
@@ -95,6 +96,8 @@ export function SelectSeats() {
     const [isSubmitting, setIsSubmitting] = useState<boolean>(false);
     const [isSheetOpen, setIsSheetOpen] = useState<boolean>(false);
     const isLoggedIn = !!localStorage.getItem('name');
+
+    useLockBodyScroll(isSheetOpen);
 
     useEffect(() => {
         window.scrollTo(0, 0);
@@ -387,13 +390,13 @@ export function SelectSeats() {
                     </Suspense>
                 </div>
                 <div
-                    className={`fixed inset-x-0 bottom-0 z-30 w-full transition-transform duration-300 ease-out md:static md:z-auto md:flex-1 md:translate-y-0 md:transition-none ${
+                    className={`fixed inset-x-0 bottom-0 z-60 w-full transition-transform duration-300 ease-out md:static md:z-auto md:flex-1 md:translate-y-0 md:transition-none ${
                         isSheetOpen
                             ? 'translate-y-0'
-                            : 'translate-y-[calc(100%-68px)]'
+                            : 'translate-y-[calc(100%-80px)]'
                     }`}
                 >
-                    <div className="border-primary-light bg-surface flex max-h-[80dvh] w-full flex-col overflow-y-auto rounded-t-2xl border-2 text-left md:max-h-none md:overflow-visible md:rounded-2xl">
+                    <div className="border-primary-light bg-surface flex max-h-[90dvh] w-full flex-col overflow-y-auto rounded-t-2xl border-2 text-left md:max-h-none md:overflow-visible md:rounded-2xl">
                         <ReservationSheetHandle
                             isOpen={isSheetOpen}
                             seatCount={selectedSeats.length}

@@ -44,7 +44,7 @@ export function ReservationSheetHandle({
             onClick={onToggle}
             onTouchStart={handleTouchStart}
             onTouchEnd={handleTouchEnd}
-            className="border-primary-ink bg-primary-light sticky top-0 z-10 flex w-full flex-col items-center gap-2 rounded-t-2xl border-b-2 px-8 py-3 md:hidden"
+            className="border-primary-ink bg-primary-light sticky top-0 z-10 flex w-full touch-none flex-col items-center gap-2 rounded-t-2xl border-b-2 px-8 py-3 md:hidden"
         >
             <span className="bg-primary-mid-light h-1 w-9 rounded-full" />
             <div className="flex w-full items-center">
