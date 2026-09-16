@@ -170,7 +170,7 @@ public class TrainCarServiceTest {
         when(trainCarRepo.findByTrainCarCd(request.getTrainCarCd())).thenReturn(Optional.of(trainCarEntity));
         when(fareKmService.getFareFromDistance(20.0)).thenReturn(fares);
         when(trainCarFacilityRepo.findByTrainCarCd("Test001")).thenReturn(List.of(
-            trainCarFacility("TCFC001", "FC001", FacilityUtils.UNISEX_RESTROOM, FacilityUtils.POSITION_REAR)
+            trainCarFacility("TCFC001", "FC001", FacilityUtils.ALL_GENDER_RESTROOM, FacilityUtils.POSITION_REAR)
         ));
 
         List<SeatDto> expectList = getSeatResponseDtosList();
@@ -179,8 +179,8 @@ public class TrainCarServiceTest {
 
         assertEquals(4, actual.getSeats().size());
         assertEquals(expectList, actual.getSeats());
-        assertFalse(actual.getFrontFacilities().getIsUnisexRestroom());
-        assertTrue(actual.getRearFacilities().getIsUnisexRestroom());
+        assertFalse(actual.getFrontFacilities().getHasAllGenderRestroom());
+        assertTrue(actual.getRearFacilities().getHasAllGenderRestroom());
     }
 
     @Test
@@ -253,7 +253,7 @@ public class TrainCarServiceTest {
     void getSeatListWithReserved_returnFrontAndRearFacilities() {
         stubSeatListQuery();
         when(trainCarFacilityRepo.findByTrainCarCd("Test001")).thenReturn(List.of(
-            trainCarFacility("TCFC001", "FC001", FacilityUtils.UNISEX_RESTROOM, FacilityUtils.POSITION_FRONT),
+            trainCarFacility("TCFC001", "FC001", FacilityUtils.ALL_GENDER_RESTROOM, FacilityUtils.POSITION_FRONT),
             trainCarFacility("TCFC002", "FC006", FacilityUtils.LUGGAGE_STORAGE, FacilityUtils.POSITION_FRONT),
             trainCarFacility("TCFC003", "FC004", FacilityUtils.WHEELCHAIR_RESTROOM, FacilityUtils.POSITION_REAR),
             trainCarFacility("TCFC004", "FC007", FacilityUtils.MULTIPURPOSE_ROOM, FacilityUtils.POSITION_REAR)
@@ -290,8 +290,8 @@ public class TrainCarServiceTest {
     void getSeatListWithReserved_withFrontFacilityOnly_returnRearAllFalse() {
         stubSeatListQuery();
         when(trainCarFacilityRepo.findByTrainCarCd("Test001")).thenReturn(List.of(
-            trainCarFacility("TCFC001", "FC002", FacilityUtils.MEN_RESTROOM, FacilityUtils.POSITION_FRONT),
-            trainCarFacility("TCFC002", "FC003", FacilityUtils.WOMEN_RESTROOM, FacilityUtils.POSITION_FRONT),
+            trainCarFacility("TCFC001", "FC002", FacilityUtils.MENS_RESTROOM, FacilityUtils.POSITION_FRONT),
+            trainCarFacility("TCFC002", "FC003", FacilityUtils.WOMENS_RESTROOM, FacilityUtils.POSITION_FRONT),
             trainCarFacility("TCFC003", "FC005", FacilityUtils.BABY_CHANGING_TABLE, FacilityUtils.POSITION_FRONT)
         ));
 
@@ -310,8 +310,8 @@ public class TrainCarServiceTest {
     void getSeatListWithReserved_withRearFacilityOnly_returnFrontAllFalse() {
         stubSeatListQuery();
         when(trainCarFacilityRepo.findByTrainCarCd("Test001")).thenReturn(List.of(
-            trainCarFacility("TCFC001", "FC002", FacilityUtils.MEN_RESTROOM, FacilityUtils.POSITION_REAR),
-            trainCarFacility("TCFC002", "FC003", FacilityUtils.WOMEN_RESTROOM, FacilityUtils.POSITION_REAR),
+            trainCarFacility("TCFC001", "FC002", FacilityUtils.MENS_RESTROOM, FacilityUtils.POSITION_REAR),
+            trainCarFacility("TCFC002", "FC003", FacilityUtils.WOMENS_RESTROOM, FacilityUtils.POSITION_REAR),
             trainCarFacility("TCFC003", "FC005", FacilityUtils.BABY_CHANGING_TABLE, FacilityUtils.POSITION_REAR)
         ));
 

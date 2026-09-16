@@ -9,11 +9,11 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 public class FacilityDto {
     private String position;
-    private Boolean isUnisexRestroom;
-    private Boolean isMenRestroom;
-    private Boolean isWomenRestroom;
-    private Boolean isWheelchairRestroom;
-    private Boolean isBabyChangingTable;
-    private Boolean isLuggageStorage;
-    private Boolean isMultipurposeRoom;
+    private Boolean hasAllGenderRestroom;
+    private Boolean hasMensRestroom;
+    private Boolean hasWomensRestroom;
+    private Boolean hasWheelchairRestroom;
+    private Boolean hasBabyChangingTable;
+    private Boolean hasLuggageStorage;
+    private Boolean hasMultipurposeRoom;
 }
