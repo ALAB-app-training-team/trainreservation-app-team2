@@ -37,6 +37,8 @@ public final class FacilityUtils {
             case BABY_CHANGING_TABLE -> dto.setHasBabyChangingTable(true);
             case LUGGAGE_STORAGE -> dto.setHasLuggageStorage(true);
             case MULTIPURPOSE_ROOM -> dto.setHasMultipurposeRoom(true);
+            default -> {
+            }
         }
     }
 }
