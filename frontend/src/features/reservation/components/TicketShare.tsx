@@ -48,6 +48,7 @@ export function TicketShare({ shareUrl = '' }: TicketShareProps) {
                         <input
                             type="text"
                             readOnly
+                            tabIndex={-1}
                             value={shareUrl}
                             className="text-fg-secondary flex-1 overflow-hidden bg-transparent px-2 text-sm text-ellipsis whitespace-nowrap"
                         />
