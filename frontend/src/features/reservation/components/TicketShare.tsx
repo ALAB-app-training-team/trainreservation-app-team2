@@ -49,7 +49,7 @@ export function TicketShare({ shareUrl = '' }: TicketShareProps) {
                             type="text"
                             readOnly
                             value={shareUrl}
-                            className="text-fg-secondary flex-1 overflow-hidden bg-transparent px-2 text-sm text-ellipsis whitespace-nowrap outline-none"
+                            className="text-fg-secondary flex-1 overflow-hidden bg-transparent px-2 text-sm text-ellipsis whitespace-nowrap"
                         />
                         <button
                             onClick={handleCopy}
