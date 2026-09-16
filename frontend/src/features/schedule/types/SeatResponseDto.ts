@@ -1,10 +1,8 @@
+import type { FacilityDto } from '@/features/schedule/types/FacilityDto';
+import type { SeatDto } from '@/features/schedule/types/SeatDto';
+
 export type SeatResponseDto = {
-    trainCarCd: string;
-    trainCarNumber: number;
-    trainCarTypeCd: string;
-    seatCd: string;
-    seatNumber: number;
-    seatColumn: string;
-    seatFare: number;
-    isReserved: boolean;
+    frontFacilities: FacilityDto;
+    rearFacilities: FacilityDto;
+    seats: SeatDto[];
 };

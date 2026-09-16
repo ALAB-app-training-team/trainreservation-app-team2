@@ -41,7 +41,7 @@ export function useResolveReservedSeats(
             return {
                 queryKey: ['seat', dto.date, dto.scheduleCd, dto.trainCarCd],
                 queryFn: async () => {
-                    const response = await apiClient.get<SeatResponseDto[]>(
+                    const response = await apiClient.get<SeatResponseDto>(
                         ENDPOINTS.SEATS_SELECT(),
                         { params: dto },
                     );
@@ -50,7 +50,7 @@ export function useResolveReservedSeats(
             };
         }),
     });
-    const allSeats = results.flatMap((result) => result.data);
+    const allSeats = results.flatMap((result) => result.data.seats);
     const resolveReservedSeat = allSeats.filter((seat) =>
         (reservedSeats ?? []).some(
             (reserved) =>

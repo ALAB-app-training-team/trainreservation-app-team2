@@ -1,8 +1,8 @@
-import type { SeatResponseDto } from '@/features/schedule/types/SeatResponseDto';
+import type { SeatDto } from '@/features/schedule/types/SeatDto';
 
 type seatProps = {
-    seat?: SeatResponseDto;
-    onClick?: (seat: SeatResponseDto) => void;
+    seat?: SeatDto;
+    onClick?: (seat: SeatDto) => void;
     disabled?: boolean;
     type: 'unreservable' | 'isSelected' | 'reservable';
 };

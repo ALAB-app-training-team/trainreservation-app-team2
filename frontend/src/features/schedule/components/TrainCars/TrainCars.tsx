@@ -8,15 +8,15 @@ import { SEAT_TYPE_LABELS } from '@/features/schedule/constants/SeatTypeLabel';
 import { useScrollOverflow } from '@/features/schedule/hooks/useScrollOverflow';
 import { useTrainCar } from '@/features/schedule/hooks/useTrainCar';
 import type { ScheduleInfoDto } from '@/features/schedule/types/ScheduleInfoDto';
-import type { SeatResponseDto } from '@/features/schedule/types/SeatResponseDto';
+import type { SeatDto } from '@/features/schedule/types/SeatDto';
 import type { SeatTypeCd } from '@/features/schedule/types/SeatTypeCd';
 import { ERROR_MESSAGE } from '@/shared/constants/ErrorMessages';
 
 type TrainCarsProps = {
     scheduleInfoDto: ScheduleInfoDto;
-    selectedSeats: SeatResponseDto[];
-    handleSelectedSeats: (seat: SeatResponseDto) => void;
-    checkReservedSeats: (seats: SeatResponseDto[]) => void;
+    selectedSeats: SeatDto[];
+    handleSelectedSeats: (seat: SeatDto) => void;
+    checkReservedSeats: (seats: SeatDto[]) => void;
     reservedSeats?: ReservedSeatDto[];
 };
 
