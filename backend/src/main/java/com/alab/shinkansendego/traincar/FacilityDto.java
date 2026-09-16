@@ -13,6 +13,7 @@ public class FacilityDto {
     private Boolean isMenRestroom;
     private Boolean isWomenRestroom;
     private Boolean isWheelchairRestroom;
-    private Boolean isLuggageStorage;
     private Boolean isBabyChangingTable;
+    private Boolean isLuggageStorage;
+    private Boolean isMultipurposeRoom;
 }

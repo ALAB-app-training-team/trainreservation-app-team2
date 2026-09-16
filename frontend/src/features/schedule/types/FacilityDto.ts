@@ -4,6 +4,7 @@ export type FacilityDto = {
     isMenRestroom: boolean;
     isWomenRestroom: boolean;
     isWheelchairRestroom: boolean;
-    isLuggageStorage: boolean;
     isBabyChangingTable: boolean;
+    isLuggageStorage: boolean;
+    isisMultipurposeRoom: boolean;
 };
