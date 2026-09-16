@@ -1,15 +1,14 @@
 import { useState } from 'react';
 import { toast } from 'sonner';
 
-import type { SeatResponseDto } from '@/features/schedule/types/SeatResponseDto';
+import type { SeatDto } from '@/features/schedule/types/SeatDto';
 import { ERROR_MESSAGE } from '@/shared/constants/ErrorMessages';
 import { LIMIT } from '@/shared/constants/Limit';
 
-export function useSelectedSeats(initialSeats: SeatResponseDto[] = []) {
-    const [selectedSeats, setSelectedSeats] =
-        useState<SeatResponseDto[]>(initialSeats);
+export function useSelectedSeats(initialSeats: SeatDto[] = []) {
+    const [selectedSeats, setSelectedSeats] = useState<SeatDto[]>(initialSeats);
 
-    const handleSelectedSeats = (seat: SeatResponseDto) => {
+    const handleSelectedSeats = (seat: SeatDto) => {
         if (
             selectedSeats.some(
                 (selectedSeat) =>
@@ -33,18 +32,18 @@ export function useSelectedSeats(initialSeats: SeatResponseDto[] = []) {
         setSelectedSeats([]);
     };
 
-    const checkReservedSeats = (seats: SeatResponseDto[]) => {
+    const checkReservedSeats = (seats: SeatDto[]) => {
         const reservedSeatCds = new Set(
             seats
                 .filter((seat) => seat.isReserved)
                 .map((seat) => seat.trainCarCd + seat.seatCd),
         );
-        const reservedSeatsInSelectedSeats: SeatResponseDto[] =
-            selectedSeats.filter((selectedSeat) =>
+        const reservedSeatsInSelectedSeats: SeatDto[] = selectedSeats.filter(
+            (selectedSeat) =>
                 reservedSeatCds.has(
                     selectedSeat.trainCarCd + selectedSeat.seatCd,
                 ),
-            );
+        );
         if (reservedSeatsInSelectedSeats.length > 0) {
             setSelectedSeats((prevSeats) =>
                 prevSeats.filter(
@@ -59,7 +58,7 @@ export function useSelectedSeats(initialSeats: SeatResponseDto[] = []) {
                 `${ERROR_MESSAGE.RELEASE_SEAT}\n` +
                     reservedSeatsInSelectedSeats
                         .map(
-                            (seat: SeatResponseDto) =>
+                            (seat: SeatDto) =>
                                 '・' +
                                 seat.trainCarNumber +
                                 '号車' +

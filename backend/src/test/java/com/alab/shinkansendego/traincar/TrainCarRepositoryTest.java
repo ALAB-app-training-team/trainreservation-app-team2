@@ -43,7 +43,7 @@ public class TrainCarRepositoryTest {
     @Test
     @DisplayName("号車コードから号車内の座席リストが取得できる")
     void findSeatByTrainCarCd_returnGetSeatListSuccess() {
-        List<SeatResponseDto> actual = repo.findSeatByTrainCarCd("E5SER01");
+        List<SeatDto> actual = repo.findSeatByTrainCarCd("E5SER01");
         assertEquals(3, actual.size());
         assertEquals("E5SER01", actual.get(0).getTrainCarCd());
         assertEquals("E5SER01", actual.get(1).getTrainCarCd());

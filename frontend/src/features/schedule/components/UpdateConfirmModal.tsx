@@ -3,7 +3,7 @@ import { FaArrowDown } from 'react-icons/fa';
 import type { ReservedSeatDto } from '@/features/reservation/types/ReservedSeatDto';
 import { UpdatedReservationInfo } from '@/features/schedule/components/UpdatedReservationInfo';
 import type { ScheduleInfoDto } from '@/features/schedule/types/ScheduleInfoDto';
-import type { SeatResponseDto } from '@/features/schedule/types/SeatResponseDto';
+import type { SeatDto } from '@/features/schedule/types/SeatDto';
 import { CustomModalTitle } from '@/shared/components/CustomModalTitle';
 
 type UpdateConfirmModalProps = {
@@ -11,7 +11,7 @@ type UpdateConfirmModalProps = {
     onRequestClose: () => void;
     isSubmitting: boolean;
     reservedSeats: ReservedSeatDto[];
-    selectedSeats: SeatResponseDto[];
+    selectedSeats: SeatDto[];
     scheduleInfo: ScheduleInfoDto;
     preChangeScheduleInfo?: ScheduleInfoDto;
 };

@@ -17,7 +17,6 @@ import org.springframework.test.web.servlet.MockMvc;
 import java.time.LocalDate;
 import java.time.LocalTime;
 import java.util.Arrays;
-import java.util.List;
 
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
@@ -35,12 +34,15 @@ public class TrainCarControllerTest {
     @MockitoBean
     private TrainCarService service;
 
-    private static @NonNull List<SeatResponseDto> getSeatResponseDtosList() {
-        SeatResponseDto expect01 = new SeatResponseDto("Test001", 1, "CAR01", "TestSeat1", 1, "T", 0, false);
-        SeatResponseDto expect02 = new SeatResponseDto("Test001", 1, "CAR01", "TestSeat2", 2, "E", 0, true);
-        SeatResponseDto expect03 = new SeatResponseDto("Test001", 1, "CAR01", "TestSeat3", 3, "S", 0, false);
-        SeatResponseDto expect04 = new SeatResponseDto("Test001", 1, "CAR01", "TestSeat4", 4, "T", 0, true);
-        return Arrays.asList(expect01, expect02, expect03, expect04);
+    private static @NonNull SeatResponseDto getSeatResponse() {
+        SeatDto expect01 = new SeatDto("Test001", 1, "CAR01", "TestSeat1", 1, "T", 0, false);
+        SeatDto expect02 = new SeatDto("Test001", 1, "CAR01", "TestSeat2", 2, "E", 0, true);
+        SeatDto expect03 = new SeatDto("Test001", 1, "CAR01", "TestSeat3", 3, "S", 0, false);
+        SeatDto expect04 = new SeatDto("Test001", 1, "CAR01", "TestSeat4", 4, "T", 0, true);
+        return new SeatResponseDto(
+            new FacilityDto("FRONT", true, false, false, false, false, true, false),
+            new FacilityDto("REAR", false, true, true, true, true, false, true),
+            Arrays.asList(expect01, expect02, expect03, expect04));
     }
 
     @BeforeEach
@@ -56,42 +58,58 @@ public class TrainCarControllerTest {
 
     @Test
     @DisplayName("号車コードから号車内の座席リストが取得できる")
-    void getSeatList_returnGetSeatListSuccess() throws Exception {
+    void getSeatList_returnGetSeatListAndFacilitySuccess() throws Exception {
 
-        List<SeatResponseDto> expectList = getSeatResponseDtosList();
+        SeatResponseDto expect = getSeatResponse();
         String url = baseUrl
             + "seats?trainCarCd=Test001&scheduleCd=Test01&date=2026-06-01&departureTime=12:00:00&arrivalTime=13:00:00";
 
-        Mockito.when(service.getSeatListWithReserved(request)).thenReturn(expectList);
+        Mockito.when(service.getSeatListWithReserved(request)).thenReturn(expect);
 
         mockMvc.perform(
                 get(url).contentType(MediaType.APPLICATION_JSON))
             .andExpect(status().isOk())
-            .andExpect(jsonPath("$.length()").value(4))
-            .andExpect(jsonPath("$[0].trainCarCd").value("Test001"))
-            .andExpect(jsonPath("$[1].trainCarCd").value("Test001"))
-            .andExpect(jsonPath("$[2].trainCarCd").value("Test001"))
-            .andExpect(jsonPath("$[3].trainCarCd").value("Test001"))
-            .andExpect(jsonPath("$[0].trainCarNumber").value(1))
-            .andExpect(jsonPath("$[1].trainCarNumber").value(1))
-            .andExpect(jsonPath("$[2].trainCarNumber").value(1))
-            .andExpect(jsonPath("$[3].trainCarNumber").value(1))
-            .andExpect(jsonPath("$[0].seatCd").value("TestSeat1"))
-            .andExpect(jsonPath("$[1].seatCd").value("TestSeat2"))
-            .andExpect(jsonPath("$[2].seatCd").value("TestSeat3"))
-            .andExpect(jsonPath("$[3].seatCd").value("TestSeat4"))
-            .andExpect(jsonPath("$[0].seatNumber").value(1))
-            .andExpect(jsonPath("$[1].seatNumber").value(2))
-            .andExpect(jsonPath("$[2].seatNumber").value(3))
-            .andExpect(jsonPath("$[3].seatNumber").value(4))
-            .andExpect(jsonPath("$[0].seatColumn").value("T"))
-            .andExpect(jsonPath("$[1].seatColumn").value("E"))
-            .andExpect(jsonPath("$[2].seatColumn").value("S"))
-            .andExpect(jsonPath("$[3].seatColumn").value("T"))
-            .andExpect(jsonPath("$[0].isReserved").value(false))
-            .andExpect(jsonPath("$[1].isReserved").value(true))
-            .andExpect(jsonPath("$[2].isReserved").value(false))
-            .andExpect(jsonPath("$[3].isReserved").value(true));
+            .andExpect(jsonPath("$.frontFacilities.position").value("FRONT"))
+            .andExpect(jsonPath("$.frontFacilities.hasAllGenderRestroom").value(true))
+            .andExpect(jsonPath("$.frontFacilities.hasMensRestroom").value(false))
+            .andExpect(jsonPath("$.frontFacilities.hasWomensRestroom").value(false))
+            .andExpect(jsonPath("$.frontFacilities.hasWheelchairRestroom").value(false))
+            .andExpect(jsonPath("$.frontFacilities.hasBabyChangingTable").value(false))
+            .andExpect(jsonPath("$.frontFacilities.hasLuggageStorage").value(true))
+            .andExpect(jsonPath("$.frontFacilities.hasMultipurposeRoom").value(false))
+            .andExpect(jsonPath("$.rearFacilities.position").value("REAR"))
+            .andExpect(jsonPath("$.rearFacilities.hasAllGenderRestroom").value(false))
+            .andExpect(jsonPath("$.rearFacilities.hasMensRestroom").value(true))
+            .andExpect(jsonPath("$.rearFacilities.hasWomensRestroom").value(true))
+            .andExpect(jsonPath("$.rearFacilities.hasWheelchairRestroom").value(true))
+            .andExpect(jsonPath("$.rearFacilities.hasBabyChangingTable").value(true))
+            .andExpect(jsonPath("$.rearFacilities.hasLuggageStorage").value(false))
+            .andExpect(jsonPath("$.rearFacilities.hasMultipurposeRoom").value(true))
+            .andExpect(jsonPath("$.seats.length()").value(4))
+            .andExpect(jsonPath("$.seats[0].trainCarCd").value("Test001"))
+            .andExpect(jsonPath("$.seats[1].trainCarCd").value("Test001"))
+            .andExpect(jsonPath("$.seats[2].trainCarCd").value("Test001"))
+            .andExpect(jsonPath("$.seats[3].trainCarCd").value("Test001"))
+            .andExpect(jsonPath("$.seats[0].trainCarNumber").value(1))
+            .andExpect(jsonPath("$.seats[1].trainCarNumber").value(1))
+            .andExpect(jsonPath("$.seats[2].trainCarNumber").value(1))
+            .andExpect(jsonPath("$.seats[3].trainCarNumber").value(1))
+            .andExpect(jsonPath("$.seats[0].seatCd").value("TestSeat1"))
+            .andExpect(jsonPath("$.seats[1].seatCd").value("TestSeat2"))
+            .andExpect(jsonPath("$.seats[2].seatCd").value("TestSeat3"))
+            .andExpect(jsonPath("$.seats[3].seatCd").value("TestSeat4"))
+            .andExpect(jsonPath("$.seats[0].seatNumber").value(1))
+            .andExpect(jsonPath("$.seats[1].seatNumber").value(2))
+            .andExpect(jsonPath("$.seats[2].seatNumber").value(3))
+            .andExpect(jsonPath("$.seats[3].seatNumber").value(4))
+            .andExpect(jsonPath("$.seats[0].seatColumn").value("T"))
+            .andExpect(jsonPath("$.seats[1].seatColumn").value("E"))
+            .andExpect(jsonPath("$.seats[2].seatColumn").value("S"))
+            .andExpect(jsonPath("$.seats[3].seatColumn").value("T"))
+            .andExpect(jsonPath("$.seats[0].isReserved").value(false))
+            .andExpect(jsonPath("$.seats[1].isReserved").value(true))
+            .andExpect(jsonPath("$.seats[2].isReserved").value(false))
+            .andExpect(jsonPath("$.seats[3].isReserved").value(true));
     }
 
     @Test

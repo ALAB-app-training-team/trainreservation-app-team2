@@ -4,16 +4,13 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import java.util.List;
+
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
 public class SeatResponseDto {
-    private String trainCarCd;
-    private Integer trainCarNumber;
-    private String trainCarTypeCd;
-    private String seatCd;
-    private Integer seatNumber;
-    private String seatColumn;
-    private Integer seatFare;
-    private Boolean isReserved;
+    private FacilityDto frontFacilities;
+    private FacilityDto rearFacilities;
+    private List<SeatDto> seats;
 }

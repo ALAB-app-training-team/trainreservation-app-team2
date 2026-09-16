@@ -1,12 +1,12 @@
 import type { ReservedSeatDto } from '@/features/reservation/types/ReservedSeatDto';
 import type { ScheduleInfoDto } from '@/features/schedule/types/ScheduleInfoDto';
 import type { SearchRequestDto } from '@/features/schedule/types/SearchRequestDto';
-import type { SeatResponseDto } from '@/features/schedule/types/SeatResponseDto';
+import type { SeatDto } from '@/features/schedule/types/SeatDto';
 
 export type SelectSeatsLocationState = {
     scheduleInfoDto: ScheduleInfoDto;
     searchRequestDto: SearchRequestDto | null;
-    prevSelectedSeats?: SeatResponseDto[];
+    prevSelectedSeats?: SeatDto[];
     reservedSeats?: ReservedSeatDto[];
     reservationId?: string;
     isChanging: boolean;

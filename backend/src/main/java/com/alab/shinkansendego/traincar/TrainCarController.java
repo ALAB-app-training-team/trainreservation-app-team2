@@ -7,7 +7,6 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import java.util.List;
 
 @RestController
 @RequestMapping(path = "api/traincars")
@@ -20,8 +19,8 @@ public class TrainCarController {
     }
 
     @GetMapping(path = "/seats")
-    public ResponseEntity<List<SeatResponseDto>> getSeatList(@Valid SeatRequestDto seatRequestDto) {
-        List<SeatResponseDto> response = traincarService.getSeatListWithReserved(seatRequestDto);
+    public ResponseEntity<SeatResponseDto> getSeatList(@Valid SeatRequestDto seatRequestDto) {
+        SeatResponseDto response = traincarService.getSeatListWithReserved(seatRequestDto);
         return ResponseEntity.ok(response);
     }
 }
