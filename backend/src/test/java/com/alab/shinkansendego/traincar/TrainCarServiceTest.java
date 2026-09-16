@@ -270,7 +270,7 @@ public class TrainCarServiceTest {
     }
 
     @Test
-    @DisplayName("設備を持たない号車の場合、前方・後方ともにすべての設備情報がfalseになる")
+    @DisplayName("設備を持たない号車の場合、前方・後方ともにすべての設備情報がfalse")
     void getSeatListWithReserved_withNoFacility_returnAllFalseFacilities() {
         stubSeatListQuery();
         when(trainCarFacilityRepo.findByTrainCarCd("Test001")).thenReturn(new ArrayList<>());
@@ -286,7 +286,7 @@ public class TrainCarServiceTest {
     }
 
     @Test
-    @DisplayName("前方にのみ設備がある号車の場合、後方の設備はすべてfalseになる")
+    @DisplayName("前方にのみ設備がある号車の場合、後方の設備はすべてfalse")
     void getSeatListWithReserved_withFrontFacilityOnly_returnRearAllFalse() {
         stubSeatListQuery();
         when(trainCarFacilityRepo.findByTrainCarCd("Test001")).thenReturn(List.of(
@@ -306,7 +306,7 @@ public class TrainCarServiceTest {
     }
 
     @Test
-    @DisplayName("後方にのみ設備がある号車の場合、前方の設備はすべてfalseになる")
+    @DisplayName("後方にのみ設備がある号車の場合、前方の設備はすべてfalse")
     void getSeatListWithReserved_withRearFacilityOnly_returnFrontAllFalse() {
         stubSeatListQuery();
         when(trainCarFacilityRepo.findByTrainCarCd("Test001")).thenReturn(List.of(
