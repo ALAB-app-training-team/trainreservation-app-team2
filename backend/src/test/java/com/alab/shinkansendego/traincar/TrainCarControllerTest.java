@@ -17,6 +17,7 @@ import org.springframework.test.web.servlet.MockMvc;
 import java.time.LocalDate;
 import java.time.LocalTime;
 import java.util.Arrays;
+import java.util.List;
 
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
@@ -91,6 +92,41 @@ public class TrainCarControllerTest {
             .andExpect(jsonPath("$.seats[1].isReserved").value(true))
             .andExpect(jsonPath("$.seats[2].isReserved").value(false))
             .andExpect(jsonPath("$.seats[3].isReserved").value(true));
+    }
+
+    @Test
+    @DisplayName("号車コードから前方・後方の設備情報が取得できる")
+    void getSeatList_returnFrontAndRearFacilities() throws Exception {
+
+        SeatResponseDto expect = new SeatResponseDto(
+            new FacilityDto("FRONT", true, false, false, false, false, true, false),
+            new FacilityDto("REAR", false, true, true, true, true, false, true),
+            List.of(new SeatDto("Test001", 1, "CAR01", "TestSeat1", 1, "T", 0, false)));
+        String url = baseUrl
+            + "seats?trainCarCd=Test001&scheduleCd=Test01&date=2026-06-01&departureTime=12:00:00&arrivalTime=13:00:00";
+
+        Mockito.when(service.getSeatListWithReserved(request)).thenReturn(expect);
+
+        mockMvc.perform(
+                get(url).contentType(MediaType.APPLICATION_JSON))
+            .andExpect(status().isOk())
+            .andExpect(jsonPath("$.frontFacilities.position").value("FRONT"))
+            .andExpect(jsonPath("$.frontFacilities.isUnisexRestroom").value(true))
+            .andExpect(jsonPath("$.frontFacilities.isMenRestroom").value(false))
+            .andExpect(jsonPath("$.frontFacilities.isWomenRestroom").value(false))
+            .andExpect(jsonPath("$.frontFacilities.isWheelchairRestroom").value(false))
+            .andExpect(jsonPath("$.frontFacilities.isBabyChangingTable").value(false))
+            .andExpect(jsonPath("$.frontFacilities.isLuggageStorage").value(true))
+            .andExpect(jsonPath("$.frontFacilities.isMultipurposeRoom").value(false))
+            .andExpect(jsonPath("$.rearFacilities.position").value("REAR"))
+            .andExpect(jsonPath("$.rearFacilities.isUnisexRestroom").value(false))
+            .andExpect(jsonPath("$.rearFacilities.isMenRestroom").value(true))
+            .andExpect(jsonPath("$.rearFacilities.isWomenRestroom").value(true))
+            .andExpect(jsonPath("$.rearFacilities.isWheelchairRestroom").value(true))
+            .andExpect(jsonPath("$.rearFacilities.isBabyChangingTable").value(true))
+            .andExpect(jsonPath("$.rearFacilities.isLuggageStorage").value(false))
+            .andExpect(jsonPath("$.rearFacilities.isMultipurposeRoom").value(true))
+            .andExpect(jsonPath("$.seats.length()").value(1));
     }
 
     @Test

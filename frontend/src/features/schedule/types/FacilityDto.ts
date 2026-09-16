@@ -6,5 +6,5 @@ export type FacilityDto = {
     isWheelchairRestroom: boolean;
     isBabyChangingTable: boolean;
     isLuggageStorage: boolean;
-    isisMultipurposeRoom: boolean;
+    isMultipurposeRoom: boolean;
 };
