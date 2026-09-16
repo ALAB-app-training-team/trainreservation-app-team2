@@ -3,6 +3,7 @@ import { useLayoutEffect, useRef, useState } from 'react';
 
 export function useScrollOverflow(deps: DependencyList = []) {
     const ref = useRef<HTMLDivElement>(null);
+    const [canScrollLeft, setCanScrollLeft] = useState(false);
     const [canScrollRight, setCanScrollRight] = useState(false);
 
     useLayoutEffect(() => {
@@ -11,6 +12,7 @@ export function useScrollOverflow(deps: DependencyList = []) {
 
         const update = () => {
             const { scrollLeft, clientWidth, scrollWidth } = element;
+            setCanScrollLeft(scrollLeft > 1);
             setCanScrollRight(scrollLeft + clientWidth < scrollWidth - 1);
         };
 
@@ -25,5 +27,5 @@ export function useScrollOverflow(deps: DependencyList = []) {
         };
     }, deps);
 
-    return { ref, canScrollRight };
+    return { ref, canScrollLeft, canScrollRight };
 }

@@ -1,5 +1,5 @@
 import { Suspense } from 'react';
-import { IoChevronForward } from 'react-icons/io5';
+import { IoChevronBack, IoChevronForward } from 'react-icons/io5';
 
 import type { ReservedSeatDto } from '@/features/reservation/types/ReservedSeatDto';
 import { SeatsByTrainCar } from '@/features/schedule/components/SeatsByTrainCar/SeatsByTrainCar';
@@ -36,9 +36,11 @@ export function TrainCars({
         setSelectedTrainCarCd,
         seatsRequestDto,
     } = useTrainCar(scheduleInfoDto, reservedSeats);
-    const { ref: trainCarListRef, canScrollRight } = useScrollOverflow([
-        filteredCars.length,
-    ]);
+    const {
+        ref: trainCarListRef,
+        canScrollLeft,
+        canScrollRight,
+    } = useScrollOverflow([filteredCars.length]);
 
     return (
         <div className="border-primary-light flex w-full flex-col gap-8 rounded-2xl border-2 p-8">
@@ -67,7 +69,7 @@ export function TrainCars({
                     <div className="relative">
                         <div
                             ref={trainCarListRef}
-                            className="flex scroll-pr-12 gap-2 overflow-x-auto"
+                            className="flex scroll-px-12 gap-2 overflow-x-auto"
                             data-testid="train-cars"
                             onFocus={(e) =>
                                 e.target.scrollIntoView({
@@ -99,6 +101,15 @@ export function TrainCars({
                                 </button>
                             ))}
                         </div>
+                        {canScrollLeft && (
+                            <div
+                                aria-hidden="true"
+                                data-testid="train-cars-scroll-hint-left"
+                                className="from-surface pointer-events-none absolute inset-y-0 left-0 flex w-12 items-center justify-start bg-gradient-to-r pl-1"
+                            >
+                                <IoChevronBack className="text-primary-ink size-5" />
+                            </div>
+                        )}
                         {canScrollRight && (
                             <div
                                 aria-hidden="true"
