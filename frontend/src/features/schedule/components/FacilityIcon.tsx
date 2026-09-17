@@ -23,7 +23,7 @@ export function FacilityIcon(props: FacilityIconProps) {
             aria-hidden={isDecorative || undefined}
             className={`inline-flex size-8 shrink-0 items-center justify-center rounded-md border-2 ${frameClassName}`}
         >
-            <props.icon className={`size-7 ${iconClassName}`} />
+            <props.icon className={`size-8 ${iconClassName}`} />
         </span>
     );
 }

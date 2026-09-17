@@ -97,7 +97,7 @@ export function FacilityByTrainCar({ facilities }: FacilityByTrainCarProps) {
             <button
                 type="button"
                 onClick={handleModalOpen}
-                aria-label="設備アイコンの説明を開く"
+                aria-label="アイコンの説明を開く"
                 className="text-fg-muted hover:text-fg rounded-full p-1"
             >
                 <MdOutlineHelpOutline className="size-6" />
