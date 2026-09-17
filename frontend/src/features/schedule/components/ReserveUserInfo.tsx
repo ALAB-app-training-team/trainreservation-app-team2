@@ -9,6 +9,7 @@ import { PasswordInput } from '@/features/account/components/PasswordInput';
 import type { PasswordCheck } from '@/features/account/types/PasswordCheck';
 import { ReserveUserInfoInput } from '@/features/schedule/components/ReserveUserInfoInput';
 import type { ReserveUser } from '@/features/schedule/types/ReserveUser';
+import { Checkbox } from '@/shared/components/Checkbox';
 
 type ReserveUserInfoProps = {
     reserveUser: ReserveUser;
@@ -68,22 +69,19 @@ export function ReserveUserInfo({
                             icon={IoMailOutline}
                             getFieldError={getFieldError}
                         />
-                        <div className="flex items-center gap-4 bg-transparent">
-                            <input
-                                type="checkbox"
-                                id="isAccountCreate"
-                                checked={isAccountCreate}
-                                onChange={(e) =>
-                                    setIsAccountCreate(e.target.checked)
-                                }
-                                className="accent-primary focus-visible:ring-primary focus-visible:ring-1 focus-visible:ring-offset-2"
-                            />
-                            <label htmlFor="isAccountCreate">
-                                このメールアドレスでアカウントを
-                                <br className="hidden md:block" />
-                                作成する
-                            </label>
-                        </div>
+                        <Checkbox
+                            id="isAccountCreate"
+                            checked={isAccountCreate}
+                            onChange={setIsAccountCreate}
+                            className="gap-4 bg-transparent"
+                            label={
+                                <>
+                                    このメールアドレスでアカウントを
+                                    <br className="hidden md:block" />
+                                    作成する
+                                </>
+                            }
+                        />
                         {isAccountCreate && (
                             <>
                                 <PasswordInput

@@ -6,6 +6,7 @@ import { GuestLoginInput } from '@/features/reservation/components/GuestLoginInp
 import { useReservationListRequestDto } from '@/features/reservation/hooks/useReservationListRequestDto';
 import type { ReservedSeatDto } from '@/features/reservation/types/ReservedSeatDto';
 import type { ReservedSeatUpdateDto } from '@/features/reservation/types/ReservedSeatUpdateDto';
+import { Checkbox } from '@/shared/components/Checkbox';
 
 type CompanionFormProps = {
     index: number;
@@ -93,18 +94,12 @@ export function CompanionForm({
                             {reservedSeat.seatColumn}
                         </div>
                     </h2>
-                    <div className="flex items-center gap-2">
-                        <input
-                            type="checkbox"
-                            id={`isCompanionUpdated${index}`}
-                            checked={canUpdate}
-                            onChange={(e) => setCanUpdate(e.target.checked)}
-                            className="accent-primary"
-                        />
-                        <label htmlFor={`isCompanionUpdated${index}`}>
-                            利用者を割り当てる
-                        </label>
-                    </div>
+                    <Checkbox
+                        id={`isCompanionUpdated${index}`}
+                        checked={canUpdate}
+                        onChange={setCanUpdate}
+                        label="利用者を割り当てる"
+                    />
                 </div>
                 <GuestLoginInput
                     id="reserverName"
