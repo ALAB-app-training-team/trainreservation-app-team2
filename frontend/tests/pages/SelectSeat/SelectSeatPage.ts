@@ -31,6 +31,7 @@ export class SelectSeatPage {
     readonly reservationInfoError: Locator;
     readonly reservationSheetButton: Locator;
     readonly reservationUpdateTitle: Locator;
+    readonly facilityLegend: Locator;
 
     constructor(page: Page) {
         this.page = page;
@@ -86,6 +87,11 @@ export class SelectSeatPage {
             name: 'ログインして 氏名・メールアドレスを省略',
         });
         this.reservationSheetButton = page.getByTestId('reservation-sheet');
+        this.facilityLegend = page
+            .getByRole('button', {
+                name: 'アイコンの説明を開く',
+            })
+            .first();
     }
 
     trainCarButton(carNumber: number | number[]): Locator {
@@ -222,5 +228,25 @@ export class SelectSeatPage {
                 el.closest('.transition-transform')?.className ?? '';
             return className.split(/\s+/).includes('translate-y-0');
         });
+    }
+
+    async clickFacilityLegend() {
+        await this.facilityLegend.click();
+    }
+
+    /**
+     * 凡例ボタンの表示がある号車に切り替える。
+     * @returns 選択した号車のインデックス
+     */
+    async selectTrainCarWithFacility(): Promise<number> {
+        const trainCarCount = await this.trainCars.count();
+        for (let index = 0; index < trainCarCount; index++) {
+            await this.trainCars.nth(index).click();
+            await this.waitForSeatMapToLoad();
+            if (await this.facilityLegend.isVisible()) {
+                return index;
+            }
+        }
+        throw new Error('設備アイコンが表示される号車がありません');
     }
 }

@@ -17,6 +17,7 @@ type VisualScheduleSearch = () => Promise<void>;
 type VisualSelectSeatGuest = () => Promise<void>;
 type VisualSelectSeatAccountCreate = () => Promise<void>;
 type VisualSelectSeatAccount = () => Promise<void>;
+type VisualSelectSeatFacility = () => Promise<void>;
 type VisualReservationGuestLogin = () => Promise<void>;
 type VisualLogin = () => Promise<void>;
 type VisualAccountCreate = () => Promise<void>;
@@ -30,6 +31,7 @@ export type VisualFixture = {
     visualSelectSeatGuest: VisualSelectSeatGuest;
     visualSelectSeatAccountCreate: VisualSelectSeatAccountCreate;
     visualSelectSeatAccount: VisualSelectSeatAccount;
+    visualSelectSeatFacility: VisualSelectSeatFacility;
     visualReservationGuestLogin: VisualReservationGuestLogin;
     visualLogin: VisualLogin;
     visualAccountCreate: VisualAccountCreate;
@@ -173,6 +175,30 @@ export const test = baseTest.extend<VisualFixture>({
 
             await logout();
             await expect(page).toHaveURL('/login');
+        };
+        await use(visual);
+    },
+    visualSelectSeatFacility: async (
+        { page }: { page: Page },
+        use: (fn: VisualSelectSeatFacility) => Promise<void>,
+        testInfo: TestInfo,
+    ) => {
+        const visual = async () => {
+            const scheduleSearchPage = new ScheduleSearchPage(page);
+            const selectSeatPage = new SelectSeatPage(page);
+
+            await scheduleSearchPage.goto();
+            await scheduleSearchPage.clickScheduleItemButton();
+            await expect(page).toHaveURL('/selectSeat');
+            await selectSeatPage.selectTrainCarWithFacility();
+            await selectSeatPage.clickFacilityLegend();
+            await page.evaluate(() => document.fonts.ready);
+
+            await expect(page).toHaveScreenshot({
+                ...screenshotOptions,
+                fullPage: testInfo.project.name !== iPhoneSEProjectName,
+                mask: [],
+            });
         };
         await use(visual);
     },

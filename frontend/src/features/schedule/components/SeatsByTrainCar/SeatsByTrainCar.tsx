@@ -87,7 +87,7 @@ export function SeatsByTrainCar({
                     </h2>
                 )}
                 <div className="flex flex-col items-center gap-2">
-                    <div className="bg-primary-light flex items-center gap-2 rounded-full px-4 py-1 text-sm">
+                    <div className="bg-primary-light flex cursor-not-allowed items-center gap-2 rounded-full px-4 py-1 text-sm">
                         <FiArrowUp />
                         {`${scheduleInfoDto.arrivalStationName}駅方面（進行方向）`}
                     </div>
@@ -155,7 +155,7 @@ export function SeatsByTrainCar({
                     <FacilityByTrainCar
                         facilities={isDown ? frontFacilities : rearFacilities}
                     />
-                    <div className="bg-primary-light flex items-center gap-2 rounded-full px-4 py-1 text-sm">
+                    <div className="bg-primary-light flex cursor-not-allowed items-center gap-2 rounded-full px-4 py-1 text-sm">
                         <span>
                             {scheduleInfoDto.departureStationName}駅方面
                         </span>

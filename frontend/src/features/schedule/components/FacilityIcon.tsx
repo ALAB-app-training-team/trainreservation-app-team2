@@ -21,7 +21,7 @@ export function FacilityIcon(props: FacilityIconProps) {
             role={isDecorative ? undefined : 'img'}
             aria-label={isDecorative ? undefined : label}
             aria-hidden={isDecorative || undefined}
-            className={`inline-flex size-8 shrink-0 items-center justify-center rounded-md border-2 ${frameClassName}`}
+            className={`inline-flex shrink-0 cursor-not-allowed items-center justify-center rounded-md ${frameClassName}`}
         >
             <props.icon className={`size-8 ${iconClassName}`} />
         </span>
