@@ -1,3 +1,5 @@
+import { Checkbox } from '@/shared/components/Checkbox';
+
 type AvailableOnlyFilterProps = {
     isChecked: boolean;
     isDisabled: boolean;
@@ -11,27 +13,15 @@ export function AvailableOnlyFilter({
 }: AvailableOnlyFilterProps) {
     return (
         <div className="flex flex-col">
-            <div
-                className={`flex items-center gap-2 ${isDisabled ? 'cursor-not-allowed' : ''}`}
-            >
-                <input
-                    type="checkbox"
-                    id="isOnlyAvailable"
-                    data-testid="isOnlyAvailable-checkbox"
-                    checked={isChecked}
-                    disabled={isDisabled}
-                    onChange={(e) => onChange(e.target.checked)}
-                    className={`accent-primary focus-visible:ring-primary size-4 focus-visible:ring-1 focus-visible:ring-offset-2 ${isDisabled ? 'pointer-events-none' : 'cursor-pointer'}`}
-                />
-                <label
-                    htmlFor="isOnlyAvailable"
-                    className={`${
-                        isDisabled ? 'cursor-not-allowed' : 'cursor-pointer'
-                    }`}
-                >
-                    空席がある列車のみ表示する
-                </label>
-            </div>
+            <Checkbox
+                id="isOnlyAvailable"
+                dataTestId="isOnlyAvailable-checkbox"
+                checked={isChecked}
+                disabled={isDisabled}
+                onChange={onChange}
+                inputClassName="size-4"
+                label="空席がある列車のみ表示する"
+            />
             {isDisabled && (
                 <p
                     data-testid="isOnlyAvailable-hint"

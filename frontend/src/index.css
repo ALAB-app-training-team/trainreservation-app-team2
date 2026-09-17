@@ -226,3 +226,10 @@ input:read-only:focus {
 input[type='checkbox'] {
     cursor: pointer;
 }
+
+@layer base {
+    :focus-visible {
+        outline: 2px solid var(--color-primary-ink);
+        outline-offset: 2px;
+    }
+}

@@ -128,7 +128,7 @@ export function ReservationGuestLoginBody() {
                                 />
                                 <button
                                     type="submit"
-                                    className="bg-primary w-full rounded-xl p-2 text-white outline-none"
+                                    className="bg-primary w-full rounded-xl p-2 text-white"
                                     disabled={isInvalid || isSubmitting}
                                 >
                                     予約を検索
