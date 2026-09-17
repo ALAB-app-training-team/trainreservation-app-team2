@@ -239,6 +239,7 @@ export class SelectSeatPage {
      * @returns 選択した号車のインデックス
      */
     async selectTrainCarWithFacility(): Promise<number> {
+        await this.trainCars.first().waitFor({ state: 'visible' });
         const trainCarCount = await this.trainCars.count();
         for (let index = 0; index < trainCarCount; index++) {
             await this.trainCars.nth(index).click();

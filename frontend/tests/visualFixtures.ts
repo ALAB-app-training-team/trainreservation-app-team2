@@ -181,7 +181,6 @@ export const test = baseTest.extend<VisualFixture>({
     visualSelectSeatFacility: async (
         { page }: { page: Page },
         use: (fn: VisualSelectSeatFacility) => Promise<void>,
-        testInfo: TestInfo,
     ) => {
         const visual = async () => {
             const scheduleSearchPage = new ScheduleSearchPage(page);
@@ -196,7 +195,7 @@ export const test = baseTest.extend<VisualFixture>({
 
             await expect(page).toHaveScreenshot({
                 ...screenshotOptions,
-                fullPage: testInfo.project.name !== iPhoneSEProjectName,
+                fullPage: false,
                 mask: [],
             });
         };

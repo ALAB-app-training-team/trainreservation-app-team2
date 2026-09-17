@@ -92,6 +92,7 @@ export function SeatsByTrainCar({
                         {`${scheduleInfoDto.arrivalStationName}駅方面（進行方向）`}
                     </div>
                     <FacilityByTrainCar
+                        isFront={true}
                         facilities={!isDown ? frontFacilities : rearFacilities}
                     />
                     <div
@@ -153,6 +154,7 @@ export function SeatsByTrainCar({
                         ))}
                     </div>
                     <FacilityByTrainCar
+                        isFront={false}
                         facilities={isDown ? frontFacilities : rearFacilities}
                     />
                     <div className="bg-primary-light flex cursor-not-allowed items-center gap-2 rounded-full px-4 py-1 text-sm">
