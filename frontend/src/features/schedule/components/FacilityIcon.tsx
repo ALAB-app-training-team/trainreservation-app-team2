@@ -3,6 +3,7 @@ import type { IconType } from 'react-icons';
 type FacilityIconProps = {
     icon: IconType;
     label: string;
+    isDecorative?: boolean;
     frameClassName?: string;
     iconClassName?: string;
 };
@@ -10,15 +11,17 @@ type FacilityIconProps = {
 export function FacilityIcon(props: FacilityIconProps) {
     const {
         label,
+        isDecorative = false,
         frameClassName = 'border-line-strong',
         iconClassName = '',
     } = props;
 
     return (
         <span
-            role="img"
-            aria-label={label}
-            className={`inline-flex size-12 cursor-not-allowed items-center justify-center rounded-md border-2 ${frameClassName}`}
+            role={isDecorative ? undefined : 'img'}
+            aria-label={isDecorative ? undefined : label}
+            aria-hidden={isDecorative || undefined}
+            className={`inline-flex size-12 shrink-0 items-center justify-center rounded-md border-2 ${frameClassName}`}
         >
             <props.icon className={`size-7 ${iconClassName}`} />
         </span>

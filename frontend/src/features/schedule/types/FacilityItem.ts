@@ -4,5 +4,6 @@ export type FacilityItem = {
     hasFacility: boolean;
     icon: IconType;
     label: string;
+    description: string;
     iconClassName: string;
 };
