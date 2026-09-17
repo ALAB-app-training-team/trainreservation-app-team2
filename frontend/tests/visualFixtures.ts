@@ -373,6 +373,7 @@ export const test = baseTest.extend<VisualFixture>({
             await commonLogin();
             await expect(page).toHaveURL('/scheduleSearch');
             await createReservation();
+            await expect(page).toHaveURL('/reservedTicket');
             await reservationListPage.goto();
             await expect(page).toHaveURL('/reservationList');
             await reservationListPage.ticketButton

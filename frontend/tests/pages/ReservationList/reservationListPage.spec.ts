@@ -16,6 +16,7 @@ test('予約した座席数が表示されていること', async ({
     await commonLogin();
     await expect(page).toHaveURL('/scheduleSearch');
     await createReservation();
+    await expect(page).toHaveURL('/reservedTicket');
     await reservationListPage.goto();
     await expect(page).toHaveURL('/reservationList');
     const expectedSeatCount = reservationListPage.seatCountElement.filter({
@@ -40,6 +41,7 @@ test('有効タブは本日または未来の日付であること', async ({
     await commonLogin();
     await expect(page).toHaveURL('/scheduleSearch');
     await createReservation();
+    await expect(page).toHaveURL('/reservedTicket');
     await reservationListPage.goto();
     await expect(page).toHaveURL('/reservationList');
 
@@ -71,6 +73,7 @@ test('過去タブは過去の日付であること', async ({
     await commonLogin();
     await expect(page).toHaveURL('/scheduleSearch');
     await createReservation();
+    await expect(page).toHaveURL('/reservedTicket');
     await reservationListPage.goto();
     await expect(page).toHaveURL('/reservationList');
     await reservationListPage.clickPastButton();
@@ -255,6 +258,7 @@ test('復路で検索の検索画面設定：有効な予約は到着日時を�
     await commonLogin();
     await expect(page).toHaveURL('/scheduleSearch');
     await createReservation();
+    await expect(page).toHaveURL('/reservedTicket');
     await reservationListPage.goto();
     await expect(page).toHaveURL('/reservationList');
 
@@ -322,6 +326,7 @@ test('復路で検索の検索画面設定：過去の予約はデフォルト�
     await commonLogin();
     await expect(page).toHaveURL('/scheduleSearch');
     await createReservation();
+    await expect(page).toHaveURL('/reservedTicket');
     await reservationListPage.goto();
     await expect(page).toHaveURL('/reservationList');
 
