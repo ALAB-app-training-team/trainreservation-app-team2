@@ -64,6 +64,7 @@ export function SeatsByTrainCar({
     const displayColumns: string[] = isDown
         ? [...layoutColumns].reverse()
         : layoutColumns;
+    // 最適化ではなく必須の useMemo。参照が毎描画変わると下の useEffect が毎回 checkReservedSeats を呼んでしまう
     const displaySeats = useMemo(() => {
         const isOwnReservedSeat = (seat: SeatDto) =>
             reservedSeats?.some(

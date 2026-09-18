@@ -3,6 +3,8 @@ import { useRef, useState } from 'react';
 
 export type RovingOrientation = 'horizontal' | 'vertical' | 'both' | 'grid';
 
+type LinearOrientation = Exclude<RovingOrientation, 'grid'>;
+
 export type RovingPosition = {
     row: number;
     col: number;
@@ -15,31 +17,73 @@ export type RovingItemProps = {
     onKeyDown: (event: KeyboardEvent<HTMLElement>) => void;
 };
 
-type UseRovingFocusOptions<K extends string> = {
+type CommonOptions<K extends string> = {
+    /** 移動対象となるキーの並び。tabIndex=0 を付ける要素や Home/End の行き先はこの順序で決まる */
     keys: readonly K[];
-    orientation: RovingOrientation;
-    canLoop?: boolean;
-    getPosition?: (key: K) => RovingPosition | undefined;
+    /**
+     * 渡すと controlled モードになり、tabIndex=0 は常に activeKey の要素に付く。
+     * その場合、矢印キーでの移動を activeKey に反映するのは呼び出し側（onNavigate）の責務。
+     * 省略すると最後にフォーカスした要素を内部で記憶する。
+     */
     activeKey?: K;
+    /** 矢印キー等で移動先が決まったときに呼ばれる。フォーカス移動自体はフックが行う */
     onNavigate?: (key: K) => void;
 };
 
-const PREV_KEYS: Record<Exclude<RovingOrientation, 'grid'>, string[]> = {
+type LinearOptions = {
+    orientation: LinearOrientation;
+    /** 端で反対側の端へ回り込むか。省略時は回り込まない */
+    canLoop?: boolean;
+};
+
+type GridOptions<K extends string> = {
+    orientation: 'grid';
+    /** キーに対応するグリッド上の位置。undefined を返したキーは移動対象から外れる */
+    getPosition: (key: K) => RovingPosition | undefined;
+};
+
+type UseRovingFocusOptions<K extends string> = CommonOptions<K> &
+    (LinearOptions | GridOptions<K>);
+
+const PREV_KEYS: Record<LinearOrientation, string[]> = {
     horizontal: ['ArrowLeft'],
     vertical: ['ArrowUp'],
     both: ['ArrowLeft', 'ArrowUp'],
 };
 
-const NEXT_KEYS: Record<Exclude<RovingOrientation, 'grid'>, string[]> = {
+const NEXT_KEYS: Record<LinearOrientation, string[]> = {
     horizontal: ['ArrowRight'],
     vertical: ['ArrowDown'],
     both: ['ArrowRight', 'ArrowDown'],
 };
 
+const GRID_KEYS = [
+    'ArrowUp',
+    'ArrowDown',
+    'ArrowLeft',
+    'ArrowRight',
+    'Home',
+    'End',
+];
+
+/**
+ * このフックが処理対象とするキーかどうか。
+ * 対象キーは移動先がなくてもブラウザ既定動作（ページスクロール等）を抑止するために使う。
+ */
+function isHandledKey(orientation: RovingOrientation, eventKey: string) {
+    if (orientation === 'grid') return GRID_KEYS.includes(eventKey);
+    return (
+        PREV_KEYS[orientation].includes(eventKey) ||
+        NEXT_KEYS[orientation].includes(eventKey) ||
+        eventKey === 'Home' ||
+        eventKey === 'End'
+    );
+}
+
 function resolveLinearKey<K extends string>(
     keys: readonly K[],
     currentKey: K,
-    orientation: Exclude<RovingOrientation, 'grid'>,
+    orientation: LinearOrientation,
     canLoop: boolean,
     eventKey: string,
 ): K | undefined {
@@ -130,16 +174,13 @@ function resolveGridKey<K extends string>(
     }
 }
 
-export function useRovingFocus<K extends string>({
-    keys,
-    orientation,
-    canLoop = false,
-    getPosition,
-    activeKey,
-    onNavigate,
-}: UseRovingFocusOptions<K>) {
+export function useRovingFocus<K extends string>(
+    options: UseRovingFocusOptions<K>,
+) {
+    const { keys, activeKey, onNavigate } = options;
     const elementsRef = useRef(new Map<K, HTMLElement>());
     const [focusedKey, setFocusedKey] = useState<K | undefined>(undefined);
+    // activeKey で制御されている間は内部 state を参照しないので、更新もしない（無駄な再描画を防ぐ）
     const isControlled = activeKey !== undefined;
     const rememberFocusedKey = (key: K) => {
         if (!isControlled) setFocusedKey(key);
@@ -155,11 +196,16 @@ export function useRovingFocus<K extends string>({
         key: K,
         event: KeyboardEvent<HTMLElement>,
     ): K | undefined => {
-        if (orientation === 'grid') {
-            if (!getPosition) return undefined;
-            return resolveGridKey(keys, key, getPosition, event);
+        if (options.orientation === 'grid') {
+            return resolveGridKey(keys, key, options.getPosition, event);
         }
-        return resolveLinearKey(keys, key, orientation, canLoop, event.key);
+        return resolveLinearKey(
+            keys,
+            key,
+            options.orientation,
+            options.canLoop ?? false,
+            event.key,
+        );
     };
 
     const getItemProps = (key: K): RovingItemProps => ({
@@ -173,9 +219,11 @@ export function useRovingFocus<K extends string>({
         tabIndex: key === currentKey ? 0 : -1,
         onFocus: () => rememberFocusedKey(key),
         onKeyDown: (event) => {
+            if (!isHandledKey(options.orientation, event.key)) return;
+            // 端で移動先がない場合もページスクロール等の既定動作は抑止する
+            event.preventDefault();
             const nextKey = resolveNextKey(key, event);
             if (nextKey === undefined || nextKey === key) return;
-            event.preventDefault();
             rememberFocusedKey(nextKey);
             onNavigate?.(nextKey);
             elementsRef.current.get(nextKey)?.focus();
