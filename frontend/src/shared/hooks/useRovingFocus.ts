@@ -140,7 +140,6 @@ export function useRovingFocus<K extends string>({
 }: UseRovingFocusOptions<K>) {
     const elementsRef = useRef(new Map<K, HTMLElement>());
     const [focusedKey, setFocusedKey] = useState<K | undefined>(undefined);
-    // activeKey で制御されている間は内部 state を参照しないので、更新もしない（無駄な再描画を防ぐ）
     const isControlled = activeKey !== undefined;
     const rememberFocusedKey = (key: K) => {
         if (!isControlled) setFocusedKey(key);

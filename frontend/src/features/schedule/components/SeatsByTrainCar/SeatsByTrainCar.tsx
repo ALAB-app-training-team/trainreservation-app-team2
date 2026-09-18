@@ -64,7 +64,6 @@ export function SeatsByTrainCar({
     const displayColumns: string[] = isDown
         ? [...layoutColumns].reverse()
         : layoutColumns;
-    // 座席データが変わったときだけ作り直す。参照が毎描画変わると下の useEffect が毎回動いてしまう
     const displaySeats = useMemo(() => {
         const isOwnReservedSeat = (seat: SeatDto) =>
             reservedSeats?.some(
@@ -92,7 +91,6 @@ export function SeatsByTrainCar({
     const isSeatDisabled = (seat: SeatDto) =>
         seat.isReserved || (isMaxSelected && !isSeatSelected(seat));
 
-    // 行 × 表示列 の二次元配列。通路や座席が無い位置は undefined
     const seatRowList: (SeatDto | undefined)[][] = rows.map((row) =>
         displayColumns.map((column) =>
             column === ''
@@ -104,7 +102,6 @@ export function SeatsByTrainCar({
         ),
     );
 
-    // 矢印キーで移動できる座席（無効化されていないもの）とグリッド上の位置
     const seatPositionMap = new Map<string, RovingPosition>();
     seatRowList.forEach((rowSeats, rowIndex) =>
         rowSeats.forEach((seat, colIndex) => {

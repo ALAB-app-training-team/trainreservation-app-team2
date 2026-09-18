@@ -47,7 +47,6 @@ export function TrainCars({
         canScrollRight,
     } = useScrollOverflow([filteredCars.length]);
 
-    // 座席種別タブ: Tab キーでは選択中のタブにだけ止まり、← → で切り替える
     const { getItemProps: getSeatTypeTabProps } = useRovingFocus({
         keys: SEAT_TYPE_CODES,
         orientation: 'horizontal',
@@ -56,7 +55,6 @@ export function TrainCars({
         onNavigate: handleSeatTypeChange,
     });
 
-    // 号車: ラジオグループとして、矢印キーで選択を移動する
     const { getItemProps: getTrainCarRadioProps } = useRovingFocus({
         keys: filteredCars.map((car) => car.trainCarCd),
         orientation: 'both',
