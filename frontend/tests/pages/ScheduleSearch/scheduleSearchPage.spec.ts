@@ -415,7 +415,6 @@ test('座席種別ごとの料金が表示されること', async ({ page }) => 
         await responsePromise
     ).json();
 
-    await expect(page.getByText(/\d+件の列車が見つかりました/)).toBeVisible();
     await expect(scheduleSearchPage.seatTypeFares).toBeVisible();
 
     const expectedFares = [
@@ -446,7 +445,7 @@ test('該当条件の列車が存在しない場合、座席種別ごとの料�
 
     await scheduleSearchPage.time.fill('23:59');
 
-    await expect(page.getByText('0件の列車が見つかりました')).toBeVisible();
+    await expect(page.getByText('指定日時の列車はありません')).toBeVisible();
     await expect(scheduleSearchPage.seatTypeFares).toBeHidden();
 });
 
@@ -655,8 +654,6 @@ test('座席種別がハイフンの時に空席チェックをオフにでき�
     const scheduleSearchPage = new ScheduleSearchPage(page);
     await scheduleSearchPage.goto();
 
-    await expect(page.getByText(/\d+件の列車が見つかりました/)).toBeVisible();
-
     await expect(scheduleSearchPage.availableTrainCheckBox).toBeEnabled();
     await expect(scheduleSearchPage.availableTrainCheckBox).toBeChecked();
 
@@ -679,20 +676,11 @@ test('グランクラスかつ4人指定時に、グランクラス残席が4未
     const response = await responsePromise;
     const { schedules } = await response.json();
 
-    const resultLocator = page.getByText(/\d+件の列車が見つかりました/);
-    await expect(resultLocator).toBeVisible();
-
     const time = await page.getByRole('textbox', { name: '時刻' }).inputValue();
 
     await scheduleSearchPage.clickExpandSearchOptionsButton();
     await scheduleSearchPage.selectSeatType('グランクラス');
     await scheduleSearchPage.selectPassengers('4人');
-
-    await expect(resultLocator).toBeVisible();
-
-    const displayCount = Number(
-        (await resultLocator.textContent())?.match(/(\d+)/)?.[1],
-    );
 
     const expectedCount = schedules.filter(
         (schedule: { gcSeats: number; departureTime: string }) =>
@@ -700,5 +688,5 @@ test('グランクラスかつ4人指定時に、グランクラス残席が4未
             schedule.departureTime.slice(0, 5) >= time.slice(0, 5),
     ).length;
 
-    expect(displayCount).toBe(expectedCount);
+    await expect(page.getByTestId('schedule')).toHaveCount(expectedCount);
 });
