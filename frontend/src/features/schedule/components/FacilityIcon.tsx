@@ -4,24 +4,18 @@ type FacilityIconProps = {
     icon: IconType;
     label: string;
     isDecorative?: boolean;
-    frameClassName?: string;
     iconClassName?: string;
 };
 
 export function FacilityIcon(props: FacilityIconProps) {
-    const {
-        label,
-        isDecorative = false,
-        frameClassName = 'border-line-strong',
-        iconClassName = '',
-    } = props;
+    const { label, isDecorative = false, iconClassName = '' } = props;
 
     const icon = (
         <span
             role={isDecorative ? undefined : 'img'}
             aria-label={isDecorative ? undefined : label}
             aria-hidden={isDecorative || undefined}
-            className={`inline-flex shrink-0 cursor-not-allowed items-center justify-center rounded-md ${frameClassName}`}
+            className="inline-flex shrink-0 cursor-not-allowed items-center justify-center"
         >
             <props.icon className={`size-8 ${iconClassName}`} />
         </span>
