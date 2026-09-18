@@ -140,50 +140,30 @@ export function ScheduleSearchForm({
                                 getFieldError={getFieldError}
                                 children={
                                     <div className="border-primary-ink inline-flex items-center overflow-hidden rounded border">
-                                        <label
-                                            className={`cursor-pointer p-1 text-sm has-[:focus-visible]:ring-2 has-[:focus-visible]:ring-heading has-[:focus-visible]:ring-inset ${!searchRequestDto.isArrivalTime ? 'bg-primary text-white' : 'bg-surface-subtle'}`}
+                                        <button
+                                            type="button"
+                                            aria-pressed={
+                                                !searchRequestDto.isArrivalTime
+                                            }
+                                            onClick={() =>
+                                                setIsArrivalTime(false)
+                                            }
+                                            className={`cursor-pointer p-1 text-sm focus-visible:ring-2 focus-visible:ring-heading focus-visible:outline-none focus-visible:ring-inset ${!searchRequestDto.isArrivalTime ? 'bg-primary text-white' : 'bg-surface-subtle'}`}
                                         >
-                                            <input
-                                                type="radio"
-                                                name="isArrivalTime"
-                                                checked={
-                                                    !searchRequestDto.isArrivalTime
-                                                }
-                                                onChange={() =>
-                                                    setIsArrivalTime(false)
-                                                }
-                                                onKeyDown={(e) => {
-                                                    if (e.key !== 'Enter')
-                                                        return;
-                                                    e.preventDefault();
-                                                    setIsArrivalTime(false);
-                                                }}
-                                                className="sr-only"
-                                            />
                                             出発
-                                        </label>
-                                        <label
-                                            className={`cursor-pointer p-1 text-sm has-[:focus-visible]:ring-2 has-[:focus-visible]:ring-heading has-[:focus-visible]:outline-none has-[:focus-visible]:ring-inset ${searchRequestDto.isArrivalTime ? 'bg-primary text-white' : 'bg-surface-subtle'}`}
+                                        </button>
+                                        <button
+                                            type="button"
+                                            aria-pressed={
+                                                searchRequestDto.isArrivalTime
+                                            }
+                                            onClick={() =>
+                                                setIsArrivalTime(true)
+                                            }
+                                            className={`cursor-pointer p-1 text-sm focus-visible:ring-2 focus-visible:ring-heading focus-visible:outline-none focus-visible:ring-inset ${searchRequestDto.isArrivalTime ? 'bg-primary text-white' : 'bg-surface-subtle'}`}
                                         >
-                                            <input
-                                                type="radio"
-                                                name="isArrivalTime"
-                                                checked={
-                                                    searchRequestDto.isArrivalTime
-                                                }
-                                                onChange={() =>
-                                                    setIsArrivalTime(true)
-                                                }
-                                                onKeyDown={(e) => {
-                                                    if (e.key !== 'Enter')
-                                                        return;
-                                                    e.preventDefault();
-                                                    setIsArrivalTime(true);
-                                                }}
-                                                className="sr-only"
-                                            />
                                             到着
-                                        </label>
+                                        </button>
                                     </div>
                                 }
                             />
