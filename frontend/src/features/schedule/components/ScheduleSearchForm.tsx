@@ -7,6 +7,7 @@ import {
     HiOutlineMinusCircle,
     HiOutlinePlus,
     HiOutlinePlusCircle,
+    HiOutlineStar,
     HiOutlineSwitchHorizontal,
 } from 'react-icons/hi';
 
@@ -197,140 +198,147 @@ export function ScheduleSearchForm({
                                             onPassengersChange={setPassengers}
                                         />
                                     </div>
-                                    <div className="flex w-full justify-start">
-                                        <AvailableOnlyFilter
-                                            isChecked={
-                                                isFilteeForced
-                                                    ? true
-                                                    : isOnlyAvailable
-                                            }
-                                            isDisabled={isFilteeForced}
-                                            onChange={setIsOnlyAvailable}
-                                        />
-                                    </div>
-                                    {info && (
-                                        <div className="flex flex-col gap-4">
-                                            <CustomAccordion
-                                                title="お気に入り経路"
-                                                children={
-                                                    <div className="mt-2 flex flex-wrap items-center gap-2">
-                                                        {searchHistoryDtos.map(
-                                                            (
-                                                                dto: SearchHistoryDto,
-                                                            ) => {
-                                                                const departureStationName =
-                                                                    stations.find(
-                                                                        (s) =>
-                                                                            s.stationCd ===
-                                                                            dto.departureStationCd,
-                                                                    )?.name;
-                                                                const arrivalStationName =
-                                                                    stations.find(
-                                                                        (s) =>
-                                                                            s.stationCd ===
-                                                                            dto.arrivalStationCd,
-                                                                    )?.name;
-
-                                                                return (
-                                                                    <div
-                                                                        key={
-                                                                            dto.id
-                                                                        }
-                                                                        className="relative w-fit"
-                                                                    >
-                                                                        <button
-                                                                            type="button"
-                                                                            onClick={() => {
-                                                                                setDepartureStation(
-                                                                                    dto.departureStationCd,
-                                                                                );
-                                                                                setArrivalStation(
-                                                                                    dto.arrivalStationCd,
-                                                                                );
-                                                                                setTime(
-                                                                                    dayjs(
-                                                                                        dto.time,
-                                                                                        'HH:mm:ss',
-                                                                                    ).format(
-                                                                                        'HH:mm',
-                                                                                    ),
-                                                                                );
-                                                                                setIsArrivalTime(
-                                                                                    dto.isArrivalTime,
-                                                                                );
-                                                                            }}
-                                                                            className="border-primary-ink hover:bg-primary-light bg-surface flex w-fit items-center gap-4 rounded-lg border px-4 py-1 text-left"
-                                                                        >
-                                                                            <span className="flex items-center gap-2 font-medium">
-                                                                                <span>
-                                                                                    {
-                                                                                        departureStationName
-                                                                                    }
-                                                                                </span>
-                                                                                <HiOutlineArrowNarrowRight className="text-primary-ink shrink-0" />
-                                                                                <span>
-                                                                                    {
-                                                                                        arrivalStationName
-                                                                                    }
-                                                                                </span>
-                                                                            </span>
-                                                                            <span className="flex items-center gap-1 text-sm">
-                                                                                <span className="bg-primary rounded px-2 py-0.5 text-xs text-white">
-                                                                                    {dto.isArrivalTime
-                                                                                        ? '到着'
-                                                                                        : '出発'}
-                                                                                </span>
-                                                                                <span>
-                                                                                    {dayjs(
-                                                                                        dto.time,
-                                                                                        'HH:mm:ss',
-                                                                                    ).format(
-                                                                                        'HH:mm',
-                                                                                    )}
-                                                                                </span>
-                                                                            </span>
-                                                                        </button>
-                                                                        <button
-                                                                            type="button"
-                                                                            onClick={() =>
-                                                                                handleDeleteHistory(
-                                                                                    dto.id,
-                                                                                )
-                                                                            }
-                                                                            disabled={
-                                                                                isSubmitting
-                                                                            }
-                                                                            aria-label={`${departureStationName}から${arrivalStationName}のお気に入り経路を削除`}
-                                                                            data-testid={`history-delete-button-${dto.id}`}
-                                                                            className="border-primary-ink text-primary-ink hover:bg-primary-light bg-surface absolute -top-2 -right-2 flex h-5 w-5 items-center justify-center rounded-full border text-xs leading-none"
-                                                                        >
-                                                                            <HiOutlineMinus />
-                                                                        </button>
-                                                                    </div>
-                                                                );
-                                                            },
-                                                        )}
-                                                        <button
-                                                            type="button"
-                                                            onClick={() =>
-                                                                handleSaveHistory()
-                                                            }
-                                                            disabled={
-                                                                isSubmitting
-                                                            }
-                                                            data-testid="history-save-button"
-                                                            className="border-primary-ink hover:bg-primary-light text-primary-ink bg-surface flex w-fit items-center rounded-lg border px-2 py-1"
-                                                        >
-                                                            <HiOutlinePlus className="text-lg" />
-                                                        </button>
-                                                        <span className="text-sm">
-                                                            ※5件以上の場合、古いものから削除されます
-                                                        </span>
-                                                    </div>
+                                    <div className="border-line divide-line flex flex-col divide-y border-y">
+                                        <div className="py-1">
+                                            <AvailableOnlyFilter
+                                                isChecked={
+                                                    isFilteeForced
+                                                        ? true
+                                                        : isOnlyAvailable
                                                 }
+                                                isDisabled={isFilteeForced}
+                                                onChange={setIsOnlyAvailable}
                                             />
                                         </div>
-                                    )}
+                                        {info && (
+                                            <div className="py-1">
+                                                <CustomAccordion
+                                                    icon={<HiOutlineStar />}
+                                                    title="お気に入り経路"
+                                                    children={
+                                                        <div className="mt-2 flex flex-wrap items-center gap-2">
+                                                            {searchHistoryDtos.map(
+                                                                (
+                                                                    dto: SearchHistoryDto,
+                                                                ) => {
+                                                                    const departureStationName =
+                                                                        stations.find(
+                                                                            (
+                                                                                s,
+                                                                            ) =>
+                                                                                s.stationCd ===
+                                                                                dto.departureStationCd,
+                                                                        )?.name;
+                                                                    const arrivalStationName =
+                                                                        stations.find(
+                                                                            (
+                                                                                s,
+                                                                            ) =>
+                                                                                s.stationCd ===
+                                                                                dto.arrivalStationCd,
+                                                                        )?.name;
+
+                                                                    return (
+                                                                        <div
+                                                                            key={
+                                                                                dto.id
+                                                                            }
+                                                                            className="relative w-fit"
+                                                                        >
+                                                                            <button
+                                                                                type="button"
+                                                                                onClick={() => {
+                                                                                    setDepartureStation(
+                                                                                        dto.departureStationCd,
+                                                                                    );
+                                                                                    setArrivalStation(
+                                                                                        dto.arrivalStationCd,
+                                                                                    );
+                                                                                    setTime(
+                                                                                        dayjs(
+                                                                                            dto.time,
+                                                                                            'HH:mm:ss',
+                                                                                        ).format(
+                                                                                            'HH:mm',
+                                                                                        ),
+                                                                                    );
+                                                                                    setIsArrivalTime(
+                                                                                        dto.isArrivalTime,
+                                                                                    );
+                                                                                }}
+                                                                                className="border-primary-ink hover:bg-primary-light bg-surface flex w-fit items-center gap-4 rounded-lg border px-4 py-1 text-left"
+                                                                            >
+                                                                                <span className="flex items-center gap-2 font-medium">
+                                                                                    <span>
+                                                                                        {
+                                                                                            departureStationName
+                                                                                        }
+                                                                                    </span>
+                                                                                    <HiOutlineArrowNarrowRight className="text-primary-ink shrink-0" />
+                                                                                    <span>
+                                                                                        {
+                                                                                            arrivalStationName
+                                                                                        }
+                                                                                    </span>
+                                                                                </span>
+                                                                                <span className="flex items-center gap-1 text-sm">
+                                                                                    <span className="bg-primary rounded px-2 py-0.5 text-xs text-white">
+                                                                                        {dto.isArrivalTime
+                                                                                            ? '到着'
+                                                                                            : '出発'}
+                                                                                    </span>
+                                                                                    <span>
+                                                                                        {dayjs(
+                                                                                            dto.time,
+                                                                                            'HH:mm:ss',
+                                                                                        ).format(
+                                                                                            'HH:mm',
+                                                                                        )}
+                                                                                    </span>
+                                                                                </span>
+                                                                            </button>
+                                                                            <button
+                                                                                type="button"
+                                                                                onClick={() =>
+                                                                                    handleDeleteHistory(
+                                                                                        dto.id,
+                                                                                    )
+                                                                                }
+                                                                                disabled={
+                                                                                    isSubmitting
+                                                                                }
+                                                                                aria-label={`${departureStationName}から${arrivalStationName}のお気に入り経路を削除`}
+                                                                                data-testid={`history-delete-button-${dto.id}`}
+                                                                                className="border-primary-ink text-primary-ink hover:bg-primary-light bg-surface absolute -top-2 -right-2 flex h-5 w-5 items-center justify-center rounded-full border text-xs leading-none"
+                                                                            >
+                                                                                <HiOutlineMinus />
+                                                                            </button>
+                                                                        </div>
+                                                                    );
+                                                                },
+                                                            )}
+                                                            <button
+                                                                type="button"
+                                                                onClick={() =>
+                                                                    handleSaveHistory()
+                                                                }
+                                                                disabled={
+                                                                    isSubmitting
+                                                                }
+                                                                data-testid="history-save-button"
+                                                                className="border-primary-ink hover:bg-primary-light text-primary-ink bg-surface flex w-fit items-center rounded-lg border px-2 py-1"
+                                                            >
+                                                                <HiOutlinePlus className="text-lg" />
+                                                            </button>
+                                                            <span className="text-sm">
+                                                                ※5件以上の場合、古いものから削除されます
+                                                            </span>
+                                                        </div>
+                                                    }
+                                                />
+                                            </div>
+                                        )}
+                                    </div>
                                 </div>
                                 {/* グラデーションdiv */}
                                 {!isExpanded && (
