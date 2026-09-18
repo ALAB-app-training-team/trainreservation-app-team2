@@ -79,7 +79,7 @@ export function EmptySeatCount({
 
     return (
         <>
-            <div className="divide-line flex gap-1 divide-x">
+            <div className="divide-fg-muted flex gap-1 divide-x">
                 {seatTypeList.map((seat) => (
                     <div
                         key={seat.label}
