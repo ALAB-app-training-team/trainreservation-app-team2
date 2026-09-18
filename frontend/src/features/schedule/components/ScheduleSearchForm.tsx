@@ -145,12 +145,19 @@ export function ScheduleSearchForm({
                                         >
                                             <input
                                                 type="radio"
+                                                name="isArrivalTime"
                                                 checked={
                                                     !searchRequestDto.isArrivalTime
                                                 }
                                                 onChange={() =>
                                                     setIsArrivalTime(false)
                                                 }
+                                                onKeyDown={(e) => {
+                                                    if (e.key !== 'Enter')
+                                                        return;
+                                                    e.preventDefault();
+                                                    setIsArrivalTime(false);
+                                                }}
                                                 className="sr-only"
                                             />
                                             出発
@@ -160,12 +167,19 @@ export function ScheduleSearchForm({
                                         >
                                             <input
                                                 type="radio"
+                                                name="isArrivalTime"
                                                 checked={
                                                     searchRequestDto.isArrivalTime
                                                 }
                                                 onChange={() =>
                                                     setIsArrivalTime(true)
                                                 }
+                                                onKeyDown={(e) => {
+                                                    if (e.key !== 'Enter')
+                                                        return;
+                                                    e.preventDefault();
+                                                    setIsArrivalTime(true);
+                                                }}
                                                 className="sr-only"
                                             />
                                             到着
