@@ -225,7 +225,6 @@ export function useTimeSegments(
         if (/^[0-9]$/.test(e.key)) {
             e.preventDefault();
             handledByKeyDownRef.current = true;
-            // モバイル端末では1分単位になる数字入力を確定させない
             if (isMobile) return;
             const buffer = digitBufferRef.current + e.key;
             const enteredValue = Number(buffer);
