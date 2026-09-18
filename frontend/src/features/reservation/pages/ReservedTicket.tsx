@@ -174,7 +174,7 @@ export function ReservedTicket() {
                         <button
                             onClick={handleRefundConfirmModalOpen}
                             disabled={isSubmitting}
-                            className="border-primary-ink text-primary-ink flex w-full items-center justify-center gap-2 rounded-xl border-2 p-2 text-sm"
+                            className="border-primary-ink text-primary-ink order-3 flex w-full items-center justify-center gap-2 rounded-xl border-2 p-2 text-sm md:order-1"
                         >
                             <IoTrashOutline className="h-4 w-4" />
                             キャンセル
@@ -184,7 +184,7 @@ export function ReservedTicket() {
                         <button
                             onClick={handleChangeConfirmModalOpen}
                             disabled={isSubmitting}
-                            className="border-primary-ink text-primary-ink flex w-full items-center justify-center gap-2 rounded-xl border-2 p-2 text-sm"
+                            className="border-primary-ink text-primary-ink order-2 flex w-full items-center justify-center gap-2 rounded-xl border-2 p-2 text-sm md:order-2"
                         >
                             <FaEdit className="h-4 w-4" />
                             予約を変更
@@ -193,7 +193,7 @@ export function ReservedTicket() {
                     {canUpdateCompanions && (
                         <button
                             onClick={handleCompanionsModalOpen}
-                            className="bg-primary flex w-full items-center justify-center gap-2 rounded-xl p-2 text-sm text-white"
+                            className="bg-primary order-1 flex w-full items-center justify-center gap-2 rounded-xl p-2 text-sm text-white md:order-3"
                         >
                             <RiGroupLine className="h-4 w-4" />
                             利用者に割り当て
