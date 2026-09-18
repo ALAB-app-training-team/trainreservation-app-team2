@@ -6,7 +6,6 @@ type seatProps = {
     onClick?: (seat: SeatDto) => void;
     disabled?: boolean;
     type: 'unreservable' | 'isSelected' | 'reservable';
-    /** 座席グリッド内を矢印キーで移動するための roving tabindex 用 props */
     itemProps?: RovingItemProps;
 };
 
