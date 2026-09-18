@@ -60,17 +60,30 @@ export function EmptySeatCount({
         );
     };
 
+    const getSeatColorClass = (seat: SeatType) => {
+        if (seat.count === 0) {
+            return 'text-fg-muted';
+        }
+        return (
+            {
+                'reserved-seat': 'text-reserved-seat',
+                'green-seat': 'text-green-seat',
+                'gc-seat': 'text-gc-seat',
+            }[seat.name] ?? ''
+        );
+    };
+
     if (reservedSeats === 0 && greenSeats === 0 && gcSeats === 0) {
         return <span className="text-danger">満席</span>;
     }
 
     return (
         <>
-            <div className="flex gap-1">
+            <div className="divide-fg-muted flex w-full flex-1 justify-center gap-1 divide-x md:justify-end">
                 {seatTypeList.map((seat) => (
                     <div
                         key={seat.label}
-                        className={`flex items-center gap-1 p-2 md:gap-2 md:px-2 md:py-0.5`}
+                        className={`flex items-center gap-1 p-2 text-sm md:gap-2 md:px-2 md:py-0.5 ${getSeatColorClass(seat)}`}
                     >
                         {seat.label}
                         {getLeftSeatsLayout(seat)}
