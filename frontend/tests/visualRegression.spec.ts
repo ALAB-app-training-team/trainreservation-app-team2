@@ -18,6 +18,10 @@ test('visual-selectSeat-account', async ({ visualSelectSeatAccount }) => {
     await visualSelectSeatAccount();
 });
 
+test('visual-selectSeat-facility', async ({ visualSelectSeatFacility }) => {
+    await visualSelectSeatFacility();
+});
+
 test('visual-reservationGuestLogin', async ({
     visualReservationGuestLogin,
 }) => {
