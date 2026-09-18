@@ -70,7 +70,7 @@ export function EmptySeatCount({
                 {seatTypeList.map((seat) => (
                     <div
                         key={seat.label}
-                        className={`flex items-center gap-1 p-2 md:gap-2 md:px-2 md:py-0.5`}
+                        className={`flex items-center gap-1 p-2 whitespace-nowrap md:gap-2 md:px-2 md:py-0.5`}
                     >
                         {seat.label}
                         {getLeftSeatsLayout(seat)}
