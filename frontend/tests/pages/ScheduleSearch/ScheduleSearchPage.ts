@@ -41,12 +41,14 @@ export class ScheduleSearchPage {
         this.arrivalStation = page.getByRole('combobox', { name: '降車駅' });
         this.date = page.getByRole('textbox', { name: '乗車日' });
         this.time = page.getByRole('textbox', { name: '時刻' });
-        this.departureTimeButton = page
-            .locator('label')
-            .filter({ hasText: '出発' });
-        this.arrivalTimeButton = page
-            .locator('label')
-            .filter({ hasText: '到着' });
+        this.departureTimeButton = page.getByRole('button', {
+            name: '出発',
+            exact: true,
+        });
+        this.arrivalTimeButton = page.getByRole('button', {
+            name: '到着',
+            exact: true,
+        });
         this.switchStationButton = page
             .getByRole('button')
             .filter({ hasText: /^$/ });

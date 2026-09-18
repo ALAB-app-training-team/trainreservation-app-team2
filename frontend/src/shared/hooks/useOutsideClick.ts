@@ -16,11 +16,9 @@ export function useOutsideClick(
             }
         };
         const handleFocusOut = (event: FocusEvent) => {
+            if (!ref.current?.contains(event.target as Node)) return;
             const nextFocused = event.relatedTarget as Node | null;
-            if (
-                ref.current &&
-                (!nextFocused || !ref.current.contains(nextFocused))
-            ) {
+            if (!nextFocused || !ref.current.contains(nextFocused)) {
                 callback();
             }
         };
