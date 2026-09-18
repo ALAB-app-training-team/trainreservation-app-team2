@@ -176,7 +176,7 @@ test('navigate-アカウントログイン全機能', async ({
     await reservationListPage.clickChangeSeatConfirmButton();
     await expect(page).toHaveURL('/selectSeat');
     await expect(selectSeatPage.trainCarButton(1)).toHaveAttribute(
-        'aria-current',
+        'aria-checked',
         'true',
     );
     await selectSeatPage.selectSeat();

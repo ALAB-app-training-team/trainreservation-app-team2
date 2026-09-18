@@ -41,7 +41,7 @@ export class SelectSeatPage {
             name: '予約変更',
             exact: true,
         });
-        this.trainCars = page.getByTestId('train-cars').getByRole('button');
+        this.trainCars = page.getByTestId('train-cars').getByRole('radio');
         this.emptySeat = page.getByTestId('empty-seat');
         this.seatsSkeleton = page.getByTestId('seats-by-train-car-skeleton');
         this.name = page.getByRole('textbox', { name: '予約者氏名' });
@@ -94,13 +94,17 @@ export class SelectSeatPage {
             .first();
     }
 
+    seatTypeTab(name: string): Locator {
+        return this.page.getByRole('tab', { name, exact: true });
+    }
+
     trainCarButton(carNumber: number | number[]): Locator {
         const name = Array.isArray(carNumber)
             ? new RegExp(`^(${carNumber.join('|')}) 号車$`)
             : `${carNumber} 号車`;
         return this.page
             .getByTestId('train-cars')
-            .getByRole('button', { name, exact: !Array.isArray(carNumber) });
+            .getByRole('radio', { name, exact: !Array.isArray(carNumber) });
     }
 
     async clickBackButton() {
