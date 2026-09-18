@@ -217,6 +217,7 @@ export function useTimeSegments(
             case 'Delete':
                 e.preventDefault();
                 handledByKeyDownRef.current = true;
+                if (isMobile) return;
                 focusSegment(segment);
                 commitSegment(segment, 0);
                 return;

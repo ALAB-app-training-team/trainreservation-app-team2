@@ -6,7 +6,7 @@ export const isMobileDevice = () => {
     const userAgent = navigator.userAgent;
 
     const isDesktopModeMobile =
-        /Macintosh|X11|Linux/.test(userAgent) && navigator.maxTouchPoints > 1;
+        userAgent.includes('Macintosh') && navigator.maxTouchPoints > 1;
 
     return (
         /iPhone|iPad|iPod|Android/i.test(userAgent) ||
