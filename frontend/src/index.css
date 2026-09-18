@@ -74,6 +74,23 @@
     /* 白地 6.56:1 / ダーク面 6.1:1 */
     --color-gc-seat: light-dark(#6449ba, #a992e8);
 
+    /* ---------- 設備の識別色 ----------
+       シートマップの設備アイコンに使う。 */
+    /* 男女共用トイレ。白地 5.47:1 / ダーク面 8.7:1 */
+    --color-facility-all-gender: light-dark(#0f766e, #2dd4bf);
+    /* 男性用トイレ。白地 6.70:1 / ダーク面 6.4:1 */
+    --color-facility-mens: light-dark(#1d4ed8, #60a5fa);
+    /* 女性用トイレ。白地 6.29:1 / ダーク面 6.0:1 */
+    --color-facility-womens: light-dark(#be123c, #fb7185);
+    /* 車いす対応トイレ。白地 7.10:1 / ダーク面 6.0:1 */
+    --color-facility-wheelchair: light-dark(#6d28d9, #a78bfa);
+    /* ベビーベッド。白地 6.32:1 / ダーク面 6.6:1 */
+    --color-facility-baby: light-dark(#a21caf, #e879f9);
+    /* 荷物置き場。白地 5.02:1 / ダーク面 9.7:1 */
+    --color-facility-luggage: light-dark(#b45309, #fbbf24);
+    /* 多目的室。白地 5.48:1 / ダーク面 8.4:1 */
+    --color-facility-multipurpose: light-dark(#047857, #34d399);
+
     /* ---------- 列車の識別色 ----------
        車両アイコンの塗りに使う識別色。文字色には使わない。 */
     /* やまびこ */
