@@ -17,12 +17,12 @@ export function CustomAccordion({ title, count, children }: AccordionProps) {
                 onClick={() => setIsOpen((prev) => !prev)}
                 className="flex items-center gap-2"
             >
-                <span className="size-4">
+                <span className="text-primary-ink size-4">
                     {isOpen ? <IoCaretDown /> : <IoCaretForward />}
                 </span>
-                <span className="text-base font-bold">{title}</span>
+                <span className="text-base">{title}</span>
                 {count !== undefined && (
-                    <span className="border-primary-mid-light text-primary-ink rounded-full border px-2 py-0.5 text-xs">
+                    <span className="border-primary-mid-light text-primary-ink bg-surface rounded-full border px-2 py-0.5 text-xs">
                         {count}件
                     </span>
                 )}
