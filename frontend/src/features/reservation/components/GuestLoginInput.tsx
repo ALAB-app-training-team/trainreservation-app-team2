@@ -3,6 +3,7 @@ import React from 'react';
 
 type GuestLoginInputProps = {
     id: string;
+    name?: string;
     label: string;
     type: string;
     value: string;
@@ -18,6 +19,7 @@ type GuestLoginInputProps = {
 
 export function GuestLoginInput({
     id,
+    name = id,
     label,
     type,
     value,
@@ -42,7 +44,7 @@ export function GuestLoginInput({
                 })}
                 <input
                     id={id}
-                    name={id}
+                    name={name}
                     type={type}
                     inputMode={inputMode}
                     value={value}

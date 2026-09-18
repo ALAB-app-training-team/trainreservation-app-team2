@@ -3,7 +3,7 @@ import 'swiper/css/pagination';
 import 'swiper/css/navigation';
 
 import { QRCodeSVG } from 'qrcode.react';
-import { Navigation, Pagination } from 'swiper/modules';
+import { A11y, Navigation, Pagination } from 'swiper/modules';
 import { Swiper, SwiperSlide } from 'swiper/react';
 
 import type { ReservedSeatDto } from '@/features/reservation/types/ReservedSeatDto';
@@ -34,7 +34,7 @@ export function ReservedTicketQrCode({
                     type: 'fraction',
                 }}
                 navigation={true}
-                modules={[Pagination, Navigation]}
+                modules={[Pagination, Navigation, A11y]}
                 className="flex w-full max-w-5xl flex-col gap-4"
             >
                 {seats.length !== 0 ? (
