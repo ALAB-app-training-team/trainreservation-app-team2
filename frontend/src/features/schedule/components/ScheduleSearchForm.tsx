@@ -141,7 +141,7 @@ export function ScheduleSearchForm({
                                 children={
                                     <div className="border-primary-ink inline-flex items-center overflow-hidden rounded border">
                                         <label
-                                            className={`cursor-pointer p-1 text-sm has-[:focus-visible]:ring-2 has-[:focus-visible]:ring-heading has-[:focus-visible]:ring-inset ${!searchRequestDto.isArrivalTime ? 'bg-primary text-white' : 'bg-surface-subtle'}`}
+                                            className={`has-[:focus-visible]:ring-heading cursor-pointer p-1 text-sm has-[:focus-visible]:ring-2 has-[:focus-visible]:ring-inset ${!searchRequestDto.isArrivalTime ? 'bg-primary text-white' : 'bg-surface-subtle'}`}
                                         >
                                             <input
                                                 type="radio"
@@ -156,7 +156,7 @@ export function ScheduleSearchForm({
                                             出発
                                         </label>
                                         <label
-                                            className={`cursor-pointer p-1 text-sm has-[:focus-visible]:ring-2 has-[:focus-visible]:ring-heading has-[:focus-visible]:outline-none has-[:focus-visible]:ring-inset ${searchRequestDto.isArrivalTime ? 'bg-primary text-white' : 'bg-surface-subtle'}`}
+                                            className={`has-[:focus-visible]:ring-heading cursor-pointer p-1 text-sm has-[:focus-visible]:ring-2 has-[:focus-visible]:outline-none has-[:focus-visible]:ring-inset ${searchRequestDto.isArrivalTime ? 'bg-primary text-white' : 'bg-surface-subtle'}`}
                                         >
                                             <input
                                                 type="radio"
@@ -212,7 +212,6 @@ export function ScheduleSearchForm({
                                         <div className="flex flex-col gap-4">
                                             <CustomAccordion
                                                 title="お気に入り経路"
-                                                count={searchHistoryDtos.length}
                                                 children={
                                                     <div className="mt-2 flex flex-wrap items-center gap-2">
                                                         {searchHistoryDtos.map(
