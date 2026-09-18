@@ -73,7 +73,7 @@ test('タイトル表示：予約完了時は予約完了、予約確認のゲ�
     await expect(page).toHaveURL('/selectSeat');
     await expect(page.getByText('座席が選択されていません')).not.toBeVisible();
     await expect(selectSeatPage.trainCarButton(1)).toHaveAttribute(
-        'aria-current',
+        'aria-checked',
         'true',
     );
     await selectSeatPage.selectSeat();
@@ -140,7 +140,7 @@ test('戻るボタン表示有無：予約確認のアカウントログイン�
     await expect(page).toHaveURL('/selectSeat');
     await expect(page.getByText('座席が選択されていません')).not.toBeVisible();
     await expect(selectSeatPage.trainCarButton(1)).toHaveAttribute(
-        'aria-current',
+        'aria-checked',
         'true',
     );
     await selectSeatPage.selectSeat();
