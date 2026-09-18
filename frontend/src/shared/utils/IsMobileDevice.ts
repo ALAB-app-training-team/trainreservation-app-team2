@@ -11,7 +11,7 @@ export const isMobileDevice = () => {
     if (typeof window === 'undefined') return false;
 
     const userAgent = navigator.userAgent;
-    const hasTouch = navigator.maxTouchPoints > 1;
+    const hasTouch = navigator.maxTouchPoints >= 1;
 
     // デスクトップ表示のiPadはUAがMacintoshになるため、タッチ有無で判別する
     const isDesktopModeIPad = userAgent.includes('Macintosh') && hasTouch;
