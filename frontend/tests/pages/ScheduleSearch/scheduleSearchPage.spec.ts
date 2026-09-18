@@ -688,5 +688,46 @@ test('グランクラスかつ4人指定時に、グランクラス残席が4未
             schedule.departureTime.slice(0, 5) >= time.slice(0, 5),
     ).length;
 
-    await expect(page.getByTestId('schedule')).toHaveCount(expectedCount);
+    let actualCount = 0;
+    for (;;) {
+        actualCount += await page.getByTestId('schedule').count();
+
+        const currentPageButton = page.getByRole('button', {
+            name: /is your current page$/,
+        });
+        const currentPageNumber = Number(
+            (await currentPageButton.textContent())?.trim(),
+        );
+
+        const laterPageNumbers = (
+            await page
+                .getByRole('button', { name: /^Page \d+$/ })
+                .allTextContents()
+        )
+            .map(Number)
+            .filter((pageNumber) => pageNumber > currentPageNumber);
+
+        if (laterPageNumbers.length > 0) {
+            const nextPageNumber = Math.min(...laterPageNumbers);
+            await page
+                .getByRole('button', {
+                    name: `Page ${nextPageNumber}`,
+                    exact: true,
+                })
+                .click();
+            continue;
+        }
+
+        const jumpForwardButton = page.getByRole('button', {
+            name: 'Jump forward',
+        });
+        if ((await jumpForwardButton.count()) > 0) {
+            await jumpForwardButton.click();
+            continue;
+        }
+
+        break;
+    }
+
+    expect(actualCount).toBe(expectedCount);
 });
