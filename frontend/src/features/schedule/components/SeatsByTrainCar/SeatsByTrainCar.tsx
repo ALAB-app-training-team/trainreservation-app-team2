@@ -2,6 +2,7 @@ import { Fragment, useEffect, useMemo } from 'react';
 import { FiArrowUp } from 'react-icons/fi';
 
 import type { ReservedSeatDto } from '@/features/reservation/types/ReservedSeatDto';
+import { FacilityByTrainCar } from '@/features/schedule/components/FacilityByTrainCar';
 import { Seat } from '@/features/schedule/components/Seat';
 import { TRAIN_DIRECTION } from '@/features/schedule/constants/TrainDirection';
 import { useSeatsByTrainCar } from '@/features/schedule/hooks/useSeatsByTrainCar';
@@ -27,7 +28,8 @@ export function SeatsByTrainCar({
     handleSelectedSeats,
     checkReservedSeats,
 }: SeatsByTrainCarProps) {
-    const { seats } = useSeatsByTrainCar(seatsRequestDto);
+    const { seats, frontFacilities, rearFacilities } =
+        useSeatsByTrainCar(seatsRequestDto);
     const trainCarNumber = seats[0]?.trainCarNumber;
     const isDown = scheduleInfoDto.direction === TRAIN_DIRECTION.DOWN;
     const columns: string[] = Array.from(
@@ -89,6 +91,10 @@ export function SeatsByTrainCar({
                         <FiArrowUp />
                         {`${scheduleInfoDto.arrivalStationName}駅方面（進行方向）`}
                     </div>
+                    <FacilityByTrainCar
+                        isFront={true}
+                        facilities={!isDown ? frontFacilities : rearFacilities}
+                    />
                     <div
                         className={`grid gap-2`}
                         style={{
@@ -147,6 +153,10 @@ export function SeatsByTrainCar({
                             </Fragment>
                         ))}
                     </div>
+                    <FacilityByTrainCar
+                        isFront={false}
+                        facilities={isDown ? frontFacilities : rearFacilities}
+                    />
                     <div className="bg-primary-light flex items-center gap-2 rounded-full px-4 py-1 text-sm">
                         <span>
                             {scheduleInfoDto.departureStationName}駅方面

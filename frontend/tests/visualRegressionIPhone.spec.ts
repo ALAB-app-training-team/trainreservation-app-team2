@@ -20,6 +20,12 @@ test('visual-iPhone-selectSeat-account', async ({
     await visualSelectSeatAccount();
 });
 
+test('visual-iPhone-selectSeat-facility', async ({
+    visualSelectSeatFacility,
+}) => {
+    await visualSelectSeatFacility();
+});
+
 test('visual-iPhone-reservationGuestLogin', async ({
     visualReservationGuestLogin,
 }) => {
