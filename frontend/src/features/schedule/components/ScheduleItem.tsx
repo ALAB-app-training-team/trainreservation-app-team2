@@ -151,11 +151,13 @@ export function ScheduleItem({
                     </div>
                 </div>
             </div>
-            <EmptySeatCount
-                reservedSeats={schedule.reservedSeats}
-                greenSeats={schedule.greenSeats}
-                gcSeats={schedule.gcSeats}
-            />
+            <div className="flex w-full flex-1 justify-center md:justify-end">
+                <EmptySeatCount
+                    reservedSeats={schedule.reservedSeats}
+                    greenSeats={schedule.greenSeats}
+                    gcSeats={schedule.gcSeats}
+                />
+            </div>
         </button>
     );
 }
