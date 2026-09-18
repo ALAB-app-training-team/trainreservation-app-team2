@@ -286,7 +286,10 @@ test('出発時刻・到着時刻の切り替えができること、空席表�
 
     await scheduleSearchPage.goto();
     await expect(page).toHaveURL('/scheduleSearch');
-    await expect(scheduleSearchPage.departureTimeButton).toBeChecked();
+    await expect(scheduleSearchPage.departureTimeButton).toHaveAttribute(
+        'aria-pressed',
+        'true',
+    );
     await expect(scheduleSearchPage.availableTrainCheckBox).toBeChecked();
     await expect(page.getByText('満席')).toBeHidden();
 
@@ -330,7 +333,10 @@ test('出発時刻・到着時刻の切り替えができること、空席表�
     await scheduleSearchPage.clickAvailableTrainCheckBox();
     await expect(scheduleSearchPage.availableTrainCheckBox).toBeChecked();
     await scheduleSearchPage.clickArrivalTimeButton();
-    await expect(scheduleSearchPage.arrivalTimeButton).toBeChecked();
+    await expect(scheduleSearchPage.arrivalTimeButton).toHaveAttribute(
+        'aria-pressed',
+        'true',
+    );
     await scheduleSearchPage.time.fill('06:37');
     await expect(page.getByTestId('schedule-arrival-time').first()).toHaveText(
         '06:37',
@@ -465,13 +471,19 @@ test('列車が見つからない場合、翌日の始発で検索できる', as
     await scheduleSearchPage.clickSearchNextDayButton();
     await expect(scheduleSearchPage.date).toHaveValue(expectedNextDate);
     await expect(scheduleSearchPage.time).toHaveValue('00:00');
-    await expect(scheduleSearchPage.departureTimeButton).toBeChecked();
+    await expect(scheduleSearchPage.departureTimeButton).toHaveAttribute(
+        'aria-pressed',
+        'true',
+    );
 
     // 出発時刻で検索されること
     await scheduleSearchPage.clickArrivalTimeButton();
     await expect(scheduleSearchPage.searchNextDayButton).toBeVisible();
     await scheduleSearchPage.clickSearchNextDayButton();
-    await expect(scheduleSearchPage.departureTimeButton).toBeChecked();
+    await expect(scheduleSearchPage.departureTimeButton).toHaveAttribute(
+        'aria-pressed',
+        'true',
+    );
 
     // 検索可能期間の上限日の場合、翌日の始発検索ボタンが非活性になること
     await scheduleSearchPage.date.fill(
@@ -517,7 +529,10 @@ test('未ログイン状態ではお気に入り経路の登録が表示され�
     await scheduleSearchPage.selectArrivalStation('上野');
     await scheduleSearchPage.time.fill('06:00');
     await scheduleSearchPage.clickDepartureTimeButton();
-    await expect(scheduleSearchPage.departureTimeButton).toBeChecked();
+    await expect(scheduleSearchPage.departureTimeButton).toHaveAttribute(
+        'aria-pressed',
+        'true',
+    );
 
     await registeredRoute.click();
     await expect(page.getByTestId('departureStation-select')).toContainText(
@@ -527,7 +542,10 @@ test('未ログイン状態ではお気に入り経路の登録が表示され�
         '白石蔵王',
     );
     await expect(scheduleSearchPage.time).toHaveValue('10:30');
-    await expect(scheduleSearchPage.arrivalTimeButton).toBeChecked();
+    await expect(scheduleSearchPage.arrivalTimeButton).toHaveAttribute(
+        'aria-pressed',
+        'true',
+    );
 
     await scheduleSearchPage.clickHistoryDeleteButton('仙台', '白石蔵王');
     await expect(registeredRoute).toBeHidden();

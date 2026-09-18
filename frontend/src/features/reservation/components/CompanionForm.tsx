@@ -102,7 +102,8 @@ export function CompanionForm({
                     />
                 </div>
                 <GuestLoginInput
-                    id="reserverName"
+                    id={`reserverName${index}`}
+                    name="reserverName"
                     label="お名前"
                     type="text"
                     inputMode="text"
@@ -118,7 +119,8 @@ export function CompanionForm({
                     readOnly={!canUpdate}
                 />
                 <GuestLoginInput
-                    id="reserverMail"
+                    id={`reserverMail${index}`}
+                    name="reserverMail"
                     label="メールアドレス"
                     type="text"
                     inputMode="email"

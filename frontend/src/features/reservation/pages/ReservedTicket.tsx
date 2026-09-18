@@ -170,33 +170,33 @@ export function ReservedTicket() {
                     </>
                 )}
                 <div className="flex w-full flex-col gap-4 md:flex-row">
-                    {canUpdateCompanions && (
+                    {canCancelReservation && (
                         <button
-                            onClick={handleCompanionsModalOpen}
-                            className="bg-primary flex w-full items-center justify-center gap-2 rounded-xl p-2 text-sm text-white md:order-4"
+                            onClick={handleRefundConfirmModalOpen}
+                            disabled={isSubmitting}
+                            className="border-primary-ink text-primary-ink order-3 flex w-full items-center justify-center gap-2 rounded-xl border-2 p-2 text-sm md:order-1"
                         >
-                            <RiGroupLine className="h-4 w-4" />
-                            利用者に割り当て
+                            <IoTrashOutline className="h-4 w-4" />
+                            キャンセル
                         </button>
                     )}
                     {canUpdateReservation && (
                         <button
                             onClick={handleChangeConfirmModalOpen}
                             disabled={isSubmitting}
-                            className="border-primary-ink text-primary-ink flex w-full items-center justify-center gap-2 rounded-xl border-2 p-2 text-sm md:order-2"
+                            className="border-primary-ink text-primary-ink order-2 flex w-full items-center justify-center gap-2 rounded-xl border-2 p-2 text-sm md:order-2"
                         >
                             <FaEdit className="h-4 w-4" />
                             予約を変更
                         </button>
                     )}
-                    {canCancelReservation && (
+                    {canUpdateCompanions && (
                         <button
-                            onClick={handleRefundConfirmModalOpen}
-                            disabled={isSubmitting}
-                            className="border-primary-ink text-primary-ink flex w-full items-center justify-center gap-2 rounded-xl border-2 p-2 text-sm md:order-1"
+                            onClick={handleCompanionsModalOpen}
+                            className="bg-primary order-1 flex w-full items-center justify-center gap-2 rounded-xl p-2 text-sm text-white md:order-3"
                         >
-                            <IoTrashOutline className="h-4 w-4" />
-                            キャンセル
+                            <RiGroupLine className="h-4 w-4" />
+                            利用者に割り当て
                         </button>
                     )}
                 </div>

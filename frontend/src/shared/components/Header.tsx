@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useRef, useState } from 'react';
 import { BsTrainFreightFrontFill } from 'react-icons/bs';
 import { FiMenu } from 'react-icons/fi';
 import { NavLink, useLocation, useNavigate } from 'react-router-dom';
@@ -30,9 +30,11 @@ export function Header() {
     ];
 
     const [isMenuOpen, setIsMenuOpen] = useState(false);
+    const menuButtonRef = useRef<HTMLButtonElement>(null);
     const { ref: menuRef } = useOutsideClick(
         () => setIsMenuOpen(false),
         isMenuOpen,
+        menuButtonRef,
     );
     const handleMenuOpen = () => {
         setIsMenuOpen(!isMenuOpen);
@@ -104,8 +106,10 @@ export function Header() {
                         ))}
                     </div>
                     <button
+                        ref={menuButtonRef}
                         type="button"
                         onClick={handleMenuOpen}
+                        aria-expanded={isMenuOpen}
                         className={`flex min-h-11 min-w-11 items-center justify-center gap-2 py-3 text-base font-bold ${
                             name ? '' : 'md:hidden'
                         }`}
