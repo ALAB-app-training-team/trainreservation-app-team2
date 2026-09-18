@@ -18,27 +18,18 @@ export type RovingItemProps = {
 };
 
 type CommonOptions<K extends string> = {
-    /** 移動対象となるキーの並び。tabIndex=0 を付ける要素や Home/End の行き先はこの順序で決まる */
     keys: readonly K[];
-    /**
-     * 渡すと controlled モードになり、tabIndex=0 は常に activeKey の要素に付く。
-     * その場合、矢印キーでの移動を activeKey に反映するのは呼び出し側（onNavigate）の責務。
-     * 省略すると最後にフォーカスした要素を内部で記憶する。
-     */
     activeKey?: K;
-    /** 矢印キー等で移動先が決まったときに呼ばれる。フォーカス移動自体はフックが行う */
     onNavigate?: (key: K) => void;
 };
 
 type LinearOptions = {
     orientation: LinearOrientation;
-    /** 端で反対側の端へ回り込むか。省略時は回り込まない */
     canLoop?: boolean;
 };
 
 type GridOptions<K extends string> = {
     orientation: 'grid';
-    /** キーに対応するグリッド上の位置。undefined を返したキーは移動対象から外れる */
     getPosition: (key: K) => RovingPosition | undefined;
 };
 
@@ -66,10 +57,6 @@ const GRID_KEYS = [
     'End',
 ];
 
-/**
- * このフックが処理対象とするキーかどうか。
- * 対象キーは移動先がなくてもブラウザ既定動作（ページスクロール等）を抑止するために使う。
- */
 function isHandledKey(orientation: RovingOrientation, eventKey: string) {
     if (orientation === 'grid') return GRID_KEYS.includes(eventKey);
     return (
@@ -180,7 +167,6 @@ export function useRovingFocus<K extends string>(
     const { keys, activeKey, onNavigate } = options;
     const elementsRef = useRef(new Map<K, HTMLElement>());
     const [focusedKey, setFocusedKey] = useState<K | undefined>(undefined);
-    // activeKey で制御されている間は内部 state を参照しないので、更新もしない（無駄な再描画を防ぐ）
     const isControlled = activeKey !== undefined;
     const rememberFocusedKey = (key: K) => {
         if (!isControlled) setFocusedKey(key);
@@ -220,7 +206,6 @@ export function useRovingFocus<K extends string>(
         onFocus: () => rememberFocusedKey(key),
         onKeyDown: (event) => {
             if (!isHandledKey(options.orientation, event.key)) return;
-            // 端で移動先がない場合もページスクロール等の既定動作は抑止する
             event.preventDefault();
             const nextKey = resolveNextKey(key, event);
             if (nextKey === undefined || nextKey === key) return;
