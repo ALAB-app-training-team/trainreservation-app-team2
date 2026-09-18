@@ -212,6 +212,7 @@ export function ScheduleSearchForm({
                                         <div className="flex flex-col gap-4">
                                             <CustomAccordion
                                                 title="お気に入り経路"
+                                                count={searchHistoryDtos.length}
                                                 children={
                                                     <div className="mt-2 flex flex-wrap items-center gap-2">
                                                         {searchHistoryDtos.map(
