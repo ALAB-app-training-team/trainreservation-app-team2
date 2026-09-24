@@ -39,7 +39,7 @@ export function SeatTypeFares({
     return (
         <div
             data-testid="seat-type-fares"
-            className="divide-line flex divide-x"
+            className="divide-fg-muted text-fg-muted flex divide-x"
         >
             {fareList.map((seat) => (
                 <div
