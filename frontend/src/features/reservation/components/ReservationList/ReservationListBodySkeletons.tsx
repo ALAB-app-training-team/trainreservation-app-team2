@@ -34,8 +34,13 @@ export function ReservationListBodySkeleton() {
                         </button>
                     </div>
                 </div>
-                <svg className="bg-surface-disabled h-76 animate-pulse rounded-2xl md:w-full" />
-                <svg className="bg-surface-disabled h-76 animate-pulse rounded-2xl md:w-full" />
+                <div className="flex flex-col gap-4 md:gap-3">
+                    <svg className="bg-surface-disabled h-55 animate-pulse rounded-2xl md:h-24 md:w-full" />
+                    <svg className="bg-surface-disabled h-55 animate-pulse rounded-2xl md:h-24 md:w-full" />
+                    <svg className="bg-surface-disabled h-55 animate-pulse rounded-2xl md:h-24 md:w-full" />
+                    <svg className="bg-surface-disabled h-55 animate-pulse rounded-2xl md:h-24 md:w-full" />
+                    <svg className="bg-surface-disabled h-55 animate-pulse rounded-2xl md:h-24 md:w-full" />
+                </div>
             </div>
         </>
     );
