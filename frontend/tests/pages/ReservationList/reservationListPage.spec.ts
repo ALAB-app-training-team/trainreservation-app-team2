@@ -302,8 +302,14 @@ test('復路で検索の検索画面設定：有効な予約は到着日時を�
     );
     await expect(scheduleSearchPage.date).toHaveValue(expectedDate);
     await expect(scheduleSearchPage.time).toHaveValue(expectedArrivalTime);
-    await expect(scheduleSearchPage.departureTimeButton).toBeChecked();
-    await expect(scheduleSearchPage.arrivalTimeButton).not.toBeChecked();
+    await expect(scheduleSearchPage.departureTimeButton).toHaveAttribute(
+        'aria-pressed',
+        'true',
+    );
+    await expect(scheduleSearchPage.arrivalTimeButton).toHaveAttribute(
+        'aria-pressed',
+        'false',
+    );
 
     await logout();
     await expect(page).toHaveURL('/login');
@@ -355,8 +361,14 @@ test('復路で検索の検索画面設定：過去の予約はデフォルト�
         dayjs().format('YYYY-MM-DD'),
     );
     await expect(scheduleSearchPage.time).toHaveValue(dayjs().format('HH:mm'));
-    await expect(scheduleSearchPage.departureTimeButton).toBeChecked();
-    await expect(scheduleSearchPage.arrivalTimeButton).not.toBeChecked();
+    await expect(scheduleSearchPage.departureTimeButton).toHaveAttribute(
+        'aria-pressed',
+        'true',
+    );
+    await expect(scheduleSearchPage.arrivalTimeButton).toHaveAttribute(
+        'aria-pressed',
+        'false',
+    );
 
     await logout();
     await expect(page).toHaveURL('/login');

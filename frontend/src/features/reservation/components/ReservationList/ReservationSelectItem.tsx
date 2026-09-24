@@ -1,6 +1,6 @@
 import dayjs from 'dayjs';
 import customParseFormat from 'dayjs/plugin/customParseFormat';
-import { useState } from 'react';
+import { useRef, useState } from 'react';
 import { BsQrCode } from 'react-icons/bs';
 import { FaEdit, FaSearch } from 'react-icons/fa';
 import { IoTrashOutline, IoWarningOutline } from 'react-icons/io5';
@@ -50,9 +50,11 @@ export function ReservationSelectItem({
         totalFare,
     } = useReservationSelectItemConfig(details);
     const [isMenuOpen, setIsMenuOpen] = useState(false);
+    const menuButtonRef = useRef<HTMLButtonElement>(null);
     const { ref: menuRef } = useOutsideClick(
         () => setIsMenuOpen(false),
         isMenuOpen,
+        menuButtonRef,
     );
     const handleMenuOpen = () => {
         setIsMenuOpen(!isMenuOpen);
@@ -189,6 +191,7 @@ export function ReservationSelectItem({
                         ref={menuRef}
                     >
                         <button
+                            ref={menuButtonRef}
                             onClick={handleMenuOpen}
                             className="text-primary-ink hover:bg-surface-muted flex h-11 w-11 items-center justify-center rounded-md text-2xl transition"
                             data-testid="three-dots-button"

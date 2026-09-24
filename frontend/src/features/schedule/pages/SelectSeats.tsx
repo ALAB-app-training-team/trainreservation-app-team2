@@ -1,6 +1,6 @@
 import { useQueryClient } from '@tanstack/react-query';
 import axios, { HttpStatusCode } from 'axios';
-import { Suspense, useEffect, useState } from 'react';
+import { Suspense, useEffect, useRef, useState } from 'react';
 import { IoCardOutline } from 'react-icons/io5';
 import { LuLogIn } from 'react-icons/lu';
 import { redirect, useLocation, useNavigate } from 'react-router-dom';
@@ -96,8 +96,24 @@ export function SelectSeats() {
     const [isSubmitting, setIsSubmitting] = useState<boolean>(false);
     const [isSheetOpen, setIsSheetOpen] = useState<boolean>(false);
     const isLoggedIn = !!localStorage.getItem('name');
+    const reserveButtonRef = useRef<HTMLButtonElement>(null);
 
     useLockBodyScroll(isSheetOpen);
+
+    useEffect(() => {
+        const button = reserveButtonRef.current;
+        if (!button) return;
+
+        const handleBlur = (e: FocusEvent) => {
+            if (e.relatedTarget === null) {
+                button.form
+                    ?.querySelector<HTMLElement>('input, select, textarea')
+                    ?.focus();
+            }
+        };
+        button.addEventListener('blur', handleBlur);
+        return () => button.removeEventListener('blur', handleBlur);
+    }, []);
 
     useEffect(() => {
         window.scrollTo(0, 0);
@@ -483,6 +499,7 @@ export function SelectSeats() {
                                         />
                                     )}
                                     <button
+                                        ref={reserveButtonRef}
                                         type="submit"
                                         className="bg-primary w-full rounded-lg p-2 text-white"
                                         disabled={

@@ -169,6 +169,26 @@ export function ReservedTicket() {
                     </>
                 )}
                 <div className="flex w-full flex-col gap-4 md:flex-row">
+                    {canCancelReservation && (
+                        <button
+                            onClick={handleRefundConfirmModalOpen}
+                            disabled={isSubmitting}
+                            className="border-primary-ink text-primary-ink order-3 flex w-full items-center justify-center gap-2 rounded-xl border-2 p-2 text-sm md:order-1"
+                        >
+                            <IoTrashOutline className="h-4 w-4" />
+                            キャンセル
+                        </button>
+                    )}
+                    {canUpdateReservation && (
+                        <button
+                            onClick={handleChangeConfirmModalOpen}
+                            disabled={isSubmitting}
+                            className="border-primary-ink text-primary-ink order-2 flex w-full items-center justify-center gap-2 rounded-xl border-2 p-2 text-sm md:order-2"
+                        >
+                            <FaEdit className="h-4 w-4" />
+                            予約を変更
+                        </button>
+                    )}
                     {canUpdateCompanions && (
                         <button
                             onClick={handleCompanionsModalOpen}
@@ -176,26 +196,6 @@ export function ReservedTicket() {
                         >
                             <RiGroupLine className="h-4 w-4" />
                             利用者に割り当て
-                        </button>
-                    )}
-                    {canUpdateReservation && (
-                        <button
-                            onClick={handleChangeConfirmModalOpen}
-                            disabled={isSubmitting}
-                            className="border-primary-ink text-primary-ink flex w-full items-center justify-center gap-2 rounded-xl border-2 p-2 text-sm md:order-2"
-                        >
-                            <FaEdit className="h-4 w-4" />
-                            予約を変更
-                        </button>
-                    )}
-                    {canCancelReservation && (
-                        <button
-                            onClick={handleRefundConfirmModalOpen}
-                            disabled={isSubmitting}
-                            className="border-primary-ink text-primary-ink flex w-full items-center justify-center gap-2 rounded-xl border-2 p-2 text-sm md:order-1"
-                        >
-                            <IoTrashOutline className="h-4 w-4" />
-                            キャンセル
                         </button>
                     )}
                 </div>
