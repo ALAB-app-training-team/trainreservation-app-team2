@@ -10,14 +10,14 @@ import {
 } from 'react';
 
 import { HOURS, MINUTES } from '@/features/schedule/constants/Time';
-import { isMobileDevice } from '@/shared/utils/IsMobileDevice';
+import { useIsBelowMd } from '@/shared/hooks/useIsBelowMd';
 
 export function useTimeSegments(
     value: string,
     setValue: (time: string) => void,
 ) {
     const [isOpen, setIsOpen] = useState(false);
-    const [isMobile] = useState(isMobileDevice);
+    const isNarrowScreen = useIsBelowMd();
     const [activeSegment, setActiveSegment] = useState<Segment | null>(null);
 
     const containerRef = useRef<HTMLDivElement>(null);
@@ -94,7 +94,7 @@ export function useTimeSegments(
     // 時または分を編集対象にする関数
     const focusSegment = (segment: Segment) => {
         digitBufferRef.current = '';
-        if (!isMobile) {
+        if (!isNarrowScreen) {
             pendingSelectionRef.current = segment;
         }
         setActiveSegment(segment);
@@ -184,7 +184,7 @@ export function useTimeSegments(
     // input をクリックしたとき
     const handleClick = (e: MouseEvent<HTMLInputElement>) => {
         setIsOpen(true);
-        if (isMobile) return;
+        if (isNarrowScreen) return;
         const caret = e.currentTarget.selectionStart ?? 0;
         const segment: Segment = caret < 3 ? 'hour' : 'minute';
         const [start, end] = SEGMENTS[segment].characters;
@@ -217,7 +217,7 @@ export function useTimeSegments(
             case 'Delete':
                 e.preventDefault();
                 handledByKeyDownRef.current = true;
-                if (isMobile) return;
+                if (isNarrowScreen) return;
                 focusSegment(segment);
                 commitSegment(segment, 0);
                 return;
@@ -226,7 +226,7 @@ export function useTimeSegments(
         if (/^[0-9]$/.test(e.key)) {
             e.preventDefault();
             handledByKeyDownRef.current = true;
-            if (isMobile) return;
+            if (isNarrowScreen) return;
             const buffer = digitBufferRef.current + e.key;
             const enteredValue = Number(buffer);
             const maxLeadingDigit = segment === 'hour' ? 2 : 5;
@@ -257,7 +257,7 @@ export function useTimeSegments(
         hour: values.hour,
         minute: values.minute,
         isOpen,
-        isMobile,
+        isNarrowScreen,
         containerRef,
         inputRef,
         hourListRef,

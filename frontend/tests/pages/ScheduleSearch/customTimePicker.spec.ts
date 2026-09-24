@@ -1,106 +1,46 @@
 import { expect, test } from '@playwright/test';
-import type { Browser, BrowserContextOptions } from '@playwright/test';
+import type { Browser, ViewportSize } from '@playwright/test';
 import { ScheduleSearchPage } from '@tests/pages/ScheduleSearch/ScheduleSearchPage';
 
-const IPHONE_USER_AGENT =
-    'Mozilla/5.0 (iPhone; CPU iPhone OS 17_5 like Mac OS X) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/17.5 Mobile/15E148 Safari/604.1';
-const ANDROID_USER_AGENT =
-    'Mozilla/5.0 (Linux; Android 14; Pixel 8) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/126.0.0.0 Mobile Safari/537.36';
-const MAC_USER_AGENT =
-    'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/17.5 Safari/605.1.15';
-const WINDOWS_USER_AGENT =
-    'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/126.0.0.0 Safari/537.36 Edg/126.0.0.0';
+const MD_BREAKPOINT = 768;
+const NARROW_VIEWPORT: ViewportSize = { width: MD_BREAKPOINT - 1, height: 844 };
+const WIDE_VIEWPORT: ViewportSize = { width: MD_BREAKPOINT, height: 800 };
 
-type DeviceProfile = {
+type ViewportProfile = {
     name: string;
-    isMobile: boolean;
-    contextOptions: BrowserContextOptions;
-    maxTouchPoints?: number;
+    isNarrowScreen: boolean;
+    viewport: ViewportSize;
 };
 
-const DEVICE_PROFILES: DeviceProfile[] = [
+const VIEWPORT_PROFILES: ViewportProfile[] = [
     {
-        name: 'iPhone',
-        isMobile: true,
-        contextOptions: {
-            userAgent: IPHONE_USER_AGENT,
-            viewport: { width: 390, height: 844 },
-            hasTouch: true,
-            isMobile: true,
-        },
+        name: 'スマートフォン幅',
+        isNarrowScreen: true,
+        viewport: { width: 390, height: 844 },
     },
     {
-        // 横向きでは画面幅が md 以上になりメディアクエリでは拾えないため、
-        // UA 条件が効いていることを確認する
-        name: 'iPhone（横向き）',
-        isMobile: true,
-        contextOptions: {
-            userAgent: IPHONE_USER_AGENT,
-            viewport: { width: 844, height: 390 },
-            hasTouch: true,
-            isMobile: true,
-        },
+        name: 'md 直前の幅',
+        isNarrowScreen: true,
+        viewport: NARROW_VIEWPORT,
     },
     {
-        name: 'Android',
-        isMobile: true,
-        contextOptions: {
-            userAgent: ANDROID_USER_AGENT,
-            viewport: { width: 412, height: 915 },
-            hasTouch: true,
-            isMobile: true,
-        },
+        name: 'md ちょうどの幅',
+        isNarrowScreen: false,
+        viewport: WIDE_VIEWPORT,
     },
     {
-        // UA からはモバイルと判別できず、maxTouchPoints でのみ拾えるケース
-        name: 'iPad（デスクトップ用Webサイトを表示）',
-        isMobile: true,
-        contextOptions: {
-            userAgent: MAC_USER_AGENT,
-            viewport: { width: 1024, height: 1366 },
-            hasTouch: true,
-        },
-        maxTouchPoints: 5,
-    },
-    {
-        // タッチ対応PCは要件上モバイル扱いしない
-        name: 'Windows タッチPC（Surface）',
-        isMobile: false,
-        contextOptions: {
-            userAgent: WINDOWS_USER_AGENT,
-            viewport: { width: 1280, height: 800 },
-            hasTouch: true,
-        },
-        maxTouchPoints: 10,
-    },
-    {
-        name: '通常のPC',
-        isMobile: false,
-        contextOptions: {
-            userAgent: WINDOWS_USER_AGENT,
-            viewport: { width: 1280, height: 800 },
-            hasTouch: false,
-        },
+        name: 'PC 幅',
+        isNarrowScreen: false,
+        viewport: { width: 1280, height: 800 },
     },
 ];
 
 const openScheduleSearch = async (
     browser: Browser,
     baseURL: string | undefined,
-    profile: DeviceProfile,
+    viewport: ViewportSize,
 ) => {
-    const context = await browser.newContext({
-        baseURL,
-        ...profile.contextOptions,
-    });
-    if (profile.maxTouchPoints !== undefined) {
-        await context.addInitScript((maxTouchPoints: number) => {
-            Object.defineProperty(navigator, 'maxTouchPoints', {
-                get: () => maxTouchPoints,
-            });
-        }, profile.maxTouchPoints);
-    }
-
+    const context = await browser.newContext({ baseURL, viewport });
     const page = await context.newPage();
     const scheduleSearchPage = new ScheduleSearchPage(page);
     await scheduleSearchPage.goto();
@@ -109,32 +49,52 @@ const openScheduleSearch = async (
     return { context, page, time: scheduleSearchPage.time };
 };
 
-for (const profile of DEVICE_PROFILES) {
-    test(`${profile.name}では時刻入力欄が${profile.isMobile ? '読み取り専用になる' : '直接入力できる'}`, async ({
+for (const profile of VIEWPORT_PROFILES) {
+    test(`${profile.name}では時刻入力欄が${profile.isNarrowScreen ? '読み取り専用になる' : '直接入力できる'}`, async ({
         browser,
         baseURL,
     }) => {
         const { context, time } = await openScheduleSearch(
             browser,
             baseURL,
-            profile,
+            profile.viewport,
         );
 
-        await expect(time).toHaveJSProperty('readOnly', profile.isMobile);
+        await expect(time).toHaveJSProperty('readOnly', profile.isNarrowScreen);
 
         await context.close();
     });
 }
 
-test('モバイル端末では数字キー・Backspaceで時刻が変わらない', async ({
+test('md をまたぐリサイズで読み取り専用の切り替わりが追従する', async ({
     browser,
     baseURL,
 }) => {
-    const profile = DEVICE_PROFILES[0];
     const { context, page, time } = await openScheduleSearch(
         browser,
         baseURL,
-        profile,
+        WIDE_VIEWPORT,
+    );
+
+    await expect(time).toHaveJSProperty('readOnly', false);
+
+    await page.setViewportSize(NARROW_VIEWPORT);
+    await expect(time).toHaveJSProperty('readOnly', true);
+
+    await page.setViewportSize(WIDE_VIEWPORT);
+    await expect(time).toHaveJSProperty('readOnly', false);
+
+    await context.close();
+});
+
+test('md 未満では数字キー・Backspaceで時刻が変わらない', async ({
+    browser,
+    baseURL,
+}) => {
+    const { context, page, time } = await openScheduleSearch(
+        browser,
+        baseURL,
+        NARROW_VIEWPORT,
     );
 
     await time.click();
@@ -153,15 +113,14 @@ test('モバイル端末では数字キー・Backspaceで時刻が変わらな�
     await context.close();
 });
 
-test('モバイル端末でも矢印キーでは操作でき、分は5分単位になる', async ({
+test('md 未満でも矢印キーでは操作でき、分は5分単位になる', async ({
     browser,
     baseURL,
 }) => {
-    const profile = DEVICE_PROFILES[0];
     const { context, page, time } = await openScheduleSearch(
         browser,
         baseURL,
-        profile,
+        NARROW_VIEWPORT,
     );
 
     await time.click();
@@ -175,16 +134,14 @@ test('モバイル端末でも矢印キーでは操作でき、分は5分単位�
     await context.close();
 });
 
-test('PCでは従来どおり数字キーで時刻を直接入力できる', async ({
+test('md 以上では従来どおり数字キーで時刻を直接入力できる', async ({
     browser,
     baseURL,
 }) => {
-    const profile = DEVICE_PROFILES[DEVICE_PROFILES.length - 1];
-    const { context, page, time } = await openScheduleSearch(
-        browser,
-        baseURL,
-        profile,
-    );
+    const { context, page, time } = await openScheduleSearch(browser, baseURL, {
+        width: 1280,
+        height: 800,
+    });
 
     await time.click();
     // 入力欄の余白をクリックするとキャレットが分側に入るため、

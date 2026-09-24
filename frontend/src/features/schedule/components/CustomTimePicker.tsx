@@ -25,7 +25,7 @@ export function CustomTimePicker({
         hour,
         minute,
         isOpen,
-        isMobile,
+        isNarrowScreen,
         containerRef,
         inputRef,
         hourListRef,
@@ -56,8 +56,8 @@ export function CustomTimePicker({
                     id={id}
                     ref={inputRef}
                     type="text"
-                    readOnly={isMobile}
-                    inputMode={isMobile ? 'none' : 'numeric'}
+                    readOnly={isNarrowScreen}
+                    inputMode={isNarrowScreen ? 'none' : 'numeric'}
                     maxLength={5}
                     value={value}
                     onChange={handleChange}
