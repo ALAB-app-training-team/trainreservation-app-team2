@@ -3,6 +3,7 @@ import {
     RESERVEDTICKET_ROLE,
 } from '@/features/reservation/constants/ReservedTicketState';
 import type { ReservationResponseDto } from '@/features/reservation/types/ReservationResponseDto';
+import { isDeparted } from '@/shared/utils/IsDeparted';
 
 export function useReservedTicketConfig(
     reservedTickets: ReservationResponseDto,
@@ -21,9 +22,17 @@ export function useReservedTicketConfig(
           ? null
           : mode;
 
-    const canCancelReservation = !isDeleted && isReserver;
+    const hasDeparted = isDeparted(
+        reservedTickets.rideDate,
+        reservedTickets.departureTime,
+    );
+
+    const canCancelReservation = !isDeleted && isReserver && !hasDeparted;
     const canUpdateReservation =
-        !isDeleted && role == RESERVEDTICKET_ROLE.account && isReserver;
+        !isDeleted &&
+        role == RESERVEDTICKET_ROLE.account &&
+        isReserver &&
+        !hasDeparted;
     const canUpdateCompanions = !isDeleted && isReserver;
     const canShareLink = !isDeleted;
 

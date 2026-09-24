@@ -8,6 +8,7 @@ import type { ScheduleDto } from '@/features/schedule/types/ScheduleDto';
 import type { ScheduleInfoDto } from '@/features/schedule/types/ScheduleInfoDto';
 import type { SearchRequestDto } from '@/features/schedule/types/SearchRequestDto';
 import { TrainIcon } from '@/shared/components/TrainIcon';
+import { isDeparted } from '@/shared/utils/IsDeparted';
 
 dayjs.extend(customParseFormat);
 
@@ -99,17 +100,14 @@ export function ScheduleItem({
         window.scrollTo(0, 0);
     };
 
-    const isDeparted = dayjs(
-        `${date} ${schedule.departureTime}`,
-        'YYYY-MM-DD HH:mm:ss',
-    ).isBefore(dayjs());
+    const hasDeparted = isDeparted(date, schedule.departureTime);
 
     const isFull =
         schedule.reservedSeats === 0 &&
         schedule.greenSeats === 0 &&
         schedule.gcSeats === 0;
 
-    const timeClass = isDeparted
+    const timeClass = hasDeparted
         ? 'text-fg-secondary text-2xl font-bold'
         : 'text-heading text-2xl font-black';
 
@@ -118,7 +116,7 @@ export function ScheduleItem({
             type="button"
             onClick={handleSearch}
             data-testid="schedule"
-            disabled={isDeparted || isFull}
+            disabled={hasDeparted || isFull}
             className="border-primary-light group enabled:hover:border-primary-ink flex w-full flex-col items-start gap-3 rounded-2xl border-2 p-4 text-left transition-colors duration-200 ease-out sm:p-8 md:flex-row md:items-center md:justify-between"
         >
             <div className="flex items-center gap-2">
@@ -163,7 +161,7 @@ export function ScheduleItem({
                 reservedSeats={schedule.reservedSeats}
                 greenSeats={schedule.greenSeats}
                 gcSeats={schedule.gcSeats}
-                isDeparted={isDeparted}
+                isDeparted={hasDeparted}
             />
         </button>
     );
