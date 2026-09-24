@@ -51,7 +51,7 @@ test('座席を6席選択すると、それ以上選択できない', async ({ p
     // 2号車から座席を選択する
     await selectSeatPage.trainCarButton(2).click();
     await expect(selectSeatPage.trainCarButton(2)).toHaveAttribute(
-        'aria-current',
+        'aria-checked',
         'true',
     );
     await page.getByText('2号車').waitFor({ state: 'visible' });
@@ -62,9 +62,9 @@ test('座席を6席選択すると、それ以上選択できない', async ({ p
     const fourthSeatText = await fourthSeat.textContent();
     await fourthSeat.click();
     // グリーン車から座席を選択する
-    await page.getByRole('button', { name: 'グリーン車' }).click();
+    await selectSeatPage.seatTypeTab('グリーン車').click();
     await expect(selectSeatPage.trainCarButton([9, 11])).toHaveAttribute(
-        'aria-current',
+        'aria-checked',
         'true',
     );
     await selectSeatPage.waitForSeatMapToLoad();
@@ -74,9 +74,9 @@ test('座席を6席選択すると、それ以上選択できない', async ({ p
     const fifthSeatText = await fifthSeat.textContent();
     await fifthSeat.click();
     // グランクラスから座席を選択する
-    await page.getByRole('button', { name: 'グランクラス' }).click();
+    await selectSeatPage.seatTypeTab('グランクラス').click();
     await expect(selectSeatPage.trainCarButton([10, 12])).toHaveAttribute(
-        'aria-current',
+        'aria-checked',
         'true',
     );
     await selectSeatPage.waitForSeatMapToLoad();

@@ -1,4 +1,4 @@
-import { Fragment, useEffect, useMemo } from 'react';
+import { useEffect, useMemo } from 'react';
 import { FiArrowUp } from 'react-icons/fi';
 
 import type { ReservedSeatDto } from '@/features/reservation/types/ReservedSeatDto';
@@ -10,6 +10,8 @@ import type { ScheduleInfoDto } from '@/features/schedule/types/ScheduleInfoDto'
 import type { SeatDto } from '@/features/schedule/types/SeatDto';
 import type { SeatsRequestDto } from '@/features/schedule/types/SeatsRequestDto';
 import { LIMIT } from '@/shared/constants/Limit';
+import type { RovingPosition } from '@/shared/hooks/useRovingFocus';
+import { useRovingFocus } from '@/shared/hooks/useRovingFocus';
 
 type SeatsByTrainCarProps = {
     scheduleInfoDto: ScheduleInfoDto;
@@ -62,21 +64,60 @@ export function SeatsByTrainCar({
     const displayColumns: string[] = isDown
         ? [...layoutColumns].reverse()
         : layoutColumns;
-    const isOwnReservedSeat = (seat: SeatDto) =>
-        reservedSeats?.some(
-            (reserved) =>
-                reserved.trainCarNumber === seat.trainCarNumber &&
-                reserved.seatNumber === seat.seatNumber &&
-                reserved.seatColumn === seat.seatColumn,
-        ) ?? false;
-
-    const displaySeats = seats.map((seat) =>
-        isOwnReservedSeat(seat) ? { ...seat, isReserved: false } : seat,
-    );
+    const displaySeats = useMemo(() => {
+        const isOwnReservedSeat = (seat: SeatDto) =>
+            reservedSeats?.some(
+                (reserved) =>
+                    reserved.trainCarNumber === seat.trainCarNumber &&
+                    reserved.seatNumber === seat.seatNumber &&
+                    reserved.seatColumn === seat.seatColumn,
+            ) ?? false;
+        return seats.map((seat) =>
+            isOwnReservedSeat(seat) ? { ...seat, isReserved: false } : seat,
+        );
+    }, [seats, reservedSeats]);
 
     useEffect(() => {
         checkReservedSeats(displaySeats);
     }, [displaySeats]);
+
+    const isMaxSelected = selectedSeats.length >= LIMIT.SEATS;
+    const isSeatSelected = (seat: SeatDto) =>
+        selectedSeats.some(
+            (selectedSeat) =>
+                selectedSeat.seatCd === seat.seatCd &&
+                selectedSeat.trainCarCd === seatsRequestDto.trainCarCd,
+        );
+    const isSeatDisabled = (seat: SeatDto) =>
+        seat.isReserved || (isMaxSelected && !isSeatSelected(seat));
+
+    const seatRowList: (SeatDto | undefined)[][] = rows.map((row) =>
+        displayColumns.map((column) =>
+            column === ''
+                ? undefined
+                : displaySeats.find(
+                      (seat) =>
+                          seat.seatColumn === column && seat.seatNumber === row,
+                  ),
+        ),
+    );
+
+    const seatPositionMap = new Map<string, RovingPosition>();
+    seatRowList.forEach((rowSeats, rowIndex) =>
+        rowSeats.forEach((seat, colIndex) => {
+            if (seat && !isSeatDisabled(seat)) {
+                seatPositionMap.set(seat.seatCd, {
+                    row: rowIndex,
+                    col: colIndex,
+                });
+            }
+        }),
+    );
+    const { getItemProps: getSeatItemProps } = useRovingFocus({
+        keys: [...seatPositionMap.keys()],
+        orientation: 'grid',
+        getPosition: (seatCd) => seatPositionMap.get(seatCd),
+    });
 
     return (
         <>
@@ -96,61 +137,56 @@ export function SeatsByTrainCar({
                         facilities={!isDown ? frontFacilities : rearFacilities}
                     />
                     <div
-                        className={`grid gap-2`}
-                        style={{
-                            gridTemplateColumns: `repeat(${displayColumns.length}, minmax(0, 1fr))`,
-                        }}
+                        role="grid"
+                        aria-label="座席"
+                        className="flex flex-col gap-2"
                     >
-                        {rows.map((row) => (
-                            <Fragment key={row}>
-                                {displayColumns.map((column, colIndex) => {
-                                    if (column === '') {
+                        {seatRowList.map((rowSeats, rowIndex) => (
+                            <div
+                                key={rows[rowIndex]}
+                                role="row"
+                                className="grid gap-2"
+                                style={{
+                                    gridTemplateColumns: `repeat(${displayColumns.length}, minmax(0, 1fr))`,
+                                }}
+                            >
+                                {rowSeats.map((seat, colIndex) => {
+                                    if (!seat) {
                                         return (
                                             <div
-                                                key={`aisle-${colIndex}-${row}`}
+                                                key={`empty-${rowIndex}-${colIndex}`}
+                                                role="presentation"
                                             />
                                         );
                                     }
-                                    const seat = displaySeats.find(
-                                        (seat) =>
-                                            seat.seatColumn === column &&
-                                            seat.seatNumber === row,
-                                    );
-                                    if (!seat) {
-                                        return <div key={column + row} />;
-                                    }
-
-                                    const isSelected = selectedSeats.some(
-                                        (selectedSeat) =>
-                                            selectedSeat.seatCd ===
-                                                seat.seatCd &&
-                                            selectedSeat.trainCarCd ===
-                                                seatsRequestDto.trainCarCd,
-                                    );
-                                    const isMaxSelected =
-                                        selectedSeats.length >= LIMIT.SEATS;
+                                    const isSelected = isSeatSelected(seat);
                                     return (
-                                        <Seat
+                                        <div
                                             key={seat.seatCd}
-                                            seat={seat}
-                                            onClick={handleSelectedSeats}
-                                            disabled={
-                                                seat.isReserved ||
-                                                (isMaxSelected && !isSelected)
-                                            }
-                                            type={
-                                                seat.isReserved
-                                                    ? 'unreservable'
-                                                    : isSelected
-                                                      ? 'isSelected'
-                                                      : isMaxSelected
+                                            role="gridcell"
+                                            className="flex"
+                                        >
+                                            <Seat
+                                                seat={seat}
+                                                onClick={handleSelectedSeats}
+                                                disabled={isSeatDisabled(seat)}
+                                                type={
+                                                    seat.isReserved
                                                         ? 'unreservable'
-                                                        : 'reservable'
-                                            }
-                                        />
+                                                        : isSelected
+                                                          ? 'isSelected'
+                                                          : isMaxSelected
+                                                            ? 'unreservable'
+                                                            : 'reservable'
+                                                }
+                                                itemProps={getSeatItemProps(
+                                                    seat.seatCd,
+                                                )}
+                                            />
+                                        </div>
                                     );
                                 })}
-                            </Fragment>
+                            </div>
                         ))}
                     </div>
                     <FacilityByTrainCar
