@@ -66,12 +66,12 @@ export function ScheduleList({
 
     const [offset, setOffset] = useState(0);
     const perPage: number = 10;
-    const resultsHeadingRef = useRef<HTMLDivElement>(null);
+    const firstScheduleItemRef = useRef<HTMLButtonElement>(null);
     const handlePageChange = (data: { selected: number }) => {
         window.scrollTo(0, 0);
         const pageNumber = data['selected'];
         setOffset(pageNumber * perPage);
-        resultsHeadingRef.current?.focus();
+        firstScheduleItemRef.current?.focus();
     };
 
     const filteredSchedules = useFilteredSchedules({
@@ -101,8 +101,6 @@ export function ScheduleList({
         <>
             <div className="flex flex-col gap-4">
                 <div
-                    ref={resultsHeadingRef}
-                    tabIndex={-1}
                     aria-live="polite"
                     className="flex flex-wrap items-center justify-between gap-4 text-sm md:text-base"
                 >
@@ -129,6 +127,14 @@ export function ScheduleList({
                                 return (
                                     <ScheduleItem
                                         key={index}
+                                        buttonRef={
+                                            index === 0
+                                                ? (element) => {
+                                                      firstScheduleItemRef.current =
+                                                          element;
+                                                  }
+                                                : undefined
+                                        }
                                         schedule={schedule}
                                         date={searchRequestDto.date}
                                         departureStationCd={departureStationCd}
