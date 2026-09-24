@@ -25,6 +25,7 @@ export function CustomTimePicker({
         hour,
         minute,
         isOpen,
+        isNarrowScreen,
         containerRef,
         inputRef,
         hourListRef,
@@ -55,7 +56,8 @@ export function CustomTimePicker({
                     id={id}
                     ref={inputRef}
                     type="text"
-                    inputMode="numeric"
+                    readOnly={isNarrowScreen}
+                    inputMode={isNarrowScreen ? 'none' : 'numeric'}
                     maxLength={5}
                     value={value}
                     onChange={handleChange}
@@ -63,7 +65,7 @@ export function CustomTimePicker({
                     onClick={handleClick}
                     onKeyDown={handleKeyDown}
                     onBlur={handleBlur}
-                    className="focus:ring-primary-ink bg-surface w-full cursor-pointer rounded-xl p-2 pr-9 outline-none focus:ring-2 focus:ring-inset"
+                    className="focus:ring-primary-ink bg-surface read-only:bg-surface! w-full cursor-pointer rounded-xl p-2 pr-9 outline-none read-only:cursor-pointer! focus:ring-2 focus:ring-inset"
                 />
                 <span
                     tabIndex={0}
