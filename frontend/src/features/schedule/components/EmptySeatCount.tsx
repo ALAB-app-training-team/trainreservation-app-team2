@@ -62,7 +62,7 @@ export function EmptySeatCount({
 
     const getSeatColorClass = (seat: SeatType) => {
         if (seat.count === 0) {
-            return 'text-fg-muted';
+            return '';
         }
         return (
             {
