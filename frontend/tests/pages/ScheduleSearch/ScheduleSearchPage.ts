@@ -5,6 +5,7 @@ export class ScheduleSearchPage {
     readonly page: Page;
     readonly header: Header;
     readonly scheduleItemButton: Locator;
+    readonly availableScheduleItemButton: Locator;
     readonly departureStationSelectElement: Locator;
     readonly departureStation: Locator;
     readonly arrivalStationSelectElement: Locator;
@@ -31,6 +32,9 @@ export class ScheduleSearchPage {
         this.page = page;
         this.header = new Header(page);
         this.scheduleItemButton = page.getByTestId('schedule');
+        this.availableScheduleItemButton = page.locator(
+            '[data-testid="schedule"]:not([disabled])',
+        );
         this.departureStationSelectElement = page.getByTestId(
             'departureStation-select',
         );
@@ -82,11 +86,11 @@ export class ScheduleSearchPage {
     }
 
     async clickScheduleItemButton() {
-        await this.scheduleItemButton.first().click();
+        await this.availableScheduleItemButton.first().click();
     }
 
     async clickSecondScheduleItemButton() {
-        await this.scheduleItemButton.nth(1).click();
+        await this.availableScheduleItemButton.nth(1).click();
     }
 
     async openDepartureStationDropdown() {
