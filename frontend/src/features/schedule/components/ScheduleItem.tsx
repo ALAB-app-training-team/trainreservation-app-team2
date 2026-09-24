@@ -9,6 +9,8 @@ import type { ScheduleInfoDto } from '@/features/schedule/types/ScheduleInfoDto'
 import type { SearchRequestDto } from '@/features/schedule/types/SearchRequestDto';
 import { TrainIcon } from '@/shared/components/TrainIcon';
 
+dayjs.extend(customParseFormat);
+
 type ScheduleItemProps = {
     schedule: ScheduleDto;
     date: string;
@@ -97,18 +99,26 @@ export function ScheduleItem({
         window.scrollTo(0, 0);
     };
 
-    dayjs.extend(customParseFormat);
+    const isDeparted = dayjs(
+        `${date} ${schedule.departureTime}`,
+        'YYYY-MM-DD HH:mm:ss',
+    ).isBefore(dayjs());
+
+    const isFull =
+        schedule.reservedSeats === 0 &&
+        schedule.greenSeats === 0 &&
+        schedule.gcSeats === 0;
+
+    const timeClass = isDeparted
+        ? 'text-fg-secondary text-2xl font-bold'
+        : 'text-heading text-2xl font-black';
 
     return (
         <button
             type="button"
             onClick={handleSearch}
             data-testid="schedule"
-            disabled={
-                schedule.reservedSeats === 0 &&
-                schedule.greenSeats === 0 &&
-                schedule.gcSeats === 0
-            }
+            disabled={isDeparted || isFull}
             className="border-primary-light group enabled:hover:border-primary-ink flex w-full flex-col items-start gap-3 rounded-2xl border-2 p-4 text-left transition-colors duration-200 ease-out sm:p-8 md:flex-row md:items-center md:justify-between"
         >
             <div className="flex items-center gap-2">
@@ -117,18 +127,16 @@ export function ScheduleItem({
                     <div className="flex flex-wrap items-baseline gap-1.5">
                         <span
                             data-testid="schedule-departure-time"
-                            className="text-heading text-2xl font-black tabular-nums"
+                            className={`${timeClass} tabular-nums`}
                         >
                             {dayjs(schedule.departureTime, 'HH:mm:ss').format(
                                 'HH:mm',
                             )}
                         </span>
-                        <span className="text-heading text-2xl font-black">
-                            -
-                        </span>
+                        <span className={timeClass}>-</span>
                         <span
                             data-testid="schedule-arrival-time"
-                            className="text-heading text-2xl font-black tabular-nums"
+                            className={`${timeClass} tabular-nums`}
                         >
                             {dayjs(schedule.arrivalTime, 'HH:mm:ss').format(
                                 'HH:mm',
@@ -155,6 +163,7 @@ export function ScheduleItem({
                 reservedSeats={schedule.reservedSeats}
                 greenSeats={schedule.greenSeats}
                 gcSeats={schedule.gcSeats}
+                isDeparted={isDeparted}
             />
         </button>
     );

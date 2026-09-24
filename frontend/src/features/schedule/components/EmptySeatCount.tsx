@@ -8,12 +8,14 @@ type EmptySeatCountProps = {
     reservedSeats?: number;
     greenSeats?: number;
     gcSeats?: number;
+    isDeparted?: boolean;
 };
 
 export function EmptySeatCount({
     reservedSeats,
     greenSeats,
     gcSeats,
+    isDeparted = false,
 }: EmptySeatCountProps) {
     const seatTypeList: SeatType[] = [
         {
@@ -59,6 +61,10 @@ export function EmptySeatCount({
             <BsTriangle />
         );
     };
+
+    if (isDeparted) {
+        return <span className="text-fg-secondary">販売終了</span>;
+    }
 
     if (reservedSeats === 0 && greenSeats === 0 && gcSeats === 0) {
         return <span className="text-danger">満席</span>;
