@@ -16,13 +16,20 @@ export function SeatTypeFares({
             seatTypeCd: 'SEAT01',
             label: SEAT_TYPE_LABELS.SEAT01,
             fare: reservedFare,
+            colorClass: 'text-reserved-seat',
         },
         {
             seatTypeCd: 'SEAT02',
             label: SEAT_TYPE_LABELS.SEAT02,
             fare: greenFare,
+            colorClass: 'text-green-seat',
         },
-        { seatTypeCd: 'SEAT03', label: SEAT_TYPE_LABELS.SEAT03, fare: gcFare },
+        {
+            seatTypeCd: 'SEAT03',
+            label: SEAT_TYPE_LABELS.SEAT03,
+            fare: gcFare,
+            colorClass: 'text-gc-seat',
+        },
     ];
 
     if (fareList.every((seat) => seat.fare === null)) {
@@ -42,7 +49,7 @@ export function SeatTypeFares({
                             data-testid={`seat-type-fare-${seat.seatTypeCd}`}
                             className="flex flex-col px-3 first:pl-0 last:pr-0"
                         >
-                            <span>
+                            <span className={seat.colorClass}>
                                 {seat.label}
                                 <br className="md:hidden" />
                                 {` ${seat.fare.toLocaleString()}円`}
