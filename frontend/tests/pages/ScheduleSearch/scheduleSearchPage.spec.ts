@@ -425,13 +425,11 @@ test('座席種別ごとの料金が表示されること', async ({ page }) => 
 
     for (const { seatTypeCd, label, fare } of expectedFares) {
         const fareLocator = scheduleSearchPage.seatTypeFare(seatTypeCd);
-        if (fare === null) {
-            await expect(fareLocator).toBeHidden();
-        } else {
-            await expect(fareLocator).toHaveText(
-                `${label} ${fare.toLocaleString()}円`,
-            );
-        }
+        await expect(fareLocator).toHaveText(
+            fare === null
+                ? `${label} -`
+                : `${label} ${fare.toLocaleString()}円`,
+        );
     }
 });
 

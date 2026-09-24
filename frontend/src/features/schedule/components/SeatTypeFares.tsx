@@ -41,22 +41,21 @@ export function SeatTypeFares({
             data-testid="seat-type-fares"
             className="divide-line flex divide-x"
         >
-            {fareList.map(
-                (seat) =>
-                    seat.fare !== null && (
-                        <div
-                            key={seat.seatTypeCd}
-                            data-testid={`seat-type-fare-${seat.seatTypeCd}`}
-                            className="flex flex-col px-3 first:pl-0 last:pr-0"
-                        >
-                            <span className={seat.colorClass}>
-                                {seat.label}
-                                <br className="md:hidden" />
-                                {` ${seat.fare.toLocaleString()}円`}
-                            </span>
-                        </div>
-                    ),
-            )}
+            {fareList.map((seat) => (
+                <div
+                    key={seat.seatTypeCd}
+                    data-testid={`seat-type-fare-${seat.seatTypeCd}`}
+                    className="flex flex-col px-3 first:pl-0 last:pr-0"
+                >
+                    <span>
+                        <span className={seat.colorClass}>{seat.label}</span>
+                        <br className="md:hidden" />
+                        {seat.fare === null
+                            ? ' -'
+                            : ` ${seat.fare.toLocaleString()}円`}
+                    </span>
+                </div>
+            ))}
         </div>
     );
 }
