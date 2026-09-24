@@ -74,7 +74,7 @@ export function EmptySeatCount({
     };
 
     if (reservedSeats === 0 && greenSeats === 0 && gcSeats === 0) {
-        return <span className="text-danger">満席</span>;
+        return <span className="text-danger text-sm md:text-base">満席</span>;
     }
 
     return (
@@ -83,7 +83,7 @@ export function EmptySeatCount({
                 {seatTypeList.map((seat) => (
                     <div
                         key={seat.label}
-                        className={`flex items-center gap-1 p-2 text-sm md:gap-2 md:px-2 md:py-0.5 ${seat.count === 0 ? 'text-fg-muted' : ''}`}
+                        className={`flex items-center gap-1 p-2 text-sm md:gap-2 md:px-2 md:py-0.5 md:text-base ${seat.count === 0 ? 'text-fg-muted' : ''}`}
                     >
                         <span className={getSeatLabelColorClass(seat)}>
                             {seat.label}
