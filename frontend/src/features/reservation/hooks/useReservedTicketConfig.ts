@@ -34,6 +34,8 @@ export function useReservedTicketConfig(
         isReserver &&
         !hasDeparted;
     const canUpdateCompanions = !isDeleted && isReserver;
+    const isSoleCompanionsAction =
+        canUpdateCompanions && !canCancelReservation && !canUpdateReservation;
     const canShareLink = !isDeleted;
 
     return {
@@ -43,6 +45,7 @@ export function useReservedTicketConfig(
         canCancelReservation,
         canUpdateReservation,
         canUpdateCompanions,
+        isSoleCompanionsAction,
         canShareLink,
     };
 }

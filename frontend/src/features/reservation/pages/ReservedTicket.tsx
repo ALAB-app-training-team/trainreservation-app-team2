@@ -45,6 +45,7 @@ export function ReservedTicket() {
         canCancelReservation,
         canUpdateReservation,
         canUpdateCompanions,
+        isSoleCompanionsAction,
         canShareLink,
     } = useReservedTicketConfig(reservedTickets, mode, role);
     const isCreated = mode === RESERVEDTICKET_MODE.created;
@@ -173,7 +174,7 @@ export function ReservedTicket() {
                     {canUpdateCompanions && (
                         <button
                             onClick={handleCompanionsModalOpen}
-                            className="bg-primary flex w-full items-center justify-center gap-2 rounded-xl p-2 text-sm text-white md:order-4"
+                            className={`bg-primary flex w-full items-center justify-center gap-2 rounded-xl p-2 text-sm text-white md:order-4 ${isSoleCompanionsAction ? 'md:ml-auto md:w-[calc(33.333%_-_0.667rem)]' : ''}`}
                         >
                             <RiGroupLine className="h-4 w-4" />
                             利用者に割り当て
