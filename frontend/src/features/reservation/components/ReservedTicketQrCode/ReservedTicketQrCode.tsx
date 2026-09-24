@@ -26,7 +26,12 @@ export function ReservedTicketQrCode({
             a.seatColumn.localeCompare(b.seatColumn),
     );
     return (
-        <div className="flex w-full justify-center">
+        <div
+            className="flex w-full justify-center"
+            onFocus={(e) => {
+                e.target.scrollIntoView({ block: 'nearest' });
+            }}
+        >
             <Swiper
                 spaceBetween={0}
                 loop={true}
