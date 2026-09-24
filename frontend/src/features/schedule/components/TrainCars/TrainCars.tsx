@@ -81,7 +81,7 @@ export function TrainCars({
                             aria-selected={isActive}
                             aria-controls={SEAT_TYPE_PANEL_ID}
                             onClick={() => handleSeatTypeChange(code)}
-                            className={`flex-1 rounded-full px-4 py-2 text-center text-sm font-medium transition-all duration-200 ${
+                            className={`flex-1 rounded-full px-4 py-2 text-center text-xs font-medium transition-all duration-200 ${
                                 isActive
                                     ? 'bg-surface text-fg cursor-default font-semibold'
                                     : 'hover:text-fg cursor-pointer'
