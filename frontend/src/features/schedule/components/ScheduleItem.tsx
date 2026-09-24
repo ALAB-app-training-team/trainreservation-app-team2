@@ -22,6 +22,7 @@ type ScheduleItemProps = {
     preChangeScheduleInfo: ScheduleInfoDto | null;
     isChanging: boolean | undefined;
     isBack: boolean | undefined;
+    buttonRef?: (element: HTMLButtonElement | null) => void;
 };
 
 export function ScheduleItem({
@@ -37,6 +38,7 @@ export function ScheduleItem({
     preChangeScheduleInfo,
     isChanging,
     isBack,
+    buttonRef,
 }: ScheduleItemProps) {
     const navigate = useNavigate();
 
@@ -101,6 +103,7 @@ export function ScheduleItem({
 
     return (
         <button
+            ref={buttonRef}
             type="button"
             onClick={handleSearch}
             data-testid="schedule"

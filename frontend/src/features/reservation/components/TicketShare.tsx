@@ -4,6 +4,7 @@ import { IoCheckmarkOutline, IoCopyOutline } from 'react-icons/io5';
 import { toast } from 'sonner';
 
 import { CustomModal } from '@/shared/components/CustomModal';
+import { CustomModalTitle } from '@/shared/components/CustomModalTitle';
 
 interface TicketShareProps {
     shareUrl: string;
@@ -38,10 +39,12 @@ export function TicketShare({ shareUrl = '' }: TicketShareProps) {
 
             <CustomModal isOpen={isOpen} onRequestClose={handleClose}>
                 <div className="relative">
-                    <h3 className="text-fg mb-2 text-lg font-bold">
-                        チケットを共有
-                    </h3>
-                    <div className="text-fg-secondary mb-4 text-sm">
+                    <CustomModalTitle
+                        title="チケットを共有"
+                        onRequestClose={handleClose}
+                        isSubmitting={false}
+                    />
+                    <div className="text-fg-secondary mt-2 mb-4 text-sm">
                         以下のリンクをコピーして共有できます
                     </div>
                     <div className="border-line bg-surface-subtle flex items-center gap-2 rounded-lg border p-2">

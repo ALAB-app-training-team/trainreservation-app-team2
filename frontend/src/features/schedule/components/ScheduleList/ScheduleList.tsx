@@ -1,7 +1,7 @@
 import 'tailwindcss';
 
 import dayjs from 'dayjs';
-import { useState } from 'react';
+import { useRef, useState } from 'react';
 import { AiOutlineExclamationCircle } from 'react-icons/ai';
 import { FaArrowTrendUp } from 'react-icons/fa6';
 import type { ReactPaginateProps } from 'react-paginate';
@@ -66,10 +66,12 @@ export function ScheduleList({
 
     const [offset, setOffset] = useState(0);
     const perPage: number = 10;
+    const firstScheduleItemRef = useRef<HTMLButtonElement>(null);
     const handlePageChange = (data: { selected: number }) => {
         window.scrollTo(0, 0);
         const pageNumber = data['selected'];
         setOffset(pageNumber * perPage);
+        firstScheduleItemRef.current?.focus();
     };
 
     const filteredSchedules = useFilteredSchedules({
@@ -98,7 +100,10 @@ export function ScheduleList({
     return (
         <>
             <div className="flex flex-col gap-4">
-                <div className="flex flex-wrap items-center justify-end gap-4 text-sm md:text-base">
+                <div
+                    aria-live="polite"
+                    className="flex flex-wrap items-center justify-end gap-4 text-sm md:text-base"
+                >
                     {filteredSchedules.length > 0 && (
                         <SeatTypeFares
                             reservedFare={reservedFare}
@@ -115,6 +120,14 @@ export function ScheduleList({
                                 return (
                                     <ScheduleItem
                                         key={index}
+                                        buttonRef={
+                                            index === 0
+                                                ? (element) => {
+                                                      firstScheduleItemRef.current =
+                                                          element;
+                                                  }
+                                                : undefined
+                                        }
                                         schedule={schedule}
                                         date={searchRequestDto.date}
                                         departureStationCd={departureStationCd}
