@@ -66,7 +66,7 @@ export function ReservedSeats({
                                         }
                                         className={`${reservedSeatsStyle({ id })} flex shrink-0 items-center gap-2`}
                                     >
-                                        <div className="text-fg-secondary flex items-center gap-2">
+                                        <div className="text-fg-secondary flex items-center gap-1 md:gap-2">
                                             {id === 'reservationDetail' && (
                                                 <BsTrainFreightFrontFill className="text-primary-ink" />
                                             )}
@@ -84,7 +84,7 @@ export function ReservedSeats({
                                         {id === 'reservationDetail' && (
                                             <>
                                                 <div className="bg-primary h-3.5 w-[1px] self-center" />
-                                                <div className="text-primary-ink flex items-center text-xl font-bold whitespace-nowrap">
+                                                <div className="text-primary-ink flex items-center text-lg font-bold whitespace-nowrap md:text-xl">
                                                     <RiMoneyCnyBoxLine />
                                                     {(
                                                         seat.seatFare || 0
