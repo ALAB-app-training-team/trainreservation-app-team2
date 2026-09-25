@@ -73,7 +73,11 @@ export function EmptySeatCount({
     };
 
     if (isDeparted) {
-        return <span className="text-fg-secondary">販売終了</span>;
+        return (
+            <span className="text-fg-secondary text-sm md:text-base">
+                販売終了
+            </span>
+        );
     }
 
     if (reservedSeats === 0 && greenSeats === 0 && gcSeats === 0) {
