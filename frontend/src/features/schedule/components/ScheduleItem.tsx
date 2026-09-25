@@ -78,10 +78,14 @@ export function ScheduleItem({
             arrivalStationName,
             direction: schedule.direction,
         };
-        const isScheduleCdUnchanged =
+        const isScheduleUnchanged =
             preChangeScheduleInfo?.scheduleCd &&
             scheduleInfoDto.scheduleCd === preChangeScheduleInfo.scheduleCd &&
-            scheduleInfoDto.date === preChangeScheduleInfo.date;
+            scheduleInfoDto.date === preChangeScheduleInfo.date &&
+            scheduleInfoDto.departureStationCd ===
+                preChangeScheduleInfo.departureStationCd &&
+            scheduleInfoDto.arrivalStationCd ===
+                preChangeScheduleInfo.arrivalStationCd;
 
         navigate('/selectSeat', {
             state: {
@@ -96,7 +100,7 @@ export function ScheduleItem({
                     reservedSeats.length > 0 && {
                         preChangeReservedSeats: reservedSeats,
                     }),
-                ...(isScheduleCdUnchanged && { reservedSeats }),
+                ...(isScheduleUnchanged && { reservedSeats }),
             },
         });
         window.scrollTo(0, 0);
