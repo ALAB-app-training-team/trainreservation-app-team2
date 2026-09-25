@@ -1,3 +1,4 @@
+import type { KeyboardEvent } from 'react';
 import { HiOutlineFilter } from 'react-icons/hi';
 
 type AvailableOnlyFilterProps = {
@@ -11,6 +12,12 @@ export function AvailableOnlyFilter({
     isDisabled,
     onChange,
 }: AvailableOnlyFilterProps) {
+    const handleKeyDown = (e: KeyboardEvent<HTMLInputElement>) => {
+        if (e.key !== 'Enter' || isDisabled) return;
+        e.preventDefault();
+        onChange(!isChecked);
+    };
+
     return (
         <label
             htmlFor="isOnlyAvailable"
@@ -31,6 +38,7 @@ export function AvailableOnlyFilter({
                         checked={isChecked}
                         disabled={isDisabled}
                         onChange={(e) => onChange(e.target.checked)}
+                        onKeyDown={handleKeyDown}
                         className={`peer absolute inset-0 z-10 size-full opacity-0 ${
                             isDisabled
                                 ? 'pointer-events-none'
