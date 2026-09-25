@@ -327,6 +327,30 @@ public class ScheduleServiceTest {
     }
 
     @Test
+    @DisplayName("号車違いで同じ座席CDが予約済みの場合、別々の座席として残席数が算出される")
+    void getSearchedScheduleByStation_withSameSeatCdInDifferentTrainCars_returnSeparatelyCountedSeats() {
+        List<ReservedSeatSectionEntity> sameSeatCdInOtherCarList = List.of(
+            new ReservedSeatSectionEntity(UUID.randomUUID(), UUID.randomUUID(), LocalDate.of(2026, 6, 1), "TIME01", "E5SER01", "SEAT01001", "SEC01", "CAR01"),
+            new ReservedSeatSectionEntity(UUID.randomUUID(), UUID.randomUUID(), LocalDate.of(2026, 6, 1), "TIME01", "E5SER01", "SEAT01001", "SEC02", "CAR01"),
+            new ReservedSeatSectionEntity(UUID.randomUUID(), UUID.randomUUID(), LocalDate.of(2026, 6, 1), "TIME01", "E5SER02", "SEAT01001", "SEC01", "CAR01"),
+            new ReservedSeatSectionEntity(UUID.randomUUID(), UUID.randomUUID(), LocalDate.of(2026, 6, 1), "TIME01", "E5SER03", "SEAT01001", "SEC01", "CAR01")
+        );
+        stubScheduleLookups();
+        when(reservedSeatSectionRepo.findByRideDateAndScheduleCdAndReservedSectionCdIn(any(), any(), any()))
+            .thenReturn(sameSeatCdInOtherCarList);
+        when(totalSeatRepo.findAll()).thenReturn(List.of(new TotalSeatEntity("E5SER", 3, 2, 1)));
+        stubFareCalculation();
+
+        ScheduleResponseDto actualResponse = service.getSearchedScheduleByStation(request);
+
+        ScheduleDto firstSchedule = actualResponse.getSchedules().getFirst();
+        assertEquals(0, firstSchedule.getReservedSeats());
+        assertEquals(2, firstSchedule.getGreenSeats());
+        assertEquals(1, firstSchedule.getGcSeats());
+        assertNull(actualResponse.getReservedFare());
+    }
+
+    @Test
     @DisplayName("料金算出対象の区間リストが取得できない場合、エラーを発生させる")
     void getSearchedScheduleByStation_withNotExistSectionCdOfSeat_returnIllegalArgumentException() {
         stubScheduleLookups();

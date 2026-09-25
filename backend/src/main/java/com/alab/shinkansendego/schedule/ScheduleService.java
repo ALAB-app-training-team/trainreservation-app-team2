@@ -107,15 +107,9 @@ public class ScheduleService {
                         .filter(entity -> (Objects.equals(entity.getTrainSeriesCd(), scheduleEntity.get().getTrainType().getTrainSeriesCd())))
                         .findFirst()
                         .orElseThrow(() -> new IllegalArgumentException("TotalSeat Of TrainSeriesCd is Not Found"));
-                    int calcReservedSeats = totalSeats.getReservedTotal() - (reservedSeatSectionEntities
-                        .stream().filter(entity -> (Objects.equals(entity.getTrainCarTypeCd(), "CAR01")))
-                        .collect(Collectors.groupingBy(ReservedSeatSectionEntity::getSeatCd)).size());
-                    int calcGreenSeats = totalSeats.getGreenTotal() - (reservedSeatSectionEntities
-                        .stream().filter(entity -> (Objects.equals(entity.getTrainCarTypeCd(), "CAR02")))
-                        .collect(Collectors.groupingBy(ReservedSeatSectionEntity::getSeatCd)).size());
-                    int calcGcSeats = totalSeats.getGcTotal() - (reservedSeatSectionEntities
-                        .stream().filter(entity -> (Objects.equals(entity.getTrainCarTypeCd(), "CAR03")))
-                        .collect(Collectors.groupingBy(ReservedSeatSectionEntity::getSeatCd)).size());
+                    int calcReservedSeats = totalSeats.getReservedTotal() - countReservedSeats(reservedSeatSectionEntities, "CAR01");
+                    int calcGreenSeats = totalSeats.getGreenTotal() - countReservedSeats(reservedSeatSectionEntities, "CAR02");
+                    int calcGcSeats = totalSeats.getGcTotal() - countReservedSeats(reservedSeatSectionEntities, "CAR03");
 
                     if (calcReservedSeats < 0 || calcGreenSeats < 0 || calcGcSeats < 0) {
                         throw new IllegalArgumentException("AvailableSeats is Not found");
@@ -169,6 +163,23 @@ public class ScheduleService {
         }
 
         return new ScheduleResponseDto(reservedFare, greenFare, gcFare, responseList);
+    }
+
+    /**
+     * 指定した号車種別の予約済み座席数を数える
+     * 座席CDは座席タイプごとに定義されており号車をまたいで重複するため、号車CDと合わせて一意に判定する
+     * また1席が区間ごとにレコードを持つため、重複を除いて数える
+     *
+     * @param reservedSeatSections 対象区間の予約済み座席区間リスト
+     * @param trainCarTypeCd       号車種別CD
+     * @return 予約済みの座席数
+     */
+    private int countReservedSeats(List<ReservedSeatSectionEntity> reservedSeatSections, String trainCarTypeCd) {
+        return (int) reservedSeatSections.stream()
+            .filter(entity -> Objects.equals(entity.getTrainCarTypeCd(), trainCarTypeCd))
+            .map(entity -> entity.getTrainCarCd() + "_" + entity.getSeatCd())
+            .distinct()
+            .count();
     }
 
     /**
