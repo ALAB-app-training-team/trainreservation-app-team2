@@ -64,7 +64,7 @@ export function TrainCars({
     });
 
     return (
-        <div className="border-primary-light flex w-full flex-col gap-8 rounded-2xl border-2 p-8">
+        <div className="border-primary-light flex w-full flex-col gap-8 rounded-2xl border-2 p-4 md:p-8">
             <div
                 role="tablist"
                 aria-label="座席種別"
@@ -81,7 +81,7 @@ export function TrainCars({
                             aria-selected={isActive}
                             aria-controls={SEAT_TYPE_PANEL_ID}
                             onClick={() => handleSeatTypeChange(code)}
-                            className={`flex-1 rounded-full px-4 py-2 text-center text-xs font-medium transition-all duration-200 ${
+                            className={`flex-1 rounded-full px-2 py-2 text-center text-xs font-medium transition-all duration-200 md:px-4 ${
                                 isActive
                                     ? 'bg-surface text-fg cursor-default font-semibold'
                                     : 'hover:text-fg cursor-pointer'
