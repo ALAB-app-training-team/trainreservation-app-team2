@@ -1,4 +1,5 @@
 import type { ReservationResponseDto } from '@/features/reservation/types/ReservationResponseDto';
+import { isDeparted } from '@/shared/utils/IsDeparted';
 
 export function useReservationSelectItemConfig(
     details: ReservationResponseDto,
@@ -11,13 +12,16 @@ export function useReservationSelectItemConfig(
     const isDeleted = details.isDeleted;
     // 有効
     const isEnabled = departureDate >= now;
+    // 出発済み（当日で出発時刻を過ぎている）
+    const hasDeparted = isDeparted(details.rideDate, details.departureTime);
 
     const isActiveReservation = !isDeleted && isEnabled;
-    const canCancelReservation = !isDeleted && isEnabled;
-    const canUpdateReservation = !isDeleted && isEnabled;
+    const canCancelReservation = !isDeleted && isEnabled && !hasDeparted;
+    const canUpdateReservation = !isDeleted && isEnabled && !hasDeparted;
     const canCheckReservation = !isDeleted && isEnabled;
     const canSearchReturinTrip = !isDeleted;
     const showThreeDotsMenu = canCancelReservation || canUpdateReservation;
+    const reserveThreeDotsSlot = isActiveReservation && !showThreeDotsMenu;
     const hasUnassignedSeat =
         isActiveReservation && details.reservedSeats.some((seat) => !seat.name);
     const showTotalFare = !isActiveReservation;
@@ -33,6 +37,7 @@ export function useReservationSelectItemConfig(
         canCheckReservation,
         canSearchReturinTrip,
         showThreeDotsMenu,
+        reserveThreeDotsSlot,
         hasUnassignedSeat,
         showTotalFare,
         totalFare,
