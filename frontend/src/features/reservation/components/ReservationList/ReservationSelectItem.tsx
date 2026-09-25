@@ -44,6 +44,7 @@ export function ReservationSelectItem({
         canCheckReservation,
         canSearchReturinTrip,
         showThreeDotsMenu,
+        reserveThreeDotsSlot,
         hasUnassignedSeat,
         showTotalFare,
         totalFare,
@@ -224,6 +225,9 @@ export function ReservationSelectItem({
                             </div>
                         )}
                     </div>
+                )}
+                {reserveThreeDotsSlot && (
+                    <div aria-hidden="true" className="h-11 w-11 shrink-0" />
                 )}
             </div>
         </div>

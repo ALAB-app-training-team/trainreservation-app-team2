@@ -8,12 +8,14 @@ type EmptySeatCountProps = {
     reservedSeats?: number;
     greenSeats?: number;
     gcSeats?: number;
+    isDeparted?: boolean;
 };
 
 export function EmptySeatCount({
     reservedSeats,
     greenSeats,
     gcSeats,
+    isDeparted = false,
 }: EmptySeatCountProps) {
     const seatTypeList: SeatType[] = [
         {
@@ -70,8 +72,22 @@ export function EmptySeatCount({
         );
     };
 
+    if (isDeparted) {
+        return (
+            <div className="flex w-full flex-1 justify-center md:justify-end">
+                <span className="text-fg-secondary text-sm md:text-base">
+                    販売終了
+                </span>
+            </div>
+        );
+    }
+
     if (reservedSeats === 0 && greenSeats === 0 && gcSeats === 0) {
-        return <span className="text-danger text-sm md:text-base">満席</span>;
+        return (
+            <div className="flex w-full flex-1 justify-center md:justify-end">
+                <span className="text-danger text-sm md:text-base">満席</span>
+            </div>
+        );
     }
 
     return (
