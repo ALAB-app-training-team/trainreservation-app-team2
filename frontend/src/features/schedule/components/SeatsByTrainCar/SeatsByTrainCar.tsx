@@ -121,13 +121,13 @@ export function SeatsByTrainCar({
 
     return (
         <>
-            <div className="mx-auto flex flex-col items-center gap-4">
+            <div className="mx-auto flex w-full flex-col items-center gap-4">
                 {trainCarNumber !== undefined && (
                     <h2 className="sr-only" aria-live="polite">
                         {trainCarNumber}号車の座席
                     </h2>
                 )}
-                <div className="flex flex-col items-center gap-2">
+                <div className="flex w-full flex-col items-center gap-2">
                     <div className="bg-primary-light flex items-center gap-2 rounded-full px-4 py-1 text-sm">
                         <FiArrowUp />
                         {`${scheduleInfoDto.arrivalStationName}駅方面（進行方向）`}
@@ -136,58 +136,64 @@ export function SeatsByTrainCar({
                         isFront={true}
                         facilities={!isDown ? frontFacilities : rearFacilities}
                     />
-                    <div
-                        role="grid"
-                        aria-label="座席"
-                        className="flex flex-col gap-2"
-                    >
-                        {seatRowList.map((rowSeats, rowIndex) => (
-                            <div
-                                key={rows[rowIndex]}
-                                role="row"
-                                className="grid gap-2"
-                                style={{
-                                    gridTemplateColumns: `repeat(${displayColumns.length}, minmax(0, 1fr))`,
-                                }}
-                            >
-                                {rowSeats.map((seat, colIndex) => {
-                                    if (!seat) {
+                    <div className="w-full overflow-x-auto">
+                        <div
+                            role="grid"
+                            aria-label="座席"
+                            className="mx-auto flex w-max flex-col gap-1 md:gap-2"
+                        >
+                            {seatRowList.map((rowSeats, rowIndex) => (
+                                <div
+                                    key={rows[rowIndex]}
+                                    role="row"
+                                    className="grid gap-1 md:gap-2"
+                                    style={{
+                                        gridTemplateColumns: `repeat(${displayColumns.length}, minmax(0, 1fr))`,
+                                    }}
+                                >
+                                    {rowSeats.map((seat, colIndex) => {
+                                        if (!seat) {
+                                            return (
+                                                <div
+                                                    key={`empty-${rowIndex}-${colIndex}`}
+                                                    role="presentation"
+                                                />
+                                            );
+                                        }
+                                        const isSelected = isSeatSelected(seat);
                                         return (
                                             <div
-                                                key={`empty-${rowIndex}-${colIndex}`}
-                                                role="presentation"
-                                            />
-                                        );
-                                    }
-                                    const isSelected = isSeatSelected(seat);
-                                    return (
-                                        <div
-                                            key={seat.seatCd}
-                                            role="gridcell"
-                                            className="flex"
-                                        >
-                                            <Seat
-                                                seat={seat}
-                                                onClick={handleSelectedSeats}
-                                                disabled={isSeatDisabled(seat)}
-                                                type={
-                                                    seat.isReserved
-                                                        ? 'unreservable'
-                                                        : isSelected
-                                                          ? 'isSelected'
-                                                          : isMaxSelected
+                                                key={seat.seatCd}
+                                                role="gridcell"
+                                                className="flex"
+                                            >
+                                                <Seat
+                                                    seat={seat}
+                                                    onClick={
+                                                        handleSelectedSeats
+                                                    }
+                                                    disabled={isSeatDisabled(
+                                                        seat,
+                                                    )}
+                                                    type={
+                                                        seat.isReserved
                                                             ? 'unreservable'
-                                                            : 'reservable'
-                                                }
-                                                itemProps={getSeatItemProps(
-                                                    seat.seatCd,
-                                                )}
-                                            />
-                                        </div>
-                                    );
-                                })}
-                            </div>
-                        ))}
+                                                            : isSelected
+                                                              ? 'isSelected'
+                                                              : isMaxSelected
+                                                                ? 'unreservable'
+                                                                : 'reservable'
+                                                    }
+                                                    itemProps={getSeatItemProps(
+                                                        seat.seatCd,
+                                                    )}
+                                                />
+                                            </div>
+                                        );
+                                    })}
+                                </div>
+                            ))}
+                        </div>
                     </div>
                     <FacilityByTrainCar
                         isFront={false}

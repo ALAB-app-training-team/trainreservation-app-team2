@@ -11,7 +11,8 @@ type seatProps = {
 
 export function Seat({ seat, onClick, disabled, type, itemProps }: seatProps) {
     const styles = {
-        reserveModeStyle: 'w-12 h-12 rounded-lg lg:w-16 lg:h-16',
+        reserveModeStyle:
+            'h-11 w-11 shrink-0 rounded-lg md:h-12 md:w-12 lg:h-16 lg:w-16',
         nonReserveModeStyle: 'w-8 h-8 rounded-md !cursor-default',
         unreservable: {
             visual: ' border-none bg-surface-inset',

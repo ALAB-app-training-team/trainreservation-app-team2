@@ -64,7 +64,7 @@ export function TrainCars({
     });
 
     return (
-        <div className="border-primary-light flex w-full flex-col gap-8 rounded-2xl border-2 p-8">
+        <div className="border-primary-light flex w-full flex-col gap-8 rounded-2xl border-2 p-4 md:p-8">
             <div
                 role="tablist"
                 aria-label="座席種別"
